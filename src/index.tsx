@@ -4,34 +4,10 @@ import {CssBaseline, ThemeProvider} from "@material-ui/core";
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { Provider } from "react-redux";
 import {store} from "./store/store";
 import {BrowserRouter} from "react-router-dom";
-
-import {fonts} from "./fonts";
-
-const theme = createMuiTheme({
-    typography: {
-        fontFamily: [
-            // '-apple-system',
-            // 'BlinkMacSystemFont',
-            '"Proxima Nova"',
-            'Roboto',
-            'sans-serif',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"'
-        ].join(','),
-    },
-    overrides: {
-        MuiCssBaseline: {
-            '@global': {
-                '@font-face': fonts
-            }
-        }
-    }
-});
+import theme from "./theme";
 
 ReactDOM.render(
     <React.StrictMode>
