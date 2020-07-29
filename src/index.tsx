@@ -9,19 +9,40 @@ import { Provider } from "react-redux";
 import {store} from "./store/store";
 import {BrowserRouter} from "react-router-dom";
 
-const theme = createMuiTheme({});
+import {fonts} from "./fonts";
+
+const theme = createMuiTheme({
+    typography: {
+        fontFamily: [
+            // '-apple-system',
+            // 'BlinkMacSystemFont',
+            '"Proxima Nova"',
+            'Roboto',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"'
+        ].join(','),
+    },
+    overrides: {
+        MuiCssBaseline: {
+            '@global': {
+                '@font-face': fonts
+            }
+        }
+    }
+});
 
 ReactDOM.render(
     <React.StrictMode>
-        <CssBaseline>
-            <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
-                </ThemeProvider>
-            </Provider>
-        </CssBaseline>
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
+            </ThemeProvider>
+        </Provider>
     </React.StrictMode>,
     document.getElementById('root')
 );
