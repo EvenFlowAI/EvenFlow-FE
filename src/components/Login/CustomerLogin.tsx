@@ -1,25 +1,21 @@
-import {Button, Checkbox, FormControlLabel, Grid, Link, Paper, Typography} from "@material-ui/core";
+import {Checkbox, FormControlLabel, Grid, Link} from "@material-ui/core";
 import {TextField} from "../UI/TextField";
 import {Link as RLink} from "react-router-dom";
 import {LockOpen} from "@material-ui/icons";
 import React from "react";
+import {LoginHeader} from "./LoginHeader";
+import {LoginContainer} from "./LoginContainer";
+import {LoginButton} from "./LoginButton";
 
 export const CustomerLogin = () => {
-    return <Paper elevation={0} style={{padding: 30}}>
-        <Typography variant="h1" style={{
-            textTransform: "uppercase", textAlign: "center",
-            fontSize: 36,
-            fontWeight: "bold",
-            marginBottom: 20
-        }}>
-            Welcome to EvenFlow
-        </Typography>
+    return <LoginContainer>
+        <LoginHeader title="Welcome to EvenFlow" />
         <TextField
             label="Email Address"
             spacing="normal"
             fullWidth
             placeholder="TYPE HERE"
-            name="asd"
+            name="email"
             autoComplete="off"
             id="email"
             autoFocus
@@ -34,7 +30,7 @@ export const CustomerLogin = () => {
             id="password"
             autoComplete="current-password"
         />
-        <Grid container style={{marginBottom: 40}} alignItems="center">
+        <Grid container alignItems="center">
             <Grid item xs={6}>
                 <FormControlLabel
                     label="Keep me signed in"
@@ -46,13 +42,8 @@ export const CustomerLogin = () => {
             </Grid>
         </Grid>
 
-        <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            startIcon={<LockOpen/>}
-        >
+        <LoginButton startIcon={<LockOpen/>}>
             Log In
-        </Button>
-    </Paper>;
+        </LoginButton>
+    </LoginContainer>;
 }

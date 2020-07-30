@@ -2,6 +2,7 @@ import {Grid} from "@material-ui/core";
 import {CustomerLogin} from "./CustomerLogin";
 import React from "react";
 import {Switch, Route, Redirect} from "react-router-dom";
+import {ForgotPassword} from "./ForgotPassword";
 
 export const Login = () => {
     return <Grid container alignItems="stretch" style={{height: "100%"}}>
@@ -11,7 +12,7 @@ export const Login = () => {
                 <Grid item xs={6}>
                     <Switch>
                         <Route path="/login" exact component={CustomerLogin} />
-                        <Route path="/login/forgot-password" component={CustomerLogin} />
+                        <Route path="/login/forgot-password" component={ForgotPassword} />
                         <Redirect to="/login" />
                     </Switch>
                 </Grid>
