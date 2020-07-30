@@ -48,6 +48,11 @@ theme.overrides = {
             fontWeight: "bold",
             padding: theme.spacing(2)
         }
+    },
+    MuiCheckbox: {
+        root: {
+            color: "#DADADA"
+        }
     }
 }
 export default theme;
