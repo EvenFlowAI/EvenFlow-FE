@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import {store} from "./store/store";
 import {BrowserRouter} from "react-router-dom";
 import theme from "./theme/theme";
+import {SnackbarProvider} from "notistack";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -15,7 +16,11 @@ ReactDOM.render(
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <BrowserRouter>
-                    <App />
+                    <SnackbarProvider maxSnack={3}
+                                      anchorOrigin={{horizontal: "right", vertical: "top"}}
+                                      variant="success">
+                        <App />
+                    </SnackbarProvider>
                 </BrowserRouter>
             </ThemeProvider>
         </Provider>

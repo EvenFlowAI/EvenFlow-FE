@@ -4,6 +4,7 @@ import React from "react";
 import {Switch, Route, Redirect} from "react-router-dom";
 import {ForgotPassword} from "./ForgotPassword";
 import {LoginSideBar} from "./LoginSideBar";
+import {ResetPassword} from "./ResetPassword";
 
 export const Login = () => {
     return <Grid container alignItems="stretch" style={{height: "100%"}}>
@@ -14,6 +15,7 @@ export const Login = () => {
                     <Switch>
                         <Route path="/login" exact component={CustomerLogin} />
                         <Route path="/login/forgot-password" component={ForgotPassword} />
+                        <Route path="/login/reset-password" component={ResetPassword} />
                         <Redirect to="/login" />
                     </Switch>
                 </Grid>
