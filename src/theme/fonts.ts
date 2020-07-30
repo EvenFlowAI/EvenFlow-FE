@@ -1,7 +1,7 @@
-import ProximaNovaRegular from './fonts/ProximaNova-Regular.otf';
-import ProximaNovaThin from './fonts/Proxima Nova Thin.otf';
-import ProximaNovaExtraBold from './fonts/Proxima Nova Extrabold.otf';
-import ProximaNovaBold from './fonts/Proxima Nova Bold.otf';
+import ProximaNovaRegular from '../assets/fonts/ProximaNova-Regular.otf';
+import ProximaNovaThin from '../assets/fonts/Proxima Nova Thin.otf';
+import ProximaNovaExtraBold from '../assets/fonts/Proxima Nova Extrabold.otf';
+import ProximaNovaBold from '../assets/fonts/Proxima Nova Bold.otf';
 // import ProximaNovaBlack from './fonts/Proxima Nova Black.otf';
 // import ProximaNovaAltThin from './fonts/Proxima Nova Alt Thin.otf';
 // import ProximaNovaAltLight from './fonts/Proxima Nova Alt Light.otf';

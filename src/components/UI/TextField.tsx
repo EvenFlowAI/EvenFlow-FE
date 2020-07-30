@@ -1,7 +1,7 @@
 import React from 'react';
 import {InputBase as DefaultTextField, withStyles, InputLabel} from "@material-ui/core";
 import {InputBaseProps} from "@material-ui/core/InputBase/InputBase";
-import theme from "../../theme";
+import theme from "../../theme/theme";
 
 type TextInputProps = {label?: string, spacing?: 'normal' | 'none' | undefined} & InputBaseProps;
 

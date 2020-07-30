@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from "react-redux";
 import {store} from "./store/store";
 import {BrowserRouter} from "react-router-dom";
-import theme from "./theme";
+import theme from "./theme/theme";
 
 ReactDOM.render(
     <React.StrictMode>
