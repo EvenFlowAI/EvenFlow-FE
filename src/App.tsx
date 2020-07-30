@@ -3,12 +3,14 @@ import './App.css';
 import {Container} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
 import {Switch, Route, Redirect} from 'react-router-dom';
+import {Layout} from "./components/Layout/Layout";
 
 const  App = () => {
     return (
         <Container component="main" maxWidth={false} disableGutters style={{height: "100vh"}}>
             <Switch>
-                <Route path="/login" component={Login}/>
+                <Route path="/login" component={Login} />
+                <Route path="/" component={Layout} />
                 <Redirect to="/login" />
             </Switch>
         </Container>
