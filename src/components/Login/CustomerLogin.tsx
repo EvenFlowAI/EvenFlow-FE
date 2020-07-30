@@ -2,12 +2,20 @@ import {Checkbox, FormControlLabel, Grid, Link} from "@material-ui/core";
 import {TextField} from "../UI/TextField";
 import {Link as RLink} from "react-router-dom";
 import {LockOpen} from "@material-ui/icons";
-import React from "react";
+import React, {useState} from "react";
 import {LoginHeader} from "./LoginHeader";
 import {LoginContainer} from "./LoginContainer";
 import {LoginButton} from "./LoginButton";
 
 export const CustomerLogin = () => {
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = () => {
+        setLoading(true);
+        setTimeout(() => {setLoading(false)}, 1000);
+    };
+
+
     return <LoginContainer>
         <LoginHeader title="Welcome to EvenFlow" />
         <TextField
@@ -42,7 +50,7 @@ export const CustomerLogin = () => {
             </Grid>
         </Grid>
 
-        <LoginButton startIcon={<LockOpen/>}>
+        <LoginButton startIcon={<LockOpen/>} loading={loading} onClick={handleLogin}>
             Log In
         </LoginButton>
     </LoginContainer>;

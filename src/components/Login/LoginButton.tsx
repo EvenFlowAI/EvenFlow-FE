@@ -1,10 +1,6 @@
-import React from "react";
-import {Button, ButtonProps, withStyles} from "@material-ui/core";
-
-export const BaseLoginButton: React.FC<ButtonProps> = props => {
-    return <Button variant="contained" color="primary" fullWidth {...props} />
-}
+import {withStyles} from "@material-ui/core";
+import {LoadingButton} from "../UI/Button";
 
 export const LoginButton = withStyles({
-    root: {marginTop: 40}
-})(BaseLoginButton);
+    wrapper: {marginTop: 40}
+})(LoadingButton);
