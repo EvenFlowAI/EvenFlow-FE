@@ -1,14 +1,15 @@
 import React from "react";
 import {SideBar} from "../SideBar/SideBar.";
-import {makeStyles} from "@material-ui/core/styles";
+import {lighten, makeStyles} from "@material-ui/core/styles";
 import { Redirect, Route, Switch } from "react-router-dom";
 import {AdminPage} from "../Admin/AdminPage";
+import {NavBar} from "../NavBar/NavBar";
 
 
 const useStyles = makeStyles(theme => ({
     root: {
         display: "flex",
-        minHeight: "100vh"
+        minHeight: "100vh",
     },
     main: {
         flexGrow: 1,
@@ -21,6 +22,7 @@ export const Layout = () => {
     const classes = useStyles();
     return <div className={classes.root}>
         <SideBar />
+        <NavBar />
         <div className={classes.main}>
             <Switch>
                 <Route to="/admin" component={AdminPage} />

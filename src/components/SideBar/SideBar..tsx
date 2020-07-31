@@ -3,23 +3,19 @@ import {Drawer, lighten, List, ListItem} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import logo from '../../assets/img/logoSidebar.svg';
 import {NavLink} from "react-router-dom";
+import {LinkType} from "../../types/types";
+import {sideBarWidth} from "../../theme/theme";
 
-
-type LinkObj = {
-    to: string;
-    name: string;
-}
-const links: LinkObj[] = [
+const links: LinkType[] = [
     {to: '/admin/sc-profiles', name: "Service Center Profiles"},
     {to: '/admin/employees', name: "Employees"},
     {to: '/admin/locations', name: "Locations"}
 ];
 
-const sideBarWidth = 255;
-
 const useStyles = makeStyles(theme => ({
     drawer: {
         width: sideBarWidth,
+        flexShrink: 0
     },
     logo: {
         maxWidth: "80%",

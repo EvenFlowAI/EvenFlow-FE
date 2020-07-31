@@ -3,6 +3,9 @@ import {fonts} from "./fonts";
 import {colors} from "./colors";
 
 
+export const sideBarWidth = 255;
+
+
 const themeOptions: ThemeOptions = {
     typography: {
         fontFamily: [

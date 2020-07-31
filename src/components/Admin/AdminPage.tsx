@@ -1,5 +1,8 @@
 import React from "react";
+import {Switch, Redirect} from "react-router-dom";
 
 export const AdminPage = () => {
-    return <h1>Admin Content</h1>
+    return <Switch>
+        <Redirect to="/admin/sc-profiles" />
+    </Switch>;
 }
