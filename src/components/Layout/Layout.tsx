@@ -1,6 +1,8 @@
 import React from "react";
 import {SideBar} from "../SideBar/SideBar.";
 import {makeStyles} from "@material-ui/core/styles";
+import { Redirect, Route, Switch } from "react-router-dom";
+import {AdminPage} from "../Admin/AdminPage";
 
 
 const useStyles = makeStyles(theme => ({
@@ -21,7 +23,10 @@ export const Layout = () => {
     return <div className={classes.root}>
         <SideBar />
         <div className={classes.main}>
-            Content
+            <Switch>
+                <Route to="/admin" component={AdminPage} />
+                <Redirect to="/admin" />
+            </Switch>
         </div>
     </div>
 }
