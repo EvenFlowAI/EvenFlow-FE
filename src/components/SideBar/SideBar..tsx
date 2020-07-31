@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
         color: "#FFFFFF",
         textTransform: "uppercase",
         fontSize: 14,
+        padding: "16px 0",
         lineHeight: "17px",
         transition: theme.transitions.create(['color']),
         "&.active": {
@@ -58,7 +59,7 @@ export const SideBar = () => {
         anchor="left"
     >
         <img className={classes.logo} src={logo} alt="EvenFlow AI"/>
-        <List>
+        <List disablePadding>
             {links.map(link => <ListItem
                 disableGutters
                 className={classes.listItem}
