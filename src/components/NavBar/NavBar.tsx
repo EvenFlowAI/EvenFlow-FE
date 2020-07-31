@@ -29,13 +29,15 @@ const useStyles = makeStyles(theme => ({
 export const NavBar = () => {
     const classes = useStyles();
 
-    return <AppBar className={classes.root}>
-        <Toolbar>
-            <div className={classes.grow} />
-            <Typography className={classes.name} variant="h4">EvenFlow Admin</Typography>
-            <Avatar className={classes.avatar}>
-                IM
-            </Avatar>
-        </Toolbar>
-    </AppBar>
+    return <>
+        <AppBar className={classes.root}>
+            <Toolbar>
+                <div className={classes.grow} />
+                <Typography className={classes.name} variant="h4">EvenFlow Admin</Typography>
+                <Avatar className={classes.avatar}>
+                    IM
+                </Avatar>
+            </Toolbar>
+        </AppBar>
+    </>
 }

@@ -4,6 +4,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import { Redirect, Route, Switch } from "react-router-dom";
 import {AdminPage} from "../Admin/AdminPage";
 import {NavBar} from "../NavBar/NavBar";
+import {ContentTitle} from "../Content/ContentTitle/ContentTitle";
+import {Toolbar} from "@material-ui/core";
 
 
 const useStyles = makeStyles(theme => ({
@@ -24,6 +26,8 @@ export const Layout = () => {
         <SideBar />
         <NavBar />
         <div className={classes.main}>
+            <Toolbar id="backToTopAnchor" />
+            <ContentTitle />
             <Switch>
                 <Route to="/admin" component={AdminPage} />
                 <Redirect to="/admin" />
