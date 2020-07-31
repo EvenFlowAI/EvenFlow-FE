@@ -1,6 +1,6 @@
 import React from "react";
 import {SideBar} from "../SideBar/SideBar.";
-import {lighten, makeStyles} from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import { Redirect, Route, Switch } from "react-router-dom";
 import {AdminPage} from "../Admin/AdminPage";
 import {NavBar} from "../NavBar/NavBar";
