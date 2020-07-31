@@ -25,7 +25,9 @@ const getTitle = (match: any): TTitle => {
 }
 
 const titles: TTitle[] = [
-    {route: "/", title: "Service centers"}
+    {route: "/admin/sc-profiles", title: "Service centers"},
+    {route: "/admin/locations", title: "Locations"},
+    {route: "/admin/employees", title: "Employees"}
 ];
 
 export const ContentTitle = () => {
