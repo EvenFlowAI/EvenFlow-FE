@@ -1,8 +1,8 @@
 import React from "react";
-import {Drawer, List, ListItem} from "@material-ui/core";
+import {Drawer, lighten, List, ListItem} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import logo from '../../assets/img/logoSidebar.svg';
-import {Link} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 
 
 type LinkObj = {
@@ -15,24 +15,37 @@ const links: LinkObj[] = [
     {to: '/admin/locations', name: "Locations"}
 ];
 
-
+const sideBarWidth = 255;
 
 const useStyles = makeStyles(theme => ({
     drawer: {
-        width: 240,
+        width: sideBarWidth,
     },
     logo: {
         maxWidth: "80%",
         marginBottom: 60
     },
     drawerPaper: {
-        width: 240,
+        width: sideBarWidth,
         backgroundColor: "#252525",
         color: "#FFFFFF",
         display: "flex",
         flexFlow: "column",
         padding: "60px 30px",
         alignItems: "center"
+    },
+    listItem: {
+        color: "#FFFFFF",
+        textTransform: "uppercase",
+        fontSize: 14,
+        lineHeight: "17px",
+        transition: theme.transitions.create(['color']),
+        "&.active": {
+            color: "#7898FF"
+        },
+        "&:hover": {
+            color: lighten("#7898FF", .5)
+        }
     }
 }));
 
@@ -46,7 +59,12 @@ export const SideBar = () => {
     >
         <img className={classes.logo} src={logo} alt="EvenFlow AI"/>
         <List>
-            {links.map(link => <ListItem component={Link} to={link.to} key={link.to}>{link.name}</ListItem>)}
+            {links.map(link => <ListItem
+                disableGutters
+                className={classes.listItem}
+                component={NavLink}
+                to={link.to}
+                key={link.to}>{link.name}</ListItem>)}
         </List>
     </Drawer>
 };
