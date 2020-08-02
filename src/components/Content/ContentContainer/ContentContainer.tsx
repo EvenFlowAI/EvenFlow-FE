@@ -6,7 +6,7 @@ const useStyles = makeStyles({
     root: {
         padding: 40,
         display: "flex",
-        flexFlow: "row no-wrap",
+        flexFlow: "column nowrap",
         alignItems: "center"
     }
 });

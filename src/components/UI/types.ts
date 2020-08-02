@@ -8,4 +8,5 @@ export interface ITableProps<Data> {
     data: Data[];
     index: keyof Data;
     rowData: TableRowDataType<Data>[];
+    actions?: (el: Data) => JSX.Element
 }

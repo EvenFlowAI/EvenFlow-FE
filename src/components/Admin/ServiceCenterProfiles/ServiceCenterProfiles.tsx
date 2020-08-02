@@ -1,5 +1,7 @@
 import React from "react";
 import {Table} from "../../UI/Table";
+import {IconButton} from "@material-ui/core";
+import {Visibility} from "@material-ui/icons";
 
 
 interface IServiceRow {
@@ -11,6 +13,8 @@ const data: IServiceRow[] = [
         serviceLocation: "1901 Thornridge Cir. Shiloh, Chicago 39495", serviceLevel: 1},
     {technicianName: "Wade Warren", serviceName: "Honda Service",
         serviceLocation: "2118 Thornridge Cir. Syracuse, Chicago 39495", serviceLevel: 1},
+    {technicianName: "Dianne Russell", serviceName: "Audi service",
+        serviceLocation: "2715 Ash Dr. San Jose, Chicago 39495", serviceLevel: 2},
 ];
 
 const rowData = [
@@ -22,9 +26,14 @@ const rowData = [
 
 
 export const ServiceCenterProfiles = () => {
+    const handleView = (el: IServiceRow) => () => alert(`View ${el.technicianName}`);
+    const viewActions = (el: IServiceRow) => (
+        <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
+    );
     return <Table
         data={data}
         rowData={rowData}
         index="technicianName"
+        actions={viewActions}
     />
 }
