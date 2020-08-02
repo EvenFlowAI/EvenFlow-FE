@@ -32,6 +32,8 @@ export const ServiceCenterProfiles = () => {
     );
     return <Table
         data={data}
+        noDataTitle="No service centers present"
+        isLoading={false}
         rowData={rowData}
         index="technicianName"
         actions={viewActions}

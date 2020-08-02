@@ -9,4 +9,6 @@ export interface ITableProps<Data> {
     index: keyof Data;
     rowData: TableRowDataType<Data>[];
     actions?: (el: Data) => JSX.Element
+    noDataTitle?: string;
+    isLoading?: boolean;
 }

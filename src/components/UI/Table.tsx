@@ -11,6 +11,8 @@ import {
 import {makeStyles} from "@material-ui/core/styles";
 import {ITableProps} from "./types";
 import {defaultRowsPerPage, defaultRowsPerPageOptions} from "../../config/config";
+import { NoData } from "./NoData";
+import { Loading } from "./Loading";
 
 
 const useStyles = makeStyles({
@@ -39,6 +41,9 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
         setRowsPerPage(+e.target.value);
         setPage(0);
     }
+
+    if (props.isLoading) return <Loading />;
+    if (!props.data.length) return <NoData title={props.noDataTitle} />;
 
     return <>
         <TableContainer className={classes.root}>
