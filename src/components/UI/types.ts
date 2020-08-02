@@ -1,7 +1,9 @@
+
+export type AlignTypes = "inherit" | "left" | "center" | "right" | "justify";
 export type TableRowDataType<DataEl> = {
     header: string;
     val: (el: DataEl) => string;
-
+    align?: AlignTypes;
 }
 
 export interface ITableProps<Data> {

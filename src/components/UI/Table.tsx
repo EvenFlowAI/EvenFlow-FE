@@ -14,9 +14,21 @@ import {defaultRowsPerPage, defaultRowsPerPageOptions} from "../../config/config
 import { NoData } from "./NoData";
 import { Loading } from "./Loading";
 
-
+const cellPadding = "28px 16px 9px";
 const useStyles = makeStyles({
     root: {},
+    tableCell: {
+        fontSize: 16,
+        borderBottomColor: "#000000",
+        padding: cellPadding
+    },
+    tableHead: {
+        fontSize: 16,
+        borderBottomColor: "#9DA8B5",
+        padding: cellPadding,
+        fontWeight: "bold",
+        color: "#9DA8B5"
+    },
     pagination: {
         flexShrink: 0,
         width: "100%",
@@ -51,11 +63,11 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
                 <TableHead>
                     <TableRow>
                         {props.rowData.map((rE, idx) => (
-                            <TableCell key={`t_${idx}`}>
+                            <TableCell key={`t_${idx}`} align={rE.align || "left"} className={classes.tableHead}>
                                 {rE.header}
                             </TableCell>
                         ))}
-                        {props.actions ? <TableCell /> : null}
+                        {props.actions ? <TableCell className={classes.tableHead} /> : null}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -64,9 +76,18 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
                         return (
                             <TableRow key={`${rIdx}`}>
                                 {props.rowData.map((cellData, cIdx) => (
-                                    <TableCell key={`${rIdx}_${cIdx}`}>{cellData.val(row)}</TableCell>
+                                    <TableCell
+                                        align={cellData.align || "left"}
+                                        className={classes.tableCell}
+                                        key={`${rIdx}_${cIdx}`}>
+                                        {cellData.val(row)}
+                                    </TableCell>
                                 ))}
-                                {props.actions ? <TableCell align="right">{props.actions(row)}</TableCell> : null}
+                                {props.actions
+                                    ?   <TableCell align="right" className={classes.tableCell}>
+                                            {props.actions(row)}
+                                        </TableCell>
+                                    : null}
                             </TableRow>
                         );
                     })}

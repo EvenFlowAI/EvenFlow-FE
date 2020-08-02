@@ -1,41 +1,58 @@
 import React from "react";
 import {Table} from "../../UI/Table";
 import {IconButton} from "@material-ui/core";
-import {Visibility} from "@material-ui/icons";
-
+import {Edit, Visibility} from "@material-ui/icons";
+import {TableRowDataType} from "../../UI/types";
 
 interface IServiceRow {
-    technicianName: string; serviceName: string; serviceLocation: string; serviceLevel: number;
+    name: string;
+    locations: number;
+    employees: number;
+    address: string;
 }
 
 const data: IServiceRow[] = [
-    {technicianName: "Devon Lane", serviceName: "Honda Service",
-        serviceLocation: "1901 Thornridge Cir. Shiloh, Chicago 39495", serviceLevel: 1},
-    {technicianName: "Wade Warren", serviceName: "Honda Service",
-        serviceLocation: "2118 Thornridge Cir. Syracuse, Chicago 39495", serviceLevel: 1},
-    {technicianName: "Dianne Russell", serviceName: "Audi service",
-        serviceLocation: "2715 Ash Dr. San Jose, Chicago 39495", serviceLevel: 2},
+    {
+        name: "Honda East",
+        locations: 4,
+        employees: 45,
+        address: "6391 Elgin St. Celina, Delaware 10299"
+    },
+    {
+        name: "BMW car",
+        locations: 3,
+        employees: 55,
+        address: "2972 Westheimer Rd. Santa Ana, Illinois 85486 "
+    },
+    {
+        name: "Mercedes trust corp.",
+        locations: 10,
+        employees: 104,
+        address: "1901 Thornridge Cir. Shiloh, Hawaii 81063"
+    },
 ];
-
-const rowData = [
-    {val: (el: IServiceRow) => el.technicianName, header: "Technician Name"},
-    {val: (el: IServiceRow) => el.serviceName, header: "Service Name"},
-    {val: (el: IServiceRow) => el.serviceLocation, header: "Service Location"},
-    {val: (el: IServiceRow) => el.serviceLevel.toString(), header: "Level"},
+const rowData: TableRowDataType<IServiceRow>[] = [
+    {val: el => el.name, header: "Name"},
+    {val: el => el.locations.toString(), header: "Locations", align: "center"},
+    {val: el => el.employees.toString(), header: "Employees", align: "center"},
+    {val: el => el.address, header: "Address"}
 ];
 
 
 export const ServiceCenterProfiles = () => {
-    const handleView = (el: IServiceRow) => () => alert(`View ${el.technicianName}`);
-    const viewActions = (el: IServiceRow) => (
+    const handleView = (el: IServiceRow) => () => alert(`View ${el.name}`);
+    const handleEdit = (el: IServiceRow) => () => alert(`Update ${el.name}`);
+    const viewActions = (el: IServiceRow) => (<>
         <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
-    );
+        <IconButton size="small" onClick={handleEdit(el)}><Edit /></IconButton>
+    </>);
+
     return <Table
         data={data}
         noDataTitle="No service centers present"
         isLoading={false}
         rowData={rowData}
-        index="technicianName"
+        index="name"
         actions={viewActions}
     />
 }
