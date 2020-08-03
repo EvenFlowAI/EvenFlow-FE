@@ -7,7 +7,9 @@ import {Routes} from "../../../config/routes";
 
 const useStyles = makeStyles({
     wrapper: {
-
+        "& > button": {
+            marginLeft: 8
+        }
     }
 });
 

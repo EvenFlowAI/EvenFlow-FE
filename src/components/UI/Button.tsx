@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, ButtonClassKey, ButtonProps, CircularProgress} from "@material-ui/core";
+import {Button, ButtonClassKey, ButtonProps, CircularProgress, withStyles} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 
@@ -37,3 +37,12 @@ export const LoadingButton: React.FC<Props> = ({loading, classes, ...props}) => 
         {loading && <CircularProgress size={28} className={classes_.buttonProgress}/>}
     </div>;
 }
+
+export const SquareIconButton = withStyles({
+    root: {
+        padding: "5px 0",
+        minWidth: 40
+    }
+})((props: ButtonProps) => {
+    return <Button {...props} />
+})

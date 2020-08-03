@@ -9,7 +9,7 @@ import {loginTheme} from "../../theme/theme";
 
 export const Login = () => {
     return <ThemeProvider theme={loginTheme}>
-        <Grid container alignItems="stretch" style={{height: "100%"}}>
+        <Grid container alignItems="stretch" style={{height: "100%", background: "#ffffff"}}>
             <Grid item xs={4}><LoginSideBar/></Grid>
             <Grid item xs={8} style={{justifyContent: "center"}}>
                 <Grid container alignItems="center" justify="center" style={{height: "100%"}}>
