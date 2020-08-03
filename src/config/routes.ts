@@ -1,8 +1,8 @@
 enum AdminRoutes {
     Base = "/admin",
-    ServiceCenter = "/admin/sc-profiles",
+    DealershipGroups = "/admin/dealership-groups",
     Employees = "/admin/employees",
-    Locations = "/admin/locations"
+    ServiceCenters = "/admin/service-centers"
 }
 
 export const Routes = {

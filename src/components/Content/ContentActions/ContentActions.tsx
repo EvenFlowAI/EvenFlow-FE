@@ -1,8 +1,8 @@
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Switch, Route} from "react-router-dom";
-import {ServiceCenterActions} from "../../Admin/ServiceCenterProfiles/ServiceCenterActions";
 import {Routes} from "../../../config/routes";
+import {DealershipActions} from "../../Admin/DealershipGroups/DealershipActions";
 
 
 const useStyles = makeStyles({
@@ -18,7 +18,7 @@ export const ContentActions = () => {
     const classes = useStyles();
     return <div className={classes.wrapper}>
         <Switch>
-            <Route path={Routes.Admin.ServiceCenter} component={ServiceCenterActions} />
+            <Route path={Routes.Admin.DealershipGroups} component={DealershipActions} />
         </Switch>
     </div>;
 }

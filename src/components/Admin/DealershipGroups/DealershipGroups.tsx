@@ -39,12 +39,12 @@ const rowData: TableRowDataType<IServiceRow>[] = [
 ];
 
 
-export const ServiceCenterProfiles = () => {
+export const DealershipGroups = () => {
     const handleView = (el: IServiceRow) => () => alert(`View ${el.name}`);
     const handleEdit = (el: IServiceRow) => () => alert(`Update ${el.name}`);
     const viewActions = (el: IServiceRow) => (<>
         <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
-        <IconButton size="small" onClick={handleEdit(el)}><Edit /></IconButton>
+        <IconButton size="small" style={{marginLeft: 8}} onClick={handleEdit(el)}><Edit /></IconButton>
     </>);
 
     return <Table

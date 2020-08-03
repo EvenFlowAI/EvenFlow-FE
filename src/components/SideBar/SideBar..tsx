@@ -7,12 +7,6 @@ import {LinkType} from "../../types/types";
 import {sideBarWidth} from "../../theme/theme";
 import {Routes} from "../../config/routes";
 
-const links: LinkType[] = [
-    {to: Routes.Admin.ServiceCenter, name: "Service Center Profiles"},
-    {to: Routes.Admin.Employees, name: "Employees"},
-    {to: Routes.Admin.Locations, name: "Locations"}
-];
-
 const useStyles = makeStyles(theme => ({
     drawer: {
         width: sideBarWidth,
@@ -46,6 +40,12 @@ const useStyles = makeStyles(theme => ({
         }
     }
 }));
+
+const links: LinkType[] = [
+    {to: Routes.Admin.DealershipGroups, name: "Dealership Groups"},
+    {to: Routes.Admin.Employees, name: "Employees"},
+    {to: Routes.Admin.ServiceCenters, name: "Service Centers"}
+];
 
 export const SideBar = () => {
     const classes = useStyles();

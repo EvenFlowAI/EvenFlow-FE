@@ -4,16 +4,13 @@ import {Search} from "@material-ui/icons";
 import {SquareIconButton} from "../../UI/Button";
 
 
-export const ServiceCenterActions = () => {
+export const DealershipActions = () => {
     return <>
         <SquareIconButton variant="outlined">
             <Search />
         </SquareIconButton>
-        <Button variant="outlined">
-            Filters
-        </Button>
         <Button variant="contained" color="primary">
-            Add new user
+            Create new
         </Button>
     </>;
 }

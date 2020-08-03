@@ -25,8 +25,8 @@ const getTitle = (match: any): TTitle => {
 }
 
 const titles: TTitle[] = [
-    {route: Routes.Admin.ServiceCenter, title: "Service centers"},
-    {route: Routes.Admin.Locations, title: "Locations"},
+    {route: Routes.Admin.DealershipGroups, title: "Dealership Groups"},
+    {route: Routes.Admin.ServiceCenters, title: "Service Centers"},
     {route: Routes.Admin.Employees, title: "Employees"}
 ];
 
