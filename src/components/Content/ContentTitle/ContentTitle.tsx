@@ -2,14 +2,14 @@ import React, {useMemo} from 'react';
 import {useLocation, matchPath} from "react-router-dom";
 import {Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import {Routes} from "../../../config/routes";
 
 const useStyles = makeStyles({
     title: {
         fontWeight: "bold",
         fontSize: 24,
         lineHeight: "29px",
-        marginLeft: 32,
-        marginTop: 24
+        margin: 0
     }
 });
 
@@ -25,9 +25,9 @@ const getTitle = (match: any): TTitle => {
 }
 
 const titles: TTitle[] = [
-    {route: "/admin/sc-profiles", title: "Service centers"},
-    {route: "/admin/locations", title: "Locations"},
-    {route: "/admin/employees", title: "Employees"}
+    {route: Routes.Admin.ServiceCenter, title: "Service centers"},
+    {route: Routes.Admin.Locations, title: "Locations"},
+    {route: Routes.Admin.Employees, title: "Employees"}
 ];
 
 export const ContentTitle = () => {

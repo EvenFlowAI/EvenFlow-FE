@@ -4,14 +4,15 @@ import {ServiceCenterProfiles} from "./ServiceCenterProfiles/ServiceCenterProfil
 import {Locations} from "./Locations/Locations";
 import {Employees} from "./Employees/Employees";
 import {ContentContainer} from "../Content/ContentContainer/ContentContainer";
+import {Routes} from "../../config/routes";
 
 export const AdminPage = () => {
     return <ContentContainer>
         <Switch>
-            <Route path="/admin/sc-profiles" component={ServiceCenterProfiles}/>
-            <Route path="/admin/employees" component={Employees}/>
-            <Route path="/admin/locations" component={Locations}/>
-            <Redirect to="/admin/sc-profiles"/>
+            <Route path={Routes.Admin.ServiceCenter} component={ServiceCenterProfiles}/>
+            <Route path={Routes.Admin.Employees} component={Employees}/>
+            <Route path={Routes.Admin.Locations} component={Locations}/>
+            <Redirect to={Routes.Admin.ServiceCenter} />
         </Switch>
     </ContentContainer>;
 }

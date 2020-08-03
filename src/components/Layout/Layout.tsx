@@ -6,6 +6,9 @@ import {AdminPage} from "../Admin/AdminPage";
 import {NavBar} from "../NavBar/NavBar";
 import {ContentTitle} from "../Content/ContentTitle/ContentTitle";
 import {Toolbar} from "@material-ui/core";
+import {ContentActions} from "../Content/ContentActions/ContentActions";
+import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
+import {Routes} from "../../config/routes";
 
 
 const useStyles = makeStyles(theme => ({
@@ -27,10 +30,13 @@ export const Layout = () => {
         <NavBar />
         <div className={classes.main}>
             <Toolbar id="backToTopAnchor" />
-            <ContentTitle />
+            <TitleContainer>
+                <ContentTitle />
+                <ContentActions />
+            </TitleContainer>
             <Switch>
-                <Route to="/admin" component={AdminPage} />
-                <Redirect to="/admin" />
+                <Route to={Routes.Admin.Base} component={AdminPage} />
+                <Redirect to={Routes.Admin.Base} />
             </Switch>
         </div>
     </div>

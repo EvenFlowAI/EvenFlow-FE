@@ -5,11 +5,12 @@ import logo from '../../assets/img/logoSidebar.svg';
 import {NavLink} from "react-router-dom";
 import {LinkType} from "../../types/types";
 import {sideBarWidth} from "../../theme/theme";
+import {Routes} from "../../config/routes";
 
 const links: LinkType[] = [
-    {to: '/admin/sc-profiles', name: "Service Center Profiles"},
-    {to: '/admin/employees', name: "Employees"},
-    {to: '/admin/locations', name: "Locations"}
+    {to: Routes.Admin.ServiceCenter, name: "Service Center Profiles"},
+    {to: Routes.Admin.Employees, name: "Employees"},
+    {to: Routes.Admin.Locations, name: "Locations"}
 ];
 
 const useStyles = makeStyles(theme => ({
