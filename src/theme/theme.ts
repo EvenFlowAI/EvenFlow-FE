@@ -49,7 +49,6 @@ theme.overrides = {
         root: {
             borderRadius: 4,
             fontWeight: "bold",
-            padding: theme.spacing(2)
         }
     },
     MuiCheckbox: {
@@ -58,4 +57,11 @@ theme.overrides = {
         }
     }
 }
+
+export const loginTheme = createMuiTheme({...theme, palette: {
+    ...theme.palette,
+    primary: {
+        main: "#3855F3",
+    },
+}});
 export default theme;
