@@ -32,10 +32,10 @@ const data: IServiceRow[] = [
     },
 ];
 const rowData: TableRowDataType<IServiceRow>[] = [
-    {val: el => el.name, header: "Name"},
-    {val: el => el.locations.toString(), header: "Locations", align: "center"},
+    {val: el => el.name, header: "Dealership name"},
+    {val: el => el.locations.toString(), header: "Service centers", align: "center"},
     {val: el => el.employees.toString(), header: "Employees", align: "center"},
-    {val: el => el.address, header: "Address"}
+    {val: el => el.address, header: "Main Address"}
 ];
 
 
