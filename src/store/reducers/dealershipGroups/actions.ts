@@ -1,4 +1,4 @@
-import {DealershipActions, IDealershipGroup} from "./types";
+import {DealershipActions, IDealershipForm, IDealershipGroup} from "./types";
 import {ThunkAction} from "redux-thunk";
 import {ActionCreator, Dispatch} from "redux";
 import {dealershipGroupsMock} from "./mock";
@@ -30,9 +30,13 @@ export const loadAll: ActionCreator<ThunkAction<
   };
 };
 
-export const create = (data: IDealershipGroup) => async (dispatch: Dispatch) => {
+export const create = (data: IDealershipForm) => async (dispatch: Dispatch) => {
     dispatch(loading(true));
-    const createdData: IDealershipGroup = await PromiseTimeout<IDealershipGroup>(data, 500);
+    const createdData: IDealershipForm = await PromiseTimeout<IDealershipForm>(data, 500);
     dispatch(loading(false));
-    return dispatch(add(createdData));
+
+    const fixedData: IDealershipGroup = {
+        ...createdData, serviceCenters: createdData.serviceCenters || 0, employees: createdData.employees || 0
+    }
+    return dispatch(add(fixedData));
 }
