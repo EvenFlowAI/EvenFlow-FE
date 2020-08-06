@@ -1,11 +1,16 @@
 import React from "react";
-import {BaseModal, DialogTitle} from "../BaseModal";
+import {
+    BaseModal,
+    DialogContent,
+    DialogContentTitle,
+    DialogTitle
+} from "../BaseModal";
 import {DialogProps} from "../types";
 import {
-    DialogContent,
     DialogActions,
-    Typography, Divider, Button
+    Divider, Button, Grid
 } from "@material-ui/core";
+import {TextField} from "../../UI/TextField";
 
 
 export const CreateDealershipGroup: React.FC<
@@ -13,15 +18,39 @@ export const CreateDealershipGroup: React.FC<
     return <BaseModal {...props} onClose={props.onClose}>
         <DialogTitle onClose={props.onClose}>New dealership group</DialogTitle>
         <DialogContent>
-            <Typography variant="h4">
-                Dealership group info
-            </Typography>
+            <DialogContentTitle
+                title="Dealership group info"
+            />
+            <Grid container spacing={4}>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Dealership group name"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Dealership email"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Phone"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Address"
+                        fullWidth
+                    />
+                </Grid>
+            </Grid>
 
             <Divider />
 
-            <Typography variant="h4">
-                Contact personal info
-            </Typography>
+            <DialogContentTitle title="Contact personal info" />
 
         </DialogContent>
         <DialogActions>
