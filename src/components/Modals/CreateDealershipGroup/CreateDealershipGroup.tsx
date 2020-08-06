@@ -3,11 +3,11 @@ import {
     BaseModal,
     DialogContent,
     DialogContentTitle,
-    DialogTitle
+    DialogTitle,
+    DialogActions
 } from "../BaseModal";
 import {DialogProps} from "../types";
 import {
-    DialogActions,
     Divider, Button, Grid
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
@@ -21,7 +21,7 @@ export const CreateDealershipGroup: React.FC<
             <DialogContentTitle
                 title="Dealership group info"
             />
-            <Grid container spacing={4}>
+            <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <TextField
                         label="Dealership group name"
@@ -51,6 +51,27 @@ export const CreateDealershipGroup: React.FC<
             <Divider />
 
             <DialogContentTitle title="Contact personal info" />
+
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Contact person name"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Contact person phone"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Contact person email"
+                        fullWidth
+                    />
+                </Grid>
+            </Grid>
 
         </DialogContent>
         <DialogActions>

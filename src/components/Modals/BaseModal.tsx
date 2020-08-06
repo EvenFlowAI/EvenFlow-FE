@@ -3,11 +3,12 @@ import {
     Dialog,
     DialogTitle as DT,
     DialogContent as DC,
+    DialogActions as DA,
     DialogProps,
     DialogTitleProps,
     IconButton,
     Typography,
-    DialogContentProps
+    DialogContentProps, DialogActionsProps
 } from "@material-ui/core";
 import {Close} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
@@ -15,7 +16,11 @@ import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles({
     root: {
         "& hr": {
-            margin: "28px 0"
+            margin: "28px 0",
+        },
+        "& input": {
+            padding: 11,
+            fontSize: 14
         }
     },
     dialogTitle: {
@@ -28,10 +33,14 @@ const useStyles = makeStyles({
     dialogContent: {
         padding: "10px 48px"
     },
+    dialogActions: {
+        padding: "10px 48px 36px"
+    },
     dialogContentTitle: {
         fontSize: 19,
+        lineHeight: "16px",
         fontWeight: "bold",
-        marginBottom: 20
+        marginBottom: 22
     },
     closeButton: {
         position: "absolute",
@@ -49,6 +58,11 @@ export const BaseModal: React.FC<DialogProps> = props => {
 export const DialogContent: React.FC<DialogContentProps> = props => {
     const classes = useStyles();
     return <DC {...props} className={classes.dialogContent} />
+}
+
+export const DialogActions: React.FC<DialogActionsProps> = props => {
+    const classes = useStyles();
+    return <DA {...props} className={classes.dialogActions} />
 }
 
 export const DialogTitle: React.FC<
