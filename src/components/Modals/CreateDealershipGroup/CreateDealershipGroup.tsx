@@ -14,9 +14,11 @@ import {TextField} from "../../UI/TextField";
 import {useSnackbar} from "notistack";
 import {IDealershipForm} from "../../../store/reducers/dealershipGroups/types";
 import {create} from "../../../store/reducers/dealershipGroups/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useValidation} from "../../../utils/hooks";
 import {ValidationKeyPairs} from "../../../types/types";
+import {RootState} from "../../../store/rootReducer";
+import {LoadingButton} from "../../UI/Button";
 
 type KeyPair = {
     name: keyof IDealershipForm,
@@ -83,6 +85,7 @@ export const CreateDealershipGroup: React.FC<
     }
 
     const dispatch = useDispatch();
+    const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
     const {enqueueSnackbar} = useSnackbar();
     const validate = useValidation<IDealershipForm>(
         requiredFields, data
@@ -121,12 +124,13 @@ export const CreateDealershipGroup: React.FC<
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button
+            <LoadingButton
                 onClick={handleCreate}
+                loading={saving}
                 color="primary"
                 variant="contained">
                 Create
-            </Button>
+            </LoadingButton>
         </DialogActions>
     </BaseModal>;
 }

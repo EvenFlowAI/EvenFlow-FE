@@ -8,6 +8,10 @@ export const loading = (payload: boolean): DealershipActions => ({
     type: "Dealership/Loading", payload
 });
 
+export const saving = (payload: boolean): DealershipActions => ({
+    type: "Dealership/Saving", payload
+})
+
 const getAll = (payload: IDealershipGroup[]): DealershipActions => ({
     type: "Dealership/GetAll", payload
 });
@@ -31,9 +35,9 @@ export const loadAll: ActionCreator<ThunkAction<
 };
 
 export const create = (data: IDealershipForm) => async (dispatch: Dispatch) => {
-    dispatch(loading(true));
+    dispatch(saving(true));
     const createdData: IDealershipForm = await PromiseTimeout<IDealershipForm>(data, 500);
-    dispatch(loading(false));
+    dispatch(saving(false));
 
     const fixedData: IDealershipGroup = {
         ...createdData, serviceCenters: createdData.serviceCenters || 0, employees: createdData.employees || 0

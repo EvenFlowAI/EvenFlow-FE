@@ -18,14 +18,17 @@ export interface IDealershipForm extends Partial<IDealershipGroup> {
 
 type AddDealership = {type: "Dealership/Add", payload: IDealershipGroup};
 type Loading = {type: "Dealership/Loading", payload: boolean;};
+type Saving = {type: "Dealership/Saving", payload: boolean;};
 type GetAllDealerships = {type: "Dealership/GetAll", payload: IDealershipGroup[]};
 
 export type DealershipActions =
     | AddDealership
     | Loading
+    | Saving
     | GetAllDealerships;
 
 export type DealershipState = {
     dealershipList: IDealershipGroup[];
     loading: boolean;
+    saving: boolean;
 }
