@@ -8,7 +8,7 @@ import {
 } from "../BaseModal";
 import {DialogProps} from "../types";
 import {
-    Divider, Button, Grid
+    Divider, Button, Grid, Container
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {useSnackbar} from "notistack";
@@ -19,6 +19,17 @@ import {useValidation} from "../../../utils/hooks";
 import {ValidationKeyPairs} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
+import {AvatarUpload} from "../../UI/AvatarUpload";
+import {makeStyles} from "@material-ui/core/styles";
+
+
+const useStyles = makeStyles({
+    avatarWrapper: {
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: 38
+    }
+});
 
 type KeyPair = {
     name: keyof IDealershipForm,
@@ -80,16 +91,17 @@ export const CreateDealershipGroup: React.FC<
         contactPersonPhone: ""
     });
 
-    const handleChange = ({target: {value, name}}: React.ChangeEvent<HTMLInputElement>) => {
-        setData({...data, [name]: value});
-    }
-
+    const classes = useStyles();
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
     const {enqueueSnackbar} = useSnackbar();
     const validate = useValidation<IDealershipForm>(
         requiredFields, data
     );
+
+    const handleChange = ({target: {value, name}}: React.ChangeEvent<HTMLInputElement>) => {
+        setData({...data, [name]: value});
+    }
 
     const handleCreate = async () => {
         const errors = validate();
@@ -104,6 +116,10 @@ export const CreateDealershipGroup: React.FC<
     return <BaseModal {...props} onClose={props.onClose}>
         <DialogTitle onClose={props.onClose}>New dealership group</DialogTitle>
         <DialogContent>
+            <Container className={classes.avatarWrapper}>
+                <AvatarUpload />
+            </Container>
+
             <DialogContentTitle
                 title="Dealership group info"
             />
