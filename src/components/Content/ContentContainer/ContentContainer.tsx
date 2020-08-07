@@ -7,7 +7,9 @@ const useStyles = makeStyles({
         padding: 40,
         display: "flex",
         flexFlow: "column nowrap",
-        alignItems: "center"
+        alignItems: "center",
+        width: "100%",
+        maxWidth: "100%",
     }
 });
 

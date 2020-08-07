@@ -6,7 +6,7 @@ export const colors: PaletteOptions = {
         contrastText: "#FFFFFF"
     },
     background: {
-        default: "#E5E5E5",
+        default: "#F7F8FB",
         paper: "#FFFFFF"
     }
     // success: {
