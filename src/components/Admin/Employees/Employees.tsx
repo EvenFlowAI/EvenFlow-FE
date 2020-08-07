@@ -1,43 +1,49 @@
 import React from "react";
 import {Table} from "../../UI/Table";
-import {IconButton} from "@material-ui/core";
+import {Avatar, IconButton} from "@material-ui/core";
 import {Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
+import {getInitials} from "../../../utils/utils";
+import {TableAvatar} from "../TableAvatar";
 
 
 interface EmployeeRow {
-    technicianName: string; serviceName: string; serviceLocation: string; serviceLevel: number;
+    name: string; dealershipGroup: string; serviceCenterAddress: string; role: string;
 }
 
 const data: EmployeeRow[] = [
-    {technicianName: "Devon Lane", serviceName: "Honda Service",
-        serviceLocation: "1901 Thornridge Cir. Shiloh, Chicago 39495", serviceLevel: 1},
-    {technicianName: "Wade Warren", serviceName: "Honda Service",
-        serviceLocation: "2118 Thornridge Cir. Syracuse, Chicago 39495", serviceLevel: 1},
-    {technicianName: "Dianne Russell", serviceName: "Audi service",
-        serviceLocation: "2715 Ash Dr. San Jose, Chicago 39495", serviceLevel: 2},
+    {name: "Devon Lane", dealershipGroup: "Honda Service",
+        serviceCenterAddress: "1901 Thornridge Cir. Shiloh, Chicago 39495", role: "Owner"},
+    {name: "Wade Warren", dealershipGroup: "Honda Service",
+        serviceCenterAddress: "2118 Thornridge Cir. Syracuse, Chicago 39495", role: "Technician (1)"},
+    {name: "Dianne Russell", dealershipGroup: "Audi service",
+        serviceCenterAddress: "2715 Ash Dr. San Jose, Chicago 39495", role: "Advisor"},
 ];
 
 const rowData: TableRowDataType<EmployeeRow>[] = [
-    {val: (el: EmployeeRow) => el.technicianName, header: "Technician Name"},
-    {val: (el: EmployeeRow) => el.serviceName, header: "Service Name"},
-    {val: (el: EmployeeRow) => el.serviceLocation, header: "Service Location"},
-    {val: (el: EmployeeRow) => el.serviceLevel.toString(), header: "Level", align: "center"},
+    {val: (el: EmployeeRow) => el.name, header: "Name"},
+    {val: (el: EmployeeRow) => el.dealershipGroup, header: "Dealership group"},
+    {val: (el: EmployeeRow) => el.serviceCenterAddress, header: "Service center address"},
+    {val: (el: EmployeeRow) => el.role, header: "Role"},
 ];
 
 
 export const Employees = () => {
-    const handleView = (el: EmployeeRow) => () => alert(`View ${el.technicianName}`);
+    const handleView = (el: EmployeeRow) => () => alert(`View ${el.name}`);
     const viewActions = (el: EmployeeRow) => (
         <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
     );
+    const startActions = (el: EmployeeRow) => (
+        <TableAvatar name={el.name} />
+    )
 
     return <Table
         data={data}
         noDataTitle="No employees present"
         isLoading={false}
         rowData={rowData}
-        index="technicianName"
+        startActions={startActions}
+        index="name"
         actions={viewActions}
     />
 }

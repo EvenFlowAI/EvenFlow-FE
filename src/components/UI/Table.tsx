@@ -62,6 +62,7 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
             <BaseTable>
                 <TableHead>
                     <TableRow>
+                        {props.startActions ? <TableCell className={classes.tableHead} /> : null}
                         {props.rowData.map((rE, idx) => (
                             <TableCell key={`t_${idx}`} align={rE.align || "left"} className={classes.tableHead}>
                                 {rE.header}
@@ -75,6 +76,11 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
                         const rIdx = props.index ? row[props.index] : idx;
                         return (
                             <TableRow key={`${rIdx}`}>
+                                {props.startActions
+                                    ? <TableCell className={classes.tableCell}>
+                                        {props.startActions(row)}
+                                    </TableCell>
+                                :null}
                                 {props.rowData.map((cellData, cIdx) => (
                                     <TableCell
                                         align={cellData.align || "left"}

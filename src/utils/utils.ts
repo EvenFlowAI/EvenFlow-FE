@@ -4,3 +4,8 @@ export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
         }
     );
 }
+
+export const getInitials = (name: string) => {
+    const data = name.split(' ').slice(0, 2);
+    return data.map(l => l[0].toUpperCase()).join('');
+}
