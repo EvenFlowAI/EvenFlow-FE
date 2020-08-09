@@ -1,15 +1,14 @@
 import React from "react";
 import {Route, RouteProps, Redirect} from "react-router-dom";
 import {Routes} from "../config/routes";
-import {useAuth} from "../context/auth";
+import {authService} from "../config/requests";
 
 export const PrivateRoute: React.FC<RouteProps> = (
     {component: Component, ...rest}) => {
-    const {tokens: {accessToken}} = useAuth();
     return <Route {...rest} render={props => {
         if (!Component) return null;
         return (
-            accessToken
+            authService.isAuthenticated()
                 ? <Component {...props} />
                 : <Redirect to={{
                     pathname: Routes.Login.Base,

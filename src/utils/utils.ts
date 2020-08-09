@@ -9,3 +9,9 @@ export const getInitials = (name: string) => {
     const data = name.split(' ').slice(0, 2);
     return data.map(l => l[0].toUpperCase()).join('');
 }
+
+const defaultException = "Something went wrong";
+export const getAPIException = (e: any): string => {
+    return e ? e.response?.data?.message || e.message || defaultException : defaultException;
+
+}

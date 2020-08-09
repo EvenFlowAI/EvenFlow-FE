@@ -9,6 +9,16 @@ export type ValidationKeyPairs<U> = {
 }
 
 export interface ITokens {
-    accessToken?: string;
-    refreshToken?: string;
+    accessToken: string;
+    refreshToken: string;
+}
+
+export interface ICredentials {
+    email: string;
+    password: string;
+}
+
+export enum LocalTokens {
+    authToken = 'at',
+    refreshToken = 'rt'
 }
