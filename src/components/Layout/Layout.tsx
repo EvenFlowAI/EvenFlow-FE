@@ -1,7 +1,7 @@
 import React from "react";
 import {SideBar} from "../SideBar/SideBar.";
 import {makeStyles} from "@material-ui/core/styles";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
 import {AdminPage} from "../Admin/AdminPage";
 import {NavBar} from "../NavBar/NavBar";
 import {ContentTitle} from "../Content/ContentTitle/ContentTitle";
@@ -9,6 +9,7 @@ import {Toolbar} from "@material-ui/core";
 import {ContentActions} from "../Content/ContentActions/ContentActions";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {Routes} from "../../config/routes";
+import {PrivateRoute} from "../../utils/Routes";
 
 
 const useStyles = makeStyles(theme => ({
@@ -35,7 +36,7 @@ export const Layout = () => {
                 <ContentActions />
             </TitleContainer>
             <Switch>
-                <Route to={Routes.Admin.Base} component={AdminPage} />
+                <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />
                 <Redirect to={Routes.Admin.Base} />
             </Switch>
         </div>

@@ -1,9 +1,8 @@
 import React from "react";
 import {Table} from "../../UI/Table";
-import {Avatar, IconButton} from "@material-ui/core";
+import {IconButton} from "@material-ui/core";
 import {Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
-import {getInitials} from "../../../utils/utils";
 import {TableAvatar} from "../TableAvatar";
 
 
