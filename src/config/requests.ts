@@ -43,8 +43,8 @@ class AuthService {
     }
 }
 
-export const request = axios.create({
-    baseURL: APIUrl
-});
-
 export const authService = new AuthService();
+export const request = axios.create({
+    baseURL: APIUrl,
+    headers: {Authentication: `Bearer ${authService.getLocalToken()}`}
+});

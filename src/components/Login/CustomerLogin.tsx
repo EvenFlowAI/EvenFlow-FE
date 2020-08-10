@@ -1,6 +1,6 @@
 import {Checkbox, FormControlLabel, Grid, Link} from "@material-ui/core";
 import {TextField} from "../UI/TextField";
-import {Link as RLink} from "react-router-dom";
+import {Link as RLink, useHistory, useLocation} from "react-router-dom";
 import {LockOpen} from "@material-ui/icons";
 import React, {useState} from "react";
 import {LoginHeader} from "./LoginHeader";
@@ -15,6 +15,8 @@ export const CustomerLogin = () => {
     const [loading, setLoading] = useState(false);
     const [credentials, setCredentials] = useState<ICredentials>({email: '', password: ''});
     const {enqueueSnackbar} = useSnackbar();
+    const history = useHistory();
+    const {state: locationState} = useLocation();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setCredentials({...credentials, [name]: value});
@@ -28,6 +30,7 @@ export const CustomerLogin = () => {
         setLoading(true);
         try {
             await authService.login(credentials);
+            history.replace(locationState && locationState.from ? locationState.from : "/");
         } catch (e) {
             enqueueSnackbar(getAPIException(e), {variant: "error"});
         }
