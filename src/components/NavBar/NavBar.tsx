@@ -2,6 +2,8 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {AppBar, Avatar, Toolbar, Typography} from "@material-ui/core";
 import {sideBarWidth} from "../../theme/theme";
+import {authService} from "../../config/requests";
+import { useHistory } from "react-router-dom";
 
 
 const useStyles = makeStyles(theme => ({
@@ -21,20 +23,27 @@ const useStyles = makeStyles(theme => ({
         fontWeight: "bold"
     },
     avatar: {
-        backgroundColor: theme.palette.primary.dark
+        backgroundColor: theme.palette.primary.dark,
+        cursor: "pointer"
     }
 }));
 
 
 export const NavBar = () => {
     const classes = useStyles();
+    const history = useHistory();
+
+    const handleLogout = () => {
+        authService.logout();
+        history.push("/");
+    }
 
     return <>
         <AppBar className={classes.root}>
             <Toolbar>
                 <div className={classes.grow} />
                 <Typography className={classes.name} variant="h4">EvenFlow Admin</Typography>
-                <Avatar className={classes.avatar}>
+                <Avatar className={classes.avatar} onClick={handleLogout}>
                     IM
                 </Avatar>
             </Toolbar>

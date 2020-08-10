@@ -1,6 +1,7 @@
 import axios from "axios";
 import {APIUrl} from "./config";
 import {ICredentials, ITokens, LocalTokens} from "../types/types";
+import { useHistory } from "react-router-dom";
 
 
 class AuthService {
@@ -36,7 +37,7 @@ class AuthService {
         }
     }
 
-    logout(): void {
+    logout (): void {
         localStorage.removeItem(LocalTokens.authToken);
         localStorage.removeItem(LocalTokens.refreshToken);
         this.refreshRequest();
