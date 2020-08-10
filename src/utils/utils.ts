@@ -7,7 +7,7 @@ export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
 
 export const getInitials = (name: string) => {
     const data = name.split(' ').slice(0, 2);
-    return data.map(l => l[0].toUpperCase()).join('');
+    return data.filter(v => !!v).map(l => l[0].toUpperCase()).join('');
 }
 
 const defaultException = "Something went wrong";
