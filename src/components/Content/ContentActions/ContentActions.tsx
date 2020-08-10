@@ -4,6 +4,7 @@ import {Switch, Route} from "react-router-dom";
 import {Routes} from "../../../config/routes";
 import {DealershipActions} from "../../Admin/DealershipGroups/DealershipActions";
 import {EmployeesActions} from "../../Admin/Employees/EmployeesActions";
+import {ServiceCenterActions} from "../../Admin/ServiceCenters/ServiceCenterActions";
 
 
 const useStyles = makeStyles({
@@ -21,6 +22,7 @@ export const ContentActions = () => {
         <Switch>
             <Route path={Routes.Admin.DealershipGroups} component={DealershipActions} />
             <Route path={Routes.Admin.Employees} component={EmployeesActions} />
+            <Route path={Routes.Admin.ServiceCenters} component={ServiceCenterActions} />
         </Switch>
     </div>;
 }
