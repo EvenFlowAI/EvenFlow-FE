@@ -30,11 +30,13 @@ export const CustomerLogin = () => {
         setLoading(true);
         try {
             await authService.login(credentials);
+            // Loading here because of history unmounts component
+            setLoading(false);
             history.replace(locationState && locationState.from ? locationState.from : "/");
         } catch (e) {
             enqueueSnackbar(getAPIException(e), {variant: "error"});
+            setLoading(false);
         }
-        setLoading(false);
     };
 
 
