@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     BaseModal,
     DialogContent,
@@ -77,19 +77,24 @@ const requiredFields: ValidationKeyPairs<IDealershipForm>[] = [
     {field: "mainAddress", message: "Dealership Main Address is required"}
 ];
 
+const initialState: IDealershipForm = {
+    name: "",
+    mainAddress: "",
+    phone: "",
+    email: "",
+    contactPersonEmail: "",
+    contactPersonName: "",
+    contactPersonPhone: ""
+};
+
 
 export const CreateDealershipGroup: React.FC<
     DialogProps> = props => {
 
-    const [data, setData] = useState<IDealershipForm>({
-        name: "",
-        mainAddress: "",
-        phone: "",
-        email: "",
-        contactPersonEmail: "",
-        contactPersonName: "",
-        contactPersonPhone: ""
-    });
+    const [data, setData] = useState<IDealershipForm>({...initialState});
+    useEffect(() => {
+        setData({...initialState});
+    }, [props.open])
 
     const classes = useStyles();
     const dispatch = useDispatch();
