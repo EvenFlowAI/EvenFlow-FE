@@ -5,15 +5,20 @@ export interface IDealershipGroup {
     mainAddress: string;
 }
 
-export interface IDealershipForm extends Partial<IDealershipGroup> {
+export interface IDealershipForm {
     name: string;
     mainAddress: string;
-    phone: string;
+    phoneNumber: string;
+}
+export interface IContactPersonForm {
+    fullName: string;
+    phoneNumber: string;
     email: string;
-    // Contact info
-    contactPersonName: string;
-    contactPersonPhone: string;
-    contactPersonEmail: string;
+}
+
+export interface IDealershipGroupForm {
+    dealership: IDealershipForm;
+    contactPerson: IContactPersonForm;
 }
 
 type AddDealership = {type: "Dealership/Add", payload: IDealershipGroup};

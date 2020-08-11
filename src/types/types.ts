@@ -13,6 +13,10 @@ export interface ITokens {
     refreshToken: string;
 }
 
+export interface IRefreshTokenData {
+    token: string;
+}
+
 export interface ICredentials {
     email: string;
     password: string;
