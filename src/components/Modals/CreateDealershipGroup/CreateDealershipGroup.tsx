@@ -11,7 +11,6 @@ import {
     Divider, Button, Grid, Container
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
-import {useSnackbar} from "notistack";
 import {
     IContactPersonForm,
     IDealershipForm,
@@ -19,12 +18,13 @@ import {
 } from "../../../store/reducers/dealershipGroups/types";
 import {create} from "../../../store/reducers/dealershipGroups/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useValidation} from "../../../utils/hooks";
+import {useException, useValidation} from "../../../utils/hooks";
 import {ValidationKeyPairs} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
 import {AvatarUpload} from "../../UI/AvatarUpload";
 import {makeStyles} from "@material-ui/core/styles";
+import {useSnackbar} from "notistack";
 
 
 const useStyles = makeStyles({
@@ -102,6 +102,7 @@ export const CreateDealershipGroup: React.FC<
     const classes = useStyles();
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
+    const setException = useException();
     const {enqueueSnackbar} = useSnackbar();
     const validate = useValidation(
         requiredFields, {...dealership, ...contactPerson}
@@ -121,9 +122,14 @@ export const CreateDealershipGroup: React.FC<
             return;
         }
         const data: IDealershipGroupForm = {contactPerson, dealership};
-        await dispatch(create(data));
-        enqueueSnackbar("Created", {variant: "success"});
-        props.onClose();
+        try {
+            await dispatch(create(data));
+            enqueueSnackbar("Created", {variant: "success"});
+            props.onClose();
+        } catch (e) {
+            setException(e);
+        }
+
     }
 
     return <BaseModal {...props} onClose={props.onClose}>

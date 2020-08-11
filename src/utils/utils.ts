@@ -13,5 +13,11 @@ export const getInitials = (name: string) => {
 const defaultException = "Something went wrong";
 export const getAPIException = (e: any): string => {
     return e ? e.response?.data?.message || e.message || defaultException : defaultException;
+}
 
+export const pathReplace = (path: string, data?: Record<string, any>): string => {
+    if (!data) return path;
+    const keys = Object.keys(data).map(k => `{${k}}`);
+    const re = new RegExp(keys.join('|'), "gi");
+    return path.replace(re, matched => data[matched.slice(1, -1)] as string)
 }

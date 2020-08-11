@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from "axios";
 import {APIUrl} from "./config";
 import {ICredentials, IRefreshTokenData, ITokens, LocalTokens} from "../types/types";
-import {deflateRawSync} from "zlib";
+import {pathReplace} from "../utils/utils";
 
 
 class AuthService {
@@ -33,7 +33,7 @@ class AuthService {
     async refresh() {
         try {
             const data: IRefreshTokenData =  {token: this.getRefreshToken()};
-            const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Refresh, data);
+            const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Refresh, {data});
             this.setTokens(resp.data);
             this.refreshRequest();
         } catch (e) {
@@ -42,9 +42,9 @@ class AuthService {
         }
     }
 
-    async login(credentials: ICredentials) {
+    async login(data: ICredentials) {
         try {
-            const resp= await Api.call<ITokens>(Api.endpoints.Authentications.Request, credentials);
+            const resp= await Api.call<ITokens>(Api.endpoints.Authentications.Request, {data});
             this.setTokens(resp.data);
             this.refreshRequest()
         } catch (e) {
@@ -63,7 +63,7 @@ class AuthService {
 export const authService = new AuthService();
 export const request = axios.create({
     baseURL: APIUrl,
-    headers: {Authentication: `Bearer ${authService.getLocalToken()}`}
+    headers: {Authorization: `Bearer ${authService.getLocalToken()}`}
 });
 
 
@@ -81,6 +81,13 @@ type TApiRoute = {
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
+    Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll" | "UpdateAddress" | "UploadAvatar", TApiRoute>,
+}
+
+type TOptions = {
+    data?: any,
+    params?: Record<string, any>,
+    urlParams?: Record<string, any>
 }
 
 export class Api {
@@ -99,13 +106,24 @@ export class Api {
         Authentications: {
             Request: {route: "/authentications", method: "post"},
             Refresh: {route: "/authentications/refresh", method: "post"},
+        },
+        Dealerships: {
+            Create: {route: "/dealerships", method: "post"},
+            GetShort: {route: "/dealerships", method: "get"},
+            GetAll: {route: "/dealerships/by-query", method: "post"},
+            Remove: {route: "/dealerships/{id}", method: "delete"},
+            Retrieve: {route: "/dealerships/{id}", method: "get"},
+            Update: {route: "/dealerships/{id}", method: "put"},
+            UpdateAddress: {route: "/dealerships", method: "put"},
+            UploadAvatar: {route: "/dealerships/{id}/avatar", method: "patch"}
         }
     };
-    static async call<RValue=any>(r: TApiRoute, data?: any) {
+    static async call<RValue=any>(r: TApiRoute, options?: TOptions) {
+        const path = pathReplace(r.route, options?.urlParams);
         if (r.method === "post" || r.method === "put" || r.method === "patch") {
-            return request[r.method]<RValue, AxiosResponse<RValue>>(r.route, data);
+            return request[r.method]<RValue, AxiosResponse<RValue>>(path, options?.data);
         } else {
-            return request[r.method]<RValue, AxiosResponse<RValue>>(r.route);
+            return request[r.method]<RValue, AxiosResponse<RValue>>(path);
         }
     }
 }

@@ -3,6 +3,7 @@ import {ThunkAction} from "redux-thunk";
 import {ActionCreator, Dispatch} from "redux";
 import {dealershipGroupsMock} from "./mock";
 import {PromiseTimeout} from "../../../utils/utils";
+import {Api} from "../../../config/requests";
 
 export const loading = (payload: boolean): DealershipActions => ({
     type: "Dealership/Loading", payload
@@ -37,8 +38,14 @@ export const loadAll: ActionCreator<ThunkAction<
 export const create = (data: IDealershipGroupForm) => async (dispatch: Dispatch) => {
     dispatch(saving(true));
 
+    try {
+        const {data: rData} = await Api.call<IDealershipGroup>(Api.endpoints.Dealerships.Create, {data});
+        dispatch(saving(false));
+    } catch (e) {
+        dispatch(saving(false));
+        throw e;
+    }
 
-    dispatch(saving(false));
     // const createdData: IDealershipForm = await PromiseTimeout<IDealershipForm>(data, 500);
     // dispatch(saving(false));
     //

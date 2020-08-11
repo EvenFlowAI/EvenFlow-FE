@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {useSnackbar} from "notistack";
 import {ValidationKeyPairs} from "../types/types";
+import {getAPIException} from "./utils";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -14,6 +15,20 @@ export const useModal = () => {
         setOpen(!isOpen);
     };
     return {isOpen, onClose, onOpen, onToggleOpen};
+}
+
+export function useException() {
+    const {enqueueSnackbar} = useSnackbar();
+    const handler = (e: any) => {
+        if (e && e.response?.data?.errors && e.response.data.errors.length) {
+            for (const error of e.response.data.errors as {field: string; message: string}[]) {
+                enqueueSnackbar(error.message, {variant: "error"});
+            }
+        } else {
+            enqueueSnackbar(getAPIException(e), {variant: "error"})
+        }
+    };
+    return handler;
 }
 
 export function useValidation<U> (
