@@ -123,7 +123,7 @@ export class Api {
         if (r.method === "post" || r.method === "put" || r.method === "patch") {
             return request[r.method]<RValue, AxiosResponse<RValue>>(path, options?.data);
         } else {
-            return request[r.method]<RValue, AxiosResponse<RValue>>(path);
+            return request[r.method]<RValue, AxiosResponse<RValue>>(path, {params: options?.params});
         }
     }
 }

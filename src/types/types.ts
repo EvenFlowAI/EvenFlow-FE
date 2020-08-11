@@ -26,3 +26,8 @@ export enum LocalTokens {
     authToken = 'at',
     refreshToken = 'rt'
 }
+
+export interface PaginatedAPIResponse<T> {
+    result: T[];
+    paging: {numberOfPages: 1, numberOfRecords: 2};
+}

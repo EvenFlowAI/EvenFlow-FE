@@ -1,8 +1,19 @@
-export interface IDealershipGroup {
+export interface IDealershipGroupShort {
+    id: number;
     name: string;
-    serviceCenters: number;
-    employees: number;
     mainAddress: string;
+}
+
+export interface IDealershipGroupExtended extends IDealershipGroupShort {
+    address: {
+        street: string;
+        city: string;
+        state: string;
+        zipCode: string;
+    },
+    "countOfServiceCenters": number,
+    "countOfEmployees": number,
+    avatarPath: string;
 }
 
 export interface IDealershipForm {
@@ -21,10 +32,10 @@ export interface IDealershipGroupForm {
     contactPerson: IContactPersonForm;
 }
 
-type AddDealership = {type: "Dealership/Add", payload: IDealershipGroup};
+type AddDealership = {type: "Dealership/Add", payload: IDealershipGroupExtended};
 type Loading = {type: "Dealership/Loading", payload: boolean;};
 type Saving = {type: "Dealership/Saving", payload: boolean;};
-type GetAllDealerships = {type: "Dealership/GetAll", payload: IDealershipGroup[]};
+type GetAllDealerships = {type: "Dealership/GetAll", payload: IDealershipGroupExtended[]};
 
 export type DealershipActions =
     | AddDealership
@@ -33,7 +44,7 @@ export type DealershipActions =
     | GetAllDealerships;
 
 export type DealershipState = {
-    dealershipList: IDealershipGroup[];
+    dealershipList: IDealershipGroupExtended[];
     loading: boolean;
     saving: boolean;
 }
