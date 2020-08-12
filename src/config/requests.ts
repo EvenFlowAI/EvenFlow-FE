@@ -46,9 +46,9 @@ class AuthService {
 
     async login(data: ICredentials) {
         try {
-            const resp= await Api.call<ITokens>(Api.endpoints.Authentications.Request, {data});
+            const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Request, {data});
             this.setTokens(resp.data);
-            this.refreshRequest()
+            this.refreshRequest();
         } catch (e) {
             console.error(e);
             throw e;
@@ -78,9 +78,10 @@ request.interceptors.response.use(
                 rq.headers['Authorization'] = `Bearer ${authService.getLocalToken()}`;
                 return request(rq);
             } catch (e) {
-                throw e;
+                return Promise.reject(error);
             }
         }
+        return Promise.reject(error);
     }
 )
 
