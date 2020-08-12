@@ -10,7 +10,7 @@ const initialState: DealershipState = {
         numberOfRecords: 0
     },
     pageData: {
-        pageIndex: 1,
+        pageIndex: 0,
         pageSize: defaultRowsPerPage
     }
 };

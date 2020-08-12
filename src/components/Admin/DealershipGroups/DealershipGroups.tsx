@@ -7,6 +7,7 @@ import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import * as dealershipActions from "../../../store/reducers/dealershipGroups/actions";
+import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
 
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
@@ -18,9 +19,12 @@ const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
 
 
 export const DealershipGroups = () => {
-    const {count} = useSelector((state: RootState) => ({
-        count: state.dealershipGroups.paging.numberOfRecords
+    const {count, page} = useSelector((state: RootState) => ({
+        count: state.dealershipGroups.paging.numberOfRecords,
+        page: state.dealershipGroups.pageData.pageIndex
     }));
+
+    const dispatch = useDispatch();
 
     const handleView = (el: IDealershipGroupExtended) => () => alert(`View ${el.name}`);
     const handleEdit = (el: IDealershipGroupExtended) => () => alert(`Update ${el.name}`);
@@ -29,10 +33,8 @@ export const DealershipGroups = () => {
         <IconButton size="small" style={{marginLeft: 8}} onClick={handleEdit(el)}><Edit /></IconButton>
     </>);
     const handleChangePage = (_: React.MouseEvent | null, page: number) => {
-        console.log(page);
+        dispatch(changePageData({pageIndex: page}));
     };
-
-    const dispatch = useDispatch();
 
     React.useEffect(() => {
         dispatch(dealershipActions.loadAll());
@@ -52,6 +54,7 @@ export const DealershipGroups = () => {
         rowData={rowData}
         onChangePage={handleChangePage}
         count={count}
+        page={page}
         index="name"
         actions={viewActions}
     />
