@@ -12,6 +12,7 @@ export interface ITableProps<Data> {
     index: keyof Data;
     rowData: TableRowDataType<Data>[];
     onChangePage?: (e: React.MouseEvent<Element, MouseEvent> | null, page: number) => void;
+    onChangeRowsPerPage?: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
     page?: number;
     count?: number;
     rowsPerPage?: number;

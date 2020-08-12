@@ -60,7 +60,9 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
         props.onChangePage ? props.onChangePage(e, newPage) : setPage(newPage);
     };
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+e.target.value);
+        props.onChangeRowsPerPage
+            ? props.onChangeRowsPerPage(e)
+            : setRowsPerPage(+e.target.value);
         handleChangePage(null, 0);
     }
 

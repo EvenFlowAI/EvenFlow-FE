@@ -19,9 +19,12 @@ const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
 
 
 export const DealershipGroups = () => {
-    const {count, page} = useSelector((state: RootState) => ({
+    const {count, page, data, isLoading, pageSize} = useSelector((state: RootState) => ({
         count: state.dealershipGroups.paging.numberOfRecords,
-        page: state.dealershipGroups.pageData.pageIndex
+        page: state.dealershipGroups.pageData.pageIndex,
+        pageSize: state.dealershipGroups.pageData.pageSize,
+        data: state.dealershipGroups.dealershipList,
+        isLoading: state.dealershipGroups.loading
     }));
 
     const dispatch = useDispatch();
@@ -35,27 +38,26 @@ export const DealershipGroups = () => {
     const handleChangePage = (_: React.MouseEvent | null, page: number) => {
         dispatch(changePageData({pageIndex: page}));
     };
+    const handleChangeRowsPerPage:
+        React.ChangeEventHandler<HTMLInputElement> = e => {
+        dispatch(changePageData({pageSize: +e.target.value}));
+    }
 
     React.useEffect(() => {
         dispatch(dealershipActions.loadAll());
     }, [dispatch]);
 
-    const {data, isLoading} = useSelector((state: RootState) => {
-        return {
-            data: state.dealershipGroups.dealershipList,
-            isLoading: state.dealershipGroups.loading
-        }
-    });
-
-    return <Table
+    return <Table<IDealershipGroupExtended>
         data={data}
-        noDataTitle="No service centers present"
+        noDataTitle="No Dealership Groups are present"
         isLoading={isLoading}
         rowData={rowData}
         onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
         count={count}
         page={page}
-        index="name"
+        rowsPerPage={pageSize}
+        index="id"
         actions={viewActions}
     />
 }
