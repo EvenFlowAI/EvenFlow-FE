@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import * as dealershipActions from "../../../store/reducers/dealershipGroups/actions";
 import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
+import {usePagination} from "../../../utils/hooks";
 
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
@@ -19,13 +20,16 @@ const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
 
 
 export const DealershipGroups = () => {
-    const {count, page, data, isLoading, pageSize} = useSelector((state: RootState) => ({
+    const {count, data, isLoading} = useSelector((state: RootState) => ({
         count: state.dealershipGroups.paging.numberOfRecords,
-        page: state.dealershipGroups.pageData.pageIndex,
-        pageSize: state.dealershipGroups.pageData.pageSize,
         data: state.dealershipGroups.dealershipList,
         isLoading: state.dealershipGroups.loading
     }));
+
+    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+        (s: RootState) => s.dealershipGroups.pageData,
+        changePageData
+    );
 
     const dispatch = useDispatch();
 
@@ -35,13 +39,6 @@ export const DealershipGroups = () => {
         <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
         <IconButton size="small" style={{marginLeft: 8}} onClick={handleEdit(el)}><Edit /></IconButton>
     </>);
-    const handleChangePage = (_: React.MouseEvent | null, page: number) => {
-        dispatch(changePageData({pageIndex: page}));
-    };
-    const handleChangeRowsPerPage:
-        React.ChangeEventHandler<HTMLInputElement> = e => {
-        dispatch(changePageData({pageSize: +e.target.value}));
-    }
 
     React.useEffect(() => {
         dispatch(dealershipActions.loadAll());
@@ -52,10 +49,10 @@ export const DealershipGroups = () => {
         noDataTitle="No Dealership Groups are present"
         isLoading={isLoading}
         rowData={rowData}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onChangePage={changePage}
+        onChangeRowsPerPage={changeRowsPerPage}
         count={count}
-        page={page}
+        page={pageIndex}
         rowsPerPage={pageSize}
         index="id"
         actions={viewActions}

@@ -1,7 +1,9 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {useSnackbar} from "notistack";
-import {ValidationKeyPairs} from "../types/types";
+import {IPageRequest, ValidationKeyPairs} from "../types/types";
 import {getAPIException} from "./utils";
+import {RootState} from "../store/rootReducer";
+import {useDispatch, useSelector} from "react-redux";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -19,7 +21,7 @@ export const useModal = () => {
 
 export function useException() {
     const {enqueueSnackbar} = useSnackbar();
-    const handler = (e: any) => {
+    return (e: any) => {
         if (e && e.response?.data?.errors && e.response.data.errors.length) {
             for (const error of e.response.data.errors as {field: string; message: string}[]) {
                 enqueueSnackbar(error.message, {variant: "error"});
@@ -28,7 +30,6 @@ export function useException() {
             enqueueSnackbar(getAPIException(e), {variant: "error"})
         }
     };
-    return handler;
 }
 
 export function useValidation<U> (
@@ -37,7 +38,7 @@ export function useValidation<U> (
 ) {
     const {enqueueSnackbar} = useSnackbar();
 
-    const validate = () => {
+    return () => {
         const errors: ValidationKeyPairs<U>[] = [];
         for (const field of fields) {
             if (!data[field.field]) {
@@ -50,6 +51,19 @@ export function useValidation<U> (
         }
         return errors;
     };
-
-    return validate;
+}
+type TPageCallback = (state: RootState) => IPageRequest
+type IPageRequestActionCreator = (payload: Partial<IPageRequest>) => void;
+export const usePagination = (cb: TPageCallback, changePageData: IPageRequestActionCreator) => {
+    const {pageIndex, pageSize} = useSelector(cb);
+    const dispatch = useDispatch();
+    const changePage =
+        (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
+            dispatch(changePageData({pageIndex: pageNumber}));
+    }
+    const changeRowsPerPage:
+        React.ChangeEventHandler<HTMLInputElement> = e => {
+        dispatch(changePageData({pageSize: +e.target.value, pageIndex: 0}));
+    }
+    return {pageSize, pageIndex, changePage, changeRowsPerPage};
 }

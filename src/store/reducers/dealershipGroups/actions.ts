@@ -26,14 +26,14 @@ const _changePageData = (payload: Partial<IPageRequest>): DealershipActions => (
 });
 
 export const changePageData: ActionCreator<ThunkAction<
-    Promise<DealershipActions>,
+    void,
     RootState,
-    null,
+    void,
     DealershipActions
     >> = (payload: Partial<IPageRequest>) => {
     return async dispatch => {
         dispatch(_changePageData(payload));
-        return dispatch(loadAll());
+        dispatch(loadAll());
     }
 }
 
@@ -41,9 +41,10 @@ export const changePageData: ActionCreator<ThunkAction<
 //     type: "Dealership/Add", payload
 // });
 
-export const loadAll: ActionCreator<ThunkAction<Promise<DealershipActions>,
+export const loadAll: ActionCreator<ThunkAction<
+    void,
     RootState,
-    null,
+    void,
     DealershipActions>> = () => {
     return async (dispatch: Dispatch, getState) => {
         dispatch(loading(true));
@@ -54,7 +55,7 @@ export const loadAll: ActionCreator<ThunkAction<Promise<DealershipActions>,
             >(Api.endpoints.Dealerships.GetAll, {data: state.dealershipGroups.pageData});
             dispatch(loading(false));
             dispatch(changePaging(paging));
-            return dispatch(getAll(dealerships));
+            dispatch(getAll(dealerships));
         } catch (e) {
             dispatch(loading(false));
             throw e;
@@ -62,9 +63,10 @@ export const loadAll: ActionCreator<ThunkAction<Promise<DealershipActions>,
     };
 };
 
-export const create: ActionCreator<ThunkAction<Promise<DealershipActions>,
+export const create: ActionCreator<ThunkAction<
+    void,
     RootState,
-    null,
+    void,
     DealershipActions>> = (data: IDealershipGroupForm) => async (dispatch) => {
     dispatch(saving(true));
 
@@ -73,7 +75,7 @@ export const create: ActionCreator<ThunkAction<Promise<DealershipActions>,
         // TODO: Talk about full object response not id
         // const {data: rData} = await Api.call<number>(Api.endpoints.Dealerships.Create, {data});
         dispatch(saving(false));
-        return dispatch(loadAll());
+        dispatch(loadAll());
     } catch (e) {
         dispatch(saving(false));
         throw e;
