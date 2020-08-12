@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {
     TableContainer,
     Table as BaseTable,
@@ -46,12 +46,22 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);
 
+    const nPage = useMemo(() => {
+        return props.page !== undefined ? props.page : page;
+    }, [page, props.page]);
+    const nRowsPerPage = useMemo(() => {
+        return props.rowsPerPage || rowsPerPage;
+    }, [rowsPerPage, props.rowsPerPage]);
+    const count = useMemo(() => {
+        return props.count || props.data.length
+    }, [props.data, props.count])
+
     const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {
-        setPage(newPage);
+        props.onChangePage ? props.onChangePage(e, newPage) : setPage(newPage);
     };
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(+e.target.value);
-        setPage(0);
+        handleChangePage(null, 0);
     }
 
     if (props.isLoading) return <Loading />;
@@ -104,11 +114,11 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
             className={classes.pagination}
             classes={{select: classes.select}}
             component="div"
-            count={props.data.length}
-            page={page}
+            count={count}
+            page={nPage}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            rowsPerPage={rowsPerPage}
+            rowsPerPage={nRowsPerPage}
             rowsPerPageOptions={defaultRowsPerPageOptions}
         />
     </>

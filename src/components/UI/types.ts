@@ -1,3 +1,4 @@
+import React from "react";
 
 export type AlignTypes = "inherit" | "left" | "center" | "right" | "justify";
 export type TableRowDataType<DataEl> = {
@@ -10,6 +11,10 @@ export interface ITableProps<Data> {
     data: Data[];
     index: keyof Data;
     rowData: TableRowDataType<Data>[];
+    onChangePage?: (e: React.MouseEvent<Element, MouseEvent> | null, page: number) => void;
+    page?: number;
+    count?: number;
+    rowsPerPage?: number;
     startActions?: (el: Data) => JSX.Element;
     actions?: (el: Data) => JSX.Element;
     noDataTitle?: string;

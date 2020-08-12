@@ -2,7 +2,8 @@ import {DealershipActions, IDealershipGroupExtended, IDealershipGroupForm} from 
 import {ThunkAction} from "redux-thunk";
 import {ActionCreator, Dispatch} from "redux";
 import {Api} from "../../../config/requests";
-import {PaginatedAPIResponse} from "../../../types/types";
+import {IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {RootState} from "../../rootReducer";
 
 export const loading = (payload: boolean): DealershipActions => ({
     type: "Dealership/Loading", payload
@@ -16,21 +17,43 @@ const getAll = (payload: IDealershipGroupExtended[]): DealershipActions => ({
     type: "Dealership/GetAll", payload
 });
 
+const changePaging = (payload: IPagingResponse): DealershipActions => ({
+    type: "Dealership/ChangePaging", payload
+});
+
+const _changePageData = (payload: Partial<IPageRequest>): DealershipActions => ({
+    type: "Dealership/ChangePageData", payload
+});
+
+export const changePageData: ActionCreator<ThunkAction<
+    Promise<DealershipActions>,
+    RootState,
+    null,
+    DealershipActions
+    >> = (payload: Partial<IPageRequest>) => {
+    return async dispatch => {
+        dispatch(_changePageData(payload));
+        return dispatch(loadAll());
+    }
+}
+
 // const add = (payload: IDealershipGroup): DealershipActions => ({
 //     type: "Dealership/Add", payload
 // });
 
 export const loadAll: ActionCreator<ThunkAction<Promise<DealershipActions>,
-    IDealershipGroupExtended,
+    RootState,
     null,
     DealershipActions>> = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: Dispatch, getState) => {
         dispatch(loading(true));
+        const state = getState();
         try {
-            const {data: {result: dealerships}} = await Api.call<
+            const {data: {result: dealerships, paging}} = await Api.call<
                 PaginatedAPIResponse<IDealershipGroupExtended>
-            >(Api.endpoints.Dealerships.GetAll, {data: {pageSize: 10}});
+            >(Api.endpoints.Dealerships.GetAll, {data: state.dealershipGroups.pageData});
             dispatch(loading(false));
+            dispatch(changePaging(paging));
             return dispatch(getAll(dealerships));
         } catch (e) {
             dispatch(loading(false));
@@ -40,7 +63,7 @@ export const loadAll: ActionCreator<ThunkAction<Promise<DealershipActions>,
 };
 
 export const create: ActionCreator<ThunkAction<Promise<DealershipActions>,
-    IDealershipGroupExtended,
+    RootState,
     null,
     DealershipActions>> = (data: IDealershipGroupForm) => async (dispatch) => {
     dispatch(saving(true));

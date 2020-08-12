@@ -32,6 +32,11 @@ export interface IPagingResponse {
     numberOfRecords: number;
 }
 
+export interface IPageRequest {
+    pageIndex: number;
+    pageSize: number;
+}
+
 export interface PaginatedAPIResponse<T> {
     result: T[];
     paging: IPagingResponse;

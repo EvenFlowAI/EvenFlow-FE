@@ -1,3 +1,5 @@
+import {IPageRequest, IPagingResponse} from "../../../types/types";
+
 export interface IDealershipGroupShort {
     id: number;
     name: string;
@@ -36,15 +38,21 @@ type AddDealership = {type: "Dealership/Add", payload: IDealershipGroupExtended}
 type Loading = {type: "Dealership/Loading", payload: boolean;};
 type Saving = {type: "Dealership/Saving", payload: boolean;};
 type GetAllDealerships = {type: "Dealership/GetAll", payload: IDealershipGroupExtended[]};
+type ChangePageData = {type: "Dealership/ChangePageData", payload: Partial<IPageRequest>};
+type ChangePaging = {type: "Dealership/ChangePaging", payload: IPagingResponse};
 
 export type DealershipActions =
     | AddDealership
     | Loading
     | Saving
-    | GetAllDealerships;
+    | GetAllDealerships
+    | ChangePaging
+    | ChangePageData;
 
 export type DealershipState = {
     dealershipList: IDealershipGroupExtended[];
     loading: boolean;
     saving: boolean;
+    paging: IPagingResponse;
+    pageData: IPageRequest
 }

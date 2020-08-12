@@ -18,12 +18,19 @@ const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
 
 
 export const DealershipGroups = () => {
+    const {count} = useSelector((state: RootState) => ({
+        count: state.dealershipGroups.paging.numberOfRecords
+    }));
+
     const handleView = (el: IDealershipGroupExtended) => () => alert(`View ${el.name}`);
     const handleEdit = (el: IDealershipGroupExtended) => () => alert(`Update ${el.name}`);
     const viewActions = (el: IDealershipGroupExtended) => (<>
         <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
         <IconButton size="small" style={{marginLeft: 8}} onClick={handleEdit(el)}><Edit /></IconButton>
     </>);
+    const handleChangePage = (_: React.MouseEvent | null, page: number) => {
+        console.log(page);
+    };
 
     const dispatch = useDispatch();
 
@@ -43,6 +50,8 @@ export const DealershipGroups = () => {
         noDataTitle="No service centers present"
         isLoading={isLoading}
         rowData={rowData}
+        onChangePage={handleChangePage}
+        count={count}
         index="name"
         actions={viewActions}
     />
