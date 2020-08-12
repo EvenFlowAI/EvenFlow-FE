@@ -25,8 +25,10 @@ class AuthService {
         const token = this.getLocalToken();
         if (token) {
             request.defaults.headers['Authorization'] = `Bearer ${token}`;
+            request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         } else {
             delete request.defaults.headers['Authorization'];
+            delete request.defaults.headers.common['Authorization'];
         }
     }
 
@@ -65,6 +67,22 @@ export const request = axios.create({
     baseURL: APIUrl,
     headers: {Authorization: `Bearer ${authService.getLocalToken()}`}
 });
+
+request.interceptors.response.use(
+    resp => resp,
+    async error => {
+        if (error?.response?.status === 401 && authService.getRefreshToken()) {
+            const rq = error.config;
+            try {
+                await authService.refresh();
+                rq.headers['Authorization'] = `Bearer ${authService.getLocalToken()}`;
+                return request(rq);
+            } catch (e) {
+                throw e;
+            }
+        }
+    }
+)
 
 
 type TApiRoute = {
