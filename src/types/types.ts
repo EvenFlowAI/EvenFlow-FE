@@ -27,7 +27,12 @@ export enum LocalTokens {
     refreshToken = 'rt'
 }
 
+export interface IPagingResponse {
+    numberOfPages: number;
+    numberOfRecords: number;
+}
+
 export interface PaginatedAPIResponse<T> {
     result: T[];
-    paging: {numberOfPages: 1, numberOfRecords: 2};
+    paging: IPagingResponse;
 }
