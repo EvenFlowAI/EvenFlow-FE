@@ -1,52 +1,60 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {TableRowDataType} from "../../UI/types";
 import {IconButton} from "@material-ui/core";
 import {Visibility} from "@material-ui/icons";
 import {TableAvatar} from "../TableAvatar";
 import {Table} from "../../UI/Table";
+import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {loadAll} from "../../../store/reducers/serviceCenters/actions";
+import {usePagination} from "../../../utils/hooks";
+import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
 
-interface ServiceCenter {
-    name: string; dealershipGroup: string; serviceCenterAddress: string; bays: number;
-}
 
-const data: ServiceCenter[] = [
-    {name: "Honda Downtown", dealershipGroup: "Honda",
-        serviceCenterAddress: "3891 Ranchview, Chicago, 60600", bays: 6},
-    {name: "Audi Kardan center", dealershipGroup: "Audi",
-        serviceCenterAddress: "2715 Ash Dr. San Jose, Chicago, 60601", bays: 5},
-    {name: "Shtirlitcz BMW Håus", dealershipGroup: "BMW",
-        serviceCenterAddress: "2715 Ash Dr. San Jose, Chicago, 60231", bays: 10},
-    {name: "Honda North city", dealershipGroup: "Honda",
-        serviceCenterAddress: "3891 Ranchview, Chicago, 60600", bays: 2},
-    {name: "Audi car downtown center", dealershipGroup: "Audi",
-        serviceCenterAddress: "2715 Ash Dr. San Jose, Chicago, 60601", bays: 11},
-    {name: "BMW US Bavaria center", dealershipGroup: "BMW",
-        serviceCenterAddress: "2715 Ash Dr. San Jose, Chicago, 60231", bays: 1},
-];
-
-const rowData: TableRowDataType<ServiceCenter>[] = [
-    {val: (el: ServiceCenter) => el.dealershipGroup, header: "Dealership group"},
-    {val: (el: ServiceCenter) => el.name, header: "Service center name"},
-    {val: (el: ServiceCenter) => el.serviceCenterAddress, header: "Service center address"},
-    {val: (el: ServiceCenter) => el.bays.toString(), header: "Bays", align: "center"},
+const rowData: TableRowDataType<IServiceCenterExtended>[] = [
+    {val: (el: IServiceCenterExtended) => el.dealership.name, header: "Dealership group"},
+    {val: (el: IServiceCenterExtended) => el.name, header: "Service center name"},
+    {val: (el: IServiceCenterExtended) => el.mainAddress, header: "Service center address"},
+    {val: (el: IServiceCenterExtended) => el.countOfBays.toString(), header: "Bays", align: "center"},
 ];
 
 export const ServiceCenters = () => {
-    const handleView = (el: ServiceCenter) => () => alert(`View ${el.name}`);
-    const viewActions = (el: ServiceCenter) => (
+    const {data, loading, count} = useSelector((state: RootState) => ({
+        data: state.serviceCenters.serviceCenters,
+        loading: state.serviceCenters.loading,
+        count: state.serviceCenters.paging.numberOfRecords
+    }));
+    const dispatch = useDispatch();
+    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+        (s: RootState) => s.dealershipGroups.pageData,
+        changePageData
+    );
+
+    useEffect(() => {
+        dispatch(loadAll())
+    }, [dispatch])
+
+    const handleView = (el: IServiceCenterExtended) => () => alert(`View ${el.name}`);
+    const viewActions = (el: IServiceCenterExtended) => (
         <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
     );
-    const startActions = (el: ServiceCenter) => (
+    const startActions = (el: IServiceCenterExtended) => (
         <TableAvatar name={el.name} />
     )
 
-    return <Table
+    return <Table<IServiceCenterExtended>
         data={data}
-        noDataTitle="No employees present"
-        isLoading={false}
+        noDataTitle="No Service Centers present"
+        isLoading={loading}
         rowData={rowData}
+        onChangePage={changePage}
+        onChangeRowsPerPage={changeRowsPerPage}
+        count={count}
+        page={pageIndex}
+        rowsPerPage={pageSize}
         startActions={startActions}
-        index="name"
+        index="id"
         actions={viewActions}
     />
 }
