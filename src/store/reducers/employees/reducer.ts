@@ -24,6 +24,8 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
             return {...state, employeesList: action.payload};
         case "Employees/ChangePaging":
             return {...state, paging: action.payload};
+        case "Employees/ChangePageData":
+            return {...state, pageData: {...state.pageData, ...action.payload}};
         default:
             return state;
     }

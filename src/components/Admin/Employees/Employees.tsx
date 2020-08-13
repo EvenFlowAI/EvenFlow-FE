@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAll} from "../../../store/reducers/employees/actions";
 import {usePagination} from "../../../utils/hooks";
-import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
+import {changePageData} from "../../../store/reducers/employees/actions";
 
 const rowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
@@ -26,7 +26,7 @@ export const Employees = () => {
         count: state.employees.paging.numberOfRecords
     }));
     const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
-        (s: RootState) => s.dealershipGroups.pageData,
+        (s: RootState) => s.employees.pageData,
         changePageData
     );
     const dispatch = useDispatch();
