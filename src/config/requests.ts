@@ -100,8 +100,12 @@ type TApiRoute = {
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
-    Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll" | "UpdateAddress" | "UploadAvatar", TApiRoute>,
-    Users: Record<"GetAll", TApiRoute>,
+    Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
+        | "UpdateAddress" | "UploadAvatar", TApiRoute>,
+    Employees: Record<"Create" | "Update", TApiRoute>,
+    ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
+        | "GetAll" | "Avatar", TApiRoute>,
+    Users: Record<"GetAll" | "Create" | "Remove" | "Avatar", TApiRoute>,
 }
 
 type TOptions = {
@@ -137,8 +141,25 @@ export class Api {
             UpdateAddress: {route: "/dealerships", method: "put"},
             UploadAvatar: {route: "/dealerships/{id}/avatar", method: "patch"}
         },
+        Employees: {
+            Create: {route: "/employees", method: "post"},
+            Update: {route: "/employees/{id}", method: "put"},
+        },
+        ServiceCenters: {
+            Create: {route: "/service-centers", method: "post"},
+            GetShort: {route: "/service-centers", method: "get"},
+            Update: {route: "/service-centers/{id}", method: "put"},
+            Remove: {route: "/service-centers/{id}", method: "delete"},
+            Retrieve: {route: "/service-centers/{id}", method: "get"},
+            UpdateAddress: {route: "/service-centers/{id}/address", method: "put"},
+            GetAll: {route: "/service-centers/by-query", method: "post"},
+            Avatar: {route: "/service-centers/{id}/avatar", method: "patch"},
+        },
         Users: {
-            GetAll: {route: "/users/by-query", method: "post"}
+            GetAll: {route: "/users/by-query", method: "post"},
+            Create: {route: "/users", method: "post"},
+            Remove: {route: "/users/{id}", method: "delete"},
+            Avatar: {route: "/users/{id}/avatar", method: "patch"}
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {
