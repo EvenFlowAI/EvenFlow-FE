@@ -1,6 +1,6 @@
 import {IDealershipGroupExtended} from "../dealershipGroups/types";
 import {IServiceCenter} from "../serviceCenters/types";
-import {TChangePagingGeneric} from "../utils";
+import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
 import {IPageRequest} from "../../../types/types";
 
 export interface IEmployeeInfo {
@@ -27,7 +27,7 @@ export interface IEmployee {
 
 export type TGetAll = {type: "Employees/GetAll"; payload: IEmployee[]};
 export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
-export type TChangePageData = {type: "Employees/ChangePageData", payload: Partial<IPageRequest>};
+export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
 
 export type TEmployeeActions =
     | TChangePageData
