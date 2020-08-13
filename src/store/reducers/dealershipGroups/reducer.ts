@@ -1,18 +1,12 @@
 import {DealershipActions, DealershipState} from "./types";
-import {defaultRowsPerPage} from "../../../config/config";
+import {defaultPageData, defaultPaging} from "../defaultInitials";
 
 const initialState: DealershipState = {
     dealershipList: [],
     loading: false,
     saving: false,
-    paging: {
-        numberOfPages: 0,
-        numberOfRecords: 0
-    },
-    pageData: {
-        pageIndex: 0,
-        pageSize: defaultRowsPerPage
-    }
+    paging: {...defaultPaging},
+    pageData: {...defaultPageData}
 };
 
 export const dealershipGroupsReducer =(

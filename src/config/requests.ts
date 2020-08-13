@@ -101,6 +101,7 @@ type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll" | "UpdateAddress" | "UploadAvatar", TApiRoute>,
+    Users: Record<"GetAll", TApiRoute>,
 }
 
 type TOptions = {
@@ -135,6 +136,9 @@ export class Api {
             Update: {route: "/dealerships/{id}", method: "put"},
             UpdateAddress: {route: "/dealerships", method: "put"},
             UploadAvatar: {route: "/dealerships/{id}/avatar", method: "patch"}
+        },
+        Users: {
+            GetAll: {route: "/users/by-query", method: "post"}
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {

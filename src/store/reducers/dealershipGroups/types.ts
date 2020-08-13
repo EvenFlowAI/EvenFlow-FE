@@ -6,15 +6,17 @@ export interface IDealershipGroupShort {
     mainAddress: string;
 }
 
+export interface IAddress {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+}
+
 export interface IDealershipGroupExtended extends IDealershipGroupShort {
-    address: {
-        street: string;
-        city: string;
-        state: string;
-        zipCode: string;
-    },
-    "countOfServiceCenters": number,
-    "countOfEmployees": number,
+    address: IAddress;
+    "countOfServiceCenters": number;
+    "countOfEmployees": number;
     avatarPath: string;
 }
 
