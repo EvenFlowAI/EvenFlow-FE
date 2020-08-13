@@ -3,7 +3,7 @@ import {IPageRequest, IPagingResponse} from "../../../types/types";
 export interface IDealershipGroupShort {
     id: number;
     name: string;
-    mainAddress: string;
+    avatarPath: string;
 }
 
 export interface IAddress {
@@ -15,9 +15,9 @@ export interface IAddress {
 
 export interface IDealershipGroupExtended extends IDealershipGroupShort {
     address: IAddress;
-    "countOfServiceCenters": number;
-    "countOfEmployees": number;
-    avatarPath: string;
+    countOfServiceCenters: number;
+    countOfEmployees: number;
+    mainAddress: string;
 }
 
 export interface IDealershipForm {

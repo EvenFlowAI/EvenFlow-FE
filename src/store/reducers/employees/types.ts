@@ -26,10 +26,14 @@ export interface IEmployee {
 }
 
 export type TGetAll = {type: "Employees/GetAll"; payload: IEmployee[]};
+export type TLoading = {type: "Employees/Loading"; payload: boolean};
+export type TSaving = {type: "Employees/Saving"; payload: boolean};
 export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
 export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
 
 export type TEmployeeActions =
+    | TSaving
+    | TLoading
     | TChangePageData
     | TChangePaging
     | TGetAll;

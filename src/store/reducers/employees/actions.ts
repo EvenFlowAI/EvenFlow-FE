@@ -2,7 +2,6 @@ import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
-import {loading} from "../dealershipGroups/actions";
 import {Api} from "../../../config/requests";
 import {IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {IEmployee, TEmployeeActions} from "./types";
@@ -24,6 +23,12 @@ export const changePageData: ActionCreator<ThunkAction<
         dispatch(loadAll());
     }
 }
+export const loading = (payload: boolean): TEmployeeActions => ({
+    payload, type: "Employees/Loading"
+});
+export const saving = (payload: boolean): TEmployeeActions => ({
+    payload, type: "Employees/Saving"
+})
 
 export const loadAll: ActionCreator<ThunkAction<
         void, RootState, void, Action
