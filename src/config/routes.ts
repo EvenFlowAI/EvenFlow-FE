@@ -9,8 +9,13 @@ enum LoginRoutes {
     Base = "/login",
 }
 
+enum EmailVerificationRoutes {
+    Base= "/email-verification"
+}
+
 export const Routes = {
     Home: "/",
     Admin: AdminRoutes,
-    Login: LoginRoutes
+    Login: LoginRoutes,
+    EmailVerification: EmailVerificationRoutes,
 }
