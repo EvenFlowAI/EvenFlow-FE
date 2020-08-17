@@ -42,11 +42,13 @@ type Saving = {type: "Dealership/Saving", payload: boolean;};
 type GetAllDealerships = {type: "Dealership/GetAll", payload: IDealershipGroupExtended[]};
 type ChangePageData = {type: "Dealership/ChangePageData", payload: Partial<IPageRequest>};
 type ChangePaging = {type: "Dealership/ChangePaging", payload: IPagingResponse};
+type Remove = {type: "Dealership/Remove", payload: number};
 
 export type DealershipActions =
     | AddDealership
     | Loading
     | Saving
+    | Remove
     | GetAllDealerships
     | ChangePaging
     | ChangePageData;

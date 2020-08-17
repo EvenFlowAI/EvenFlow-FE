@@ -17,6 +17,8 @@ export const dealershipGroupsReducer =(
             return {...state, dealershipList: [
                 action.payload, ...state.dealershipList
             ]};
+        case "Dealership/Remove":
+            return {...state, dealershipList: state.dealershipList.filter(d => d.id !== action.payload)};
         case "Dealership/GetAll":
             return {...state, dealershipList: action.payload};
         case "Dealership/Loading":

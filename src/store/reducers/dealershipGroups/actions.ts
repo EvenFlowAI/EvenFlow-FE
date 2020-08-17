@@ -81,3 +81,21 @@ export const create: ActionCreator<ThunkAction<
         throw e;
     }
 }
+
+
+const _remove = (payload: number): DealershipActions => ({
+    type: "Dealership/Remove",
+    payload
+})
+export const remove: ActionCreator<ThunkAction<
+    void,
+    RootState,
+    void,
+    DealershipActions>> = (id: number) => async dispatch => {
+    try {
+        await Api.call(Api.endpoints.Dealerships.Remove, {urlParams: {id}})
+        dispatch(_remove(id));
+    } catch (e) {
+        throw e;
+    }
+}
