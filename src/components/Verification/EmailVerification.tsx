@@ -48,7 +48,7 @@ export const EmailVerification: React.FC = () => {
 
     const params = new URLSearchParams(search);
     const token = params.get('token');
-    const userId = params.get('id');
+    const userId = params.get('userId');
 
     return <LoginContainer>
         <LoginHeader title="Set your password" />
