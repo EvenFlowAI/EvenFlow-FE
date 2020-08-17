@@ -26,10 +26,19 @@ export function useException() {
             for (const error of e.response.data.errors as {field: string; message: string}[]) {
                 enqueueSnackbar(error.message, {variant: "error"});
             }
+        } else if (typeof e === "string") {
+            enqueueSnackbar(e, {variant: "error"});
         } else {
-            enqueueSnackbar(getAPIException(e), {variant: "error"})
+            enqueueSnackbar(getAPIException(e), {variant: "error"});
         }
     };
+}
+type TVariant = "default" | "warning" | "success" | "error" | "info";
+export function useMessage() {
+    const {enqueueSnackbar} = useSnackbar();
+    return (message: string, variant?: TVariant) => {
+        enqueueSnackbar(message, {variant: variant || "success"})
+    }
 }
 
 export function useValidation<U> (

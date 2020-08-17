@@ -6,6 +6,8 @@ import {ForgotPassword} from "./ForgotPassword";
 import {LoginSideBar} from "./LoginSideBar";
 import {ResetPassword} from "./ResetPassword";
 import {loginTheme} from "../../theme/theme";
+import {Routes} from "../../config/routes";
+import {EmailVerification} from "../Verification/EmailVerification";
 
 export const Login = () => {
     return <ThemeProvider theme={loginTheme}>
@@ -15,9 +17,10 @@ export const Login = () => {
                 <Grid container alignItems="center" justify="center" style={{height: "100%"}}>
                     <Grid item xs={6}>
                         <Switch>
-                            <Route path="/login" exact component={CustomerLogin}/>
-                            <Route path="/login/forgot-password" component={ForgotPassword}/>
-                            <Route path="/login/reset-password" component={ResetPassword}/>
+                            <Route path={Routes.Login.Base} exact component={CustomerLogin}/>
+                            <Route path={Routes.Login.ForgotPassword} component={ForgotPassword}/>
+                            <Route path={Routes.Login.ResetPassword} component={ResetPassword}/>
+                            <Route path={Routes.Account.Verification} component={EmailVerification} />
                             <Redirect to="/login"/>
                         </Switch>
                     </Grid>

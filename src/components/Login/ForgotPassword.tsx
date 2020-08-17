@@ -5,19 +5,12 @@ import {LoginHeader} from "./LoginHeader";
 import {LoginTextContent} from "./LoginTextContent";
 import {TextField} from "../UI/TextField";
 import {LoginButton} from "./LoginButton";
-import {Link, Typography, LinkProps} from "@material-ui/core";
-import {Link as BLink, useHistory} from "react-router-dom";
+import {Typography} from "@material-ui/core";
+import {useHistory} from "react-router-dom";
+import {BackLink} from "./UI";
+import {Routes} from "../../config/routes";
 
 const content = "Enter the email you registered with and we will send you a link to reset your password";
-
-
-const BackLink: React.FC<LinkProps & {to: string}> = props => {
-    return <Link
-        style={{fontWeight: "bold", textTransform: "uppercase"}}
-        component={BLink}
-        to={props.to}
-    >{props.children}</Link>;
-};
 
 
 const messageContent = (
@@ -56,7 +49,7 @@ const ForgotPasswordForm = (props: FormProps) => {
         <LoginButton onClick={props.onSubmit}>Send Email</LoginButton>
         <Typography variant="body1" style={{marginTop: 20}}>
             Back to&nbsp;
-            <BackLink to='/login'>Sign In</BackLink>
+            <BackLink to={Routes.Login.Base}>Sign In</BackLink>
         </Typography>
     </LoginContainer>;
 };
