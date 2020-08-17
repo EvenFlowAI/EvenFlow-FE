@@ -1,5 +1,6 @@
 import React, {useCallback} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Button} from "@material-ui/core";
+import {BaseModal, DialogContent, DialogTitle, DialogActions} from '../Modals/BaseModal';
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {useConfirm} from "../../utils/hooks";
@@ -24,7 +25,7 @@ export const ConfirmDialog: React.FC = props => {
     if (!payload)
         return null;
 
-    return <Dialog
+    return <BaseModal
         open={open}
         onClose={closeConfirm}
     >
@@ -38,5 +39,5 @@ export const ConfirmDialog: React.FC = props => {
                 {payload.confirmContent || "Confirm"}
             </Button>
         </DialogActions>
-    </Dialog>
+    </BaseModal>
 };

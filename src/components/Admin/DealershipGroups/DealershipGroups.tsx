@@ -1,7 +1,7 @@
 import React from "react";
 import {Table} from "../../UI/Table";
 import {IconButton} from "@material-ui/core";
-import {Edit, Visibility} from "@material-ui/icons";
+import {Edit, DeleteForever, Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -37,7 +37,8 @@ export const DealershipGroups = () => {
     const showMessage = useMessage();
 
     const handleView = (el: IDealershipGroupExtended) => () => alert(`View ${el.name}`);
-    const handleEdit = (el: IDealershipGroupExtended) => () => askConfirm({
+    const handleEdit = (el: IDealershipGroupExtended) => () => alert(`Edit ${el.name}`);
+    const handleRemoveAction = (el: IDealershipGroupExtended) => () => askConfirm({
         content: `Are you sure want to remove dealership group ${el.name}?`,
         title: "Remove Dealership",
         onConfirm: async () => {
@@ -56,6 +57,7 @@ export const DealershipGroups = () => {
     const viewActions = (el: IDealershipGroupExtended) => (<>
         <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
         <IconButton size="small" style={{marginLeft: 8}} onClick={handleEdit(el)}><Edit /></IconButton>
+        <IconButton size="small" style={{marginLeft: 8}} onClick={handleRemoveAction(el)}><DeleteForever /></IconButton>
     </>);
 
     React.useEffect(() => {
