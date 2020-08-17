@@ -6,10 +6,12 @@ import {Switch, Route} from 'react-router-dom';
 import {Layout} from "./components/Layout/Layout";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
+import { ConfirmDialog } from './components/UI/ConfirmDialog';
 
 const App = () => {
     return (
         <Container component="main" maxWidth={false} disableGutters style={{height: "100vh"}}>
+            <ConfirmDialog />
             <Switch>
                 <Route path={Routes.Login.Base} component={Login} />
                 <Route path={Routes.Account.Verification} component={Login} />

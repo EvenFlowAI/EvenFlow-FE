@@ -4,6 +4,8 @@ import {IPageRequest, ValidationKeyPairs} from "../types/types";
 import {getAPIException} from "./utils";
 import {RootState} from "../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
+import {closeConfirmModal, openConfirmModal} from "../store/reducers/modals/actions";
+import {TConfirmModalPayload} from "../store/reducers/modals/types";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -17,6 +19,14 @@ export const useModal = () => {
         setOpen(!isOpen);
     };
     return {isOpen, onClose, onOpen, onToggleOpen};
+}
+
+export function useConfirm () {
+    const dispatch = useDispatch();
+    return {
+        closeConfirm: () => dispatch(closeConfirmModal()),
+        askConfirm: (payload: TConfirmModalPayload) => dispatch(openConfirmModal(payload))
+    };
 }
 
 export function useException() {
