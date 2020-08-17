@@ -1,7 +1,6 @@
 import {IDealershipGroupExtended} from "../dealershipGroups/types";
 import {IServiceCenter} from "../serviceCenters/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
-import {IPageRequest} from "../../../types/types";
 
 export interface IEmployeeInfo {
     hourlyRate: number;
@@ -11,7 +10,7 @@ export interface IEmployeeInfo {
 }
 
 export interface IEmployee {
-    dealership: IDealershipGroupExtended;
+    dealership?: IDealershipGroupExtended;
     serviceCenter: IServiceCenter;
     employeeInfo: IEmployeeInfo;
     id: string;

@@ -98,7 +98,7 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
                                         align={cellData.align || "left"}
                                         className={classes.tableCell}
                                         key={`${rIdx}_${cIdx}`}>
-                                        {cellData.val(row)}
+                                        {cellData.val(row) || '-'}
                                     </TableCell>
                                 ))}
                                 {props.actions

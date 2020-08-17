@@ -13,8 +13,8 @@ import {changePageData} from "../../../store/reducers/employees/actions";
 
 const rowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
-    {val: (el: IEmployee) => el.dealership.name, header: "Dealership group"},
-    {val: (el: IEmployee) => el.dealership.mainAddress, header: "Service center address"},
+    {val: (el: IEmployee) => el?.dealership?.name, header: "Dealership group"},
+    {val: (el: IEmployee) => el?.dealership?.mainAddress, header: "Service center address"},
     {val: (el: IEmployee) => el.role, header: "Role"},
 ];
 
