@@ -10,7 +10,6 @@ import {useCurrentUser} from "../../utils/hooks";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
-    console.log(currentUser);
 
     return <ContentContainer>
         <Switch>
@@ -21,7 +20,7 @@ export const AdminPage = () => {
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser ? currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
-                : <Redirect to={Routes.Admin.Employees} /> : null}
+                : <Redirect to={Routes.Admin.ServiceCenters} /> : null}
         </Switch>
     </ContentContainer>;
 }

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 import {Table} from "../../UI/Table";
 import {IconButton} from "@material-ui/core";
 import {Visibility} from "@material-ui/icons";
@@ -8,14 +8,22 @@ import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAll} from "../../../store/reducers/employees/actions";
-import {usePagination} from "../../../utils/hooks";
+import {useCurrentUser, usePagination} from "../../../utils/hooks";
 import {changePageData} from "../../../store/reducers/employees/actions";
 
-const rowData: TableRowDataType<IEmployee>[] = [
+const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
     {val: (el: IEmployee) => el?.dealership?.name, header: "Dealership group"},
     {val: (el: IEmployee) => el?.dealership?.mainAddress, header: "Service center address"},
     {val: (el: IEmployee) => el.role, header: "Role"},
+];
+
+const AdminRowData: TableRowDataType<IEmployee>[] = [
+    {val: el => el.fullName, header: "Name"},
+    {val: el => el.serviceCenter?.name || '-', header: "Service Center"},
+    {val: el => el.serviceCenter?.mainAddress || '-', header: "Service center Address"},
+    {val: el => el.role, header: "Role"},
+    {val: el => el.phoneNumber, header: "Phone Number"}
 ];
 
 
@@ -32,7 +40,12 @@ export const Employees = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(loadAll());
-    }, [dispatch])
+    }, [dispatch]);
+    const currentUser = useCurrentUser();
+
+    const rowData = useMemo<TableRowDataType<IEmployee>[]>(() => {
+        return currentUser?.isSuperUser ? SURowData : AdminRowData;
+    }, [currentUser]);
 
     const handleView = (el: IEmployee) => () => alert(`View ${el.fullName}`);
     const viewActions = (el: IEmployee) => (
