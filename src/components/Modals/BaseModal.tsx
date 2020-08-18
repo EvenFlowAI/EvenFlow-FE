@@ -8,10 +8,11 @@ import {
     DialogTitleProps,
     IconButton,
     Typography,
-    DialogContentProps, DialogActionsProps
+    DialogContentProps, DialogActionsProps, Container
 } from "@material-ui/core";
 import {Close} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
+import {AvatarUpload} from "../UI/AvatarUpload";
 
 const useStyles = makeStyles({
     root: {
@@ -46,6 +47,11 @@ const useStyles = makeStyles({
         position: "absolute",
         top: 0,
         right: 0
+    },
+    avatarWrapper: {
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: 38
     }
 });
 
@@ -85,4 +91,11 @@ export const DialogContentTitle: React.FC<{title: string}> = props => {
         variant="h4">
         {props.title}
     </Typography>;
+}
+
+export const AvatarContainer: React.FC = () => {
+    const classes = useStyles();
+    return <Container className={classes.avatarWrapper}>
+        <AvatarUpload />
+    </Container>
 }

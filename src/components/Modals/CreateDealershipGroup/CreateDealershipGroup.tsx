@@ -4,11 +4,11 @@ import {
     DialogContent,
     DialogContentTitle,
     DialogTitle,
-    DialogActions
+    DialogActions, AvatarContainer
 } from "../BaseModal";
 import {DialogProps} from "../types";
 import {
-    Divider, Button, Grid, Container
+    Divider, Button, Grid
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {
@@ -22,18 +22,8 @@ import {useException, useValidation} from "../../../utils/hooks";
 import {ValidationKeyPairs} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
-import {AvatarUpload} from "../../UI/AvatarUpload";
-import {makeStyles} from "@material-ui/core/styles";
 import {useSnackbar} from "notistack";
 
-
-const useStyles = makeStyles({
-    avatarWrapper: {
-        display: "flex",
-        justifyContent: "center",
-        marginBottom: 38
-    }
-});
 
 type KeyPair<U> = {
     name: keyof U,
@@ -99,7 +89,6 @@ export const CreateDealershipGroup: React.FC<
         setCP({...initialCPState});
     }, [props.open])
 
-    const classes = useStyles();
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
     const setException = useException();
@@ -135,9 +124,7 @@ export const CreateDealershipGroup: React.FC<
     return <BaseModal {...props} onClose={props.onClose}>
         <DialogTitle onClose={props.onClose}>New dealership group</DialogTitle>
         <DialogContent>
-            <Container className={classes.avatarWrapper}>
-                <AvatarUpload />
-            </Container>
+            <AvatarContainer />
 
             <DialogContentTitle
                 title="Dealership group info"
