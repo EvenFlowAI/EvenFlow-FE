@@ -6,6 +6,7 @@ import {RootState} from "../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {closeConfirmModal, openConfirmModal} from "../store/reducers/modals/actions";
 import {TConfirmModalPayload} from "../store/reducers/modals/types";
+import {ICurrentUser} from "../store/reducers/users/types";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -27,6 +28,12 @@ export function useConfirm () {
         closeConfirm: () => dispatch(closeConfirmModal()),
         askConfirm: (payload: TConfirmModalPayload) => dispatch(openConfirmModal(payload))
     };
+}
+
+export const useCurrentUser = (): ICurrentUser | undefined => {
+    const currentUser = useSelector((state: RootState) => state.users.currentUser);
+    console.log('cu', currentUser);
+    return currentUser;
 }
 
 export function useException() {

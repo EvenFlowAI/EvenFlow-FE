@@ -31,7 +31,7 @@ export const Layout = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getCurrentUser());
-    })
+    }, [dispatch]);
 
     return <div className={classes.root}>
         <SideBar />

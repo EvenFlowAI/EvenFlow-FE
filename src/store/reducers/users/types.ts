@@ -9,6 +9,7 @@ export interface ICurrentUser {
     phoneNumber: string;
     emailConfirmed: boolean;
     avatarPath: string;
+    isSuperUser: boolean;
 }
 
 
