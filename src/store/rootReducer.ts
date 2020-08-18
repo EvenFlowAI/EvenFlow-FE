@@ -1,5 +1,5 @@
 import {combineReducers} from "@reduxjs/toolkit";
-import {usersReducer} from "./reducers/user";
+import {usersReducer} from "./reducers/users/user";
 import {dealershipGroupsReducer} from "./reducers/dealershipGroups/reducer";
 import {employeesReducer} from "./reducers/employees/reducer";
 import {serviceCenterReducer} from "./reducers/serviceCenters/reducer";

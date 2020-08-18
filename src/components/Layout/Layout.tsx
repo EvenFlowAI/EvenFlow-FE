@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {SideBar} from "../SideBar/SideBar.";
 import {makeStyles} from "@material-ui/core/styles";
 import { Redirect, Switch } from "react-router-dom";
@@ -10,6 +10,8 @@ import {ContentActions} from "../Content/ContentActions/ContentActions";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";
+import {useDispatch} from "react-redux";
+import {getCurrentUser} from "../../store/reducers/users/actions";
 
 
 const useStyles = makeStyles(theme => ({
@@ -26,6 +28,11 @@ const useStyles = makeStyles(theme => ({
 
 export const Layout = () => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(getCurrentUser());
+    })
+
     return <div className={classes.root}>
         <SideBar />
         <NavBar />
