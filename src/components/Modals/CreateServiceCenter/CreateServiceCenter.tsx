@@ -1,15 +1,18 @@
 import React from "react";
 import {AvatarContainer, BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {MenuItem, Select} from "@material-ui/core";
 import {States} from "../../../config/constants";
+import {Autocomplete} from "@material-ui/lab";
+import {TextField} from "../../UI/TextField";
 
 
+const states = Object.keys(States)
 const ServiceCenterForm: React.FC = () => {
     return <form>
-        <Select>
-            {(Object.keys(States).map(state => <MenuItem key={state} value={state}>{state}</MenuItem>))}
-        </Select>
+        <Autocomplete
+            options={states}
+            renderInput={params => <div ref={params.InputProps.ref}><TextField {...params.inputProps} label="Test"/></div>}
+        />
     </form>;
 };
 

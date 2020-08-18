@@ -32,7 +32,6 @@ export function useConfirm () {
 
 export const useCurrentUser = (): ICurrentUser | undefined => {
     const currentUser = useSelector((state: RootState) => state.users.currentUser);
-    console.log('cu', currentUser);
     return currentUser;
 }
 

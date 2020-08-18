@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {forwardRef} from 'react';
 import {InputBase as DefaultTextField, withStyles, InputLabel} from "@material-ui/core";
 import {InputBaseProps} from "@material-ui/core/InputBase/InputBase";
 import theme from "../../theme/theme";
@@ -14,13 +14,14 @@ const StyledLabel = withStyles(theme => ({
     }
 }))(InputLabel)
 
-export const TextField = ({label, spacing, ...props}: TextInputProps) => {
+export const TextField = forwardRef<React.Ref<any>, TextInputProps>(
+    ({label, spacing, ...props}, ref) => {
     return <>
         {label &&
             <StyledLabel shrink htmlFor={props.id}>
                 {label}
             </StyledLabel>
         }
-        <DefaultTextField {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0 }} />
+        <DefaultTextField ref={ref} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0 }} />
     </>
-}
+});
