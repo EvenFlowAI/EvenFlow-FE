@@ -1,6 +1,6 @@
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {AppBar, Avatar, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Avatar, Menu, MenuItem, Toolbar, Typography} from "@material-ui/core";
 import {sideBarWidth} from "../../theme/theme";
 import {authService} from "../../config/requests";
 import { useHistory } from "react-router-dom";
@@ -36,6 +36,14 @@ export const NavBar = () => {
     const classes = useStyles();
     const history = useHistory();
     const {currentUser} = useSelector((state: RootState) => state.users);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick: React.MouseEventHandler<HTMLElement> = e => {
+        setAnchorEl(e.currentTarget);
+    }
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
 
     const handleLogout = () => {
         authService.logout();
@@ -47,9 +55,18 @@ export const NavBar = () => {
             <Toolbar>
                 <div className={classes.grow} />
                 <Typography className={classes.name} variant="h4">{currentUser?.fullName || ""}</Typography>
-                <Avatar src={currentUser?.avatarPath} className={classes.avatar} onClick={handleLogout}>
+                <Avatar src={currentUser?.avatarPath} className={classes.avatar} onClick={handleClick}>
                     {getInitials(currentUser?.fullName || '-')}
                 </Avatar>
+                <Menu
+                    id="fade-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
             </Toolbar>
         </AppBar>
     </>
