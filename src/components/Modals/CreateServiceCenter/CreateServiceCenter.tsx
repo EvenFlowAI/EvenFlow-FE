@@ -1,60 +1,97 @@
-import React from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {States} from "../../../config/constants";
 import {Autocomplete} from "@material-ui/lab";
-import {TextField} from "../../UI/TextField";
+import {TextField, TextInputProps} from "../../UI/TextField";
 import {Button, Divider, Grid} from "@material-ui/core";
+
+type TFormItem<DataType> = {
+    label?: string;
+    id: string;
+    name?: string;
+    value: (d: DataType) => string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    inputType?: "email" | "password";
+    variant?: "input" | "textarea" | "select"
+    inputProps?: TextInputProps;
+    selectOptions?: any
+}
+type TProps<D> = {
+    items: TFormItem<D>[]
+    values: D
+}
+
+const ModalForm = <Item extends {}>(props: TProps<Item>): JSX.Element => {
+    return <form>
+        <Grid container spacing={2}>
+            {props.items.map(item => {
+                return <Grid item xs={6}>
+                    {!item.variant || item.variant === 'input'
+                    ? <TextField
+                        label={item.label}
+                        key={item.id}
+                        name={item.name || item.id}
+                        value={item.value(props.values)}
+                        onChange={item.onChange}
+                        fullWidth
+                        {...item.inputProps}
+                    />
+                    : null}
+                </Grid>;
+            })}
+        </Grid>
+    </form>;
+}
 
 
 const states = Object.values(States);
-const ServiceCenterForm: React.FC = () => {
-    return <form>
-        <Grid container spacing={2}>
-            <Grid item xs={6}>
-                <TextField label={"Service center name"} fullWidth />
-            </Grid>
-            <Grid item xs={6}>
-                <TextField label={"Service center email"} fullWidth />
-            </Grid>
-            <Grid item xs={6}>
-                <TextField label={"Service center phone number"} fullWidth />
-            </Grid>
-            <Grid item xs={6}>
-                <TextField label={"Contact person email"} fullWidth />
-            </Grid>
-        </Grid>
-        <Divider />
-        <Grid container spacing={2}>
-            <Grid item xs={6}>
-                <TextField label={"Address"} fullWidth />
-            </Grid>
-            <Grid item xs={6}>
-                <TextField label={"City"} fullWidth />
-            </Grid>
-            <Grid item xs={6}>
-                <Autocomplete
-                    options={states}
-                    renderInput={params => <div ref={params.InputProps.ref}><TextField {...params.inputProps} label="State"/></div>}
-                />
-            </Grid>
-            <Grid item xs={6}>
-                <TextField label="Zip code" />
-            </Grid>
-        </Grid>
-    </form>;
-};
+
+
+type TSCFormState = {
+    scName: string;
+    scEmail: string;
+    scPhoneNumber: string;
+    scContactEmail: string;
+    address: string;
+    state: string;
+    zipCode: string;
+}
+const initialFormState: TSCFormState = {
+    scName: "",
+    scEmail: "",
+    scPhoneNumber: "",
+    scContactEmail: "",
+    address: "",
+    state: "",
+    zipCode: "",
+}
+const getFormItems = (onChange: React.ChangeEventHandler): TFormItem<TSCFormState>[] => [
+    {id: "scName", label: "Service center name", value: v => v.scName, onChange},
+    {id: "scEmail", label: "Service center email", value: v => v.scEmail, onChange},
+    {id: "scPhoneNumber", label: "Service center phone number", value: v => v.scPhoneNumber, onChange},
+    {id: "scContactEmail", label: "Contact person email", value: v => v.scContactEmail, onChange},
+];
+
+
 
 export const CreateServiceCenter: React.FC<DialogProps> = props => {
+    const [formState, setFormState] = useState<TSCFormState>(initialFormState);
+
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormState({...formState, [e.target.name]: e.target.value});
+    }, [formState]);
+    const formItems = useMemo(() => getFormItems(handleChange), [handleChange]);
+
     return <BaseModal {...props} onClose={props.onClose}>
         <DialogTitle onClose={props.onClose}>Add service center</DialogTitle>
         <DialogContent>
             <AvatarContainer />
-            <ServiceCenterForm />
+            <ModalForm items={formItems} values={formState} />
         </DialogContent>
         <DialogActions>
             <Button>Cancel</Button>
-            <Button color="primary" variant="contained">Create</Button>
+            <Button color="primary" variant="contained" type="submit">Create</Button>
         </DialogActions>
     </BaseModal>;
 }

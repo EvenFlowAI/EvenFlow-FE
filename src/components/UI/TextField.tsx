@@ -3,7 +3,7 @@ import {InputBase as DefaultTextField, withStyles, InputLabel} from "@material-u
 import {InputBaseProps} from "@material-ui/core/InputBase/InputBase";
 import theme from "../../theme/theme";
 
-type TextInputProps = {label?: string, spacing?: 'normal' | 'none' | undefined} & InputBaseProps;
+export type TextInputProps = {label?: string, spacing?: 'normal' | 'none' | undefined} & InputBaseProps;
 
 const StyledLabel = withStyles(theme => ({
     root: {
@@ -14,7 +14,7 @@ const StyledLabel = withStyles(theme => ({
     }
 }))(InputLabel)
 
-export const TextField = forwardRef<React.Ref<any>, TextInputProps>(
+export const TextField = forwardRef<unknown, TextInputProps>(
     ({label, spacing, ...props}, ref) => {
     return <>
         {label &&
