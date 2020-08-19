@@ -21,3 +21,4 @@ export const pathReplace = (path: string, data?: Record<string, any>): string =>
     const re = new RegExp(keys.join('|'), "gi");
     return path.replace(re, matched => data[matched.slice(1, -1)] as string)
 }
+export const noop = () => {};
