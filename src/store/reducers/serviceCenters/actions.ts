@@ -1,4 +1,4 @@
-import {IServiceCenterExtended, TServiceCenterActions} from "./types";
+import {IServiceCenterExtended, IServiceCenterForm, TServiceCenterActions} from "./types";
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
@@ -41,6 +41,25 @@ export const loadAll: ActionCreator<
         dispatch(loading(false));
     } catch (e) {
         dispatch(loading(false));
+        throw e;
+    }
+}
+
+const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
+    type: "ServiceCenters/Create", payload
+});
+export const createSC: ActionCreator<
+    ThunkAction<void, RootState, void, TServiceCenterActions>
+> = (payload: IServiceCenterForm) => async dispatch => {
+    dispatch(saving(true));
+    try {
+        const {data} = await Api.call<IServiceCenterExtended>(
+            Api.endpoints.ServiceCenters.Create, {data: payload}
+        );
+        dispatch(_create(data));
+        dispatch(saving(false));
+    } catch (e) {
+        dispatch(saving(false));
         throw e;
     }
 }

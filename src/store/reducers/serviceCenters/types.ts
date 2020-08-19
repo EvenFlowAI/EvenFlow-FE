@@ -19,14 +19,23 @@ export interface IServiceCenterExtended extends IServiceCenter {
     phoneNumber: string;
     dealershipId: number;
 }
+export interface IServiceCenterForm {
+    name: string,
+    serviceCenterEmail: string,
+    contactPersonalEmail: string,
+    phoneNumber: string,
+    address: IAddress
+}
 
 export type TGetAll = {type: "ServiceCenters/GetAll", payload: IServiceCenterExtended[]};
+export type TCreate = {type: "ServiceCenters/Create", payload: IServiceCenterExtended}
 export type TLoading = {type: "ServiceCenters/Loading", payload: boolean};
 export type TSaving = {type: "ServiceCenters/Saving", payload: boolean};
 export type TChangePageData = TChangePageDataGeneric<"ServiceCenters/ChangePageData">;
 export type TChangePaging = TChangePagingGeneric<"ServiceCenters/ChangePaging">;
 
 export type TServiceCenterActions =
+    | TCreate
     | TLoading
     | TSaving
     | TChangePageData

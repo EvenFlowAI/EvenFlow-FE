@@ -22,6 +22,8 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
     switch (action.type) {
         case "ServiceCenters/GetAll":
             return {...state, serviceCenters: action.payload};
+        case "ServiceCenters/Create":
+            return {...state, serviceCenters: [action.payload, ...state.serviceCenters]};
         case "ServiceCenters/ChangePageData":
             return {...state, pageData: {...state.pageData, ...action.payload}};
         case "ServiceCenters/ChangePaging":
