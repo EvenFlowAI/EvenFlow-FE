@@ -12,5 +12,8 @@ export const EmployeesActions = () => {
         <Button variant="outlined">
             Filters
         </Button>
+        <Button variant="contained" color="primary" >
+            New
+        </Button>
     </>;
 }
