@@ -86,7 +86,7 @@ export const CreateServiceCenter: React.FC<DialogProps> = props => {
         }
     }
 
-    return <BaseModal {...props} onClose={props.onClose}>
+    return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>Add service center</DialogTitle>
         <DialogContent>
             <AvatarContainer />

@@ -41,3 +41,5 @@ export interface PaginatedAPIResponse<T> {
     result: T[];
     paging: IPagingResponse;
 }
+
+export type TTechnicianLevel = 1 | 2 | 3;

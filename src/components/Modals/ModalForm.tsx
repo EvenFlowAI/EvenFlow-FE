@@ -2,6 +2,7 @@ import React from "react";
 import {Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason} from "@material-ui/lab";
 import {TextField, TextInputProps} from "../UI/TextField";
 import {Divider, Grid} from "@material-ui/core";
+import {noop} from "../../utils/utils";
 
 export type TInputChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
 export type TSelectChange = (
@@ -16,19 +17,19 @@ export type TFormItem<DataType> = {
     id: string;
     name?: string;
     value: (d: DataType) => string;
-    inputType?: "email" | "password";
+    inputType?: "email" | "password" | "number";
     variant?: "input" | "textarea" | "select"
     inputProps?: TextInputProps;
     selectOptions?: any
 }
-export type TProps<D> = {
+export type TModalFormProps<D> = {
     items: TFormItem<D>[][]
     values: D,
     onChange: TInputChange;
-    onSelectChange: TSelectChange;
+    onSelectChange?: TSelectChange;
 }
 
-export const ModalForm = <Item extends {}>(props: TProps<Item>): JSX.Element => {
+export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.Element => {
     return <form>
         {props.items.map((itemGroup, idx) =>
             <div key={idx}>
@@ -48,7 +49,7 @@ export const ModalForm = <Item extends {}>(props: TProps<Item>): JSX.Element => 
                                 : item.variant === 'select'
                                     ? <Autocomplete
                                         options={item.selectOptions || []}
-                                        onChange={props.onSelectChange}
+                                        onChange={props.onSelectChange || noop}
                                         value={item.value(props.values)}
                                         renderInput={params =>
                                             <div ref={params.InputProps.ref}>
