@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "./BaseModal";
 import {DialogProps} from "./types";
-import {Button} from "@material-ui/core";
+import {Button, Grid} from "@material-ui/core";
 import {ModalForm, TFormItem, TModalFormProps} from "./ModalForm";
 import {TTechnicianLevel} from "../../types/types";
+import {TextField} from "../UI/TextField";
 
 enum Roles {
     Advisor= 'Advisor',
@@ -48,7 +49,32 @@ const technicianFormItems: TFormItem<TTechnicianForm>[][] = [
     ]
 ]
 
-const AdvisorForm = <I extends {}>(props: TModalFormProps<I>) => <ModalForm {...props} />;
+const AdvisorForm: React.FC<{
+    onChange: React.ChangeEventHandler<HTMLInputElement>,
+    onSelectChange: React.ChangeEventHandler<HTMLInputElement>,
+    form: TAdvisorForm,
+}> = props => {
+    return <Grid container spacing={3}>
+        <Grid item xs={8}>
+            <TextField
+                label="First name"
+                id="firstName"
+                name="firstName"
+                onChange={props.onChange}
+                fullWidth
+            />
+        </Grid>
+        <Grid item xs={8}>
+            <TextField
+                label="Last name"
+                id="lastName"
+                name="lastName"
+                onChange={props.onChange}
+                fullWidth
+            />
+        </Grid>
+    </Grid>
+}
 const TechnicianForm = <I extends {}>(props: TModalFormProps<I>) => <ModalForm {...props} />;
 
 export const CreateEmployee: React.FC<DialogProps> = (props) => {
@@ -60,11 +86,19 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
     const [advisorForm, setAdvisorForm] = useState<TAdvisorForm>(initialAdvisorForm);
     const [technicianForm, setTechnicianForm] = useState<TTechnicianForm>(initialTechnicianForm);
 
-    const handleAdvisorChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-        setAdvisorForm({...advisorForm, [e.target.name]: e.target.value});
+    const handleChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler<HTMLInputElement> => e => {
+        if (r === Roles.Advisor) {
+            setAdvisorForm({...advisorForm, [e.target.name]: e.target.value});
+        } else {
+            setTechnicianForm({...technicianForm, [e.target.name]: e.target.value});
+        }
     }
-    const handleTechnicianChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-        setTechnicianForm({...technicianForm, [e.target.name]: e.target.value});
+    const handleSelectChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler => e => {
+        if (r === Roles.Advisor) {
+
+        } else {
+
+        }
     }
 
     return <BaseModal {...props}>
@@ -74,14 +108,14 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
         <DialogContent>
             <AvatarContainer />
             {role === Roles.Advisor
-                ? <AdvisorForm<TAdvisorForm>
-                    items={advisorFormItems}
-                    values={advisorForm}
-                    onChange={handleAdvisorChange} />
+                ? <AdvisorForm
+                    form={advisorForm}
+                    onSelectChange={handleSelectChange(Roles.Advisor)}
+                    onChange={handleChange(Roles.Advisor)} />
                 : <TechnicianForm<TTechnicianForm>
                     items={technicianFormItems}
                     values={technicianForm}
-                    onChange={handleTechnicianChange}
+                    onChange={handleChange(Roles.Technician)}
                 />
             }
         </DialogContent>
