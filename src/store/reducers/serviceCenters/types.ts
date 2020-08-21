@@ -28,6 +28,8 @@ export interface IServiceCenterForm {
 }
 
 export type TGetAll = {type: "ServiceCenters/GetAll", payload: IServiceCenterExtended[]};
+export type TGetShort = {type: "ServiceCenters/GetShort", payload: IServiceCenter[]};
+export type TShortLoading = {type: "ServiceCenters/ShortLoading", payload: boolean};
 export type TCreate = {type: "ServiceCenters/Create", payload: IServiceCenterExtended}
 export type TLoading = {type: "ServiceCenters/Loading", payload: boolean};
 export type TSaving = {type: "ServiceCenters/Saving", payload: boolean};
@@ -40,4 +42,6 @@ export type TServiceCenterActions =
     | TSaving
     | TChangePageData
     | TChangePaging
+    | TGetShort
+    | TShortLoading
     | TGetAll;

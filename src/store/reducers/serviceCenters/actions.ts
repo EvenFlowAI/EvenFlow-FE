@@ -1,4 +1,4 @@
-import {IServiceCenterExtended, IServiceCenterForm, TServiceCenterActions} from "./types";
+import {IServiceCenter, IServiceCenterExtended, IServiceCenterForm, TServiceCenterActions} from "./types";
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
@@ -60,6 +60,25 @@ export const createSC: ActionCreator<
         dispatch(saving(false));
     } catch (e) {
         dispatch(saving(false));
+        throw e;
+    }
+}
+const shortLoading = (payload: boolean): TServiceCenterActions => ({
+    type: "ServiceCenters/ShortLoading", payload
+});
+const _loadShortSC = (payload: IServiceCenter[]): TServiceCenterActions => ({
+    type: "ServiceCenters/GetShort", payload
+});
+export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServiceCenterActions>>
+    = () => async dispatch => {
+    dispatch(shortLoading(true));
+    try {
+        const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params: {
+            pageIndex: 0, pageSize: 100}});
+        dispatch(_loadShortSC(result));
+        dispatch(shortLoading(false));
+    } catch (e) {
+        dispatch(shortLoading(false));
         throw e;
     }
 }
