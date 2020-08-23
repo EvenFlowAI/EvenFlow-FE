@@ -44,6 +44,11 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
     const [advisorForm, setAdvisorForm] = useState<TAdvisorForm>(initialAdvisorForm);
     const [technicianForm, setTechnicianForm] = useState<TTechnicianForm>(initialTechnicianForm);
 
+    useEffect(() => {
+        setAdvisorForm(initialAdvisorForm);
+        setTechnicianForm(initialTechnicianForm)
+    }, [props.open])
+
     const handleChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler<HTMLInputElement> => e => {
         if (r === Roles.Advisor) {
             setAdvisorForm({...advisorForm, [e.target.name]: e.target.value});
@@ -88,6 +93,8 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
         try {
             await dispatch(createEmployee(data));
             showMessage("Employee created");
+            setTechnicianForm(initialTechnicianForm);
+            setAdvisorForm(initialAdvisorForm);
             props.onClose();
         } catch (e) {
             showError(e);

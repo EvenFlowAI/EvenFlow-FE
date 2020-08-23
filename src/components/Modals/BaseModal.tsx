@@ -58,7 +58,7 @@ const useStyles = makeStyles({
 
 export const BaseModal: React.FC<DialogProps> = props => {
     const classes = useStyles();
-    return <Dialog {...props} className={classes.root} maxWidth={"md"} />;
+    return <Dialog {...props} className={classes.root} maxWidth={"md"} fullWidth />;
 }
 
 export const DialogContent: React.FC<DialogContentProps> = props => {
