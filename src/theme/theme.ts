@@ -1,4 +1,4 @@
-import {createMuiTheme, ThemeOptions} from "@material-ui/core";
+import {unstable_createMuiStrictModeTheme as createMuiTheme, ThemeOptions} from "@material-ui/core";
 import {fonts} from "./fonts";
 import {colors} from "./colors";
 
