@@ -1,10 +1,11 @@
 import React from "react";
-import {Autocomplete, ToggleButton, ToggleButtonGroup} from "@material-ui/lab";
+import {Autocomplete} from "@material-ui/lab";
 import {IServiceCenter} from "../../../store/reducers/serviceCenters/types";
 import {Grid} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {TAdvisorForm, TSelectChange, TTechnicianForm} from "./types";
 import {ToggleButtons} from "../../UI/ToggleButtons";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
 
 
 export const initialAdvisorForm: TAdvisorForm = {
@@ -54,12 +55,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 getOptionLabel={i => i.name}
                 loading={props.loading}
                 value={props.form.serviceCenter}
-                renderInput={params => <div ref={params.InputProps.ref}>
-                    <TextField label="Service center"
-                               {...params.inputProps}
-                               fullWidth
-                               endAdornment={params.InputProps.endAdornment} />
-                </div>}
+                renderInput={autocompleteRender({label: "Service Center"})}
             />
         </Grid>
     </Grid>
@@ -91,12 +87,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 getOptionLabel={i => i.name}
                 loading={props.loading}
                 value={props.form.serviceCenter}
-                renderInput={params => <div ref={params.InputProps.ref}>
-                    <TextField label="Service center"
-                               {...params.inputProps}
-                               fullWidth
-                               endAdornment={params.InputProps.endAdornment} />
-                </div>}
+                renderInput={autocompleteRender({label: "Service center"})}
             />
         </Grid>
         <Grid item xs={6}>
@@ -118,6 +109,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                     name="hourlyRate"
                     label="Hourly rate"
                     type="number"
+                    fullWidth
                     onChange={props.onChange}
                     value={props.form.hourlyRate}
                 />
@@ -128,10 +120,17 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                     name="overtimeRate"
                     label="Overtime rate"
                     type="number"
+                    fullWidth
                     onChange={props.onChange}
                     value={props.form.overtimeRate}
                 />
             </Grid>
+        </Grid>
+        <Grid item xs={6}>
+            <Autocomplete
+                renderInput={autocompleteRender({label: "Certificate"})}
+                options={[]}
+            />
         </Grid>
     </Grid>
 }

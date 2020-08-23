@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Divider, Grid} from "@material-ui/core";
 import {TTechnicianLevel} from "../../../types/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
@@ -87,6 +87,7 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
                     </Button>
                 </Grid>
             </Grid>
+            <Divider />
             <AvatarContainer />
             {role === Roles.Advisor
                 ? <AdvisorForm
@@ -104,6 +105,7 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
                     onSelectChange={handleSelectChange(Roles.Technician)}
                 />
             }
+            <Divider />
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
