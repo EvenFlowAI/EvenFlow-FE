@@ -4,6 +4,7 @@ import {IServiceCenter} from "../../../store/reducers/serviceCenters/types";
 import {Grid} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {TAdvisorForm, TSelectChange, TTechnicianForm} from "./types";
+import {ToggleButtons} from "../../UI/ToggleButtons";
 
 
 export const initialAdvisorForm: TAdvisorForm = {
@@ -99,14 +100,16 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
             />
         </Grid>
         <Grid item xs={6}>
-            <ToggleButtonGroup
+            <ToggleButtons
+                value={props.form.technicianLevel}
+                buttons={[
+                    {id: "1", label: "1", value: 1},
+                    {id: "2", label: "2", value: 2},
+                    {id: "3", label: "3", value: 3}
+                ]}
                 exclusive
                 onChange={props.onSwitch}
-                value={props.form.technicianLevel} color="primary">
-                <ToggleButton value={1}>1</ToggleButton>
-                <ToggleButton value={2}>2</ToggleButton>
-                <ToggleButton value={3}>3</ToggleButton>
-            </ToggleButtonGroup>
+            />
         </Grid>
         <Grid container item xs={6} spacing={2}>
             <Grid item xs={6}>

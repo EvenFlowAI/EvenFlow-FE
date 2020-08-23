@@ -7,16 +7,9 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
-import {makeStyles} from "@material-ui/core/styles";
 import {TAdvisorForm, TTechnicianForm} from "./types";
 import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
 import {TSelectChange} from "./types";
-
-const useStyles = makeStyles({
-    toggleButtonGroup: {
-        width: "100%"
-    }
-});
 
 enum Roles {
     Advisor= 'Advisor',
@@ -24,8 +17,6 @@ enum Roles {
 }
 
 export const CreateEmployee: React.FC<DialogProps> = (props) => {
-    const classes = useStyles();
-
     const [role, setRole] = useState<Roles.Advisor | Roles.Technician>(Roles.Advisor);
     const handleChangeRole = (role: string) => {
         setRole(role as Roles);
