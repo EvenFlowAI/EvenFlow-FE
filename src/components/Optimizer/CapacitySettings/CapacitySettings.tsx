@@ -2,6 +2,10 @@ import React, {useState} from "react";
 import {Tab} from "@material-ui/core";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
+import {AvailableStaff} from "./AvailableStaff/AvailableStaff";
+import {RequiredEquipment} from "./RequiredEquipment";
+import {RequiredSkills} from "./RequiredSkills";
+import {TechnicianStaff} from "./TechnicianStaff";
 
 const useStyles = makeStyles(theme => ({
     tabList: {
@@ -14,6 +18,10 @@ const useStyles = makeStyles(theme => ({
         "& .MuiTabs-indicator": {
             height: 5
         }
+    },
+    panel: {
+        width: "100%",
+        padding: "24px 0"
     },
     separator: {
         height: 0,
@@ -41,9 +49,9 @@ export const CapacitySettings = () => {
             <Tab label="Technician Staff" value="3" />
         </TabList>
         <div className={classes.separator} />
-        <TabPanel value="0"><p>Content 1</p></TabPanel>
-        <TabPanel value="1"><p>Content 2</p></TabPanel>
-        <TabPanel value="2"><p>Content 3</p></TabPanel>
-        <TabPanel value="3"><p>Content 3</p></TabPanel>
+        <TabPanel className={classes.panel} value="0" ><AvailableStaff /></TabPanel>
+        <TabPanel className={classes.panel} value="1"><RequiredEquipment /></TabPanel>
+        <TabPanel className={classes.panel} value="2"><RequiredSkills /></TabPanel>
+        <TabPanel className={classes.panel} value="3"><TechnicianStaff /></TabPanel>
     </TabContext>
 }

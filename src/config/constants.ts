@@ -50,3 +50,10 @@ export enum States {
     WI = "Wisconsin",
     WY = "Wyoming",
 }
+
+export const MonthNames = [
+    "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+];
+export const WeekDayNames = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+]
