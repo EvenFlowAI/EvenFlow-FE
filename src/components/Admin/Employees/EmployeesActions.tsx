@@ -3,7 +3,7 @@ import {Button} from "@material-ui/core";
 import {Search} from "@material-ui/icons";
 import {SquareIconButton} from "../../UI/Button";
 import {useCurrentUser, useModal} from "../../../utils/hooks";
-import {CreateEmployee} from "../../Modals/CreateEmployee";
+import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 
 
 export const EmployeesActions = () => {
