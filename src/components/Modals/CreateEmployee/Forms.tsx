@@ -55,7 +55,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 getOptionLabel={i => i.name}
                 loading={props.loading}
                 value={props.form.serviceCenter}
-                renderInput={autocompleteRender({label: "Service Center"})}
+                renderInput={autocompleteRender({label: "Service Center", fullWidth: true})}
             />
         </Grid>
     </Grid>
@@ -87,7 +87,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 getOptionLabel={i => i.name}
                 loading={props.loading}
                 value={props.form.serviceCenter}
-                renderInput={autocompleteRender({label: "Service center"})}
+                renderInput={autocompleteRender({label: "Service center", fullWidth: true})}
             />
         </Grid>
         <Grid item xs={6}>

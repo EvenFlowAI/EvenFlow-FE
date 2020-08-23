@@ -80,7 +80,8 @@ export const CreateServiceCenter: React.FC<DialogProps> = props => {
         try {
             await dispatch(createSC(data));
             showMessage(`${data.name} successfully created`);
-            setFormState({...initialFormState});
+            setFormState(initialFormState);
+            props.onClose();
         } catch (e) {
             showError(e);
         }
@@ -98,7 +99,7 @@ export const CreateServiceCenter: React.FC<DialogProps> = props => {
             />
         </DialogContent>
         <DialogActions>
-            <Button>Cancel</Button>
+            <Button onClick={props.onClose}>Cancel</Button>
             <Button color="primary"
                     variant="contained"
                     onClick={handleCreate}

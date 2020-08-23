@@ -44,19 +44,19 @@ export const loadAll: ActionCreator<
         throw e;
     }
 }
-
-const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
-    type: "ServiceCenters/Create", payload
-});
+//
+// const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
+//     type: "ServiceCenters/Create", payload
+// });
 export const createSC: ActionCreator<
     ThunkAction<void, RootState, void, TServiceCenterActions>
 > = (payload: IServiceCenterForm) => async dispatch => {
     dispatch(saving(true));
     try {
-        const {data} = await Api.call<IServiceCenterExtended>(
+        await Api.call<IServiceCenterExtended>(
             Api.endpoints.ServiceCenters.Create, {data: payload}
         );
-        dispatch(_create(data));
+        dispatch(loadAll());
         dispatch(saving(false));
     } catch (e) {
         dispatch(saving(false));

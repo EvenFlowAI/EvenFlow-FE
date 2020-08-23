@@ -3,6 +3,7 @@ import {Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason} from 
 import {TextField, TextInputProps} from "../UI/TextField";
 import {Divider, Grid} from "@material-ui/core";
 import {noop} from "../../utils/utils";
+import {autocompleteRender} from "../UI/AutocompleteRender";
 
 export type TInputChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
 export type TSelectChange = (
@@ -51,11 +52,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                                         options={item.selectOptions || []}
                                         onChange={props.onSelectChange || noop}
                                         value={item.value(props.values)}
-                                        renderInput={params =>
-                                            <div ref={params.InputProps.ref}>
-                                                <TextField {...params.inputProps} label={item.label} />
-                                            </div>
-                                        }
+                                        renderInput={autocompleteRender({label: item.label || ""})}
                                     />
                                     : null}
                         </Grid>
