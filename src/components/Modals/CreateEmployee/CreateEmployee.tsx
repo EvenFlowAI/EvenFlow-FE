@@ -10,6 +10,9 @@ import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
 import {TAdvisorForm, TTechnicianForm} from "./types";
 import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
 import {TSelectChange} from "./types";
+import {IEmployeeForm} from "../../../store/reducers/employees/types";
+import {createEmployee} from "../../../store/reducers/employees/actions";
+import {useException, useMessage} from "../../../utils/hooks";
 
 enum Roles {
     Advisor= 'Advisor',
@@ -26,6 +29,8 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
         shortLoading: state.serviceCenters.shortLoading
     }));
     const dispatch = useDispatch();
+    const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
         dispatch(loadShortSC())
@@ -50,7 +55,7 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
         if (r === Roles.Advisor) {
             setAdvisorForm({...advisorForm, serviceCenter: typeof value !== 'string' ? value : null});
         } else {
-
+            setTechnicianForm({...technicianForm, serviceCenter: typeof value !== 'string' ? value : null});
         }
     }
     const handleSwitchChange = (e: React.ChangeEvent<{}>, newVal: number) => {
@@ -59,6 +64,33 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
                 ...technicianForm,
                 technicianLevel: newVal as TTechnicianLevel
             });
+        }
+    }
+    const handleCreate = async () => {
+        let data: IEmployeeForm;
+        if (role === Roles.Advisor) {
+            data = {
+                ...advisorForm,
+                serviceCenterId: advisorForm.serviceCenter?.id || null
+            };
+        } else {
+            data = {
+                firstName: technicianForm.firstName,
+                lastName: technicianForm.lastName,
+                serviceCenterId: technicianForm.serviceCenter?.id || null,
+                employeeInfo: {
+                    hourlyRate: technicianForm.hourlyRate || 0,
+                    overtimeRate: technicianForm.overtimeRate || 0,
+                    skillLevel: technicianForm.technicianLevel
+                }
+            }
+        }
+        try {
+            await dispatch(createEmployee(data));
+            showMessage("Employee created");
+            props.onClose();
+        } catch (e) {
+            showError(e);
         }
     }
 
@@ -111,6 +143,7 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
             <Button onClick={props.onClose}>Cancel</Button>
             <Button
                 color="primary"
+                onClick={handleCreate}
                 variant="contained">
                 Create
             </Button>

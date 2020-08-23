@@ -6,7 +6,7 @@ export interface IEmployeeInfo {
     hourlyRate: number;
     overtimeRate: number;
     skillLevel: number;
-    certifications: string[];
+    certifications?: string[];
 }
 
 export interface IEmployee {
@@ -24,14 +24,23 @@ export interface IEmployee {
     avatarPath: string;
 }
 
+export interface IEmployeeForm {
+    firstName: string;
+    lastName: string;
+    serviceCenterId: number | null;
+    employeeInfo?: IEmployeeInfo
+}
+
 export type TGetAll = {type: "Employees/GetAll"; payload: IEmployee[]};
 export type TLoading = {type: "Employees/Loading"; payload: boolean};
 export type TSaving = {type: "Employees/Saving"; payload: boolean};
+export type TCreate = {type: "Employees/Create"; payload: IEmployee};
 export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
 export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
 
 export type TEmployeeActions =
     | TSaving
+    | TCreate
     | TLoading
     | TChangePageData
     | TChangePaging

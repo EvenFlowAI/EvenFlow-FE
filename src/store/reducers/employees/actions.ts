@@ -4,7 +4,7 @@ import {RootState} from "../../rootReducer";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {Api} from "../../../config/requests";
 import {IPageRequest, PaginatedAPIResponse} from "../../../types/types";
-import {IEmployee, TEmployeeActions} from "./types";
+import {IEmployee, IEmployeeForm, TEmployeeActions} from "./types";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
    type: "Employees/GetAll", payload
@@ -50,5 +50,18 @@ export const loadAll: ActionCreator<ThunkAction<
         throw e;
     }
 };
+export const createEmployee: ActionCreator<
+    ThunkAction<void, RootState, void, TEmployeeActions
+>> = (payload: IEmployeeForm) => async dispatch => {
+    dispatch(saving(true));
+    try {
+        await Api.call<IEmployee>(Api.endpoints.Employees.Create, {data: payload});
+        dispatch(saving(false));
+        dispatch(loadAll());
+    } catch (e) {
+        dispatch(saving(false));
+        throw e;
+    }
+}
 
 export const changePaging = changePagingGeneric("Employees/ChangePaging");
