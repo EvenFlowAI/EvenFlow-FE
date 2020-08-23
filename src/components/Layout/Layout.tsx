@@ -12,6 +12,7 @@ import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";
 import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../store/reducers/users/actions";
+import {OptimizerPage} from "../Optimizer/OptimizerPage";
 
 
 const useStyles = makeStyles(theme => ({
@@ -44,6 +45,7 @@ export const Layout = () => {
             </TitleContainer>
             <Switch>
                 <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />
+                <PrivateRoute path={Routes.Optimizer.Base} component={OptimizerPage} />
                 <Redirect to={Routes.Admin.Base} />
             </Switch>
         </div>

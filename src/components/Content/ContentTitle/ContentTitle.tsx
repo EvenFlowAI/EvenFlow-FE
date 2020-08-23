@@ -1,19 +1,31 @@
 import React, {useMemo} from 'react';
-import {useLocation, matchPath} from "react-router-dom";
-import {Typography} from "@material-ui/core";
+import {useLocation, matchPath, Link} from "react-router-dom";
+import {Theme, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {Routes} from "../../../config/routes";
 
-const useStyles = makeStyles({
+const titleSt = {
+    fontSize: 24,
+    lineHeight: "29px",
+    margin: 0
+}
+const useStyles = makeStyles((theme: Theme) => ({
     title: {
-        fontWeight: "bold",
-        fontSize: 24,
-        lineHeight: "29px",
-        margin: 0
-    }
-});
+        ...titleSt,
+        fontWeight: "bold"
+    },
+    titleContainer: {
+        display: "flex"
+    },
+    titleLink: (normal) => ({
+        ...titleSt,
+        fontWeight: !normal ? "bold" : "normal",
+        textDecoration: "none",
+        color: theme.palette.text.primary
+    })
+}));
 
-type TTitle = {route: string; title: string};
+type TTitle = {route: string; title: string, parent?: TTitle};
 
 const getTitle = (match: any): TTitle => {
     for (let path of titles) {
@@ -27,15 +39,37 @@ const getTitle = (match: any): TTitle => {
 const titles: TTitle[] = [
     {route: Routes.Admin.DealershipGroups, title: "Dealership Groups"},
     {route: Routes.Admin.ServiceCenters, title: "Service Centers"},
-    {route: Routes.Admin.Employees, title: "Employees"}
+    {route: Routes.Admin.Employees, title: "Employees"},
+    {route: Routes.Optimizer.CapacitySettings, title: "Capacity Settings", parent: {
+        route: Routes.Optimizer.Base, title: "Optimizer Settings"
+    }},
 ];
-
+const collectParents = (link: TTitle, list: TTitle[]): void => {
+    list.push(link)
+    if (link.parent) {
+        collectParents(link.parent, list);
+    }
+}
 export const ContentTitle = () => {
     const {pathname} = useLocation();
-    const classes = useStyles();
 
     const path = useMemo(() => getTitle(pathname), [pathname]);
+    let prefix: TTitle[] = [];
+    if (path.parent) {
+        collectParents(path.parent, prefix);
+    }
 
-    return <Typography className={classes.title} variant="h1">{path.title}</Typography>
+    const classes = useStyles(!!prefix.length);
+
+    return <div className={classes.titleContainer}>
+        {prefix.length ? prefix.map(title => {
+            return <Link to={title.route}
+                         key={title.route}
+                         className={classes.titleLink}>
+                {title.title}/
+            </Link>
+        }) : null}
+        <Typography className={classes.title} variant="h1">{path.title}</Typography>
+    </div>
 }
 

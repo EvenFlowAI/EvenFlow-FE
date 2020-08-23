@@ -7,6 +7,7 @@ import {LinkType} from "../../types/types";
 import {sideBarWidth} from "../../theme/theme";
 import {Routes} from "../../config/routes";
 import {useCurrentUser} from "../../utils/hooks";
+import {useLocation, matchPath} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -51,14 +52,20 @@ const AdminLinks: LinkType[] = [
     {to: Routes.Admin.ServiceCenters, name: "Service Centers"},
     {to: Routes.Admin.Employees, name: "Employees"}
 ]
+const MainLinks: LinkType[] = [
+    {to: Routes.Optimizer.Base, name: "Optimizer Settings"},
+]
 
 export const SideBar = () => {
     const classes = useStyles();
 
     const currentUser = useCurrentUser();
+    const {pathname} = useLocation();
     const links: LinkType[] = useMemo(() => {
-        return currentUser?.isSuperUser ? SULinks : AdminLinks
-    }, [currentUser]);
+        if (matchPath(pathname, Routes.Admin.Base))
+            return currentUser?.isSuperUser ? SULinks : AdminLinks;
+        return MainLinks;
+    }, [currentUser, pathname]);
 
     return <Drawer
         className={classes.drawer}
