@@ -5,7 +5,7 @@ import theme from "../../theme/theme";
 
 export type TextInputProps = {label?: string, spacing?: 'normal' | 'none' | undefined} & InputBaseProps;
 
-const StyledLabel = withStyles(theme => ({
+export const StyledLabel = withStyles(theme => ({
     root: {
         textTransform: "uppercase",
         marginBottom: theme.spacing(.5),
