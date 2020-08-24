@@ -6,8 +6,6 @@ import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
     controls: {
-        paddingTop: 8,
-        marginLeft: 8,
     },
     controlButton: {
 

@@ -1,10 +1,14 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {CalendarControls} from "./CalendarControls";
 import {WeekDayNames} from "../../../../config/constants";
+import moment, {Moment} from "moment";
+import clsx from "clsx";
+import {Star, SupervisorAccount} from "@material-ui/icons";
 
-const useStyles = makeStyles({
+
+const useStyles = makeStyles(theme => ({
     title: {
         textAlign: "center",
         position: "absolute",
@@ -15,31 +19,111 @@ const useStyles = makeStyles({
         fontSize: 16
     },
     paper: {
-        position: "relative"
+        borderRadius: 0,
+        position: "relative",
+        padding: 11
+    },
+    weekDay: {
+        textAlign: "center",
+        background: theme.palette.common.white
+    },
+    dayNumber: {
+        position: "absolute",
+        top: 4, left: 4
+    },
+    prevMonth: {
+        color: theme.palette.text.hint
+    },
+    dayCell: {
+        background: theme.palette.common.white,
+        minHeight: 70,
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    iconBlock: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 10,
+        margin: 3,
+        "&>.MuiSvgIcon-root": {
+            fontSize: 20
+        }
+    },
+    currentMonth: {
+        color: theme.palette.text.primary
     },
     calendarWrapper: {
-        margin: 8,
-        border: "1px solid gray",
+        marginTop: 11,
+        gridGap: 1,
+        background: theme.palette.divider,
+        border: `1px solid ${theme.palette.divider}`,
         display: "grid",
         gridTemplateColumns: "repeat(7, 1fr)"
     }
-});
+}));
 
+
+type TDayType = "prev" | "cur" | "next"
+type TDay = {
+    date: Moment,
+    day: number,
+    type: TDayType
+}
 export const Calendar = () => {
     const today = new Date();
     const [month, setMonth] = useState<number>(today.getMonth());
     const handleMonthChange = (m: number) => {
         setMonth(m);
     }
+    const days: TDay[] = useMemo(() => {
+        const days: TDay[] = [];
+        const cur = moment().month(month).startOf("month");
+        const daysInMonth = cur.daysInMonth();
+        const startDay = cur.day();
+        cur.subtract(startDay, 'days');
+        for (let i=0; i < daysInMonth + startDay; i++) {
+            days.push({
+                date: moment(cur),
+                day: +cur.format("D"),
+                type: cur.month() === month ? "cur" : "prev"
+            });
+            cur.add(1, "day");
+        }
+        for (let i = 0; i < cur.day(); i++) {
+            days.push({
+                date: moment(cur),
+                day: +cur.format("D"),
+                type: "next"
+            })
+            cur.add(1, "day");
+        }
+
+        return days;
+    }, [month]);
 
     const classes = useStyles();
     return <Paper className={classes.paper}>
         <h2 className={classes.title}>Calendar</h2>
         <CalendarControls month={month} onChange={handleMonthChange} />
         <div className={classes.calendarWrapper}>
-            {WeekDayNames.map(day => {
-                return <span key={day}>{day}</span>
-            })}
+            {WeekDayNames.map(day =>
+                <div className={classes.weekDay} key={day}>{day}</div>
+            )}
+            {days.map(d =>
+                <div
+                    className={clsx(
+                        classes.dayCell,
+                        d.type === "cur" ? classes.currentMonth : classes.prevMonth
+                    )}
+                    key={`${d.day}-${d.type}`}>
+                    <span className={classes.dayNumber}>{d.day}</span>
+                    <span className={classes.iconBlock}><SupervisorAccount/> - 4</span>
+                    <span className={classes.iconBlock}><Star /> - 2</span>
+                </div>
+            )}
         </div>
     </Paper>
 }
