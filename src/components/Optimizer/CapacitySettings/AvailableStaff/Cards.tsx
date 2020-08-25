@@ -4,6 +4,7 @@ import {Card} from "@material-ui/core";
 import React from "react";
 import {useModal} from "../../../../utils/hooks";
 import {EditAddress} from "../../../Modals/EditAddress/EditAddress";
+import {HourOfOperations} from "../../../Modals/HourOfOperations/HourOfOperations";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -66,12 +67,20 @@ type TCardItem = {
 }
 
 export const Cards = () => {
-    const {onClose: onCloseAddress,
-        onOpen: onOpenAddress, isOpen: isAddressOpen} = useModal();
+    const {
+        onClose: onCloseAddress,
+        onOpen: onOpenAddress,
+        isOpen: isAddressOpen
+    } = useModal();
+    const {
+        onClose: onCloseHOO,
+        onOpen: onOpenHOO,
+        isOpen: isHOOOpen
+    } = useModal();
 
     const cards: TCardItem[] = [
         {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
-        {label: "Hours of operation", icon: <Alarm />, action: onOpenAddress},
+        {label: "Hours of operation", icon: <Alarm />, action: onOpenHOO},
         {label: "Weekly schedule", icon: <DateRange />, action: onOpenAddress},
         {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenAddress},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenAddress},
@@ -94,5 +103,6 @@ export const Cards = () => {
             </Card>
         )}
         <EditAddress open={isAddressOpen} onClose={onCloseAddress} />
+        <HourOfOperations open={isHOOOpen} onClose={onCloseHOO} />
     </div>
 }
