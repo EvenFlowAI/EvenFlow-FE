@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from "react";
-import {Paper} from "@material-ui/core";
+import {lighten, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {CalendarControls} from "./CalendarControls";
 import {WeekDayNames} from "../../../../config/constants";
@@ -40,7 +40,12 @@ const useStyles = makeStyles(theme => ({
         position: "relative",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        cursor: "pointer",
+        transition: theme.transitions.create(["background"]),
+        "&:hover": {
+            background: lighten(theme.palette.primary.light, .9)
+        }
     },
     iconBlock: {
         display: "flex",
@@ -51,6 +56,9 @@ const useStyles = makeStyles(theme => ({
         "&>.MuiSvgIcon-root": {
             fontSize: 20
         }
+    },
+    today: {
+        color: `${theme.palette.success.dark} !important`,
     },
     currentMonth: {
         color: theme.palette.text.primary
@@ -74,6 +82,9 @@ type TDay = {
 }
 export const Calendar = () => {
     const [date, setDate] = useState<Moment>(moment());
+    const today = useMemo(() => {
+        return moment();
+    }, []);
     const handleMonthChange = (m: Moment) => {
         setDate(m);
     }
@@ -115,7 +126,8 @@ export const Calendar = () => {
                 <div
                     className={clsx(
                         classes.dayCell,
-                        d.type === "cur" ? classes.currentMonth : classes.prevMonth
+                        d.type === "cur" ? classes.currentMonth : classes.prevMonth,
+                        d.date.isSame(today, "day") ? classes.today : ""
                     )}
                     key={`${d.day}-${d.type}`}>
                     <span className={classes.dayNumber}>{d.day}</span>
