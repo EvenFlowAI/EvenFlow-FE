@@ -9,7 +9,7 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 
 
 export const initialAdvisorForm: TAdvisorForm = {
-    firstName: '', lastName: '', serviceCenter: null
+    firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null
 }
 export const initialTechnicianForm: TTechnicianForm = {
     firstName: '', lastName: '', serviceCenter: null,
@@ -24,13 +24,17 @@ type TAFormProps = {
     loading: boolean,
     shortSC: IServiceCenter[]
 };
-type TTFormProps = TAFormProps & {
+type TTFormProps = {
+    onChange: React.ChangeEventHandler<HTMLInputElement>,
+    onSelectChange: TSelectChange,
+    loading: boolean,
+    shortSC: IServiceCenter[]
     form: TTechnicianForm
     onSwitch: (e: React.ChangeEvent<{}>, newVal: number) => void
 };
 export const AdvisorForm: React.FC<TAFormProps> = props => {
     return <Grid container spacing={3} justify="center">
-        <Grid item xs={8}>
+        <Grid item xs={6}>
             <TextField
                 label="First name"
                 id="firstName"
@@ -39,7 +43,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 fullWidth
             />
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={6}>
             <TextField
                 label="Last name"
                 id="lastName"
@@ -48,7 +52,25 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 fullWidth
             />
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={6}>
+            <TextField
+                label="Email address"
+                id="email"
+                name="email"
+                onChange={props.onChange}
+                fullWidth
+            />
+        </Grid>
+        <Grid item xs={6}>
+            <TextField
+                label="Phone number"
+                id="phoneNumber"
+                name="phoneNumber"
+                onChange={props.onChange}
+                fullWidth
+            />
+        </Grid>
+        <Grid item xs={12}>
             <Autocomplete
                 options={props.shortSC}
                 onChange={props.onSelectChange}

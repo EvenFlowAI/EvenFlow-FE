@@ -1,5 +1,5 @@
-import {ICurrentUser, TUserActions} from "./types";
-import {ActionCreator} from "redux";
+import {ICurrentUser, IUserForm, TUserActions} from "./types";
+import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
 import {Api} from "../../../config/requests";
@@ -20,3 +20,6 @@ export const getCurrentUser: ActionCreator<ThunkAction<
         console.error(e);
     }
 }
+export const createUser: ActionCreator<ThunkAction<void, RootState, void, Action>> = (payload: IUserForm) => async dispatch => {
+    await Api.call(Api.endpoints.Users.Create, {data: payload});
+};

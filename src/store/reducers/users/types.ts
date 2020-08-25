@@ -11,6 +11,14 @@ export interface ICurrentUser {
     avatarPath: string;
     isSuperUser: boolean;
 }
+export interface IUserForm {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    role: string;
+    serviceCenterId: number;
+}
 
 
 export type TGetCurrentUser = {type: "User/GetCurrentUser", payload: ICurrentUser};

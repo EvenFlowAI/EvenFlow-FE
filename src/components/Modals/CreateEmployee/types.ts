@@ -5,6 +5,8 @@ import {Value} from "@material-ui/lab";
 
 export type TAdvisorForm = {
     firstName: string;
+    email: string;
+    phoneNumber: string;
     lastName: string;
     serviceCenter: IServiceCenter | null;
 }

@@ -11,8 +11,10 @@ import {TAdvisorForm, TTechnicianForm} from "./types";
 import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
 import {TSelectChange} from "./types";
 import {IEmployeeForm} from "../../../store/reducers/employees/types";
-import {createEmployee} from "../../../store/reducers/employees/actions";
+import {createEmployee, loadAll} from "../../../store/reducers/employees/actions";
 import {useException, useMessage} from "../../../utils/hooks";
+import {IUserForm} from "../../../store/reducers/users/types";
+import {createUser} from "../../../store/reducers/users/actions";
 
 enum Roles {
     Advisor= 'Advisor',
@@ -72,10 +74,11 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
         }
     }
     const handleCreate = async () => {
-        let data: IEmployeeForm;
+        let data: IEmployeeForm | IUserForm;
         if (role === Roles.Advisor) {
             data = {
                 ...advisorForm,
+                role,
                 serviceCenterId: advisorForm.serviceCenter?.id || null
             };
         } else {
@@ -91,7 +94,12 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
             }
         }
         try {
-            await dispatch(createEmployee(data));
+            if (role === Roles.Advisor) {
+                await dispatch(createUser(data));
+                await dispatch(loadAll());
+            } else {
+                await dispatch(createEmployee(data));
+            }
             showMessage("Employee created");
             setTechnicianForm(initialTechnicianForm);
             setAdvisorForm(initialAdvisorForm);
