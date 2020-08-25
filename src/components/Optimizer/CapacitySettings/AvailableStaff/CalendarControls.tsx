@@ -1,7 +1,6 @@
 import React from "react";
 import {Button} from "@material-ui/core";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
-import {MonthNames} from "../../../../config/constants";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import moment, {Moment} from "moment";
