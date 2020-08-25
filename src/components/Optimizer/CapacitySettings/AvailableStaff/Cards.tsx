@@ -2,6 +2,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Alarm, DateRange, FreeBreakfastOutlined, LockOutlined, PlaceOutlined} from "@material-ui/icons";
 import {Card} from "@material-ui/core";
 import React from "react";
+import {useModal} from "../../../../utils/hooks";
+import {EditAddress} from "../../../Modals/EditAddress/EditAddress";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -60,16 +62,21 @@ const useStyles = makeStyles(theme => ({
 type TCardItem = {
     label: string;
     icon: JSX.Element,
+    action: React.MouseEventHandler
 }
-const cards: TCardItem[] = [
-    {label: "Address", icon: <PlaceOutlined />},
-    {label: "Hours of operation", icon: <Alarm />},
-    {label: "Weekly schedule", icon: <DateRange />},
-    {label: "Breaks", icon: <FreeBreakfastOutlined />},
-    {label: "Holidays", icon: <LockOutlined />},
-];
 
 export const Cards = () => {
+    const {onClose: onCloseAddress,
+        onOpen: onOpenAddress, isOpen: isAddressOpen} = useModal();
+
+    const cards: TCardItem[] = [
+        {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
+        {label: "Hours of operation", icon: <Alarm />, action: onOpenAddress},
+        {label: "Weekly schedule", icon: <DateRange />, action: onOpenAddress},
+        {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenAddress},
+        {label: "Holidays", icon: <LockOutlined />, action: onOpenAddress},
+    ];
+
     const classes = useStyles();
     return <div className={classes.wrapper}>
         {cards.map(card =>
@@ -83,8 +90,9 @@ export const Cards = () => {
                         <h3 className={classes.titleContent}>{card.label}</h3>
                     </div>
                 </div>
-                <div className={classes.edit}>Edit</div>
+                <div className={classes.edit} onClick={card.action}>Edit</div>
             </Card>
         )}
+        <EditAddress open={isAddressOpen} onClose={onCloseAddress} />
     </div>
 }

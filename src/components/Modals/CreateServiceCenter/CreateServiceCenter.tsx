@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from "react";
 import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {States} from "../../../config/constants";
+import {states} from "../../../config/constants";
 import {Button} from "@material-ui/core";
 import {ModalForm, TFormItem, TSelectChange} from "../ModalForm";
 import {useDispatch} from "react-redux";
@@ -9,8 +9,6 @@ import {IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {useException, useMessage} from "../../../utils/hooks";
 import {createSC} from "../../../store/reducers/serviceCenters/actions";
 
-
-const states = Object.values(States);
 
 type TSCFormState = {
     scName: string;
