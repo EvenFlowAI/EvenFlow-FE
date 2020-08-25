@@ -115,7 +115,7 @@ export const Calendar = () => {
     }, [date]);
 
     const classes = useStyles();
-    return <Paper className={classes.paper}>
+    return <Paper className={classes.paper} variant="outlined">
         <h2 className={classes.title}>Calendar</h2>
         <CalendarControls date={date} onChange={handleMonthChange} />
         <div className={classes.calendarWrapper}>

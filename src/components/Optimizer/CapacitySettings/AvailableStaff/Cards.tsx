@@ -11,6 +11,7 @@ const useStyles = makeStyles(theme => ({
     card: {
         margin: 5,
         flexGrow: 1,
+        borderRadius: 0,
         position: "relative",
     },
     hElement: {
@@ -31,7 +32,10 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        flexGrow: 4
+        flexGrow: 4,
+        "&>.MuiSvgIcon-root": {
+            fontSize: 45,
+        }
     },
     edit: {
         cursor: "pointer",
@@ -69,7 +73,7 @@ export const Cards = () => {
     const classes = useStyles();
     return <div className={classes.wrapper}>
         {cards.map(card =>
-            <Card className={classes.card} key={card.label}>
+            <Card className={classes.card} key={card.label} variant="outlined">
                 <span className={classes.hElement} />
                 <div className={classes.cardContent}>
                     <div className={classes.cardIcon}>
