@@ -1,12 +1,18 @@
 import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab";
 import React from "react";
-import {StyledLabel} from "./TextField";
+import {InputLabel} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
     root: {
         display: "flex",
         width: "100%"
+    },
+    label: {
+        textTransform: "uppercase",
+        marginBottom: theme.spacing(.5),
+        fontWeight: theme.typography.fontWeightBold,
+        color: theme.palette.text.primary,
     },
     button: {
         width: "100%",
@@ -37,7 +43,7 @@ export const ToggleButtons: React.FC<TProps> = props => {
     const classes = useStyles();
 
     return <div>
-        <StyledLabel shrink>{props.label}</StyledLabel>
+        <InputLabel className={classes.label} shrink>{props.label}</InputLabel>
         <ToggleButtonGroup
             className={classes.root}
             exclusive={props.exclusive}

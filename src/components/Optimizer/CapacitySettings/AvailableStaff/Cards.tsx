@@ -5,6 +5,7 @@ import React from "react";
 import {useModal} from "../../../../utils/hooks";
 import {EditAddress} from "../../../Modals/EditAddress/EditAddress";
 import {HourOfOperations} from "../../../Modals/HourOfOperations/HourOfOperations";
+import {WeeklySchedule} from "../../../Modals/WeeklySchedule/WeeklySchedule";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -77,11 +78,16 @@ export const Cards = () => {
         onOpen: onOpenHOO,
         isOpen: isHOOOpen
     } = useModal();
+    const {
+        onClose: onCloseWS,
+        onOpen: onOpenWS,
+        isOpen: isWSOpen
+    } = useModal();
 
     const cards: TCardItem[] = [
         {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
         {label: "Hours of operation", icon: <Alarm />, action: onOpenHOO},
-        {label: "Weekly schedule", icon: <DateRange />, action: onOpenAddress},
+        {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
         {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenAddress},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenAddress},
     ];
@@ -104,5 +110,6 @@ export const Cards = () => {
         )}
         <EditAddress open={isAddressOpen} onClose={onCloseAddress} />
         <HourOfOperations open={isHOOOpen} onClose={onCloseHOO} />
+        <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
     </div>
 }
