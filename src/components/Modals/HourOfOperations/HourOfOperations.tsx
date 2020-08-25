@@ -54,7 +54,7 @@ const HOOForm: React.FC<{
 }
 export const HourOfOperations: React.FC<DialogProps> = props => {
     return <BaseModal {...props} maxWidth="sm">
-        <DialogTitle>Edit Hours of Operations</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Edit Hours of Operations</DialogTitle>
         <DialogContent>
             <HOOForm />
         </DialogContent>

@@ -75,7 +75,7 @@ export const EditAddress: React.FC<DialogProps> = props => {
     }
 
     return <BaseModal {...props} maxWidth="sm">
-        <DialogTitle>
+        <DialogTitle onClose={props.onClose}>
             Edit Address
         </DialogTitle>
         <DialogContent>
