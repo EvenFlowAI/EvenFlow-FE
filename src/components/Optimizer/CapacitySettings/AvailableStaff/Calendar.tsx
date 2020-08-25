@@ -73,14 +73,13 @@ type TDay = {
     type: TDayType
 }
 export const Calendar = () => {
-    const today = new Date();
-    const [month, setMonth] = useState<number>(today.getMonth());
-    const handleMonthChange = (m: number) => {
-        setMonth(m);
+    const [date, setDate] = useState<Moment>(moment());
+    const handleMonthChange = (m: Moment) => {
+        setDate(m);
     }
     const days: TDay[] = useMemo(() => {
         const days: TDay[] = [];
-        const cur = moment().month(month).startOf("month");
+        const cur = moment(date).startOf("month");
         const daysInMonth = cur.daysInMonth();
         const startDay = cur.day();
         cur.subtract(startDay, 'days');
@@ -88,7 +87,7 @@ export const Calendar = () => {
             days.push({
                 date: moment(cur),
                 day: +cur.format("D"),
-                type: cur.month() === month ? "cur" : "prev"
+                type: cur.month() === date.month() ? "cur" : "prev"
             });
             cur.add(1, "day");
         }
@@ -102,12 +101,12 @@ export const Calendar = () => {
         }
 
         return days;
-    }, [month]);
+    }, [date]);
 
     const classes = useStyles();
     return <Paper className={classes.paper}>
         <h2 className={classes.title}>Calendar</h2>
-        <CalendarControls month={month} onChange={handleMonthChange} />
+        <CalendarControls date={date} onChange={handleMonthChange} />
         <div className={classes.calendarWrapper}>
             {WeekDayNames.map(day =>
                 <div className={classes.weekDay} key={day}>{day}</div>
