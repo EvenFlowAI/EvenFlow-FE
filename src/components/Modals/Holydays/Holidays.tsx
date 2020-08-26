@@ -11,6 +11,11 @@ import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles({
     divider: {
         margin: "0 !important"
+    },
+    addHoliday: {
+        textAlign: "right",
+        marginBottom: 5,
+        marginRight: 15
     }
 });
 
@@ -43,6 +48,9 @@ export const Holidays: React.FC<DialogProps> = props => {
     const classes = useStyles();
     return <BaseModal {...props} width={720}>
         <DialogTitle onClose={props.onClose}>Holidays</DialogTitle>
+        <div className={classes.addHoliday}>
+            <Button variant="contained" color="primary">Add Holiday</Button>
+        </div>
         <Divider className={classes.divider} />
         <Table hidePagination compact data={holidays} index={"title"} rowData={rowData} actions={actions} />
         <Divider className={classes.divider} />
