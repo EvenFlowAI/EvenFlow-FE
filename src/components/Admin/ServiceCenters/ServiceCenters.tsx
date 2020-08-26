@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {TableRowDataType} from "../../UI/types";
-import {IconButton} from "@material-ui/core";
+import {Box, IconButton} from "@material-ui/core";
 import {Visibility} from "@material-ui/icons";
 import {TableAvatar} from "../TableAvatar";
 import {Table} from "../../UI/Table";
@@ -43,18 +43,21 @@ export const ServiceCenters = () => {
         <TableAvatar name={el.name} />
     )
 
-    return <Table<IServiceCenterExtended>
-        data={data}
-        noDataTitle="No Service Centers present"
-        isLoading={loading}
-        rowData={rowData}
-        onChangePage={changePage}
-        onChangeRowsPerPage={changeRowsPerPage}
-        count={count}
-        page={pageIndex}
-        rowsPerPage={pageSize}
-        startActions={startActions}
-        index="id"
-        actions={viewActions}
-    />
+    return <>
+        <Box padding={1} />
+        <Table<IServiceCenterExtended>
+            data={data}
+            noDataTitle="No Service Centers present"
+            isLoading={loading}
+            rowData={rowData}
+            onChangePage={changePage}
+            onChangeRowsPerPage={changeRowsPerPage}
+            count={count}
+            page={pageIndex}
+            rowsPerPage={pageSize}
+            startActions={startActions}
+            index="id"
+            actions={viewActions}
+        />
+    </>
 }

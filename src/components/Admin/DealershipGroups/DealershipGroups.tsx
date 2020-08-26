@@ -1,6 +1,6 @@
 import React from "react";
 import {Table} from "../../UI/Table";
-import {IconButton} from "@material-ui/core";
+import {Box, IconButton} from "@material-ui/core";
 import {Edit, DeleteForever, Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
@@ -64,17 +64,20 @@ export const DealershipGroups = () => {
         dispatch(dealershipActions.loadAll());
     }, [dispatch]);
 
-    return <Table<IDealershipGroupExtended>
-        data={data}
-        noDataTitle="No Dealership Groups are present"
-        isLoading={isLoading}
-        rowData={rowData}
-        onChangePage={changePage}
-        onChangeRowsPerPage={changeRowsPerPage}
-        count={count}
-        page={pageIndex}
-        rowsPerPage={pageSize}
-        index="id"
-        actions={viewActions}
-    />
+    return <>
+        <Box padding={1} />
+        <Table<IDealershipGroupExtended>
+            data={data}
+            noDataTitle="No Dealership Groups are present"
+            isLoading={isLoading}
+            rowData={rowData}
+            onChangePage={changePage}
+            onChangeRowsPerPage={changeRowsPerPage}
+            count={count}
+            page={pageIndex}
+            rowsPerPage={pageSize}
+            index="id"
+            actions={viewActions}
+        />
+    </>
 }

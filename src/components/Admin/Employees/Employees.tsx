@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from "react";
 import {Table} from "../../UI/Table";
-import {IconButton} from "@material-ui/core";
+import {Box, IconButton} from "@material-ui/core";
 import {Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
 import {TableAvatar} from "../TableAvatar";
@@ -56,18 +56,21 @@ export const Employees = () => {
         <TableAvatar name={el.fullName} />
     )
 
-    return <Table<IEmployee>
-        data={data}
-        noDataTitle="No employees present"
-        isLoading={isLoading}
-        rowData={rowData}
-        onChangePage={changePage}
-        onChangeRowsPerPage={changeRowsPerPage}
-        count={count}
-        page={pageIndex}
-        rowsPerPage={pageSize}
-        startActions={startActions}
-        index="id"
-        actions={viewActions}
-    />
+    return <>
+        <Box padding={1} />
+        <Table<IEmployee>
+            data={data}
+            noDataTitle="No employees present"
+            isLoading={isLoading}
+            rowData={rowData}
+            onChangePage={changePage}
+            onChangeRowsPerPage={changeRowsPerPage}
+            count={count}
+            page={pageIndex}
+            rowsPerPage={pageSize}
+            startActions={startActions}
+            index="id"
+            actions={viewActions}
+        />
+    </>
 }
