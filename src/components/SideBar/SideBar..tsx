@@ -7,7 +7,7 @@ import {LinkType} from "../../types/types";
 import {sideBarWidth} from "../../theme/theme";
 import {Routes} from "../../config/routes";
 import {useCurrentUser} from "../../utils/hooks";
-import {useLocation, matchPath} from "react-router-dom";
+import {useLocation, useHistory, matchPath} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -16,7 +16,12 @@ const useStyles = makeStyles(theme => ({
     },
     logo: {
         maxWidth: "80%",
-        marginBottom: 60
+        marginBottom: 60,
+        cursor: "pointer",
+        transition: theme.transitions.create(['opacity']),
+        "&:hover": {
+            opacity: .8
+        }
     },
     drawerPaper: {
         width: sideBarWidth,
@@ -61,11 +66,15 @@ export const SideBar = () => {
 
     const currentUser = useCurrentUser();
     const {pathname} = useLocation();
+    const history = useHistory();
     const links: LinkType[] = useMemo(() => {
         if (matchPath(pathname, Routes.Admin.Base))
             return currentUser?.isSuperUser ? SULinks : AdminLinks;
         return MainLinks;
     }, [currentUser, pathname]);
+    const handleLogoClick = () => {
+        history.push(Routes.Admin.Base);
+    }
 
     return <Drawer
         className={classes.drawer}
@@ -73,7 +82,7 @@ export const SideBar = () => {
         variant="permanent"
         anchor="left"
     >
-        <img className={classes.logo} src={logo} alt="EvenFlow AI"/>
+        <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI"/>
         <List disablePadding>
             {links.map(link => <ListItem
                 disableGutters
