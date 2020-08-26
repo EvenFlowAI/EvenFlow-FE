@@ -4,6 +4,8 @@ import {defaultPageData, defaultPaging} from "../defaultInitials";
 
 export type TEmployeesState = {
     employeesList: IEmployee[];
+    techniciansList: IEmployee[];
+    loadingTechnicians: boolean;
     loading: boolean;
     saving: boolean;
     paging: IPagingResponse;
@@ -12,6 +14,8 @@ export type TEmployeesState = {
 
 const initialState: TEmployeesState = {
     employeesList: [],
+    techniciansList: [],
+    loadingTechnicians: false,
     loading: false,
     saving: false,
     paging: {...defaultPaging},
@@ -22,6 +26,10 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
     switch (action.type) {
         case "Employees/GetAll":
             return {...state, employeesList: action.payload};
+        case "Employees/GetTechnicians":
+            return {...state, techniciansList: action.payload};
+        case "Employees/LoadingTechnicians":
+            return {...state, loadingTechnicians: action.payload};
         case "Employees/ChangePaging":
             return {...state, paging: action.payload};
         case "Employees/ChangePageData":

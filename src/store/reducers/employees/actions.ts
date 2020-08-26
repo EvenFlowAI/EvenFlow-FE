@@ -50,6 +50,33 @@ export const loadAll: ActionCreator<ThunkAction<
         throw e;
     }
 };
+const loadingTechnicians = (payload: boolean): TEmployeeActions => ({type: "Employees/LoadingTechnicians", payload});
+const _loadTechnicians = (payload: IEmployee[]): TEmployeeActions => ({type: "Employees/GetTechnicians", payload});
+export const loadTechnicians: ActionCreator<ThunkAction<
+        void, RootState, void, Action
+    >> = () =>
+    async (dispatch, getState) => {
+
+    dispatch(loadingTechnicians(true));
+    try {
+        const {data: {result: employees}} = await Api.call<PaginatedAPIResponse<IEmployee>>(
+            Api.endpoints.Users.GetAll,
+            {
+                data: {
+                    roles: ["Technician"],
+                    pageIndex: 0,
+                    pageSize: 100
+                }
+            }
+        );
+        dispatch(loadingTechnicians(false));
+        dispatch(_loadTechnicians(employees));
+    } catch (e) {
+        dispatch(loadingTechnicians(false));
+        throw e;
+    }
+};
+
 export const createEmployee: ActionCreator<
     ThunkAction<void, RootState, void, TEmployeeActions
 >> = (payload: IEmployeeForm) => async dispatch => {

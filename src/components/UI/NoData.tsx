@@ -7,5 +7,5 @@ type Props = {
 }
 
 export const NoData: React.FC<Props> = props => {
-    return <Typography variant="body1">{props.title || "No data"}</Typography>
+    return <Typography variant="body1" align="center">{props.title || "No data"}</Typography>
 }
