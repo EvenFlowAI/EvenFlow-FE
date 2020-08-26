@@ -6,6 +6,7 @@ import {useModal} from "../../../../utils/hooks";
 import {EditAddress} from "../../../Modals/EditAddress/EditAddress";
 import {HourOfOperations} from "../../../Modals/HourOfOperations/HourOfOperations";
 import {WeeklySchedule} from "../../../Modals/WeeklySchedule/WeeklySchedule";
+import {Break} from "../../../Modals/Breaks/Break";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -83,12 +84,17 @@ export const Cards = () => {
         onOpen: onOpenWS,
         isOpen: isWSOpen
     } = useModal();
+    const {
+        onClose: onCloseB,
+        onOpen: onOpenB,
+        isOpen: isBOpen
+    } = useModal();
 
     const cards: TCardItem[] = [
         {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
         {label: "Hours of operation", icon: <Alarm />, action: onOpenHOO},
         {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
-        {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenAddress},
+        {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenB},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenAddress},
     ];
 
@@ -111,5 +117,6 @@ export const Cards = () => {
         <EditAddress open={isAddressOpen} onClose={onCloseAddress} />
         <HourOfOperations open={isHOOOpen} onClose={onCloseHOO} />
         <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
+        <Break open={isBOpen} onClose={onCloseB} />
     </div>
 }

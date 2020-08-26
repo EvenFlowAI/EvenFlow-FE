@@ -2,11 +2,31 @@ import {unstable_createMuiStrictModeTheme as createMuiTheme, ThemeOptions} from 
 import {fonts} from "./fonts";
 import {colors} from "./colors";
 
+declare module "@material-ui/core/styles/createBreakpoints" {
+    interface BreakpointOverrides {
+        xs: true;
+        sm: true;
+        mds: true;
+        md: true;
+        lg: true;
+        xl: true;
+    }
+}
 
 export const sideBarWidth = 255;
 
 
 const themeOptions: ThemeOptions = {
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            mds: 720,
+            md: 960,
+            lg: 1280,
+            xl: 1920
+        }
+    },
     typography: {
         fontFamily: [
             // '-apple-system',
@@ -23,6 +43,11 @@ const themeOptions: ThemeOptions = {
         MuiCssBaseline: {
             '@global': {
                 '@font-face': fonts
+            }
+        },
+        MuiIconButton: {
+            root: {
+                padding: 9
             }
         }
     },

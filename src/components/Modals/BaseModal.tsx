@@ -4,13 +4,13 @@ import {
     DialogTitle as DT,
     DialogContent as DC,
     DialogActions as DA,
-    DialogProps,
     DialogTitleProps,
     IconButton,
     Typography,
     DialogContentProps, DialogActionsProps, Container
 } from "@material-ui/core";
 import {Close} from "@material-ui/icons";
+import {DialogProps} from "./types";
 import {makeStyles} from "@material-ui/core/styles";
 import {AvatarUpload} from "../UI/AvatarUpload";
 
@@ -33,6 +33,9 @@ const useStyles = makeStyles({
     },
     dialogContent: {
         padding: "10px 48px"
+    },
+    dialogPaper: (maxWidth: number) => {
+        return maxWidth ? {maxWidth} : {};
     },
     dialogActions: {
         padding: "10px 48px 36px"
@@ -57,24 +60,24 @@ const useStyles = makeStyles({
 
 
 export const BaseModal: React.FC<DialogProps> = props => {
-    const classes = useStyles();
-    return <Dialog maxWidth={"md"} fullWidth {...props} className={classes.root} />;
+    const classes = useStyles(props.width || 0);
+    return <Dialog maxWidth={"md"} fullWidth {...props} classes={{root: classes.root, paper: classes.dialogPaper}} />;
 }
 
 export const DialogContent: React.FC<DialogContentProps> = props => {
-    const classes = useStyles();
+    const classes = useStyles(0);
     return <DC {...props} className={classes.dialogContent} />
 }
 
 export const DialogActions: React.FC<DialogActionsProps> = props => {
-    const classes = useStyles();
+    const classes = useStyles(0);
     return <DA {...props} className={classes.dialogActions} />
 }
 
 export const DialogTitle: React.FC<
     DialogTitleProps & {onClose?: () => void}
 > = ({children, onClose, ...props}) => {
-    const classes = useStyles();
+    const classes = useStyles(0);
     return <DT {...props} className={classes.dialogTitle}>
         {children}
         {onClose ? <IconButton className={classes.closeButton} onClick={onClose}>
@@ -85,7 +88,7 @@ export const DialogTitle: React.FC<
 
 
 export const DialogContentTitle: React.FC<{title: string}> = props => {
-    const classes = useStyles();
+    const classes = useStyles(0);
     return <Typography
         className={classes.dialogContentTitle}
         variant="h4">
@@ -94,7 +97,7 @@ export const DialogContentTitle: React.FC<{title: string}> = props => {
 }
 
 export const AvatarContainer: React.FC = () => {
-    const classes = useStyles();
+    const classes = useStyles(0);
     return <Container className={classes.avatarWrapper}>
         <AvatarUpload />
     </Container>

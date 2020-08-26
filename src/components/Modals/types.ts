@@ -4,6 +4,7 @@ import {DialogProps as DP} from "@material-ui/core";
 //     payload?: U;
 // };
 type DialogData = {
-    onClose: () => void
+    onClose: () => void,
+    width?: number
 }
 export type DialogProps = DP & DialogData;
