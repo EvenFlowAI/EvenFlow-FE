@@ -8,6 +8,8 @@ export type TableRowDataType<DataEl> = {
 }
 
 export interface ITableProps<Data> {
+    compact?: boolean;
+    hidePagination?: boolean;
     data: Data[];
     index: keyof Data;
     rowData: TableRowDataType<Data>[];

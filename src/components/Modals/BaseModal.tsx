@@ -38,7 +38,7 @@ const useStyles = makeStyles({
         return maxWidth ? {maxWidth} : {};
     },
     dialogActions: {
-        padding: "10px 48px 36px"
+        padding: "10px 25px 25px"
     },
     dialogContentTitle: {
         fontSize: 19,

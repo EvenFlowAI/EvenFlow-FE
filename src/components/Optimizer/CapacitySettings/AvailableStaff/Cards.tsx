@@ -7,6 +7,7 @@ import {EditAddress} from "../../../Modals/EditAddress/EditAddress";
 import {HourOfOperations} from "../../../Modals/HourOfOperations/HourOfOperations";
 import {WeeklySchedule} from "../../../Modals/WeeklySchedule/WeeklySchedule";
 import {Break} from "../../../Modals/Breaks/Break";
+import {Holidays} from "../../../Modals/Holydays/Holidays";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -89,13 +90,18 @@ export const Cards = () => {
         onOpen: onOpenB,
         isOpen: isBOpen
     } = useModal();
+    const {
+        onClose: onCloseH,
+        onOpen: onOpenH,
+        isOpen: isHOpen
+    } = useModal();
 
     const cards: TCardItem[] = [
         {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
         {label: "Hours of operation", icon: <Alarm />, action: onOpenHOO},
         {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
         {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenB},
-        {label: "Holidays", icon: <LockOutlined />, action: onOpenAddress},
+        {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
     ];
 
     const classes = useStyles();
@@ -118,5 +124,6 @@ export const Cards = () => {
         <HourOfOperations open={isHOOOpen} onClose={onCloseHOO} />
         <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
         <Break open={isBOpen} onClose={onCloseB} />
+        <Holidays open={isHOpen} onClose={onCloseH} />
     </div>
 }

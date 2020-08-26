@@ -15,22 +15,23 @@ import { NoData } from "./NoData";
 import { Loading } from "./Loading";
 
 const cellPadding = 16;
+const compactPadding = "5px 15px"
 const useStyles = makeStyles(theme => ({
     root: {},
-    tableCell: {
-        fontSize: 16,
+    tableCell: (compact: boolean) => ({
+        fontSize: compact ? 14 : 16,
         border: "none",
         // borderBottomColor: "#000000",
-        padding: cellPadding
-    },
-    tableHead: {
-        fontSize: 16,
+        padding: compact ? compactPadding : cellPadding
+    }),
+    tableHead: (compact: boolean) => ({
+        fontSize: compact ? 14 : 16,
         border: "none",
         // borderBottomColor: "#9DA8B5",
-        padding: cellPadding,
+        padding: compact ? compactPadding : cellPadding,
         fontWeight: "bold",
         color: "#9DA8B5"
-    },
+    }),
     pagination: {
         flexShrink: 0,
         width: "100%",
@@ -51,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export function Table<U>(props: ITableProps<U>): JSX.Element {
-    const classes = useStyles();
+    const classes = useStyles(!!props.compact);
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);
@@ -122,7 +123,7 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
                 </TableBody>
             </BaseTable>
         </TableContainer>
-        <TablePagination
+        {!props.hidePagination ? <TablePagination
             className={classes.pagination}
             classes={{select: classes.select}}
             component="div"
@@ -132,6 +133,6 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
             onChangeRowsPerPage={handleChangeRowsPerPage}
             rowsPerPage={nRowsPerPage}
             rowsPerPageOptions={defaultRowsPerPageOptions}
-        />
+        /> : null}
     </>
 }
