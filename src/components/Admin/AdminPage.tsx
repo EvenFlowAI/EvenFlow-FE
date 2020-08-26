@@ -19,13 +19,13 @@ export const AdminPage = () => {
                 : null}
             <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>
             {currentUser && !currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.Base} component={AdminDashboard}/>
+                ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null
             }
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser ? currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
-                : <Redirect to={Routes.Admin.ServiceCenters} /> : null}
+                : <Redirect to={Routes.Admin.Base} /> : null}
         </Switch>
     </ContentContainer>;
 }
