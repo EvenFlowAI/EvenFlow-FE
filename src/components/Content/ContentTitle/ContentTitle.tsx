@@ -60,6 +60,7 @@ export const ContentTitle = () => {
     }
 
     const classes = useStyles(!!prefix.length);
+    if (path.title === "Not Found") return null;
 
     return <div className={classes.titleContainer}>
         {prefix.length ? prefix.map(title => {

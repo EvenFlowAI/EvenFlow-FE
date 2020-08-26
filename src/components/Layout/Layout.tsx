@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
 import {SideBar} from "../SideBar/SideBar.";
 import {makeStyles} from "@material-ui/core/styles";
-import { Redirect, Switch, matchPath, useLocation } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
 import {AdminPage} from "../Admin/AdminPage";
 import {NavBar} from "../NavBar/NavBar";
 import {ContentTitle} from "../Content/ContentTitle/ContentTitle";
-import {Divider, Toolbar} from "@material-ui/core";
+import {Toolbar} from "@material-ui/core";
 import {ContentActions} from "../Content/ContentActions/ContentActions";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {Routes} from "../../config/routes";
@@ -38,8 +38,6 @@ export const Layout = () => {
         dispatch(getCurrentUser());
     }, [dispatch]);
 
-    const {pathname} = useLocation();
-
     return <div className={classes.root}>
         <SideBar />
         <NavBar />
@@ -49,7 +47,6 @@ export const Layout = () => {
                 <ContentTitle />
                 <ContentActions />
             </TitleContainer>
-            {matchPath(pathname, "/admin") ? <Divider className={classes.divider}/> : null}
             <Switch>
                 <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />
                 <PrivateRoute path={Routes.Optimizer.Base} component={OptimizerPage} />

@@ -7,6 +7,7 @@ import {ContentContainer} from "../Content/ContentContainer/ContentContainer";
 import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";
 import {useCurrentUser} from "../../utils/hooks";
+import {AdminDashboard} from "./Dashboard/Dashboard";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
@@ -17,6 +18,10 @@ export const AdminPage = () => {
                 ? <PrivateRoute path={Routes.Admin.DealershipGroups} component={DealershipGroups}/>
                 : null}
             <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>
+            {currentUser && !currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.Base} component={AdminDashboard}/>
+                : null
+            }
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser ? currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
