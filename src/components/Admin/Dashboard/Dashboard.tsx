@@ -9,6 +9,12 @@ import {
     PeopleAltOutlined,
     PlaceOutlined
 } from "@material-ui/icons";
+import {EditAddress} from "../../Modals/EditAddress/EditAddress";
+import {HourOfOperations} from "../../Modals/HourOfOperations/HourOfOperations";
+import {WeeklySchedule} from "../../Modals/WeeklySchedule/WeeklySchedule";
+import {Holidays} from "../../Modals/Holydays/Holidays";
+import {Break} from "../../Modals/Breaks/Break";
+import {useModal} from "../../../utils/hooks";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -70,18 +76,45 @@ const DashboardTitle = () => {
 type TItem = {
     label: string;
     icon: JSX.Element;
+    action: () => void;
 }
 
 export const AdminDashboard: React.FC = props => {
+    const {
+        onClose: onCloseAddress,
+        onOpen: onOpenAddress,
+        isOpen: isAddressOpen
+    } = useModal();
+    const {
+        onClose: onCloseHOO,
+        onOpen: onOpenHOO,
+        isOpen: isHOOOpen
+    } = useModal();
+    const {
+        onClose: onCloseWS,
+        onOpen: onOpenWS,
+        isOpen: isWSOpen
+    } = useModal();
+    const {
+        onClose: onCloseB,
+        onOpen: onOpenB,
+        isOpen: isBOpen
+    } = useModal();
+    const {
+        onClose: onCloseH,
+        onOpen: onOpenH,
+        isOpen: isHOpen
+    } = useModal();
+
     const items: TItem[] = [
-        {label: "Address", icon: <PlaceOutlined />},
-        {label: "Hours of operation", icon: <Alarm />},
-        {label: "Weekly schedule", icon: <DateRange />},
-        {label: "Bays", icon: <Build />},
-        {label: "Breaks", icon: <FreeBreakfastOutlined />},
-        {label: "Holidays", icon: <LockOutlined />},
-        {label: "Technician stuff", icon: <PeopleAltOutlined />},
-        {label: "Pods", icon: <FormatListNumbered />},
+        {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
+        {label: "Hours of operation", icon: <Alarm />, action: onOpenHOO},
+        {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
+        {label: "Bays", icon: <Build />, action: onOpenAddress},
+        {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenB},
+        {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
+        {label: "Technician stuff", icon: <PeopleAltOutlined />, action: onOpenAddress},
+        {label: "Pods", icon: <FormatListNumbered />, action: onOpenAddress},
     ];
 
     const classes = useStyles();
@@ -91,12 +124,17 @@ export const AdminDashboard: React.FC = props => {
             {items.map(item =>
                 <Grid item xs={4} key={item.label}>
                     <Paper variant="outlined" className={classes.paper}>
-                        <span className={classes.edit}>Edit</span>
+                        <span className={classes.edit} onClick={item.action}>Edit</span>
                         <div className={classes.icon}>{item.icon}</div>
                         <h4 className={classes.label}>{item.label}</h4>
                     </Paper>
                 </Grid>
             )}
         </Grid>
+        <EditAddress open={isAddressOpen} onClose={onCloseAddress} />
+        <HourOfOperations open={isHOOOpen} onClose={onCloseHOO} />
+        <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
+        <Break open={isBOpen} onClose={onCloseB} />
+        <Holidays open={isHOpen} onClose={onCloseH} />
     </div>
 }
