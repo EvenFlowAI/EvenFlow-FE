@@ -63,7 +63,7 @@ export const loadTechnicians: ActionCreator<ThunkAction<
             Api.endpoints.Users.GetAll,
             {
                 data: {
-                    roles: ["Technician"],
+                    roles: ["Tehnician"],
                     pageIndex: 0,
                     pageSize: 100
                 }

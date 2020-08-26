@@ -18,6 +18,7 @@ import {Break} from "../../Modals/Breaks/Break";
 import {useModal} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Technicians} from "../../Modals/Technicians/Technicians";
+import {Bays} from "../../Modals/Bays/Bays";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -129,12 +130,17 @@ export const AdminDashboard: React.FC = props => {
         onOpen: onOpenTech,
         isOpen: isTechOpen
     } = useModal();
+    const {
+        onClose: onCloseBays,
+        onOpen: onOpenBays,
+        isOpen: isBaysOpen
+    } = useModal();
 
     const items: TItem[] = [
         {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
         {label: "Hours of operation", icon: <Alarm />, action: onOpenHOO},
         {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
-        {label: "Bays", icon: <Build />, action: onOpenAddress},
+        {label: "Bays", icon: <Build />, action: onOpenBays},
         {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenB},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
         {label: "Technician stuff", icon: <PeopleAltOutlined />, action: onOpenTech},
@@ -161,5 +167,6 @@ export const AdminDashboard: React.FC = props => {
         <Break open={isBOpen} onClose={onCloseB} />
         <Holidays open={isHOpen} onClose={onCloseH} />
         <Technicians open={isTechOpen} onClose={onCloseTech} />
+        <Bays open={isBaysOpen} onClose={onCloseBays} />
     </div>
 }

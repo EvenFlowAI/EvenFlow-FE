@@ -3,7 +3,7 @@ import React from "react";
 export type AlignTypes = "inherit" | "left" | "center" | "right" | "justify";
 export type TableRowDataType<DataEl> = {
     header: string;
-    val: (el: DataEl) => string | undefined | null;
+    val: (el: DataEl) => string | JSX.Element | undefined | null;
     align?: AlignTypes;
 }
 
