@@ -4,7 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
     root: {
-        padding: 40,
+        padding: "0 40px 40px",
         display: "flex",
         flexFlow: "column nowrap",
         alignItems: "center",

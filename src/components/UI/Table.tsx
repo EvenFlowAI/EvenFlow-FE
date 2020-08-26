@@ -14,17 +14,19 @@ import {defaultRowsPerPage, defaultRowsPerPageOptions} from "../../config/config
 import { NoData } from "./NoData";
 import { Loading } from "./Loading";
 
-const cellPadding = "28px 16px 9px";
-const useStyles = makeStyles({
+const cellPadding = 16;
+const useStyles = makeStyles(theme => ({
     root: {},
     tableCell: {
         fontSize: 16,
-        borderBottomColor: "#000000",
+        border: "none",
+        // borderBottomColor: "#000000",
         padding: cellPadding
     },
     tableHead: {
         fontSize: 16,
-        borderBottomColor: "#9DA8B5",
+        border: "none",
+        // borderBottomColor: "#9DA8B5",
         padding: cellPadding,
         fontWeight: "bold",
         color: "#9DA8B5"
@@ -33,11 +35,19 @@ const useStyles = makeStyles({
         flexShrink: 0,
         width: "100%",
     },
+    tableRow: {
+        "&:nth-of-type(odd)": {
+            background: "#FFFFFF"
+        },
+        "&:nth-of-type(even)": {
+            background: "#F2F3F7"
+        }
+    },
     select: {
         background: "transparent",
         border: "none"
     }
-});
+}));
 
 
 export function Table<U>(props: ITableProps<U>): JSX.Element {
@@ -87,7 +97,7 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
                     {props.data.map((row, idx) => {
                         const rIdx = props.index ? row[props.index] : idx;
                         return (
-                            <TableRow key={`${rIdx}`}>
+                            <TableRow key={`${rIdx}`} className={classes.tableRow}>
                                 {props.startActions
                                     ? <TableCell className={classes.tableCell}>
                                         {props.startActions(row)}
