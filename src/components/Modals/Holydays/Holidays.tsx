@@ -1,12 +1,15 @@
 import React from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogTitle} from "../BaseModal";
-import {Button, Divider, IconButton} from "@material-ui/core";
+import {Button, IconButton} from "@material-ui/core";
 import {Table} from "../../UI/Table";
 import moment, {Moment} from "moment";
 import {TableRowDataType} from "../../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
+import {AddHoliday} from "./AddHoliday";
+import {useModal} from "../../../utils/hooks";
+import {DividerThin} from "../../UI/Divider";
 
 const useStyles = makeStyles({
     divider: {
@@ -41,23 +44,26 @@ const rowData: TableRowDataType<THoliday>[] = [
 
 export const Holidays: React.FC<DialogProps> = props => {
     const actions = (el: THoliday) => {
-        return <IconButton>
+        return <IconButton onClick={onOpen}>
             <MoreHoriz />
         </IconButton>
     }
+    const {onOpen, onClose, isOpen} = useModal();
+
     const classes = useStyles();
     return <BaseModal {...props} width={720}>
         <DialogTitle onClose={props.onClose}>Holidays</DialogTitle>
         <div className={classes.addHoliday}>
-            <Button variant="contained" color="primary">Add Holiday</Button>
+            <Button variant="contained" color="primary" onClick={onOpen}>Add Holiday</Button>
         </div>
-        <Divider className={classes.divider} />
+        <DividerThin />
         <Table hidePagination compact data={holidays} index={"title"} rowData={rowData} actions={actions} />
-        <Divider className={classes.divider} />
+        <DividerThin />
         <DialogActions>
             <Button onClick={props.onClose} variant="contained" color="primary">
                 Close
             </Button>
         </DialogActions>
+        <AddHoliday open={isOpen} onClose={onClose} />
     </BaseModal>
 }
