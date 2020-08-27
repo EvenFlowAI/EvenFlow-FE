@@ -26,7 +26,8 @@ export interface IDealershipForm {
     phoneNumber: string;
 }
 export interface IContactPersonForm {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     phoneNumber: string;
     email: string;
 }

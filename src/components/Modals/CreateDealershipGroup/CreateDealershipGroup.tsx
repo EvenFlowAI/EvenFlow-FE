@@ -61,7 +61,8 @@ const elementsGroup1: KeyPair<IDealershipForm>[] = [
 ];
 
 const elementsGroup2: KeyPair<IContactPersonForm>[] = [
-    {name: "fullName", label: "Contact person name"},
+    {name: "firstName", label: "Contact person first name"},
+    {name: "lastName", label: "Contact person last name"},
     {name: "phoneNumber", label: "Contact person phone"},
     {name: "email", label: "Contact person email"}
 ];
@@ -75,7 +76,7 @@ const initialStateDealershipState: IDealershipForm = {
     name: "", mainAddress: "", phoneNumber: ""
 };
 const initialCPState: IContactPersonForm = {
-    phoneNumber: "", fullName: "", email: ""
+    phoneNumber: "", firstName: "", lastName: "", email: ""
 }
 
 

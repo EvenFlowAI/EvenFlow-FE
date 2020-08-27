@@ -102,7 +102,7 @@ type ApiRoutes = {
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
-    Employees: Record<"Create" | "Update", TApiRoute>,
+    Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Remove" | "Avatar", TApiRoute>,
@@ -144,6 +144,7 @@ export class Api {
         Employees: {
             Create: {route: "/employees", method: "post"},
             Update: {route: "/employees/{id}", method: "put"},
+            GetAll: {route: "/employees/by-query", method: "post"}
         },
         ServiceCenters: {
             Create: {route: "/service-centers", method: "post"},

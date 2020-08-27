@@ -55,17 +55,17 @@ const _loadTechnicians = (payload: IEmployee[]): TEmployeeActions => ({type: "Em
 export const loadTechnicians: ActionCreator<ThunkAction<
         void, RootState, void, Action
     >> = () =>
-    async (dispatch, getState) => {
+    async (dispatch) => {
 
     dispatch(loadingTechnicians(true));
     try {
         const {data: {result: employees}} = await Api.call<PaginatedAPIResponse<IEmployee>>(
-            Api.endpoints.Users.GetAll,
+            Api.endpoints.Employees.GetAll,
             {
                 data: {
-                    roles: ["Tehnician"],
+                    serviceCenterId: 1,
                     pageIndex: 0,
-                    pageSize: 100
+                    pageSize: 0
                 }
             }
         );
