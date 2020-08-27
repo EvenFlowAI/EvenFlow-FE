@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {states} from "../../../config/constants";
@@ -47,8 +47,26 @@ const formItems: TFormItem<TSCFormState>[][] = [
 
 
 
-export const CreateServiceCenter: React.FC<DialogProps> = props => {
-    const [formState, setFormState] = useState<TSCFormState>(initialFormState);
+export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({payload, ...props}) => {
+    const initialState: TSCFormState = useMemo(() => {
+        return {
+            scName: payload?.name || initialFormState.scName,
+            scEmail: payload?.serviceCenterEmail || initialFormState.scEmail,
+            scPhoneNumber: payload?.phoneNumber || initialFormState.scPhoneNumber,
+            cpEmail: payload?.contactPersonalEmail || initialFormState.cpEmail,
+            city: payload?.address?.city || initialFormState.city,
+            zipCode: payload?.address?.zipCode || initialFormState.zipCode,
+            street: payload?.address?.street || initialFormState.street,
+            state: payload?.address?.state || initialFormState.state
+        }
+    }, [payload]);
+
+    const [formState, setFormState] = useState<TSCFormState>(initialState);
+
+    useEffect(() => {
+        setFormState(initialState);
+    }, [props.open, initialState]);
+
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
