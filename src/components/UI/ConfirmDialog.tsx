@@ -26,6 +26,7 @@ export const ConfirmDialog: React.FC = props => {
         return null;
 
     return <BaseModal
+        maxWidth="sm"
         open={open}
         onClose={closeConfirm}
     >

@@ -31,8 +31,7 @@ export function useConfirm () {
 }
 
 export const useCurrentUser = (): ICurrentUser | undefined => {
-    const currentUser = useSelector((state: RootState) => state.users.currentUser);
-    return currentUser;
+    return useSelector((state: RootState) => state.users.currentUser);
 }
 
 export function useException() {

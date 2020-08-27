@@ -82,3 +82,14 @@ export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServ
         throw e;
     }
 }
+
+export const removeSC: ActionCreator<
+    ThunkAction<void, RootState, void, TServiceCenterActions>
+> = (serviceCenterId: number) => async (dispatch) => {
+    try {
+        await Api.call(Api.endpoints.ServiceCenters.Remove, {urlParams: {id: serviceCenterId}});
+        dispatch(loadAll())
+    } catch (e) {
+        throw e;
+    }
+}

@@ -20,6 +20,7 @@ export interface IServiceCenterExtended extends IServiceCenter {
     dealershipId: number;
 }
 export interface IServiceCenterForm {
+    id?: number,
     name: string,
     serviceCenterEmail: string,
     contactPersonalEmail: string,
