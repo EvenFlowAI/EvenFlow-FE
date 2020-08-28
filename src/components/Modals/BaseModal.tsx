@@ -12,7 +12,7 @@ import {
 import {Close} from "@material-ui/icons";
 import {DialogProps} from "./types";
 import {makeStyles} from "@material-ui/core/styles";
-import {AvatarUpload} from "../UI/AvatarUpload";
+import {AvatarUpload, TAvatarProps} from "../UI/AvatarUpload";
 
 const useStyles = makeStyles({
     root: {
@@ -96,9 +96,9 @@ export const DialogContentTitle: React.FC<{title: string}> = props => {
     </Typography>;
 }
 
-export const AvatarContainer: React.FC = () => {
+export const AvatarContainer: React.FC<TAvatarProps> = (props) => {
     const classes = useStyles(0);
     return <Container className={classes.avatarWrapper}>
-        <AvatarUpload />
+        <AvatarUpload {...props} />
     </Container>
 }

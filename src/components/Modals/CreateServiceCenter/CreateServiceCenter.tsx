@@ -62,6 +62,7 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
     }, [payload]);
 
     const [formState, setFormState] = useState<TSCFormState>(initialState);
+    const [avatar, setAvatar] = useState<File | null>( null);
 
     const isEdit = Boolean(payload?.id);
 
@@ -99,7 +100,7 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
             if (isEdit) {
                 await dispatch(updateSC(data, payload?.id));
             } else {
-                await dispatch(createSC(data));
+                await dispatch(createSC(data, avatar));
             }
             showMessage(`${data.name} successfully ${isEdit ? "updated" : "created"}`);
             setFormState(initialFormState);
@@ -112,7 +113,7 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{isEdit ? "Update" : "Add"} service center</DialogTitle>
         <DialogContent>
-            <AvatarContainer />
+            <AvatarContainer dataUrl={payload?.avatarPath} onChange={(f: File) => setAvatar(f)} />
             <ModalForm
                 items={formItems}
                 values={formState}

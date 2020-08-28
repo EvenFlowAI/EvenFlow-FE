@@ -6,7 +6,7 @@ export interface IServiceCenter {
     name: string;
     address: IAddress;
     mainAddress: string;
-    avatarPath: string;
+    avatarPath?: string;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
@@ -21,6 +21,7 @@ export interface IServiceCenterExtended extends IServiceCenter {
 }
 export interface IServiceCenterForm {
     id?: number,
+    avatarPath?: string,
     name: string,
     serviceCenterEmail: string,
     contactPersonalEmail: string,

@@ -46,14 +46,22 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
 // const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
 //     type: "ServiceCenters/Create", payload
 // });
-export const createSC: ActionCreator<
-    ThunkAction<void, RootState, void, TServiceCenterActions>
-> = (payload: IServiceCenterForm) => async dispatch => {
+export const saveAvatar = (avatar: File, id: number): AppThunk => async (dispatch) => {
+    const data = new FormData();
+    data.append("file", avatar, avatar?.name || "");
+    await Api.call(Api.endpoints.ServiceCenters.Avatar, {
+        urlParams: {id}, data
+    });
+}
+export const createSC = (payload: IServiceCenterForm, avatar: File | null): AppThunk => async (dispatch) => {
     dispatch(saving(true));
     try {
-        await Api.call<IServiceCenterExtended>(
+        const {data} = await Api.call<IServiceCenterExtended>(
             Api.endpoints.ServiceCenters.Create, {data: payload}
         );
+        if (avatar) {
+            await dispatch(saveAvatar(avatar, data.id));
+        }
         dispatch(loadAll());
         dispatch(saving(false));
     } catch (e) {

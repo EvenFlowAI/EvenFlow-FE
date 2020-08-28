@@ -37,8 +37,13 @@ interface IAvatarState {
     dataUrl?: string;
 }
 
-export const AvatarUpload = () => {
-    const [state, setState] = useState<IAvatarState>({file: null});
+export type TAvatarProps = {
+    dataUrl?: string;
+    onChange?: (file: File) => void;
+}
+
+export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
+    const [state, setState] = useState<IAvatarState>({file: null, dataUrl: props.dataUrl || undefined});
     const classes = useStyles();
 
     const ref = createRef<HTMLInputElement>();
@@ -59,6 +64,9 @@ export const AvatarUpload = () => {
              if (ref.current) {
                  ref.current.files = null;
                  ref.current.value = "";
+             }
+             if (props.onChange) {
+                 props.onChange(file);
              }
         }
 

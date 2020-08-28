@@ -73,7 +73,7 @@ export const ServiceCenters = () => {
                           onClick={handleSetAnchor(el)}><MoreHoriz/></IconButton>
     );
     const startActions = (el: IServiceCenterExtended) => (
-        <TableAvatar name={el.name} />
+        <TableAvatar name={el.name} src={el.avatarPath} />
     )
 
     const {askConfirm} = useConfirm();
