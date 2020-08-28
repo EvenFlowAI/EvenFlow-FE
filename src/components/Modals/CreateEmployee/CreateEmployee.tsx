@@ -120,9 +120,9 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
                 }
             } else {
                 if (payload?.id) {
-                    await dispatch(updateEmployee(data, payload.id));
+                    await dispatch(updateEmployee(data, payload.id, avatar));
                 } else {
-                    await dispatch(createEmployee(data));
+                    await dispatch(createEmployee(data, avatar));
                 }
             }
             dispatch(loadAll());

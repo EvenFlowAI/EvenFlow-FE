@@ -5,6 +5,7 @@ import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {Api} from "../../../config/requests";
 import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {IEmployee, IEmployeeForm, TEmployeeActions} from "./types";
+import {saveEmployeeAvatar} from "../users/actions";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
    type: "Employees/GetAll", payload
@@ -69,11 +70,13 @@ export const loadTechnicians: ActionCreator<ThunkAction<
         throw e;
     }
 };
-
-export const createEmployee = (payload: IEmployeeForm): AppThunk => async dispatch => {
+export const createEmployee = (payload: IEmployeeForm, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
     try {
-        await Api.call<IEmployee>(Api.endpoints.Employees.Create, {data: payload});
+        const {data} = await Api.call<IEmployee|string>(Api.endpoints.Employees.Create, {data: payload});
+        if (avatar) {
+            await dispatch(saveEmployeeAvatar(avatar, typeof data === 'string' ? data : data.id));
+        }
         dispatch(saving(false));
         dispatch(loadAll());
     } catch (e) {
@@ -88,10 +91,13 @@ export const removeEmployee = (id: string): AppThunk => async (dispatch) => {
     await Api.call(Api.endpoints.Users.Remove, {urlParams: {id}});
     dispatch(loadAll());
 }
-export const updateEmployee = (data: IEmployeeForm, id: string): AppThunk => async dispatch => {
+export const updateEmployee = (data: IEmployeeForm, id: string, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
     try {
         await Api.call(Api.endpoints.Employees.Update, {urlParams: {id}, data});
+        if (avatar) {
+            await dispatch(saveEmployeeAvatar(avatar, id));
+        }
         dispatch(saving(false));
         dispatch(loadAll());
     } catch (e) {

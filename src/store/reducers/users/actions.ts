@@ -14,7 +14,7 @@ export const getCurrentUser = (): AppThunk => async dispatch => {
         console.error(e);
     }
 }
-const saveAvatar = (avatar: File, id: string): AppThunk => async dispatch => {
+export const saveEmployeeAvatar = (avatar: File, id: string): AppThunk => async dispatch => {
     const fd = new FormData();
     fd.append("file", avatar, avatar.name);
     await Api.call(Api.endpoints.Users.Avatar, {urlParams: {id}, data: fd});
@@ -25,7 +25,7 @@ export const createUser = (payload: IUserForm, avatar?: File): AppThunk => async
     try {
         const {data} = await Api.call<IEmployee|string>(Api.endpoints.Users.Create, {data: payload})
         if (avatar) {
-            await dispatch(saveAvatar(avatar, typeof data === "string" ? data : data.id));
+            await dispatch(saveEmployeeAvatar(avatar, typeof data === "string" ? data : data.id));
         }
         dispatch(saving(false))
     } catch (e) {
@@ -38,7 +38,7 @@ export const updateUser = (payload: IUserForm, id: string, avatar?: File): AppTh
     try {
         await Api.call(Api.endpoints.Users.Update, {urlParams: {id}, data: payload});
         if (avatar) {
-            await dispatch(saveAvatar(avatar, id));
+            await dispatch(saveEmployeeAvatar(avatar, id));
         }
         dispatch(saving(false));
     } catch (e) {
