@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {Button, Divider, Grid} from "@material-ui/core";
@@ -10,7 +10,7 @@ import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
 import {TAdvisorForm, TTechnicianForm} from "./types";
 import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
 import {TSelectChange} from "./types";
-import {IEmployeeForm} from "../../../store/reducers/employees/types";
+import {IEmployee, IEmployeeForm} from "../../../store/reducers/employees/types";
 import {createEmployee, loadAll} from "../../../store/reducers/employees/actions";
 import {useException, useMessage} from "../../../utils/hooks";
 import {IUserForm} from "../../../store/reducers/users/types";
@@ -22,8 +22,9 @@ enum Roles {
     Technician= 'Technician'
 }
 
-export const CreateEmployee: React.FC<DialogProps> = (props) => {
-    const [role, setRole] = useState<Roles.Advisor | Roles.Technician>(Roles.Advisor);
+export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...props}) => {
+    const isEdit = Boolean(payload?.id);
+    const [role, setRole] = useState<Roles.Advisor | Roles.Technician>(payload?.role as Roles || Roles.Advisor);
     const handleChangeRole = (role: string) => {
         setRole(role as Roles);
     }
@@ -39,21 +40,22 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
     const showMessage = useMessage();
 
     useEffect(() => {
-        dispatch(loadShortSC())
+        dispatch(loadShortSC());
     }, [dispatch]);
 
     const buttonStyle = (r: string) => ({
         startIcon: role === r ? <RadioButtonChecked /> : <RadioButtonUnchecked />,
         color: role === r ? "primary" as const : "default" as const
     })
-
+    const startAdvisorForm = useMemo(() => payload as TAdvisorForm || initialAdvisorForm, [payload]);
     const [advisorForm, setAdvisorForm] = useState<TAdvisorForm>(initialAdvisorForm);
+    const startTechnicianForm = useMemo(() => payload as TTechnicianForm || initialTechnicianForm, [payload]);
     const [technicianForm, setTechnicianForm] = useState<TTechnicianForm>(initialTechnicianForm);
 
     useEffect(() => {
-        setAdvisorForm(initialAdvisorForm);
-        setTechnicianForm(initialTechnicianForm)
-    }, [props.open])
+        setAdvisorForm(startAdvisorForm);
+        setTechnicianForm(startTechnicianForm)
+    }, [props.open, startAdvisorForm, startTechnicianForm]);
 
     const handleChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler<HTMLInputElement> => e => {
         if (r === Roles.Advisor) {

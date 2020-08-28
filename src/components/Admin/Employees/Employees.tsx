@@ -11,6 +11,7 @@ import {loadAll, removeEmployee} from "../../../store/reducers/employees/actions
 import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
 import {changePageData} from "../../../store/reducers/employees/actions";
 import {concatAddress} from "../../../utils/utils";
+import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 
 const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
@@ -114,5 +115,6 @@ export const Employees = () => {
             <MenuItem onClick={editEmployee}>Edit</MenuItem>
             <MenuItem onClick={deleteEmployee}>Delete</MenuItem>
         </Menu>
+        <CreateEmployee open={isOpen} payload={editedItem} onClose={onClose} />
     </>
 }
