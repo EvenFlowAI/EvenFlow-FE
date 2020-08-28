@@ -7,7 +7,7 @@ import {ModalForm, TFormItem, TSelectChange} from "../ModalForm";
 import {useDispatch} from "react-redux";
 import {IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {useException, useMessage} from "../../../utils/hooks";
-import {createSC} from "../../../store/reducers/serviceCenters/actions";
+import {createSC, updateSC} from "../../../store/reducers/serviceCenters/actions";
 
 
 type TSCFormState = {
@@ -63,6 +63,8 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
 
     const [formState, setFormState] = useState<TSCFormState>(initialState);
 
+    const isEdit = Boolean(payload?.id);
+
     useEffect(() => {
         setFormState(initialState);
     }, [props.open, initialState]);
@@ -94,8 +96,12 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
             }
         }
         try {
-            await dispatch(createSC(data));
-            showMessage(`${data.name} successfully created`);
+            if (isEdit) {
+                await dispatch(updateSC(data, payload?.id));
+            } else {
+                await dispatch(createSC(data));
+            }
+            showMessage(`${data.name} successfully ${isEdit ? "updated" : "created"}`);
             setFormState(initialFormState);
             props.onClose();
         } catch (e) {
@@ -104,7 +110,7 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
     }
 
     return <BaseModal {...props}>
-        <DialogTitle onClose={props.onClose}>Add service center</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{isEdit ? "Update" : "Add"} service center</DialogTitle>
         <DialogContent>
             <AvatarContainer />
             <ModalForm
@@ -119,7 +125,7 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
             <Button color="primary"
                     variant="contained"
                     onClick={handleCreate}
-                    type="submit">Create</Button>
+                    type="submit">Save</Button>
         </DialogActions>
     </BaseModal>;
 }

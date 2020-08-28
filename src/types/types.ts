@@ -1,3 +1,7 @@
+import {ThunkAction} from "redux-thunk";
+import {RootState} from "../store/rootReducer";
+import {Action} from "redux";
+
 export type LinkType = {
     to: string;
     name: string;
@@ -43,3 +47,5 @@ export interface PaginatedAPIResponse<T> {
 }
 
 export type TTechnicianLevel = 1 | 2 | 3;
+
+export type AppThunk<ReturnType=void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;

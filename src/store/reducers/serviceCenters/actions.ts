@@ -3,7 +3,7 @@ import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
 import {Api} from "../../../config/requests";
-import {IPageRequest, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
@@ -26,9 +26,7 @@ export const changePageData: ActionCreator<ThunkAction<void, RootState, void, Ac
     }
 }
 
-export const loadAll: ActionCreator<
-    ThunkAction<void, RootState, void, Action
->> = () => async (dispatch, getState) => {
+export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState) => {
     dispatch(loading(true));
     const state = getState();
     try {
@@ -83,13 +81,19 @@ export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServ
     }
 }
 
-export const removeSC: ActionCreator<
-    ThunkAction<void, RootState, void, TServiceCenterActions>
-> = (serviceCenterId: number) => async (dispatch) => {
+export const removeSC: ActionCreator<AppThunk> = (serviceCenterId: number) => async (dispatch) => {
     try {
         await Api.call(Api.endpoints.ServiceCenters.Remove, {urlParams: {id: serviceCenterId}});
         dispatch(loadAll())
     } catch (e) {
         throw e;
     }
+}
+
+export const updateSC: ActionCreator<AppThunk> = (payload: IServiceCenterForm, id: number) => async (dispatch) => {
+    await Api.call(Api.endpoints.ServiceCenters.Update, {
+        urlParams: {id},
+        data: payload
+    });
+    dispatch(loadAll());
 }
