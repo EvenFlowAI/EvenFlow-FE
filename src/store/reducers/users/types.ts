@@ -22,4 +22,5 @@ export interface IUserForm {
 
 
 export type TGetCurrentUser = {type: "User/GetCurrentUser", payload: ICurrentUser};
-export type TUserActions = TGetCurrentUser;
+type TSaving = {type: "User/Saving", payload: boolean};
+export type TUserActions = TSaving | TGetCurrentUser;

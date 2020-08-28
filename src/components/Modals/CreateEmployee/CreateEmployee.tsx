@@ -15,6 +15,7 @@ import {createEmployee, loadAll} from "../../../store/reducers/employees/actions
 import {useException, useMessage} from "../../../utils/hooks";
 import {IUserForm} from "../../../store/reducers/users/types";
 import {createUser} from "../../../store/reducers/users/actions";
+import {LoadingButton} from "../../UI/Button";
 
 enum Roles {
     Advisor= 'Advisor',
@@ -26,10 +27,13 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
     const handleChangeRole = (role: string) => {
         setRole(role as Roles);
     }
-    const {shortSC, shortLoading} = useSelector((state: RootState) => ({
+    const {shortSC, shortLoading, savingE, savingU} = useSelector((state: RootState) => ({
         shortSC: state.serviceCenters.shortSC,
-        shortLoading: state.serviceCenters.shortLoading
+        shortLoading: state.serviceCenters.shortLoading,
+        savingE: state.employees.saving,
+        savingU: state.users.saving,
     }));
+    const saving = savingU || savingE;
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
@@ -95,11 +99,12 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
         }
         try {
             if (role === Roles.Advisor) {
-                await dispatch(createUser(data));
-                await dispatch(loadAll());
+                await dispatch(createUser(data as IUserForm));
+
             } else {
                 await dispatch(createEmployee(data));
             }
+            dispatch(loadAll());
             showMessage("Employee created");
             setTechnicianForm(initialTechnicianForm);
             setAdvisorForm(initialAdvisorForm);
@@ -109,7 +114,7 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
         }
     }
 
-    return <BaseModal {...props}>
+    return <BaseModal {...props} width={700}>
         <DialogTitle onClose={props.onClose}>
             I want to add new
         </DialogTitle>
@@ -156,12 +161,13 @@ export const CreateEmployee: React.FC<DialogProps> = (props) => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button
+            <LoadingButton
+                loading={saving}
                 color="primary"
                 onClick={handleCreate}
                 variant="contained">
                 Create
-            </Button>
+            </LoadingButton>
         </DialogActions>
     </BaseModal>
 }
