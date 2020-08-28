@@ -24,7 +24,7 @@ enum Roles {
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...props}) => {
     const isEdit = Boolean(payload?.id);
-    const [role, setRole] = useState<Roles.Advisor | Roles.Technician>(payload?.role as Roles || Roles.Advisor);
+    const [role, setRole] = useState<Roles>(Roles.Advisor);
     const handleChangeRole = (role: string) => {
         setRole(role as Roles);
     }
@@ -54,8 +54,11 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
 
     useEffect(() => {
         setAdvisorForm(startAdvisorForm);
-        setTechnicianForm(startTechnicianForm)
-    }, [props.open, startAdvisorForm, startTechnicianForm]);
+        setTechnicianForm(startTechnicianForm);
+        if (payload) {
+            setRole(payload.role as Roles);
+        }
+    }, [props.open, startAdvisorForm, startTechnicianForm, payload]);
 
     const handleChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler<HTMLInputElement> => e => {
         if (r === Roles.Advisor) {
@@ -118,10 +121,10 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
 
     return <BaseModal {...props} width={700}>
         <DialogTitle onClose={props.onClose}>
-            I want to add new
+            {isEdit ? `Edit ${payload?.role}` : "I want to add new"}
         </DialogTitle>
         <DialogContent>
-            <Grid container spacing={3}>
+            {!isEdit ? <Grid container spacing={3}>
                 <Grid item xs={6}>
                     <Button
                         {...buttonStyle(Roles.Advisor)}
@@ -140,7 +143,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
                         Technician
                     </Button>
                 </Grid>
-            </Grid>
+            </Grid> : null}
             <Divider />
             <AvatarContainer />
             {role === Roles.Advisor
@@ -168,7 +171,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
                 color="primary"
                 onClick={handleCreate}
                 variant="contained">
-                Create
+                Save
             </LoadingButton>
         </DialogActions>
     </BaseModal>

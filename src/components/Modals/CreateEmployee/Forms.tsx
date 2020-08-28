@@ -39,6 +39,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 label="First name"
                 id="firstName"
                 name="firstName"
+                value={props.form.firstName}
                 onChange={props.onChange}
                 fullWidth
             />
@@ -48,6 +49,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 label="Last name"
                 id="lastName"
                 name="lastName"
+                value={props.form.lastName}
                 onChange={props.onChange}
                 fullWidth
             />
@@ -57,6 +59,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 label="Email address"
                 id="email"
                 name="email"
+                value={props.form.email}
                 onChange={props.onChange}
                 fullWidth
             />
@@ -65,6 +68,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
             <TextField
                 label="Phone number"
                 id="phoneNumber"
+                value={props.form.phoneNumber}
                 name="phoneNumber"
                 onChange={props.onChange}
                 fullWidth
@@ -75,8 +79,9 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 options={props.shortSC}
                 onChange={props.onSelectChange}
                 getOptionLabel={i => i.name}
+                getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
-                value={props.form.serviceCenter}
+                value={props.form.serviceCenter || null}
                 renderInput={autocompleteRender({label: "Service Center", fullWidth: true})}
             />
         </Grid>
@@ -107,8 +112,9 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 options={props.shortSC}
                 onChange={props.onSelectChange}
                 getOptionLabel={i => i.name}
+                getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
-                value={props.form.serviceCenter}
+                value={props.form.serviceCenter || null}
                 renderInput={autocompleteRender({label: "Service center", fullWidth: true})}
             />
         </Grid>
