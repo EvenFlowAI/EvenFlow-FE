@@ -11,10 +11,10 @@ import {TAdvisorForm, TTechnicianForm} from "./types";
 import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
 import {TSelectChange} from "./types";
 import {IEmployee, IEmployeeForm} from "../../../store/reducers/employees/types";
-import {createEmployee, loadAll} from "../../../store/reducers/employees/actions";
+import {createEmployee, loadAll, updateEmployee} from "../../../store/reducers/employees/actions";
 import {useException, useMessage} from "../../../utils/hooks";
 import {IUserForm} from "../../../store/reducers/users/types";
-import {createUser} from "../../../store/reducers/users/actions";
+import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
 
 enum Roles {
@@ -49,7 +49,13 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
     })
     const startAdvisorForm = useMemo(() => payload as TAdvisorForm || initialAdvisorForm, [payload]);
     const [advisorForm, setAdvisorForm] = useState<TAdvisorForm>(initialAdvisorForm);
-    const startTechnicianForm = useMemo(() => payload as TTechnicianForm || initialTechnicianForm, [payload]);
+    const startTechnicianForm = useMemo(() => {
+        const data: TTechnicianForm = payload as TTechnicianForm || initialTechnicianForm
+        data.hourlyRate = payload?.employeeInfo?.hourlyRate || "";
+        data.overtimeRate = payload?.employeeInfo?.overtimeRate || "";
+        data.technicianLevel = payload?.employeeInfo?.skillLevel as TTechnicianLevel;
+        return data;
+    }, [payload]);
     const [technicianForm, setTechnicianForm] = useState<TTechnicianForm>(initialTechnicianForm);
 
     useEffect(() => {
@@ -104,13 +110,20 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
         }
         try {
             if (role === Roles.Advisor) {
-                await dispatch(createUser(data as IUserForm));
-
+                if (payload?.id) {
+                    await dispatch(updateUser(data as IUserForm, payload.id));
+                } else {
+                    await dispatch(createUser(data as IUserForm));
+                }
             } else {
-                await dispatch(createEmployee(data));
+                if (payload?.id) {
+                    await dispatch(updateEmployee(data, payload.id));
+                } else {
+                    await dispatch(createEmployee(data));
+                }
             }
             dispatch(loadAll());
-            showMessage("Employee created");
+            showMessage(`Employee ${isEdit ? "updated" : "created"}`);
             setTechnicianForm(initialTechnicianForm);
             setAdvisorForm(initialAdvisorForm);
             props.onClose();

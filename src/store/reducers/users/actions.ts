@@ -25,3 +25,13 @@ export const createUser = (payload: IUserForm): AppThunk => async dispatch => {
         throw e;
     }
 };
+export const updateUser = (payload: IUserForm, id: string): AppThunk => async dispatch => {
+    dispatch(saving(true));
+    try {
+        await Api.call(Api.endpoints.Users.Update, {urlParams: {id}, data: payload});
+        dispatch(saving(false));
+    } catch (e) {
+        dispatch(saving(false));
+        throw e;
+    }
+}

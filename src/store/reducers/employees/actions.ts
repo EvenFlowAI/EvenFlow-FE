@@ -12,12 +12,7 @@ export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
 export const _changePageData = changePageDataGeneric("Employees/ChangePageData");
 
 
-export const changePageData: ActionCreator<ThunkAction<
-    void,
-    RootState,
-    void,
-    Action
-    >> = (payload: Partial<IPageRequest>) => {
+export const changePageData: ActionCreator<AppThunk> = (payload: Partial<IPageRequest>) => {
     return async dispatch => {
         dispatch(_changePageData(payload));
         dispatch(loadAll());
@@ -75,9 +70,7 @@ export const loadTechnicians: ActionCreator<ThunkAction<
     }
 };
 
-export const createEmployee: ActionCreator<
-    ThunkAction<void, RootState, void, TEmployeeActions
->> = (payload: IEmployeeForm) => async dispatch => {
+export const createEmployee = (payload: IEmployeeForm): AppThunk => async dispatch => {
     dispatch(saving(true));
     try {
         await Api.call<IEmployee>(Api.endpoints.Employees.Create, {data: payload});
@@ -94,4 +87,15 @@ export const changePaging = changePagingGeneric("Employees/ChangePaging");
 export const removeEmployee = (id: string): AppThunk => async (dispatch) => {
     await Api.call(Api.endpoints.Users.Remove, {urlParams: {id}});
     dispatch(loadAll());
+}
+export const updateEmployee = (data: IEmployeeForm, id: string): AppThunk => async dispatch => {
+    dispatch(saving(true));
+    try {
+        await Api.call(Api.endpoints.Employees.Update, {urlParams: {id}, data});
+        dispatch(saving(false));
+        dispatch(loadAll());
+    } catch (e) {
+        dispatch(saving(false));
+        throw e;
+    }
 }
