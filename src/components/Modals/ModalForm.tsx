@@ -51,7 +51,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                                     ? <Autocomplete
                                         options={item.selectOptions || []}
                                         onChange={props.onSelectChange || noop}
-                                        value={item.value(props.values)}
+                                        value={item.value(props.values) || null}
                                         renderInput={autocompleteRender({label: item.label || ""})}
                                     />
                                     : null}

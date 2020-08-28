@@ -4,10 +4,12 @@ import {DialogProps} from "../types";
 import {states} from "../../../config/constants";
 import {Button} from "@material-ui/core";
 import {ModalForm, TFormItem, TSelectChange} from "../ModalForm";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {useException, useMessage} from "../../../utils/hooks";
 import {createSC, updateSC} from "../../../store/reducers/serviceCenters/actions";
+import {LoadingButton} from "../../UI/Button";
+import {RootState} from "../../../store/rootReducer";
 
 
 type TSCFormState = {
@@ -61,6 +63,8 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
         }
     }, [payload]);
 
+    const saving = useSelector((state: RootState) => state.serviceCenters.saving);
+
     const [formState, setFormState] = useState<TSCFormState>(initialState);
     const [avatar, setAvatar] = useState<File | null>( null);
 
@@ -97,8 +101,8 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
             }
         }
         try {
-            if (isEdit) {
-                await dispatch(updateSC(data, payload?.id));
+            if (payload?.id) {
+                await dispatch(updateSC(data, payload.id, avatar));
             } else {
                 await dispatch(createSC(data, avatar));
             }
@@ -123,10 +127,12 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button color="primary"
-                    variant="contained"
-                    onClick={handleCreate}
-                    type="submit">Save</Button>
+            <LoadingButton
+                color="primary"
+                loading={saving}
+                variant="contained"
+                onClick={handleCreate}
+                type="submit">Save</LoadingButton>
         </DialogActions>
     </BaseModal>;
 }

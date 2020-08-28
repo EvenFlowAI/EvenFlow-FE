@@ -62,8 +62,8 @@ export const createSC = (payload: IServiceCenterForm, avatar: File | null): AppT
         if (avatar) {
             await dispatch(saveAvatar(avatar, data.id));
         }
-        dispatch(loadAll());
         dispatch(saving(false));
+        dispatch(loadAll());
     } catch (e) {
         dispatch(saving(false));
         throw e;
@@ -98,10 +98,20 @@ export const removeSC: ActionCreator<AppThunk> = (serviceCenterId: number) => as
     }
 }
 
-export const updateSC: ActionCreator<AppThunk> = (payload: IServiceCenterForm, id: number) => async (dispatch) => {
-    await Api.call(Api.endpoints.ServiceCenters.Update, {
-        urlParams: {id},
-        data: payload
-    });
-    dispatch(loadAll());
+export const updateSC = (payload: IServiceCenterForm, id: number, avatar: File | null): AppThunk => async (dispatch) => {
+    dispatch(saving(true));
+    try {
+        await Api.call(Api.endpoints.ServiceCenters.Update, {
+            urlParams: {id},
+            data: payload
+        });
+        if (avatar) {
+            await dispatch(saveAvatar(avatar, id));
+        }
+        dispatch(saving(false));
+        dispatch(loadAll());
+    } catch (e) {
+        dispatch(saving(false));
+        throw e;
+    }
 }
