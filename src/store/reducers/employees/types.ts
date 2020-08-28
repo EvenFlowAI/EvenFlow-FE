@@ -21,7 +21,7 @@ export interface IEmployee {
     email: string;
     role: string;
     phoneNumber: string;
-    avatarPath: string;
+    avatarPath?: string;
 }
 
 export interface IEmployeeForm {

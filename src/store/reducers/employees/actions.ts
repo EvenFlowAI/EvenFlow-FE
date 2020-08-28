@@ -3,7 +3,7 @@ import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {Api} from "../../../config/requests";
-import {IPageRequest, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {IEmployee, IEmployeeForm, TEmployeeActions} from "./types";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
@@ -30,9 +30,7 @@ export const saving = (payload: boolean): TEmployeeActions => ({
     payload, type: "Employees/Saving"
 })
 
-export const loadAll: ActionCreator<ThunkAction<
-        void, RootState, void, Action
-    >> = () =>
+export const loadAll: ActionCreator<AppThunk> = () =>
     async (dispatch, getState) => {
 
     dispatch(loading(true));
@@ -92,3 +90,8 @@ export const createEmployee: ActionCreator<
 }
 
 export const changePaging = changePagingGeneric("Employees/ChangePaging");
+
+export const removeEmployee = (id: string): AppThunk => async (dispatch) => {
+    await Api.call(Api.endpoints.Users.Remove, {urlParams: {id}});
+    dispatch(loadAll());
+}

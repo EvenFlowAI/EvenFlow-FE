@@ -1,14 +1,14 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Table} from "../../UI/Table";
-import {Box, IconButton} from "@material-ui/core";
-import {Visibility} from "@material-ui/icons";
+import {Box, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {MoreHoriz, Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
 import {TableAvatar} from "../TableAvatar";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadAll} from "../../../store/reducers/employees/actions";
-import {useCurrentUser, usePagination} from "../../../utils/hooks";
+import {loadAll, removeEmployee} from "../../../store/reducers/employees/actions";
+import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
 import {changePageData} from "../../../store/reducers/employees/actions";
 import {concatAddress} from "../../../utils/utils";
 
@@ -48,12 +48,46 @@ export const Employees = () => {
         return currentUser?.isSuperUser ? SURowData : AdminRowData;
     }, [currentUser]);
 
+    const {askConfirm} = useConfirm();
+    const showError = useException();
+    const showMessage = useMessage();
+    const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
+    const {onOpen, isOpen, onClose} = useModal();
+    const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
+    const handleMenuOpen = (item: IEmployee) => (e: React.MouseEvent<HTMLButtonElement>) => {
+        setEditedItem(item);
+        setAnchorEl(e.currentTarget);
+    }
+    const editEmployee = () => {
+        onOpen();
+        setAnchorEl(null);
+    }
+    const handleRemove = async () => {
+        try {
+            await dispatch(removeEmployee(editedItem?.id || ''))
+            showMessage(`Successfully removed ${editedItem?.fullName}`);
+            setEditedItem(undefined);
+        } catch (e) {
+            showError(e);
+        }
+    }
+    const deleteEmployee = () => {
+        setAnchorEl(null);
+        askConfirm({
+            title: "Remove employee?",
+            content: `Are you sure want to remove ${editedItem?.fullName}?`,
+            onConfirm: handleRemove
+        });
+    }
+
     const handleView = (el: IEmployee) => () => alert(`View ${el.fullName}`);
     const viewActions = (el: IEmployee) => (
-        <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
+        currentUser?.isSuperUser
+            ? <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
+            : <IconButton size="small" onClick={handleMenuOpen(el)}><MoreHoriz /></IconButton>
     );
     const startActions = (el: IEmployee) => (
-        <TableAvatar name={el.fullName} />
+        <TableAvatar name={el.fullName} src={el?.avatarPath} />
     )
 
     return <>
@@ -72,5 +106,9 @@ export const Employees = () => {
             index="id"
             actions={viewActions}
         />
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+            <MenuItem onClick={editEmployee}>Edit</MenuItem>
+            <MenuItem onClick={deleteEmployee}>Delete</MenuItem>
+        </Menu>
     </>
 }
