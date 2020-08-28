@@ -73,11 +73,15 @@ export const Employees = () => {
     }
     const deleteEmployee = () => {
         setAnchorEl(null);
-        askConfirm({
-            title: "Remove employee?",
-            content: `Are you sure want to remove ${editedItem?.fullName}?`,
-            onConfirm: handleRemove
-        });
+        if (editedItem?.role === 'Owner') {
+            showError("You can not remove dealership account");
+        } else {
+            askConfirm({
+                title: "Remove employee?",
+                content: `Are you sure want to remove ${editedItem?.fullName}?`,
+                onConfirm: handleRemove
+            });
+        }
     }
 
     const handleView = (el: IEmployee) => () => alert(`View ${el.fullName}`);

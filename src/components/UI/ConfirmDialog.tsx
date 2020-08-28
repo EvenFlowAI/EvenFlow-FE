@@ -1,17 +1,26 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useState} from "react";
 import {Button} from "@material-ui/core";
 import {BaseModal, DialogContent, DialogTitle, DialogActions} from '../Modals/BaseModal';
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {useConfirm} from "../../utils/hooks";
+import {LoadingButton} from "./Button";
 
 
-export const ConfirmDialog: React.FC = props => {
+export const ConfirmDialog: React.FC = () => {
     const {open, payload} = useSelector((state: RootState) => state.modals.confirm);
     const {closeConfirm} = useConfirm();
-    const onClose = useCallback(() => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const onClose = useCallback(async () => {
+        setLoading(true);
         if (payload?.onCancel) {
-            payload.onCancel();
+            try {
+                await payload.onCancel();
+                setLoading(false);
+            } catch (e) {
+                setLoading(false);
+                throw e;
+            }
         }
         closeConfirm();
     }, [payload, closeConfirm]);
@@ -36,9 +45,13 @@ export const ConfirmDialog: React.FC = props => {
             <Button onClick={onClose}>
                 Cancel
             </Button>
-            <Button onClick={onConfirm} variant="contained" color="primary">
+            <LoadingButton
+                loading={loading}
+                onClick={onConfirm}
+                variant="contained"
+                color="primary">
                 {payload.confirmContent || "Confirm"}
-            </Button>
+            </LoadingButton>
         </DialogActions>
     </BaseModal>
 };
