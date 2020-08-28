@@ -34,6 +34,9 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
         savingE: state.employees.saving,
         savingU: state.users.saving,
     }));
+
+    const [avatar, setAvatar] = useState<File | undefined>();
+
     const saving = savingU || savingE;
     const dispatch = useDispatch();
     const showError = useException();
@@ -111,9 +114,9 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
         try {
             if (role === Roles.Advisor) {
                 if (payload?.id) {
-                    await dispatch(updateUser(data as IUserForm, payload.id));
+                    await dispatch(updateUser(data as IUserForm, payload.id, avatar));
                 } else {
-                    await dispatch(createUser(data as IUserForm));
+                    await dispatch(createUser(data as IUserForm, avatar));
                 }
             } else {
                 if (payload?.id) {
@@ -157,8 +160,8 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
                     </Button>
                 </Grid>
             </Grid> : null}
-            <Divider />
-            <AvatarContainer />
+            {isEdit ? null : <Divider />}
+            <AvatarContainer onChange={(f) => setAvatar(f)} dataUrl={payload?.avatarPath} />
             {role === Roles.Advisor
                 ? <AdvisorForm
                     form={advisorForm}
