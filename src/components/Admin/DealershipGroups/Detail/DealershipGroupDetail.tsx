@@ -7,32 +7,34 @@ import {concatAddress} from "../../../../utils/utils";
 import {Tab} from "@material-ui/core";
 import {TabList} from "../../../UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {DetailSC, TDetailSCProps} from "./DetailSC";
-import {DetailEmployees, TDetailEmployeesProps} from "./DetailEmployees";
-import {IPageRequest} from "../../../../types/types";
-import {defaultRowsPerPage} from "../../../../config/config";
+import {DetailSC} from "./DetailSC";
+import {DetailEmployees} from "./DetailEmployees";
 import {useDispatch} from "react-redux";
 import {loadDealershipEmployees} from "../../../../store/reducers/employees/actions";
-import {useStatePagination} from "../../../../utils/hooks";
+import {TDetailComponentProps} from "./types";
+import {defaultRowsPerPage} from "../../../../config/config";
 
 type TTab = {
     id: string;
     label: string;
-    component: React.FC<TDetailEmployeesProps> | React.FC<TDetailSCProps>;
+    component: React.FC<TDetailComponentProps>;
 }
 
 const tabs: TTab[] = [
     {id: "1", label: "Service centers", component: DetailSC},
     {id: "2", label: "Employees", component: DetailEmployees}
 ];
-const initialPageData: IPageRequest = {
-    pageIndex: 0,
-    pageSize: defaultRowsPerPage
-}
+
 export const DealershipGroupDetail = () => {
     const {id} = useParams();
     const [dealership, setDS] = useState<IDealershipGroupExtended | undefined>();
-    const {page, setPage, rowsPerPage, setRowsPerPage} = useStatePagination();
+
+    const changePageCb = (pageIndex: number, pageSize: number) => {
+        dispatch(loadDealershipEmployees(id, {pageIndex, pageSize}));
+    }
+    const changePageSizeCb = (pageSize: number) => {
+        dispatch(loadDealershipEmployees(id, {pageIndex: 0, pageSize}));
+    }
 
     const dispatch = useDispatch();
 
@@ -44,7 +46,7 @@ export const DealershipGroupDetail = () => {
     }, [setDS, id]);
 
     useEffect(() => {
-        dispatch(loadDealershipEmployees(id, {pageIndex: page, pageSize: rowsPerPage}));
+        dispatch(loadDealershipEmployees(id, {pageIndex: 0, pageSize: defaultRowsPerPage}));
     }, [id, dispatch]);
 
     const [selectedTab, setTab] = useState<string>("1");
@@ -63,7 +65,10 @@ export const DealershipGroupDetail = () => {
             })}
         </TabList>
         {tabs.map((t) => {
-            return <TabPanel value={t.id} key={t.id}><t.component /></TabPanel>
+            return <TabPanel style={{width: "100%"}} value={t.id} key={t.id}><t.component
+                onChangePage={changePageCb}
+                onChangeRowsPerPage={changePageSizeCb}
+            /></TabPanel>
         })}
     </TabContext>;
 }

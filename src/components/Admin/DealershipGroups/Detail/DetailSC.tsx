@@ -1,8 +1,7 @@
 import React from "react";
+import {TDetailComponentProps} from "./types";
 
-export type TDetailSCProps = {
 
-};
-export const DetailSC = () => {
+export const DetailSC: React.FC<TDetailComponentProps> = () => {
     return <p>Detail SC</p>
 }

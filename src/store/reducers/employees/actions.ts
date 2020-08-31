@@ -3,10 +3,9 @@ import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {Api} from "../../../config/requests";
-import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {IEmployee, IEmployeeForm, TEmployeeActions} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
-import {DealershipActions} from "../dealershipGroups/types";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
    type: "Employees/GetAll", payload
@@ -113,7 +112,7 @@ const _loadDealership = (payload: IEmployee[]): TEmployeeActions => ({type: "Emp
 export const loadDealershipEmployees = (dealershipId: number, pageData: IPageRequest): AppThunk => async (dispatch) => {
     dispatch(loadDealership(true));
     try {
-        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IEmployee>>(Api.endpoints.Employees.GetAll, {data: {...pageData, dealershipId}});
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IEmployee>>(Api.endpoints.Users.GetAll, {data: {...pageData, dealershipId}});
         dispatch(changeDPaging(paging));
         dispatch(_loadDealership(result));
         dispatch(loadDealership(false));

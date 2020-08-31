@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React, {useEffect, useMemo} from "react";
 import {
     TableContainer,
     Table as BaseTable,
@@ -17,7 +17,9 @@ import { Loading } from "./Loading";
 const cellPadding = 16;
 const compactPadding = "5px 15px"
 const useStyles = makeStyles(theme => ({
-    root: {},
+    root: {
+        maxWidth: theme.breakpoints.values.lg
+    },
     tableCell: (compact: boolean) => ({
         fontSize: compact ? 14 : 16,
         border: "none",
@@ -51,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export function Table<U>(props: ITableProps<U>): JSX.Element {
+export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITableProps<U>): JSX.Element {
     const classes = useStyles(!!props.compact);
 
     const [page, setPage] = React.useState(0);
@@ -76,6 +78,15 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
             : setRowsPerPage(+e.target.value);
         handleChangePage(null, 0);
     }
+
+    useEffect(() => {
+        if (changePageCb) {
+            changePageCb(page, rowsPerPage);
+        } else if (changeRowsPerPageCb) {
+            changeRowsPerPageCb(rowsPerPage);
+        }
+        console.log('call');
+    }, [changePageCb, changeRowsPerPageCb, page, rowsPerPage]);
 
     if (props.isLoading) return <Loading />;
     if (!props.data.length) return <NoData title={props.noDataTitle} />;
