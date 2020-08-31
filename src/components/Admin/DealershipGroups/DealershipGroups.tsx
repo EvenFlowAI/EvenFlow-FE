@@ -1,6 +1,6 @@
 import React from "react";
 import {Table} from "../../UI/Table";
-import {Box, IconButton} from "@material-ui/core";
+import {IconButton} from "@material-ui/core";
 import {Edit, DeleteForever, Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
@@ -9,6 +9,8 @@ import {RootState} from "../../../store/rootReducer";
 import * as dealershipActions from "../../../store/reducers/dealershipGroups/actions";
 import {changePageData, remove as removeDealership} from "../../../store/reducers/dealershipGroups/actions";
 import {useConfirm, useException, useMessage, usePagination} from "../../../utils/hooks";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {Titles} from "../../../config/constants";
 
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
@@ -65,7 +67,7 @@ export const DealershipGroups = () => {
     }, [dispatch]);
 
     return <>
-        <Box padding={1} />
+        <TitleContainer title={Titles.DealershipGroups} actions pad />
         <Table<IDealershipGroupExtended>
             data={data}
             noDataTitle="No Dealership Groups are present"

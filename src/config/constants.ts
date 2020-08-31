@@ -65,3 +65,7 @@ export enum Roles {
     Technician='Technician',
     Owner='Owner'
 }
+
+export enum Titles {
+    DealershipGroups = "Dealership Groups"
+}

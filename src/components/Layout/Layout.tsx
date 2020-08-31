@@ -4,10 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import { Redirect, Switch } from "react-router-dom";
 import {AdminPage} from "../Admin/AdminPage";
 import {NavBar} from "../NavBar/NavBar";
-import {ContentTitle} from "../Content/ContentTitle/ContentTitle";
 import {Toolbar} from "@material-ui/core";
-import {ContentActions} from "../Content/ContentActions/ContentActions";
-import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";
 import {useDispatch} from "react-redux";
@@ -43,10 +40,6 @@ export const Layout = () => {
         <NavBar />
         <div className={classes.main}>
             <Toolbar id="backToTopAnchor" />
-            <TitleContainer>
-                <ContentTitle />
-                <ContentActions />
-            </TitleContainer>
             <Switch>
                 <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />
                 <PrivateRoute path={Routes.Optimizer.Base} component={OptimizerPage} />

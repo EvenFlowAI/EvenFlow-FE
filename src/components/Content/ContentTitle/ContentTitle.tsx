@@ -1,8 +1,6 @@
-import React, {useMemo} from 'react';
-import {useLocation, matchPath, Link} from "react-router-dom";
+import React from 'react';
 import {Theme, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {Routes} from "../../../config/routes";
 
 const titleSt = {
     fontSize: 24,
@@ -13,6 +11,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     title: {
         ...titleSt,
         fontWeight: "bold"
+    },
+    subtitle: {
+
     },
     titleContainer: {
         display: "flex"
@@ -25,52 +26,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     })
 }));
 
-type TTitle = {route: string; title: string, parent?: TTitle};
-
-const getTitle = (match: any): TTitle => {
-    for (let path of titles) {
-        if (matchPath(match, path.route) !== null) {
-            return path;
-        }
-    }
-    return {route: "~", title: "Not Found"};
+type TTitleProps = {
+    title: string;
+    subtitle?: string;
 }
-
-const titles: TTitle[] = [
-    {route: Routes.Admin.DealershipGroups, title: "Dealership Groups"},
-    {route: Routes.Admin.ServiceCenters, title: "Service Centers"},
-    {route: Routes.Admin.Employees, title: "Employees"},
-    {route: Routes.Optimizer.CapacitySettings, title: "Capacity Settings", parent: {
-        route: Routes.Optimizer.Base, title: "Optimizer Settings"
-    }},
-];
-const collectParents = (link: TTitle, list: TTitle[]): void => {
-    list.push(link)
-    if (link.parent) {
-        collectParents(link.parent, list);
-    }
-}
-export const ContentTitle = () => {
-    const {pathname} = useLocation();
-
-    const path = useMemo(() => getTitle(pathname), [pathname]);
-    let prefix: TTitle[] = [];
-    if (path.parent) {
-        collectParents(path.parent, prefix);
-    }
-
-    const classes = useStyles(!!prefix.length);
-    if (path.title === "Not Found") return null;
-
+export const ContentTitle: React.FC<TTitleProps> = (props) => {
+    const classes = useStyles();
     return <div className={classes.titleContainer}>
-        {prefix.length ? prefix.map(title => {
-            return <Link to={title.route}
-                         key={title.route}
-                         className={classes.titleLink}>
-                {title.title}/
-            </Link>
-        }) : null}
-        <Typography className={classes.title} variant="h1">{path.title}</Typography>
+        <Typography className={classes.title} variant="h1">{props.title}</Typography>
+        {props.subtitle
+            ? <Typography className={classes.subtitle} variant="subtitle1">{props.subtitle}</Typography>
+            : null
+        }
     </div>
 }
 
