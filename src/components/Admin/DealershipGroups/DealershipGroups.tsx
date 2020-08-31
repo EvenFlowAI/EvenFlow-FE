@@ -1,7 +1,7 @@
 import React from "react";
 import {Table} from "../../UI/Table";
 import {IconButton} from "@material-ui/core";
-import {Edit, DeleteForever, Visibility} from "@material-ui/icons";
+import {DeleteForever, Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +11,8 @@ import {changePageData, remove as removeDealership} from "../../../store/reducer
 import {useConfirm, useException, useMessage, usePagination} from "../../../utils/hooks";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {Titles} from "../../../config/constants";
+import {useHistory} from "react-router-dom";
+import {Routes} from "../../../config/routes";
 
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
@@ -37,9 +39,11 @@ export const DealershipGroups = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
+    const history = useHistory();
 
-    const handleView = (el: IDealershipGroupExtended) => () => alert(`View ${el.name}`);
-    const handleEdit = (el: IDealershipGroupExtended) => () => alert(`Edit ${el.name}`);
+    const handleView = (el: IDealershipGroupExtended) => () => {
+        history.push(`${Routes.Admin.DealershipGroups}/${el.id}`);
+    };
     const handleRemoveAction = (el: IDealershipGroupExtended) => () => askConfirm({
         content: `Are you sure want to remove dealership group ${el.name}?`,
         title: "Remove Dealership",
@@ -58,7 +62,6 @@ export const DealershipGroups = () => {
     }
     const viewActions = (el: IDealershipGroupExtended) => (<>
         <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
-        <IconButton size="small" style={{marginLeft: 8}} onClick={handleEdit(el)}><Edit /></IconButton>
         <IconButton size="small" style={{marginLeft: 8}} onClick={handleRemoveAction(el)}><DeleteForever /></IconButton>
     </>);
 

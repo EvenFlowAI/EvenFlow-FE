@@ -17,7 +17,9 @@ export const getAPIException = (e: any): string => {
     return e ? e.response?.data?.message || e.message || defaultException : defaultException;
 }
 
-export const concatAddress = (address: IAddress): string => `${address.street}, ${address.city}, ${address.zipCode}`
+export const concatAddress = (address?: IAddress, def?: string): string => address
+    ? `${address.street}, ${address.city}, ${address.zipCode}`
+    : def || "";
 
 export const pathReplace = (path: string, data?: Record<string, any>): string => {
     if (!data) return path;
