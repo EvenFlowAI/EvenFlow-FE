@@ -8,7 +8,7 @@ import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";
 import {useCurrentUser} from "../../utils/hooks";
 import {AdminDashboard} from "./Dashboard/Dashboard";
-import {DealershipGroupDetail} from "./DealershipGroups/DealershipGroupDetail";
+import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDetail";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();

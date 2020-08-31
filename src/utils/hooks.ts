@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {closeConfirmModal, openConfirmModal} from "../store/reducers/modals/actions";
 import {TConfirmModalPayload} from "../store/reducers/modals/types";
 import {ICurrentUser} from "../store/reducers/users/types";
+import {defaultRowsPerPage} from "../config/config";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -90,4 +91,9 @@ export const usePagination = (cb: TPageCallback, changePageData: IPageRequestAct
         dispatch(changePageData({pageSize: +e.target.value, pageIndex: 0}));
     }
     return {pageSize, pageIndex, changePage, changeRowsPerPage};
+}
+export const useStatePagination = () => {
+    const [page, setPage] = useState<number>(0);
+    const [rowsPerPage, setRowsPerPage] = useState<number>(defaultRowsPerPage);
+    return {page, setPage, rowsPerPage, setRowsPerPage};
 }

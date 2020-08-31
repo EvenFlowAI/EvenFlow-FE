@@ -4,10 +4,13 @@ import {defaultPageData, defaultPaging} from "../defaultInitials";
 
 export type TEmployeesState = {
     employeesList: IEmployee[];
+    dealershipEmployeesList: IEmployee[];
     techniciansList: IEmployee[];
     loadingTechnicians: boolean;
+    loadingDealership: boolean;
     loading: boolean;
     saving: boolean;
+    dealershipPaging: IPagingResponse;
     paging: IPagingResponse;
     pageData: IPageRequest;
 }
@@ -15,7 +18,10 @@ export type TEmployeesState = {
 const initialState: TEmployeesState = {
     employeesList: [],
     techniciansList: [],
+    dealershipEmployeesList: [],
+    dealershipPaging: {...defaultPaging},
     loadingTechnicians: false,
+    loadingDealership: false,
     loading: false,
     saving: false,
     paging: {...defaultPaging},
@@ -28,6 +34,12 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
             return {...state, employeesList: action.payload};
         case "Employees/GetTechnicians":
             return {...state, techniciansList: action.payload};
+        case "Employees/GetDealershipEmployees":
+            return {...state, dealershipEmployeesList: action.payload};
+        case "Employees/ChangeDPaging":
+            return {...state, dealershipPaging: action.payload};
+        case "Employees/LoadingDealership":
+            return {...state, loadingDealership: action.payload};
         case "Employees/LoadingTechnicians":
             return {...state, loadingTechnicians: action.payload};
         case "Employees/ChangePaging":
