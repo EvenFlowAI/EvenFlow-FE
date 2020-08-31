@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Table} from "../../UI/Table";
-import {Box, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz, Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
 import {TableAvatar} from "../TableAvatar";
@@ -12,7 +12,8 @@ import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagin
 import {changePageData} from "../../../store/reducers/employees/actions";
 import {concatAddress} from "../../../utils/utils";
 import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
-import {Roles} from "../../../config/constants";
+import {Roles, Titles} from "../../../config/constants";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 
 const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
@@ -102,7 +103,7 @@ export const Employees = () => {
     )
 
     return <>
-        <Box padding={1} />
+        <TitleContainer title={Titles.Employees} pad actions />
         <Table<IEmployee>
             data={data}
             noDataTitle="No employees present"

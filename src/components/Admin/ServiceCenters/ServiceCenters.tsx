@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {TableRowDataType} from "../../UI/types";
-import {Box, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz, Visibility} from "@material-ui/icons";
 import {TableAvatar} from "../TableAvatar";
 import {Table} from "../../UI/Table";
@@ -12,6 +12,8 @@ import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagin
 import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
 import {CreateServiceCenter} from "../../Modals/CreateServiceCenter/CreateServiceCenter";
 import {concatAddress} from "../../../utils/utils";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {Titles} from "../../../config/constants";
 
 
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
@@ -102,7 +104,7 @@ export const ServiceCenters = () => {
     const [editedItem, setEditedItem] = useState<Partial<IServiceCenterForm>>({});
 
     return <>
-        <Box padding={1} />
+        <TitleContainer title={Titles.ServiceCenters} actions pad />
         <Table<IServiceCenterExtended>
             data={data}
             noDataTitle="No Service Centers present"
