@@ -16,11 +16,7 @@ import {useException, useMessage} from "../../../utils/hooks";
 import {IUserForm} from "../../../store/reducers/users/types";
 import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
-
-enum Roles {
-    Advisor= 'Advisor',
-    Technician= 'Technician'
-}
+import {Roles} from "../../../config/constants";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...props}) => {
     const isEdit = Boolean(payload?.id);

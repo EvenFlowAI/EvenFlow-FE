@@ -12,6 +12,7 @@ import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagin
 import {changePageData} from "../../../store/reducers/employees/actions";
 import {concatAddress} from "../../../utils/utils";
 import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
+import {Roles} from "../../../config/constants";
 
 const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
@@ -89,7 +90,12 @@ export const Employees = () => {
     const viewActions = (el: IEmployee) => (
         currentUser?.isSuperUser
             ? <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
-            : <IconButton size="small" onClick={handleMenuOpen(el)}><MoreHoriz /></IconButton>
+            : <IconButton
+                disabled={el.role === Roles.Owner || el.id === currentUser?.id}
+                size="small"
+                onClick={handleMenuOpen(el)}>
+                <MoreHoriz />
+            </IconButton>
     );
     const startActions = (el: IEmployee) => (
         <TableAvatar name={el.fullName} src={el?.avatarPath} />
