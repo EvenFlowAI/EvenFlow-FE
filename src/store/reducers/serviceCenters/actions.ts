@@ -122,7 +122,7 @@ const _loadDealershipSCs = (payload: IServiceCenterExtended[]): TServiceCenterAc
 export const loadDealershipSCs = (dealershipId: number, pageData: IPageRequest): AppThunk => async dispatch => {
     dispatch(loadingDealership(true));
     try {
-        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IServiceCenterExtended>>(Api.endpoints.Dealerships.GetAll, {data: {
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IServiceCenterExtended>>(Api.endpoints.ServiceCenters.GetAll, {data: {
             dealershipId, ...pageData
         }});
         dispatch(pagingDealership(paging));

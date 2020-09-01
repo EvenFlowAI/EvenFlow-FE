@@ -10,7 +10,7 @@ import {concatAddress} from "../../../../utils/utils";
 const rowData: TableRowDataType<IServiceCenterExtended>[] = [
     {header: "Name", val: v => v.name},
     {header: "Address", val: v => concatAddress(v.address)},
-    {header: "Employees", val: v => String(v.countOfEmployees) || '-', align: "center"},
+    {header: "Employees", val: v => String(v.countOfEmployees), align: "center"},
     {header: "Bays", val: v => String(v.countOfBays) || '-', align: "center"}
 ];
 export const DetailSC: React.FC<TDetailComponentProps> = (props) => {
