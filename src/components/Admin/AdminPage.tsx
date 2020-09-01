@@ -12,24 +12,23 @@ import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDe
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
-
+    if (!currentUser) return null;
     return <ContentContainer>
         <Switch>
-            {currentUser && currentUser.isSuperUser
-                ? <>
-                    <PrivateRoute path={Routes.Admin.DealershipGroups} exact component={DealershipGroups}/>
-                    <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetail} />
-                </>
+            {currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.DealershipGroups} exact component={DealershipGroups}/>
+                : null}
+            {currentUser.isSuperUser
+                ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetail} />
                 : null}
             <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>
-            {currentUser && !currentUser.isSuperUser
+            {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
-                : null
-            }
+                : null}
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
-            {currentUser ? currentUser.isSuperUser
+            {currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
-                : <Redirect to={Routes.Admin.Base} /> : null}
+                : <Redirect to={Routes.Admin.Base} />}
         </Switch>
     </ContentContainer>;
 }

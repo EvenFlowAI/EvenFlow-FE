@@ -69,5 +69,5 @@ export enum Roles {
 export enum Titles {
     DealershipGroups = "Dealership Groups",
     Employees = "Employees",
-    ServiceCenters = "ServiceCenters"
+    ServiceCenters = "Service Centers"
 }
