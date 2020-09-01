@@ -9,6 +9,8 @@ import {TConfirmModalPayload} from "../store/reducers/modals/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {defaultRowsPerPage} from "../config/config";
 import {IDealershipProfile} from "../store/reducers/dealershipGroups/types";
+import {IServiceCenter} from "../store/reducers/serviceCenters/types";
+import {selectSC as selectSCAction} from "../store/reducers/serviceCenters/actions";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -38,6 +40,21 @@ export const useCurrentUser = (): ICurrentUser | undefined => {
 
 export const useDealershipProfile = (): IDealershipProfile | undefined => {
     return useSelector((state: RootState) => state.dealershipGroups.profile);
+}
+
+export const useSCs = () => {
+    const [
+        selectedSC, scList
+    ] = useSelector((state: RootState) => [
+        state.serviceCenters.selectedSC,
+        state.serviceCenters.fullSCList
+    ]);
+    const dispatch = useDispatch();
+    const selectSC = useCallback((sc: IServiceCenter) => {
+        dispatch(selectSCAction(sc));
+    },[dispatch])
+
+    return {selectedSC, scList, selectSC};
 }
 
 export function useException() {

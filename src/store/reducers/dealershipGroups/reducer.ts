@@ -1,4 +1,4 @@
-import {DealershipActions, DealershipState, IDealershipProfile} from "./types";
+import {DealershipActions, DealershipState} from "./types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 
 const initialState: DealershipState = {

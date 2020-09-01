@@ -11,6 +11,7 @@ import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actions";
+import {loadAllSCs} from "../../store/reducers/serviceCenters/actions";
 
 
 const useStyles = makeStyles(theme => ({
@@ -35,6 +36,7 @@ export const Layout = () => {
     useEffect(() => {
         dispatch(getCurrentUser());
         dispatch(loadDealershipProfile());
+        dispatch(loadAllSCs());
     }, [dispatch]);
 
     return <div className={classes.root}>

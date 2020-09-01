@@ -133,3 +133,14 @@ export const loadDealershipSCs = (dealershipId: number, pageData: IPageRequest):
         throw e;
     }
 }
+const _loadAllSCS = (payload: IServiceCenter[]): TServiceCenterActions => ({type: "ServiceCenters/FullSCList", payload});
+export const selectSC = (payload: IServiceCenter): TServiceCenterActions => ({
+    type: "ServiceCenters/SelectSC", payload
+});
+export const loadAllSCs = (): AppThunk => async dispatch => {
+    const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params: {pageSize: 0, pageIndex: 0}});
+    if (result.length) {
+        dispatch(_loadAllSCS(result));
+        dispatch(selectSC(result[0]));
+    }
+}

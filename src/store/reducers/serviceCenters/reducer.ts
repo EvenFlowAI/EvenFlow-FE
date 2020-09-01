@@ -5,6 +5,8 @@ import {defaultPageData, defaultPaging} from "../defaultInitials";
 type TServiceCenterState = {
     serviceCenters: IServiceCenterExtended[],
     dealershipSCs: IServiceCenterExtended[],
+    fullSCList: IServiceCenter[],
+    selectedSC?: IServiceCenter,
     shortSC: IServiceCenter[],
     loading: boolean,
     dealershipLoading: boolean,
@@ -18,6 +20,7 @@ type TServiceCenterState = {
 const initialState: TServiceCenterState = {
     serviceCenters: [],
     dealershipSCs: [],
+    fullSCList: [],
     shortSC: [],
     shortLoading: false,
     dealershipLoading: false,

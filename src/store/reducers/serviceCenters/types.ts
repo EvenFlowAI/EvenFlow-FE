@@ -37,6 +37,8 @@ export type TCreate = {type: "ServiceCenters/Create", payload: IServiceCenterExt
 export type TLoading = {type: "ServiceCenters/Loading", payload: boolean};
 export type TDealershipLoading = {type: "ServiceCenters/DealershipLoading", payload: boolean};
 export type TSaving = {type: "ServiceCenters/Saving", payload: boolean};
+export type TSelectSC = {type: "ServiceCenters/SelectSC", payload: IServiceCenter};
+export type TFullSCList = {type: "ServiceCenters/FullSCList", payload: IServiceCenter[]};
 export type TChangePageData = TChangePageDataGeneric<"ServiceCenters/ChangePageData">;
 export type TChangePaging = TChangePagingGeneric<"ServiceCenters/ChangePaging">;
 export type TChangeDealershipPaging = TChangePagingGeneric<"ServiceCenters/ChangeDealershipPaging">;
@@ -44,6 +46,8 @@ export type TChangeDealershipPaging = TChangePagingGeneric<"ServiceCenters/Chang
 export type TServiceCenterActions =
     | TCreate
     | TLoading
+    | TSelectSC
+    | TFullSCList
     | TSaving
     | TDealershipLoading
     | TGetDealershipAll
