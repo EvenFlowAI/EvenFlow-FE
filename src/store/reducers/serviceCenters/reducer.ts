@@ -4,21 +4,27 @@ import {defaultPageData, defaultPaging} from "../defaultInitials";
 
 type TServiceCenterState = {
     serviceCenters: IServiceCenterExtended[],
+    dealershipSCs: IServiceCenterExtended[],
     shortSC: IServiceCenter[],
     loading: boolean,
+    dealershipLoading: boolean,
     shortLoading: boolean,
     saving: boolean,
     paging: IPagingResponse,
+    dealershipPaging: IPagingResponse,
     pageData: IPageRequest
 };
 
 const initialState: TServiceCenterState = {
     serviceCenters: [],
+    dealershipSCs: [],
     shortSC: [],
     shortLoading: false,
+    dealershipLoading: false,
     loading: false,
     saving: false,
     paging: {...defaultPaging},
+    dealershipPaging: {...defaultPaging},
     pageData: {...defaultPageData}
 };
 
@@ -26,6 +32,12 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
     switch (action.type) {
         case "ServiceCenters/GetAll":
             return {...state, serviceCenters: action.payload};
+        case "ServiceCenters/ChangeDealershipPaging":
+            return {...state, dealershipPaging: action.payload};
+        case "ServiceCenters/DealershipLoading":
+            return {...state, dealershipLoading: action.payload};
+        case "ServiceCenters/GetDealershipAll":
+            return {...state, dealershipSCs: action.payload};
         case "ServiceCenters/GetShort":
             return {...state, shortSC: action.payload};
         case "ServiceCenters/ShortLoading":

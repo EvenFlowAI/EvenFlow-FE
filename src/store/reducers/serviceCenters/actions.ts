@@ -115,3 +115,21 @@ export const updateSC = (payload: IServiceCenterForm, id: number, avatar: File |
         throw e;
     }
 }
+
+const loadingDealership = (payload: boolean): TServiceCenterActions => ({type: "ServiceCenters/DealershipLoading", payload});
+const pagingDealership = changePagingGeneric("ServiceCenters/ChangeDealershipPaging");
+const _loadDealershipSCs = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({type: "ServiceCenters/GetDealershipAll", payload});
+export const loadDealershipSCs = (dealershipId: number, pageData: IPageRequest): AppThunk => async dispatch => {
+    dispatch(loadingDealership(true));
+    try {
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IServiceCenterExtended>>(Api.endpoints.Dealerships.GetAll, {data: {
+            dealershipId, ...pageData
+        }});
+        dispatch(pagingDealership(paging));
+        dispatch(_loadDealershipSCs(result));
+        dispatch(loadingDealership(false));
+    } catch (e) {
+        dispatch(loadingDealership(false));
+        throw e;
+    }
+}
