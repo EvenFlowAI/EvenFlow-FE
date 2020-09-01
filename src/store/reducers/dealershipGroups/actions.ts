@@ -1,8 +1,8 @@
-import {DealershipActions, IDealershipGroupExtended, IDealershipGroupForm} from "./types";
+import {DealershipActions, IDealershipGroupExtended, IDealershipGroupForm, IDealershipProfile} from "./types";
 import {ThunkAction} from "redux-thunk";
 import {ActionCreator, Dispatch} from "redux";
 import {Api} from "../../../config/requests";
-import {IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {RootState} from "../../rootReducer";
 
 export const loading = (payload: boolean): DealershipActions => ({
@@ -98,4 +98,10 @@ export const remove: ActionCreator<ThunkAction<
     } catch (e) {
         throw e;
     }
+}
+
+const _loadDealershipProfile = (payload: IDealershipProfile): DealershipActions => ({type: "Dealership/Profile", payload});
+export const loadDealershipProfile = (): AppThunk => async dispatch => {
+    const {data} = await Api.call<IDealershipProfile>(Api.endpoints.Accounts.Dealership);
+    dispatch(_loadDealershipProfile(data));
 }

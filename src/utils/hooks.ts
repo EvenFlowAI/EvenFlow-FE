@@ -8,6 +8,7 @@ import {closeConfirmModal, openConfirmModal} from "../store/reducers/modals/acti
 import {TConfirmModalPayload} from "../store/reducers/modals/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {defaultRowsPerPage} from "../config/config";
+import {IDealershipProfile} from "../store/reducers/dealershipGroups/types";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -33,6 +34,10 @@ export function useConfirm () {
 
 export const useCurrentUser = (): ICurrentUser | undefined => {
     return useSelector((state: RootState) => state.users.currentUser);
+}
+
+export const useDealershipProfile = (): IDealershipProfile | undefined => {
+    return useSelector((state: RootState) => state.dealershipGroups.profile);
 }
 
 export function useException() {

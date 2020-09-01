@@ -10,6 +10,7 @@ import {PrivateRoute} from "../../utils/Routes";
 import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
+import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actions";
 
 
 const useStyles = makeStyles(theme => ({
@@ -33,6 +34,7 @@ export const Layout = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getCurrentUser());
+        dispatch(loadDealershipProfile());
     }, [dispatch]);
 
     return <div className={classes.root}>

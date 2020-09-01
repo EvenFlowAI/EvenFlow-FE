@@ -13,6 +13,12 @@ export interface IAddress {
     zipCode: string;
 }
 
+export interface IDealershipProfile extends IDealershipGroupShort{
+    address: IAddress;
+    phoneNumber: string;
+    mainAddress: string;
+}
+
 export interface IDealershipGroupExtended extends IDealershipGroupShort {
     address: IAddress;
     countOfServiceCenters: number;
@@ -44,9 +50,11 @@ type GetAllDealerships = {type: "Dealership/GetAll", payload: IDealershipGroupEx
 type ChangePageData = {type: "Dealership/ChangePageData", payload: Partial<IPageRequest>};
 type ChangePaging = {type: "Dealership/ChangePaging", payload: IPagingResponse};
 type Remove = {type: "Dealership/Remove", payload: number};
+type Profile = {type: "Dealership/Profile", payload: IDealershipProfile};
 
 export type DealershipActions =
     | AddDealership
+    | Profile
     | Loading
     | Saving
     | Remove
@@ -56,6 +64,7 @@ export type DealershipActions =
 
 export type DealershipState = {
     dealershipList: IDealershipGroupExtended[];
+    profile?: IDealershipProfile;
     loading: boolean;
     saving: boolean;
     paging: IPagingResponse;
