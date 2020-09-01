@@ -85,7 +85,6 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
         } else if (changeRowsPerPageCb) {
             changeRowsPerPageCb(rowsPerPage);
         }
-        console.log('call');
     }, [changePageCb, changeRowsPerPageCb, page, rowsPerPage]);
 
     if (props.isLoading) return <Loading />;

@@ -26,8 +26,10 @@ export const DetailEmployees: React.FC<TDetailComponentProps> = (props) => {
         data={employees}
         index={"id"}
         isLoading={employeesLoading}
-        changePageCb={props.onChangePage}
-        changeRowsPerPageCb={props.onChangeRowsPerPage}
+        page={props.page}
+        rowsPerPage={props.rowsPerPage}
+        onChangePage={props.onChangePage}
+        onChangeRowsPerPage={props.onChangeRowsPerPage}
         count={employeesPaging.numberOfRecords}
         rowData={rowData}
     />

@@ -1,4 +1,8 @@
+import React from "react";
+
 export type TDetailComponentProps = {
-    onChangePage: (pageIndex: number, pageSize: number) => void;
-    onChangeRowsPerPage: (pageIndex: number) => void;
+    onChangePage: (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number) => void;
+    onChangeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    page: number;
+    rowsPerPage: number
 }

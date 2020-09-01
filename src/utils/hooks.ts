@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import {useSnackbar} from "notistack";
 import {IPageRequest, ValidationKeyPairs} from "../types/types";
 import {getAPIException} from "./utils";
@@ -93,7 +93,15 @@ export const usePagination = (cb: TPageCallback, changePageData: IPageRequestAct
     return {pageSize, pageIndex, changePage, changeRowsPerPage};
 }
 export const useStatePagination = () => {
-    const [page, setPage] = useState<number>(0);
-    const [rowsPerPage, setRowsPerPage] = useState<number>(defaultRowsPerPage);
-    return {page, setPage, rowsPerPage, setRowsPerPage};
+    const [pageData, setPageData] = useState<IPageRequest>({
+        pageIndex: 0, pageSize: defaultRowsPerPage
+    });
+    const onChangePage = useCallback((e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number): void => {
+        setPageData(s => ({...s, pageIndex}));
+    }, [setPageData]);
+    const onChangeRowsPerPage = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+        setPageData({pageIndex: 0, pageSize: Number(e.target.value)});
+    }, [setPageData])
+
+    return {pageData, onChangePage, onChangeRowsPerPage};
 }

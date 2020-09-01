@@ -12,7 +12,7 @@ import {DetailEmployees} from "./DetailEmployees";
 import {useDispatch} from "react-redux";
 import {loadDealershipEmployees} from "../../../../store/reducers/employees/actions";
 import {TDetailComponentProps} from "./types";
-import {defaultRowsPerPage} from "../../../../config/config";
+import {useStatePagination} from "../../../../utils/hooks";
 
 type TTab = {
     id: string;
@@ -29,14 +29,9 @@ export const DealershipGroupDetail = () => {
     const {id} = useParams();
     const [dealership, setDS] = useState<IDealershipGroupExtended | undefined>();
 
-    const changePageCb = (pageIndex: number, pageSize: number) => {
-        dispatch(loadDealershipEmployees(id, {pageIndex, pageSize}));
-    }
-    const changePageSizeCb = (pageSize: number) => {
-        dispatch(loadDealershipEmployees(id, {pageIndex: 0, pageSize}));
-    }
-
     const dispatch = useDispatch();
+
+    const {pageData, onChangeRowsPerPage, onChangePage} = useStatePagination();
 
     useEffect(() => {
         Api.call<IDealershipGroupExtended>(Api.endpoints.Dealerships.Retrieve, {urlParams: {id}})
@@ -46,8 +41,8 @@ export const DealershipGroupDetail = () => {
     }, [setDS, id]);
 
     useEffect(() => {
-        dispatch(loadDealershipEmployees(id, {pageIndex: 0, pageSize: defaultRowsPerPage}));
-    }, [id, dispatch]);
+        dispatch(loadDealershipEmployees(id, pageData));
+    }, [id, dispatch, pageData]);
 
     const [selectedTab, setTab] = useState<string>("1");
     const handleChangeTab = (e: React.ChangeEvent<{}>, tab: string) => {
@@ -66,8 +61,10 @@ export const DealershipGroupDetail = () => {
         </TabList>
         {tabs.map((t) => {
             return <TabPanel style={{width: "100%"}} value={t.id} key={t.id}><t.component
-                onChangePage={changePageCb}
-                onChangeRowsPerPage={changePageSizeCb}
+                onChangePage={onChangePage}
+                onChangeRowsPerPage={onChangeRowsPerPage}
+                page={pageData.pageIndex}
+                rowsPerPage={pageData.pageSize}
             /></TabPanel>
         })}
     </TabContext>;
