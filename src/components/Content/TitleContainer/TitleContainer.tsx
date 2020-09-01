@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(3),
         paddingLeft: theme.spacing(4),
         paddingRight: theme.spacing(4),
-        paddingBottom: pad ? theme.spacing(4) : 0
+        paddingBottom: pad ? theme.spacing(3) : 0
     })
 }));
 type TProps = {

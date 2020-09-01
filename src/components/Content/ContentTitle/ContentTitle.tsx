@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     },
     titleContainer: {
-        display: "flex"
+        display: "flex",
+        flexDirection: "column"
     },
     titleLink: (normal) => ({
         ...titleSt,
