@@ -8,7 +8,7 @@ import {TextField} from "../../UI/TextField";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {states} from "../../../config/constants";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {Api} from "../../../config/requests";
 import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
 
@@ -69,6 +69,9 @@ const initialAddress: IAddress = {
 
 export const EditAddress: React.FC<DialogProps> = props => {
     const [form, setForm] = useState<IAddress>(initialAddress);
+    const [saving, setSave] = useState<boolean>(false);
+    const showError = useException();
+    const showMessage = useMessage();
 
     const {selectedSC} = useSCs();
     useEffect(() => {
@@ -88,6 +91,24 @@ export const EditAddress: React.FC<DialogProps> = props => {
     const handleSelectState: TSelectChange = (e, val) => {
         setForm({...form, state: val || ''});
     }
+    const handleSave = async () => {
+        if (!selectedSC) {
+            showError("Service center is not specified");
+        } else {
+            setSave(true);
+            try {
+                await Api.call(
+                    Api.endpoints.ServiceCenters.UpdateAddress,
+                    {data: form, urlParams: {id: selectedSC.id}}
+                    )
+                showMessage("Updated successfully");
+                props.onClose();
+            } catch (e) {
+                showError(e);
+                // TODO: Complete and check
+            }
+        }
+    }
 
     return <BaseModal {...props} maxWidth="sm">
         <DialogTitle onClose={props.onClose}>
@@ -98,7 +119,7 @@ export const EditAddress: React.FC<DialogProps> = props => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button variant="contained" color="primary" onClick={props.onClose}>Save</Button>
+            <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
         </DialogActions>
     </BaseModal>
 }
