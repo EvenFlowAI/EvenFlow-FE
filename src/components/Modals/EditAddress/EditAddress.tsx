@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Grid} from "@material-ui/core";
@@ -8,6 +8,9 @@ import {TextField} from "../../UI/TextField";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {states} from "../../../config/constants";
+import {useSCs} from "../../../utils/hooks";
+import {Api} from "../../../config/requests";
+import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
 
 
 const EditForm: React.FC<{
@@ -66,6 +69,18 @@ const initialAddress: IAddress = {
 
 export const EditAddress: React.FC<DialogProps> = props => {
     const [form, setForm] = useState<IAddress>(initialAddress);
+
+    const {selectedSC} = useSCs();
+    useEffect(() => {
+        if (selectedSC) {
+            Api.call<IServiceCenterExtended>(
+                Api.endpoints.ServiceCenters.Retrieve,
+                {urlParams: {id: selectedSC.id}}
+            ).then(r => {
+                setForm(r.data.address);
+            })
+        }
+    }, [selectedSC, setForm]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
