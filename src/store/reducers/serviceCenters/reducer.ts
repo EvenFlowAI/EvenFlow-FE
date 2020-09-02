@@ -55,6 +55,10 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, loading: action.payload};
         case "ServiceCenters/Saving":
             return {...state, saving: action.payload};
+        case "ServiceCenters/FullSCList":
+            return {...state, fullSCList: action.payload};
+        case "ServiceCenters/SelectSC":
+            return {...state, selectedSC: action.payload};
         default:
             return state;
     }

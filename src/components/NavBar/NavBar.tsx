@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {getInitials} from "../../utils/utils";
+import {ServiceCenterSelector} from "./ServiceCenterSelector";
 
 
 const useStyles = makeStyles(theme => ({
@@ -17,8 +18,8 @@ const useStyles = makeStyles(theme => ({
         marginLeft: sideBarWidth,
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)"
     },
-    grow: {
-        flexGrow: 1
+    toolbar: {
+        justifyContent: "flex-end"
     },
     name: {
         fontSize: 16,
@@ -52,8 +53,8 @@ export const NavBar = () => {
 
     return <>
         <AppBar className={classes.root}>
-            <Toolbar>
-                <div className={classes.grow} />
+            <Toolbar className={classes.toolbar}>
+                <ServiceCenterSelector />
                 <Typography className={classes.name} variant="h4">{currentUser?.fullName || ""}</Typography>
                 <Avatar src={currentUser?.avatarPath} className={classes.avatar} onClick={handleClick}>
                     {getInitials(currentUser?.fullName || '-')}
