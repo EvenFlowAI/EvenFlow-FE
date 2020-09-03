@@ -31,6 +31,20 @@ export enum LocalTokens {
     refreshToken = 'rt'
 }
 
+export interface ITimeSpan {
+    ticks: number;
+    days: number;
+    hours: number;
+    milliseconds: number;
+    minutes: number;
+    seconds: number;
+    totalDays: number;
+    totalHours: number;
+    totalMilliseconds: number;
+    totalMinutes: number;
+    totalSeconds: number;
+}
+
 export interface IPagingResponse {
     numberOfPages: number;
     numberOfRecords: number;

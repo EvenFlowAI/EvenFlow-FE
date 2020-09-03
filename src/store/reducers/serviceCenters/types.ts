@@ -1,5 +1,6 @@
 import {IAddress, IDealershipGroupShort} from "../dealershipGroups/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
+import {ITimeSpan} from "../../../types/types";
 
 export interface IServiceCenter {
     id: number;
@@ -27,6 +28,16 @@ export interface IServiceCenterForm {
     contactPersonalEmail: string,
     phoneNumber: string,
     address: IAddress
+}
+export interface IHOOData {
+    dayOfWeek: number;
+    from: ITimeSpan;
+    to: ITimeSpan;
+}
+export interface IHOODataForm {
+    dayOfWeek: number;
+    from: string;
+    to: string;
 }
 
 export type TGetAll = {type: "ServiceCenters/GetAll", payload: IServiceCenterExtended[]};

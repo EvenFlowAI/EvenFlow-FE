@@ -104,7 +104,7 @@ type ApiRoutes = {
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
-        | "GetAll" | "Avatar", TApiRoute>,
+        | "GetAll" | "Avatar" | "GetHOO" | "SetHOO", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar", TApiRoute>,
 }
 
@@ -155,6 +155,8 @@ export class Api {
             UpdateAddress: {route: "/service-centers/{id}/address", method: "put"},
             GetAll: {route: "/service-centers/by-query", method: "post"},
             Avatar: {route: "/service-centers/{id}/avatar", method: "patch"},
+            GetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "get"},
+            SetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "put"}
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},
