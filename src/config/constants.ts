@@ -71,3 +71,5 @@ export enum Titles {
     Employees = "Employees",
     ServiceCenters = "Service Centers"
 }
+
+export const timeSpanString = "HH:mm:ss";
