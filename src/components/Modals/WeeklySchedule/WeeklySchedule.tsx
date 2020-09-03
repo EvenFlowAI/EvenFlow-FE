@@ -6,7 +6,6 @@ import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import moment from "moment";
 import {IWeeklySchedule} from "../../../store/reducers/serviceCenters/types";
-import {truncate} from "fs";
 
 const useStyles = makeStyles(theme => ({
     container: {
