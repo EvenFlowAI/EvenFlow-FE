@@ -7,7 +7,7 @@ import moment from "moment";
 import {makeStyles} from "@material-ui/core/styles";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {Api} from "../../../config/requests";
-import {IHOOData, IHOODataForm} from "../../../store/reducers/serviceCenters/types";
+import {IHOODataForm} from "../../../store/reducers/serviceCenters/types";
 import {LoadingButton} from "../../UI/Button";
 
 
@@ -87,21 +87,26 @@ export const HourOfOperations: React.FC<DialogProps> = props => {
     const showMessage = useMessage();
     useEffect(() => {
         if (selectedSC) {
-            Api.call<IHOOData[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id: selectedSC.id}}).then(r => {
-                console.log(r.data);
-                // TODO: Set initial form
+            Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id: selectedSC.id}}).then(r => {
+                setForm(initialForm.map(ie => {
+                    const element = r.data.find(e => e.dayOfWeek === ie.dayOfWeek);
+                    if (element) {
+                        return {...element, checked: true};
+                    }
+                    return ie;
+                }))
             });
         }
-    }, [selectedSC, setForm]);
+    }, [selectedSC, setForm, props.open]);
 
     const handleChange = (day: number, t: "from" | "to") => (e: React.ChangeEvent<HTMLInputElement>) => {
         const idx = form.findIndex(v => v.dayOfWeek === day);
-        form[idx][t] = e.target.value;
+        form[idx] = {...form[idx], [t]: e.target.value};
         setForm([...form]);
     }
     const handleCheck = (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         const idx = form.findIndex(v => v.dayOfWeek === day);
-        form[idx].checked = checked;
+        form[idx] = {...form[idx], checked};
         setForm([...form]);
     }
     const handleUpdate = async () => {
