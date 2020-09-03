@@ -68,8 +68,6 @@ const elementsGroup2: KeyPair<IContactPersonForm>[] = [
 ];
 
 const requiredFields: ValidationKeyPairs<IDealershipForm & IContactPersonForm>[] = [
-    {field: "phoneNumber", message: "Dealership Group name is required"},
-
 ];
 
 const initialStateDealershipState: IDealershipForm = {

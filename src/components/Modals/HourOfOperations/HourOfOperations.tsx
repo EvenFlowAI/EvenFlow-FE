@@ -5,9 +5,10 @@ import {Button, Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import moment from "moment";
 import {makeStyles} from "@material-ui/core/styles";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {Api} from "../../../config/requests";
-import {IHOOData} from "../../../store/reducers/serviceCenters/types";
+import {IHOOData, IHOODataForm} from "../../../store/reducers/serviceCenters/types";
+import {LoadingButton} from "../../UI/Button";
 
 
 const useStyles = makeStyles({
@@ -26,7 +27,7 @@ const useStyles = makeStyles({
 
 const HOOForm: React.FC<{
     form: THOOForm[];
-    onChange: () => void;
+    onChange: (day: number, t: "from" | "to") => (e: React.ChangeEvent<HTMLInputElement>) => void;
     onCheck: (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }> = props => {
     const classes = useStyles();
@@ -38,6 +39,8 @@ const HOOForm: React.FC<{
                 <TextField
                     disabled={!data.checked}
                     fullWidth
+                    value={data.from}
+                    onChange={props.onChange(idx, "from")}
                     label={day}
                     id={`from-${day}`}
                 />
@@ -48,7 +51,9 @@ const HOOForm: React.FC<{
             <Grid item xs={3}>
                 <TextField
                     fullWidth
+                    value={data.to}
                     disabled={!data.checked}
+                    onChange={props.onChange(idx, "to")}
                     id={`to-${day}`}
                 />
             </Grid>
@@ -77,6 +82,9 @@ const initialForm: THOOForm[] = moment.weekdays().map((w, idx) => {
 export const HourOfOperations: React.FC<DialogProps> = props => {
     const {selectedSC} = useSCs();
     const [form, setForm] = useState<THOOForm[]>(initialForm);
+    const [saving, setSaving] = useState<boolean>(false);
+    const showError = useException();
+    const showMessage = useMessage();
     useEffect(() => {
         if (selectedSC) {
             Api.call<IHOOData[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id: selectedSC.id}}).then(r => {
@@ -86,13 +94,32 @@ export const HourOfOperations: React.FC<DialogProps> = props => {
         }
     }, [selectedSC, setForm]);
 
-    const handleChange = () => {
-
+    const handleChange = (day: number, t: "from" | "to") => (e: React.ChangeEvent<HTMLInputElement>) => {
+        const idx = form.findIndex(v => v.dayOfWeek === day);
+        form[idx][t] = e.target.value;
+        setForm([...form]);
     }
     const handleCheck = (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         const idx = form.findIndex(v => v.dayOfWeek === day);
         form[idx].checked = checked;
         setForm([...form]);
+    }
+    const handleUpdate = async () => {
+        if (!selectedSC) {
+            showError("Service center is not selected");
+        } else {
+            setSaving(true);
+            const fd: IHOODataForm[] = form.filter(e => e.checked) as IHOODataForm[];
+            try {
+                await Api.call(Api.endpoints.ServiceCenters.SetHOO, {data: {hoursOfOperations: fd}, urlParams: {id: selectedSC.id}});
+                setSaving(false);
+                showMessage("Successfully saved");
+                props.onClose();
+            } catch (e) {
+                showError(e);
+                setSaving(false);
+            }
+        }
     }
 
     return <BaseModal {...props} maxWidth="sm">
@@ -102,7 +129,13 @@ export const HourOfOperations: React.FC<DialogProps> = props => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button variant="contained" color="primary" onClick={props.onClose}>Save</Button>
+            <LoadingButton
+                variant="contained"
+                color="primary"
+                loading={saving}
+                onClick={handleUpdate}>
+                Save
+            </LoadingButton>
         </DialogActions>
     </BaseModal>
 }
