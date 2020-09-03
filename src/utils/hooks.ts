@@ -61,7 +61,7 @@ export function useException() {
     const {enqueueSnackbar} = useSnackbar();
     return (e: any) => {
         if (e && e.response?.data?.errors && e.response.data.errors.length) {
-            for (const error of e.response.data.errors as {field: string; message: string}[]) {
+            for (const error of e.response.data.errors.slice(0, 3) as {field: string; message: string}[]) {
                 enqueueSnackbar(error.message, {variant: "error"});
             }
         } else if (typeof e === "string") {

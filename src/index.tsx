@@ -9,19 +9,23 @@ import {store} from "./store/store";
 import {BrowserRouter} from "react-router-dom";
 import theme from "./theme/theme";
 import {SnackbarProvider} from "notistack";
+import MomentUtils from "@date-io/moment";
+import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <BrowserRouter>
-                    <SnackbarProvider maxSnack={3}
-                                      anchorOrigin={{horizontal: "right", vertical: "top"}}
-                                      variant="success">
-                        <App />
-                    </SnackbarProvider>
-                </BrowserRouter>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <CssBaseline />
+                    <BrowserRouter>
+                        <SnackbarProvider maxSnack={3}
+                                          anchorOrigin={{horizontal: "right", vertical: "top"}}
+                                          variant="success">
+                            <App />
+                        </SnackbarProvider>
+                    </BrowserRouter>
+                </MuiPickersUtilsProvider>
             </ThemeProvider>
         </Provider>
     </React.StrictMode>,
