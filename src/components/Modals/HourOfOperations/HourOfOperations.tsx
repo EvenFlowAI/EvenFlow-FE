@@ -42,6 +42,7 @@ const HOOForm: React.FC<{
             <Grid item xs={3}>
                 <TimePicker
                     disabled={!data.checked}
+                    placeholder={!data.checked ? "Closed" : ""}
                     fullWidth
                     value={data.from}
                     onChange={props.onChange(idx, "from")}
