@@ -24,12 +24,12 @@ type TProps = {
     title: string;
     subtitle?: string;
     pad?: boolean;
-    actions?: boolean;
+    actions?: boolean | JSX.Element;
 }
 export const TitleContainer: React.FC<TProps> = props => {
     const classes = useStyles(Boolean(props.pad));
     return <div className={classes.container}>
         <ContentTitle title={props.title} subtitle={props.subtitle} />
-        {props.actions ? <ContentActions /> : null}
-    </div>
+        {props.actions ? typeof props.actions === 'boolean' ? <ContentActions /> : props.actions : null}
+    </div>;
 }

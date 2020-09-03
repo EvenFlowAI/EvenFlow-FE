@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback, useMemo} from "react";
 import {Button, Grid, Paper, Typography} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
@@ -19,11 +19,16 @@ import {useModal} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Technicians} from "../../Modals/Technicians/Technicians";
 import {Bays} from "../../Modals/Bays/Bays";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 
 const useStyles = makeStyles(theme => ({
     paper: {
         position: "relative",
         borderRadius: 0
+    },
+    container: {
+        width: "100%",
+        maxWidth: theme.breakpoints.values.lg
     },
     icon: {
         display: "flex",
@@ -70,27 +75,20 @@ const useDStyles = makeStyles({
 })
 
 const DashboardTitle = () => {
-    const classes = useDStyles();
     const history = useHistory();
-
-    const handleGoToOptimizer = () => {
+    const handleGoToOptimizer = useCallback(() => {
         history.push(Routes.Optimizer.Base);
-    }
-    return <div className={classes.container}>
-        <Grid container justify="space-between" alignItems="center">
-            <div>
-                <Typography className={classes.title} variant="h2">Honda Downtown</Typography>
-                <Typography variant="subtitle1">6391 Elgin St. Celina, Chicago 10299</Typography>
-            </div>
-            <div>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    endIcon={<ChevronRight />}
-                    onClick={handleGoToOptimizer}>go to optimizer settings</Button>
-            </div>
-        </Grid>
-    </div>
+    }, [history]);
+    const actions = useMemo(() => {
+        return <Button
+            variant="contained"
+            color="primary"
+            endIcon={<ChevronRight />}
+            onClick={handleGoToOptimizer}>go to optimizer settings
+        </Button>;
+    }, [handleGoToOptimizer]);
+
+    return <TitleContainer pad actions={actions} title="Honda Downtown" subtitle="6391 Elgin St. Celina, Chicago 10299" />;
 }
 
 type TItem = {
@@ -148,7 +146,7 @@ export const AdminDashboard: React.FC = props => {
     ];
 
     const classes = useStyles();
-    return <div>
+    return <div className={classes.container}>
         <DashboardTitle />
         <Grid container spacing={2}>
             {items.map(item =>
