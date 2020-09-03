@@ -11,6 +11,7 @@ import {states} from "../../../config/constants";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {Api} from "../../../config/requests";
 import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
+import {LoadingButton} from "../../UI/Button";
 
 
 const EditForm: React.FC<{
@@ -102,10 +103,11 @@ export const EditAddress: React.FC<DialogProps> = props => {
                     {data: form, urlParams: {id: selectedSC.id}}
                     )
                 showMessage("Updated successfully");
+                setSave(false);
                 props.onClose();
             } catch (e) {
+                setSave(false)
                 showError(e);
-                // TODO: Complete and check
             }
         }
     }
@@ -119,7 +121,13 @@ export const EditAddress: React.FC<DialogProps> = props => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
+            <LoadingButton
+                loading={saving}
+                variant="contained"
+                color="primary"
+                onClick={handleSave}>
+                Save
+            </LoadingButton>
         </DialogActions>
     </BaseModal>
 }
