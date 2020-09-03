@@ -40,6 +40,12 @@ export interface IHOODataForm {
     to: string;
 }
 
+export interface IWeeklySchedule {
+    dayOfWeek: number;
+    averageTechnicians: number;
+    averageLevelThreeTechnicians: number;
+}
+
 export type TGetAll = {type: "ServiceCenters/GetAll", payload: IServiceCenterExtended[]};
 export type TGetDealershipAll = {type: "ServiceCenters/GetDealershipAll", payload: IServiceCenterExtended[]};
 export type TGetShort = {type: "ServiceCenters/GetShort", payload: IServiceCenter[]};
