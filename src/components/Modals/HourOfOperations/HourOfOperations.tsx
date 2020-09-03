@@ -30,6 +30,7 @@ const useStyles = makeStyles({
 
 const HOOForm: React.FC<{
     form: THOOForm[];
+    onApply: () => void;
     onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void;
     onCheck: (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }> = props => {
@@ -61,7 +62,7 @@ const HOOForm: React.FC<{
                 />
             </Grid>
             <Grid item xs={3}>
-                {!idx ? <Button>
+                {!idx ? <Button onClick={props.onApply}>
                     Apply to all
                 </Button> : null}
             </Grid>
@@ -112,6 +113,10 @@ export const HourOfOperations: React.FC<DialogProps> = props => {
         form[idx] = {...form[idx], [t]: date};
         setForm([...form]);
     }
+    const handleApplyToAll = (): void => {
+        const el = form[0];
+        setForm(form.map((_, idx) => ({...el, dayOfWeek: idx})));
+    }
     const handleCheck = (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         const idx = form.findIndex(v => v.dayOfWeek === day);
         form[idx] = {...form[idx], checked};
@@ -140,7 +145,7 @@ export const HourOfOperations: React.FC<DialogProps> = props => {
     return <BaseModal {...props} maxWidth="sm">
         <DialogTitle onClose={props.onClose}>Edit Hours of Operations</DialogTitle>
         <DialogContent>
-            <HOOForm onCheck={handleCheck} form={form} onChange={handleChange} />
+            <HOOForm onApply={handleApplyToAll} onCheck={handleCheck} form={form} onChange={handleChange} />
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
