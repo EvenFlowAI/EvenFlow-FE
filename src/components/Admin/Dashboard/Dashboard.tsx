@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from "react";
-import {Button, Grid, Paper, Typography} from "@material-ui/core";
+import {Button, Grid, Paper} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -62,17 +62,6 @@ const useStyles = makeStyles(theme => ({
         }
     }
 }));
-
-const useDStyles = makeStyles({
-    title: {
-        fontSize: 24,
-        fontWeight: "bold"
-    },
-    container: {
-        marginBottom: 16,
-        marginTop: -12
-    }
-})
 
 const DashboardTitle = () => {
     const history = useHistory();
