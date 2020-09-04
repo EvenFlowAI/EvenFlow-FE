@@ -1,15 +1,19 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogTitle} from "../BaseModal";
 import {Button, IconButton} from "@material-ui/core";
 import {Table} from "../../UI/Table";
-import moment, {Moment} from "moment";
 import {TableRowDataType} from "../../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {AddHoliday} from "./AddHoliday";
-import {useModal} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
 import {DividerThin} from "../../UI/Divider";
+import {IHoliday} from "../../../store/reducers/holidays/types";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
+import moment from "moment";
 
 const useStyles = makeStyles({
     divider: {
@@ -22,33 +26,42 @@ const useStyles = makeStyles({
     }
 });
 
-
-type THoliday = {
-    title: string;
-    date: Moment;
-    duration: "All day";
-    recurring: "No repeat" | "Repeat";
-}
-const holidays: THoliday[] = [
-    {title: "Christmas", date: moment().month(11).date(25), duration: "All day", recurring: "Repeat"},
-    {title: "New Year", date: moment().month(0).date(1), duration: "All day", recurring: "Repeat"},
-    {title: "Easter", date: moment().month(2).date(1), duration: "All day", recurring: "No repeat"},
-]
-
-const rowData: TableRowDataType<THoliday>[] = [
-    {header: "Description Title", val: v => v.title},
-    {header: "Date", val: v => v.date.format("MMMM D")},
-    {header: "Duration", val: v => v.duration},
-    {header: "Recurring", val: v => v.recurring}
+const rowData: TableRowDataType<IHoliday>[] = [
+    {header: "Description Title", val: v => v.description},
+    {header: "Date", val: v => moment(v.startDate).format("MMMM D")},
+    {header: "Duration", val: v => v.isAllDay ? "All day" : "Timed"},
+    {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
 export const Holidays: React.FC<DialogProps> = props => {
-    const actions = (el: THoliday) => {
+    const [
+        holidays,
+        isLoading
+    ] = useSelector((state: RootState) => [
+        state.holidays.holidaysList,
+        state.holidays.loading
+    ]);
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (props.open && selectedSC) {
+            dispatch(loadAllHolidays(selectedSC.id));
+        }
+    }, [dispatch, props.open, selectedSC]);
+    const reloadHolidays = () => {
+        if (selectedSC) {
+            dispatch(loadAllHolidays(selectedSC.id));
+        }
+    }
+
+    const actions = (el: IHoliday) => {
         return <IconButton onClick={onOpen}>
             <MoreHoriz />
         </IconButton>
     }
     const {onOpen, onClose, isOpen} = useModal();
+
 
     const classes = useStyles();
     return <BaseModal {...props} width={720}>
@@ -57,13 +70,21 @@ export const Holidays: React.FC<DialogProps> = props => {
             <Button variant="contained" color="primary" onClick={onOpen}>Add Holiday</Button>
         </div>
         <DividerThin />
-        <Table hidePagination compact data={holidays} index={"title"} rowData={rowData} actions={actions} />
+        <Table<IHoliday>
+            hidePagination
+            compact
+            isLoading={isLoading}
+            data={holidays}
+            index={"id"}
+            rowData={rowData}
+            actions={actions}
+        />
         <DividerThin />
         <DialogActions>
             <Button onClick={props.onClose} variant="contained" color="primary">
                 Close
             </Button>
         </DialogActions>
-        <AddHoliday open={isOpen} onClose={onClose} />
+        <AddHoliday open={isOpen} onAction={reloadHolidays} onClose={onClose} />
     </BaseModal>
 }

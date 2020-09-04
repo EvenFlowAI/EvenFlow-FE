@@ -107,6 +107,7 @@ type ApiRoutes = {
         | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar", TApiRoute>,
+    Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
 }
 
 type TOptions = {
@@ -170,6 +171,13 @@ export class Api {
             Remove: {route: "/users/{id}", method: "delete"},
             Update: {route: "/users/{id}", method: "put"},
             Avatar: {route: "/users/{id}/avatar", method: "patch"}
+        },
+        Holidays: {
+            GetAll: {route: "/holidays/by-query", method: "post"},
+            Retrieve: {route: "/holidays/{id}", method: "get"},
+            Remove: {route: "/holidays/{id}", method: "delete"},
+            Update: {route: "/holidays/{id}", method: "put"},
+            Create: {route: "/holidays", method: "post"},
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {
