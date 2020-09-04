@@ -104,7 +104,8 @@ type ApiRoutes = {
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
-        | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays", TApiRoute>,
+        | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
+        | "GetBreaks" | "SetBreaks", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar", TApiRoute>,
 }
 
@@ -159,6 +160,8 @@ export class Api {
             SetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "put"},
             GetWS: {route: "/service-centers/{id}/weekly-schedules", method: "get"},
             SetWS: {route: "/service-centers/{id}/weekly-schedules", method: "put"},
+            GetBreaks: {route: "/service-centers/{id}/breaks", method: "get"},
+            SetBreaks: {route: "/service-centers/{id}/breaks", method: "put"},
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
         },
         Users: {
