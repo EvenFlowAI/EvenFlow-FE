@@ -6,6 +6,9 @@ import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import moment from "moment";
 import {IWeeklySchedule} from "../../../store/reducers/serviceCenters/types";
+import {Api} from "../../../config/requests";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {LoadingButton} from "../../UI/Button";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -104,6 +107,11 @@ const initialIWeeklySchedule: TWeeklySchedule[] = moment.weekdays().map((day, da
 }));
 export const WeeklySchedule: React.FC<DialogProps> = (props) => {
     const [form, setForm] = useState<TWeeklySchedule[]>(initialIWeeklySchedule);
+    const [saving, setSaving] = useState<boolean>(false);
+    const showError = useException();
+    const showMessage = useMessage();
+    const {selectedSC} = useSCs();
+
     const handleChange = (day: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const el = form.findIndex(e => e.dayOfWeek === day);
         form[el] = {...form[el], [e.target.name]: e.target.value};
@@ -114,8 +122,26 @@ export const WeeklySchedule: React.FC<DialogProps> = (props) => {
         form[el] = {...form[el], checked};
         setForm([...form]);
     }
-    const handleSave = () => {
-
+    const handleSave = async () => {
+        if (!selectedSC) {
+            showError("Service center is not selected");
+        } else {
+            setSaving(true);
+            try {
+                const data: IWeeklySchedule[] = form.map(fe => ({
+                    dayOfWeek: fe.dayOfWeek,
+                    averageLevelThreeTechnicians: Number(fe.averageLevelThreeTechnicians),
+                    averageTechnicians: Number(fe.averageTechnicians)
+                }));
+                await Api.call(Api.endpoints.ServiceCenters.SetWS, {urlParams: {id: selectedSC.id}, data});
+                showMessage("Weekly schedule updated.")
+                setSaving(false);
+                props.onClose();
+            } catch (e) {
+                showError(e);
+                setSaving(false);
+            }
+        }
     }
 
     return <BaseModal {...props} maxWidth="sm">
@@ -125,12 +151,13 @@ export const WeeklySchedule: React.FC<DialogProps> = (props) => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button
+            <LoadingButton
+                loading={saving}
                 color="primary"
                 variant="contained"
                 onClick={handleSave}>
                 Save
-            </Button>
+            </LoadingButton>
         </DialogActions>
     </BaseModal>;
 };

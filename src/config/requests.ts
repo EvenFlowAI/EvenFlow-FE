@@ -104,7 +104,7 @@ type ApiRoutes = {
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
-        | "GetAll" | "Avatar" | "GetHOO" | "SetHOO", TApiRoute>,
+        | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar", TApiRoute>,
 }
 
@@ -156,7 +156,10 @@ export class Api {
             GetAll: {route: "/service-centers/by-query", method: "post"},
             Avatar: {route: "/service-centers/{id}/avatar", method: "patch"},
             GetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "get"},
-            SetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "put"}
+            SetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "put"},
+            GetWS: {route: "/service-centers/{id}/weekly-schedule", method: "get"},
+            SetWS: {route: "/service-centers/{id}/weekly-schedule", method: "put"},
+            WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},

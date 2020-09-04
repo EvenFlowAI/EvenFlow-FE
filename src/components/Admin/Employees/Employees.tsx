@@ -19,14 +19,14 @@ const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
     {val: (el: IEmployee) => el?.dealership?.name, header: "Dealership group"},
     {val: (el: IEmployee) => el?.dealership?.mainAddress, header: "Service center address"},
-    {val: (el: IEmployee) => el.role, header: "Role"},
+    {val: (el: IEmployee) => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role"},
 ];
 
 const AdminRowData: TableRowDataType<IEmployee>[] = [
     {val: el => el.fullName, header: "Name"},
     {val: el => el.serviceCenter?.name || '-', header: "Service Center"},
     {val: el => el.serviceCenter?.address ? concatAddress(el.serviceCenter.address) : '-', header: "Service center Address"},
-    {val: el => el.role, header: "Role"},
+    {val: el => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role"},
     {val: el => el.phoneNumber, header: "Phone Number"}
 ];
 
