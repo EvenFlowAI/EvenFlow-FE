@@ -53,16 +53,19 @@ const themeOptions: ThemeOptions = {
     },
     palette: colors,
 };
-
+const input = {
+    border: '1px solid #DADADA',
+    padding: 11,
+    fontSize: 14,
+    backgroundColor: "#F7F8FB",
+    fontWeight: "bold" as const,
+}
 const theme = createMuiTheme(themeOptions);
 theme.overrides = {
     ...theme.overrides,
     MuiInputBase: {
         input: {
-            border: '1px solid #DADADA',
-            padding: theme.spacing(2),
-            backgroundColor: "#F7F8FB",
-            fontWeight: "bold",
+            ...input,
             transition: theme.transitions.create(['border-color']),
             '&:focus': {
             //     boxShadow: `${fade(theme.palette.grey.A400, 0.25)} 0 0 0 0.2rem`,
@@ -83,10 +86,22 @@ theme.overrides = {
     }
 }
 
-export const loginTheme = createMuiTheme({...theme, palette: {
-    ...theme.palette,
-    primary: {
-        main: "#3855F3",
+export const loginTheme = createMuiTheme({
+    ...theme,
+    palette: {
+        ...theme.palette,
+        primary: {
+            main: "#3855F3",
+        },
     },
-}});
+    overrides: {
+        ...theme.overrides,
+        MuiInputBase: {
+        input: {
+            ...input,
+            padding: theme.spacing(2)
+        }
+        }
+    }
+});
 export default theme;
