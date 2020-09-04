@@ -135,7 +135,11 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
         setForm({...form, [e.target.name]: e.target.value});
     }
     const handleDateChange = (f: "startDate" | "endDate") => (date: MaterialUiPickersDate) => {
-        setForm({...form, [f]: date});
+        if (f === 'startDate') {
+            setForm({...form, startDate: date, endDate: moment(date).endOf("day")})
+        } else {
+            setForm({...form, [f]: date});
+        }
     }
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         setForm({...form, [e.target.name]: checked});
