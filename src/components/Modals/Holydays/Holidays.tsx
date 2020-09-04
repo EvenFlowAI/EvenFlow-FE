@@ -1,13 +1,13 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogTitle} from "../BaseModal";
-import {Button, IconButton} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {Table} from "../../UI/Table";
 import {TableRowDataType} from "../../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {AddHoliday} from "./AddHoliday";
-import {useModal, usePagination, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {DividerThin} from "../../UI/Divider";
 import {IHoliday} from "../../../store/reducers/holidays/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -15,6 +15,7 @@ import {RootState} from "../../../store/rootReducer";
 import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
 import moment from "moment";
 import {setHolidayPageData} from "../../../store/reducers/holidays/actions";
+import {Api} from "../../../config/requests";
 
 const useStyles = makeStyles({
     divider: {
@@ -42,8 +43,13 @@ export const Holidays: React.FC<DialogProps> = props => {
         state.holidays.holidaysList,
         state.holidays.loading
     ]);
+    const [editedItem, setEditedItem] = useState<IHoliday|undefined>();
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showMessage = useMessage();
+    const showError = useException();
+    const {askConfirm, closeConfirm} = useConfirm();
 
     useEffect(() => {
         if (props.open && selectedSC) {
@@ -55,9 +61,45 @@ export const Holidays: React.FC<DialogProps> = props => {
             dispatch(loadAllHolidays(selectedSC.id));
         }
     }
+    const openMenu = (el: IHoliday) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setEditedItem(el);
+        setAnchorEl(e.currentTarget);
+    }
+    const closeMenu = () => {
+        setAnchorEl(null);
+    }
+    const handleRemove = async () => {
+        if (editedItem) {
+            try {
+                await Api.call(
+                    Api.endpoints.Holidays.Remove,
+                    {urlParams: {id: editedItem.id}}
+                )
+                showMessage("Holiday removed");
+            } catch (e) {
+                showError(e);
+            }
+        }
+        closeConfirm();
+        reloadHolidays();
+    }
+    const askRemove = () => {
+        closeMenu();
+        if (editedItem) {
+            askConfirm({
+                title: "Remove holiday?",
+                content: `Remove ${editedItem.description}?`,
+                onConfirm: handleRemove
+            })
+        }
+    }
+    const openEdit = () => {
+        closeMenu();
+        onOpen();
+    }
 
     const actions = (el: IHoliday) => {
-        return <IconButton onClick={onOpen}>
+        return <IconButton onClick={openMenu(el)}>
             <MoreHoriz />
         </IconButton>
     }
@@ -92,6 +134,13 @@ export const Holidays: React.FC<DialogProps> = props => {
                 Close
             </Button>
         </DialogActions>
-        <AddHoliday open={isOpen} onAction={reloadHolidays} onClose={onClose} />
+        <Menu
+            onClose={closeMenu}
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}>
+            <MenuItem onClick={openEdit}>Edit</MenuItem>
+            <MenuItem onClick={askRemove}>Remove</MenuItem>
+        </Menu>
+        <AddHoliday open={isOpen} payload={editedItem} onAction={reloadHolidays} onClose={onClose} />
     </BaseModal>
 }

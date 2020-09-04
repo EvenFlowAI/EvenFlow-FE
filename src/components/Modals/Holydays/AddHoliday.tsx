@@ -145,10 +145,17 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
         if (!selectedSC) {
             showError("Service center is not selected");
         } else {
-            const data = {...payload, ...form, serviceCenterId: selectedSC.id};
+            const data: IHoliday = {...payload, ...form, serviceCenterId: selectedSC.id};
             setSaving(true);
             try {
-                await Api.call(Api.endpoints.Holidays.Create, {data});
+                if (payload) {
+                    await Api.call(
+                        Api.endpoints.Holidays.Update,
+                        {data, urlParams: {id: data?.id}}
+                    )
+                } else {
+                    await Api.call(Api.endpoints.Holidays.Create, {data});
+                }
                 setSaving(false);
                 showMessage("Holiday saved");
                 if (onAction) {
