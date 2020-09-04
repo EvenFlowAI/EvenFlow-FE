@@ -5,7 +5,7 @@ import {Button, Grid, Switch, Typography} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import moment from "moment";
-import {IWeeklySchedule, IWeeklyScheduleResponse} from "../../../store/reducers/serviceCenters/types";
+import {IWeeklySchedule} from "../../../store/reducers/serviceCenters/types";
 import {Api} from "../../../config/requests";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {LoadingButton} from "../../UI/Button";
