@@ -74,6 +74,7 @@ const WSForm: React.FC<{
                         name="averageTechnicians"
                         onChange={props.onChange(dayOfWeek)}
                         value={data.averageTechnicians}
+                        type="number"
                         fullWidth
                         label={day} />
                 </Grid>
@@ -81,6 +82,7 @@ const WSForm: React.FC<{
                     <TextField
                         value={data.averageLevelThreeTechnicians}
                         disabled={!data.checked}
+                        type="number"
                         id={`${dayOfWeek}-averageLevelThreeTechnicians`}
                         name="averageLevelThreeTechnicians"
                         onChange={props.onChange(dayOfWeek)}
@@ -94,9 +96,9 @@ const WSForm: React.FC<{
 }
 
 type TWeeklySchedule = {
-    dayOfWeek: number; averageLevelThreeTechnicians: number; averageTechnicians: number; checked: boolean;
+    dayOfWeek: number; averageLevelThreeTechnicians: string; averageTechnicians: string; checked: boolean;
 }
-const blankRow = {dayOfWeek: 0, checked: false, averageLevelThreeTechnicians: 0, averageTechnicians: 0};
+const blankRow = {dayOfWeek: 0, checked: false, averageLevelThreeTechnicians: "", averageTechnicians: ""};
 const initialIWeeklySchedule: TWeeklySchedule[] = moment.weekdays().map((day, dayOfWeek) => ({
    ...blankRow, dayOfWeek
 }));
@@ -112,6 +114,9 @@ export const WeeklySchedule: React.FC<DialogProps> = (props) => {
         form[el] = {...form[el], checked};
         setForm([...form]);
     }
+    const handleSave = () => {
+
+    }
 
     return <BaseModal {...props} maxWidth="sm">
         <DialogTitle onClose={props.onClose}>Edit Weekly Schedule</DialogTitle>
@@ -120,7 +125,12 @@ export const WeeklySchedule: React.FC<DialogProps> = (props) => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button color="primary" variant="contained" onClick={props.onClose}>Save</Button>
+            <Button
+                color="primary"
+                variant="contained"
+                onClick={handleSave}>
+                Save
+            </Button>
         </DialogActions>
     </BaseModal>;
 };

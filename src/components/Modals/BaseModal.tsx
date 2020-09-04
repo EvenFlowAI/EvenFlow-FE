@@ -32,7 +32,7 @@ const useStyles = makeStyles({
         }
     },
     dialogContent: {
-        padding: "10px 48px"
+        padding: "10px 25px"
     },
     dialogPaper: (maxWidth: number) => {
         return maxWidth ? {maxWidth} : {};
