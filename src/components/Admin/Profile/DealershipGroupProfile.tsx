@@ -5,6 +5,11 @@ import {TextField} from "../../UI/TextField";
 import {AvatarUpload} from "../../UI/AvatarUpload";
 
 const useStyles = makeStyles({
+    container: {
+        "& input": {
+            backgroundColor: "#fff"
+        }
+    },
     editButtonContainer: {
         textAlign: "right"
     },
@@ -17,7 +22,7 @@ const useStyles = makeStyles({
         alignItems: "center"
     },
     divider: {
-        margin: "0 20px"
+        margin: "30px 0"
     }
 });
 
@@ -29,7 +34,7 @@ export const DealershipGroupProfile = () => {
     }
 
     const classes = useStyles();
-    return <>
+    return <div className={classes.container}>
         <Grid container spacing={2} alignItems="flex-end">
             <Grid item xs={5}>
                 <div className={classes.avatarContainer}>
@@ -62,7 +67,63 @@ export const DealershipGroupProfile = () => {
         </Grid>
         <Divider className={classes.divider} />
         <Grid container spacing={2}>
-
+            <Grid item xs={5}>
+                <TextField
+                    fullWidth
+                    label="Main Address"
+                    name="name"
+                    id="33"
+                    disabled={!nameEdit}
+                    value="string"
+                    onChange={handleChange}
+                />
+            </Grid>
+            <Grid item xs={4}>
+                <TextField
+                    fullWidth
+                    label="City"
+                    name="name"
+                    id="33"
+                    disabled={!nameEdit}
+                    value="string"
+                    onChange={handleChange}
+                />
+            </Grid>
+            <Grid item xs={3} className={classes.editButtonContainer}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    value={"test"}
+                    id="dealershipName"
+                    name="name"
+                    onClick={() => setNameEdit(true)}>
+                    Edit
+                </Button>
+            </Grid>
         </Grid>
-    </>;
+        <Grid container spacing={2}>
+            <Grid item xs={2}>
+                <TextField
+                    fullWidth
+                    label="State"
+                    name="name"
+                    id="31233"
+                    disabled={!nameEdit}
+                    value="string"
+                    onChange={handleChange}
+                />
+            </Grid>
+            <Grid item xs={2}>
+                <TextField
+                    fullWidth
+                    label="Zip code"
+                    name="name"
+                    id="2223"
+                    disabled={!nameEdit}
+                    value="string"
+                    onChange={handleChange}
+                />
+            </Grid>
+        </Grid>
+    </div>;
 }
