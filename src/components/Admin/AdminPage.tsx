@@ -9,6 +9,8 @@ import {PrivateRoute} from "../../utils/Routes";
 import {useCurrentUser} from "../../utils/hooks";
 import {AdminDashboard} from "./Dashboard/Dashboard";
 import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDetail";
+import {Roles} from "../../config/constants";
+import {Profile} from "./Profile/Profile";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
@@ -24,6 +26,9 @@ export const AdminPage = () => {
             <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>
             {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
+                : null}
+            {currentUser.role === Roles.Owner
+                ? <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
                 : null}
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser.isSuperUser

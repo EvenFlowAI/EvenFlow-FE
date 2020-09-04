@@ -8,6 +8,8 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {getInitials} from "../../utils/utils";
 import {ServiceCenterSelector} from "./ServiceCenterSelector";
+import {Roles} from "../../config/constants";
+import {Routes} from "../../config/routes";
 
 
 const useStyles = makeStyles(theme => ({
@@ -45,6 +47,10 @@ export const NavBar = () => {
     const handleClose = () => {
         setAnchorEl(null);
     }
+    const openProfile = () => {
+        handleClose();
+        history.push(Routes.Admin.Profile);
+    }
 
     const handleLogout = () => {
         authService.logout();
@@ -65,7 +71,7 @@ export const NavBar = () => {
                     open={open}
                     onClose={handleClose}
                 >
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    {currentUser?.role === Roles.Owner ? <MenuItem onClick={openProfile}>Company Settings</MenuItem> : null}
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
             </Toolbar>
