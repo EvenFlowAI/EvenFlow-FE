@@ -45,6 +45,9 @@ export interface IWeeklySchedule {
     averageTechnicians: number;
     averageLevelThreeTechnicians: number;
 }
+export interface IWeeklyScheduleResponse {
+    weeklySchedules: IWeeklySchedule[]
+}
 
 export type TGetAll = {type: "ServiceCenters/GetAll", payload: IServiceCenterExtended[]};
 export type TGetDealershipAll = {type: "ServiceCenters/GetDealershipAll", payload: IServiceCenterExtended[]};

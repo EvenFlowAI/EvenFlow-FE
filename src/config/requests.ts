@@ -157,8 +157,8 @@ export class Api {
             Avatar: {route: "/service-centers/{id}/avatar", method: "patch"},
             GetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "get"},
             SetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "put"},
-            GetWS: {route: "/service-centers/{id}/weekly-schedule", method: "get"},
-            SetWS: {route: "/service-centers/{id}/weekly-schedule", method: "put"},
+            GetWS: {route: "/service-centers/{id}/weekly-schedules", method: "get"},
+            SetWS: {route: "/service-centers/{id}/weekly-schedules", method: "put"},
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
         },
         Users: {

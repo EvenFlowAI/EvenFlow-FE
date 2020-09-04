@@ -1,11 +1,11 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Grid, Switch, Typography} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import moment from "moment";
-import {IWeeklySchedule} from "../../../store/reducers/serviceCenters/types";
+import {IWeeklySchedule, IWeeklyScheduleResponse} from "../../../store/reducers/serviceCenters/types";
 import {Api} from "../../../config/requests";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {LoadingButton} from "../../UI/Button";
@@ -46,10 +46,15 @@ const useStyles = makeStyles(theme => ({
 
 const WSForm: React.FC<{
     form: TWeeklySchedule[];
+    workingDays: number[];
     onCheck: (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
     onChange: (day: number) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = props => {
     const classes = useStyles();
+    const disabledByWD = (day: number): boolean => {
+        return !props.workingDays.includes(day);
+    }
+
     return <div>
         <Grid container className={classes.container} alignItems="flex-start">
             <Grid item xs={2}/>
@@ -68,12 +73,12 @@ const WSForm: React.FC<{
             const data = props.form.find(el => el.dayOfWeek === dayOfWeek) || {...blankRow, dayOfWeek};
             return <Grid container className={classes.container} alignItems="flex-end" key={`l-${day}`}>
                 <Grid item xs={2}>
-                    <Switch checked={data.checked} onChange={props.onCheck(dayOfWeek)} color="primary"/>
+                    <Switch checked={data.checked} disabled={disabledByWD(dayOfWeek)} onChange={props.onCheck(dayOfWeek)} color="primary"/>
                 </Grid>
                 <Grid item xs={5}>
                     <TextField
                         id={`${dayOfWeek}-averageTechnicians`}
-                        disabled={!data.checked}
+                        disabled={!data.checked || disabledByWD(dayOfWeek)}
                         name="averageTechnicians"
                         onChange={props.onChange(dayOfWeek)}
                         value={data.averageTechnicians}
@@ -84,7 +89,7 @@ const WSForm: React.FC<{
                 <Grid item xs={5}>
                     <TextField
                         value={data.averageLevelThreeTechnicians}
-                        disabled={!data.checked}
+                        disabled={!data.checked || disabledByWD(dayOfWeek)}
                         type="number"
                         id={`${dayOfWeek}-averageLevelThreeTechnicians`}
                         name="averageLevelThreeTechnicians"
@@ -108,9 +113,32 @@ const initialIWeeklySchedule: TWeeklySchedule[] = moment.weekdays().map((day, da
 export const WeeklySchedule: React.FC<DialogProps> = (props) => {
     const [form, setForm] = useState<TWeeklySchedule[]>(initialIWeeklySchedule);
     const [saving, setSaving] = useState<boolean>(false);
+    const [wd, setWD] = useState<number[]>([]);
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
+
+    useEffect(() => {
+        if (props.open && selectedSC) {
+            Api.call<IWeeklySchedule[]>(Api.endpoints.ServiceCenters.GetWS, {urlParams: {id: selectedSC.id}}).then(r => {
+                setForm(initialIWeeklySchedule.map(iw => {
+                    const cs = r.data.find(el => el.dayOfWeek === iw.dayOfWeek);
+                    if (cs) {
+                        return {
+                            ...cs,
+                            checked: true,
+                            averageTechnicians: String(cs.averageTechnicians),
+                            averageLevelThreeTechnicians: String(cs.averageLevelThreeTechnicians)
+                        };
+                    }
+                    return iw;
+                }));
+            });
+            Api.call<number[]>(Api.endpoints.ServiceCenters.WorkingDays, {urlParams: {id: selectedSC.id}}).then(r => {
+                setWD(r.data);
+            });
+        }
+    }, [props.open, selectedSC])
 
     const handleChange = (day: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const el = form.findIndex(e => e.dayOfWeek === day);
@@ -147,7 +175,7 @@ export const WeeklySchedule: React.FC<DialogProps> = (props) => {
     return <BaseModal {...props} maxWidth="sm">
         <DialogTitle onClose={props.onClose}>Edit Weekly Schedule</DialogTitle>
         <DialogContent>
-            <WSForm form={form} onCheck={handleCheck} onChange={handleChange} />
+            <WSForm form={form} workingDays={wd} onCheck={handleCheck} onChange={handleChange} />
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
