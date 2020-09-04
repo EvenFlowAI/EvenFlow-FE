@@ -1,5 +1,10 @@
 import React from "react";
-import {TimePicker as TP, TimePickerProps} from "@material-ui/pickers";
+import {
+    DateTimePickerProps,
+    TimePicker as TP,
+    DateTimePicker as DTP,
+    TimePickerProps
+} from "@material-ui/pickers";
 import {InputLabel} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -18,5 +23,13 @@ export const TimePicker = ({label, ...props}: TimePickerProps) => {
     return <>
         <InputLabel shrink className={classes.label}>{label}</InputLabel>
         <TP {...props} />
+    </>
+}
+export const DateTimePicker = ({label, ...props}: DateTimePickerProps) => {
+    const classes = useStyles();
+    if (!label) return <DTP {...props} />;
+    return <>
+        <InputLabel shrink className={classes.label}>{label}</InputLabel>
+        <DTP {...props} />
     </>
 }
