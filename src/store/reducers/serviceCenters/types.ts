@@ -45,7 +45,7 @@ export interface IWeeklySchedule {
     averageTechnicians: number;
     averageLevelThreeTechnicians: number;
 }
-export interface IWeeklyScheduleResponse {
+export interface IWeeklyScheduleForm {
     weeklySchedules: IWeeklySchedule[]
 }
 
