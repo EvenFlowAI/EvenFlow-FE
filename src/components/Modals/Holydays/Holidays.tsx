@@ -7,13 +7,14 @@ import {TableRowDataType} from "../../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {AddHoliday} from "./AddHoliday";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {DividerThin} from "../../UI/Divider";
 import {IHoliday} from "../../../store/reducers/holidays/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
 import moment from "moment";
+import {setHolidayPageData} from "../../../store/reducers/holidays/actions";
 
 const useStyles = makeStyles({
     divider: {
@@ -61,7 +62,10 @@ export const Holidays: React.FC<DialogProps> = props => {
         </IconButton>
     }
     const {onOpen, onClose, isOpen} = useModal();
-
+    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+        (s: RootState) => s.holidays.pageData,
+        setHolidayPageData
+    );
 
     const classes = useStyles();
     return <BaseModal {...props} width={720}>
@@ -71,7 +75,10 @@ export const Holidays: React.FC<DialogProps> = props => {
         </div>
         <DividerThin />
         <Table<IHoliday>
-            hidePagination
+            onChangePage={changePage}
+            page={pageIndex}
+            rowsPerPage={pageSize}
+            onChangeRowsPerPage={changeRowsPerPage}
             compact
             isLoading={isLoading}
             data={holidays}

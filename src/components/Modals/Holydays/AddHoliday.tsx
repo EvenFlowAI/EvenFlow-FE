@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, FormControlLabel, Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 
 const useStyles = makeStyles(theme => ({
     label: {
@@ -63,8 +64,26 @@ const HForm: React.FC<{}> = props => {
         </Grid>
     </div>
 }
+type TForm = {
 
-export const AddHoliday: React.FC<DialogProps> = props => {
+};
+const initialForm: TForm = {
+
+}
+export const AddHoliday: React.FC<DialogProps> = ({onAction, ...props}) => {
+    const [form, setForm] = useState<TForm>(initialForm);
+    const {selectedSC} = useSCs();
+    const showError = useException();
+    const showMessage = useMessage();
+    const handleSave = () => {
+        if (!selectedSC) {
+            showError("Service center is not selected");
+        } else {
+            if (onAction) {
+                onAction();
+            }
+        }
+    }
     return <BaseModal {...props} width={600}>
         <DialogTitle onClose={props.onClose}>Add New Holiday</DialogTitle>
         <DialogContent>
@@ -72,7 +91,7 @@ export const AddHoliday: React.FC<DialogProps> = props => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button onClick={props.onClose} variant="contained" color="primary">Save</Button>
+            <Button onClick={handleSave} variant="contained" color="primary">Save</Button>
         </DialogActions>
     </BaseModal>
 }
