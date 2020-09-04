@@ -40,6 +40,17 @@ export interface IHOODataForm {
     to: string;
 }
 
+export interface IBreak {
+    id?: number;
+    dayOfWeek: number;
+    from: string;
+    to: string;
+}
+
+export interface IBreakFrom {
+    breaks: IBreak[];
+}
+
 export interface IWeeklySchedule {
     dayOfWeek: number;
     averageTechnicians: number;
