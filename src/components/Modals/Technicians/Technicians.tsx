@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogTitle} from "../BaseModal";
-import {Button, IconButton} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {Table} from "../../UI/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -10,6 +10,8 @@ import {TableRowDataType} from "../../UI/types";
 import {loadTechnicians} from "../../../store/reducers/employees/actions";
 import {MoreHoriz} from "@material-ui/icons";
 import {TableAvatar} from "../../Admin/TableAvatar";
+import {useModal, useSCs} from "../../../utils/hooks";
+import {CreateEmployee} from "../CreateEmployee/CreateEmployee";
 
 
 const rowData: TableRowDataType<IEmployee>[] = [
@@ -21,13 +23,32 @@ const rowData: TableRowDataType<IEmployee>[] = [
 
 export const Technicians: React.FC<DialogProps> = props => {
     const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [edit, setEdit] = useState<IEmployee|undefined>();
+    const {isOpen, onClose, onOpen} = useModal();
+
     React.useEffect(() => {
-        dispatch(loadTechnicians());
-    }, [dispatch]);
+        if (props.open && selectedSC) {
+            dispatch(loadTechnicians(selectedSC.id));
+        }
+    }, [dispatch, props.open, selectedSC]);
     const {techniciansList, loadingTechnicians} = useSelector((state: RootState) => state.employees);
 
+    const closeMenu = () => {
+        setAnchorEl(null);
+    }
+    const openMenu = (u: IEmployee) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setEdit(u);
+        setAnchorEl(e.currentTarget);
+    }
+    const openEdit = () => {
+        closeMenu();
+        onOpen();
+    }
+
     const actions = (u: IEmployee) => {
-        return <IconButton>
+        return <IconButton onClick={openMenu(u)}>
             <MoreHoriz />
         </IconButton>
     }
@@ -47,8 +68,13 @@ export const Technicians: React.FC<DialogProps> = props => {
             rowData={rowData}
             isLoading={loadingTechnicians} />
 
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
+            <MenuItem onClick={openEdit}>Edit</MenuItem>
+        </Menu>
+
         <DialogActions>
             <Button variant="contained" color="primary" onClick={props.onClose}>Close</Button>
         </DialogActions>
+        <CreateEmployee open={isOpen} onClose={onClose} payload={edit} />
     </BaseModal>
 }

@@ -1,6 +1,4 @@
-import {Action, ActionCreator} from "redux";
-import {ThunkAction} from "redux-thunk";
-import {RootState} from "../../rootReducer";
+import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {Api} from "../../../config/requests";
 import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
@@ -46,9 +44,7 @@ export const loadAll: ActionCreator<AppThunk> = () =>
 };
 const loadingTechnicians = (payload: boolean): TEmployeeActions => ({type: "Employees/LoadingTechnicians", payload});
 const _loadTechnicians = (payload: IEmployee[]): TEmployeeActions => ({type: "Employees/GetTechnicians", payload});
-export const loadTechnicians: ActionCreator<ThunkAction<
-        void, RootState, void, Action
-    >> = () =>
+export const loadTechnicians = (serviceCenterId: number): AppThunk =>
     async (dispatch) => {
 
     dispatch(loadingTechnicians(true));
@@ -57,7 +53,7 @@ export const loadTechnicians: ActionCreator<ThunkAction<
             Api.endpoints.Employees.GetAll,
             {
                 data: {
-                    serviceCenterId: 1,
+                    serviceCenterId,
                     pageIndex: 0,
                     pageSize: 0
                 }
