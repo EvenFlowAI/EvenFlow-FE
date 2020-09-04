@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, FormControlLabel, Grid, Switch} from "@material-ui/core";
@@ -9,6 +9,9 @@ import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {DateTimePicker} from "../../UI/DateTimePickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
+import {Api} from "../../../config/requests";
+import {LoadingButton} from "../../UI/Button";
+import {IHoliday} from "../../../store/reducers/holidays/types";
 
 const useStyles = makeStyles(theme => ({
     label: {
@@ -111,11 +114,22 @@ const initialForm: TForm = {
     isRecurring: false,
     description: ""
 }
-export const AddHoliday: React.FC<DialogProps> = ({onAction, ...props}) => {
+export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
+    const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
+
+    useEffect(() => {
+        if (props.open) {
+            if (!payload) {
+                setForm(initialForm);
+            } else {
+                setForm({...initialForm, ...payload});
+            }
+        }
+    }, [props.open, payload]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
@@ -127,12 +141,23 @@ export const AddHoliday: React.FC<DialogProps> = ({onAction, ...props}) => {
         setForm({...form, [e.target.name]: checked});
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!selectedSC) {
             showError("Service center is not selected");
         } else {
-            if (onAction) {
-                onAction();
+            const data = {...payload, ...form, serviceCenterId: selectedSC.id};
+            setSaving(true);
+            try {
+                await Api.call(Api.endpoints.Holidays.Create, {data});
+                setSaving(false);
+                showMessage("Holiday saved");
+                if (onAction) {
+                    onAction();
+                }
+                props.onClose();
+            } catch (e) {
+                showError(e);
+                setSaving(false);
             }
         }
     }
@@ -148,7 +173,13 @@ export const AddHoliday: React.FC<DialogProps> = ({onAction, ...props}) => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
-            <Button onClick={handleSave} variant="contained" color="primary">Save</Button>
+            <LoadingButton
+                loading={saving}
+                onClick={handleSave}
+                variant="contained"
+                color="primary">
+                Save
+            </LoadingButton>
         </DialogActions>
     </BaseModal>
 }
