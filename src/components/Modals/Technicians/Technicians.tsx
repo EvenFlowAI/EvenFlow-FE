@@ -13,7 +13,6 @@ import {TableAvatar} from "../../Admin/TableAvatar";
 import {useModal, useSCs} from "../../../utils/hooks";
 import {CreateEmployee} from "../CreateEmployee/CreateEmployee";
 
-
 const rowData: TableRowDataType<IEmployee>[] = [
     {header: "Technician Name", val: v => v.fullName},
     {header: "Level", val: v => v.employeeInfo?.skillLevel.toString() || '-'},
@@ -38,8 +37,14 @@ export const Technicians: React.FC<DialogProps> = props => {
     const closeMenu = () => {
         setAnchorEl(null);
     }
+
+    const reloadTechnicians = () => {
+        if (selectedSC) {
+            dispatch(loadTechnicians(selectedSC.id));
+        }
+    }
     const openMenu = (u: IEmployee) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        setEdit(u);
+        setEdit({...u, serviceCenterId: selectedSC?.id || 0, serviceCenter: selectedSC});
         setAnchorEl(e.currentTarget);
     }
     const openEdit = () => {
@@ -53,7 +58,7 @@ export const Technicians: React.FC<DialogProps> = props => {
         </IconButton>
     }
     const startActions = (el: IEmployee) => (
-        <TableAvatar name={el.fullName} />
+        <TableAvatar name={el.fullName} src={el.avatarPath} />
     )
 
     return <BaseModal {...props}>
@@ -75,6 +80,6 @@ export const Technicians: React.FC<DialogProps> = props => {
         <DialogActions>
             <Button variant="contained" color="primary" onClick={props.onClose}>Close</Button>
         </DialogActions>
-        <CreateEmployee open={isOpen} onClose={onClose} payload={edit} />
+        <CreateEmployee open={isOpen} onAction={reloadTechnicians} onClose={onClose} payload={edit} />
     </BaseModal>
 }

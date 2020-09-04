@@ -125,6 +125,9 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
             showMessage(`Employee ${isEdit ? "updated" : "created"}`);
             setTechnicianForm(initialTechnicianForm);
             setAdvisorForm(initialAdvisorForm);
+            if (props.onAction) {
+                props.onAction();
+            }
             props.onClose();
         } catch (e) {
             showError(e);
