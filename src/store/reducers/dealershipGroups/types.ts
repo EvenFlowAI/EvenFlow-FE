@@ -42,6 +42,11 @@ export interface IDealershipGroupForm {
     dealership: IDealershipForm;
     contactPerson: IContactPersonForm;
 }
+export interface IDealershipProfileForm {
+    name: string;
+    phoneNumber: string;
+    mainAddress: string;
+}
 
 type AddDealership = {type: "Dealership/Add", payload: IDealershipGroupExtended};
 type Loading = {type: "Dealership/Loading", payload: boolean;};

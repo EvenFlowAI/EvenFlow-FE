@@ -1,4 +1,10 @@
-import {DealershipActions, IDealershipGroupExtended, IDealershipGroupForm, IDealershipProfile} from "./types";
+import {
+    DealershipActions,
+    IDealershipGroupExtended,
+    IDealershipGroupForm,
+    IDealershipProfile,
+    IDealershipProfileForm
+} from "./types";
 import {ThunkAction} from "redux-thunk";
 import {ActionCreator, Dispatch} from "redux";
 import {Api} from "../../../config/requests";
@@ -104,4 +110,12 @@ const _loadDealershipProfile = (payload: IDealershipProfile): DealershipActions 
 export const loadDealershipProfile = (): AppThunk => async dispatch => {
     const {data} = await Api.call<IDealershipProfile>(Api.endpoints.Accounts.Dealership);
     dispatch(_loadDealershipProfile(data));
+}
+
+export const updateDealership = (payload: IDealershipProfileForm, id: number): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.Dealerships.Update,
+        {urlParams: {id}, data: payload}
+    );
+    await dispatch(loadDealershipProfile());
 }

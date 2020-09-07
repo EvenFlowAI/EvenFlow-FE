@@ -6,7 +6,8 @@ import clsx from "clsx";
 
 const useStyles = makeStyles({
     wrapper: {
-        position: "relative"
+        position: "relative",
+        display: "inline-flex"
     },
     buttonProgress: {
         position: 'absolute',
