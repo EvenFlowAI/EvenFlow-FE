@@ -1,6 +1,6 @@
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {ContentTitle} from "../ContentTitle/ContentTitle";
+import {ContentTitle, TTitle} from "../ContentTitle/ContentTitle";
 import {ContentActions} from "../ContentActions/ContentActions";
 
 
@@ -20,16 +20,18 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: pad ? theme.spacing(3) : 0
     })
 }));
+
 type TProps = {
     title: string;
     subtitle?: string;
     pad?: boolean;
+    parent?: TTitle;
     actions?: boolean | JSX.Element;
 }
 export const TitleContainer: React.FC<TProps> = props => {
     const classes = useStyles(Boolean(props.pad));
     return <div className={classes.container}>
-        <ContentTitle title={props.title} subtitle={props.subtitle} />
+        <ContentTitle parent={props.parent} title={props.title} subtitle={props.subtitle} />
         {props.actions ? typeof props.actions === 'boolean' ? <ContentActions /> : props.actions : null}
     </div>;
 }

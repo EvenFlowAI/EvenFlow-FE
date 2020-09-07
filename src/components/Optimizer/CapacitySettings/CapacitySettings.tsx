@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Tab} from "@material-ui/core";
 import {TabList} from "../../UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
@@ -6,13 +6,24 @@ import {AvailableStaff} from "./AvailableStaff/AvailableStaff";
 import {RequiredEquipment} from "./RequiredEquipment";
 import {RequiredSkills} from "./RequiredSkills";
 import {TechnicianStaff} from "./TechnicianStaff";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {Routes} from "../../../config/routes";
+import {TTitle} from "../../Content/ContentTitle/ContentTitle";
 
+const parent: TTitle = {
+    to: Routes.Optimizer.Base,
+    title: "Optimizer Settings"
+}
 export const CapacitySettings = () => {
     const [selectedTab, setTab] = useState<string>("0");
     const handleTabChange = (e: React.ChangeEvent<{}>, val: string) => {
         setTab(val);
     }
+    const title: string = useMemo(() => {
+        return "Capacity Settings"
+    }, [])
     return <TabContext value={selectedTab}>
+        <TitleContainer title={title} pad parent={parent} />
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"
