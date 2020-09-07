@@ -5,6 +5,7 @@ import {employeesReducer} from "./reducers/employees/reducer";
 import {serviceCenterReducer} from "./reducers/serviceCenters/reducer";
 import {modalsReducer} from "./reducers/modals/reducer";
 import {holidaysReducer} from "./reducers/holidays/reducer";
+import {baysReducer} from "./reducers/bays/reducer";
 
 export const rootReducer = combineReducers({
     users: usersReducer,
@@ -13,5 +14,6 @@ export const rootReducer = combineReducers({
     serviceCenters: serviceCenterReducer,
     modals: modalsReducer,
     holidays: holidaysReducer,
+    bays: baysReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

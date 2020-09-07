@@ -100,6 +100,7 @@ type TApiRoute = {
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
+    Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
@@ -132,6 +133,14 @@ export class Api {
         Authentications: {
             Request: {route: "/authentications", method: "post"},
             Refresh: {route: "/authentications/refresh", method: "post"},
+        },
+        Bays: {
+            Create: {route: "/bays", method: "post"},
+            Update: {route: "/bays/{id}", method: "put"},
+            Remove: {route: "/bays/{id}", method: "delete"},
+            Retrieve: {route: "/bays/{id}", method: "get"},
+            GetAll: {route: "/bays/by-query", method: "post"},
+            GetShort: {route: "/bays/short-by-query", method: "post"},
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},
