@@ -18,6 +18,7 @@ export const saveEmployeeAvatar = (avatar: File, id: string): AppThunk => async 
     const fd = new FormData();
     fd.append("file", avatar, avatar.name);
     await Api.call(Api.endpoints.Users.Avatar, {urlParams: {id}, data: fd});
+    dispatch(getCurrentUser());
 }
 const saving = (payload: boolean): TUserActions => ({type: "User/Saving", payload});
 export const createUser = (payload: IUserForm, avatar?: File): AppThunk => async dispatch => {
@@ -41,6 +42,7 @@ export const updateUser = (payload: IUserForm, id: string, avatar?: File): AppTh
             await dispatch(saveEmployeeAvatar(avatar, id));
         }
         dispatch(saving(false));
+        dispatch(getCurrentUser());
     } catch (e) {
         dispatch(saving(false));
         throw e;

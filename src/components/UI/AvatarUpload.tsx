@@ -4,9 +4,9 @@ import {makeStyles} from "@material-ui/core/styles";
 
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        width: 74,
-        height: 74,
+    root: (size: number) => ({
+        width: size,
+        height: size,
         cursor: "pointer",
         backgroundColor: "#919191",
         transition: theme.transitions.create(["opacity", "box-shadow"]),
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
             boxShadow: theme.shadows[5],
             opacity: 1
         }
-    },
+    }),
     sign: {
         fontSize: 25,
         fontWeight: "bold",
@@ -40,11 +40,12 @@ interface IAvatarState {
 export type TAvatarProps = {
     dataUrl?: string;
     onChange?: (file: File) => void;
+    size?: number;
 }
 
 export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
     const [state, setState] = useState<IAvatarState>({file: null, dataUrl: props.dataUrl || undefined});
-    const classes = useStyles();
+    const classes = useStyles(props.size || 74);
 
     const ref = createRef<HTMLInputElement>();
 

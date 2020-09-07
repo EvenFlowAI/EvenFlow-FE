@@ -66,6 +66,9 @@ theme.overrides = {
     MuiInputBase: {
         input: {
             ...input,
+            "&.Mui-disabled": {
+                background: "#F7F8FB"
+            },
             transition: theme.transitions.create(['border-color']),
             '&:focus': {
             //     boxShadow: `${fade(theme.palette.grey.A400, 0.25)} 0 0 0 0.2rem`,

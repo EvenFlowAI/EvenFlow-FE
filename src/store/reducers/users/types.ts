@@ -1,6 +1,8 @@
 export interface ICurrentUser {
     id: string;
     fullName: string;
+    firstName: string;
+    lastName: string;
     dealershipId: number;
     serviceCenterId: number;
     userName: string;
