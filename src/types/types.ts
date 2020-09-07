@@ -5,6 +5,7 @@ import {Action} from "redux";
 export type LinkType = {
     to: string;
     name: string;
+    exact?: boolean;
 }
 
 export type ValidationKeyPairs<U> = {

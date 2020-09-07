@@ -54,10 +54,12 @@ const SULinks: LinkType[] = [
     {to: Routes.Admin.ServiceCenters, name: "Service Centers"}
 ];
 const AdminLinks: LinkType[] = [
+    {to: Routes.Admin.Base, name: "Dashboard", exact: true},
     {to: Routes.Admin.ServiceCenters, name: "Service Centers"},
     {to: Routes.Admin.Employees, name: "Employees"}
 ]
 const MainLinks: LinkType[] = [
+    {to: Routes.Admin.Base, name: "Dashboard", exact: true},
     {to: Routes.Optimizer.Base, name: "Optimizer Settings"},
 ]
 
@@ -89,6 +91,7 @@ export const SideBar = () => {
                 className={classes.listItem}
                 component={NavLink}
                 to={link.to}
+                exact={link.exact}
                 key={link.to}>{link.name}</ListItem>)}
         </List>
     </Drawer>
