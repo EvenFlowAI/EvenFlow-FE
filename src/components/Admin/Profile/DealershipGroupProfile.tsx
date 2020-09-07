@@ -5,7 +5,7 @@ import {TextField} from "../../UI/TextField";
 import {AvatarUpload} from "../../UI/AvatarUpload";
 import {useDealershipProfile, useException, useMessage} from "../../../utils/hooks";
 import {LoadingButton} from "../../UI/Button";
-import {updateDealership} from "../../../store/reducers/dealershipGroups/actions";
+import {updateDealership, updateDealershipAvatar} from "../../../store/reducers/dealershipGroups/actions";
 import {useDispatch} from "react-redux";
 
 const useStyles = makeStyles({
@@ -39,14 +39,13 @@ const useStyles = makeStyles({
 type TForm = {
     name: string;
     phoneNumber: string;
-    fullAddress: string;
+    mainAddress: string;
 }
 export const DealershipGroupProfile = () => {
     const [nameEdit, setNameEdit] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
-    const [avatar, setAvatar] = useState<File|null>(null);
     const dispatch = useDispatch();
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<TForm>({
         name: "", mainAddress: "", phoneNumber: ""
     });
     const profile = useDealershipProfile();
@@ -75,8 +74,17 @@ export const DealershipGroupProfile = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     }
-    const handleChangeAvatar = (f: File) => {
-        setAvatar(f);
+    const handleChangeAvatar = async (f: File) => {
+        if (profile) {
+            try {
+                await dispatch(updateDealershipAvatar(f, profile.id));
+                showMessage("Avatar updated");
+            } catch (e) {
+                showError(e);
+            }
+        } else {
+            showError("Profile is not loaded");
+        }
     }
     const handleSave = async () => {
         if (profile) {

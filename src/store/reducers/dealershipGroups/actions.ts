@@ -119,3 +119,13 @@ export const updateDealership = (payload: IDealershipProfileForm, id: number): A
     );
     await dispatch(loadDealershipProfile());
 }
+
+export const updateDealershipAvatar = (avatar: File, id: number): AppThunk => async dispatch => {
+    const data = new FormData();
+    data.append("file", avatar, avatar.name);
+    await Api.call(
+        Api.endpoints.Dealerships.UploadAvatar,
+        {urlParams: {id}, data}
+    );
+    dispatch(loadDealershipProfile());
+}
