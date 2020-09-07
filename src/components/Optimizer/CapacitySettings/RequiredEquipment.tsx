@@ -9,6 +9,7 @@ import {CheckCircle} from "@material-ui/icons";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setPageData} from "../../../store/reducers/bays/actions";
+import {CreateBay} from "../../Modals/Bays/CreateBay";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -62,5 +63,6 @@ export const RequiredEquipment = () => {
             count={size}
             rowData={rowData}
         />
+        <CreateBay open={isOpen} onClose={onClose} />
     </div>
 }

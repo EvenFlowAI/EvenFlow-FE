@@ -1,4 +1,5 @@
 import {IAddress} from "../store/reducers/dealershipGroups/types";
+import {ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction} from "react";
 
 export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     return new Promise(resolve => {
@@ -28,3 +29,13 @@ export const pathReplace = (path: string, data?: Record<string, any>): string =>
     return path.replace(re, matched => data[matched.slice(1, -1)] as string)
 }
 export const noop = () => {};
+
+export const baseChangeHandler = <State>(setForm: Dispatch<SetStateAction<State>>): ChangeEventHandler<HTMLInputElement> => e => {
+    setForm(form => ({...form, [e.target.name]: e.target.value}));
+}
+export const baseCheckHandler = <State>(setForm: Dispatch<SetStateAction<State>>) => (e: ChangeEvent<HTMLInputElement>): void => {
+    setForm(form => ({...form, [e.target.name]: e.target.checked}));
+}
+export const baseSwitchHandler = <State>(setForm: Dispatch<SetStateAction<State>>) => (e: ChangeEvent<HTMLInputElement>, checked: boolean): void => {
+    setForm(form => ({...form, [e.target.name]: checked}));
+}
