@@ -1,14 +1,14 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button} from "@material-ui/core";
-import {useModal, usePagination, useSCs} from "../../../utils/hooks";
+import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {Table} from "../../UI/Table";
 import {TableRowDataType} from "../../UI/types";
 import {IBay} from "../../../store/reducers/bays/types";
-import {CheckCircle} from "@material-ui/icons";
+import {CheckCircle, MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadBays, setPageData} from "../../../store/reducers/bays/actions";
+import {loadBays, removeBay, setPageData} from "../../../store/reducers/bays/actions";
 import {CreateBay} from "../../Modals/Bays/CreateBay";
 
 const useStyles = makeStyles({
@@ -29,6 +29,12 @@ const rowData: TableRowDataType<IBay>[] = [
 
 export const RequiredEquipment = () => {
     const {onOpen, onClose, isOpen} = useModal();
+    const [editedItem, setEditedItem] = useState<IBay|undefined>();
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+    const {askConfirm, closeConfirm} = useConfirm();
+    const showMessage = useMessage();
+    const showError = useException();
+
     const [
         loading,
         bays,
@@ -41,6 +47,47 @@ export const RequiredEquipment = () => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
+    const openCreate = () => {
+        setAnchorEl(null);
+        setEditedItem(undefined);
+        onOpen();
+    }
+    const openEdit = () => {
+        setAnchorEl(null);
+        onOpen();
+    }
+    const openMenu = (el: IBay) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setEditedItem(el);
+        setAnchorEl(e.currentTarget);
+    }
+    const askRemove = () => {
+        setAnchorEl(null);
+        if (editedItem) {
+            askConfirm({
+                title: "Remove bay?",
+                content: `Are you sure want to remove ${editedItem.name}?`,
+                onConfirm: handleRemove
+            })
+        }
+    }
+    const handleRemove = async () => {
+        if (!editedItem) {
+            showError("Bay is not selected")
+        } else {
+            try {
+                dispatch(removeBay(editedItem));
+                showMessage("Bay removed");
+                setEditedItem(undefined);
+                closeConfirm();
+            } catch (e) {
+                showError(e);
+            }
+        }
+    }
+    const closeMenu = () => {
+        setAnchorEl(null);
+    }
+
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadBays(selectedSC.id));
@@ -49,19 +96,26 @@ export const RequiredEquipment = () => {
 
     const {pageIndex, pageSize, changeRowsPerPage, changePage} = usePagination(state => state.bays.pageData, setPageData);
 
+    const endActions = useCallback((el: IBay) => {
+        return <IconButton onClick={openMenu(el)}>
+            <MoreHoriz />
+        </IconButton>
+    }, []);
+
     const classes = useStyles();
     return <div className={classes.wrapper}>
         <div className={classes.actionRow}>
             <Button
                 color="primary"
                 variant="contained"
-                onClick={onOpen}
+                onClick={openCreate}
             >
                 Add Bay
             </Button>
         </div>
         <Table<IBay>
             data={bays}
+            compact
             isLoading={loading}
             index="id"
             onChangePage={changePage}
@@ -69,8 +123,13 @@ export const RequiredEquipment = () => {
             rowsPerPage={pageSize}
             page={pageIndex}
             count={size}
+            actions={endActions}
             rowData={rowData}
         />
-        <CreateBay open={isOpen} onClose={onClose} />
+        <CreateBay open={isOpen} payload={editedItem} onClose={onClose} />
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
+            <MenuItem onClick={openEdit}>Edit</MenuItem>
+            <MenuItem onClick={askRemove}>Remove</MenuItem>
+        </Menu>
     </div>
 }
