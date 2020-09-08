@@ -1,5 +1,8 @@
 import React from "react";
+import {TechniciansList} from "../Technicians/TechniciansList";
 
 export const TechnicianStaff = () => {
-    return <p>Technician Staff</p>
+    return <div>
+        <TechniciansList />
+    </div>
 }
