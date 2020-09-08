@@ -6,6 +6,7 @@ export type LinkType = {
     to: string;
     name: string;
     exact?: boolean;
+    sub?: boolean;
 }
 
 export type ValidationKeyPairs<U> = {

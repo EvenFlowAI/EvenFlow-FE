@@ -8,6 +8,7 @@ import {sideBarWidth} from "../../theme/theme";
 import {Routes} from "../../config/routes";
 import {useCurrentUser} from "../../utils/hooks";
 import {useLocation, useHistory, matchPath} from "react-router-dom";
+import clsx from "clsx";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles(theme => ({
         fontSize: 14,
         padding: "16px 0",
         lineHeight: "17px",
+        fontWeight: "bold",
         transition: theme.transitions.create(['color']),
         "&.active": {
             color: "#7898FF"
@@ -45,6 +47,11 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             color: lighten("#7898FF", .5)
         }
+    },
+    subMenu: {
+        color: "#929292",
+        padding: "10px 0 10px 15px",
+        textTransform: "none"
     }
 }));
 
@@ -60,7 +67,9 @@ const AdminLinks: LinkType[] = [
 ]
 const MainLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true},
-    {to: Routes.Optimizer.Base, name: "Optimizer Settings"},
+    {to: Routes.Optimizer.Base, name: "Optimizer Settings", exact: true},
+    {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true},
+    {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true}
 ]
 
 export const SideBar = () => {
@@ -88,7 +97,7 @@ export const SideBar = () => {
         <List disablePadding>
             {links.map(link => <ListItem
                 disableGutters
-                className={classes.listItem}
+                className={clsx(classes.listItem, link.sub ? classes.subMenu : "")}
                 component={NavLink}
                 to={link.to}
                 exact={link.exact}
