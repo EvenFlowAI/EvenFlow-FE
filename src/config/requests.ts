@@ -109,6 +109,8 @@ type ApiRoutes = {
         | "GetBreaks" | "SetBreaks", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
+    ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
+        | "GetWS" | "SetWS", TApiRoute>
 }
 
 type TOptions = {
@@ -187,6 +189,16 @@ export class Api {
             Remove: {route: "/holidays/{id}", method: "delete"},
             Update: {route: "/holidays/{id}", method: "put"},
             Create: {route: "/holidays", method: "post"},
+        },
+        ValueSettings: {
+            GetValue: {route: "/value-settings", method: "get"},
+            SetValue: {route: "/value-settings", method: "put"},
+            GetCL: {route: "/customer-lifetimes", method: "get"},
+            SetCL: {route: "/customer-lifetimes", method: "put"},
+            GetCTS: {route: "/customer-type-settings", method: "get"},
+            SetCTS: {route: "/customer-type-settings", method: "put"},
+            GetWS: {route: "/warranty-settings", method: "get"},
+            SetWS: {route: "/warranty-settings", method: "put"},
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {
