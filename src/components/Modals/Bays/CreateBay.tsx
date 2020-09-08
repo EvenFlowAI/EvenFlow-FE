@@ -8,6 +8,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {IBay, IBayForm} from "../../../store/reducers/bays/types";
 import {TextField} from "../../UI/TextField";
+import {createBay, updateBay} from "../../../store/reducers/bays/actions";
 
 const Form: React.FC<{
     onChange: React.ChangeEventHandler<HTMLInputElement>,
@@ -104,9 +105,12 @@ export const CreateBay: React.FC<DialogProps<IBay>> = ({payload, onAction, ...pr
             showError("Service center is not loaded");
         } else {
             try {
-                // await dispatch(createBay({
-                //
-                // }));
+                const data = {...form, serviceCenterId: selectedSC.id} as IBayForm;
+                if (!payload) {
+                    await dispatch(createBay(data));
+                } else {
+                    await dispatch(updateBay(data, payload.id));
+                }
                 showMessage("Bay saved.");
                 props.onClose();
             } catch (e) {

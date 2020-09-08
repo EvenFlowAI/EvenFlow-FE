@@ -84,7 +84,7 @@ export const ServiceCenters = () => {
         try {
             await dispatch(removeSC(editedItem?.id));
             showMessage(`${editedItem?.name} removed`);
-            setEditedItem({});
+            setEditedItem(undefined);
         } catch (e) {
             showError(e);
         }
@@ -101,7 +101,7 @@ export const ServiceCenters = () => {
     }
 
     const {onOpen, onClose, isOpen} = useModal();
-    const [editedItem, setEditedItem] = useState<Partial<IServiceCenterForm>>({});
+    const [editedItem, setEditedItem] = useState<IServiceCenterForm|undefined>();
 
     return <>
         <TitleContainer title={Titles.ServiceCenters} actions pad />

@@ -1,14 +1,14 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
-import {useModal, usePagination} from "../../../utils/hooks";
+import {useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {Table} from "../../UI/Table";
 import {TableRowDataType} from "../../UI/types";
 import {IBay} from "../../../store/reducers/bays/types";
 import {CheckCircle} from "@material-ui/icons";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setPageData} from "../../../store/reducers/bays/actions";
+import {loadBays, setPageData} from "../../../store/reducers/bays/actions";
 import {CreateBay} from "../../Modals/Bays/CreateBay";
 
 const useStyles = makeStyles({
@@ -22,9 +22,9 @@ const useStyles = makeStyles({
 
 const rowData: TableRowDataType<IBay>[] = [
     {header: "", val: v => v.name},
-    {header: "Alignment Equipment", val: v => v.alignmentEquipment ? <CheckCircle color="primary" /> : "-"},
-    {header: "Carrying Capacity", val: v => v.carryingCapacity ? <CheckCircle color="primary" /> : "-"},
-    {header: "Only Quick Service", val: v => v.onlyQuickService ? <CheckCircle color="primary" /> : "-"},
+    {header: "Alignment Equipment", val: v => v.alignmentEquipment ? <CheckCircle color="primary" /> : "-", align: "center"},
+    {header: "Carrying Capacity", val: v => v.carryingCapacity ? <CheckCircle color="primary" /> : "-", align: "center"},
+    {header: "Only Quick Service", val: v => v.onlyQuickService ? <CheckCircle color="primary" /> : "-", align: "center"},
 ];
 
 export const RequiredEquipment = () => {
@@ -38,6 +38,14 @@ export const RequiredEquipment = () => {
         state.bays.bays,
         state.bays.paging.numberOfRecords
     ]);
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadBays(selectedSC.id));
+        }
+    }, [dispatch, selectedSC]);
 
     const {pageIndex, pageSize, changeRowsPerPage, changePage} = usePagination(state => state.bays.pageData, setPageData);
 

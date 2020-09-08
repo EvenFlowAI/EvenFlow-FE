@@ -15,6 +15,8 @@ export interface IEmployee {
     employeeInfo?: IEmployeeInfo;
     id: string;
     fullName: string;
+    firstName: string;
+    lastName: string;
     dealershipId: number;
     serviceCenterId: number;
     userName: string;

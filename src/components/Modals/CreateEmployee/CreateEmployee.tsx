@@ -46,14 +46,25 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
         startIcon: role === r ? <RadioButtonChecked /> : <RadioButtonUnchecked />,
         color: role === r ? "primary" as const : "default" as const
     })
-    const startAdvisorForm = useMemo(() => payload as TAdvisorForm || initialAdvisorForm, [payload]);
+    const startAdvisorForm = useMemo(() => {
+        if (!payload) {
+            return initialAdvisorForm;
+        } else {
+            return payload as TAdvisorForm;
+        }
+    }, [payload]);
     const [advisorForm, setAdvisorForm] = useState<TAdvisorForm>(initialAdvisorForm);
     const startTechnicianForm = useMemo(() => {
-        const data: TTechnicianForm = payload as TTechnicianForm || initialTechnicianForm
-        data.hourlyRate = payload?.employeeInfo?.hourlyRate || "";
-        data.overtimeRate = payload?.employeeInfo?.overtimeRate || "";
-        data.technicianLevel = payload?.employeeInfo?.skillLevel as TTechnicianLevel;
-        return data;
+        if (!payload) {
+            return initialTechnicianForm;
+        } else {
+            return {
+                ...payload,
+                hourlyRate: payload.employeeInfo?.hourlyRate || "",
+                overtimeRate: payload.employeeInfo?.overtimeRate || "",
+                technicianLevel: payload.employeeInfo?.skillLevel as TTechnicianLevel || 1 as TTechnicianLevel
+            } as TTechnicianForm;
+        }
     }, [payload]);
     const [technicianForm, setTechnicianForm] = useState<TTechnicianForm>(initialTechnicianForm);
 

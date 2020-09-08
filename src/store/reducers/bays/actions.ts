@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {IBay} from "./types";
+import {IBay, IBayForm} from "./types";
 
 export const getAllBays = createAction<IBay[]>("Bays/GetAllBays");
 export const getFilteredBays = createAction<IBay[]>("Bays/GetFiltered");
@@ -28,5 +28,46 @@ export const loadAllBays = (serviceCenterId: number): AppThunk => async dispatch
     }
 }
 export const loadBays = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
-    // const {pageData} = getState().
+    const {pageData} = getState().bays;
+    dispatch(loading(true));
+    try {
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IBay>>(
+            Api.endpoints.Bays.GetAll,
+            {data: {...pageData, serviceCenterId}}
+        )
+        dispatch(setPaging(paging));
+        dispatch(loading(false));
+        dispatch(getFilteredBays(result));
+    } catch (e) {
+        dispatch(loading(false));
+        throw e;
+    }
+}
+
+export const createBay = (data: IBayForm): AppThunk => async dispatch => {
+    dispatch(saving(true));
+    try {
+        await Api.call(Api.endpoints.Bays.Create, {data});
+        dispatch(saving(false));
+        dispatch(loadBays(data.serviceCenterId));
+    } catch (e) {
+        dispatch(saving(false));
+        throw e;
+    }
+}
+
+export const updateBay = (data: IBayForm, id: number): AppThunk => async dispatch => {
+    dispatch(saving(true));
+    try {
+        await Api.call(Api.endpoints.Bays.Update, {data, urlParams: {id}});
+        dispatch(saving(false));
+        dispatch(loadBays(data.serviceCenterId));
+    } catch (e) {
+        dispatch(saving(false));
+        throw e;
+    }
+}
+export const removeBay = (data: IBay): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Bays.Remove, {urlParams: {id: data.id}});
+    dispatch(loadBays(data.serviceCenterId));
 }
