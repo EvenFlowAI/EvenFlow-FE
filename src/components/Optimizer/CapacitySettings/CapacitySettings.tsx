@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useState} from "react";
 import {Tab} from "@material-ui/core";
 import {TabList} from "../../UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
@@ -26,12 +26,9 @@ export const CapacitySettings = () => {
     const handleTabChange = (e: React.ChangeEvent<{}>, val: string) => {
         setTab(val);
     }
-    const title: string = useMemo(() => {
-        return "Capacity Settings"
-    }, []);
     const classes = useStyles();
     return <TabContext value={selectedTab}>
-        <TitleContainer title={title} pad parent={parent} />
+        <TitleContainer title="Capacity Settings" pad parent={parent} />
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"
