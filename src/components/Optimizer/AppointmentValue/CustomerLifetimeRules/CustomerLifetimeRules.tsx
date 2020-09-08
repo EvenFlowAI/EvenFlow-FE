@@ -1,5 +1,7 @@
 import React from "react";
 import {Button, Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
+import {CustomerLifetimes} from "../../../Modals/CustomerLifetimes/CustomerLifetimes";
+import {useModal} from "../../../../utils/hooks";
 
 const StyledTable = withStyles(theme => ({
     root: {
@@ -22,6 +24,8 @@ const StyledTable = withStyles(theme => ({
 }))(Table);
 
 export const CustomerLifetimeRules = () => {
+    const {isOpen, onOpen, onClose} = useModal();
+
     return <div>
         <StyledTable>
             <TableHead>
@@ -42,6 +46,7 @@ export const CustomerLifetimeRules = () => {
                     <TableCell className="sum">$12312 - $400000</TableCell>
                     <TableCell align="right">
                         <Button
+                            onClick={onOpen}
                             color="primary"
                         >
                             Edit
@@ -55,5 +60,6 @@ export const CustomerLifetimeRules = () => {
                 </TableRow>
             </TableBody>
         </StyledTable>
+        <CustomerLifetimes open={isOpen} onClose={onClose} />
     </div>
 }
