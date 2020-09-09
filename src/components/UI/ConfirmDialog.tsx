@@ -11,27 +11,25 @@ export const ConfirmDialog: React.FC = () => {
     const {open, payload} = useSelector((state: RootState) => state.modals.confirm);
     const {closeConfirm} = useConfirm();
     const [loading, setLoading] = useState<boolean>(false);
-    const onClose = useCallback(async () => {
-        setLoading(true);
+    const onClose = useCallback(() => {
         if (payload?.onCancel) {
+            payload.onCancel();
+        }
+        closeConfirm();
+    }, [payload, closeConfirm]);
+    const onConfirm = useCallback(async () => {
+        if (payload?.onConfirm) {
+            setLoading(true)
             try {
-                await payload.onCancel();
+                await payload.onConfirm();
                 setLoading(false);
             } catch (e) {
                 setLoading(false);
                 throw e;
             }
-        } else {
-            setLoading(false);
         }
         closeConfirm();
     }, [payload, closeConfirm]);
-    const onConfirm = useCallback(() => {
-        if (payload?.onConfirm) {
-            payload.onConfirm();
-        }
-        closeConfirm();
-    }, [payload, closeConfirm])
 
     if (!payload)
         return null;
