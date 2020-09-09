@@ -53,8 +53,8 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
     const showError = useException();
     const dispatch = useDispatch();
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-        setForm({...form, [e.target.name]: e.target.value});
+    const handleChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({...form, [name]: e.target.value});
     }
 
     const handleSave = async () => {
@@ -88,21 +88,21 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
                 <TextField
                     type="number"
                     autoComplete="low-value value"
-                    id="from"
-                    name="from"
+                    id="low-value"
+                    name="low-value-f"
                     inputProps={{min: 0}}
                     value={form.from}
-                    onChange={handleChange}
+                    onChange={handleChange("from")}
                 />
                 <span>-</span>
                 <TextField
                     type="number"
                     autoComplete="high-value value"
                     inputProps={{min: Number(form.from) || 0}}
-                    id="to"
-                    name="to"
+                    id="high-value"
+                    name="high-value-t"
                     value={form.to}
-                    onChange={handleChange}
+                    onChange={handleChange("to")}
                 />
             </FormGroup>
         </DialogContent>
