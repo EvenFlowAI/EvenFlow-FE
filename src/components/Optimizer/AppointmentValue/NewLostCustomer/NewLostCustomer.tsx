@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {AppointmentTable} from "../UI";
 import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {NewCustomerValue} from "../../../Modals/NewLostCusotomer/NewCustomerValue";
@@ -10,10 +10,11 @@ import {NewLostEnum} from "../../../../store/reducers/valueSettings/types";
 
 export const NewLostCustomer = () => {
     const {
-        isOpen: isNewOpen,
-        onClose: onNewClose,
-        onOpen: onNewOpen
+        isOpen,
+        onClose,
+        onOpen
     } = useModal();
+    const [current, setCurrent] = useState<NewLostEnum>(NewLostEnum.New);
 
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -30,6 +31,11 @@ export const NewLostCustomer = () => {
             dispatch(loadNewLostCustomers(selectedSC.id));
         }
     }, [selectedSC, dispatch]);
+
+    const handleOpen = (t: NewLostEnum) => () => {
+        setCurrent(t);
+        onOpen();
+    }
 
     return <div>
         <AppointmentTable>
@@ -50,17 +56,29 @@ export const NewLostCustomer = () => {
                         }
                     </TableCell>
                     <TableCell align="right">
-                        <Button onClick={onNewOpen} color="primary">Edit</Button>
+                        <Button onClick={handleOpen(NewLostEnum.New)} color="primary">Edit</Button>
                     </TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>Lost Customer</TableCell>
                     <TableCell>Considered lost after</TableCell>
-                    <TableCell className="primary">24 months</TableCell>
-                    <TableCell align="right"><Button color="primary">Edit</Button></TableCell>
+                    <TableCell className="primary">
+                        {lostValue
+                            ? `${lostValue.periodInMonth} month${lostValue.periodInMonth > 1 ? "s" : ""}`
+                            : "-"
+                        }
+                    </TableCell>
+                    <TableCell align="right">
+                        <Button onClick={handleOpen(NewLostEnum.Lost)} color="primary">Edit</Button>
+                    </TableCell>
                 </TableRow>
             </TableBody>
         </AppointmentTable>
-        <NewCustomerValue payload={newValue} open={isNewOpen} onClose={onNewClose} />
+        <NewCustomerValue
+            isNew={current === NewLostEnum.New}
+            payload={current ? newValue : lostValue}
+            open={isOpen}
+            onClose={onClose}
+        />
     </div>;
 }

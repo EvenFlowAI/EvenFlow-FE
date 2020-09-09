@@ -9,7 +9,7 @@ import {TextField} from "../../UI/TextField";
 import {setNewLostCustomers} from "../../../store/reducers/valueSettings/actions";
 import {NewLostEnum} from "../../../store/reducers/valueSettings/types";
 
-export const NewCustomerValue: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const NewCustomerValue: React.FC<DialogProps & {isNew: boolean}> = ({onAction, isNew=false, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [months, setMonths] = useState<string>("");
 
@@ -37,7 +37,7 @@ export const NewCustomerValue: React.FC<DialogProps> = ({onAction, payload, ...p
                 await dispatch(setNewLostCustomers({
                     serviceCenterId: selectedSC.id,
                     periodInMonth: Number(months),
-                    type: NewLostEnum.New
+                    type: isNew ? NewLostEnum.New : NewLostEnum.Lost
                 }));
                 setSaving(false);
                 showMessage("Saved");
@@ -50,12 +50,13 @@ export const NewCustomerValue: React.FC<DialogProps> = ({onAction, payload, ...p
     }
 
     return <BaseModal {...props} maxWidth="xs">
-        <DialogTitle>Edit New Customer</DialogTitle>
+        <DialogTitle>Edit {isNew ? "New" : "Lost"} Customer</DialogTitle>
         <DialogContent>
             <TextField
-                id="new-months"
+                id="months"
                 name="months"
-                label="Considered new up to"
+                fullWidth
+                label={`Considered ${isNew ? "new" : "lost"} up to`}
                 value={months}
                 onChange={e => setMonths(e.target.value)}
                 inputProps={{min: 0}}
