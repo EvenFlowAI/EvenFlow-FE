@@ -5,3 +5,12 @@ export interface ICustomerLifetime {
 export interface ICustomerLifetimeForm extends ICustomerLifetime {
     serviceCenterId: number;
 }
+export enum NewLostEnum {
+    New,
+    Lost
+}
+export interface INewLostCustomer {
+    serviceCenterId: number;
+    periodInMonth: number;
+    type: NewLostEnum
+}

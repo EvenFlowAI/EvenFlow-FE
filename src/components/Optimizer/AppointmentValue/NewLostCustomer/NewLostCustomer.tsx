@@ -1,8 +1,36 @@
-import React from "react";
+import React, {useEffect, useMemo} from "react";
 import {AppointmentTable} from "../UI";
 import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {NewCustomerValue} from "../../../Modals/NewLostCusotomer/NewCustomerValue";
+import {useModal, useSCs} from "../../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {loadNewLostCustomers} from "../../../../store/reducers/valueSettings/actions";
+import {RootState} from "../../../../store/rootReducer";
+import {NewLostEnum} from "../../../../store/reducers/valueSettings/types";
 
 export const NewLostCustomer = () => {
+    const {
+        isOpen: isNewOpen,
+        onClose: onNewClose,
+        onOpen: onNewOpen
+    } = useModal();
+
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+    const newLostData = useSelector((state: RootState) => state.valueSettings.newLostCustomer);
+    const {newValue, lostValue} = useMemo(() => {
+        return {
+            newValue: newLostData.find(e => e.type === NewLostEnum.New) || undefined,
+            lostValue: newLostData.find(e => e.type === NewLostEnum.Lost) || undefined
+        }
+    }, [newLostData]);
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadNewLostCustomers(selectedSC.id));
+        }
+    }, [selectedSC, dispatch]);
+
     return <div>
         <AppointmentTable>
             <TableHead>
@@ -15,8 +43,15 @@ export const NewLostCustomer = () => {
                 <TableRow>
                     <TableCell>New Customer</TableCell>
                     <TableCell>Considered new up to</TableCell>
-                    <TableCell className="primary">8 months</TableCell>
-                    <TableCell align="right"><Button color="primary">Edit</Button></TableCell>
+                    <TableCell className="primary">
+                        {newValue
+                            ? `${newValue.periodInMonth} month${newValue.periodInMonth > 1 ? "s" : ""}`
+                            : "-"
+                        }
+                    </TableCell>
+                    <TableCell align="right">
+                        <Button onClick={onNewOpen} color="primary">Edit</Button>
+                    </TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>Lost Customer</TableCell>
@@ -26,5 +61,6 @@ export const NewLostCustomer = () => {
                 </TableRow>
             </TableBody>
         </AppointmentTable>
+        <NewCustomerValue payload={newValue} open={isNewOpen} onClose={onNewClose} />
     </div>;
 }
