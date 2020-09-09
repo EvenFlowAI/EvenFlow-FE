@@ -86,14 +86,18 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
             <FormGroup className={classes.group} row>
                 <TextField
                     type="number"
+                    autoComplete="value-number1"
                     id="from"
                     name="from"
+                    inputProps={{min: 0}}
                     value={form.from}
-                    onChange={handleChange}
+                    onChange={handleChange}F
                 />
                 <span>-</span>
                 <TextField
                     type="number"
+                    autoComplete="value-number2"
+                    inputProps={{min: Number(form.from) || 0}}
                     id="to"
                     name="to"
                     value={form.to}
