@@ -91,7 +91,7 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
                     name="from"
                     inputProps={{min: 0}}
                     value={form.from}
-                    onChange={handleChange}F
+                    onChange={handleChange}
                 />
                 <span>-</span>
                 <TextField
