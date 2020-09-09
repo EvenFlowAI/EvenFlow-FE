@@ -1,10 +1,11 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICustomerLifetime, ICustomerLifetimeForm, INewLostCustomer} from "./types";
+import {ICustomerLifetime, ICustomerLifetimeForm, IEndOfWarranty, INewLostCustomer} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
 export const getCustomerLifetimes = createAction<ICustomerLifetime|undefined>("Value/SetLifetime");
 export const getNewLostCustomers = createAction<INewLostCustomer[]>("Value/NewLostCustomer");
+export const getEndOfWarranty = createAction<IEndOfWarranty|undefined>("Value/EndOfWarranty");
 export const loadCustomerLifetimes = (serviceCenterId: number): AppThunk => async dispatch => {
     try {
         const {data} = await Api.call<ICustomerLifetime>(
@@ -41,4 +42,23 @@ export const loadNewLostCustomers = (serviceCenterId: number): AppThunk => async
 export const setNewLostCustomers = (data: INewLostCustomer): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.ValueSettings.SetCTS, {data});
     dispatch(loadNewLostCustomers(data.serviceCenterId));
+}
+
+export const loadEndOfWarranty = (serviceCenterId: number): AppThunk => async dispatch => {
+    try {
+        const {data} = await Api.call<IEndOfWarranty[]>(
+            Api.endpoints.ValueSettings.GetWS, {params: {serviceCenterId}}
+        );
+        dispatch(getEndOfWarranty(data[0]));
+    } catch (e) {
+        if (e?.response?.status === 400) {
+            dispatch(getEndOfWarranty(undefined));
+        } else {
+            throw e;
+        }
+    }
+}
+export const setEndOfWarranty = (data: IEndOfWarranty): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.ValueSettings.SetWS, {data});
+    dispatch(loadEndOfWarranty(data.serviceCenterId));
 }

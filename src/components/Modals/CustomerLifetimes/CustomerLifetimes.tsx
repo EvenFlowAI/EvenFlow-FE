@@ -9,6 +9,7 @@ import {ICustomerLifetime, ICustomerLifetimeForm} from "../../../store/reducers/
 import {setCustomerLifetimes} from "../../../store/reducers/valueSettings/actions";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
+import {SC_UNDEFINED} from "../../../config/constants";
 
 const useStyles = makeStyles(theme => ({
     group: {
@@ -58,7 +59,7 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
 
     const handleSave = async () => {
         if (!selectedSC) {
-            showError("Service center is not loaded");
+            showError(SC_UNDEFINED);
         } else {
             setSaving(true)
             const data: ICustomerLifetimeForm = {

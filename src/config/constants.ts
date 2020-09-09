@@ -78,3 +78,4 @@ export const timeSpanString = "HH:mm:ss";
 export enum LocalItems {
     selectedSC= "SSCID",
 }
+export const SC_UNDEFINED = "Service center is not loaded";
