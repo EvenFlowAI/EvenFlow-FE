@@ -5,7 +5,7 @@ import {Button, FormGroup, InputLabel} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
-import {ICustomerLifetimeForm} from "../../../store/reducers/valueSettings/types";
+import {ICustomerLifetime, ICustomerLifetimeForm} from "../../../store/reducers/valueSettings/types";
 import {setCustomerLifetimes} from "../../../store/reducers/valueSettings/actions";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
@@ -33,16 +33,20 @@ const initialForm: TForm = {
     from: "", to: ""
 }
 
-export const CustomerLifetimes: React.FC<DialogProps> = ({payload, onAction, ...props}) => {
+export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
     const {selectedSC} = useSCs();
 
     useEffect(() => {
         if (selectedSC && props.open) {
-            setForm(initialForm);
+            if (payload) {
+                setForm({from: String(payload.from), to: String(payload.to)});
+            } else {
+                setForm(initialForm);
+            }
         }
-    }, [selectedSC, props.open])
+    }, [selectedSC, props.open, payload])
 
     const showMessage = useMessage();
     const showError = useException();

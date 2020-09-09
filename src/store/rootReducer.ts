@@ -6,6 +6,7 @@ import {serviceCenterReducer} from "./reducers/serviceCenters/reducer";
 import {modalsReducer} from "./reducers/modals/reducer";
 import {holidaysReducer} from "./reducers/holidays/reducer";
 import {baysReducer} from "./reducers/bays/reducer";
+import {valueSettingsReducer} from "./reducers/valueSettings/reducer";
 
 export const rootReducer = combineReducers({
     users: usersReducer,
@@ -15,5 +16,6 @@ export const rootReducer = combineReducers({
     modals: modalsReducer,
     holidays: holidaysReducer,
     bays: baysReducer,
+    valueSettings: valueSettingsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Button, Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
 import {CustomerLifetimes} from "../../../Modals/CustomerLifetimes/CustomerLifetimes";
-import {useModal} from "../../../../utils/hooks";
+import {useModal, useSCs} from "../../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {loadCustomerLifetimes} from "../../../../store/reducers/valueSettings/actions";
+import {RootState} from "../../../../store/rootReducer";
 
 const StyledTable = withStyles(theme => ({
     root: {
@@ -25,6 +28,15 @@ const StyledTable = withStyles(theme => ({
 
 export const CustomerLifetimeRules = () => {
     const {isOpen, onOpen, onClose} = useModal();
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+    const data = useSelector((state: RootState) => state.valueSettings.customerLifetimes);
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadCustomerLifetimes(selectedSC.id));
+        }
+    }, [dispatch, selectedSC])
 
     return <div>
         <StyledTable>
@@ -38,12 +50,12 @@ export const CustomerLifetimeRules = () => {
                 <TableRow>
                     <TableCell>Low Value</TableCell>
                     <TableCell>Less than</TableCell>
-                    <TableCell colSpan={2} className="sum">$12312</TableCell>
+                    <TableCell colSpan={2} className="sum">{data ? `$${data.from}`: '-'}</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>Medium Value</TableCell>
                     <TableCell>Medium Value</TableCell>
-                    <TableCell className="sum">$12312 - $400000</TableCell>
+                    <TableCell className="sum">{data ? `$${data.from} - $${data.to}` : '-'}</TableCell>
                     <TableCell align="right">
                         <Button
                             onClick={onOpen}
@@ -56,10 +68,10 @@ export const CustomerLifetimeRules = () => {
                 <TableRow>
                     <TableCell>High Value</TableCell>
                     <TableCell>More than</TableCell>
-                    <TableCell colSpan={2} className="sum">$400000</TableCell>
+                    <TableCell colSpan={2} className="sum">{data ? `$${data.to}` : "-"}</TableCell>
                 </TableRow>
             </TableBody>
         </StyledTable>
-        <CustomerLifetimes open={isOpen} onClose={onClose} />
+        <CustomerLifetimes payload={data} open={isOpen} onClose={onClose} />
     </div>
 }
