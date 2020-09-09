@@ -8,6 +8,7 @@ import {TabList} from "../../UI/Tabs";
 import {Tab} from "@material-ui/core";
 import {CustomerLifetimeRules} from "./CustomerLifetimeRules/CustomerLifetimeRules";
 import {NewLostCustomer} from "./NewLostCustomer/NewLostCustomer";
+import {EndOfWarranty} from "./EndOfWarranty/EndOfWarranty";
 
 
 const useStyles = makeStyles({
@@ -21,6 +22,18 @@ const parent: TTitle = {
     title: "Optimizer Settings"
 }
 
+type Tab = {
+    label: string; id: string; component: React.ComponentType
+}
+
+const tabs: Tab[] = [
+    {label: "Values indicators", id: "0", component: () => <p>Values indicators</p>},
+    {label: "Customer Lifetime Rules", id: "1", component: CustomerLifetimeRules},
+    {label: "Urgent Requests", id: "2", component: () => <p>Urgent Requests</p>},
+    {label: "New/Lost customer", id: "3", component: NewLostCustomer},
+    {label: "End of Warranty", id: "4", component: EndOfWarranty},
+]
+
 export const AppointmentValue = () => {
     const [selectedTab, setTab] = useState<string>("1");
     const handleTabChange = (e: React.ChangeEvent<{}>, val: string) => {
@@ -33,16 +46,14 @@ export const AppointmentValue = () => {
             onChange={handleTabChange}
             indicatorColor="primary"
         >
-            <Tab label="Values indicators" value="0" />
-            <Tab label="Customer Lifetime Rules" value="1" />
-            <Tab label="Urgent Requests" value="2" />
-            <Tab label="New/Lost customer" value="3" />
-            <Tab label="End of Warranty" value="4" />
+            {tabs.map(tab =>
+                <Tab label={tab.label} key={tab.id} value={tab.id} />
+            )}
         </TabList>
-        <TabPanel className={classes.panel} value="0" ><p>Values indicators</p></TabPanel>
-        <TabPanel className={classes.panel} value="1"><CustomerLifetimeRules /></TabPanel>
-        <TabPanel className={classes.panel} value="2"><p>Urgent requests</p></TabPanel>
-        <TabPanel className={classes.panel} value="3"><NewLostCustomer /></TabPanel>
-        <TabPanel className={classes.panel} value="4"><p>End of warranty</p></TabPanel>
+        {tabs.map(tab =>
+            <TabPanel key={tab.id} className={classes.panel} value={tab.id}>
+                <tab.component />
+            </TabPanel>
+        )}
     </TabContext>
 }
