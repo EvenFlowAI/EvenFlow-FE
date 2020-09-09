@@ -56,7 +56,7 @@ export const NewCustomerValue: React.FC<DialogProps & {isNew: boolean}> = ({onAc
                 id="months"
                 name="months"
                 fullWidth
-                label={`Considered ${isNew ? "new" : "lost"} up to`}
+                label={`Considered ${isNew ? "new up to" : "lost after"}`}
                 value={months}
                 onChange={e => setMonths(e.target.value)}
                 inputProps={{min: 0}}
