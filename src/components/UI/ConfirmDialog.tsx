@@ -21,6 +21,8 @@ export const ConfirmDialog: React.FC = () => {
                 setLoading(false);
                 throw e;
             }
+        } else {
+            setLoading(false);
         }
         closeConfirm();
     }, [payload, closeConfirm]);
