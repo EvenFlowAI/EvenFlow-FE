@@ -1,11 +1,25 @@
 import React, {useEffect} from "react";
-import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Button, TableBody, TableCell, TableHead, TableRow, Typography} from "@material-ui/core";
 import {CustomerLifetimes} from "../../../Modals/CustomerLifetimes/CustomerLifetimes";
 import {useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadCustomerLifetimes} from "../../../../store/reducers/valueSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {AppointmentTable} from "../UI";
+import {InfoOutlined} from "@material-ui/icons";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+    caption: {
+        display: "flex",
+        fontSize: 16,
+        marginTop: 10,
+        alignItems: "center",
+        "& .MuiSvgIcon-root": {
+            marginRight: 8
+        }
+    }
+})
 
 export const CustomerLifetimeRules = () => {
     const {isOpen, onOpen, onClose} = useModal();
@@ -17,7 +31,9 @@ export const CustomerLifetimeRules = () => {
         if (selectedSC) {
             dispatch(loadCustomerLifetimes(selectedSC.id));
         }
-    }, [dispatch, selectedSC])
+    }, [dispatch, selectedSC]);
+
+    const classes = useStyles();
 
     return <div>
         <AppointmentTable>
@@ -53,6 +69,10 @@ export const CustomerLifetimeRules = () => {
                 </TableRow>
             </TableBody>
         </AppointmentTable>
+        <div className={classes.caption}>
+            <InfoOutlined color="primary" />
+            <span>You can only edit Medium value and have Low and High automatically adjust</span>
+        </div>
         <CustomerLifetimes payload={data} open={isOpen} onClose={onClose} />
     </div>
 }
