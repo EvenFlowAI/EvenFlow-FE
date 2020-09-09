@@ -7,6 +7,7 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {TabList} from "../../UI/Tabs";
 import {Tab} from "@material-ui/core";
 import {CustomerLifetimeRules} from "./CustomerLifetimeRules/CustomerLifetimeRules";
+import {NewLostCustomer} from "./NewLostCustomer/NewLostCustomer";
 
 
 const useStyles = makeStyles({
@@ -41,7 +42,7 @@ export const AppointmentValue = () => {
         <TabPanel className={classes.panel} value="0" ><p>Values indicators</p></TabPanel>
         <TabPanel className={classes.panel} value="1"><CustomerLifetimeRules /></TabPanel>
         <TabPanel className={classes.panel} value="2"><p>Urgent requests</p></TabPanel>
-        <TabPanel className={classes.panel} value="3"><p>New Lost Customers</p></TabPanel>
-        <TabPanel className={classes.panel} value="3"><p>End of warranty</p></TabPanel>
+        <TabPanel className={classes.panel} value="3"><NewLostCustomer /></TabPanel>
+        <TabPanel className={classes.panel} value="4"><p>End of warranty</p></TabPanel>
     </TabContext>
 }
