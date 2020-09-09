@@ -5,6 +5,7 @@ import {RootState} from "../../rootReducer";
 import {Api} from "../../../config/requests";
 import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
+import {LocalItems} from "../../../config/constants";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
    type: "ServiceCenters/GetAll", payload
@@ -46,7 +47,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
 // const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
 //     type: "ServiceCenters/Create", payload
 // });
-export const saveAvatar = (avatar: File, id: number): AppThunk => async (dispatch) => {
+export const saveAvatar = (avatar: File, id: number): AppThunk => async () => {
     const data = new FormData();
     data.append("file", avatar, avatar?.name || "");
     await Api.call(Api.endpoints.ServiceCenters.Avatar, {
@@ -64,6 +65,7 @@ export const createSC = (payload: IServiceCenterForm, avatar: File | null): AppT
         }
         dispatch(saving(false));
         dispatch(loadAll());
+        dispatch(loadAllSCs());
     } catch (e) {
         dispatch(saving(false));
         throw e;
@@ -110,6 +112,7 @@ export const updateSC = (payload: IServiceCenterForm, id: number, avatar: File |
         }
         dispatch(saving(false));
         dispatch(loadAll());
+        dispatch(loadAllSCs());
     } catch (e) {
         dispatch(saving(false));
         throw e;
@@ -134,13 +137,24 @@ export const loadDealershipSCs = (dealershipId: number, pageData: IPageRequest):
     }
 }
 const _loadAllSCS = (payload: IServiceCenter[]): TServiceCenterActions => ({type: "ServiceCenters/FullSCList", payload});
-export const selectSC = (payload: IServiceCenter): TServiceCenterActions => ({
-    type: "ServiceCenters/SelectSC", payload
-});
+export const selectSC = (payload: IServiceCenter): TServiceCenterActions => {
+    localStorage.setItem(LocalItems.selectedSC, String(payload.id));
+    return {type: "ServiceCenters/SelectSC", payload};
+};
 export const loadAllSCs = (): AppThunk => async dispatch => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params: {pageSize: 0, pageIndex: 0}});
     if (result.length) {
         dispatch(_loadAllSCS(result));
-        dispatch(selectSC(result[0]));
+        const prevSelected = localStorage.getItem(LocalItems.selectedSC);
+        if (prevSelected) {
+            const selected = result.find(i => i.id === Number(prevSelected));
+            if (selected) {
+                dispatch(selectSC(selected));
+            } else {
+                dispatch(selectSC(result[0]))
+            }
+        } else {
+            dispatch(selectSC(result[0]))
+        }
     }
 }

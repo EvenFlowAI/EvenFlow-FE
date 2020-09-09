@@ -29,6 +29,7 @@ export const ServiceCenterSelector = () => {
     }
 
     const classes = useStyles();
+    if (!scList || !scList.length) return null;
     return <div>
         <Button
             className={classes.root}
