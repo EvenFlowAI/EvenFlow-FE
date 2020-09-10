@@ -94,7 +94,7 @@ type TItem = {
     action: () => void;
 }
 
-export const AdminDashboard: React.FC = props => {
+export const AdminDashboard: React.FC = () => {
     const {
         onClose: onCloseAddress,
         onOpen: onOpenAddress,
