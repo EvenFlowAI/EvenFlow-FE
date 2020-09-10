@@ -1,5 +1,5 @@
 import React from "react";
-import {AppointmentTable} from "../UI";
+import {AppointmentTable, ValueSlider} from "../UI";
 import {
     Button,
     Switch,
@@ -42,8 +42,22 @@ type TRow<Item> = {
 }
 const columns: TRow<TData>[] = [
     {label: "Value Lever", id: 0, val: el => el.name},
-    {label: "Optimization Settings", id: 1, val: el => String(el.val)},
-    {label: "OFF/ON", id: 2, val: el => <Switch color="primary" checked={el.checked} />},
+    {
+        label: "Optimization Settings", id: 1,
+        val: el => <ValueSlider
+            min={-10}
+            max={10}
+            valueLabelDisplay="on"
+            defaultValue={el.val}
+        />
+    },
+    {
+        label: "OFF/ON", id: 2,
+        val: el => <Switch
+            color="primary"
+            defaultChecked={el.checked}
+        />
+    },
     {label: "", id: 3, val: el => <Button color="primary">Edit</Button>, cellProps: {align: "right"}}
 ]
 

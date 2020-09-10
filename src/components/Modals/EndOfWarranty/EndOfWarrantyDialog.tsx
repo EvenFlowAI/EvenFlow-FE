@@ -59,7 +59,7 @@ export const EndOfWarrantyDialog: React.FC<DialogProps<IEndOfWarranty>> = ({payl
                 label="Considered near the end of warranty within"
                 autoComplete="warranty-months months"
                 type="number"
-                inputProps={{min: 0}}
+                inputProps={{min: 1}}
                 value={months}
                 onChange={e => setMonths(e.target.value)}
             />
