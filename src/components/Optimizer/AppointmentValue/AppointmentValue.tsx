@@ -9,6 +9,7 @@ import {Tab} from "@material-ui/core";
 import {CustomerLifetimeRules} from "./CustomerLifetimeRules/CustomerLifetimeRules";
 import {NewLostCustomer} from "./NewLostCustomer/NewLostCustomer";
 import {EndOfWarranty} from "./EndOfWarranty/EndOfWarranty";
+import {ValueIndicators} from "./ValueIndicators/ValueIndicators";
 
 
 const useStyles = makeStyles({
@@ -27,7 +28,7 @@ type Tab = {
 }
 
 const tabs: Tab[] = [
-    {label: "Values indicators", id: "0", component: () => <p>Values indicators</p>},
+    {label: "Values indicators", id: "0", component: ValueIndicators},
     {label: "Customer Lifetime Rules", id: "1", component: CustomerLifetimeRules},
     {label: "Urgent Requests", id: "2", component: () => <p>Urgent Requests</p>},
     {label: "New/Lost customer", id: "3", component: NewLostCustomer},
@@ -35,7 +36,7 @@ const tabs: Tab[] = [
 ]
 
 export const AppointmentValue = () => {
-    const [selectedTab, setTab] = useState<string>("1");
+    const [selectedTab, setTab] = useState<string>("0");
     const handleTabChange = (e: React.ChangeEvent<{}>, val: string) => {
         setTab(val);
     }
