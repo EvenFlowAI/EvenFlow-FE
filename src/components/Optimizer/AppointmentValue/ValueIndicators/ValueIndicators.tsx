@@ -47,6 +47,10 @@ const columns: TRow<TData>[] = [
         val: el => <ValueSlider
             min={-10}
             max={10}
+            marks={[
+                {value: -10, label: "-10"},
+                {value: 10, label: "10"}
+            ]}
             valueLabelDisplay="on"
             defaultValue={el.val}
         />
