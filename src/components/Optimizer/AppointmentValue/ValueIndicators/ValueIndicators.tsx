@@ -17,6 +17,9 @@ enum Indicators {
     EndOfWarranty,
     CustomerLifetimeValue
 }
+enum SliderRange {
+    Max= 10, Min= -10
+}
 
 type TData = {
     id: Indicators;
@@ -37,32 +40,33 @@ type TRow<Item> = {
     label: string;
     id: number;
     val: (el: Item) => JSX.Element | string;
-    classes?: string;
+    width: string | number;
     cellProps?: TableCellProps
 }
 const columns: TRow<TData>[] = [
-    {label: "Value Lever", id: 0, val: el => el.name},
+    {label: "Value Lever", id: 0, val: el => el.name, width: "25%"},
     {
-        label: "Optimization Settings", id: 1,
+        label: "Optimization Settings", id: 1, width: "auto",
         val: el => <ValueSlider
-            min={-10}
-            max={10}
+            min={SliderRange.Min}
+            max={SliderRange.Max}
+            disabled={!el.checked}
             marks={[
-                {value: -10, label: "-10"},
-                {value: 10, label: "10"}
+                {value: SliderRange.Min},
+                {value: SliderRange.Max}
             ]}
             valueLabelDisplay="on"
             defaultValue={el.val}
         />
     },
     {
-        label: "OFF/ON", id: 2,
+        label: "OFF/ON", id: 2, width: "10%",
         val: el => <Switch
             color="primary"
             defaultChecked={el.checked}
         />
     },
-    {label: "", id: 3, val: el => <Button color="primary">Edit</Button>, cellProps: {align: "right"}}
+    {label: "", id: 3, val: el => <Button color="primary">Edit</Button>, width: "10%", cellProps: {align: "right"}}
 ]
 
 export const ValueIndicators = () => {
@@ -71,7 +75,7 @@ export const ValueIndicators = () => {
             <TableHead>
                 <TableRow>
                     {columns.map(col =>
-                        <TableCell key={col.id}>{col.label}</TableCell>
+                        <TableCell style={{width: col.width}} key={col.id}>{col.label}</TableCell>
                     )}
                 </TableRow>
             </TableHead>

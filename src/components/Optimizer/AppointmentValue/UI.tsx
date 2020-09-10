@@ -44,7 +44,7 @@ const useValueStyles = makeStyles(theme => ({
         top: -17,
     },
     thumb: {
-        '&:focus, &:hover, &$active': {
+        '&:focus, &:hover, &:active': {
             boxShadow: "none",
         },
     },
@@ -52,7 +52,7 @@ const useValueStyles = makeStyles(theme => ({
         top: 5,
         left: -8,
         transition: theme.transitions.create(["box-shadow"]),
-        '&:focus, &:hover, &$active': {
+        '&:focus, &:hover, &:active': {
             boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.2),0 0 0 1px rgba(0,0,0,0.02)',
             '@media (hover: none)': {
                 boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)',
