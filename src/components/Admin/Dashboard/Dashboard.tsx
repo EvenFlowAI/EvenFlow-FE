@@ -15,11 +15,12 @@ import {HourOfOperations} from "../../Modals/HourOfOperations/HourOfOperations";
 import {WeeklySchedule} from "../../Modals/WeeklySchedule/WeeklySchedule";
 import {Holidays} from "../../Modals/Holydays/Holidays";
 import {Break} from "../../Modals/Breaks/Break";
-import {useModal} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Technicians} from "../../Modals/Technicians/Technicians";
 import {Bays} from "../../Modals/Bays/Bays";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {concatAddress} from "../../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -68,6 +69,7 @@ const DashboardTitle = () => {
     const handleGoToOptimizer = useCallback(() => {
         history.push(Routes.Optimizer.Base);
     }, [history]);
+    const {selectedSC} = useSCs();
     const actions = useMemo(() => {
         return <Button
             variant="contained"
@@ -76,8 +78,14 @@ const DashboardTitle = () => {
             onClick={handleGoToOptimizer}>go to optimizer settings
         </Button>;
     }, [handleGoToOptimizer]);
+    if (!selectedSC) return null;
 
-    return <TitleContainer pad actions={actions} title="Honda Downtown" subtitle="6391 Elgin St. Celina, Chicago 10299" />;
+    return <TitleContainer
+        pad
+        actions={actions}
+        title={selectedSC.name}
+        subtitle={concatAddress(selectedSC.address)}
+    />;
 }
 
 type TItem = {
