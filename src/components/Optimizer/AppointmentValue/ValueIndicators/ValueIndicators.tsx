@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {AppointmentTable, ValueSlider} from "../UI";
 import {
     Button,
@@ -9,6 +9,9 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
+import {useDispatch} from "react-redux";
+import {loadValueSettings} from "../../../../store/reducers/valueSettings/actions";
+import {useSCs} from "../../../../utils/hooks";
 
 enum Indicators {
     NewCustomer,
@@ -70,6 +73,15 @@ const columns: TRow<TData>[] = [
 ]
 
 export const ValueIndicators = () => {
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadValueSettings(selectedSC.id));
+        }
+    }, [selectedSC, dispatch]);
+
     return <div>
         <AppointmentTable>
             <TableHead>

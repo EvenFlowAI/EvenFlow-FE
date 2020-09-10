@@ -1,11 +1,12 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICustomerLifetime, ICustomerLifetimeForm, IEndOfWarranty, INewLostCustomer} from "./types";
+import {ICustomerLifetime, ICustomerLifetimeForm, IEndOfWarranty, INewLostCustomer, IValueSettings} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
 export const getCustomerLifetimes = createAction<ICustomerLifetime|undefined>("Value/SetLifetime");
 export const getNewLostCustomers = createAction<INewLostCustomer[]>("Value/NewLostCustomer");
 export const getEndOfWarranty = createAction<IEndOfWarranty|undefined>("Value/EndOfWarranty");
+export const getValueSettings = createAction<IValueSettings[]>("Value/Settings");
 export const loadCustomerLifetimes = (serviceCenterId: number): AppThunk => async dispatch => {
     try {
         const {data} = await Api.call<ICustomerLifetime>(
@@ -61,4 +62,12 @@ export const loadEndOfWarranty = (serviceCenterId: number): AppThunk => async di
 export const setEndOfWarranty = (data: IEndOfWarranty): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.ValueSettings.SetWS, {data});
     dispatch(loadEndOfWarranty(data.serviceCenterId));
+}
+
+export const loadValueSettings = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<IValueSettings[]>(
+        Api.endpoints.ValueSettings.GetValue,
+        {params: {serviceCenterId}}
+    );
+    dispatch(getValueSettings(data));
 }

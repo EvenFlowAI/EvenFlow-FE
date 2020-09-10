@@ -18,3 +18,10 @@ export interface IEndOfWarranty {
     serviceCenterId: number;
     periodInMonth: number;
 }
+
+export interface IValueSettings {
+    type: number;
+    point: number;
+    state: number;
+    serviceCenterId: number;
+}

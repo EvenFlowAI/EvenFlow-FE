@@ -1,14 +1,16 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {getCustomerLifetimes, getNewLostCustomers, getEndOfWarranty} from "./actions";
-import {ICustomerLifetime, IEndOfWarranty, INewLostCustomer} from "./types";
+import {getCustomerLifetimes, getNewLostCustomers, getEndOfWarranty, getValueSettings} from "./actions";
+import {ICustomerLifetime, IEndOfWarranty, INewLostCustomer, IValueSettings} from "./types";
 
 type TState = {
     customerLifetimes?: ICustomerLifetime,
     newLostCustomer: INewLostCustomer[],
-    endOfWarranty?: IEndOfWarranty
+    endOfWarranty?: IEndOfWarranty,
+    valueSettings: IValueSettings[],
 }
 const initialState: TState = {
-    newLostCustomer: []
+    newLostCustomer: [],
+    valueSettings: []
 }
 export const valueSettingsReducer = createReducer<TState>(
     initialState, builder => builder
@@ -20,5 +22,8 @@ export const valueSettingsReducer = createReducer<TState>(
         })
         .addCase(getEndOfWarranty, (state, {payload}) => {
             return {...state, endOfWarranty: payload};
+        })
+        .addCase(getValueSettings, (state, {payload}) => {
+            return {...state, valueSettings: payload};
         })
 );
