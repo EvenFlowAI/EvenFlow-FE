@@ -20,8 +20,16 @@ export interface IEndOfWarranty {
 }
 
 export interface IValueSettings {
-    type: number;
+    type: Indicators;
     point: number;
     state: number;
     serviceCenterId: number;
+}
+
+export enum Indicators {
+    NewCustomer,
+    LostCustomer,
+    UrgencyFlag,
+    EndOfWarranty,
+    CustomerLifetimeValue
 }

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../UI";
 import {
     Button,
@@ -12,75 +12,77 @@ import {
 import {useDispatch} from "react-redux";
 import {loadValueSettings} from "../../../../store/reducers/valueSettings/actions";
 import {useSCs} from "../../../../utils/hooks";
+import {Indicators, IValueSettings} from "../../../../store/reducers/valueSettings/types";
+import {noop} from "../../../../utils/utils";
 
-enum Indicators {
-    NewCustomer,
-    LostCustomer,
-    UrgencyFlag,
-    EndOfWarranty,
-    CustomerLifetimeValue
-}
+
 enum SliderRange {
     Max= 10, Min= -10
 }
 
+type TForm = {
+    [K in Indicators]: IValueSettings & {editing: boolean};
+}
+const blankRow: IValueSettings & {editing: boolean} = {
+    point: 0,
+    serviceCenterId: 0,
+    editing: false,
+    state: 0,
+    type: Indicators.NewCustomer
+}
+const initialForm: TForm = Object.values(Indicators).reduce((acc, i) => {
+    return {...acc, [i]: {...blankRow, type: i}};
+}, {} as TForm);
+
+
 type TData = {
-    id: Indicators;
-    name: string;
-    val: number;
-    checked: boolean;
+    [K in Indicators]: string
 }
 
-const data: TData[] = [
-    {name: "New customer", id: Indicators.NewCustomer, val: 5, checked: false},
-    {name: "Lost customer", id: Indicators.LostCustomer, val: 2, checked: false},
-    {name: "Urgency Flag", id: Indicators.UrgencyFlag, val: 1, checked: true},
-    {name: "End of Warranty", id: Indicators.EndOfWarranty, val: 2, checked: false},
-    {name: "Customer Lifetime Value", id: Indicators.CustomerLifetimeValue, val: 10, checked: true},
-];
-
-type TRow<Item> = {
+type TColumn = {
     label: string;
     id: number;
-    val: (el: Item) => JSX.Element | string;
-    width: string | number;
-    cellProps?: TableCellProps
+    width: string;
+    cellProps?: TableCellProps;
 }
-const columns: TRow<TData>[] = [
-    {label: "Value Lever", id: 0, val: el => el.name, width: "25%"},
-    {
-        label: "Optimization Settings", id: 1, width: "auto",
-        val: el => <ValueSlider
-            min={SliderRange.Min}
-            max={SliderRange.Max}
-            disabled={!el.checked}
-            marks={[
-                {value: SliderRange.Min},
-                {value: SliderRange.Max}
-            ]}
-            valueLabelDisplay="on"
-            defaultValue={el.val}
-        />
-    },
-    {
-        label: "OFF/ON", id: 2, width: "10%",
-        val: el => <Switch
-            color="primary"
-            defaultChecked={el.checked}
-        />
-    },
-    {label: "", id: 3, val: el => <Button color="primary">Edit</Button>, width: "10%", cellProps: {align: "right"}}
+
+const data: TData = {
+    [Indicators.NewCustomer]: "New customer",
+    [Indicators.LostCustomer]: "Lost customer",
+    [Indicators.UrgencyFlag]: "Urgency Flag",
+    [Indicators.EndOfWarranty]: "End of Warranty",
+    [Indicators.CustomerLifetimeValue]: "Customer Lifetime Value"
+};
+const columns: TColumn[] = [
+    {label: "Value Lever", id: 0, width: "25%"},
+    {label: "Optimization Settings", id: 1, width: "auto"},
+    {label: "OFF/ON", id: 2, width: "10%"},
+    {label: "", id: 3, width: "20%", cellProps: {align: "right"}}
 ]
 
 export const ValueIndicators = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const [form, setForm] = useState<TForm>(initialForm);
 
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadValueSettings(selectedSC.id));
         }
     }, [selectedSC, dispatch]);
+
+    const handleChange = (i: Indicators) => (_: any, val: number | number[]) => {
+        setForm({...form, [i]: {...form[i], point: val as number} as IValueSettings});
+    }
+    const handleSwitch = (i: Indicators) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        setForm({...form, [i]: {...form[i], state: Number(checked)} as IValueSettings});
+    }
+    const handleEdit = (i: Indicators, checked: boolean) => () => {
+        setForm({...form, [i]: {...form[i], editing: checked}});
+    }
+    const handleSave = (i: Indicators) => () => {
+        handleEdit(i, false)();
+    }
 
     return <div>
         <AppointmentTable>
@@ -92,11 +94,57 @@ export const ValueIndicators = () => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {data.map(el => {
-                    return <TableRow key={el.id}>
-                        {columns.map(cell => {
-                            return <TableCell key={cell.id} {...cell.cellProps}>{cell.val(el)}</TableCell>;
-                        })}
+                {Object.values(Indicators).map((idx: string|Indicators) => {
+                    if (typeof idx === "string") return null;
+                    return <TableRow key={idx}>
+                        <TableCell>{data[idx]}</TableCell>
+                        <TableCell>
+                            <ValueSlider
+                                min={SliderRange.Min}
+                                max={SliderRange.Max}
+                                onChange={
+                                    form[idx].editing ?
+                                    handleChange(idx) : noop
+                                }
+                                disabled={!form[idx].state}
+                                marks={[
+                                    {value: SliderRange.Min, label: SliderRange.Min},
+                                    {value: SliderRange.Max, label: SliderRange.Max}
+                                ]}
+                                valueLabelDisplay="on"
+                                value={form[idx].point}
+                            />
+                        </TableCell>
+                        <TableCell>
+                            <Switch
+                                color="primary"
+                                onChange={handleSwitch(idx)}
+                                checked={Boolean(form[idx].state)}
+                            />
+                        </TableCell>
+                        <TableCell align="right">
+                            {!form[idx].editing
+                                ? <Button
+                                    color="primary"
+                                    onClick={handleEdit(idx, true)}
+                                >
+                                    Edit
+                                </Button>
+                                : <>
+                                    <Button
+                                        onClick={handleEdit(idx, false)}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        color="primary"
+                                        onClick={handleSave(idx)}
+                                    >
+                                        Save
+                                    </Button>
+                                </>
+                            }
+                        </TableCell>
                     </TableRow>
                 })}
             </TableBody>

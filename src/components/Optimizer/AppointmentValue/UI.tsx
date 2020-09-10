@@ -1,6 +1,5 @@
-import {Slider, SliderProps, Table, withStyles} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import React from "react";
+import {Slider, Table, withStyles} from "@material-ui/core";
+
 
 export const AppointmentTable = withStyles(theme => ({
     root: {
@@ -22,7 +21,7 @@ export const AppointmentTable = withStyles(theme => ({
     }
 }))(Table);
 
-const useValueStyles = makeStyles(theme => ({
+export const ValueSlider = withStyles(theme => ({
     track: {
         height: 4,
     },
@@ -71,13 +70,4 @@ const useValueStyles = makeStyles(theme => ({
             }
         }
     }
-}))
-
-export const ValueSlider: React.FC<SliderProps> = props => {
-    const classes = useValueStyles();
-    return <Slider
-        valueLabelDisplay="on"
-        classes={classes}
-        {...props}
-    />;
-}
+}))(Slider);
