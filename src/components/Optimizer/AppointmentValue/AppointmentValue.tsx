@@ -24,7 +24,11 @@ const parent: TTitle = {
 }
 
 type Tab = {
-    label: string; id: string; component: React.ComponentType
+    label: string;
+    id: string;
+    component: React.ComponentType<{
+        onTabChange?: (e: any, tab: string) => void
+    }>
 }
 
 const tabs: Tab[] = [
@@ -37,7 +41,7 @@ const tabs: Tab[] = [
 
 export const AppointmentValue = () => {
     const [selectedTab, setTab] = useState<string>("0");
-    const handleTabChange = (e: React.ChangeEvent<{}>, val: string) => {
+    const handleTabChange = (e: any, val: string) => {
         setTab(val);
     }
     const classes = useStyles();
@@ -53,7 +57,7 @@ export const AppointmentValue = () => {
         </TabList>
         {tabs.map(tab =>
             <TabPanel key={tab.id} className={classes.panel} value={tab.id}>
-                <tab.component />
+                <tab.component onTabChange={handleTabChange} />
             </TabPanel>
         )}
     </TabContext>

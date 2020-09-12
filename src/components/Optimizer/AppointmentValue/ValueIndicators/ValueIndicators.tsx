@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../UI";
 import {
     Button as DefaultButton, CircularProgress,
@@ -45,15 +45,16 @@ type TColumn = {
 type TRow = {
     id: Indicators;
     title: string;
+    tab: string;
 }
 
 const rows: TRow[] = [
-    {id: Indicators.NewCustomer, title: "New customer"},
-    {id: Indicators.LostCustomer, title: "Lost customer"},
-    {id: Indicators.UrgencyFlag, title: "Urgency Flag"},
-    {id: Indicators.EndOfWarranty, title: "End of Warranty"},
-    {id: Indicators.CustomerLifetimeLow, title: "Customer Lifetime: Low"},
-    {id: Indicators.CustomerLifetimeHigh, title: "Customer Lifetime: High"},
+    {id: Indicators.NewCustomer, title: "New customer", tab: "3"},
+    {id: Indicators.LostCustomer, title: "Lost customer", tab: "3"},
+    {id: Indicators.UrgencyFlag, title: "Urgency Flag", tab: "2"},
+    {id: Indicators.EndOfWarranty, title: "End of Warranty", tab: "4"},
+    {id: Indicators.CustomerLifetimeLow, title: "Customer Lifetime: Low", tab: "1"},
+    {id: Indicators.CustomerLifetimeHigh, title: "Customer Lifetime: High", tab: "1"},
 ];
 const blankRow: IValueSettings = {
     point: 0,
@@ -81,6 +82,7 @@ type TRowProps = {
     onSwitch: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
     onSlide: (e: React.ChangeEvent<{}>, val: number | number[]) => void;
     onEdit: () => void;
+    onTabChange: () => void
     onCancel: () => void;
     onSave: () => void;
 }
@@ -111,7 +113,7 @@ const Row: React.FC<TRowProps> = props => {
         </TableCell>
         <TableCell align="right">
             {props.isNotSet
-                ? <Button color="primary">
+                ? <Button color="primary" onClick={props.onTabChange}>
                     Adjust the value
                 </Button>
                 : !props.editing
@@ -139,8 +141,8 @@ const Row: React.FC<TRowProps> = props => {
         </TableCell>
     </TableRow>
 }
-
-export const ValueIndicators = () => {
+type TProps = {onTabChange?: (e: any, idx: string) => void}
+export const ValueIndicators = ({onTabChange}: TProps) => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const [valuesData, configuredValues] = useSelector((state: RootState) => [
@@ -170,6 +172,12 @@ export const ValueIndicators = () => {
             dispatch(loadValueSettings(selectedSC.id));
         }
     }, [selectedSC, dispatch]);
+
+    const handleTabChange = useCallback((idx: string) => (): void => {
+        if (onTabChange) {
+            onTabChange(null, idx);
+        }
+    }, [onTabChange])
 
     const handleChange = (_: any, val: number | number[]) => {
         if (editItem) {
@@ -223,6 +231,7 @@ export const ValueIndicators = () => {
                         rowData={row}
                         loading={loading}
                         isNotSet={!configuredValues.includes(Number(row.id))}
+                        onTabChange={handleTabChange(row.tab)}
                         key={row.id}
                         editing={Boolean(editItem && editItem.type === row.id)}
                         disabled={editItem === null || editItem.type !== row.id}
