@@ -25,6 +25,10 @@ export interface IValueSettings {
     state: number;
     serviceCenterId: number;
 }
+export interface IValueSettingsResponse {
+    items: IValueSettings[],
+    leversToConfiguration: number[]
+}
 
 export enum Indicators {
     NewCustomer,

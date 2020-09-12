@@ -1,5 +1,12 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICustomerLifetime, ICustomerLifetimeForm, IEndOfWarranty, INewLostCustomer, IValueSettings} from "./types";
+import {
+    ICustomerLifetime,
+    ICustomerLifetimeForm,
+    IEndOfWarranty,
+    INewLostCustomer,
+    IValueSettings,
+    IValueSettingsResponse
+} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -65,9 +72,15 @@ export const setEndOfWarranty = (data: IEndOfWarranty): AppThunk => async dispat
 }
 
 export const loadValueSettings = (serviceCenterId: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<IValueSettings[]>(
+    const {data} = await Api.call<IValueSettingsResponse>(
         Api.endpoints.ValueSettings.GetValue,
         {params: {serviceCenterId}}
     );
-    dispatch(getValueSettings(data));
+    dispatch(getValueSettings(data.items));
+}
+export const setValueSettings = (data: IValueSettings): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.ValueSettings.SetValue, {data}
+    );
+    await dispatch(loadValueSettings(data.serviceCenterId));
 }

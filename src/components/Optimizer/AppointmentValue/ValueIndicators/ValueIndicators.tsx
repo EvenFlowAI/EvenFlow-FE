@@ -9,10 +9,13 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
-import {useDispatch} from "react-redux";
-import {loadValueSettings} from "../../../../store/reducers/valueSettings/actions";
-import {useSCs} from "../../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {loadValueSettings, setValueSettings} from "../../../../store/reducers/valueSettings/actions";
+import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {Indicators, IValueSettings} from "../../../../store/reducers/valueSettings/types";
+import {SC_UNDEFINED} from "../../../../config/constants";
+import {LoadingButton} from "../../../UI/Button";
+import {RootState} from "../../../../store/rootReducer";
 
 
 enum SliderRange {
@@ -62,6 +65,7 @@ const columns: TColumn[] = [
 type TRowProps = {
     rowData: TRow;
     value: IValueSettings;
+    loading: boolean;
     disabled: boolean;
     editing: boolean;
     onSwitch: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
@@ -108,12 +112,13 @@ const Row: React.FC<TRowProps> = props => {
                     >
                         Cancel
                     </Button>
-                    <Button
+                    <LoadingButton
+                        loading={props.loading}
                         color="primary"
                         onClick={props.onSave}
                     >
                         Save
-                    </Button>
+                    </LoadingButton>
                 </>
             }
         </TableCell>
@@ -123,11 +128,24 @@ const Row: React.FC<TRowProps> = props => {
 export const ValueIndicators = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const valuesData = useSelector((state: RootState) => state.valueSettings.valueSettings);
+
+    const showError = useException();
+    const showMessage = useMessage();
+    const [loading, setLoading] = useState<boolean>(false);
     const [editItem, setEditItem] = useState<IValueSettings|null>(null);
 
     const data: TData = useMemo(() => {
-        return initialData;
-    }, []);
+        if (!valuesData.length) {
+            return initialData;
+        } else {
+            return rows.reduce((acc, row) => {
+                acc[row.id] = valuesData.find(el => el.type === row.id)
+                    || {...blankRow, type: row.id};
+                return acc;
+            }, {} as TData);
+        }
+    }, [valuesData]);
 
     useEffect(() => {
         if (selectedSC) {
@@ -149,8 +167,26 @@ export const ValueIndicators = () => {
     const handleEdit = (i: Indicators) => () => {
         setEditItem({...data[i]});
     }
-    const handleSave = () => {
-
+    const handleSave = async () => {
+        if (!selectedSC) {
+            showError(SC_UNDEFINED);
+        } else if (!editItem) {
+            showError("No changes found");
+        } else {
+            const data: IValueSettings = {
+                ...editItem, serviceCenterId: selectedSC.id
+            }
+            try {
+                setLoading(true);
+                await dispatch(setValueSettings(data));
+                setLoading(false);
+                showMessage("Saved");
+                setEditItem(null);
+            } catch (e) {
+                setLoading(false);
+                showError(e);
+            }
+        }
     }
 
     return <div>
@@ -167,6 +203,7 @@ export const ValueIndicators = () => {
                     return <Row
                         value={editItem && editItem.type === row.id ? editItem : data[row.id]}
                         rowData={row}
+                        loading={loading}
                         key={row.id}
                         editing={Boolean(editItem && editItem.type === row.id)}
                         disabled={editItem === null || editItem.type !== row.id}
