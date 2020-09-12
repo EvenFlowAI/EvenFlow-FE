@@ -14,6 +14,7 @@ export const getCustomerLifetimes = createAction<ICustomerLifetime|undefined>("V
 export const getNewLostCustomers = createAction<INewLostCustomer[]>("Value/NewLostCustomer");
 export const getEndOfWarranty = createAction<IEndOfWarranty|undefined>("Value/EndOfWarranty");
 export const getValueSettings = createAction<IValueSettings[]>("Value/Settings");
+export const getConfiguredValues = createAction<number[]>("Value/ConfiguredValues");
 export const loadCustomerLifetimes = (serviceCenterId: number): AppThunk => async dispatch => {
     try {
         const {data} = await Api.call<ICustomerLifetime>(
@@ -77,6 +78,7 @@ export const loadValueSettings = (serviceCenterId: number): AppThunk => async di
         {params: {serviceCenterId}}
     );
     dispatch(getValueSettings(data.items));
+    dispatch(getConfiguredValues(data.leversToConfiguration));
 }
 export const setValueSettings = (data: IValueSettings): AppThunk => async dispatch => {
     await Api.call(

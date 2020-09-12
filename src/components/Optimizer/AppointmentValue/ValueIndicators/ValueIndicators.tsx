@@ -1,21 +1,30 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../UI";
 import {
-    Button,
+    Button as DefaultButton, CircularProgress,
     Switch,
     TableBody,
     TableCell,
     TableCellProps,
     TableHead,
-    TableRow
+    TableRow, withStyles
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {loadValueSettings, setValueSettings} from "../../../../store/reducers/valueSettings/actions";
 import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {Indicators, IValueSettings} from "../../../../store/reducers/valueSettings/types";
 import {SC_UNDEFINED} from "../../../../config/constants";
-import {LoadingButton} from "../../../UI/Button";
 import {RootState} from "../../../../store/rootReducer";
+
+const Button = withStyles({
+    root: {
+        fontSize: 14,
+        textTransform: "none",
+        minWidth: 0,
+        padding: "4px 2px",
+        marginLeft: 8
+    }
+})(DefaultButton);
 
 
 enum SliderRange {
@@ -60,12 +69,13 @@ const columns: TColumn[] = [
     {label: "Value Lever", id: 0, width: "25%"},
     {label: "Optimization Settings", id: 1, width: "auto"},
     {label: "OFF/ON", id: 2, width: "10%"},
-    {label: "", id: 3, width: "20%", cellProps: {align: "right"}}
+    {label: "", id: 3, width: "15%", cellProps: {align: "right"}}
 ]
 type TRowProps = {
     rowData: TRow;
     value: IValueSettings;
     loading: boolean;
+    isNotSet: boolean;
     disabled: boolean;
     editing: boolean;
     onSwitch: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
@@ -94,31 +104,36 @@ const Row: React.FC<TRowProps> = props => {
         <TableCell>
             <Switch
                 color="primary"
+                disabled={props.isNotSet}
                 onChange={props.onSwitch}
                 checked={Boolean(props.value.state)}
             />
         </TableCell>
         <TableCell align="right">
-            {!props.editing
+            {props.isNotSet
+                ? <Button color="primary">
+                    Adjust the value
+                </Button>
+                : !props.editing
                 ? <Button
                     color="primary"
                     onClick={props.onEdit}
                 >
                     Edit
                 </Button>
-                : <>
+                : props.loading ? <CircularProgress /> : <>
                     <Button
+                        color="secondary"
                         onClick={props.onCancel}
                     >
                         Cancel
                     </Button>
-                    <LoadingButton
-                        loading={props.loading}
+                    <Button
                         color="primary"
                         onClick={props.onSave}
                     >
                         Save
-                    </LoadingButton>
+                    </Button>
                 </>
             }
         </TableCell>
@@ -128,7 +143,10 @@ const Row: React.FC<TRowProps> = props => {
 export const ValueIndicators = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
-    const valuesData = useSelector((state: RootState) => state.valueSettings.valueSettings);
+    const [valuesData, configuredValues] = useSelector((state: RootState) => [
+        state.valueSettings.valueSettings,
+        state.valueSettings.configuredValues
+    ]);
 
     const showError = useException();
     const showMessage = useMessage();
@@ -204,6 +222,7 @@ export const ValueIndicators = () => {
                         value={editItem && editItem.type === row.id ? editItem : data[row.id]}
                         rowData={row}
                         loading={loading}
+                        isNotSet={!configuredValues.includes(Number(row.id))}
                         key={row.id}
                         editing={Boolean(editItem && editItem.type === row.id)}
                         disabled={editItem === null || editItem.type !== row.id}
