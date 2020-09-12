@@ -31,5 +31,6 @@ export enum Indicators {
     LostCustomer,
     UrgencyFlag,
     EndOfWarranty,
-    CustomerLifetimeValue
+    CustomerLifetimeLow,
+    CustomerLifetimeHigh
 }

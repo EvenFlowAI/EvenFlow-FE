@@ -21,22 +21,7 @@ enum SliderRange {
 }
 
 type TForm = {
-    [K in Indicators]: IValueSettings & {editing: boolean};
-}
-const blankRow: IValueSettings & {editing: boolean} = {
-    point: 0,
-    serviceCenterId: 0,
-    editing: false,
-    state: 0,
-    type: Indicators.NewCustomer
-}
-const initialForm: TForm = Object.values(Indicators).reduce((acc, i) => {
-    return {...acc, [i]: {...blankRow, type: i}};
-}, {} as TForm);
-
-
-type TData = {
-    [K in Indicators]: string
+    [K in Indicators]: IValueSettings;
 }
 
 type TColumn = {
@@ -46,24 +31,101 @@ type TColumn = {
     cellProps?: TableCellProps;
 }
 
-const data: TData = {
-    [Indicators.NewCustomer]: "New customer",
-    [Indicators.LostCustomer]: "Lost customer",
-    [Indicators.UrgencyFlag]: "Urgency Flag",
-    [Indicators.EndOfWarranty]: "End of Warranty",
-    [Indicators.CustomerLifetimeValue]: "Customer Lifetime Value"
-};
+type TRow = {
+    id: Indicators;
+    title: string;
+}
+
+const data: TRow[] = [
+    {id: Indicators.NewCustomer, title: "New customer"},
+    {id: Indicators.LostCustomer, title: "Lost customer"},
+    {id: Indicators.UrgencyFlag, title: "Urgency Flag"},
+    {id: Indicators.EndOfWarranty, title: "End of Warranty"},
+    {id: Indicators.CustomerLifetimeLow, title: "Customer Lifetime: Low"},
+    {id: Indicators.CustomerLifetimeHigh, title: "Customer Lifetime: High"},
+];
+const blankRow: IValueSettings = {
+    point: 0,
+    serviceCenterId: 0,
+    state: 0,
+    type: Indicators.NewCustomer
+}
+const initialForm: TForm = data.reduce((acc, i) => {
+    return {...acc, [i.id]: {...blankRow, type: i.id}};
+}, {} as TForm);
+
 const columns: TColumn[] = [
     {label: "Value Lever", id: 0, width: "25%"},
     {label: "Optimization Settings", id: 1, width: "auto"},
     {label: "OFF/ON", id: 2, width: "10%"},
     {label: "", id: 3, width: "20%", cellProps: {align: "right"}}
 ]
+type TRowProps = {
+    rowData: TRow;
+    value: IValueSettings;
+    disabled: boolean;
+    onSwitch: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+    onSlide: (e: React.ChangeEvent<{}>, val: number | number[]) => void;
+    onEdit: () => void;
+    onCancel: () => void;
+    onSave: () => void;
+}
+const Row: React.FC<TRowProps> = props => {
+    return <TableRow>
+        <TableCell>{props.rowData.title}</TableCell>
+        <TableCell>
+            <ValueSlider
+                min={SliderRange.Min}
+                max={SliderRange.Max}
+                onChange={props.onSlide}
+                disabled={props.disabled}
+                marks={[
+                    {value: SliderRange.Min, label: SliderRange.Min},
+                    {value: SliderRange.Max, label: SliderRange.Max}
+                ]}
+                valueLabelDisplay="on"
+                value={props.value.point}
+            />
+        </TableCell>
+        <TableCell>
+            <Switch
+                color="primary"
+                onChange={props.onSwitch}
+                checked={Boolean(props.value.state)}
+            />
+        </TableCell>
+        <TableCell align="right">
+            {props.disabled
+                ? <Button
+                    color="primary"
+                    onClick={props.onEdit}
+                >
+                    Edit
+                </Button>
+                : <>
+                    <Button
+                        onClick={props.onCancel}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        color="primary"
+                        onClick={props.onSave}
+                    >
+                        Save
+                    </Button>
+                </>
+            }
+        </TableCell>
+
+    </TableRow>
+}
 
 export const ValueIndicators = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const [form, setForm] = useState<TForm>(initialForm);
+    const [editItem, setEditItem] = useState<IValueSettings|null>(null);
 
     useEffect(() => {
         if (selectedSC) {
@@ -71,17 +133,22 @@ export const ValueIndicators = () => {
         }
     }, [selectedSC, dispatch]);
 
-    const handleChange = (i: Indicators) => (_: any, val: number | number[]) => {
-        setForm({...form, [i]: {...form[i], point: val as number} as IValueSettings});
+    const handleChange = (_: any, val: number | number[]) => {
+        if (editItem) {
+            setEditItem({...editItem, point: val as number});
+        }
     }
     const handleSwitch = (i: Indicators) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        setForm({...form, [i]: {...form[i], state: Number(checked)} as IValueSettings});
+        setEditItem({...form[i], state: Number(checked)});
     }
-    const handleEdit = (i: Indicators, checked: boolean) => () => {
-        setForm({...form, [i]: {...form[i], editing: checked}});
+    const handleCancel = () => {
+        setEditItem(null);
     }
-    const handleSave = (i: Indicators) => () => {
-        handleEdit(i, false)();
+    const handleEdit = (i: Indicators) => () => {
+        setEditItem({...form[i]});
+    }
+    const handleSave = () => {
+
     }
 
     return <div>
@@ -94,58 +161,18 @@ export const ValueIndicators = () => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {Object.values(Indicators).map((idx: string|Indicators) => {
-                    if (typeof idx === "string") return null;
-                    return <TableRow key={idx}>
-                        <TableCell>{data[idx]}</TableCell>
-                        <TableCell>
-                            <ValueSlider
-                                min={SliderRange.Min}
-                                max={SliderRange.Max}
-                                onChange={
-                                    form[idx].editing ?
-                                    handleChange(idx) : noop
-                                }
-                                disabled={!form[idx].state}
-                                marks={[
-                                    {value: SliderRange.Min, label: SliderRange.Min},
-                                    {value: SliderRange.Max, label: SliderRange.Max}
-                                ]}
-                                valueLabelDisplay="on"
-                                value={form[idx].point}
-                            />
-                        </TableCell>
-                        <TableCell>
-                            <Switch
-                                color="primary"
-                                onChange={handleSwitch(idx)}
-                                checked={Boolean(form[idx].state)}
-                            />
-                        </TableCell>
-                        <TableCell align="right">
-                            {!form[idx].editing
-                                ? <Button
-                                    color="primary"
-                                    onClick={handleEdit(idx, true)}
-                                >
-                                    Edit
-                                </Button>
-                                : <>
-                                    <Button
-                                        onClick={handleEdit(idx, false)}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        color="primary"
-                                        onClick={handleSave(idx)}
-                                    >
-                                        Save
-                                    </Button>
-                                </>
-                            }
-                        </TableCell>
-                    </TableRow>
+                {data.map((row) => {
+                    return <Row
+                        value={editItem && editItem.type === row.id ? editItem : form[row.id]}
+                        rowData={row}
+                        key={row.id}
+                        disabled={editItem === null || editItem.type !== row.id}
+                        onSwitch={handleSwitch(row.id)}
+                        onCancel={handleCancel}
+                        onSlide={handleChange}
+                        onEdit={handleEdit(row.id)}
+                        onSave={handleSave}
+                    />
                 })}
             </TableBody>
         </AppointmentTable>
