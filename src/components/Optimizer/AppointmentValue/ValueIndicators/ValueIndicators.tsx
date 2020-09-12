@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../UI";
 import {
     Button,
@@ -13,14 +13,13 @@ import {useDispatch} from "react-redux";
 import {loadValueSettings} from "../../../../store/reducers/valueSettings/actions";
 import {useSCs} from "../../../../utils/hooks";
 import {Indicators, IValueSettings} from "../../../../store/reducers/valueSettings/types";
-import {noop} from "../../../../utils/utils";
 
 
 enum SliderRange {
     Max= 10, Min= -10
 }
 
-type TForm = {
+type TData = {
     [K in Indicators]: IValueSettings;
 }
 
@@ -36,7 +35,7 @@ type TRow = {
     title: string;
 }
 
-const data: TRow[] = [
+const rows: TRow[] = [
     {id: Indicators.NewCustomer, title: "New customer"},
     {id: Indicators.LostCustomer, title: "Lost customer"},
     {id: Indicators.UrgencyFlag, title: "Urgency Flag"},
@@ -50,9 +49,9 @@ const blankRow: IValueSettings = {
     state: 0,
     type: Indicators.NewCustomer
 }
-const initialForm: TForm = data.reduce((acc, i) => {
+const initialData: TData = rows.reduce((acc, i) => {
     return {...acc, [i.id]: {...blankRow, type: i.id}};
-}, {} as TForm);
+}, {} as TData);
 
 const columns: TColumn[] = [
     {label: "Value Lever", id: 0, width: "25%"},
@@ -64,6 +63,7 @@ type TRowProps = {
     rowData: TRow;
     value: IValueSettings;
     disabled: boolean;
+    editing: boolean;
     onSwitch: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
     onSlide: (e: React.ChangeEvent<{}>, val: number | number[]) => void;
     onEdit: () => void;
@@ -95,7 +95,7 @@ const Row: React.FC<TRowProps> = props => {
             />
         </TableCell>
         <TableCell align="right">
-            {props.disabled
+            {!props.editing
                 ? <Button
                     color="primary"
                     onClick={props.onEdit}
@@ -117,15 +117,17 @@ const Row: React.FC<TRowProps> = props => {
                 </>
             }
         </TableCell>
-
     </TableRow>
 }
 
 export const ValueIndicators = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
-    const [form, setForm] = useState<TForm>(initialForm);
     const [editItem, setEditItem] = useState<IValueSettings|null>(null);
+
+    const data: TData = useMemo(() => {
+        return initialData;
+    }, []);
 
     useEffect(() => {
         if (selectedSC) {
@@ -139,13 +141,13 @@ export const ValueIndicators = () => {
         }
     }
     const handleSwitch = (i: Indicators) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        setEditItem({...form[i], state: Number(checked)});
+        setEditItem({...data[i], state: Number(checked)});
     }
     const handleCancel = () => {
         setEditItem(null);
     }
     const handleEdit = (i: Indicators) => () => {
-        setEditItem({...form[i]});
+        setEditItem({...data[i]});
     }
     const handleSave = () => {
 
@@ -161,11 +163,12 @@ export const ValueIndicators = () => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {data.map((row) => {
+                {rows.map((row) => {
                     return <Row
-                        value={editItem && editItem.type === row.id ? editItem : form[row.id]}
+                        value={editItem && editItem.type === row.id ? editItem : data[row.id]}
                         rowData={row}
                         key={row.id}
+                        editing={Boolean(editItem && editItem.type === row.id)}
                         disabled={editItem === null || editItem.type !== row.id}
                         onSwitch={handleSwitch(row.id)}
                         onCancel={handleCancel}
