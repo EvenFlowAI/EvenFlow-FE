@@ -107,7 +107,10 @@ type ApiRoutes = {
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks", TApiRoute>,
-    ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered" | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides" | "GetAssignedOverrides" | "AssignMultiple" | "GetShort" | "EditSkills" | "Prioritize", TApiRoute>,
+    ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
+        | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
+        | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
+        | "EditSkills" | "Prioritize", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
@@ -188,6 +191,7 @@ export class Api {
             EditOverrides: {route: "/service-requests/overrides/{id}", method: "put"},
             GetSROverrides: {route: "/service-requests/overrides/{id}", method: "get"},
             GetAssignedOverrides: {route: "/service-requests/overrides", method: "get"},
+            RemoveOverride: {route: "/service-request/overrides/{id}", method: "delete"},
             AssignMultiple: {route: "/service-requests/overrides", method: "post"},
             GetShort: {route: "/service-requests/overrides/short-by-query", method: "get"},
             EditSkills: {route: "/service-requests/required-skills", method: "patch"},

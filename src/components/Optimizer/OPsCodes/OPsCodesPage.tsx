@@ -3,7 +3,7 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
@@ -12,6 +12,8 @@ import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/t
 import {Table} from "../../UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {OverrideOPsCodeDialog} from "../../Modals/OPsCodesListDialog/OverrideOPsCodeDialog";
+import {Api} from "../../../config/requests";
+import {SC_UNDEFINED} from "../../../config/constants";
 
 const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code},
@@ -73,12 +75,15 @@ export const OPsCodesPage = () => {
     const {isOpen: isOOpen, onOpen: onOOpen, onClose: onOClose} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showError = useException();
+    const showMessage = useMessage();
     const [serviceRequestsList, isLoading] = useSelector((state: RootState) => [
         state.serviceRequests.assignedList,
         state.serviceRequests.assignedLoading
     ]);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>(undefined);
+    const {askConfirm} = useConfirm();
 
     useEffect(() => {
         if (selectedSC) {
@@ -105,6 +110,31 @@ export const OPsCodesPage = () => {
         setAnchorEl(null);
         onOOpen();
     }
+    const askRemove = () => {
+        setAnchorEl(null);
+        askConfirm({
+            title: "Remove Service Request?",
+            content: `Remove ${editedItem?.serviceRequest.code} from selected?`,
+            onConfirm: handleRemove
+        });
+    }
+    const handleRemove = async () => {
+        if (selectedSC && editedItem) {
+            try {
+                await Api.call(
+                    Api.endpoints.ServiceRequests.RemoveOverride,
+                    {urlParams: {id: editedItem.id}}
+                )
+                setEditedItem(undefined);
+                dispatch(loadAssignedServiceRequests(selectedSC.id));
+                showMessage("Service request removed.")
+            } catch (e) {
+                showError(e);
+            }
+        } else {
+            showError(SC_UNDEFINED);
+        }
+    }
 
     return <>
         <TitleContainer
@@ -130,6 +160,7 @@ export const OPsCodesPage = () => {
         />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleCloseMenu}>
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
         <OPsCodesListDialog open={isOpen} onClose={onClose} />
         <OverrideOPsCodeDialog open={isOOpen} onClose={onOClose} payload={editedItem} />
