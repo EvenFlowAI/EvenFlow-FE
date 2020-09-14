@@ -3,10 +3,10 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {Button, IconButton, Menu, MenuItem, Tooltip} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
-import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
+import {loadAssignedServiceRequests, setAssignedPageData} from "../../../store/reducers/serviceRequests/actions";
 import {TableRowDataType} from "../../UI/types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
@@ -83,19 +83,25 @@ export const OPsCodesPage = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
-    const [serviceRequestsList, isLoading] = useSelector((state: RootState) => [
+    const [serviceRequestsList, isLoading, requestsCount, pageData] = useSelector((state: RootState) => [
         state.serviceRequests.assignedList,
-        state.serviceRequests.assignedLoading
+        state.serviceRequests.assignedLoading,
+        state.serviceRequests.assignedPaging.numberOfRecords,
+        state.serviceRequests.assignedPageData
     ]);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>(undefined);
     const {askConfirm} = useConfirm();
+    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+        (s: RootState) => s.serviceRequests.assignedPageData,
+        setAssignedPageData
+    );
 
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadAssignedServiceRequests(selectedSC.id));
         }
-    }, [selectedSC, dispatch]);
+    }, [selectedSC, dispatch, pageData]);
     const actions = (el: IAssignedServiceRequest) => {
         return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
     }
@@ -161,6 +167,11 @@ export const OPsCodesPage = () => {
             data={serviceRequestsList}
             index="id"
             rowData={tableRow}
+            rowsPerPage={pageSize}
+            page={pageIndex}
+            onChangePage={changePage}
+            onChangeRowsPerPage={changeRowsPerPage}
+            count={requestsCount}
             actions={actions}
             isLoading={isLoading}
         />
