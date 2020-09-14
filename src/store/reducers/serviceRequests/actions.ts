@@ -34,3 +34,10 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThun
         throw e;
     }
 }
+
+export const assignServiceRequests = (serviceRequestIds: number[], serviceCenterId: number): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.ServiceRequests.AssignMultiple, {data: {serviceRequestIds, serviceCenterId}}
+    );
+    dispatch(loadNonSelectedServiceRequests(serviceCenterId));
+}

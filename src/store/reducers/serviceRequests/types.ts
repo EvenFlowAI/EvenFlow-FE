@@ -2,7 +2,7 @@ export interface IServiceRequest {
     id: number;
     code: string;
     description: string;
-    durationInHours: string;
+    durationInHours: number;
     countOfTechnicians: number;
     skillLevelOfTechnicians: number;
     invoiceAmount: number;
