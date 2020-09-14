@@ -1,4 +1,4 @@
-import {IServiceRequest, IServiceRequestNonAddedFilter} from "./types";
+import {IAssignedServiceRequest, IServiceRequest, IServiceRequestNonAddedFilter} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {createReducer} from "@reduxjs/toolkit";
@@ -7,7 +7,12 @@ import {
     setLoadingNonSelected,
     setNonSelectedPageData,
     setNonSelectedPaging,
-    setNonSelectedFilter
+    setNonSelectedFilter,
+    getAssignedServiceRequests,
+    setAssignedLoading,
+    setAssignedPaging,
+    setAssignedPageData,
+    setAssignedFilter,
 } from "./actions";
 
 type TState = {
@@ -15,14 +20,24 @@ type TState = {
     nonSelectedLoading: boolean;
     nonSelectedPaging: IPagingResponse;
     nonSelectedPageData: IPageRequest;
-    nonSelectedFilter: IServiceRequestNonAddedFilter
+    nonSelectedFilter: IServiceRequestNonAddedFilter,
+    assignedList: IAssignedServiceRequest[];
+    assignedLoading: boolean;
+    assignedPaging: IPagingResponse;
+    assignedPageData: IPageRequest;
+    assignedFilter: IServiceRequestNonAddedFilter
 }
 const initialState: TState = {
     nonSelectedList: [],
     nonSelectedLoading: false,
     nonSelectedPaging: {...defaultPaging},
     nonSelectedPageData: {...defaultPageData},
-    nonSelectedFilter: {searchTerm: ""}
+    nonSelectedFilter: {searchTerm: ""},
+    assignedList: [],
+    assignedLoading: false,
+    assignedPaging: {...defaultPaging},
+    assignedPageData: {...defaultPageData},
+    assignedFilter: {searchTerm: ""}
 };
 
 export const serviceRequestsReducer = createReducer(
@@ -41,5 +56,20 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(setNonSelectedFilter, (state, {payload}) => {
             return {...state, nonSelectedFilter: {...state.nonSelectedFilter, ...payload}};
+        })
+        .addCase(getAssignedServiceRequests, (state, {payload}) => {
+            return {...state};
+        })
+        .addCase(setAssignedLoading, (state, {payload}) => {
+            return {...state};
+        })
+        .addCase(setAssignedPaging, (state, {payload}) => {
+            return {...state};
+        })
+        .addCase(setAssignedPageData, (state, {payload}) => {
+            return {...state};
+        })
+        .addCase(setAssignedFilter, (state, {payload}) => {
+            return {...state};
         })
 )

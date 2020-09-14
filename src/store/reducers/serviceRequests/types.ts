@@ -12,3 +12,7 @@ export interface IServiceRequest {
 export interface IServiceRequestNonAddedFilter {
     searchTerm: string;
 }
+
+export interface IAssignedServiceRequest {
+
+}

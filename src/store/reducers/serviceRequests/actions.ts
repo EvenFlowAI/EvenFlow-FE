@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IServiceRequest, IServiceRequestNonAddedFilter} from "./types";
+import {IAssignedServiceRequest, IServiceRequest, IServiceRequestNonAddedFilter} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -40,4 +40,15 @@ export const assignServiceRequests = (serviceRequestIds: number[], serviceCenter
         Api.endpoints.ServiceRequests.AssignMultiple, {data: {serviceRequestIds, serviceCenterId}}
     );
     dispatch(loadNonSelectedServiceRequests(serviceCenterId));
+}
+
+// Assigned Service Requests
+export const getAssignedServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequests/GetAssigned");
+export const setAssignedLoading = createAction<boolean>("ServiceRequests/SetAssignedLoading");
+export const setAssignedPaging = createAction<IPagingResponse>("ServiceRequests/SetAssignedPaging");
+export const setAssignedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetAssignedPageData");
+export const setAssignedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/SetAssignedFilter");
+export const loadAssignedServiceRequests = (serviceCenterId: number): AppThunk =>
+    async (dispatch, getState) => {
+
 }
