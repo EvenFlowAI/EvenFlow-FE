@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem, Tooltip} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -52,22 +52,28 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         header: "Warranty invoice",
         align: "center",
         val: el => <CellData
-            data={"$" + el.serviceRequest.warrantyInvoiceAmount.toString()}
-            override={"$" + el.serviceRequestOverride?.warrantyInvoiceAmount.toString()}
+            prefix="$"
+            data={el.serviceRequest.warrantyInvoiceAmount.toString()}
+            override={el.serviceRequestOverride?.warrantyInvoiceAmount.toString()}
         />
     },
     {
         header: "Regular invoice",
         align: "center",
         val: el => <CellData
-            data={"$" + el.serviceRequest.invoiceAmount.toString()}
-            override={"$" + el.serviceRequestOverride?.invoiceAmount.toString()}
+            prefix="$"
+            data={el.serviceRequest.invoiceAmount.toString()}
+            override={el.serviceRequestOverride?.invoiceAmount.toString()}
         />
     }
 ]
 
-const CellData: React.FC<{data: string; override?: string}> = ({data, override}) => {
-    return <span>{data}</span>;
+const CellData: React.FC<{
+    data: string; override?: string, prefix?: string; suffix?: string;
+}> = ({data, override, prefix, suffix}) => {
+    return override ? <Tooltip title={`${prefix}${data}${suffix}`}>
+        <strong>{prefix}{override}{suffix}</strong>
+    </Tooltip> : <span>{prefix}{data}{suffix}</span>;
 }
 
 export const OPsCodesPage = () => {

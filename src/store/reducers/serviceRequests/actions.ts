@@ -19,6 +19,7 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThun
             {
                 data: {
                     ...nonSelectedPageData, ...nonSelectedFilter,
+                    status: 1, // 1 Means not archived
                     serviceCenterFilter: {
                         isAssigned: false,
                         id: serviceCenterId
