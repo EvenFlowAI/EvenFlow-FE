@@ -1,4 +1,4 @@
-import {IServiceRequest} from "./types";
+import {IServiceRequest, IServiceRequestNonAddedFilter} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {createReducer} from "@reduxjs/toolkit";
@@ -6,7 +6,8 @@ import {
     getNonSelectedServiceRequests,
     setLoadingNonSelected,
     setNonSelectedPageData,
-    setNonSelectedPaging
+    setNonSelectedPaging,
+    setNonSelectedFilter
 } from "./actions";
 
 type TState = {
@@ -14,12 +15,14 @@ type TState = {
     nonSelectedLoading: boolean;
     nonSelectedPaging: IPagingResponse;
     nonSelectedPageData: IPageRequest;
+    nonSelectedFilter: IServiceRequestNonAddedFilter
 }
 const initialState: TState = {
     nonSelectedList: [],
     nonSelectedLoading: false,
     nonSelectedPaging: {...defaultPaging},
-    nonSelectedPageData: {...defaultPageData}
+    nonSelectedPageData: {...defaultPageData},
+    nonSelectedFilter: {searchTerm: ""}
 };
 
 export const serviceRequestsReducer = createReducer(
@@ -35,5 +38,8 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(setNonSelectedPageData, (state, {payload}) => {
             return {...state, nonSelectedPageData: {...state.nonSelectedPageData, ...payload}};
+        })
+        .addCase(setNonSelectedFilter, (state, {payload}) => {
+            return {...state, nonSelectedFilter: {...state.nonSelectedFilter, ...payload}};
         })
 )

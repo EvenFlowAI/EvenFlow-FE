@@ -9,3 +9,6 @@ export interface IServiceRequest {
     warrantyInvoiceAmount: number;
     status: string;
 }
+export interface IServiceRequestNonAddedFilter {
+    searchTerm: string;
+}

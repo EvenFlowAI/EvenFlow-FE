@@ -107,6 +107,7 @@ type ApiRoutes = {
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks", TApiRoute>,
+    ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered" | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides" | "GetAssignedOverrides" | "AssignMultiple" | "GetShort" | "EditSkills" | "Prioritize", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
@@ -175,6 +176,22 @@ export class Api {
             GetBreaks: {route: "/service-centers/{id}/breaks", method: "get"},
             SetBreaks: {route: "/service-centers/{id}/breaks", method: "put"},
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
+        },
+        ServiceRequests: {
+            Create: {route: "/service-requests", method: "post"},
+            Remove: {route: "/service-requests/{id}", method: "delete"},
+            Update: {route: "/service-requests/{id}", method: "put"},
+            Retrieve: {route: "/service-requests/{id}", method: "get"},
+            GetFiltered: {route: "/service-requests/by-query", method: "post"},
+            UpdateStatus: {route: "/service-requests/{id}/status", method: "patch"},
+            CreateOverrides: {route: "/service-requests/{id}/overrides", method: "post"},
+            EditOverrides: {route: "/service-requests/overrides/{id}", method: "put"},
+            GetSROverrides: {route: "/service-requests/overrides/{id}", method: "get"},
+            GetAssignedOverrides: {route: "/service-requests/overrides", method: "get"},
+            AssignMultiple: {route: "/service-requests/overrides", method: "post"},
+            GetShort: {route: "/service-requests/overrides/short-by-query", method: "get"},
+            EditSkills: {route: "/service-requests/required-skills", method: "patch"},
+            Prioritize: {route: "/service-requests/prioritize", method: "patch"}
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},
