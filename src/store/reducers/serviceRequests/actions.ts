@@ -50,5 +50,18 @@ export const setAssignedPageData = createAction<Partial<IPageRequest>>("ServiceR
 export const setAssignedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/SetAssignedFilter");
 export const loadAssignedServiceRequests = (serviceCenterId: number): AppThunk =>
     async (dispatch, getState) => {
-
+    const {assignedPageData, assignedFilter} = getState().serviceRequests;
+    dispatch(setAssignedLoading(true));
+    try {
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequest>>(
+            Api.endpoints.ServiceRequests.GetAssignedOverrides,
+            {params: {...assignedPageData, ...assignedFilter, serviceCenterId}}
+        );
+        dispatch(getAssignedServiceRequests(result));
+        dispatch(setAssignedLoading(false));
+        dispatch(setAssignedPaging(paging));
+    }catch (e) {
+        dispatch(setAssignedLoading(false));
+        throw e;
+    }
 }

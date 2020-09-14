@@ -58,18 +58,18 @@ export const serviceRequestsReducer = createReducer(
             return {...state, nonSelectedFilter: {...state.nonSelectedFilter, ...payload}};
         })
         .addCase(getAssignedServiceRequests, (state, {payload}) => {
-            return {...state};
+            return {...state, assignedList: payload};
         })
         .addCase(setAssignedLoading, (state, {payload}) => {
-            return {...state};
+            return {...state, assignedLoading: payload};
         })
         .addCase(setAssignedPaging, (state, {payload}) => {
-            return {...state};
+            return {...state, assignedPaging: payload};
         })
         .addCase(setAssignedPageData, (state, {payload}) => {
-            return {...state};
+            return {...state, assignedPageData: {...state.assignedPageData, ...payload}};
         })
         .addCase(setAssignedFilter, (state, {payload}) => {
-            return {...state};
+            return {...state, assignedFilter: {...state.assignedFilter, ...payload}};
         })
 )
