@@ -1,7 +1,7 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
-import {Button, IconButton} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
 import {useModal, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +11,7 @@ import {TableRowDataType} from "../../UI/types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
+import {OverrideOPsCodeDialog} from "../../Modals/OPsCodesListDialog/OverrideOPsCodeDialog";
 
 const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code},
@@ -69,12 +70,15 @@ const CellData: React.FC<{data: string; override?: string}> = ({data, override})
 
 export const OPsCodesPage = () => {
     const {isOpen, onOpen, onClose} = useModal();
+    const {isOpen: isOOpen, onOpen: onOOpen, onClose: onOClose} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [serviceRequestsList, isLoading] = useSelector((state: RootState) => [
         state.serviceRequests.assignedList,
         state.serviceRequests.assignedLoading
     ]);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+    const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>(undefined);
 
     useEffect(() => {
         if (selectedSC) {
@@ -82,7 +86,24 @@ export const OPsCodesPage = () => {
         }
     }, [selectedSC, dispatch]);
     const actions = (el: IAssignedServiceRequest) => {
-        return <IconButton><MoreHoriz /></IconButton>
+        return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
+    }
+
+    const handleAddOpsCode = () => {
+        setEditedItem(undefined);
+        onOpen();
+    }
+    const handleOpenMenu = (el: IAssignedServiceRequest) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setEditedItem(el);
+        setAnchorEl(e.currentTarget);
+    }
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+        setEditedItem(undefined);
+    }
+    const handleEdit = () => {
+        setAnchorEl(null);
+        onOOpen();
     }
 
     return <>
@@ -94,7 +115,7 @@ export const OPsCodesPage = () => {
                 <Button
                     color="primary"
                     variant="contained"
-                    onClick={onOpen}
+                    onClick={handleAddOpsCode}
                 >
                     Add Ops Code
                 </Button>
@@ -107,6 +128,10 @@ export const OPsCodesPage = () => {
             actions={actions}
             isLoading={isLoading}
         />
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleCloseMenu}>
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        </Menu>
         <OPsCodesListDialog open={isOpen} onClose={onClose} />
+        <OverrideOPsCodeDialog open={isOOpen} onClose={onOClose} payload={editedItem} />
     </>;
 }
