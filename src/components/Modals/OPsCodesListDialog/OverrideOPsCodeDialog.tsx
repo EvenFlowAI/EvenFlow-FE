@@ -140,6 +140,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                     <TextField
                         fullWidth
                         label="Warranty invoice"
+                        startAdornment="$"
                         name="warrantyInvoiceAmount"
                         id="warrantyInvoiceAmount"
                         autoComplete="warranty-invoice-amount invoice-amount"
@@ -153,6 +154,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
+                        startAdornment="$"
                         label="Invoice Amount"
                         name="invoiceAmount"
                         id="invoiceAmount"

@@ -54,26 +54,36 @@ const themeOptions: ThemeOptions = {
     palette: colors,
 };
 const input = {
-    border: '1px solid #DADADA',
+    border: "none",
     padding: 11,
     fontSize: 14,
-    backgroundColor: "#F7F8FB",
-    fontWeight: "bold" as const,
+    background: "transparent",
+    // fontWeight: "bold" as const,
 }
 const theme = createMuiTheme(themeOptions);
 theme.overrides = {
     ...theme.overrides,
     MuiInputBase: {
-        input: {
-            ...input,
+        root: {
+            backgroundColor: "#F7F8FB",
+            border: '1px solid #DADADA',
+            "&.MuiInputBase-adornedStart": {
+                paddingLeft: 8
+            },
+            "&.MuiInputBase-adornedEnd": {
+                paddingRight: 8
+            },
             "&.Mui-disabled": {
                 background: "#F7F8FB"
             },
             transition: theme.transitions.create(['border-color']),
-            '&:focus': {
+            '&.Mui-focused': {
             //     boxShadow: `${fade(theme.palette.grey.A400, 0.25)} 0 0 0 0.2rem`,
                 borderColor: theme.palette.grey.A200
             },
+        },
+        input: {
+            ...input,
         }
     },
     MuiButton: {
