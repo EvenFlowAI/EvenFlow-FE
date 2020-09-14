@@ -22,7 +22,7 @@ export interface IServiceRequestOverride {
     warrantyInvoiceAmount: number;
 }
 export interface IServiceRequestOverrideEditRequest {
-    serviceRequestInfo: IServiceRequestOverride;
+    serviceRequestInfo: Partial<IServiceRequestOverride>;
 }
 
 export interface IRequiredSkill {
@@ -35,7 +35,7 @@ export interface IAssignedServiceRequest {
     serviceRequest: IServiceRequest;
     serviceRequestId: number;
     serviceCenterId: number;
-    serviceRequestOverride?: IServiceRequestOverride;
+    serviceRequestOverride?: Partial<IServiceRequestOverride>;
     priority: string;
     requiredSkill: IRequiredSkill;
 }

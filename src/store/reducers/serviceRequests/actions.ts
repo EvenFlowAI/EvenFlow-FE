@@ -1,5 +1,10 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IAssignedServiceRequest, IServiceRequest, IServiceRequestNonAddedFilter} from "./types";
+import {
+    IAssignedServiceRequest,
+    IServiceRequest,
+    IServiceRequestNonAddedFilter,
+    IServiceRequestOverrideEditRequest
+} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -65,5 +70,14 @@ export const loadAssignedServiceRequests = (serviceCenterId: number): AppThunk =
     }catch (e) {
         dispatch(setAssignedLoading(false));
         throw e;
+    }
+}
+export const updateAssignedServiceRequest = (
+    data: IServiceRequestOverrideEditRequest, id: number, serviceCenterId?: number,
+): AppThunk =>
+    async dispatch => {
+    await Api.call(Api.endpoints.ServiceRequests.EditOverrides, {data, urlParams: {id}});
+    if (serviceCenterId) {
+        dispatch(loadAssignedServiceRequests(serviceCenterId));
     }
 }

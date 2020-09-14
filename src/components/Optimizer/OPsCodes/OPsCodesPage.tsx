@@ -29,7 +29,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.durationInHours.toFixed(1)}
-            override={el.serviceRequestOverride?.durationInHours.toFixed(1)}
+            override={el.serviceRequestOverride?.durationInHours?.toFixed(1)}
         />
     },
     {
@@ -37,7 +37,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.countOfTechnicians.toString()}
-            override={el.serviceRequestOverride?.countOfTechnicians.toString()}
+            override={el.serviceRequestOverride?.countOfTechnicians?.toString()}
         />
     },
     {
@@ -45,7 +45,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.skillLevelOfTechnicians.toString()}
-            override={el.serviceRequestOverride?.skillLevelOfTechnicians.toString()}
+            override={el.serviceRequestOverride?.skillLevelOfTechnicians?.toString()}
         />
     },
     {
@@ -54,7 +54,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         val: el => <CellData
             prefix="$"
             data={el.serviceRequest.warrantyInvoiceAmount.toString()}
-            override={el.serviceRequestOverride?.warrantyInvoiceAmount.toString()}
+            override={el.serviceRequestOverride?.warrantyInvoiceAmount?.toString()}
         />
     },
     {
@@ -63,7 +63,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         val: el => <CellData
             prefix="$"
             data={el.serviceRequest.invoiceAmount.toString()}
-            override={el.serviceRequestOverride?.invoiceAmount.toString()}
+            override={el.serviceRequestOverride?.invoiceAmount?.toString()}
         />
     }
 ]
@@ -71,8 +71,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
 const CellData: React.FC<{
     data: string; override?: string, prefix?: string; suffix?: string;
 }> = ({data, override, prefix, suffix}) => {
-    return override ? <Tooltip title={`${prefix}${data}${suffix}`}>
-        <strong>{prefix}{override}{suffix}</strong>
+    return override ? <Tooltip placement="top" title={`${prefix || ""}${data}${suffix || ""}`}>
+        <strong style={{cursor: "pointer", userSelect: "none"}}>{prefix}{override}{suffix}</strong>
     </Tooltip> : <span>{prefix}{data}{suffix}</span>;
 }
 

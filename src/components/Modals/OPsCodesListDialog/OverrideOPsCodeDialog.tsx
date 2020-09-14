@@ -1,11 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
-import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import {
+    IAssignedServiceRequest, IServiceRequestOverride,
+    IServiceRequestOverrideEditRequest
+} from "../../../store/reducers/serviceRequests/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Grid} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage} from "../../../utils/hooks";
+import {useDispatch} from "react-redux";
+import {updateAssignedServiceRequest} from "../../../store/reducers/serviceRequests/actions";
 
 
 type TForm = {
@@ -20,7 +25,7 @@ const initialForm: TForm = {
     description: "",
     durationInHours: "",
     countOfTechnicians: "",
-    skillLevelOfTechnicians: 1,
+    skillLevelOfTechnicians: 0,
     invoiceAmount: "",
     warrantyInvoiceAmount: "",
 };
@@ -29,18 +34,19 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
     const [isLoading, setLoading] = useState<boolean>(false);
     const showMessage = useMessage();
     const showError = useException();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (props.open && payload?.serviceRequestOverride) {
             const override = payload.serviceRequestOverride
             setForm({
                 ...initialForm,
-                description: override.description,
-                countOfTechnicians: override.countOfTechnicians.toString(),
-                durationInHours: override.durationInHours.toString(),
-                invoiceAmount: override.invoiceAmount.toString(),
-                warrantyInvoiceAmount: override.warrantyInvoiceAmount.toString(),
-                skillLevelOfTechnicians: override.skillLevelOfTechnicians
+                description: override?.description || "",
+                countOfTechnicians: override?.countOfTechnicians?.toString() || "",
+                durationInHours: override?.durationInHours?.toString() || "",
+                invoiceAmount: override?.invoiceAmount?.toString() || "",
+                warrantyInvoiceAmount: override?.warrantyInvoiceAmount?.toString() || "",
+                skillLevelOfTechnicians: override?.skillLevelOfTechnicians || 0
             })
         }
     }, [payload, props.open])
@@ -48,11 +54,33 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     }
-    const handleSave = () => {
-        setLoading(true);
-        setLoading(false);
-        showMessage("Saved");
-        props.onClose();
+    const handleSave = async () => {
+        if (!payload) {
+            showError("Data is not loaded");
+        } else {
+            setLoading(true);
+            try {
+                const {description, ...f} = form;
+                const data: IServiceRequestOverrideEditRequest = {
+                    serviceRequestInfo: {
+                        description,
+                        ...Object.entries(f).reduce( (acc, e) =>
+                            ({...acc, [e[0]]: e[1] ? Number(e[1]) : undefined})
+                        , {} as Partial<IServiceRequestOverride>)
+                    }
+                }
+                await dispatch(updateAssignedServiceRequest(
+                    data,
+                    payload.id,
+                    payload.serviceCenterId
+                ));
+                setLoading(false);
+                showMessage("Saved");
+                props.onClose();
+            } catch (e) {
+                showError(e);
+            }
+        }
     }
 
     return <BaseModal {...props} maxWidth="xs">
