@@ -11,6 +11,7 @@ import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {updateAssignedServiceRequest} from "../../../store/reducers/serviceRequests/actions";
+import {ToggleButtons} from "../../UI/ToggleButtons";
 
 
 type TForm = {
@@ -54,6 +55,9 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     }
+    const handleLevelChange = (e: any, val: number) => {
+        setForm({...form, skillLevelOfTechnicians: val});
+    }
     const handleSave = async () => {
         if (!payload) {
             showError("Data is not loaded");
@@ -86,7 +90,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
     return <BaseModal {...props} maxWidth="xs">
         <DialogTitle onClose={props.onClose}>Edit Service Request</DialogTitle>
         <DialogContent>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} alignItems="flex-end">
                 <Grid item xs={12}>
                     <TextField
                         label="Service Ops Code name"
@@ -135,7 +139,19 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         inputProps={{min: 1}}
                     />
                 </Grid>
-
+                <Grid item xs={12}>
+                    <ToggleButtons
+                        value={form.skillLevelOfTechnicians}
+                        label="Technician level"
+                        buttons={[
+                            {id: "1", label: "1", value: 1},
+                            {id: "2", label: "2", value: 2},
+                            {id: "3", label: "3", value: 3}
+                        ]}
+                        exclusive
+                        onChange={handleLevelChange}
+                    />
+                </Grid>
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
