@@ -107,6 +107,63 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         onChange={handleChange}
                     />
                 </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Duration (hours)"
+                        name="durationInHours"
+                        id="durationInHours"
+                        autoComplete="duration-number duration"
+                        value={form.durationInHours}
+                        placeholder={payload ? String(payload.serviceRequest.durationInHours) : ""}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{min: .5, step: .5}}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Number of technicians"
+                        name="countOfTechnicians"
+                        id="countOfTechnicians"
+                        autoComplete="technicians-count"
+                        value={form.countOfTechnicians}
+                        placeholder={payload ? String(payload.serviceRequest.countOfTechnicians) : ""}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{min: 1}}
+                    />
+                </Grid>
+
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Warranty invoice"
+                        name="warrantyInvoiceAmount"
+                        id="warrantyInvoiceAmount"
+                        autoComplete="warranty-invoice-amount invoice-amount"
+                        value={form.warrantyInvoiceAmount}
+                        placeholder={payload ? String(payload.serviceRequest.warrantyInvoiceAmount) : ""}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{min: 1}}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Invoice Amount"
+                        name="invoiceAmount"
+                        id="invoiceAmount"
+                        autoComplete="invoice-amount"
+                        value={form.invoiceAmount}
+                        placeholder={payload ? String(payload.serviceRequest.invoiceAmount) : ""}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{min: 1}}
+                    />
+                </Grid>
             </Grid>
         </DialogContent>
         <DialogActions>
