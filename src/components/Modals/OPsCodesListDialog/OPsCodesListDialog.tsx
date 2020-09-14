@@ -4,8 +4,12 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {Button, Checkbox} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {assignServiceRequests, loadNonSelectedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {
+    assignServiceRequests,
+    loadNonSelectedServiceRequests,
+    setNonSelectedPageData
+} from "../../../store/reducers/serviceRequests/actions";
+import {useException, useMessage, usePagination, useSCs} from "../../../utils/hooks";
 import {TableRowDataType} from "../../UI/types";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
@@ -24,10 +28,15 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
     const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
-    const [serviceList, isLoading] = useSelector((state: RootState) => [
+    const [serviceList, isLoading, servicesCount] = useSelector((state: RootState) => [
         state.serviceRequests.nonSelectedList,
-        state.serviceRequests.nonSelectedLoading
+        state.serviceRequests.nonSelectedLoading,
+        state.serviceRequests.nonSelectedPaging.numberOfRecords
     ]);
+    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+        (s: RootState) => s.serviceRequests.nonSelectedPageData,
+        setNonSelectedPageData
+    );
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<number[]>([]);
 
@@ -35,7 +44,7 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
         if (props.open && selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
         }
-    }, [props.open, dispatch, selectedSC]);
+    }, [props.open, dispatch, selectedSC, pageSize, pageSize]);
 
     const handleCheck = (el: IServiceRequest) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         if (checked) {
@@ -76,6 +85,11 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
                 compact
                 rowData={tableData}
                 isLoading={isLoading}
+                page={pageIndex}
+                rowsPerPage={pageSize}
+                onChangePage={changePage}
+                onChangeRowsPerPage={changeRowsPerPage}
+                count={servicesCount}
             />
         </DialogContent>
         <DialogActions>
