@@ -40,6 +40,7 @@ export const assignServiceRequests = (serviceRequestIds: number[], serviceCenter
         Api.endpoints.ServiceRequests.AssignMultiple, {data: {serviceRequestIds, serviceCenterId}}
     );
     dispatch(loadNonSelectedServiceRequests(serviceCenterId));
+    dispatch(loadAssignedServiceRequests(serviceCenterId));
 }
 
 // Assigned Service Requests
