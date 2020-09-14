@@ -1,14 +1,96 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {BaseModal, DialogActions, DialogTitle} from "../BaseModal";
-import {Button} from "@material-ui/core";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {Button, Grid} from "@material-ui/core";
+import {TextField} from "../../UI/TextField";
+import {LoadingButton} from "../../UI/Button";
+import {useException, useMessage} from "../../../utils/hooks";
 
+
+type TForm = {
+    description: string;
+    durationInHours: string;
+    countOfTechnicians: string;
+    skillLevelOfTechnicians: number;
+    invoiceAmount: string;
+    warrantyInvoiceAmount: string;
+}
+const initialForm: TForm = {
+    description: "",
+    durationInHours: "",
+    countOfTechnicians: "",
+    skillLevelOfTechnicians: 1,
+    invoiceAmount: "",
+    warrantyInvoiceAmount: "",
+};
 export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest>> = ({onAction, payload, ...props}) => {
-    return <BaseModal {...props}>
+    const [form, setForm] = useState<TForm>(initialForm);
+    const [isLoading, setLoading] = useState<boolean>(false);
+    const showMessage = useMessage();
+    const showError = useException();
+
+    useEffect(() => {
+        if (props.open && payload?.serviceRequestOverride) {
+            const override = payload.serviceRequestOverride
+            setForm({
+                ...initialForm,
+                description: override.description,
+                countOfTechnicians: override.countOfTechnicians.toString(),
+                durationInHours: override.durationInHours.toString(),
+                invoiceAmount: override.invoiceAmount.toString(),
+                warrantyInvoiceAmount: override.warrantyInvoiceAmount.toString(),
+                skillLevelOfTechnicians: override.skillLevelOfTechnicians
+            })
+        }
+    }, [payload, props.open])
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({...form, [e.target.name]: e.target.value});
+    }
+    const handleSave = () => {
+        setLoading(true);
+        setLoading(false);
+        showMessage("Saved");
+        props.onClose();
+    }
+
+    return <BaseModal {...props} maxWidth="xs">
         <DialogTitle onClose={props.onClose}>Edit Service Request</DialogTitle>
+        <DialogContent>
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <TextField
+                        label="Service Ops Code name"
+                        disabled
+                        fullWidth
+                        value={payload?.serviceRequest.code || ""}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        fullWidth
+                        label="Service description"
+                        value={form.description}
+                        placeholder={payload?.serviceRequest.description}
+                        name="description"
+                        id="description"
+                        autoComplete="service-description description"
+                        onChange={handleChange}
+                    />
+                </Grid>
+            </Grid>
+        </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Cancel</Button>
+            <LoadingButton
+                loading={isLoading}
+                color="primary"
+                variant="contained"
+                onClick={handleSave}
+            >
+                Save
+            </LoadingButton>
         </DialogActions>
     </BaseModal>
 }

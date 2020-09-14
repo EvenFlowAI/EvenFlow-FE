@@ -14,13 +14,17 @@ export interface IServiceRequestNonAddedFilter {
 }
 
 export interface IServiceRequestOverride {
-    "description": string;
-    "durationInHours": number;
-    "countOfTechnicians": number;
-    "skillLevelOfTechnicians": number;
-    "invoiceAmount": number;
-    "warrantyInvoiceAmount": number;
+    description: string;
+    durationInHours: number;
+    countOfTechnicians: number;
+    skillLevelOfTechnicians: number;
+    invoiceAmount: number;
+    warrantyInvoiceAmount: number;
 }
+export interface IServiceRequestOverrideEditRequest {
+    serviceRequestInfo: IServiceRequestOverride;
+}
+
 export interface IRequiredSkill {
     technicianLevel1: boolean;
     technicianLevel2: boolean;
