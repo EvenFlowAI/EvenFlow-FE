@@ -1,7 +1,5 @@
 import React, {useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {TTitle} from "../../Content/ContentTitle/ContentTitle";
-import {Routes} from "../../../config/routes";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {TabList} from "../../UI/Tabs";
@@ -10,18 +8,14 @@ import {CustomerLifetimeRules} from "./CustomerLifetimeRules/CustomerLifetimeRul
 import {NewLostCustomer} from "./NewLostCustomer/NewLostCustomer";
 import {EndOfWarranty} from "./EndOfWarranty/EndOfWarranty";
 import {ValueIndicators} from "./ValueIndicators/ValueIndicators";
+import {optimizerRoot} from "../utils";
 
 
 const useStyles = makeStyles({
     panel: {
         width: "100%"
     }
-})
-
-const parent: TTitle = {
-    to: Routes.Optimizer.Base,
-    title: "Optimizer Settings"
-}
+});
 
 type Tab = {
     label: string;
@@ -46,7 +40,7 @@ export const AppointmentValue = () => {
     }
     const classes = useStyles();
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Appointment Value Settings" pad parent={parent} />
+        <TitleContainer title="Appointment Value Settings" pad parent={optimizerRoot} />
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"

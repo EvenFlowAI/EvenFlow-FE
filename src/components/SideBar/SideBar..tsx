@@ -68,6 +68,7 @@ const AdminLinks: LinkType[] = [
 const MainLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true},
     {to: Routes.Optimizer.Base, name: "Optimizer Settings", exact: true},
+    {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true},
     {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true},
     {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true}
 ]
