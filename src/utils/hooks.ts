@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import {IPageRequest, ValidationKeyPairs} from "../types/types";
 import {getAPIException} from "./utils";
@@ -126,4 +126,17 @@ export const useStatePagination = () => {
     }, [setPageData])
 
     return {pageData, onChangePage, onChangeRowsPerPage};
+}
+
+export const useDebounce = <S=string>(val: S, delay: number): S => {
+    const [state, setState] = useState<S>(val);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setState(val);
+        }, delay);
+        return () => clearTimeout(handler);
+    }, [val, delay]);
+
+    return state;
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {Button, IconButton, Menu, MenuItem, Tooltip} from "@material-ui/core";
@@ -6,7 +6,11 @@ import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDi
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadAssignedServiceRequests, setAssignedPageData} from "../../../store/reducers/serviceRequests/actions";
+import {
+    loadAssignedServiceRequests,
+    setAssignedFilter,
+    setAssignedPageData
+} from "../../../store/reducers/serviceRequests/actions";
 import {TableRowDataType} from "../../UI/types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
@@ -14,6 +18,7 @@ import {MoreHoriz} from "@material-ui/icons";
 import {OverrideOPsCodeDialog} from "../../Modals/OPsCodesListDialog/OverrideOPsCodeDialog";
 import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../config/constants";
+import {SearchInput} from "../../UI/SearchInput";
 
 const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code},
@@ -83,11 +88,18 @@ export const OPsCodesPage = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
-    const [serviceRequestsList, isLoading, requestsCount, pageData] = useSelector((state: RootState) => [
+    const [
+        serviceRequestsList,
+        isLoading,
+        requestsCount,
+        pageData,
+        search
+    ] = useSelector((state: RootState) => [
         state.serviceRequests.assignedList,
         state.serviceRequests.assignedLoading,
         state.serviceRequests.assignedPaging.numberOfRecords,
-        state.serviceRequests.assignedPageData
+        state.serviceRequests.assignedPageData,
+        state.serviceRequests.assignedFilter.searchTerm
     ]);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>(undefined);
@@ -122,6 +134,15 @@ export const OPsCodesPage = () => {
         setAnchorEl(null);
         onOOpen();
     }
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setAssignedFilter({searchTerm: e.target.value}));
+    }
+    const handleSearch = useCallback(() => {
+        if (selectedSC) {
+            dispatch(loadAssignedServiceRequests(selectedSC.id));
+        }
+    }, [selectedSC, dispatch]);
+
     const askRemove = () => {
         setAnchorEl(null);
         askConfirm({
@@ -153,15 +174,21 @@ export const OPsCodesPage = () => {
             title="Service Requests"
             pad
             parent={optimizerRoot}
-            actions={
+            actions={<div style={{display: "flex", alignItems: "center"}}>
+                <SearchInput
+                    onChange={handleSearchChange}
+                    value={search}
+                    onSearch={handleSearch}
+                />
                 <Button
+                    style={{marginLeft: 16}}
                     color="primary"
                     variant="contained"
                     onClick={handleAddOpsCode}
                 >
                     Add Ops Code
                 </Button>
-            }
+            </div>}
         />
         <Table<IAssignedServiceRequest>
             data={serviceRequestsList}
