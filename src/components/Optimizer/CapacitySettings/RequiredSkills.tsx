@@ -60,8 +60,6 @@ export const RequiredSkills = () => {
     )
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const showMessage = useMessage();
-    const showError = useException();
     const {onOpen, onClose, isOpen} = useModal();
     const initial = useRef(true);
 
