@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    IAssignedServiceRequest,
+    IAssignedServiceRequest, IRequiredSkill,
     IServiceRequest,
     IServiceRequestNonAddedFilter,
     IServiceRequestOverrideEditRequest
@@ -80,4 +80,7 @@ export const updateAssignedServiceRequest = (
     if (serviceCenterId) {
         dispatch(loadAssignedServiceRequests(serviceCenterId));
     }
+}
+export const setRequiredSkills = (data: IRequiredSkill): AppThunk => async dispatch => {
+
 }

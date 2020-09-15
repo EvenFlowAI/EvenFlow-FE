@@ -8,6 +8,7 @@ import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage} from "../../../utils/hooks";
+import {setRequiredSkills} from "../../../store/reducers/serviceRequests/actions";
 
 const useStyles = makeStyles({
     input: {
@@ -43,7 +44,16 @@ export const RequiredSkillsDialog: React.FC<DialogProps<IAssignedServiceRequest>
         if (!payload) {
             showError("Data is not loaded");
         } else {
-
+            setLoading(true);
+            try {
+                await dispatch(setRequiredSkills(form));
+                setLoading(false);
+                showMessage("Saved");
+                props.onClose();
+            } catch (e) {
+                setLoading(false);
+                showError(e);
+            }
         }
     }
 
