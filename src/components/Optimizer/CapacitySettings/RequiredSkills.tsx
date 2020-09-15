@@ -5,7 +5,7 @@ import {TableRowDataType} from "../../UI/types";
 import {CheckCircle, MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
+import {useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {
     loadAssignedServiceRequests,
     setAssignedFilter,
