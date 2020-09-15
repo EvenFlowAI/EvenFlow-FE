@@ -54,3 +54,10 @@ export interface IAssignedServiceRequestShort {
     description: string;
     priority: IServiceRequestPriority
 }
+export interface IPrioritizeItem {
+    id: number;
+    priority: IServiceRequestPriority
+}
+export interface IPrioritizeRequest {
+    items: IPrioritizeItem[]
+}

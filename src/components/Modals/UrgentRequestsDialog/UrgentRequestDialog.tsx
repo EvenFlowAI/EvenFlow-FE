@@ -75,7 +75,7 @@ export const UrgentRequestDialog: React.FC<DialogProps> = ({onAction, payload, .
         } else {
             setSaving(true);
             try {
-                await dispatch(setUrgentRequests({}));
+                await dispatch(setUrgentRequests(selected, selectedSC.id));
                 setSaving(false);
                 showMessage("Saved");
             } catch (e) {

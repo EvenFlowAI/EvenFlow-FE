@@ -1,9 +1,14 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    IAssignedServiceRequest, IAssignedServiceRequestShort, IRequiredSkillData, IRequiredSkillRequest,
+    IAssignedServiceRequest,
+    IAssignedServiceRequestShort,
+    IPrioritizeRequest,
+    IRequiredSkillData,
+    IRequiredSkillRequest,
     IServiceRequest,
     IServiceRequestNonAddedFilter,
-    IServiceRequestOverrideEditRequest, IServiceRequestPriority
+    IServiceRequestOverrideEditRequest,
+    IServiceRequestPriority
 } from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -115,8 +120,17 @@ async (dispatch, getState) => {
         throw e;
     }
 }
-export const setUrgentRequests = (data: any): AppThunk => async dispatch => {
-
+export const setUrgentRequests = (ids: number[], serviceCenterId?: number): AppThunk => async dispatch => {
+    const data: IPrioritizeRequest = {
+        items: ids.map(id => ({id, priority: IServiceRequestPriority.Urgent}))
+    }
+    await Api.call(
+        Api.endpoints.ServiceRequests.Prioritize, {data}
+    );
+    if (serviceCenterId) {
+        dispatch(loadNonUrgentServiceRequests(serviceCenterId));
+        dispatch(loadUrgentServiceRequests(serviceCenterId));
+    }
 }
 
 export const getNonUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/getNonUrgent");
