@@ -18,7 +18,16 @@ const Checked: React.FC<{ val?: boolean }> = ({val}) => {
 }
 
 const rowData: TableRowDataType<IAssignedServiceRequest>[] = [
-    {header: "Service Request", val: el => el.serviceRequest.code},
+    {
+        header: "Service Request",
+        val: el => <span>
+            {el.serviceRequest.code}<br />
+            <small>
+                {el.serviceRequestOverride?.description
+                || el.serviceRequest.description}
+            </small>
+        </span>
+    },
     {
         header: "Technician Level 1",
         val: el => <Checked val={el.requiredSkill?.technicianLevel1} />,
@@ -84,20 +93,22 @@ export const RequiredSkills = () => {
     }
 
 
-    return <div><Table<IAssignedServiceRequest>
-        rowData={rowData}
-        data={data}
-        isLoading={loading}
-        index="id"
-        count={count}
-        page={pageIndex}
-        actions={actions}
-        rowsPerPage={pageSize}
-        onChangePage={changePage}
-        onChangeRowsPerPage={changeRowsPerPage}
-    />
-    <Menu open={Boolean(anchorEl)} onClose={closeMenu} anchorEl={anchorEl}>
-        <MenuItem onClick={closeMenu}>Edit</MenuItem>
-    </Menu>
+    return <div>
+        <Table<IAssignedServiceRequest>
+            rowData={rowData}
+            data={data}
+            isLoading={loading}
+            index="id"
+            compact
+            count={count}
+            page={pageIndex}
+            actions={actions}
+            rowsPerPage={pageSize}
+            onChangePage={changePage}
+            onChangeRowsPerPage={changeRowsPerPage}
+        />
+        <Menu open={Boolean(anchorEl)} onClose={closeMenu} anchorEl={anchorEl}>
+            <MenuItem onClick={closeMenu}>Edit</MenuItem>
+        </Menu>
     </div>
 }
