@@ -31,8 +31,8 @@ export const RequiredSkillsDialog: React.FC<DialogProps<IAssignedServiceRequest>
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (props.open && payload?.requiredSkill) {
-            setForm({...payload.requiredSkill});
+        if (props.open) {
+            setForm({...initialForm, ...payload?.requiredSkill});
         }
     }, [payload, props.open])
 
@@ -46,7 +46,10 @@ export const RequiredSkillsDialog: React.FC<DialogProps<IAssignedServiceRequest>
         } else {
             setLoading(true);
             try {
-                await dispatch(setRequiredSkills(form));
+                await dispatch(setRequiredSkills({
+                    ...form,
+                    serviceRequestId: payload.id
+                }, payload.serviceCenterId));
                 setLoading(false);
                 showMessage("Saved");
                 props.onClose();

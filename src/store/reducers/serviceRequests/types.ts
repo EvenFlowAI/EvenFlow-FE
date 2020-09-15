@@ -30,6 +30,12 @@ export interface IRequiredSkill {
     technicianLevel2: boolean;
     technicianLevel3: boolean;
 }
+export interface IRequiredSkillData extends IRequiredSkill{
+    serviceRequestId: number;
+}
+export interface IRequiredSkillRequest {
+    requiredSkills: IRequiredSkillData[]
+}
 export interface IAssignedServiceRequest {
     id: number;
     serviceRequest: IServiceRequest;
