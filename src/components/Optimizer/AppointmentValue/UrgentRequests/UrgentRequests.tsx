@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
-import {Button} from "@material-ui/core";
-import {useModal, usePagination, useSCs} from "../../../../utils/hooks";
+import {Button, IconButton} from "@material-ui/core";
+import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -8,9 +8,16 @@ import {
     pageDataUrgentServiceRequests
 } from "../../../../store/reducers/serviceRequests/actions";
 import {Table} from "../../../UI/Table";
-import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
+import {
+    IAssignedServiceRequestShort,
+    IPrioritizeRequest,
+    IServiceRequestPriority
+} from "../../../../store/reducers/serviceRequests/types";
 import {TableRowDataType} from "../../../UI/types";
 import {UrgentRequestDialog} from "../../../Modals/UrgentRequestsDialog/UrgentRequestDialog";
+import {Api} from "../../../../config/requests";
+import {SC_UNDEFINED} from "../../../../config/constants";
+import {DeleteOutline} from "@material-ui/icons";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
     {header: "Service OPs Code", val: el => el.code},
@@ -20,6 +27,9 @@ const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
 export const UrgentRequests = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const {selectedSC} = useSCs();
+    const {askConfirm} = useConfirm();
+    const showMessage = useMessage();
+    const showError = useException();
     const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
         state => state.serviceRequests.urgentPageData,
         pageDataUrgentServiceRequests
@@ -38,6 +48,37 @@ export const UrgentRequests = () => {
             dispatch(loadUrgentServiceRequests(selectedSC.id));
         }
     }, [selectedSC, dispatch, pageIndex, pageSize]);
+
+    const askRemove = (el: IAssignedServiceRequestShort) => () => {
+        if (selectedSC) {
+            askConfirm({
+                title: "Remove?",
+                content: `Remove ${el.code} from prioritized list?`,
+                onConfirm: handleRemove(el)
+            });
+        }
+    }
+    const handleRemove = (el: IAssignedServiceRequestShort) => async () => {
+        if (!selectedSC) {
+            showError(SC_UNDEFINED);
+        } else {
+            const data: IPrioritizeRequest = {
+                items: [{id: el.id, priority: IServiceRequestPriority.Default}]
+            }
+            try {
+                await Api.call(Api.endpoints.ServiceRequests.Prioritize, {data});
+                showMessage("Removed");
+                dispatch(loadUrgentServiceRequests(selectedSC.id));
+            } catch (e) {
+                showError(e);
+            }
+        }
+    }
+    const actions = (el: IAssignedServiceRequestShort) => {
+        return <IconButton onClick={askRemove(el)}>
+            <DeleteOutline />
+        </IconButton>
+    }
 
     return <div>
         <div style={{textAlign: "right"}}>
@@ -58,6 +99,7 @@ export const UrgentRequests = () => {
             page={pageIndex}
             rowsPerPage={pageSize}
             onChangePage={changePage}
+            actions={actions}
             onChangeRowsPerPage={changeRowsPerPage}
         />
         <UrgentRequestDialog open={isOpen} onClose={onClose} />
