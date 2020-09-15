@@ -37,5 +37,5 @@ export interface IAssignedServiceRequest {
     serviceCenterId: number;
     serviceRequestOverride?: Partial<IServiceRequestOverride>;
     priority: string;
-    requiredSkill: IRequiredSkill;
+    requiredSkill?: IRequiredSkill;
 }
