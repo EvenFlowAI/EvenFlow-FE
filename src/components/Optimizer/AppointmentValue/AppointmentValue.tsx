@@ -9,6 +9,7 @@ import {NewLostCustomer} from "./NewLostCustomer/NewLostCustomer";
 import {EndOfWarranty} from "./EndOfWarranty/EndOfWarranty";
 import {ValueIndicators} from "./ValueIndicators/ValueIndicators";
 import {optimizerRoot} from "../utils";
+import {UrgentRequests} from "./UrgentRequests/UrgentRequests";
 
 
 const useStyles = makeStyles({
@@ -28,7 +29,7 @@ type Tab = {
 const tabs: Tab[] = [
     {label: "Values indicators", id: "0", component: ValueIndicators},
     {label: "Customer Lifetime Rules", id: "1", component: CustomerLifetimeRules},
-    {label: "Urgent Requests", id: "2", component: () => <p>Urgent Requests</p>},
+    {label: "Urgent Requests", id: "2", component: UrgentRequests},
     {label: "New/Lost customer", id: "3", component: NewLostCustomer},
     {label: "End of Warranty", id: "4", component: EndOfWarranty},
 ]

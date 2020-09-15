@@ -1,4 +1,9 @@
-import {IAssignedServiceRequest, IServiceRequest, IServiceRequestNonAddedFilter} from "./types";
+import {
+    IAssignedServiceRequest,
+    IAssignedServiceRequestShort,
+    IServiceRequest,
+    IServiceRequestNonAddedFilter
+} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {createReducer} from "@reduxjs/toolkit";
@@ -13,6 +18,14 @@ import {
     setAssignedPaging,
     setAssignedPageData,
     setAssignedFilter,
+    getUrgentServiceRequests,
+    loadingUrgentServiceRequests,
+    pagingUrgentServiceRequests,
+    pageDataUrgentServiceRequests,
+    getNonUrgentServiceRequests,
+    loadingNonUrgentServiceRequests,
+    pagingNonUrgentServiceRequests,
+    pageDataNonUrgentServiceRequests
 } from "./actions";
 
 type TState = {
@@ -26,6 +39,14 @@ type TState = {
     assignedPaging: IPagingResponse;
     assignedPageData: IPageRequest;
     assignedFilter: IServiceRequestNonAddedFilter
+    urgentList: IAssignedServiceRequestShort[];
+    urgentLoading: boolean;
+    urgentPaging: IPagingResponse;
+    urgentPageData: IPageRequest;
+    nonUrgentList: IAssignedServiceRequestShort[];
+    nonUrgentLoading: boolean;
+    nonUrgentPaging: IPagingResponse;
+    nonUrgentPageData: IPageRequest;
 }
 const initialState: TState = {
     nonSelectedList: [],
@@ -37,7 +58,15 @@ const initialState: TState = {
     assignedLoading: false,
     assignedPaging: {...defaultPaging},
     assignedPageData: {...defaultPageData},
-    assignedFilter: {searchTerm: ""}
+    assignedFilter: {searchTerm: ""},
+    urgentList: [],
+    urgentLoading: false,
+    urgentPaging: {...defaultPaging},
+    urgentPageData: {...defaultPageData},
+    nonUrgentList: [],
+    nonUrgentLoading: false,
+    nonUrgentPaging: {...defaultPaging},
+    nonUrgentPageData: {...defaultPageData},
 };
 
 export const serviceRequestsReducer = createReducer(
@@ -71,5 +100,29 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(setAssignedFilter, (state, {payload}) => {
             return {...state, assignedFilter: {...state.assignedFilter, ...payload}};
+        })
+        .addCase(getUrgentServiceRequests, (state, {payload}) => {
+            return {...state, urgentList: payload};
+        })
+        .addCase(loadingUrgentServiceRequests, (state, {payload}) => {
+            return {...state, urgentLoading: payload};
+        })
+        .addCase(pagingUrgentServiceRequests, (state, {payload}) => {
+            return {...state, urgentPaging: payload};
+        })
+        .addCase(pageDataUrgentServiceRequests, (state, {payload}) => {
+            return {...state, urgentPageData: {...state.urgentPageData, payload}};
+        })
+        .addCase(getNonUrgentServiceRequests, (state, {payload}) => {
+            return {...state, nonUrgentList: payload};
+        })
+        .addCase(loadingNonUrgentServiceRequests, (state, {payload}) => {
+            return {...state, nonUrgentLoading: payload};
+        })
+        .addCase(pagingNonUrgentServiceRequests, (state, {payload}) => {
+            return {...state, nonUrgentPaging: payload};
+        })
+        .addCase(pageDataNonUrgentServiceRequests, (state, {payload}) => {
+            return {...state, nonUrgentPageData: {...state.urgentPageData, payload}};
         })
 )

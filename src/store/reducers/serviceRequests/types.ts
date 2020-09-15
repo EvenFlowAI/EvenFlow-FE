@@ -36,12 +36,21 @@ export interface IRequiredSkillData extends IRequiredSkill{
 export interface IRequiredSkillRequest {
     requiredSkills: IRequiredSkillData[]
 }
+export enum IServiceRequestPriority {
+    Default, Urgent
+}
 export interface IAssignedServiceRequest {
     id: number;
     serviceRequest: IServiceRequest;
     serviceRequestId: number;
     serviceCenterId: number;
     serviceRequestOverride?: Partial<IServiceRequestOverride>;
-    priority: string;
+    priority: IServiceRequestPriority;
     requiredSkill?: IRequiredSkill;
+}
+export interface IAssignedServiceRequestShort {
+    id: number;
+    code: string;
+    description: string;
+    priority: IServiceRequestPriority
 }

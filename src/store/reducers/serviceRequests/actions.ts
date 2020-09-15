@@ -1,9 +1,9 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    IAssignedServiceRequest, IRequiredSkill, IRequiredSkillData, IRequiredSkillRequest,
+    IAssignedServiceRequest, IAssignedServiceRequestShort, IRequiredSkillData, IRequiredSkillRequest,
     IServiceRequest,
     IServiceRequestNonAddedFilter,
-    IServiceRequestOverrideEditRequest
+    IServiceRequestOverrideEditRequest, IServiceRequestPriority
 } from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -90,5 +90,51 @@ export const setRequiredSkills = (
     await Api.call(Api.endpoints.ServiceRequests.EditSkills, {data});
     if (serviceCenterId) {
         dispatch(loadAssignedServiceRequests(serviceCenterId));
+    }
+}
+
+export const getUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/getUrgent");
+export const loadingUrgentServiceRequests = createAction<boolean>("ServiceRequests/loadingUrgent");
+export const pagingUrgentServiceRequests = createAction<IPagingResponse>("ServiceRequests/pagingUrgent");
+export const pageDataUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequests/pageDataUrgent");
+export const loadUrgentServiceRequests = (serviceCenterId: number): AppThunk =>
+async (dispatch, getState) => {
+    const pageData = getState().serviceRequests.urgentPageData;
+    dispatch(loadingUrgentServiceRequests(true));
+    try {
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
+            Api.endpoints.ServiceRequests.GetShort, {
+                params: {serviceCenterId, ...pageData, priority: IServiceRequestPriority.Urgent}
+            }
+        );
+        dispatch(loadingUrgentServiceRequests(false));
+        dispatch(getUrgentServiceRequests(result));
+        dispatch(pagingUrgentServiceRequests(paging));
+    } catch (e) {
+        dispatch(loadingUrgentServiceRequests(false));
+        throw e;
+    }
+}
+
+export const getNonUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/getNonUrgent");
+export const loadingNonUrgentServiceRequests = createAction<boolean>("ServiceRequests/loadingNonUrgent");
+export const pagingNonUrgentServiceRequests = createAction<IPagingResponse>("ServiceRequests/pagingNonUrgent");
+export const pageDataNonUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequests/pageDataNonUrgent");
+export const loadNonUrgentServiceRequests = (serviceCenterId: number): AppThunk =>
+async (dispatch, getState) => {
+    const pageData = getState().serviceRequests.urgentPageData;
+    dispatch(loadingNonUrgentServiceRequests(true));
+    try {
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
+            Api.endpoints.ServiceRequests.GetShort, {
+                params: {serviceCenterId, ...pageData, priority: IServiceRequestPriority.Default}
+            }
+        );
+        dispatch(loadingNonUrgentServiceRequests(false));
+        dispatch(getNonUrgentServiceRequests(result));
+        dispatch(pagingNonUrgentServiceRequests(paging));
+    } catch (e) {
+        dispatch(loadingNonUrgentServiceRequests(false));
+        throw e;
     }
 }
