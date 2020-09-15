@@ -10,6 +10,7 @@ import {
 import {Table} from "../../../UI/Table";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {TableRowDataType} from "../../../UI/types";
+import {UrgentRequestDialog} from "../../../Modals/UrgentRequestsDialog/UrgentRequestDialog";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
     {header: "Service OPs Code", val: el => el.code},
@@ -59,5 +60,6 @@ export const UrgentRequests = () => {
             onChangePage={changePage}
             onChangeRowsPerPage={changeRowsPerPage}
         />
+        <UrgentRequestDialog open={isOpen} onClose={onClose} />
     </div>
 }

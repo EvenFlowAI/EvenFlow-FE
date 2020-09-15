@@ -115,6 +115,9 @@ async (dispatch, getState) => {
         throw e;
     }
 }
+export const setUrgentRequests = (data: any): AppThunk => async dispatch => {
+
+}
 
 export const getNonUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/getNonUrgent");
 export const loadingNonUrgentServiceRequests = createAction<boolean>("ServiceRequests/loadingNonUrgent");
