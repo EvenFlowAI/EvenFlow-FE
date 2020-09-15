@@ -25,6 +25,6 @@ export const TextField = forwardRef<unknown, TextInputProps>(
                 {label}
             </InputLabel>
         }
-        <DefaultTextField ref={ref} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0 }} />
+        <DefaultTextField ref={ref} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0, ...props.style}} />
     </>
 });

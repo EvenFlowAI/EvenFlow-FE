@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Checkbox} from "@material-ui/core";
@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     assignServiceRequests,
-    loadNonSelectedServiceRequests,
+    loadNonSelectedServiceRequests, setNonSelectedFilter,
     setNonSelectedPageData
 } from "../../../store/reducers/serviceRequests/actions";
 import {useException, useMessage, usePagination, useSCs} from "../../../utils/hooks";
@@ -15,6 +15,7 @@ import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
 import {LoadingButton} from "../../UI/Button";
 import {SC_UNDEFINED} from "../../../config/constants";
+import {SearchInput} from "../../UI/SearchInput";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "OPs code", val: el => el.code},
@@ -28,10 +29,16 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
     const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
-    const [serviceList, isLoading, servicesCount] = useSelector((state: RootState) => [
+    const [
+        serviceList,
+        isLoading,
+        servicesCount,
+        search
+    ] = useSelector((state: RootState) => [
         state.serviceRequests.nonSelectedList,
         state.serviceRequests.nonSelectedLoading,
-        state.serviceRequests.nonSelectedPaging.numberOfRecords
+        state.serviceRequests.nonSelectedPaging.numberOfRecords,
+        state.serviceRequests.nonSelectedFilter.searchTerm
     ]);
     const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
@@ -45,6 +52,14 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageSize]);
+    const handleSearch = useCallback(() => {
+        if (selectedSC) {
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id));
+        }
+    }, [dispatch, selectedSC]);
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
+    }
 
     const handleCheck = (el: IServiceRequest) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         if (checked) {
@@ -78,6 +93,9 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>Select Service Requests</DialogTitle>
         <DialogContent>
+            <div style={{display: "flex", justifyContent: "flex-end", marginBottom: 18}}>
+                <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
+            </div>
             <Table<IServiceRequest>
                 data={serviceList}
                 index="id"
