@@ -5,13 +5,14 @@ import {TableRowDataType} from "../../UI/types";
 import {CheckCircle, MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useException, useMessage, usePagination, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {
     loadAssignedServiceRequests,
     setAssignedFilter,
     setAssignedPageData
 } from "../../../store/reducers/serviceRequests/actions";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {RequiredSkillsDialog} from "../../Modals/RequiredSkillsDialog/RequiredSkillsDialog";
 
 const Checked: React.FC<{ val?: boolean }> = ({val}) => {
     return val ? <CheckCircle color="primary" /> : <span>-</span>;
@@ -61,6 +62,7 @@ export const RequiredSkills = () => {
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
+    const {onOpen, onClose, isOpen} = useModal();
     const initial = useRef(true);
 
     useEffect(() => {
@@ -92,6 +94,12 @@ export const RequiredSkills = () => {
         return <IconButton onClick={openMenu(el)}><MoreHoriz /></IconButton>
     }
 
+    const openEdit = () => {
+        if (editedItem) {
+            onOpen();
+        }
+        setAnchorEl(null);
+    }
 
     return <div>
         <Table<IAssignedServiceRequest>
@@ -108,7 +116,12 @@ export const RequiredSkills = () => {
             onChangeRowsPerPage={changeRowsPerPage}
         />
         <Menu open={Boolean(anchorEl)} onClose={closeMenu} anchorEl={anchorEl}>
-            <MenuItem onClick={closeMenu}>Edit</MenuItem>
+            <MenuItem onClick={openEdit}>Edit</MenuItem>
         </Menu>
+        <RequiredSkillsDialog
+            payload={editedItem}
+            open={isOpen}
+            onClose={onClose}
+        />
     </div>
 }
