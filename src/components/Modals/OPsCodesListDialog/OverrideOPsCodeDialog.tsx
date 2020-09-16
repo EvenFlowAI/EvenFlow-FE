@@ -38,6 +38,12 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (props.open) {
+            setForm(initialForm);
+        }
+    }, [props.open]);
+
+    useEffect(() => {
         if (props.open && payload?.serviceRequestOverride) {
             const override = payload.serviceRequestOverride
             setForm({
