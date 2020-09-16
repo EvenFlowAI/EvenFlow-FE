@@ -48,6 +48,12 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
     const [selectedCodes, setSelectedCodes] = useState<number[]>([]);
 
     useEffect(() => {
+        if (props.open) {
+            setSelectedCodes([]);
+        }
+    }, [props.open]);
+
+    useEffect(() => {
         if (props.open && selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
         }
