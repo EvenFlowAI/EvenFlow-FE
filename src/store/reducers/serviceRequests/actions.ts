@@ -1,5 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
+    EServiceStatus,
     IAssignedServiceRequest,
     IAssignedServiceRequestShort,
     IPrioritizeRequest,
@@ -29,7 +30,7 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThun
             {
                 data: {
                     ...nonSelectedPageData, ...nonSelectedFilter,
-                    status: 1, // 1 Means not archived
+                    status: EServiceStatus.None,
                     serviceCenterFilter: {
                         isAssigned: false,
                         id: serviceCenterId

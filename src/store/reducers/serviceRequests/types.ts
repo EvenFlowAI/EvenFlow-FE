@@ -7,7 +7,7 @@ export interface IServiceRequest {
     skillLevelOfTechnicians: number;
     invoiceAmount: number;
     warrantyInvoiceAmount: number;
-    status: string;
+    status: EServiceStatus;
 }
 export interface IServiceRequestNonAddedFilter {
     searchTerm: string;
@@ -39,6 +39,10 @@ export interface IRequiredSkillRequest {
 export enum IServiceRequestPriority {
     Default, Urgent
 }
+export enum EServiceStatus {
+    None, Archived
+}
+
 export interface IAssignedServiceRequest {
     id: number;
     serviceRequest: IServiceRequest;

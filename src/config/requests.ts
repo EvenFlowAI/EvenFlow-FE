@@ -191,7 +191,7 @@ export class Api {
             EditOverrides: {route: "/service-requests/overrides/{id}", method: "put"},
             GetSROverrides: {route: "/service-requests/overrides/{id}", method: "get"},
             GetAssignedOverrides: {route: "/service-requests/overrides", method: "get"},
-            RemoveOverride: {route: "/service-request/overrides/{id}", method: "delete"},
+            RemoveOverride: {route: "/service-requests/overrides/{id}", method: "delete"},
             AssignMultiple: {route: "/service-requests/overrides", method: "post"},
             GetShort: {route: "/service-requests/overrides/short-by-query", method: "get"},
             EditSkills: {route: "/service-requests/required-skills", method: "patch"},
