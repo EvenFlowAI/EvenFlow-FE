@@ -19,6 +19,7 @@ import {
     loadSCEmployees
 } from "../../../store/reducers/employees/actions";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
+import {createPod} from "../../../store/reducers/pods/actions";
 
 
 type TForm = {
@@ -77,13 +78,22 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         setForm({...form, serviceRequests: val});
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
             setLoading(true);
             try {
-                let data: IPodForm;
+                const data: IPodForm = {
+                    advisorId: form.advisor?.id || null,
+                    bays: form.bays.map(b => b.id),
+                    description: form.description,
+                    name: form.name,
+                    serviceCenterId: selectedSC.id,
+                    serviceRequests: form.serviceRequests.map(sr => sr.id),
+                    technicians: form.technicians.map(t => t.id)
+                };
+                await dispatch(createPod(data));
                 setLoading(false);
                 showMessage("Saved");
                 props.onClose();

@@ -22,7 +22,7 @@ export interface IPodForm {
     serviceCenterId: number;
     name: string;
     description: string;
-    advisorId: string;
+    advisorId: string | null;
     technicians: string[];
     serviceRequests: number[];
     bays: number[];

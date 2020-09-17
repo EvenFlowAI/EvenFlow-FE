@@ -8,12 +8,14 @@ import {holidaysReducer} from "./reducers/holidays/reducer";
 import {baysReducer} from "./reducers/bays/reducer";
 import {valueSettingsReducer} from "./reducers/valueSettings/reducer";
 import {serviceRequestsReducer} from "./reducers/serviceRequests/reducers";
+import {podsReducer} from "./reducers/pods/reducer";
 
 export const rootReducer = combineReducers({
     users: usersReducer,
     dealershipGroups: dealershipGroupsReducer,
     employees: employeesReducer,
     scEmployees: scEmployees,
+    pods: podsReducer,
     serviceCenters: serviceCenterReducer,
     modals: modalsReducer,
     holidays: holidaysReducer,
