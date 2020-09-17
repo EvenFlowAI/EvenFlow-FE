@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {IBay, IBayForm} from "./types";
+import {IBay, IBayForm, IBayShort} from "./types";
 
 export const getAllBays = createAction<IBay[]>("Bays/GetAllBays");
 export const getFilteredBays = createAction<IBay[]>("Bays/GetFiltered");
@@ -70,4 +70,12 @@ export const updateBay = (data: IBayForm, id: number): AppThunk => async dispatc
 export const removeBay = (data: IBay): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Bays.Remove, {urlParams: {id: data.id}});
     dispatch(loadBays(data.serviceCenterId));
+}
+export const getBaysShort = createAction<IBayShort[]>("Bays/Short");
+export const loadBaysShort = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data: {result}} = await Api.call<PaginatedAPIResponse<IBayShort>>(
+        Api.endpoints.Bays.GetShort,
+        {data: {pageSize: 0, serviceCenterId}}
+    );
+    dispatch(getBaysShort(result))
 }

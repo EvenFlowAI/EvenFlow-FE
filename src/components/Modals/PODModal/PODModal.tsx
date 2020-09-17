@@ -20,6 +20,8 @@ import {
 } from "../../../store/reducers/employees/actions";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 import {createPod} from "../../../store/reducers/pods/actions";
+import {loadBaysShort} from "../../../store/reducers/bays/actions";
+import {ConfigButton} from "../../UI/ConfigButton";
 
 
 type TForm = {
@@ -27,7 +29,7 @@ type TForm = {
     description: string;
     advisor: IAdvisorShort | null;
     technicians: IAdvisorShort[];
-    bays: IBayShort[];
+    bays: number[];
     serviceRequests: IAssignedServiceRequestShort[];
 }
 const initialForm: TForm = {
@@ -46,15 +48,25 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const [advisorsList, techniciansList, serviceRequests] = useSelector((state: RootState) => [
+    const [
+        advisorsList,
+        techniciansList,
+        serviceRequests,
+        baysList
+    ] = useSelector((state: RootState) => [
         state.scEmployees.advisorsList,
         state.scEmployees.techniciansList,
-        state.serviceRequests.scRequestsShort
+        state.serviceRequests.scRequestsShort,
+        state.bays.baysShort,
     ]);
 
     useEffect(() => {
         if (props.open) {
-            setForm({...initialForm, ...payload});
+            setForm({
+                ...initialForm,
+                ...payload,
+                bays: payload?.bays.map(b => b.id) || []
+            });
         }
     }, [props.open, payload]);
     useEffect(() => {
@@ -62,6 +74,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             dispatch(loadSCAdvisors(selectedSC.id));
             dispatch(loadSCEmployees(selectedSC.id));
             dispatch(loadSCRequestsShort(selectedSC.id));
+            dispatch(loadBaysShort(selectedSC.id));
         }
     }, [selectedSC, dispatch]);
 
@@ -77,6 +90,13 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const handleSCChange = (e: any, val: IAssignedServiceRequestShort[]) => {
         setForm({...form, serviceRequests: val});
     }
+    const handleBaySelect = (b: IBayShort) => () => {
+        if (form.bays.includes(b.id)) {
+            setForm({...form, bays: form.bays.filter(bayId => bayId !== b.id)});
+        } else {
+            setForm({...form, bays: [...form.bays, b.id]});
+        }
+    }
 
     const handleSave = async () => {
         if (!selectedSC) {
@@ -86,7 +106,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             try {
                 const data: IPodForm = {
                     advisorId: form.advisor?.id || null,
-                    bays: form.bays.map(b => b.id),
+                    bays: form.bays,
                     description: form.description,
                     name: form.name,
                     serviceCenterId: selectedSC.id,
@@ -143,7 +163,20 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         renderInput={autocompleteRender({label: "Advisor", fullWidth: true})}
                     />
                 </Grid>
-                <Grid item xs={12}>Buttons</Grid>
+                <Grid item xs={12}>
+                    {baysList.map(bay => {
+                        const checked = form.bays.includes(bay.id);
+                        return <ConfigButton
+                            onClick={handleBaySelect(bay)}
+                            color={checked ? "primary" : undefined}
+                            variant="contained"
+                            key={bay.id}
+                        >
+                            {bay.name}
+                        </ConfigButton>;
+                        }
+                    )}
+                </Grid>
                 <Grid item xs={6}>
                     <Autocomplete
                         options={techniciansList}

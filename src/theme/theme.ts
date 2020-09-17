@@ -87,6 +87,9 @@ theme.overrides = {
         }
     },
     MuiButton: {
+        contained: {
+            boxShadow: "none"
+        },
         root: {
             borderRadius: 4,
             fontWeight: "bold",

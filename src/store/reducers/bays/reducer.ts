@@ -1,6 +1,16 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {getAllBays, getFilteredBays, setAllPaging, setPaging, setAllLoading, loading, saving, setPageData} from "./actions";
-import {IBay} from "./types";
+import {
+    getAllBays,
+    getFilteredBays,
+    setAllPaging,
+    setPaging,
+    setAllLoading,
+    loading,
+    saving,
+    setPageData,
+    getBaysShort
+} from "./actions";
+import {IBay, IBayShort} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 
@@ -13,6 +23,7 @@ type TState = {
     paging: IPagingResponse;
     pageData: IPageRequest;
     bays: IBay[];
+    baysShort: IBayShort[]
 }
 const initialState: TState = {
     allBays: [],
@@ -22,7 +33,8 @@ const initialState: TState = {
     saving: false,
     loading: false,
     pageData: {...defaultPageData},
-    paging: {...defaultPaging}
+    paging: {...defaultPaging},
+    baysShort: []
 }
 
 export const baysReducer = createReducer<TState>(initialState, builder => builder
@@ -49,5 +61,8 @@ export const baysReducer = createReducer<TState>(initialState, builder => builde
     })
     .addCase(saving, (state, {payload}) => {
         return {...state, saving: payload};
+    })
+    .addCase(getBaysShort, (state, {payload}) => {
+        return {...state, baysShort: payload};
     })
 );
