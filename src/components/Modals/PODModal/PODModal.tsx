@@ -3,7 +3,7 @@ import {DialogProps} from "../types";
 import {IPod, IPodForm} from "../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
-import {Button, Chip, Grid} from "@material-ui/core";
+import {Button, Grid} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -14,11 +14,11 @@ import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceReque
 import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {RootState} from "../../../store/rootReducer";
-import {TextField as TF} from "@material-ui/core";
 import {
     loadSCAdvisors,
     loadSCEmployees
 } from "../../../store/reducers/employees/actions";
+import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 
 
 type TForm = {
@@ -45,9 +45,10 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const [advisorsList, techniciansList] = useSelector((state: RootState) => [
+    const [advisorsList, techniciansList, serviceRequests] = useSelector((state: RootState) => [
         state.scEmployees.advisorsList,
-        state.scEmployees.techniciansList
+        state.scEmployees.techniciansList,
+        state.serviceRequests.scRequestsShort
     ]);
 
     useEffect(() => {
@@ -59,6 +60,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         if (selectedSC) {
             dispatch(loadSCAdvisors(selectedSC.id));
             dispatch(loadSCEmployees(selectedSC.id));
+            dispatch(loadSCRequestsShort(selectedSC.id));
         }
     }, [selectedSC, dispatch]);
 
@@ -70,6 +72,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
     const handleTechniciansChange = (e: any, val: IAdvisorShort[]) => {
         setForm({...form, technicians: val});
+    }
+    const handleSCChange = (e: any, val: IAssignedServiceRequestShort[]) => {
+        setForm({...form, serviceRequests: val});
     }
 
     const handleSave = () => {
@@ -145,6 +150,24 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         loading={false}
                         value={form.technicians}
                         renderInput={autocompleteRender({label: "Technicians", fullWidth: true})}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <Autocomplete
+                        options={serviceRequests}
+                        multiple
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        onChange={handleSCChange}
+                        getOptionLabel={i => i.code}
+                        renderOption={autocompleteOptionsRender((e) => e.code)}
+                        loading={false}
+                        value={form.serviceRequests}
+                        renderInput={autocompleteRender({label: "Service Requests", fullWidth: true})}
                     />
                 </Grid>
             </Grid>

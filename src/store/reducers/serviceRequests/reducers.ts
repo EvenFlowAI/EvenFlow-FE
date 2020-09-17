@@ -25,7 +25,8 @@ import {
     getNonUrgentServiceRequests,
     loadingNonUrgentServiceRequests,
     pagingNonUrgentServiceRequests,
-    pageDataNonUrgentServiceRequests
+    pageDataNonUrgentServiceRequests,
+    getSCRequestsShort
 } from "./actions";
 
 type TState = {
@@ -47,6 +48,7 @@ type TState = {
     nonUrgentLoading: boolean;
     nonUrgentPaging: IPagingResponse;
     nonUrgentPageData: IPageRequest;
+    scRequestsShort: IAssignedServiceRequestShort[];
 }
 const initialState: TState = {
     nonSelectedList: [],
@@ -67,6 +69,7 @@ const initialState: TState = {
     nonUrgentLoading: false,
     nonUrgentPaging: {...defaultPaging},
     nonUrgentPageData: {...defaultPageData},
+    scRequestsShort: []
 };
 
 export const serviceRequestsReducer = createReducer(
@@ -124,5 +127,8 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(pageDataNonUrgentServiceRequests, (state, {payload}) => {
             return {...state, nonUrgentPageData: {...state.urgentPageData, payload}};
+        })
+        .addCase(getSCRequestsShort, (state, {payload}) => {
+            return {...state, scRequestsShort: payload};
         })
 )

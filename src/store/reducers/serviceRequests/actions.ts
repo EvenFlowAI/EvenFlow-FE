@@ -156,3 +156,12 @@ async (dispatch, getState) => {
         throw e;
     }
 }
+
+export const getSCRequestsShort = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/GetSCShort");
+export const loadSCRequestsShort = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data: {result}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
+        Api.endpoints.ServiceRequests.GetShort,
+        {params: {serviceCenterId, pageSize: 0}}
+    );
+    dispatch(getSCRequestsShort(result));
+}
