@@ -21,6 +21,14 @@ export interface IUserForm {
     role: string;
     serviceCenterId: number;
 }
+export interface IAdvisorShort {
+    id: string;
+    role: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    avatarPath: string;
+}
 
 
 export type TGetCurrentUser = {type: "User/GetCurrentUser", payload: ICurrentUser};
