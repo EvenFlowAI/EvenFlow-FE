@@ -5,6 +5,7 @@ import {Tab} from "@material-ui/core";
 import {TabList} from "../../UI/Tabs";
 import {DealershipGroupProfile} from "./DealershipGroupProfile";
 import {UserProfile} from "./UserProfile";
+import {ProfilePODs} from "./ProfilePODs";
 
 const useStyles = makeStyles({
     container: {
@@ -23,7 +24,8 @@ type TTab = {
 }
 const tabs: TTab[] = [
     {label: "Dealership Group Profile", id: "1", component: DealershipGroupProfile},
-    {label: "Profile", id: "2", component: UserProfile}
+    {label: "Profile", id: "2", component: UserProfile},
+    {label: "Pods", id: "3", component: ProfilePODs}
 ];
 
 export const Profile = () => {
