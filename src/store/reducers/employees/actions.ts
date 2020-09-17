@@ -4,6 +4,9 @@ import {Api} from "../../../config/requests";
 import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {IEmployee, IEmployeeForm, TEmployeeActions} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
+import {createAction} from "@reduxjs/toolkit";
+import {IAdvisorShort} from "../users/types";
+import {Roles} from "../../../config/constants";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
    type: "Employees/GetAll", payload
@@ -116,4 +119,21 @@ export const loadDealershipEmployees = (dealershipId: number, pageData: IPageReq
         dispatch(loadDealership(false));
         throw e;
     }
+}
+
+export const getSCAdvisors = createAction<IAdvisorShort[]>("SCEmployees/GetAdvisors");
+export const getSCEmployees = createAction<IAdvisorShort[]>("SCEmployees/GetEmployees");
+export const loadSCAdvisors = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data: {result}} = await Api.call<PaginatedAPIResponse<IAdvisorShort>>(
+        Api.endpoints.Users.GetShort,
+        {data: {pageSize: 0, serviceCenterId, roles: [Roles.Advisor]}}
+    );
+    dispatch(getSCAdvisors(result));
+}
+export const loadSCEmployees = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data: {result}} = await Api.call<PaginatedAPIResponse<IAdvisorShort>>(
+        Api.endpoints.Users.GetShort,
+        {data: {pageSize: 0, serviceCenterId, roles: [Roles.Technician]}}
+    );
+    dispatch(getSCEmployees(result));
 }

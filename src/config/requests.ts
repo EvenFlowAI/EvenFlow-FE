@@ -112,7 +112,7 @@ type ApiRoutes = {
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
         | "EditSkills" | "Prioritize", TApiRoute>,
-    Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar", TApiRoute>,
+    Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar" | "GetShort", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>
@@ -210,7 +210,8 @@ export class Api {
             Create: {route: "/users", method: "post"},
             Remove: {route: "/users/{id}", method: "delete"},
             Update: {route: "/users/{id}", method: "put"},
-            Avatar: {route: "/users/{id}/avatar", method: "patch"}
+            Avatar: {route: "/users/{id}/avatar", method: "patch"},
+            GetShort: {route: "/users/short-by-query", method: "post"}
         },
         Holidays: {
             GetAll: {route: "/holidays/by-query", method: "post"},

@@ -1,6 +1,9 @@
 import {IEmployee, TEmployeeActions} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {createReducer} from "@reduxjs/toolkit";
+import {IAdvisorShort} from "../users/types";
+import {getSCAdvisors, getSCEmployees} from "./actions";
 
 export type TEmployeesState = {
     employeesList: IEmployee[];
@@ -54,3 +57,21 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
             return state;
     }
 }
+
+type TSCState = {
+    advisorsList: IAdvisorShort[];
+    techniciansList: IAdvisorShort[];
+}
+const scInitialState: TSCState = {
+    advisorsList: [],
+    techniciansList: []
+}
+
+export const scEmployees = createReducer(scInitialState, builder => builder
+    .addCase(getSCAdvisors, (state, {payload}) => {
+        return {...state, advisorsList: payload};
+    })
+    .addCase(getSCEmployees, (state, {payload}) => {
+        return {...state, techniciansList: payload};
+    })
+)
