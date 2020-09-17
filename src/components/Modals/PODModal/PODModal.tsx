@@ -19,7 +19,7 @@ import {
     loadSCEmployees
 } from "../../../store/reducers/employees/actions";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
-import {createPod} from "../../../store/reducers/pods/actions";
+import {createPod, updatePod} from "../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../store/reducers/bays/actions";
 import {ConfigButton} from "../../UI/ConfigButton";
 
@@ -113,7 +113,11 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     serviceRequests: form.serviceRequests.map(sr => sr.id),
                     technicians: form.technicians.map(t => t.id)
                 };
-                await dispatch(createPod(data));
+                if (payload) {
+                    await dispatch(updatePod(data, payload.id));
+                } else {
+                    await dispatch(createPod(data));
+                }
                 setLoading(false);
                 showMessage("Saved");
                 props.onClose();

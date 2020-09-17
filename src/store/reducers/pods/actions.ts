@@ -29,3 +29,7 @@ export const createPod = (data: IPodForm): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Pods.Create, {data});
     dispatch(loadPods(data.serviceCenterId));
 }
+export const updatePod = (data: IPodForm, id: number): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Pods.Update, {data, urlParams: {id}});
+    dispatch(loadPods(data.serviceCenterId));
+}
