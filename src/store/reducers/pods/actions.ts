@@ -11,12 +11,19 @@ export const setPodsFilters = createAction<Partial<IPodFilters>>("Pods/Filters")
 
 export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     const {podsFilters, podsPageData} = getState().pods;
-    const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IPod>>(
-        Api.endpoints.Pods.GetAll,
-        {data: {...podsPageData, ...podsFilters, serviceCenterId}}
-    );
-    dispatch(getPods(result));
-    setPodsPaging(paging);
+    dispatch(setPodsLoading(true));
+    try {
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IPod>>(
+            Api.endpoints.Pods.GetAll,
+            {data: {...podsPageData, ...podsFilters, serviceCenterId}}
+        );
+        dispatch(getPods(result));
+        dispatch(setPodsPaging(paging));
+        dispatch(setPodsLoading(false));
+    } catch (e) {
+        dispatch(setPodsLoading(false));
+        throw e;
+    }
 }
 export const createPod = (data: IPodForm): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Pods.Create, {data});
