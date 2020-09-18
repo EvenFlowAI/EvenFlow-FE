@@ -33,3 +33,9 @@ export const updatePod = (data: IPodForm, id: number): AppThunk => async dispatc
     await Api.call(Api.endpoints.Pods.Update, {data, urlParams: {id}});
     dispatch(loadPods(data.serviceCenterId));
 }
+export const removePod = (id: number, serviceCenterId?: number): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Pods.Remove, {urlParams: {id}});
+    if (serviceCenterId) {
+        dispatch(loadPods(serviceCenterId));
+    }
+}

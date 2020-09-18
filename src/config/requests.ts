@@ -104,7 +104,7 @@ type ApiRoutes = {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
-    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
+    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks", TApiRoute>,
@@ -168,6 +168,7 @@ export class Api {
             Create: {route: "/pods", method: "post"},
             Update: {route: "/pods/{id}", method: "put"},
             Retrieve: {route: "/pods/{id}", method: "get"},
+            Remove: {route: "/pods/{id}", method: "delete"},
             GetAll: {route: "/pods/by-query", method: "post"},
             GetShort: {route: "/pods/short-by-query", method: "post"},
         },

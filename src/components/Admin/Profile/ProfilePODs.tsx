@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {useModal, usePagination, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {PODModal} from "../../Modals/PODModal/PODModal";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {IPod} from "../../../store/reducers/pods/types";
 import {useDispatch, useSelector} from "react-redux";
-import {loadPods, setPodsPageData} from "../../../store/reducers/pods/actions";
+import {loadPods, removePod, setPodsPageData} from "../../../store/reducers/pods/actions";
 import {RootState} from "../../../store/rootReducer";
 import {TableRowDataType} from "../../UI/types";
 import {Table} from "../../UI/Table";
@@ -30,7 +30,10 @@ export const ProfilePODs = () => {
         state.pods.podsPaging.numberOfRecords,
         state.pods.podsLoading
     ]);
+    const showMessage = useMessage();
+    const showError = useException();
     const {pageSize, pageIndex, changeRowsPerPage, changePage} = usePagination(state => state.pods.podsPageData, setPodsPageData);
+    const {askConfirm} = useConfirm();
 
     useEffect(() => {
         if (selectedSC) {
@@ -46,6 +49,29 @@ export const ProfilePODs = () => {
         setAnchorEl(null);
         onOpen();
     }
+    const askRemove = () => {
+        setAnchorEl(null);
+        askConfirm({
+            title: "Remove POD?",
+            content: `Remove POD ${editedItem?.name}`,
+            onConfirm: handleRemove
+        });
+    }
+
+    const handleRemove = async () => {
+        if (!editedItem) {
+            showError("Pod not specified");
+        } else {
+            try {
+                await dispatch(removePod(editedItem.id, selectedSC?.id));
+                showMessage("Removed");
+                setEditedItem(undefined);
+            } catch (e) {
+                showError(e);
+            }
+        }
+    }
+
     const handleOpenMenu = (el: IPod) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setAnchorEl(e.currentTarget);
         setEditedItem(el);
@@ -82,6 +108,7 @@ export const ProfilePODs = () => {
         <PODModal open={isOpen} onClose={onClose} payload={editedItem} />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
     </div>
 }
