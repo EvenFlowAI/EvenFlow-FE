@@ -76,7 +76,7 @@ export const NewLostCustomer = () => {
         </AppointmentTable>
         <NewCustomerValue
             isNew={current === NewLostEnum.New}
-            payload={current ? newValue : lostValue}
+            payload={current === NewLostEnum.New ? newValue : lostValue}
             open={isOpen}
             onClose={onClose}
         />

@@ -7,10 +7,10 @@ import {useDispatch} from "react-redux";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
 import {setNewLostCustomers} from "../../../store/reducers/valueSettings/actions";
-import {NewLostEnum} from "../../../store/reducers/valueSettings/types";
+import {INewLostCustomer, NewLostEnum} from "../../../store/reducers/valueSettings/types";
 import {SC_UNDEFINED} from "../../../config/constants";
 
-export const NewCustomerValue: React.FC<DialogProps & {isNew: boolean}> = ({onAction, isNew=false, payload, ...props}) => {
+export const NewCustomerValue: React.FC<DialogProps<INewLostCustomer> & {isNew: boolean}> = ({onAction, isNew=false, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [months, setMonths] = useState<string>("");
 
@@ -22,7 +22,7 @@ export const NewCustomerValue: React.FC<DialogProps & {isNew: boolean}> = ({onAc
     useEffect(() => {
         if (props.open) {
             if (payload) {
-                setMonths("");
+                setMonths(String(payload.periodInMonth));
             } else {
                 setMonths("");
             }
@@ -60,6 +60,7 @@ export const NewCustomerValue: React.FC<DialogProps & {isNew: boolean}> = ({onAc
                 label={`Considered ${isNew ? "new up to" : "lost after"}`}
                 value={months}
                 onChange={e => setMonths(e.target.value)}
+                endAdornment="months"
                 inputProps={{min: 0}}
                 type="number"
                 autoComplete="new-customer number"
