@@ -30,8 +30,7 @@ const useStyles = makeStyles({
 
 const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Description Title", val: v => v.description},
-    {header: "Date", val: v => moment(v.startDate).format("MMMM D")},
-    {header: "Duration", val: v => v.isAllDay ? "All day" : "Timed"},
+    {header: "Date", val: v => moment(v.date).format("MMMM D")},
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
@@ -108,12 +107,16 @@ export const Holidays: React.FC<DialogProps> = props => {
         (s: RootState) => s.holidays.pageData,
         setHolidayPageData
     );
+    const handleOpenCreate = () => {
+        setEditedItem(undefined);
+        onOpen();
+    }
 
     const classes = useStyles();
     return <BaseModal {...props} width={720}>
         <DialogTitle onClose={props.onClose}>Holidays</DialogTitle>
         <div className={classes.addHoliday}>
-            <Button variant="contained" color="primary" onClick={onOpen}>Add Holiday</Button>
+            <Button variant="contained" color="primary" onClick={handleOpenCreate}>Add Holiday</Button>
         </div>
         <DividerThin />
         <Table<IHoliday>

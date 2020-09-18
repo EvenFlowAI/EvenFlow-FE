@@ -6,9 +6,8 @@ import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {DateTimePicker} from "../../UI/DateTimePickers";
+import {DatePicker} from "../../UI/DateTimePickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import moment from "moment";
 import {Api} from "../../../config/requests";
 import {LoadingButton} from "../../UI/Button";
 import {IHoliday} from "../../../store/reducers/holidays/types";
@@ -34,40 +33,20 @@ const useStyles = makeStyles(theme => ({
 
 const HForm: React.FC<{
     form: TForm
-    onDateChange: (f: "startDate" | "endDate") => (date: MaterialUiPickersDate) => void;
+    onDateChange: (date: MaterialUiPickersDate) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onCheck: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }> = props => {
     const classes = useStyles();
     return <div>
         <Grid container spacing={2}>
-            <Grid item xs={6}>
-                <DateTimePicker
-                    value={props.form.startDate}
-                    onChange={props.onDateChange("startDate")}
-                    label="Start Date"
-                    fullWidth
-                />
-            </Grid>
-            <Grid item xs={6}>
-                <DateTimePicker
-                    value={props.form.endDate}
-                    onChange={props.onDateChange("endDate")}
-                    label="End Date"
-                    fullWidth
-                />
-            </Grid>
             <Grid item xs={12}>
-                <FormControlLabel
-                    className={classes.label}
-                    control={
-                        <Switch
-                            name="isAllDay"
-                            onChange={props.onCheck}
-                            checked={props.form.isAllDay}
-                            color="primary" />
-                    }
-                    label="All day" />
+                <DatePicker
+                    value={props.form.date}
+                    onChange={props.onDateChange}
+                    label="Date"
+                    fullWidth
+                />
             </Grid>
             <Grid item xs={12}>
                 <FormControlLabel
@@ -92,25 +71,21 @@ const HForm: React.FC<{
                 />
             </Grid>
             <Grid item xs={12} className={classes.spacer} />
-            <Grid item xs={12}>
-                {props.form.startDate && props.form.endDate ? <div className={classes.preview}>
-                    From {moment(props.form.startDate).format("MMM D, H:mm a")} to {moment(props.form.endDate).format("MMM D, H:mm a")}
-                </div> : null}
-            </Grid>
+            {/*<Grid item xs={12}>*/}
+            {/*    {props.form.startDate && props.form.endDate ? <div className={classes.preview}>*/}
+            {/*        From {moment(props.form.startDate).format("MMM D, H:mm a")} to {moment(props.form.endDate).format("MMM D, H:mm a")}*/}
+            {/*    </div> : null}*/}
+            {/*</Grid>*/}
         </Grid>
     </div>
 }
 type TForm = {
-    startDate: ParsableDate;
-    endDate: ParsableDate;
-    isAllDay: boolean;
+    date: ParsableDate;
     isRecurring: boolean;
     description: string;
 };
 const initialForm: TForm = {
-    startDate: null,
-    endDate: null,
-    isAllDay: true,
+    date: null,
     isRecurring: false,
     description: ""
 }
@@ -134,12 +109,8 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     }
-    const handleDateChange = (f: "startDate" | "endDate") => (date: MaterialUiPickersDate) => {
-        if (f === 'startDate') {
-            setForm({...form, startDate: date, endDate: moment(date).endOf("day")})
-        } else {
-            setForm({...form, [f]: date});
-        }
+    const handleDateChange = (date: MaterialUiPickersDate) => {
+        setForm({...form, date});
     }
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         setForm({...form, [e.target.name]: checked});

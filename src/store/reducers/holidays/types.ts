@@ -3,9 +3,7 @@ import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
 
 export interface IHoliday {
     id?: number;
-    startDate: ParsableDate;
-    endDate: ParsableDate;
-    isAllDay: boolean;
+    date: ParsableDate;
     isRecurring: boolean;
     description: string;
     serviceCenterId: number;
