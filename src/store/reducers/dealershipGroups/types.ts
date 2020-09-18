@@ -14,7 +14,7 @@ export interface IAddress {
 }
 
 export interface IDealershipProfile extends IDealershipGroupShort{
-    address: IAddress;
+    address?: IAddress;
     phoneNumber: string;
 }
 

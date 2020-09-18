@@ -3,8 +3,14 @@ import {InputBase as DefaultTextField, InputLabel} from "@material-ui/core";
 import {InputBaseProps} from "@material-ui/core/InputBase/InputBase";
 import theme from "../../theme/theme";
 import {makeStyles} from "@material-ui/core/styles";
+import {AutocompleteRenderInputParams} from "@material-ui/lab";
 
-export type TextInputProps = {label?: string, hideLabel?: boolean, spacing?: 'normal' | 'none' | undefined} & InputBaseProps;
+export type TextInputProps = {
+    label?: string,
+    hideLabel?: boolean,
+    spacing?: 'normal' | 'none' | undefined,
+    params?: AutocompleteRenderInputParams
+} & InputBaseProps;
 
 const useStyles = makeStyles(theme => ({
     label: (visible: boolean) =>  ({
@@ -17,14 +23,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const TextField = forwardRef<unknown, TextInputProps>(
-    ({label, hideLabel, spacing, ...props}, ref) => {
+    ({label, params, hideLabel, spacing, ...props}, ref) => {
     const classes = useStyles(!hideLabel);
+    const {InputProps={}, InputLabelProps={}, ...p} = params || {};
+
     return <>
         {label &&
-            <InputLabel className={classes.label} shrink htmlFor={props.id}>
+            <InputLabel className={classes.label} shrink htmlFor={props.id} {...InputLabelProps}>
                 {label}
             </InputLabel>
         }
-        <DefaultTextField ref={ref} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0, ...props.style}} />
+        <DefaultTextField ref={ref} {...{...p, ...InputProps}} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0, ...props.style}} />
     </>
 });

@@ -8,6 +8,9 @@ import {LoadingButton} from "../../UI/Button";
 import {updateDealership, updateDealershipAvatar} from "../../../store/reducers/dealershipGroups/actions";
 import {useDispatch} from "react-redux";
 import {IAddress} from "../../../store/reducers/dealershipGroups/types";
+import {states} from "../../../config/constants";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {Autocomplete} from "@material-ui/lab";
 
 const useStyles = makeStyles({
     container: {
@@ -42,12 +45,13 @@ type TForm = {
     phoneNumber: string;
     address: IAddress;
 }
+const blankAddress = {street: "", city: "", zipCode: "", state: ""}
 export const DealershipGroupProfile = () => {
     const [nameEdit, setNameEdit] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [form, setForm] = useState<TForm>({
-        name: "", address: {street: "", city: "", zipCode: "", state: ""}, phoneNumber: ""
+        name: "", address: {...blankAddress}, phoneNumber: ""
     });
     const profile = useDealershipProfile();
     const showError = useException();
@@ -58,7 +62,7 @@ export const DealershipGroupProfile = () => {
             setForm({
                 phoneNumber: profile.phoneNumber,
                 name: profile.name,
-                address: profile.address
+                address: profile?.address || {...blankAddress}
             });
         }
     }, [profile]);
@@ -67,7 +71,7 @@ export const DealershipGroupProfile = () => {
         setForm({
             name: profile?.name || '',
             phoneNumber: profile?.phoneNumber || '',
-            address: profile?.address || {state: "", zipCode: "", city: "", street: ""}
+            address: profile?.address || {...blankAddress}
         });
         setNameEdit(false);
     }
@@ -77,6 +81,9 @@ export const DealershipGroupProfile = () => {
     }
     const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, address: {...form.address, [e.target.name]: e.target.value}});
+    }
+    const handleSelectState = (e: React.ChangeEvent<{}>, val: string | null) => {
+        setForm({...form, address: {...form.address, state: val || ""}});
     }
     const handleChangeAvatar = async (f: File) => {
         if (profile) {
@@ -174,12 +181,48 @@ export const DealershipGroupProfile = () => {
             <Grid item xs={4}>
                 <TextField
                     fullWidth
-                    label="Main Address"
+                    label="City"
+                    name="city"
+                    autoComplete="dealership-city-address dealership-city"
+                    id="city"
+                    disabled={!nameEdit}
+                    value={form.address.city}
+                    onChange={handleChangeAddress}
+                />
+            </Grid>
+            <Grid item xs={4}>
+                <TextField
+                    fullWidth
+                    label="Street"
                     name="street"
                     autoComplete="dealership-street-address dealership-street"
-                    id="mainAddress"
+                    id="street"
                     disabled={!nameEdit}
                     value={form.address.street}
+                    onChange={handleChangeAddress}
+                />
+            </Grid>
+            <Grid item xs={1} />
+            <Grid item xs={2}>
+                <Autocomplete
+                    options={states}
+                    disabled={!nameEdit}
+                    onChange={handleSelectState}
+                    fullWidth
+                    autoComplete={true}
+                    renderInput={autocompleteRender({label: "State"})}
+                    value={form.address.state || null}
+                />
+            </Grid>
+            <Grid item xs={2}>
+                <TextField
+                    fullWidth
+                    label="ZIP Code"
+                    name="zipCode"
+                    autoComplete="dealership-zipCode-address dealership-zipCode"
+                    id="zipCode"
+                    disabled={!nameEdit}
+                    value={form.address.zipCode}
                     onChange={handleChangeAddress}
                 />
             </Grid>

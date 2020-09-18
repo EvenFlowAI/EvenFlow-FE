@@ -7,17 +7,15 @@ import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 
 type TTextParams = {
     label: string;
-    fullWidth?: boolean
+    fullWidth?: boolean;
+    disabled?: boolean;
 };
 export const autocompleteRender = (props: TTextParams) => (params: AutocompleteRenderInputParams) => {
-    return <div ref={params.InputProps.ref}>
-        <TextField label={props.label}
-                   {...params.inputProps}
-                   autoComplete={"off-invalid-value"}
-                   fullWidth={props.fullWidth}
-                   startAdornment={params.InputProps.startAdornment}
-                   endAdornment={params.InputProps.endAdornment}/>
-    </div>
+    return <TextField
+        label={props.label}
+        name={"undefined-name"}
+        params={params}
+    />;
 }
 export const autocompleteOptionsRender = (label: (el: any) => string) => (option: any, params: AutocompleteRenderOptionState) => {
     return <>
