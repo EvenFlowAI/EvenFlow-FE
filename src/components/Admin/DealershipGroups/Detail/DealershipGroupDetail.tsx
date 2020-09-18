@@ -57,7 +57,7 @@ export const DealershipGroupDetail = () => {
     return <TabContext value={selectedTab}>
         <TitleContainer
             title={dealership?.name || ""}
-            subtitle={dealership?.address ? concatAddress(dealership.address) : dealership?.mainAddress}
+            subtitle={concatAddress(dealership?.address)}
             pad />
         <TabList indicatorColor="primary" onChange={handleChangeTab}>
             {tabs.map((t) => {

@@ -17,8 +17,8 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 
 const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
-    {val: (el: IEmployee) => el?.dealership?.name, header: "Dealership group"},
-    {val: (el: IEmployee) => el?.dealership?.mainAddress, header: "Service center address"},
+    {val: (el: IEmployee) => el.dealership?.name, header: "Dealership group"},
+    {val: (el: IEmployee) => concatAddress(el.dealership?.address), header: "Service center address"},
     {val: (el: IEmployee) => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role"},
 ];
 

@@ -16,20 +16,18 @@ export interface IAddress {
 export interface IDealershipProfile extends IDealershipGroupShort{
     address: IAddress;
     phoneNumber: string;
-    mainAddress: string;
 }
 
 export interface IDealershipGroupExtended extends IDealershipGroupShort {
     address: IAddress;
     countOfServiceCenters: number;
     countOfEmployees: number;
-    mainAddress: string;
 }
 
 export interface IDealershipForm {
     name: string;
-    mainAddress: string;
     phoneNumber: string;
+    address: IAddress;
 }
 export interface IContactPersonForm {
     firstName: string;
@@ -45,7 +43,7 @@ export interface IDealershipGroupForm {
 export interface IDealershipProfileForm {
     name: string;
     phoneNumber: string;
-    mainAddress: string;
+    address: IAddress;
 }
 
 type AddDealership = {type: "Dealership/Add", payload: IDealershipGroupExtended};

@@ -18,11 +18,10 @@ import {
 } from "../../../store/reducers/dealershipGroups/types";
 import {create} from "../../../store/reducers/dealershipGroups/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useValidation} from "../../../utils/hooks";
+import {useException, useMessage, useValidation} from "../../../utils/hooks";
 import {ValidationKeyPairs} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
-import {useSnackbar} from "notistack";
 
 
 type KeyPair<U> = {
@@ -57,7 +56,7 @@ const FormElements: <T>(p: FormElementProps<T>) => React.ReactElement<FormElemen
 const elementsGroup1: KeyPair<IDealershipForm>[] = [
     {name: "name", label: "Dealership group name"},
     {name: "phoneNumber", label: "Phone"},
-    {name: "mainAddress", label: "Address"},
+    {name: "address", label: "Address"},
 ];
 
 const elementsGroup2: KeyPair<IContactPersonForm>[] = [
@@ -71,27 +70,25 @@ const requiredFields: ValidationKeyPairs<IDealershipForm & IContactPersonForm>[]
 ];
 
 const initialStateDealershipState: IDealershipForm = {
-    name: "", mainAddress: "", phoneNumber: ""
+    name: "", address: {street: "", city: "", state: "", zipCode: ""}, phoneNumber: ""
 };
 const initialCPState: IContactPersonForm = {
     phoneNumber: "", firstName: "", lastName: "", email: ""
 }
 
 
-export const CreateDealershipGroup: React.FC<
-    DialogProps> = props => {
-
+export const CreateDealershipGroup: React.FC<DialogProps> = props => {
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
     const [contactPerson, setCP] = useState<IContactPersonForm>({...initialCPState});
     useEffect(() => {
         setDealership({...initialStateDealershipState});
         setCP({...initialCPState});
-    }, [props.open])
+    }, [props.open]);
 
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
     const setException = useException();
-    const {enqueueSnackbar} = useSnackbar();
+    const showMessage = useMessage();
     const validate = useValidation(
         requiredFields, {...dealership, ...contactPerson}
     );
@@ -112,7 +109,7 @@ export const CreateDealershipGroup: React.FC<
         const data: IDealershipGroupForm = {contactPerson, dealership};
         try {
             await dispatch(create(data));
-            enqueueSnackbar("Created", {variant: "success"});
+            showMessage("Created");
             props.onClose();
         } catch (e) {
             setException(e);

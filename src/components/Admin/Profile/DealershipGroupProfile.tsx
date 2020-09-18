@@ -7,6 +7,7 @@ import {useDealershipProfile, useException, useMessage} from "../../../utils/hoo
 import {LoadingButton} from "../../UI/Button";
 import {updateDealership, updateDealershipAvatar} from "../../../store/reducers/dealershipGroups/actions";
 import {useDispatch} from "react-redux";
+import {IAddress} from "../../../store/reducers/dealershipGroups/types";
 
 const useStyles = makeStyles({
     container: {
@@ -39,14 +40,14 @@ const useStyles = makeStyles({
 type TForm = {
     name: string;
     phoneNumber: string;
-    mainAddress: string;
+    address: IAddress;
 }
 export const DealershipGroupProfile = () => {
     const [nameEdit, setNameEdit] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [form, setForm] = useState<TForm>({
-        name: "", mainAddress: "", phoneNumber: ""
+        name: "", address: {street: "", city: "", zipCode: "", state: ""}, phoneNumber: ""
     });
     const profile = useDealershipProfile();
     const showError = useException();
@@ -57,7 +58,7 @@ export const DealershipGroupProfile = () => {
             setForm({
                 phoneNumber: profile.phoneNumber,
                 name: profile.name,
-                mainAddress: profile.mainAddress
+                address: profile.address
             });
         }
     }, [profile]);
@@ -66,13 +67,16 @@ export const DealershipGroupProfile = () => {
         setForm({
             name: profile?.name || '',
             phoneNumber: profile?.phoneNumber || '',
-            mainAddress: profile?.mainAddress || ''
+            address: profile?.address || {state: "", zipCode: "", city: "", street: ""}
         });
         setNameEdit(false);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
+    }
+    const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({...form, address: {...form.address, [e.target.name]: e.target.value}});
     }
     const handleChangeAvatar = async (f: File) => {
         if (profile) {
@@ -171,11 +175,12 @@ export const DealershipGroupProfile = () => {
                 <TextField
                     fullWidth
                     label="Main Address"
-                    name="mainAddress"
+                    name="street"
+                    autoComplete="dealership-street-address dealership-street"
                     id="mainAddress"
                     disabled={!nameEdit}
-                    value={form.mainAddress}
-                    onChange={handleChange}
+                    value={form.address.street}
+                    onChange={handleChangeAddress}
                 />
             </Grid>
         </Grid>
