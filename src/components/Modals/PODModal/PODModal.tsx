@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {DialogProps} from "../types";
 import {IPod, IPodForm} from "../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
@@ -60,6 +60,13 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         state.bays.baysShort,
     ]);
 
+    const disabledBays: number[] = useMemo(() => {
+        if (payload) {
+            return baysList.filter(b => !b?.podId || b.podId === payload.id).map(b => b.id);
+        }
+        return baysList.filter(b => !b?.podId).map(b => b.id);
+    }, [baysList, payload]);
+
     useEffect(() => {
         if (props.open) {
             setForm({
@@ -70,13 +77,13 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         }
     }, [props.open, payload]);
     useEffect(() => {
-        if (selectedSC) {
+        if (selectedSC && props.open) {
             dispatch(loadSCAdvisors(selectedSC.id));
             dispatch(loadSCEmployees(selectedSC.id));
             dispatch(loadSCRequestsShort(selectedSC.id));
             dispatch(loadBaysShort(selectedSC.id));
         }
-    }, [selectedSC, dispatch]);
+    }, [selectedSC, dispatch, props.open]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
@@ -172,6 +179,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         const checked = form.bays.includes(bay.id);
                         return <ConfigButton
                             onClick={handleBaySelect(bay)}
+                            disabled={!disabledBays.includes(bay.id)}
                             color={checked ? "primary" : undefined}
                             variant="contained"
                             key={bay.id}

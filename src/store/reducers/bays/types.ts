@@ -7,8 +7,10 @@ export interface IBayForm {
 }
 export interface IBay extends IBayForm {
     id: number;
+    podId?: number;
 }
 export interface IBayShort {
     id: number;
     name: string;
+    podId?: number;
 }
