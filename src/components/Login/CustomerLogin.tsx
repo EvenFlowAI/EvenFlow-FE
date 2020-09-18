@@ -78,7 +78,7 @@ export const CustomerLogin = () => {
             </Grid>
         </Grid>
 
-        <LoginButton startIcon={<LockOpen/>} loading={loading} onClick={handleLogin}>
+        <LoginButton startIcon={<LockOpen/>} fullWidth loading={loading} onClick={handleLogin}>
             Log In
         </LoginButton>
     </LoginContainer>;

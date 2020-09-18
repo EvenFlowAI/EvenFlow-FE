@@ -25,7 +25,7 @@ const Message = () => {
     return <LoginContainer>
         <LoginHeader title="Check your email" />
         <LoginTextContent content={messageContent} />
-        <LoginButton onClick={handleBack}>Close</LoginButton>
+        <LoginButton fullWidth onClick={handleBack}>Close</LoginButton>
     </LoginContainer>;
 };
 
@@ -46,7 +46,7 @@ const ForgotPasswordForm = (props: FormProps) => {
             fullWidth
             placeholder="TYPE HERE"
         />
-        <LoginButton onClick={props.onSubmit}>Send Email</LoginButton>
+        <LoginButton fullWidth onClick={props.onSubmit}>Send Email</LoginButton>
         <Typography variant="body1" style={{marginTop: 20}}>
             Back to&nbsp;
             <BackLink to={Routes.Login.Base}>Sign In</BackLink>

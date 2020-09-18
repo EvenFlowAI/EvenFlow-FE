@@ -5,10 +5,11 @@ import clsx from "clsx";
 
 
 const useStyles = makeStyles({
-    wrapper: {
+    wrapper: (fw: boolean) => ({
         position: "relative",
+        width: fw ? "100%" : "auto",
         display: "inline-flex"
-    },
+    }),
     buttonProgress: {
         position: 'absolute',
         top: '50%',
@@ -21,7 +22,7 @@ const useStyles = makeStyles({
 type Props = {loading?: boolean, classes?: Partial<Record<ButtonClassKey, string> & {wrapper?: string}>} & ButtonProps;
 
 export const LoadingButton: React.FC<Props> = ({loading, classes, ...props}) => {
-    const classes_ = useStyles();
+    const classes_ = useStyles(props.fullWidth || false);
     const wrapperClassName = clsx(classes?.wrapper, classes_.wrapper);
     const buttonClasses = {...classes};
     if ("wrapper" in buttonClasses) {

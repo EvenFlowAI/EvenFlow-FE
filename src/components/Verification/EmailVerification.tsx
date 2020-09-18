@@ -55,7 +55,7 @@ export const EmailVerification: React.FC = () => {
         {token && userId
             ? <>
                 <PasswordForm password={password} password2={password2} onChange={handleChangePassword}/>
-                <LoginButton onClick={confirmVerification}>Set Password</LoginButton>
+                <LoginButton fullWidth onClick={confirmVerification}>Set Password</LoginButton>
             </>
             : <InvalidData />
         }

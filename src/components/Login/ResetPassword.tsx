@@ -46,6 +46,7 @@ export const ResetPassword = () => {
         />
         <LoginButton
             type="submit"
+            fullWidth
             onSubmit={handleResetPassword}
             onClick={handleResetPassword}
         >Reset password</LoginButton>

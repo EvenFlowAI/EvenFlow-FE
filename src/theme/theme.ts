@@ -115,7 +115,10 @@ export const loginTheme = createMuiTheme({
         MuiInputBase: {
         input: {
             ...input,
-            padding: theme.spacing(2)
+            padding: theme.spacing(2),
+            border: '1px solid #DADADA',
+            backgroundColor: "#F7F8FB",
+            fontWeight: "bold"
         }
         }
     }
