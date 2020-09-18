@@ -88,6 +88,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                 showMessage("Saved");
                 props.onClose();
             } catch (e) {
+                setLoading(false);
                 showError(e);
             }
         }
