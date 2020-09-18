@@ -47,6 +47,14 @@ export const RequiredEquipment = () => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
+    const {pageIndex, pageSize, changeRowsPerPage, changePage} = usePagination(state => state.bays.pageData, setPageData);
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadBays(selectedSC.id));
+        }
+    }, [dispatch, selectedSC, pageIndex, pageSize]);
+
     const openCreate = () => {
         setAnchorEl(null);
         setEditedItem(undefined);
@@ -87,14 +95,6 @@ export const RequiredEquipment = () => {
     const closeMenu = () => {
         setAnchorEl(null);
     }
-
-    useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadBays(selectedSC.id));
-        }
-    }, [dispatch, selectedSC]);
-
-    const {pageIndex, pageSize, changeRowsPerPage, changePage} = usePagination(state => state.bays.pageData, setPageData);
 
     const endActions = useCallback((el: IBay) => {
         return <IconButton onClick={openMenu(el)}>
