@@ -20,7 +20,7 @@ const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
     {val: el => el.name, header: "Dealership name"},
     {val: el => el.countOfServiceCenters.toString(), header: "Service centers", align: "center"},
     {val: el => el.countOfEmployees.toString(), header: "Employees", align: "center"},
-    {val: el => concatAddress(el.address), header: "Main Address"}
+    {val: el => concatAddress(el.address), header: "Address"}
 ];
 
 
