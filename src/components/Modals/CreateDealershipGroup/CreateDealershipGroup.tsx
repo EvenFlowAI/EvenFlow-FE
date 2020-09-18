@@ -56,7 +56,6 @@ const FormElements: <T>(p: FormElementProps<T>) => React.ReactElement<FormElemen
 const elementsGroup1: KeyPair<IDealershipForm>[] = [
     {name: "name", label: "Dealership group name"},
     {name: "phoneNumber", label: "Phone"},
-    {name: "address", label: "Address"},
 ];
 
 const elementsGroup2: KeyPair<IContactPersonForm>[] = [
@@ -70,7 +69,7 @@ const requiredFields: ValidationKeyPairs<IDealershipForm & IContactPersonForm>[]
 ];
 
 const initialStateDealershipState: IDealershipForm = {
-    name: "", address: {street: "", city: "", state: "", zipCode: ""}, phoneNumber: ""
+    name: "", phoneNumber: "",
 };
 const initialCPState: IContactPersonForm = {
     phoneNumber: "", firstName: "", lastName: "", email: ""

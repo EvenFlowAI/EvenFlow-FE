@@ -27,7 +27,6 @@ export interface IDealershipGroupExtended extends IDealershipGroupShort {
 export interface IDealershipForm {
     name: string;
     phoneNumber: string;
-    address: IAddress;
 }
 export interface IContactPersonForm {
     firstName: string;
