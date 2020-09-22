@@ -1,4 +1,6 @@
-export const APIHost = "http://3.129.173.158:8008"
+export const APIHost = process.env.REACT_APP_ENV === "stage"
+    ? "http://be.stage.evenflow.ai"
+    : "http://3.129.173.158:8008";
 export const APIUrl = `${APIHost}/api/v0`;
 
 export const defaultRowsPerPageOptions = [10, 50, 100];
