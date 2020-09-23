@@ -1,8 +1,10 @@
 import {
     IAssignedServiceRequest,
     IAssignedServiceRequestShort,
+    ISRAdminFilters,
     IServiceRequest,
-    IServiceRequestNonAddedFilter
+    IServiceRequestNonAddedFilter,
+    ISRAdmin
 } from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
@@ -26,10 +28,20 @@ import {
     loadingNonUrgentServiceRequests,
     pagingNonUrgentServiceRequests,
     pageDataNonUrgentServiceRequests,
-    getSCRequestsShort
+    getSCRequestsShort,
+    getAdminServiceRequests,
+    setLoadingAdmin,
+    setAdminPaging,
+    setAdminPageData,
+    setAdminFilter,
 } from "./actions";
 
 type TState = {
+    adminList: ISRAdmin[];
+    adminLoading: boolean;
+    adminPaging: IPagingResponse;
+    adminPageData: IPageRequest;
+    adminFilters: ISRAdminFilters;
     nonSelectedList: IServiceRequest[];
     nonSelectedLoading: boolean;
     nonSelectedPaging: IPagingResponse;
@@ -51,6 +63,11 @@ type TState = {
     scRequestsShort: IAssignedServiceRequestShort[];
 }
 const initialState: TState = {
+    adminList: [],
+    adminLoading: false,
+    adminPaging: {...defaultPaging},
+    adminPageData: {...defaultPageData},
+    adminFilters: {searchTerm: ""},
     nonSelectedList: [],
     nonSelectedLoading: false,
     nonSelectedPaging: {...defaultPaging},
@@ -130,5 +147,20 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(getSCRequestsShort, (state, {payload}) => {
             return {...state, scRequestsShort: payload};
+        })
+        .addCase(getAdminServiceRequests, (state, {payload}) => {
+            return {...state, adminList: payload};
+        })
+        .addCase(setLoadingAdmin, (state, {payload}) => {
+            return {...state, adminLoading: payload};
+        })
+        .addCase(setAdminPaging, (state, {payload}) => {
+            return {...state, adminPaging: payload};
+        })
+        .addCase(setAdminPageData, (state, {payload}) => {
+            return {...state, adminPageData: {...state.adminPageData, ...payload}};
+        })
+        .addCase(setAdminFilter, (state, {payload}) => {
+            return {...state, adminFilters: {...state.adminFilters, ...payload}};
         })
 )

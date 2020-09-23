@@ -9,7 +9,7 @@ import {
     IServiceRequest,
     IServiceRequestNonAddedFilter,
     IServiceRequestOverrideEditRequest,
-    IServiceRequestPriority
+    IServiceRequestPriority, ISRAdmin, ISRAdminFilters
 } from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -164,4 +164,27 @@ export const loadSCRequestsShort = (serviceCenterId: number): AppThunk => async 
         {params: {serviceCenterId, pageSize: 0}}
     );
     dispatch(getSCRequestsShort(result));
+}
+
+export const getAdminServiceRequests = createAction<ISRAdmin[]>("ServiceRequests/getAdmin");
+export const setLoadingAdmin = createAction<boolean>("ServiceRequests/loadingAdmin");
+export const setAdminPaging = createAction<IPagingResponse>("ServiceRequests/AdminPaging");
+export const setAdminPageData = createAction<Partial<IPageRequest>>("ServiceRequests/AdminPageData");
+export const setAdminFilter = createAction<Partial<ISRAdminFilters>>("ServiceRequests/AdminFilter");
+export const loadAdminServiceRequests = (): AppThunk =>
+async (dispatch, getState) => {
+    const {adminPageData, adminFilters} = getState().serviceRequests;
+    dispatch(setLoadingAdmin(true));
+    try {
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<ISRAdmin>>(
+            Api.endpoints.ServiceRequests.GetFiltered,
+            {data: {...adminPageData, ...adminFilters}}
+        );
+        dispatch(setLoadingAdmin(false));
+        dispatch(getAdminServiceRequests(result));
+        dispatch(setAdminPaging(paging));
+    } catch (e) {
+        dispatch(setLoadingAdmin(false));
+        throw e;
+    }
 }

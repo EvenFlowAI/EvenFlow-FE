@@ -65,3 +65,19 @@ export interface IPrioritizeItem {
 export interface IPrioritizeRequest {
     items: IPrioritizeItem[]
 }
+
+export interface ISRAdminFilters {
+    searchTerm: string;
+}
+
+export interface ISRAdmin {
+    id: number;
+    code: string;
+    description: string;
+    durationInHours: number;
+    countOfTechnicians: number;
+    skillLevelOfTechnicians: number;
+    invoiceAmount: number;
+    warrantyInvoiceAmount: number;
+    status: EServiceStatus
+}
