@@ -19,13 +19,38 @@ import {CreateOPsCode} from "../../Modals/CreateOPsCode/CreateOPsCode";
 
 const rowData: TableRowDataType<ISRAdmin>[] = [
     {header: "OPs Code", val: el => el.code},
-
+    {header: "Description", val: el => el.description},
+    {
+        header: "Duration (hours)",
+        align: "center",
+        val: el => String(el.durationInHours)
+    },
+    {
+        header: "Number of technicians",
+        align: "center",
+        val: el => String(el.countOfTechnicians)
+    },
+    {
+        header: "Skill level of technicians",
+        align: "center",
+        val: el => String(el.skillLevelOfTechnicians)
+    },
+    {
+        header: "Warranty invoice",
+        align: "center",
+        val: el => `$${el.warrantyInvoiceAmount}`
+    },
+    {
+        header: "Regular invoice",
+        align: "center",
+        val: el => `$${el.invoiceAmount}`
+    },
     {
         header: "Status",
         align: "center",
         val: el => el.status === EServiceStatus.Archived
-            ? <CheckCircle fontSize="small" color="primary" />
-            : ""
+            ? ""
+            : <CheckCircle fontSize="small" color="primary" />
     }
 ];
 

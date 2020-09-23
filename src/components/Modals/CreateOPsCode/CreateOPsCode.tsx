@@ -64,34 +64,30 @@ export const CreateOPsCode: React.FC<DialogProps<ISRAdmin>> = ({onAction, payloa
         setForm({...form, skillLevelOfTechnicians: val});
     }
     const handleSave = async () => {
-        if (!payload) {
-            showError("Data is not loaded");
-        } else {
-            setLoading(true);
-            try {
-                const {description, code, skillLevelOfTechnicians, ...f} = form;
-                const data: ISRAdminForm = {
-                    code, description, skillLevelOfTechnicians,
-                    countOfTechnicians: Number(f.countOfTechnicians),
-                    durationInHours: Number(f.durationInHours),
-                    invoiceAmount: Number(f.invoiceAmount),
-                    warrantyInvoiceAmount: Number(f.warrantyInvoiceAmount)
-                };
-                if (!payload) {
-                    await dispatch(createAdminServiceRequest(data));
-                } else {
-                    await dispatch(updateAdminServiceRequest(
-                        data,
-                        payload.id,
-                    ));
-                }
-                setLoading(false);
-                showMessage("Saved");
-                props.onClose();
-            } catch (e) {
-                setLoading(false);
-                showError(e);
+        setLoading(true);
+        try {
+            const {description, code, skillLevelOfTechnicians, ...f} = form;
+            const data: ISRAdminForm = {
+                code, description, skillLevelOfTechnicians,
+                countOfTechnicians: Number(f.countOfTechnicians),
+                durationInHours: Number(f.durationInHours),
+                invoiceAmount: Number(f.invoiceAmount),
+                warrantyInvoiceAmount: Number(f.warrantyInvoiceAmount)
+            };
+            if (!payload) {
+                await dispatch(createAdminServiceRequest(data));
+            } else {
+                await dispatch(updateAdminServiceRequest(
+                    data,
+                    payload.id,
+                ));
             }
+            setLoading(false);
+            showMessage("Saved");
+            props.onClose();
+        } catch (e) {
+            setLoading(false);
+            showError(e);
         }
     }
 
