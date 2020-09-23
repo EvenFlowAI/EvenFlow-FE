@@ -70,6 +70,16 @@ export interface ISRAdminFilters {
     searchTerm: string;
 }
 
+export interface ISRAdminForm {
+    code: string;
+    description: string;
+    durationInHours: number;
+    countOfTechnicians: number;
+    skillLevelOfTechnicians: number;
+    invoiceAmount: number;
+    warrantyInvoiceAmount: number;
+}
+
 export interface ISRAdmin {
     id: number;
     code: string;

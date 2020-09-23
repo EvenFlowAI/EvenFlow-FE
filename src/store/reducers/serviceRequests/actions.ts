@@ -9,7 +9,7 @@ import {
     IServiceRequest,
     IServiceRequestNonAddedFilter,
     IServiceRequestOverrideEditRequest,
-    IServiceRequestPriority, ISRAdmin, ISRAdminFilters
+    IServiceRequestPriority, ISRAdmin, ISRAdminFilters, ISRAdminForm
 } from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -190,5 +190,19 @@ async (dispatch, getState) => {
 }
 export const removeAdminServiceRequest = (el: ISRAdmin): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.ServiceRequests.Remove, {urlParams: {id: el.id}});
+    dispatch(loadAdminServiceRequests());
+}
+export const createAdminServiceRequest = (data: ISRAdminForm): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.ServiceRequests.Create,
+        {data}
+    );
+    dispatch(loadAdminServiceRequests());
+}
+export const updateAdminServiceRequest = (data: ISRAdminForm, id: number): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.ServiceRequests.Update,
+        {data, urlParams: {id}}
+    );
     dispatch(loadAdminServiceRequests());
 }

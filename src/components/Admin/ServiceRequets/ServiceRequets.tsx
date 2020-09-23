@@ -9,12 +9,13 @@ import {
     removeAdminServiceRequest,
     setAdminPageData
 } from "../../../store/reducers/serviceRequests/actions";
-import {useConfirm, useException, useMessage, usePagination} from "../../../utils/hooks";
+import {useConfirm, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
 import {TableRowDataType} from "../../UI/types";
 import {EServiceStatus, ISRAdmin} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
 import {RootState} from "../../../store/rootReducer";
 import {CheckCircle, MoreHoriz} from "@material-ui/icons";
+import {CreateOPsCode} from "../../Modals/CreateOPsCode/CreateOPsCode";
 
 const rowData: TableRowDataType<ISRAdmin>[] = [
     {header: "OPs Code", val: el => el.code},
@@ -49,6 +50,7 @@ export const ServiceRequests = () => {
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
+    const {onOpen, onClose, isOpen} = useModal();
 
     useEffect(() => {
         dispatch(loadAdminServiceRequests());
@@ -74,6 +76,12 @@ export const ServiceRequests = () => {
 
     const openEdit = () => {
         setAnchorEl(null);
+        onOpen();
+    }
+    const openCreate = () => {
+        setAnchorEl(null);
+        setEditedItem(undefined);
+        onOpen();
     }
 
     const handleRemove = async () => {
@@ -103,6 +111,7 @@ export const ServiceRequests = () => {
         <Button
             style={{marginLeft: 16}}
             color="primary"
+            onClick={openCreate}
             variant="contained">
             Add OPs Code
         </Button>
@@ -129,6 +138,7 @@ export const ServiceRequests = () => {
             isLoading={loading}
             onChangeRowsPerPage={changeRowsPerPage}
         />
+        <CreateOPsCode open={isOpen} onClose={onClose} payload={editedItem} />
         <Menu
             open={Boolean(anchorEl)}
             onClose={() => {setAnchorEl(null);}}
