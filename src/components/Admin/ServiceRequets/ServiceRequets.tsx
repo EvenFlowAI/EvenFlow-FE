@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {SearchInput} from "../../UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {
     loadAdminServiceRequests,
+    setAdminFilter,
     removeAdminServiceRequest,
     setAdminPageData
 } from "../../../store/reducers/serviceRequests/actions";
@@ -35,11 +36,13 @@ export const ServiceRequests = () => {
     const [
         serviceRequests,
         loading,
-        count
+        count,
+        searchTerm
     ] = useSelector((state: RootState) => [
         state.serviceRequests.adminList,
         state.serviceRequests.adminLoading,
-        state.serviceRequests.adminPaging.numberOfRecords
+        state.serviceRequests.adminPaging.numberOfRecords,
+        state.serviceRequests.adminFilters.searchTerm
     ]);
     const [editedItem, setEditedItem] = useState<ISRAdmin|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -87,8 +90,16 @@ export const ServiceRequests = () => {
         }
     }
 
+    const handleSearch = useCallback(() => {
+        dispatch(loadAdminServiceRequests());
+    }, [dispatch]);
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setAdminFilter({searchTerm: e.target.value}));
+    }
+
     const titleActions = <div style={{display: "flex", alignItems: "center"}}>
-        <SearchInput onSearch={() => {}} />
+        <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={searchTerm} />
         <Button
             style={{marginLeft: 16}}
             color="primary"
