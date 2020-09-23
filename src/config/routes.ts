@@ -3,7 +3,8 @@ enum AdminRoutes {
     DealershipGroups = "/admin/dealership-groups",
     Employees = "/admin/employees",
     Profile = "/admin/profile",
-    ServiceCenters = "/admin/service-centers"
+    ServiceCenters = "/admin/service-centers",
+    ServiceRequests = "/admin/service-requests"
 }
 
 enum LoginRoutes {

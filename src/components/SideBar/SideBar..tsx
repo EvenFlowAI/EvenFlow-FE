@@ -58,7 +58,8 @@ const useStyles = makeStyles(theme => ({
 const SULinks: LinkType[] = [
     {to: Routes.Admin.DealershipGroups, name: "Dealership Groups"},
     {to: Routes.Admin.Employees, name: "Employees"},
-    {to: Routes.Admin.ServiceCenters, name: "Service Centers"}
+    {to: Routes.Admin.ServiceCenters, name: "Service Centers"},
+    {to: Routes.Admin.ServiceRequests, name: "Service Requests"}
 ];
 const AdminLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true},
