@@ -1,10 +1,14 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {Button, IconButton} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {SearchInput} from "../../UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAdminServiceRequests, setAdminPageData} from "../../../store/reducers/serviceRequests/actions";
-import {usePagination} from "../../../utils/hooks";
+import {
+    loadAdminServiceRequests,
+    removeAdminServiceRequest,
+    setAdminPageData
+} from "../../../store/reducers/serviceRequests/actions";
+import {useConfirm, useException, useMessage, usePagination} from "../../../utils/hooks";
 import {TableRowDataType} from "../../UI/types";
 import {EServiceStatus, ISRAdmin} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
@@ -37,10 +41,51 @@ export const ServiceRequests = () => {
         state.serviceRequests.adminLoading,
         state.serviceRequests.adminPaging.numberOfRecords
     ]);
+    const [editedItem, setEditedItem] = useState<ISRAdmin|undefined>(undefined);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+    const showMessage = useMessage();
+    const showError = useException();
+    const {askConfirm} = useConfirm();
 
     useEffect(() => {
         dispatch(loadAdminServiceRequests());
     }, [dispatch, pageIndex, pageSize]);
+
+    const openMenu = (el: ISRAdmin) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setEditedItem(el);
+        setAnchorEl(e.currentTarget);
+    }
+
+    const askRemove = () => {
+        setAnchorEl(null);
+        if (!editedItem) {
+            showError("Service request is not loaded");
+        } else {
+            askConfirm({
+                title: "Remove Service Request?",
+                content: `Remove service request ${editedItem.code}?`,
+                onConfirm: handleRemove
+            });
+        }
+    }
+
+    const openEdit = () => {
+        setAnchorEl(null);
+    }
+
+    const handleRemove = async () => {
+        if (!editedItem) {
+            showError("Service request is not loaded");
+        } else {
+            try {
+                await dispatch(removeAdminServiceRequest(editedItem));
+                showMessage("Removed");
+                setEditedItem(undefined);
+            } catch (e) {
+                showError(e);
+            }
+        }
+    }
 
     const titleActions = <div style={{display: "flex", alignItems: "center"}}>
         <SearchInput onSearch={() => {}} />
@@ -53,7 +98,7 @@ export const ServiceRequests = () => {
     </div>;
 
     const tableActions = (el: ISRAdmin) => {
-        return <IconButton>
+        return <IconButton onClick={openMenu(el)}>
             <MoreHoriz />
         </IconButton>;
     }
@@ -73,5 +118,13 @@ export const ServiceRequests = () => {
             isLoading={loading}
             onChangeRowsPerPage={changeRowsPerPage}
         />
+        <Menu
+            open={Boolean(anchorEl)}
+            onClose={() => {setAnchorEl(null);}}
+            anchorEl={anchorEl}
+        >
+            <MenuItem onClick={openEdit}>Edit</MenuItem>
+            <MenuItem onClick={askRemove}>Remove</MenuItem>
+        </Menu>
     </>
 }

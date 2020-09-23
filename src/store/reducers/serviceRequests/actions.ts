@@ -188,3 +188,7 @@ async (dispatch, getState) => {
         throw e;
     }
 }
+export const removeAdminServiceRequest = (el: ISRAdmin): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.ServiceRequests.Remove, {urlParams: {id: el.id}});
+    dispatch(loadAdminServiceRequests());
+}
