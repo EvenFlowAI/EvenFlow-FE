@@ -79,3 +79,4 @@ export enum LocalItems {
     selectedSC= "SSCID",
 }
 export const SC_UNDEFINED = "Service center is not loaded";
+export const SOMETHING_WRONG = "Something wrong";

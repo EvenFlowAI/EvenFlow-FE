@@ -1,11 +1,12 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../AppointmentValue/UI";
-import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {useSCs} from "../../../utils/hooks";
+import {Button, CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadProximity} from "../../../store/reducers/slotScoring/actions";
+import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
-import {EProximityType} from "../../../store/reducers/slotScoring/types";
+import {EProximityType, IProximity} from "../../../store/reducers/slotScoring/types";
+import {SOMETHING_WRONG} from "../../../config/constants";
 
 enum SliderRange {
     Min= 0,
@@ -28,7 +29,10 @@ export const Proximity = () => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [edit, setEdit] = useState<EProximityType|null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
+    const showMessage = useMessage();
+    const showError = useException();
 
     const [proximity] = useSelector((state: RootState) => [
         state.slotScoring.proximity
@@ -42,19 +46,24 @@ export const Proximity = () => {
     }, [proximity]);
 
     useEffect(() => {
+        if (selectedSC)
+            dispatch(loadProximity(selectedSC.id));
+    }, [dispatch, selectedSC]);
+
+    useEffect(() => {
         setForm({
             [EProximityType.Closest]: closest ? {...closest} : {...blankSlider},
             [EProximityType.Earliest]: earliest ? {...earliest} : {...blankSlider}
         });
     }, [closest, earliest]);
 
-    useEffect(() => {
-        if (selectedSC)
-            dispatch(loadProximity(selectedSC.id));
-    }, [dispatch, selectedSC]);
-
     const handleEdit = (el: EProximityType) => () => {
         setEdit(el);
+    }
+    const handleSlide = (_: any, val: number | number[]) => {
+        if (edit !== null) {
+            setForm({...form, [edit]: {point: val as number}});
+        }
     }
     const handleCancel = () => {
         setForm({
@@ -63,8 +72,47 @@ export const Proximity = () => {
         });
         setEdit(null);
     }
-    const handleSave = () => {
+    const handleSave = async () => {
+        if (edit === null) {
+            showError(SOMETHING_WRONG);
+        } else {
+            setLoading(true);
+            const data: IProximity = {
+                point: form[edit].point,
+                serviceCenterId: selectedSC?.id,
+                type: edit
+            };
+            try {
+                await dispatch(createProximity(data));
+                setLoading(false);
+                setEdit(null);
+                showMessage("Saved")
+            } catch (e) {
+                setLoading(false);
+                handleCancel();
+                showError(e);
+            }
+        }
+    }
 
+    const editButton = (t: EProximityType) => {
+        return loading
+            ? <CircularProgress color="primary"/>
+            : edit === t
+                ? <>
+                    <Button onClick={handleCancel} color="secondary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleSave} color="primary">
+                        Save
+                    </Button>
+                </>
+                : <Button
+                    disabled={edit !== null}
+                    color="primary"
+                    onClick={handleEdit(t)}>
+                    Edit
+                </Button>;
     }
 
     return <div>
@@ -83,6 +131,7 @@ export const Proximity = () => {
                         <ValueSlider
                             min={SliderRange.Min}
                             max={SliderRange.Max}
+                            onChange={handleSlide}
                             disabled={edit !== EProximityType.Closest}
                             marks={[
                                 {value: SliderRange.Min, label: SliderRange.Min},
@@ -93,21 +142,7 @@ export const Proximity = () => {
                         />
                     </TableCell>
                     <TableCell align="right">
-                        {edit === EProximityType.Closest
-                        ? <>
-                            <Button onClick={handleCancel} color="secondary">
-                                Cancel
-                            </Button>
-                            <Button onClick={handleSave} color="primary">
-                                Save
-                            </Button>
-                        </>
-                        : <Button
-                            disabled={edit !== null}
-                            color="primary"
-                            onClick={handleEdit(EProximityType.Closest)}>
-                            Edit
-                        </Button>}
+                        {editButton(EProximityType.Closest)}
                     </TableCell>
                 </TableRow>
                 <TableRow>
@@ -116,6 +151,7 @@ export const Proximity = () => {
                         <ValueSlider
                             min={SliderRange.Min}
                             max={SliderRange.Max}
+                            onChange={handleSlide}
                             disabled={edit !== EProximityType.Earliest}
                             marks={[
                                 {value: SliderRange.Min, label: SliderRange.Min},
@@ -126,21 +162,7 @@ export const Proximity = () => {
                         />
                     </TableCell>
                     <TableCell align="right">
-                        {edit === EProximityType.Earliest
-                        ? <>
-                            <Button onClick={handleCancel} color="secondary">
-                                Cancel
-                            </Button>
-                            <Button onClick={handleSave} color="primary">
-                                Save
-                            </Button>
-                        </>
-                        : <Button
-                            disabled={edit !== null}
-                            color="primary"
-                            onClick={handleEdit(EProximityType.Earliest)}>
-                            Edit
-                        </Button>}
+                        {editButton(EProximityType.Earliest)}
                     </TableCell>
                 </TableRow>
             </TableBody>

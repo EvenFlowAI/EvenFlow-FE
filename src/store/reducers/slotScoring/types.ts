@@ -6,6 +6,6 @@ export enum EProximityType {
 export interface IProximity {
     type: EProximityType;
     point: number;
-    serviceCenterId: number;
-    podId: number;
+    serviceCenterId?: number;
+    podId?: number;
 }
