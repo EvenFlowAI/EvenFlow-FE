@@ -6,6 +6,7 @@ import {Routes} from "../../config/routes";
 import {CapacitySettings} from "./CapacitySettings/CapacitySettings";
 import {AppointmentValue} from "./AppointmentValue/AppointmentValue";
 import {OPsCodesPage} from "./OPsCodes/OPsCodesPage";
+import {AppointmentSlotScoring} from "./AppointmentSlotScoring/AppointmentSlotScoring";
 
 export const OptimizerPage = () => {
     return <ContentContainer>
@@ -13,6 +14,7 @@ export const OptimizerPage = () => {
             <PrivateRoute path={Routes.Optimizer.ServiceRequests} component={OPsCodesPage} />
             <PrivateRoute path={Routes.Optimizer.AppointmentValue} component={AppointmentValue} />
             <PrivateRoute path={Routes.Optimizer.CapacitySettings} component={CapacitySettings} />
+            <PrivateRoute path={Routes.Optimizer.AppointmentSlotScoring} component={AppointmentSlotScoring} />
             <Redirect to={Routes.Optimizer.CapacitySettings} />
         </Switch>
     </ContentContainer>
