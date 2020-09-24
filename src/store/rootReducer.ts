@@ -9,6 +9,7 @@ import {baysReducer} from "./reducers/bays/reducer";
 import {valueSettingsReducer} from "./reducers/valueSettings/reducer";
 import {serviceRequestsReducer} from "./reducers/serviceRequests/reducers";
 import {podsReducer} from "./reducers/pods/reducer";
+import {slotScoringReducer} from "./reducers/slotScoring/reducer";
 
 export const rootReducer = combineReducers({
     users: usersReducer,
@@ -17,6 +18,7 @@ export const rootReducer = combineReducers({
     scEmployees: scEmployees,
     pods: podsReducer,
     serviceCenters: serviceCenterReducer,
+    slotScoring: slotScoringReducer,
     modals: modalsReducer,
     holidays: holidaysReducer,
     bays: baysReducer,
