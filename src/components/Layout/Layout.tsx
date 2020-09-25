@@ -13,6 +13,7 @@ import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actions";
 import {loadAllSCs} from "../../store/reducers/serviceCenters/actions";
 import {useSCs} from "../../utils/hooks";
+import {getPodsShort, loadPodsShort} from "../../store/reducers/pods/actions";
 
 
 const useStyles = makeStyles(theme => ({
@@ -42,7 +43,9 @@ export const Layout = () => {
     }, [dispatch]);
     useEffect(() => {
         if (selectedSC) {
-            // TODO: Load pods for selection
+            dispatch(loadPodsShort(selectedSC.id));
+        } else {
+            dispatch(getPodsShort([]));
         }
     }, [dispatch, selectedSC])
 
