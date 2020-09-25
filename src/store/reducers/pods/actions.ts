@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IPod, IPodFilters, IPodForm} from "./types";
+import {IPod, IPodFilters, IPodForm, IPodShort} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -38,4 +38,14 @@ export const removePod = (id: number, serviceCenterId?: number): AppThunk => asy
     if (serviceCenterId) {
         dispatch(loadPods(serviceCenterId));
     }
+}
+
+export const getPodsShort = createAction<IPodShort[]>("Pods/GetPodsShort");
+export const setSelectedPod = createAction<IPodShort|null>("Pods/SetSelectedPod");
+export const loadPodsShort = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data: {result}} = await Api.call<PaginatedAPIResponse<IPodShort>>(
+        Api.endpoints.Pods.GetShort,
+        {data: {serviceCenterId, pageSize: 0}}
+    );
+    dispatch(getPodsShort(result));
 }

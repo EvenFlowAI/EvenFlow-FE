@@ -12,6 +12,7 @@ import {getCurrentUser} from "../../store/reducers/users/actions";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actions";
 import {loadAllSCs} from "../../store/reducers/serviceCenters/actions";
+import {useSCs} from "../../utils/hooks";
 
 
 const useStyles = makeStyles(theme => ({
@@ -33,11 +34,17 @@ const useStyles = makeStyles(theme => ({
 export const Layout = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
     useEffect(() => {
         dispatch(getCurrentUser());
         dispatch(loadDealershipProfile());
         dispatch(loadAllSCs());
     }, [dispatch]);
+    useEffect(() => {
+        if (selectedSC) {
+            // TODO: Load pods for selection
+        }
+    }, [dispatch, selectedSC])
 
     return <div className={classes.root}>
         <SideBar />

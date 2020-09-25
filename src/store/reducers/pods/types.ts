@@ -2,6 +2,11 @@ import {IAdvisorShort} from "../users/types";
 import {IBayShort} from "../bays/types";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
 
+
+export interface IPodShort {
+    id: number;
+    name: string;
+}
 export interface IPod {
     id: number;
     name: string;

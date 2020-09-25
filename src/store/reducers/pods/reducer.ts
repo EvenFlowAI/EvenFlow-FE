@@ -1,10 +1,10 @@
-import {IPod, IPodFilters} from "./types";
+import {IPod, IPodFilters, IPodShort} from "./types";
 import {
     getPods,
     setPodsLoading,
     setPodsPageData,
     setPodsPaging,
-    setPodsFilters
+    setPodsFilters, getPodsShort, setSelectedPod
 } from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
@@ -16,6 +16,8 @@ type TState = {
     podsPaging: IPagingResponse;
     podsPageData: IPageRequest;
     podsFilters: IPodFilters;
+    shortPodsList: IPodShort[];
+    selectedPod: IPodShort|null
 }
 const initialState: TState = {
     podsList: [],
@@ -25,7 +27,9 @@ const initialState: TState = {
     podsFilters: {
         searchTerm: "",
         advisorId: ""
-    }
+    },
+    selectedPod: null,
+    shortPodsList: []
 }
 
 export const podsReducer = createReducer(initialState, builder => builder
@@ -43,5 +47,11 @@ export const podsReducer = createReducer(initialState, builder => builder
     })
     .addCase(setPodsFilters, (state, {payload}) => {
         return {...state, podsFilters: {...state.podsFilters, ...payload}};
+    })
+    .addCase(getPodsShort, (state, {payload}) => {
+        return {...state, shortPodsList: payload};
+    })
+    .addCase(setSelectedPod, (state, {payload}) => {
+        return {...state, selectedPod: payload};
     })
 )

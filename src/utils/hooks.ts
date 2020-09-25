@@ -57,6 +57,11 @@ export const useSCs = () => {
     return {selectedSC, scList, selectSC};
 }
 
+export const useSelectedPod = () => {
+    const selectedPod = useSelector((state: RootState) => state.pods.selectedPod);
+    return {selectedPod};
+}
+
 export function useException() {
     const {enqueueSnackbar} = useSnackbar();
     return (e: any) => {
