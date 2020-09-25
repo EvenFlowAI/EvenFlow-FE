@@ -6,6 +6,7 @@ import {Api} from "../../../config/requests";
 import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {LocalItems} from "../../../config/constants";
+import {setSelectedPod} from "../pods/actions";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
    type: "ServiceCenters/GetAll", payload
@@ -137,9 +138,13 @@ export const loadDealershipSCs = (dealershipId: number, pageData: IPageRequest):
     }
 }
 const _loadAllSCS = (payload: IServiceCenter[]): TServiceCenterActions => ({type: "ServiceCenters/FullSCList", payload});
-export const selectSC = (payload: IServiceCenter): TServiceCenterActions => {
-    localStorage.setItem(LocalItems.selectedSC, String(payload.id));
+const _selectSc = (payload: IServiceCenter): TServiceCenterActions => {
     return {type: "ServiceCenters/SelectSC", payload};
+}
+export const selectSC = (payload: IServiceCenter): AppThunk => dispatch => {
+    localStorage.setItem(LocalItems.selectedSC, String(payload.id));
+    dispatch(_selectSc(payload));
+    dispatch(setSelectedPod(null));
 };
 export const loadAllSCs = (): AppThunk => async dispatch => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params: {pageSize: 0, pageIndex: 0}});
