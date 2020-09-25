@@ -10,6 +10,7 @@ import {getInitials} from "../../utils/utils";
 import {ServiceCenterSelector} from "./ServiceCenterSelector";
 import {Roles} from "../../config/constants";
 import {Routes} from "../../config/routes";
+import {PodSelector} from "./PodSelector";
 
 
 const useStyles = makeStyles(theme => ({
@@ -18,7 +19,9 @@ const useStyles = makeStyles(theme => ({
         color: "#858585",
         backgroundColor: theme.palette.background.paper,
         marginLeft: sideBarWidth,
-        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)"
+        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        flexDirection: "row",
+        justifyContent: "space-between"
     },
     toolbar: {
         justifyContent: "flex-end"
@@ -59,6 +62,9 @@ export const NavBar = () => {
 
     return <>
         <AppBar className={classes.root}>
+            <Toolbar>
+                <PodSelector />
+            </Toolbar>
             <Toolbar className={classes.toolbar}>
                 <ServiceCenterSelector />
                 <Typography className={classes.name} variant="h4">{currentUser?.fullName || ""}</Typography>
