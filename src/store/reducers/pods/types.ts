@@ -10,12 +10,12 @@ export interface IPodShort {
 export interface IPod {
     id: number;
     name: string;
-    description: string;
-    advisorId: string;
-    advisor: IAdvisorShort;
-    bays: IBayShort[];
-    technicians: IAdvisorShort[];
-    serviceRequests: IAssignedServiceRequestShort[];
+    description?: string;
+    advisorId?: string;
+    advisor?: IAdvisorShort;
+    bays?: IBayShort[];
+    technicians?: IAdvisorShort[];
+    serviceRequests?: IAssignedServiceRequestShort[];
     serviceCenterId: number;
 }
 export interface IPodFilters {
@@ -26,9 +26,9 @@ export interface IPodFilters {
 export interface IPodForm {
     serviceCenterId: number;
     name: string;
-    description: string;
-    advisorId: string | null;
-    technicians: string[];
-    serviceRequests: number[];
-    bays: number[];
+    description?: string;
+    advisorId?: string | null;
+    technicians?: string[];
+    serviceRequests?: number[];
+    bays?: number[];
 }

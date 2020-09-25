@@ -72,7 +72,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             setForm({
                 ...initialForm,
                 ...payload,
-                bays: payload?.bays.map(b => b.id) || []
+                bays: payload?.bays?.map(b => b.id) || []
             });
         }
     }, [props.open, payload]);

@@ -13,10 +13,10 @@ import {MoreHoriz} from "@material-ui/icons";
 const rowData: TableRowDataType<IPod>[] = [
     {header: "POD#", val: el => el.name},
     {header: "Description", val: e => e.description},
-    {header: "Advisor", val: e => e.advisor.fullName},
-    {header: "Technicians", val: e => e.technicians.map(t => t.fullName).join(", ")},
-    {header: "Bays", val: e => e.bays.map(b => b.name).join(", ")},
-    {header: "Service Requests", val: e => e.serviceRequests.map(s => s.code).join(", ")}
+    {header: "Advisor", val: e => e.advisor?.fullName},
+    {header: "Technicians", val: e => e.technicians?.map(t => t.fullName).join(", ") || ""},
+    {header: "Bays", val: e => e.bays?.map(b => b.name).join(", ") || ""},
+    {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || ""}
 ]
 
 export const ProfilePODs = () => {
