@@ -17,6 +17,7 @@ export interface INewLostCustomer {
     type: NewLostEnum
 }
 export interface IEndOfWarranty {
+    podId?: number;
     serviceCenterId: number;
     periodInMonth: number;
 }

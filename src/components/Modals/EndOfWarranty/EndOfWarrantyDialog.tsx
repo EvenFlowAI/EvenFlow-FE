@@ -3,7 +3,7 @@ import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {TextField} from "../../UI/TextField";
 import {SC_UNDEFINED} from "../../../config/constants";
@@ -14,6 +14,7 @@ export const EndOfWarrantyDialog: React.FC<DialogProps<IEndOfWarranty>> = ({payl
     const [saving, setSaving] = useState<boolean>();
     const [months, setMonths] = useState<string>("");
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
@@ -37,6 +38,7 @@ export const EndOfWarrantyDialog: React.FC<DialogProps<IEndOfWarranty>> = ({payl
             try {
                 await dispatch(setEndOfWarranty({
                     serviceCenterId: selectedSC.id,
+                    podId: selectedPod?.id,
                     periodInMonth: Number(months)
                 }));
                 setSaving(false);
@@ -58,6 +60,7 @@ export const EndOfWarrantyDialog: React.FC<DialogProps<IEndOfWarranty>> = ({payl
                 name="months"
                 label="Considered near the end of warranty within"
                 autoComplete="warranty-months months"
+                endAdornment="months"
                 type="number"
                 inputProps={{min: 1}}
                 value={months}

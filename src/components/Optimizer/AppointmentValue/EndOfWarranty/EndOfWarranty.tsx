@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {AppointmentTable} from "../UI";
 import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {useModal, useSCs} from "../../../../utils/hooks";
+import {useModal, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadEndOfWarranty} from "../../../../store/reducers/valueSettings/actions";
@@ -12,12 +12,13 @@ export const EndOfWarranty = () => {
     const dispatch = useDispatch();
     const endOfWarranty = useSelector((state: RootState) => state.valueSettings.endOfWarranty);
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadEndOfWarranty(selectedSC.id));
+            dispatch(loadEndOfWarranty(selectedSC.id, selectedPod?.id));
         }
-    }, [dispatch, selectedSC]);
+    }, [dispatch, selectedPod, selectedSC]);
 
     return <div>
         <AppointmentTable>

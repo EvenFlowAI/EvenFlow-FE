@@ -53,10 +53,10 @@ export const setNewLostCustomers = (data: INewLostCustomer): AppThunk => async d
     dispatch(loadNewLostCustomers(data.serviceCenterId, data.podId));
 }
 
-export const loadEndOfWarranty = (serviceCenterId: number): AppThunk => async dispatch => {
+export const loadEndOfWarranty = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
     try {
         const {data} = await Api.call<IEndOfWarranty[]>(
-            Api.endpoints.ValueSettings.GetWS, {params: {serviceCenterId}}
+            Api.endpoints.ValueSettings.GetWS, {params: {serviceCenterId, podId}}
         );
         dispatch(getEndOfWarranty(data[0]));
     } catch (e) {
@@ -69,7 +69,7 @@ export const loadEndOfWarranty = (serviceCenterId: number): AppThunk => async di
 }
 export const setEndOfWarranty = (data: IEndOfWarranty): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.ValueSettings.SetWS, {data});
-    dispatch(loadEndOfWarranty(data.serviceCenterId));
+    dispatch(loadEndOfWarranty(data.serviceCenterId, data.podId));
 }
 
 export const loadValueSettings = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
