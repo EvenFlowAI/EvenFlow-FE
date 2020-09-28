@@ -18,6 +18,10 @@ const useStyles = makeStyles({
     }
 });
 
+const selectedRoutes: string[] = [
+    Routes.Optimizer.AppointmentValue
+];
+
 export const PodSelector = () => {
     const {selectedPod} = useSelectedPod();
     const [pods] = useSelector((state: RootState) => [
@@ -27,8 +31,9 @@ export const PodSelector = () => {
     const {pathname} = useLocation();
 
     const show = useMemo(() => {
-        if (matchPath(pathname, Routes.Optimizer.Base)) {
-            return true;
+        for (let route of selectedRoutes) {
+            if (Boolean(matchPath(pathname, route)))
+                return true;
         }
         return false;
     }, [pathname]);
