@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {AppointmentTable} from "../UI";
 import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {NewCustomerValue} from "../../../Modals/NewLostCusotomer/NewCustomerValue";
-import {useModal, useSCs} from "../../../../utils/hooks";
+import {useModal, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadNewLostCustomers} from "../../../../store/reducers/valueSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
@@ -18,6 +18,7 @@ export const NewLostCustomer = () => {
 
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
     const newLostData = useSelector((state: RootState) => state.valueSettings.newLostCustomer);
     const {newValue, lostValue} = useMemo(() => {
         return {
@@ -28,9 +29,9 @@ export const NewLostCustomer = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadNewLostCustomers(selectedSC.id));
+            dispatch(loadNewLostCustomers(selectedSC.id, selectedPod?.id));
         }
-    }, [selectedSC, dispatch]);
+    }, [selectedSC, selectedPod, dispatch]);
 
     const handleOpen = (t: NewLostEnum) => () => {
         setCurrent(t);

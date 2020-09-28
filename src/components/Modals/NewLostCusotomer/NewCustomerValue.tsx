@@ -4,7 +4,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {Button} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useDispatch} from "react-redux";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
 import {setNewLostCustomers} from "../../../store/reducers/valueSettings/actions";
 import {INewLostCustomer, NewLostEnum} from "../../../store/reducers/valueSettings/types";
@@ -18,6 +18,7 @@ export const NewCustomerValue: React.FC<DialogProps<INewLostCustomer> & {isNew: 
     const showMessage = useMessage();
     const showError = useException();
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
 
     useEffect(() => {
         if (props.open) {
@@ -37,6 +38,7 @@ export const NewCustomerValue: React.FC<DialogProps<INewLostCustomer> & {isNew: 
             try {
                 await dispatch(setNewLostCustomers({
                     serviceCenterId: selectedSC.id,
+                    podId: selectedPod?.id,
                     periodInMonth: Number(months),
                     type: isNew ? NewLostEnum.New : NewLostEnum.Lost
                 }));

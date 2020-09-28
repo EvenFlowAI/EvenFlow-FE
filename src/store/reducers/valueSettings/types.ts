@@ -12,6 +12,7 @@ export enum NewLostEnum {
 }
 export interface INewLostCustomer {
     serviceCenterId: number;
+    podId?: number;
     periodInMonth: number;
     type: NewLostEnum
 }
