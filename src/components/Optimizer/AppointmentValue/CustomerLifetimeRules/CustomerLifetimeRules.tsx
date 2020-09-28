@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {CustomerLifetimes} from "../../../Modals/CustomerLifetimes/CustomerLifetimes";
-import {useModal, useSCs} from "../../../../utils/hooks";
+import {useModal, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadCustomerLifetimes} from "../../../../store/reducers/valueSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
@@ -25,13 +25,14 @@ export const CustomerLifetimeRules = () => {
     const {isOpen, onOpen, onClose} = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
     const data = useSelector((state: RootState) => state.valueSettings.customerLifetimes);
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadCustomerLifetimes(selectedSC.id));
+            dispatch(loadCustomerLifetimes(selectedSC.id, selectedPod?.id));
         }
-    }, [dispatch, selectedSC]);
+    }, [dispatch, selectedPod, selectedSC]);
 
     const classes = useStyles();
 

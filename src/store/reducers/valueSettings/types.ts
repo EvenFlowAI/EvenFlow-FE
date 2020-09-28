@@ -4,6 +4,7 @@ export interface ICustomerLifetime {
 }
 export interface ICustomerLifetimeForm extends ICustomerLifetime {
     serviceCenterId: number;
+    podId?: number;
 }
 export enum NewLostEnum {
     New,

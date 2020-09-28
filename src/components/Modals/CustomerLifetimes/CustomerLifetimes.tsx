@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import React, {useEffect, useState} from "react";
 import {Button, FormGroup, InputLabel} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {ICustomerLifetime, ICustomerLifetimeForm} from "../../../store/reducers/valueSettings/types";
 import {setCustomerLifetimes} from "../../../store/reducers/valueSettings/actions";
@@ -38,6 +38,7 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
 
     useEffect(() => {
         if (selectedSC && props.open) {
@@ -65,7 +66,8 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
             const data: ICustomerLifetimeForm = {
                 from: Number(form.from),
                 to: Number(form.to),
-                serviceCenterId: selectedSC.id
+                serviceCenterId: selectedSC.id,
+                podId: selectedPod?.id
             }
             try {
                 await dispatch(setCustomerLifetimes(data))
@@ -89,6 +91,7 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
                     type="number"
                     autoComplete="low-value value"
                     id="low-value"
+                    startAdornment="$"
                     name="low-value-f"
                     inputProps={{min: 0}}
                     value={form.from}
@@ -97,6 +100,7 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
                 <span>-</span>
                 <TextField
                     type="number"
+                    startAdornment="$"
                     autoComplete="high-value value"
                     inputProps={{min: Number(form.from) || 0}}
                     id="high-value"
