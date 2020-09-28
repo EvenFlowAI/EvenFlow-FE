@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {useSelectedPod} from "../../utils/hooks";
 import {MenuItem, Select} from "@material-ui/core";
 import {RootState} from "../../store/rootReducer";
@@ -6,6 +6,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../UI/TextField";
 import {setSelectedPod} from "../../store/reducers/pods/actions";
 import {makeStyles} from "@material-ui/core/styles";
+import {Routes} from "../../config/routes";
+import { matchPath } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles({
     label: {
@@ -21,6 +24,14 @@ export const PodSelector = () => {
         state.pods.shortPodsList
     ]);
     const dispatch = useDispatch();
+    const {pathname} = useLocation();
+
+    const show = useMemo(() => {
+        if (matchPath(pathname, Routes.Optimizer.Base)) {
+            return true;
+        }
+        return false;
+    }, [pathname]);
 
     const handleSelectPod = (e: React.ChangeEvent<{value: unknown}>) => {
         const val = e.target.value as number;
@@ -28,6 +39,8 @@ export const PodSelector = () => {
         dispatch(setSelectedPod(selectedPod || null));
     }
     const classes = useStyles();
+
+    if (!show) return null;
 
     return <div>
         <span className={classes.label}>Changes for:</span>
