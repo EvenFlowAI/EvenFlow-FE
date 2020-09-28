@@ -24,6 +24,7 @@ export interface IValueSettings {
     point: number;
     state: number;
     serviceCenterId: number;
+    podId?: number;
 }
 export interface IValueSettingsResponse {
     items: IValueSettings[],

@@ -72,10 +72,10 @@ export const setEndOfWarranty = (data: IEndOfWarranty): AppThunk => async dispat
     dispatch(loadEndOfWarranty(data.serviceCenterId));
 }
 
-export const loadValueSettings = (serviceCenterId: number): AppThunk => async dispatch => {
+export const loadValueSettings = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
     const {data} = await Api.call<IValueSettingsResponse>(
         Api.endpoints.ValueSettings.GetValue,
-        {params: {serviceCenterId}}
+        {params: {serviceCenterId, podId}}
     );
     dispatch(getValueSettings(data.items));
     dispatch(getConfiguredValues(data.leversToConfiguration));
@@ -84,5 +84,5 @@ export const setValueSettings = (data: IValueSettings): AppThunk => async dispat
     await Api.call(
         Api.endpoints.ValueSettings.SetValue, {data}
     );
-    await dispatch(loadValueSettings(data.serviceCenterId));
+    await dispatch(loadValueSettings(data.serviceCenterId, data.podId));
 }

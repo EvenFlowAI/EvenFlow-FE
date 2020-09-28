@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {loadValueSettings, setValueSettings} from "../../../../store/reducers/valueSettings/actions";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {Indicators, IValueSettings} from "../../../../store/reducers/valueSettings/types";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {RootState} from "../../../../store/rootReducer";
@@ -145,6 +145,7 @@ type TProps = {onTabChange?: (e: any, idx: string) => void}
 export const ValueIndicators = ({onTabChange}: TProps) => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
     const [valuesData, configuredValues] = useSelector((state: RootState) => [
         state.valueSettings.valueSettings,
         state.valueSettings.configuredValues
@@ -169,9 +170,9 @@ export const ValueIndicators = ({onTabChange}: TProps) => {
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadValueSettings(selectedSC.id));
+            dispatch(loadValueSettings(selectedSC.id, selectedPod?.id));
         }
-    }, [selectedSC, dispatch]);
+    }, [selectedSC, selectedPod, dispatch]);
 
     const handleTabChange = useCallback((idx: string) => (): void => {
         if (onTabChange) {
@@ -200,7 +201,7 @@ export const ValueIndicators = ({onTabChange}: TProps) => {
             showError("No changes found");
         } else {
             const data: IValueSettings = {
-                ...editItem, serviceCenterId: selectedSC.id
+                ...editItem, serviceCenterId: selectedSC.id, podId: selectedPod?.id
             }
             try {
                 setLoading(true);
