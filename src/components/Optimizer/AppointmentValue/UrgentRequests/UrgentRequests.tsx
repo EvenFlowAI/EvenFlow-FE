@@ -72,6 +72,7 @@ export const UrgentRequests = () => {
             showError(SC_UNDEFINED);
         } else {
             const data: IPrioritizeRequest = {
+                podId: selectedPod?.id,
                 items: [{id: el.id, priority: IServiceRequestPriority.Default}]
             }
             try {
