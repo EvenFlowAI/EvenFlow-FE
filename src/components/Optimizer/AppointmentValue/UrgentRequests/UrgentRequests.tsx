@@ -1,6 +1,14 @@
 import React, {useEffect} from "react";
 import {Button, IconButton} from "@material-ui/core";
-import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../../utils/hooks";
+import {
+    useConfirm,
+    useException,
+    useMessage,
+    useModal,
+    usePagination,
+    useSCs,
+    useSelectedPod
+} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -27,6 +35,7 @@ const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
 export const UrgentRequests = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
     const {askConfirm} = useConfirm();
     const showMessage = useMessage();
     const showError = useException();
@@ -45,9 +54,9 @@ export const UrgentRequests = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadUrgentServiceRequests(selectedSC.id));
+            dispatch(loadUrgentServiceRequests(selectedSC.id, selectedPod?.id));
         }
-    }, [selectedSC, dispatch, pageIndex, pageSize]);
+    }, [selectedSC, selectedPod, dispatch, pageIndex, pageSize]);
 
     const askRemove = (el: IAssignedServiceRequestShort) => () => {
         if (selectedSC) {

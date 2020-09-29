@@ -63,6 +63,7 @@ export interface IPrioritizeItem {
     priority: IServiceRequestPriority
 }
 export interface IPrioritizeRequest {
+    podId?: number;
     items: IPrioritizeItem[]
 }
 

@@ -5,7 +5,7 @@ import {Button} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useException, useMessage, usePagination, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, usePagination, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {
     loadNonUrgentServiceRequests,
     pageDataNonUrgentServiceRequests,
@@ -27,6 +27,7 @@ export const UrgentRequestDialog: React.FC<DialogProps> = ({onAction, payload, .
     const [selected, setSelected] = useState<number[]>([]);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
     const showError = useException();
     const showMessage = useMessage();
     const [data, isLoading, count] = useSelector((state: RootState) => [
@@ -47,9 +48,9 @@ export const UrgentRequestDialog: React.FC<DialogProps> = ({onAction, payload, .
 
     useEffect(() => {
         if (props.open && selectedSC) {
-            dispatch(loadNonUrgentServiceRequests(selectedSC.id));
+            dispatch(loadNonUrgentServiceRequests(selectedSC.id, selectedPod?.id));
         }
-    }, [props.open, dispatch, selectedSC, pageIndex, pageSize]);
+    }, [props.open, dispatch, selectedPod, selectedSC, pageIndex, pageSize]);
 
     const handleCheck = (el: IAssignedServiceRequestShort) => () => {
         if (selected.includes(el.id)) {
@@ -75,7 +76,7 @@ export const UrgentRequestDialog: React.FC<DialogProps> = ({onAction, payload, .
         } else {
             setSaving(true);
             try {
-                await dispatch(setUrgentRequests(selected, selectedSC.id));
+                await dispatch(setUrgentRequests(selected, selectedSC.id, selectedPod?.id));
                 setSaving(false);
                 showMessage("Saved");
             } catch (e) {
