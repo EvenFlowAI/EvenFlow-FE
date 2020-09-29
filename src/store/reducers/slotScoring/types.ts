@@ -9,3 +9,12 @@ export interface IProximity {
     serviceCenterId?: number;
     podId?: number;
 }
+
+export enum ETimeSlotType {
+    TenMinutes,
+    FifteenMinutes,
+    ThirtyMinutes
+}
+export enum EDesirabilityState {
+    Neutral, Desirable, Undesirable
+}
