@@ -130,7 +130,7 @@ export const setUrgentRequests = (ids: number[], serviceCenterId?: number, podId
         Api.endpoints.ServiceRequests.Prioritize, {data}
     );
     if (serviceCenterId) {
-        dispatch(loadNonUrgentServiceRequests(serviceCenterId));
+        dispatch(loadNonUrgentServiceRequests(serviceCenterId, podId));
         dispatch(loadUrgentServiceRequests(serviceCenterId, podId));
     }
 }

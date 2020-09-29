@@ -77,7 +77,7 @@ export const UrgentRequests = () => {
             try {
                 await Api.call(Api.endpoints.ServiceRequests.Prioritize, {data});
                 showMessage("Removed");
-                dispatch(loadUrgentServiceRequests(selectedSC.id));
+                dispatch(loadUrgentServiceRequests(selectedSC.id, selectedPod?.id));
             } catch (e) {
                 showError(e);
             }
