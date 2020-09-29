@@ -19,7 +19,8 @@ const useStyles = makeStyles({
 });
 
 const selectedRoutes: string[] = [
-    Routes.Optimizer.AppointmentValue
+    Routes.Optimizer.AppointmentValue,
+    Routes.Optimizer.AppointmentSlotScoring
 ];
 
 export const PodSelector = () => {

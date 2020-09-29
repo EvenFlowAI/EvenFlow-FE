@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../AppointmentValue/UI";
 import {Button, CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -27,6 +27,7 @@ const initialForm: TForm = {
 
 export const Proximity = () => {
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
     const [edit, setEdit] = useState<EProximityType|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -47,8 +48,8 @@ export const Proximity = () => {
 
     useEffect(() => {
         if (selectedSC)
-            dispatch(loadProximity(selectedSC.id));
-    }, [dispatch, selectedSC]);
+            dispatch(loadProximity(selectedSC.id, selectedPod?.id));
+    }, [dispatch, selectedPod, selectedSC]);
 
     useEffect(() => {
         setForm({
@@ -80,6 +81,7 @@ export const Proximity = () => {
             const data: IProximity = {
                 point: form[edit].point,
                 serviceCenterId: selectedSC?.id,
+                podId: selectedPod?.id,
                 type: edit
             };
             try {
