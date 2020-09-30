@@ -1,5 +1,8 @@
 import React from "react";
+import {AppointmentSlotsDesirability} from "./AppointmentSlotsDesirability";
 
 export const TODDesirability = () => {
-    return <p>TOD Desirability</p>
+    return <div>
+        <AppointmentSlotsDesirability />
+    </div>
 }
