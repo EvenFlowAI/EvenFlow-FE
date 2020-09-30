@@ -13,8 +13,17 @@ const useStyles = makeStyles(theme => ({
     gridContainer: {
         margin: "0 -16px"
     },
+    dataRow: {
+        fontSize: 14
+    },
     row: {
         borderRight: `1px solid ${theme.palette.divider}`
+    },
+    titleRow: {
+        textTransform: "uppercase",
+        fontWeight: "bold",
+        fontSize: 12,
+        color: theme.palette.text.disabled
     },
     title: {
         fontSize: 16,
@@ -22,11 +31,20 @@ const useStyles = makeStyles(theme => ({
         textAlign: "center",
         textTransform: "uppercase",
         margin: "0 0 16px",
-    }
+    },
 }));
 
 const ButtonRow = () => {
-    return <Grid container spacing={4}>
+    const classes = useStyles();
+    return <Grid container spacing={2} className={classes.dataRow}>
+        <Grid className={classes.titleRow} item xs={3}>
+            Slot starts
+        </Grid>
+        <Grid className={classes.titleRow} item xs={3}>
+            Slot ends
+        </Grid>
+        <Grid item xs={6} />
+
         <Grid item xs={3}>
             H1
         </Grid>

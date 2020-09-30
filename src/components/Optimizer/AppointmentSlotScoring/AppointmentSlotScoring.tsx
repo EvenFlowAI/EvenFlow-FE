@@ -23,7 +23,7 @@ export const AppointmentSlotScoring = () => {
             <Tab label="Proximity" value="0" />
             <Tab label="Time of Day desirability" value="1" />
         </TabList>
-        <TabPanel style={{width: "100%"}} value="0"><Proximity /></TabPanel>
-        <TabPanel style={{width: "100%"}} value="1"><TODDesirability /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><Proximity /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><TODDesirability /></TabPanel>
     </TabContext>
 }
