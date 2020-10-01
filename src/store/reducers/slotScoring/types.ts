@@ -18,3 +18,23 @@ export enum ETimeSlotType {
 export enum EDesirabilityState {
     Neutral, Desirable, Undesirable
 }
+
+export interface IDesirability {
+    id: number;
+    serviceCenterId: number;
+    desirability: EDesirabilityState;
+    timeSlotType: ETimeSlotType;
+    podId?: number;
+    index: number;
+}
+export interface IDesirabilityItem {
+    id?: number;
+    index: number;
+    desirability: EDesirabilityState;
+}
+export interface IDesirabilityForm {
+    serviceCenterId: number;
+    podId?: number;
+    timeSlotType: ETimeSlotType;
+    items: IDesirabilityItem[];
+}

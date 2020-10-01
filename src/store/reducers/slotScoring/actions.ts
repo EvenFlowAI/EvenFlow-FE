@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IProximity} from "./types";
+import {ETimeSlotType, IDesirability, IDesirabilityForm, IDesirabilityItem, IProximity} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -17,4 +17,20 @@ export const createProximity = (data: IProximity): AppThunk => async dispatch =>
         {data}
     );
     dispatch(loadProximity(data.serviceCenterId, data.podId));
+}
+
+export const getDesirability = createAction<IDesirability[]>("SlotScoring/GetDesirability");
+export const loadDesirability = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<IDesirability[]>(
+        Api.endpoints.SlotScoring.GetDesirability,
+        {params: {serviceCenterId, podId}}
+    );
+    dispatch(getDesirability(data));
+}
+export const saveDesirability = (items: IDesirabilityItem[], type: ETimeSlotType, serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+    const data: IDesirabilityForm = {
+        podId, serviceCenterId, timeSlotType: type, items
+    };
+    await Api.call(Api.endpoints.SlotScoring.SetDesirability, {data});
+    dispatch(loadDesirability(serviceCenterId, podId));
 }

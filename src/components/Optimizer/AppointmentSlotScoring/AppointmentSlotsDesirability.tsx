@@ -1,10 +1,14 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {Button, Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {EDesirabilityState, ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "./utils";
 import {DesirabilityButton} from "../../UI/ConfigButton";
+import {useDispatch, useSelector} from "react-redux";
+import {SC_UNDEFINED} from "../../../config/constants";
+import {loadDesirability, saveDesirability} from "../../../store/reducers/slotScoring/actions";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -44,11 +48,9 @@ const useStyles = makeStyles(theme => ({
 }));
 type TRowProps = {
     slot: TSlot;
-    idx: number;
     onClick: (t: EDesirabilityState) => () => void;
 }
 type TButtonProps = {
-    idx: number;
     onClick: (t: EDesirabilityState) => () => void;
     desirability: EDesirabilityState;
 }
@@ -62,7 +64,7 @@ const buttons: TButton[] = [
     {label: "Neutral", type: EDesirabilityState.Neutral},
     {label: "Desirable", type: EDesirabilityState.Desirable},
 ]
-const Buttons: React.FC<TButtonProps> = ({idx, onClick, desirability}) => {
+const Buttons: React.FC<TButtonProps> = ({onClick, desirability}) => {
     return <>
         {buttons.map(b => {
             return <DesirabilityButton
@@ -88,7 +90,7 @@ const useStylesBR = makeStyles({
         textAlign: "right"
     }
 });
-const ButtonRow:React.FC<TRowProps> = ({slot, idx, onClick}) => {
+const ButtonRow:React.FC<TRowProps> = ({slot, onClick}) => {
     const classes = useStylesBR();
     return <Grid className={classes.dataRow} container spacing={1}>
         <Grid item xs={3} className={classes.time}>
@@ -98,7 +100,7 @@ const ButtonRow:React.FC<TRowProps> = ({slot, idx, onClick}) => {
             {slot.end.format("HH:mm a")}
         </Grid>
         <Grid item xs={7} className={classes.buttons}>
-            <Buttons idx={idx} onClick={onClick} desirability={slot.desirability} />
+            <Buttons onClick={onClick} desirability={slot.desirability} />
         </Grid>
     </Grid>
 }
@@ -130,14 +132,29 @@ export const AppointmentSlotsDesirability = () => {
     const [isEdit, setEdit] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+    const dispatch = useDispatch();
+    const showMessage = useMessage();
+    const showError = useException();
+
+    const [desirabilityItems] = useSelector((state: RootState) => [
+        state.slotScoring.desirability
+    ]);
 
     useEffect(() => {
-        const t = ETimeSlotType.ThirtyMinutes;
+        if (selectedSC) {
+            dispatch(loadDesirability(selectedSC.id, selectedPod?.id));
+        }
+    }, [dispatch, selectedSC, selectedPod]);
+
+    useEffect(() => {
+        const t = desirabilityItems[0]
+            ? desirabilityItems[0].timeSlotType
+            : ETimeSlotType.ThirtyMinutes;
         setForm({
             timeSlotType: t,
-            items: generateSlots(t)
+            items: generateSlots(t, desirabilityItems)
         });
-    }, []);
+    }, [desirabilityItems]);
 
     const [slots1, slots2]: [TSlot[], TSlot[]] = useMemo(() => {
         const slots = [...form.items];
@@ -159,12 +176,25 @@ export const AppointmentSlotsDesirability = () => {
     const handleEditCancel = () => {
         setForm({
             ...form,
-            items: generateSlots(form.timeSlotType)
+            items: generateSlots(form.timeSlotType, desirabilityItems)
         });
         setEdit(false);
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        if (!selectedSC) {
+            showError(SC_UNDEFINED);
+        } else {
+            try {
+                await dispatch(saveDesirability(
+                    form.items.map(i => ({...i, index: i.idx})),
+                    form.timeSlotType, selectedSC.id, selectedPod?.id
+                ));
+                showMessage("Saved");
+            } catch (e) {
+                showError(e);
+            }
+        }
         setEdit(false);
     }
 
@@ -202,13 +232,13 @@ export const AppointmentSlotsDesirability = () => {
             <Grid className={classes.row} item xs={6}>
                 <TitleRow />
                 {slots1.map((slot) =>
-                    <ButtonRow slot={slot} key={slot.idx} idx={slot.idx} onClick={handleClick(slot.idx)} />
+                    <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
                 )}
             </Grid>
             <Grid item xs={6}>
                 <TitleRow />
                 {slots2.map((slot) =>
-                    <ButtonRow slot={slot} key={slot.idx} idx={slot.idx} onClick={handleClick(slot.idx)} />
+                    <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
                 )}
             </Grid>
         </Grid>

@@ -1,12 +1,14 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IProximity} from "./types";
+import {IDesirability, IProximity} from "./types";
 import {getProximity} from "./actions";
 
 type TState = {
     proximity: IProximity[];
+    desirability: IDesirability[];
 }
 const initialState: TState = {
-    proximity: []
+    proximity: [],
+    desirability: []
 };
 
 export const slotScoringReducer = createReducer(initialState, builder => builder
