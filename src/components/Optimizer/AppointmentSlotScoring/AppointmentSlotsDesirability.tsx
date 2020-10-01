@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
-import {Button, Grid, Paper} from "@material-ui/core";
+import {Button, CircularProgress, Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {EDesirabilityState, ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "./utils";
@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
         position: "absolute",
         top: 0,
         right: 0
+    },
+    progress: {
+        padding: 10,
     },
     editButton: {
         textTransform: "none",
@@ -129,6 +132,7 @@ const initialForm = {
 };
 export const AppointmentSlotsDesirability = () => {
     const [form, setForm] = useState<TForm>(initialForm);
+    const [saving, setSaving] = useState<boolean>(false);
     const [isEdit, setEdit] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
@@ -185,17 +189,21 @@ export const AppointmentSlotsDesirability = () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
+            setSaving(true);
             try {
                 await dispatch(saveDesirability(
                     form.items.map(i => ({...i, index: i.idx})),
                     form.timeSlotType, selectedSC.id, selectedPod?.id
                 ));
                 showMessage("Saved");
+                setEdit(false);
+                setSaving(false);
             } catch (e) {
                 showError(e);
+                setSaving(false);
+                handleEditCancel();
             }
         }
-        setEdit(false);
     }
 
     const classes = useStyles();
@@ -206,7 +214,8 @@ export const AppointmentSlotsDesirability = () => {
         </h2>
         <div className={classes.controlButtons}>
             {isEdit
-                ? <>
+                ? saving ? <CircularProgress color="primary" className={classes.progress} />
+                : <>
                     <Button
                         className={classes.editButton}
                         color="secondary"
