@@ -18,6 +18,7 @@ const gapToMin = (gap: ETimeSlotType): number => {
 }
 export type TSlot = {
     idx: number;
+    id?: number;
     desirability: EDesirabilityState;
     start: moment.Moment;
     end: moment.Moment;
