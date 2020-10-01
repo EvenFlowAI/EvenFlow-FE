@@ -23,17 +23,34 @@ export type TSlot = {
     start: moment.Moment;
     end: moment.Moment;
 }
-export const generateSlots = (gap: ETimeSlotType, items: IDesirability[]): TSlot[] => {
+export const generateSlots = (gap: ETimeSlotType,
+                              items: IDesirability[],
+                              org?: ETimeSlotType): TSlot[] => {
+    if (org === undefined) {
+        org = gap;
+    }
     const gapMinutes: number = gapToMin(gap);
+    const gapOrg: number = gapToMin(org);
+    const mappedItems = items.reduce((acc, i) => {
+        acc[i.index] = i;
+        return acc;
+    }, [] as IDesirability[]);
+
     const slotsCount = end.diff(start, 'minutes') / gapMinutes;
+    const orgSlotsCount = end.diff(start, "minutes") / gapOrg;
+
+    const idxMod = orgSlotsCount / (slotsCount ? slotsCount : 1);
     const slots: TSlot[] = [];
     let st = moment(start);
     let nd = moment(st).add(gapMinutes, "minutes");
     for (let i=1; i <= slotsCount; i++) {
         const idx = i-1;
+        const idxToLook = Math.floor(idx * idxMod);
         slots.push({
             idx,
-            desirability: items[idx] ? items[idx].desirability : EDesirabilityState.Neutral,
+            id: mappedItems[idxToLook]?.id,
+            desirability: mappedItems[idxToLook]
+                ? items[idxToLook].desirability : EDesirabilityState.Neutral,
             start: moment(st),
             end: moment(nd)
         });

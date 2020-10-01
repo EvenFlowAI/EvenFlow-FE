@@ -156,7 +156,7 @@ export const AppointmentSlotsDesirability = () => {
             : ETimeSlotType.ThirtyMinutes;
         setForm({
             timeSlotType: t,
-            items: generateSlots(t, desirabilityItems)
+            items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType)
         });
     }, [desirabilityItems]);
 
@@ -178,9 +178,13 @@ export const AppointmentSlotsDesirability = () => {
     };
 
     const handleEditCancel = () => {
+        const t = desirabilityItems[0]?.timeSlotType || ETimeSlotType.ThirtyMinutes
         setForm({
             ...form,
-            items: generateSlots(form.timeSlotType, desirabilityItems)
+            timeSlotType: t,
+            items: generateSlots(t,
+                desirabilityItems,
+                desirabilityItems[0]?.timeSlotType)
         });
         setEdit(false);
     }
