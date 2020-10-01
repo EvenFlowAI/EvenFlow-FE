@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
-import {Button, CircularProgress, Grid, Paper} from "@material-ui/core";
+import {Button, Checkbox, CircularProgress, FormControlLabel, Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {EDesirabilityState, ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "./utils";
@@ -9,6 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {loadDesirability, saveDesirability} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
+import {CheckBoxOutlined} from "@material-ui/icons";
+import {Caption} from "../../UI/Caption";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -34,6 +36,10 @@ const useStyles = makeStyles(theme => ({
     },
     row: {
         borderRight: `1px solid ${theme.palette.divider}`
+    },
+    checkRow: {
+        display: "flex",
+        justifyContent: "space-around"
     },
     titleRow: {
         textTransform: "uppercase",
@@ -93,6 +99,15 @@ const useStylesBR = makeStyles({
         textAlign: "right"
     }
 });
+type TGap = {
+    label: string;
+    type: ETimeSlotType;
+}
+const gaps: TGap[] = [
+    {label: "10-minutes Gap slots", type: ETimeSlotType.TenMinutes},
+    {label: "15-minutes Gap slots", type: ETimeSlotType.FifteenMinutes},
+    {label: "30-minutes Gap slots", type: ETimeSlotType.ThirtyMinutes}
+];
 const ButtonRow:React.FC<TRowProps> = ({slot, onClick}) => {
     const classes = useStylesBR();
     return <Grid className={classes.dataRow} container spacing={1}>
@@ -189,6 +204,15 @@ export const AppointmentSlotsDesirability = () => {
         setEdit(false);
     }
 
+    const handleGapChange = (g: ETimeSlotType) => () => {
+        if (isEdit) {
+            setForm({
+                timeSlotType: g,
+                items: generateSlots(g, desirabilityItems, desirabilityItems[0]?.timeSlotType)
+            });
+        }
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -241,6 +265,21 @@ export const AppointmentSlotsDesirability = () => {
                 </Button>
             }
         </div>
+        <div className={classes.checkRow}>
+            {gaps.map(g => {
+                return <FormControlLabel
+                    key={g.type}
+                    label={g.label}
+                    onChange={handleGapChange(g.type)}
+                    control={
+                        <Checkbox
+                            color="primary"
+                            checkedIcon={<CheckBoxOutlined />}
+                            checked={form.timeSlotType === g.type} />
+                    }
+                />
+            })}
+        </div>
         <Grid className={classes.gridContainer} container spacing={4} alignItems="stretch">
             <Grid className={classes.row} item xs={6}>
                 <TitleRow />
@@ -255,5 +294,6 @@ export const AppointmentSlotsDesirability = () => {
                 )}
             </Grid>
         </Grid>
+        <Caption title="e.g. 30 min slots will show open slots at 8:00, 8:30, 9:00 etc" />
     </Paper>
 }

@@ -48,7 +48,7 @@ export const generateSlots = (gap: ETimeSlotType,
         const idxToLook = Math.floor(idx * idxMod);
         slots.push({
             idx,
-            id: mappedItems[idxToLook]?.id,
+            id: idxMod === 1 ? mappedItems[idxToLook]?.id : undefined,
             desirability: mappedItems[idxToLook]
                 ? items[idxToLook].desirability : EDesirabilityState.Neutral,
             start: moment(st),
