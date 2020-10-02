@@ -4,9 +4,10 @@ import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {SearchInput} from "../../UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    archiveAdminServiceRequest,
     loadAdminServiceRequests,
-    setAdminFilter,
     removeAdminServiceRequest,
+    setAdminFilter,
     setAdminPageData
 } from "../../../store/reducers/serviceRequests/actions";
 import {useConfirm, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
@@ -14,7 +15,7 @@ import {TableRowDataType} from "../../UI/types";
 import {EServiceStatus, ISRAdmin} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
 import {RootState} from "../../../store/rootReducer";
-import {CheckCircle, MoreHoriz} from "@material-ui/icons";
+import {ArchiveOutlined, CheckCircle, MoreHoriz} from "@material-ui/icons";
 import {CreateOPsCode} from "../../Modals/CreateOPsCode/CreateOPsCode";
 
 const rowData: TableRowDataType<ISRAdmin>[] = [
@@ -49,7 +50,7 @@ const rowData: TableRowDataType<ISRAdmin>[] = [
         header: "Status",
         align: "center",
         val: el => el.status === EServiceStatus.Archived
-            ? ""
+            ? <ArchiveOutlined fontSize="small" color="secondary" />
             : <CheckCircle fontSize="small" color="primary" />
     }
 ];
@@ -86,6 +87,16 @@ export const ServiceRequests = () => {
         setAnchorEl(e.currentTarget);
     }
 
+    const openEdit = () => {
+        setAnchorEl(null);
+        onOpen();
+    }
+    const openCreate = () => {
+        setAnchorEl(null);
+        setEditedItem(undefined);
+        onOpen();
+    }
+
     const askRemove = () => {
         setAnchorEl(null);
         if (!editedItem) {
@@ -99,16 +110,6 @@ export const ServiceRequests = () => {
         }
     }
 
-    const openEdit = () => {
-        setAnchorEl(null);
-        onOpen();
-    }
-    const openCreate = () => {
-        setAnchorEl(null);
-        setEditedItem(undefined);
-        onOpen();
-    }
-
     const handleRemove = async () => {
         if (!editedItem) {
             showError("Service request is not loaded");
@@ -116,6 +117,33 @@ export const ServiceRequests = () => {
             try {
                 await dispatch(removeAdminServiceRequest(editedItem));
                 showMessage("Removed");
+                setEditedItem(undefined);
+            } catch (e) {
+                showError(e);
+            }
+        }
+    }
+
+    const askArchive = () => {
+        setAnchorEl(null);
+        if (!editedItem) {
+            showError("Service request is not loaded");
+        } else {
+            const isArchived = editedItem.status === EServiceStatus.Archived;
+            askConfirm({
+                title: isArchived ? "Restore Service Request?" : "Archive Service Request?",
+                content: `${isArchived ? "Restore" : "Archive"} service request ${editedItem.code}?`,
+                onConfirm: handleArchive
+            });
+        }
+    }
+    const handleArchive = async () => {
+        if (!editedItem) {
+            showError("Service request is not loaded");
+        } else {
+            try {
+                await dispatch(archiveAdminServiceRequest(editedItem));
+                showMessage("Archived");
                 setEditedItem(undefined);
             } catch (e) {
                 showError(e);
@@ -170,6 +198,11 @@ export const ServiceRequests = () => {
             anchorEl={anchorEl}
         >
             <MenuItem onClick={openEdit}>Edit</MenuItem>
+            <MenuItem onClick={askArchive}>{
+                editedItem && editedItem.status === EServiceStatus.Archived
+                    ? "Restore"
+                    : "Archive"
+            }</MenuItem>
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
     </>
