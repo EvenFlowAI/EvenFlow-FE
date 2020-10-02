@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Menu, MenuItem} from "@material-ui/core";
-import {useSCs} from "../../utils/hooks";
+import {useCurrentUser, useSCs} from "../../utils/hooks";
 import {ArrowDropDown} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {IServiceCenter} from "../../store/reducers/serviceCenters/types";
@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
 
 export const ServiceCenterSelector = () => {
     const {selectSC, selectedSC, scList} = useSCs();
+    const currentUser = useCurrentUser();
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const handleMenuOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(e.currentTarget);
@@ -30,6 +31,7 @@ export const ServiceCenterSelector = () => {
 
     const classes = useStyles();
     if (!scList || !scList.length) return null;
+    if (!currentUser || currentUser.isSuperUser) return null;
     return <div>
         <Button
             className={classes.root}
