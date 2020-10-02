@@ -20,7 +20,7 @@ import {Roles} from "../../../config/constants";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...props}) => {
     const isEdit = Boolean(payload?.id);
-    const [role, setRole] = useState<Roles>(Roles.Advisor);
+    const [role, setRole] = useState<Roles>(Roles.Technician);
     const handleChangeRole = (role: string) => {
         setRole(role as Roles);
     }
@@ -153,20 +153,22 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
             {!isEdit ? <Grid container spacing={3}>
                 <Grid item xs={6}>
                     <Button
-                        {...buttonStyle(Roles.Advisor)}
-                        fullWidth
-                        variant="outlined"
-                        onClick={() => handleChangeRole(Roles.Advisor)}>
-                        Service center advisor
-                    </Button>
-                </Grid>
-                <Grid item xs={6}>
-                    <Button
                         {...buttonStyle(Roles.Technician)}
+                        style={{textTransform: "capitalize"}}
                         fullWidth
                         variant="outlined"
                         onClick={() => handleChangeRole(Roles.Technician)}>
                         Technician
+                    </Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button
+                        {...buttonStyle(Roles.Advisor)}
+                        style={{textTransform: "capitalize"}}
+                        fullWidth
+                        variant="outlined"
+                        onClick={() => handleChangeRole(Roles.Advisor)}>
+                        Service center advisor
                     </Button>
                 </Grid>
             </Grid> : null}
