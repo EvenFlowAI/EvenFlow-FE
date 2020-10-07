@@ -12,7 +12,7 @@ export const initialAdvisorForm: TAdvisorForm = {
     firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null
 }
 export const initialTechnicianForm: TTechnicianForm = {
-    firstName: '', lastName: '', serviceCenter: null,
+    firstName: '', lastName: '', serviceCenter: null, phoneNumber: "",
     hourlyRate: '', overtimeRate: '', technicianLevel: 1
 }
 
@@ -106,6 +106,16 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 onChange={props.onChange}
                 name="lastName"
                 label="Last name" />
+        </Grid>
+        <Grid item xs={12}>
+            <TextField
+                id="phoneNumber"
+                name="phoneNumber"
+                fullWidth
+                value={props.form.phoneNumber}
+                onChange={props.onChange}
+                label="Phone number"
+            />
         </Grid>
         <Grid item xs={6}>
             <Autocomplete

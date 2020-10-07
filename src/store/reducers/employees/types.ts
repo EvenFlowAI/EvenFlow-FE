@@ -30,6 +30,7 @@ export interface IEmployeeForm {
     firstName: string;
     lastName: string;
     serviceCenterId: number | null;
+    phoneNumber?: string;
     employeeInfo?: IEmployeeInfo
 }
 

@@ -16,6 +16,7 @@ export type TTechnicianForm = {
     serviceCenter: IServiceCenter | null;
     hourlyRate: number | '';
     overtimeRate: number | '';
+    phoneNumber?: string;
     technicianLevel: TTechnicianLevel;
 }
 export type TSelectChange = (e: React.ChangeEvent<{}>, value: Value<IServiceCenter, false, any, any>) => void;
