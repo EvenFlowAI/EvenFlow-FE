@@ -14,7 +14,16 @@ import {SC_UNDEFINED} from "../../../config/constants";
 const useStyles = makeStyles(theme => ({
     group: {
         display: "flex",
+        flexFlow: "row nowrap",
         alignItems: "center",
+        "&>*:nth-child(2)": {
+            flexGrow: 0,
+            padding: 10
+        },
+        "&>*": {
+            flexGrow: 1,
+        },
+
         justifyContent: "space-between"
     },
     label: {
