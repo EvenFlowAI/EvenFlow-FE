@@ -99,6 +99,10 @@ type TApiRoute = {
 
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
+    AppointmentAllocation: Record<"SetTimeWindows" | "GetTimeWindows"
+        | "CreateDemandSegment" | "GetDemandSegments"
+        | "BatchUpdateDemandSegments" | "RemoveDemandSegment"
+        | "SetUnplanned" | "GetUnplanned", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
@@ -137,6 +141,16 @@ export class Api {
             Verification: {route: "/accounts/verification", method: "patch"},
             Profile: {route: "/accounts/profile", method: "get"},
             Dealership: {route: "/accounts/dealership", method: "get"},
+        },
+        AppointmentAllocation: {
+            SetTimeWindows: {route: "/appointment-allocations/time-windows", method: "put"},
+            GetTimeWindows: {route: "/appointment-allocations/time-windows", method: "get"},
+            CreateDemandSegment: {route: "/appointment-allocations/demand-segments", method: "post"},
+            GetDemandSegments: {route: "/appointment-allocations/demand-segments", method: "get"},
+            BatchUpdateDemandSegments: {route: "/appointment-allocations/demand-segments", method: "put"},
+            RemoveDemandSegment: {route: "/appointment-allocations/demand-segments/{id}", method: "delete"},
+            SetUnplanned: {route: "/appointment-allocations/unplanned-demand-segments", method: "put"},
+            GetUnplanned: {route: "/appointment-allocations/unplanned-demand-segments", method: "get"},
         },
         Authentications: {
             Request: {route: "/authentications", method: "post"},
