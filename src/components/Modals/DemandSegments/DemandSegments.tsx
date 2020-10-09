@@ -1,13 +1,25 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button} from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
-import {useDispatch} from "react-redux";
-import {createDemandSegment} from "../../../store/reducers/demandSegments/actions";
+import {useConfirm, useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {createDemandSegment, loadDemandSegments} from "../../../store/reducers/demandSegments/actions";
 import {defaultDemandSegment} from "../../../store/reducers/demandSegments/reducer";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {LoadingButton} from "../../UI/Button";
+import {RootState} from "../../../store/rootReducer";
+import {Table} from "../../UI/Table";
+import {IDemandSegment} from "../../../store/reducers/demandSegments/types";
+import {TableRowDataType} from "../../UI/types";
+import {Api} from "../../../config/requests";
+
+const rowData: TableRowDataType<IDemandSegment>[] = [
+    {header: "Demand segments", val: el => el.id.toString(), align: "center"},
+    {header: "Window 1", val: el => `${el.window1Point} %`, align: "center"},
+    {header: "Window 2", val: el => `${el.window2Point} %`, align: "center"},
+    {header: "Window 3", val: el => `${el.window3Point} %`, align: "center"},
+];
 
 export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
     const [isSaving, setSaving] = useState<boolean>(false);
@@ -17,6 +29,18 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+    const {askConfirm} = useConfirm();
+
+    const [demandSegmentsList, isLoading] = useSelector((state: RootState) => [
+        state.demandSegments.demandSegmentList,
+        state.demandSegments.listLoading
+    ]);
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
+        }
+    }, [dispatch, selectedSC, selectedPod]);
 
     const handleAddSegment = async () => {
         if (!selectedSC) {
@@ -37,6 +61,31 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
             }
         }
     }
+    const actions = (el: IDemandSegment) => {
+        return <Button onClick={askRemove(el)} variant="outlined" color="primary">
+            Delete
+        </Button>
+    }
+    const askRemove = (el: IDemandSegment) => () => {
+        askConfirm({
+            onConfirm: handleRemoveSegment(el),
+            title: "Remove Segment?",
+            content: "",
+        });
+    }
+    const handleRemoveSegment = (el: IDemandSegment) => async () => {
+        try {
+            await Api.call(
+                Api.endpoints.AppointmentAllocation.RemoveDemandSegment,
+                {urlParams: {id: el.id}}
+                );
+            showMessage("Segment Removed");
+            dispatch(loadDemandSegments(selectedSC?.id || 0, selectedPod?.id));
+        } catch (e) {
+            showError(e);
+        }
+    }
+
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>Demand segments settings</DialogTitle>
         <DialogContent>
@@ -49,6 +98,15 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
                     Add New Segment
                 </LoadingButton>
             </div>
+            <Table<IDemandSegment>
+                hidePagination
+                data={demandSegmentsList}
+                index="id"
+                isLoading={isLoading}
+                compact
+                rowData={rowData}
+                actions={actions}
+            />
         </DialogContent>
         <DialogActions>
             <Button
