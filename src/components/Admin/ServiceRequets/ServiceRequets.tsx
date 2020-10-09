@@ -103,8 +103,8 @@ export const ServiceRequests = () => {
             showError("Service request is not loaded");
         } else {
             askConfirm({
-                title: "Remove Service Request?",
-                content: `Remove service request ${editedItem.code}?`,
+                isRemove: true,
+                title: `Remove service request ${editedItem.code}?`,
                 onConfirm: handleRemove
             });
         }
@@ -131,8 +131,9 @@ export const ServiceRequests = () => {
         } else {
             const isArchived = editedItem.status === EServiceStatus.Archived;
             askConfirm({
-                title: isArchived ? "Restore Service Request?" : "Archive Service Request?",
-                content: `${isArchived ? "Restore" : "Archive"} service request ${editedItem.code}?`,
+                isRemove: true,
+                confirmContent: isArchived ? "Restore" : "Archive",
+                title: `${isArchived ? "Restore" : "Archive"} service request ${editedItem.code}?`,
                 onConfirm: handleArchive
             });
         }

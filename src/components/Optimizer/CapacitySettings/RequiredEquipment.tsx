@@ -72,8 +72,8 @@ export const RequiredEquipment = () => {
         setAnchorEl(null);
         if (editedItem) {
             askConfirm({
-                title: "Remove bay?",
-                content: `Are you sure want to remove ${editedItem.name}?`,
+                isRemove: true,
+                title: `Are you sure want to remove ${editedItem.name}?`,
                 onConfirm: handleRemove
             })
         }

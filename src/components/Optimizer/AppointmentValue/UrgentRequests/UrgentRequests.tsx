@@ -61,8 +61,8 @@ export const UrgentRequests = () => {
     const askRemove = (el: IAssignedServiceRequestShort) => () => {
         if (selectedSC) {
             askConfirm({
-                title: "Remove?",
-                content: `Remove ${el.code} from prioritized list?`,
+                isRemove: true,
+                title: `Remove ${el.code} from prioritized list?`,
                 onConfirm: handleRemove(el)
             });
         }

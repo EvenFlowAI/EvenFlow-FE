@@ -80,8 +80,8 @@ export const Employees = () => {
             showError("You can not remove dealership account");
         } else {
             askConfirm({
-                title: "Remove employee?",
-                content: `Are you sure want to remove ${editedItem?.fullName}?`,
+                isRemove: true,
+                title: `Are you sure want to remove ${editedItem?.fullName}?`,
                 onConfirm: handleRemove
             });
         }

@@ -56,8 +56,8 @@ export const TechniciansList = () => {
         setAnchorEl(null);
         if (edit) {
             askConfirm({
-                title: "Remove employee?",
-                content: `Remove ${edit.fullName}?`,
+                isRemove: true,
+                title: `Remove ${edit.fullName}?`,
                 onConfirm: handleRemove
             })
         }

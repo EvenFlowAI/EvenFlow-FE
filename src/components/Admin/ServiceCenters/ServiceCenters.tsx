@@ -94,8 +94,8 @@ export const ServiceCenters = () => {
     const openRemove = () => {
         setAnchorEl(null);
         askConfirm({
-            title: `Remove service center?`,
-            content: `Remove service center ${editedItem?.name}?`,
+            isRemove: true,
+            title: `Remove service center ${editedItem?.name}?`,
             onConfirm: handleRemove
         });
     }

@@ -52,8 +52,8 @@ export const ProfilePODs = () => {
     const askRemove = () => {
         setAnchorEl(null);
         askConfirm({
-            title: "Remove POD?",
-            content: `Remove POD ${editedItem?.name}`,
+            isRemove: true,
+            title: `Remove POD ${editedItem?.name}`,
             onConfirm: handleRemove
         });
     }

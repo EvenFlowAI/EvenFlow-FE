@@ -86,8 +86,8 @@ export const Holidays: React.FC<DialogProps> = props => {
         closeMenu();
         if (editedItem) {
             askConfirm({
-                title: "Remove holiday?",
-                content: `Remove ${editedItem.description}?`,
+                isRemove: true,
+                title: `Remove ${editedItem.description}?`,
                 onConfirm: handleRemove
             })
         }

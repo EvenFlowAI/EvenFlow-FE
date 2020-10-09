@@ -146,8 +146,8 @@ export const OPsCodesPage = () => {
     const askRemove = () => {
         setAnchorEl(null);
         askConfirm({
-            title: "Remove Service Request?",
-            content: `Remove ${editedItem?.serviceRequest.code} from selected?`,
+            isRemove: true,
+            title: `Remove ${editedItem?.serviceRequest.code} from selected?`,
             onConfirm: handleRemove
         });
     }

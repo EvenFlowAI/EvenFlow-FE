@@ -46,8 +46,8 @@ export const DealershipGroups = () => {
         history.push(`${Routes.Admin.DealershipGroups}/${el.id}`);
     };
     const handleRemoveAction = (el: IDealershipGroupExtended) => () => askConfirm({
-        content: `Are you sure want to remove dealership group ${el.name}?`,
-        title: "Remove Dealership",
+        title: `Are you sure want to remove dealership group ${el.name}?`,
+        isRemove: true,
         onConfirm: async () => {
             await handleRemove(el);
         }
