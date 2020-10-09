@@ -119,7 +119,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                         align={cellData.align || "left"}
                                         className={classes.tableCell}
                                         key={`${rIdx}_${cIdx}`}>
-                                        {cellData.val(row) || '-'}
+                                        {cellData.val(row, idx) || '-'}
                                     </TableCell>
                                 ))}
                                 {props.actions

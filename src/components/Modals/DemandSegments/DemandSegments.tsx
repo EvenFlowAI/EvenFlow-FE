@@ -15,7 +15,8 @@ import {TableRowDataType} from "../../UI/types";
 import {Api} from "../../../config/requests";
 
 const rowData: TableRowDataType<IDemandSegment>[] = [
-    {header: "Demand segments", val: el => el.id.toString(), align: "center"},
+    {header: "Demand segments",
+        val: (el, idx) => String(idx + 1), align: "center"},
     {header: "Window 1", val: el => `${el.window1Point} %`, align: "center"},
     {header: "Window 2", val: el => `${el.window2Point} %`, align: "center"},
     {header: "Window 3", val: el => `${el.window3Point} %`, align: "center"},
