@@ -1,19 +1,22 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {OptimizationPlate, TOptimizationPlateProps} from "./OptimizationPlate";
 import {Grid} from "@material-ui/core";
+import {DemandSegments} from "../../Modals/DemandSegments/DemandSegments";
+import {useModal} from "../../../utils/hooks";
 
 export const OptimizationWindowsPage = () => {
-    const data: TOptimizationPlateProps[] = [
+    const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
+    const data: TOptimizationPlateProps[] = useMemo(() => [
         {
             count: 10,
             helperText: "Set the number of demand value segments to group service requests of equal value",
             label: "Segments",
             title: "Demand Segments",
-            onEdit: () => {}
+            onEdit: onDemandOpen
         },
-    ]
+    ], [onDemandOpen])
     return <>
         <TitleContainer title="Optimization Windows" pad parent={optimizerRoot} />
         <Grid container spacing={3}>
@@ -28,6 +31,7 @@ export const OptimizationWindowsPage = () => {
                     />
                 </Grid>
             )}
+            <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
         </Grid>
     </>
 }
