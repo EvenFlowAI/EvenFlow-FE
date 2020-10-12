@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Button as Bt, TableBody, TableCell as TC, TableRow, withStyles} from "@material-ui/core";
+import {Button as Bt, CircularProgress, TableBody, TableCell as TC, TableRow, withStyles} from "@material-ui/core";
 import {AppointmentTable} from "../AppointmentValue/UI";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
-import {loadTimeWindow} from "../../../store/reducers/demandSegments/actions";
+import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ITimeWindow} from "../../../store/reducers/demandSegments/types";
+import {SC_UNDEFINED} from "../../../config/constants";
 
 const TableCell = withStyles({
     root: {
@@ -45,6 +46,7 @@ const getData = (d: ITimeWindow): TForm => {
 export const TimeWindows = () => {
     const [form, setForm] = useState<TForm>(defaultForm);
     const [isEdit, setEdit] = useState<boolean>(false);
+    const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const showMessage = useMessage();
@@ -69,7 +71,25 @@ export const TimeWindows = () => {
     }
 
     const handleSave = async () => {
-
+        if (!selectedSC) {
+            showError(SC_UNDEFINED);
+        } else {
+            setSaving(true);
+            try {
+                await dispatch(setTimeWindow({
+                    serviceCenterId: selectedSC.id,
+                    podId: selectedPod?.id,
+                    startInHours: form.start,
+                    durationInHours: form.stop
+                }));
+                setSaving(false);
+                setEdit(false);
+                showMessage("Saved");
+            } catch (e) {
+                setSaving(false);
+                showError(e);
+            }
+        }
     }
 
     return <AppointmentTable>
@@ -79,19 +99,20 @@ export const TimeWindows = () => {
                 <TableCell style={theadStyle}>Window 1</TableCell>
                 <TableCell style={theadStyle}>Window 2</TableCell>
                 <TableCell style={theadStyle}>Window 3</TableCell>
-                <TableCell rowSpan={3}>
+                <TableCell rowSpan={3} width={100}>
                     {!isEdit
                         ? <Button color="primary" onClick={() => setEdit(true)}>
                             Edit
                         </Button>
-                        : <>
-                            <Button color="secondary" onClick={handleCancel}>
-                                Cancel
-                            </Button>
+                        : !saving ? <>
                             <Button color="primary" onClick={handleSave}>
                                 Save
                             </Button>
-                        </>}
+                            <Button color="secondary" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                        </>
+                    : <CircularProgress />}
                 </TableCell>
             </TableRow>
             <TableRow>

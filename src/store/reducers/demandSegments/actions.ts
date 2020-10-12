@@ -31,3 +31,7 @@ export const loadTimeWindow = (serviceCenterId: number, podId?: number): AppThun
     );
     dispatch(getTimeWindow(data));
 }
+export const setTimeWindow = (data: ITimeWindow): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.AppointmentAllocation.SetTimeWindows, {data});
+    dispatch(loadTimeWindow(data.serviceCenterId, data.podId));
+}
