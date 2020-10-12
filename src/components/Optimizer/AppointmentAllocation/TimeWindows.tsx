@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ITimeWindow} from "../../../store/reducers/demandSegments/types";
 import {SC_UNDEFINED} from "../../../config/constants";
+import {TextField} from "../../UI/TextField";
 
 const TableCell = withStyles({
     root: {
@@ -43,6 +44,25 @@ const getData = (d: ITimeWindow): TForm => {
         duration2: d.durationInHours
     };
 }
+const InputOrValue: React.FC<{
+    name: string;
+    value: number;
+    onChange: React.ChangeEventHandler
+    isEdit: boolean;
+}> = ({name, value, isEdit, onChange}) => {
+    if (!isEdit) return <span>{value ? String(value) : "0"}</span>;
+    return <TextField
+        name={name}
+        value={value}
+        type="number"
+        inputProps={{
+            min: 0
+        }}
+        endAdornment={"hour(s)"}
+        onChange={onChange}
+        id={name}
+    />
+}
 export const TimeWindows = () => {
     const [form, setForm] = useState<TForm>(defaultForm);
     const [isEdit, setEdit] = useState<boolean>(false);
@@ -68,6 +88,27 @@ export const TimeWindows = () => {
     const handleCancel = () => {
         setForm(getData(timeWindow));
         setEdit(false);
+    }
+    const handleChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        const nForm = {...form, [name]: Number(value)};
+        switch(name) {
+            case "start":
+                nForm.duration1 = nForm.start;
+                nForm.duration2 = nForm.stop - nForm.start;
+                break;
+            case "stop":
+                nForm.duration2 = nForm.stop - nForm.start;
+                break;
+            case "duration1":
+                nForm.start = nForm.duration1;
+                break;
+            case "duration2":
+                nForm.stop = nForm.start + nForm.duration2;
+                break;
+            default:
+                break;
+        }
+        setForm(nForm);
     }
 
     const handleSave = async () => {
@@ -118,13 +159,41 @@ export const TimeWindows = () => {
             <TableRow>
                 <TableCell>Start (hours)</TableCell>
                 <TableCell>0</TableCell>
-                <TableCell>{form.start}</TableCell>
-                <TableCell>{form.stop}</TableCell>
+                <TableCell>
+                    <InputOrValue
+                        name={"start"}
+                        value={form.start}
+                        onChange={handleChange}
+                        isEdit={isEdit}
+                    />
+                </TableCell>
+                <TableCell>
+                    <InputOrValue
+                        name={"stop"}
+                        value={form.stop}
+                        onChange={handleChange}
+                        isEdit={isEdit}
+                    />
+                </TableCell>
             </TableRow>
             <TableRow>
                 <TableCell>Duration (hours)</TableCell>
-                <TableCell>{form.duration1}</TableCell>
-                <TableCell>{form.duration2}</TableCell>
+                <TableCell>
+                    <InputOrValue
+                        name={"duration1"}
+                        value={form.duration1}
+                        onChange={handleChange}
+                        isEdit={isEdit}
+                    />
+                </TableCell>
+                <TableCell>
+                    <InputOrValue
+                        name={"duration2"}
+                        value={form.duration2}
+                        onChange={handleChange}
+                        isEdit={isEdit}
+                    />
+                </TableCell>
                 <TableCell/>
             </TableRow>
         </TableBody>
