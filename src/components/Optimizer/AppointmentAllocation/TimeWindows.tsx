@@ -80,7 +80,7 @@ export const TimeWindows = () => {
                     serviceCenterId: selectedSC.id,
                     podId: selectedPod?.id,
                     startInHours: form.start,
-                    durationInHours: form.stop
+                    durationInHours: form.duration2
                 }));
                 setSaving(false);
                 setEdit(false);
