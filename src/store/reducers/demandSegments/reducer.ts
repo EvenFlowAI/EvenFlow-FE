@@ -1,10 +1,11 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IDemandSegment} from "./types";
-import {getDemandSegments, loadingDemandSegments} from "./actions";
+import {IDemandSegment, ITimeWindow} from "./types";
+import {getDemandSegments, getTimeWindow, loadingDemandSegments} from "./actions";
 
 type TState = {
     demandSegmentList: IDemandSegment[];
     listLoading: boolean;
+    timeWindow: ITimeWindow;
 }
 type TPDemandSegment = {
     window1Point: number;
@@ -19,7 +20,12 @@ export const defaultDemandSegment: TPDemandSegment = {
 
 const initialState: TState = {
     demandSegmentList: [],
-    listLoading: false
+    listLoading: false,
+    timeWindow: {
+        durationInHours: 0,
+        serviceCenterId: 0,
+        startInHours: 0,
+    }
 }
 export const demandSegmentsReducer = createReducer(initialState, builder => builder
     .addCase(getDemandSegments, (state, {payload}) => {
@@ -27,5 +33,8 @@ export const demandSegmentsReducer = createReducer(initialState, builder => buil
     })
     .addCase(loadingDemandSegments, (state, {payload}) => {
         return {...state, listLoading: payload};
+    })
+    .addCase(getTimeWindow, (state, {payload}) => {
+        return {...state, timeWindow: payload};
     })
 );

@@ -9,3 +9,9 @@ export interface IDemandSegment {
 export interface IDemandSegmentForm extends Omit<IDemandSegment, "id"> {
     id?: number;
 }
+export interface ITimeWindow {
+    startInHours: number;
+    durationInHours: number;
+    serviceCenterId: number;
+    podId?: number;
+}
