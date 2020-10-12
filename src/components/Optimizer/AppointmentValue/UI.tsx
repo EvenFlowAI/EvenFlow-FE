@@ -6,14 +6,15 @@ export const AppointmentTable = withStyles(theme => ({
         "& .MuiTableCell-head": {
             textTransform: "uppercase",
             padding: 17,
-            fontWeight: "bold",
+            fontWeight: "bold"
         },
         "& .MuiTableCell-body": {
-            padding: "33px 17px",
+            padding: "33px 17px"
         },
         "& .MuiTableCell-root": {
             fontSize: 16,
-            backgroundColor: "#FFFFFF"
+            backgroundColor: "#FFFFFF",
+            border: `1px solid ${theme.palette.divider}`
         },
         "& .primary": {
             color: theme.palette.primary.main

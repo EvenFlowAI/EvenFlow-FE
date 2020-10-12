@@ -15,7 +15,7 @@ export const AppointmentAllocationPage = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Appointment Slot Scoring" pad parent={optimizerRoot} />
+        <TitleContainer title="Appointment Allocation" pad parent={optimizerRoot} />
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"
