@@ -1,7 +1,11 @@
-import React from "react";
-import {TableCell, TableHead, TableRow, TableBody, Button} from "@material-ui/core";
+import React, {useEffect} from "react";
+import {TableCell, TableHead, TableRow, TableBody, Button, CircularProgress} from "@material-ui/core";
 import {AppointmentTable} from "../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
+import {useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {loadDemandSegments} from "../../../store/reducers/demandSegments/actions";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles(theme => ({
     cell: {
@@ -27,11 +31,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const DemandSegments = () => {
+    const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
+    const dispatch = useDispatch();
+    const [segments, loading] = useSelector((state: RootState) => [
+        state.demandSegments.demandSegmentList,
+        state.demandSegments.listLoading
+    ])
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
+        }
+    }, [dispatch, selectedSC, selectedPod]);
+
     const classes = useStyles();
     return <AppointmentTable className={classes.table}>
         <TableHead>
             <TableRow className={classes.headRow}>
-                <TableCell className={classes.cell}>Demand segments</TableCell>
+                <TableCell className={classes.cell} width={200}>Demand segments</TableCell>
                 <TableCell className={classes.cell}>Window 1</TableCell>
                 <TableCell className={classes.cell}>Window 2</TableCell>
                 <TableCell className={classes.cell}>Window 3</TableCell>
@@ -45,27 +63,34 @@ export const DemandSegments = () => {
             </TableRow>
         </TableHead>
         <TableBody>
-            <TableRow className={classes.row}>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell} />
-            </TableRow>
-            <TableRow className={classes.row}>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell} />
-            </TableRow>
-            <TableRow className={classes.row}>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell}>1</TableCell>
-                <TableCell className={classes.cell} />
-            </TableRow>
+            {loading
+                ? <TableRow>
+                    <TableCell colSpan={4} className={classes.cell}>
+                            <CircularProgress />
+                    </TableCell>
+                </TableRow>
+                : !segments.length
+                    ? <TableRow>
+                        <TableCell colSpan={4} className={classes.cell}>No Segments Created</TableCell>
+                    </TableRow>
+                    : segments.map((segment, idx) => {
+                        return <TableRow key={segment.id} className={classes.row}>
+                            <TableCell className={classes.cell}>
+                                {idx + 1}
+                            </TableCell>
+                            <TableCell className={classes.cell}>
+                                {segment.window1Point} %
+                            </TableCell>
+                            <TableCell className={classes.cell}>
+                                {segment.window2Point} %
+                            </TableCell>
+                            <TableCell className={classes.cell}>
+                                {segment.window3Point} %
+                            </TableCell>
+                            <TableCell className={classes.cell} />
+                        </TableRow>
+                    })
+            }
         </TableBody>
     </AppointmentTable>;
 }
