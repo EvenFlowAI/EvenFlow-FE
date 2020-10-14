@@ -4,9 +4,11 @@ import {AppointmentTable} from "../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadDemandSegments} from "../../../store/reducers/demandSegments/actions";
+import {loadDemandSegments, setDemandSegments} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
 import {SC_UNDEFINED} from "../../../config/constants";
+import {TextField} from "../../UI/TextField";
+import {ISetDemandSegmentForm} from "../../../store/reducers/demandSegments/types";
 
 const useStyles = makeStyles(theme => ({
     cell: {
@@ -27,11 +29,13 @@ const useStyles = makeStyles(theme => ({
     },
     button: {
         textTransform: "none",
-        fontSize: 16
+        fontSize: 14
     }
 }));
 
+type TForm = number[][];
 export const DemandSegments = () => {
+    const [form, setForm] = useState<TForm>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [isSaving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
@@ -51,15 +55,47 @@ export const DemandSegments = () => {
         }
     }, [dispatch, selectedSC, selectedPod]);
 
-    const handleCancel = () => {
+    useEffect(() => {
+        setForm(segments.map(s => [s.window1Point, s.window2Point, s.window3Point]));
+    }, [segments]);
 
+    const handleCancel = () => {
+        setEdit(false);
+        setForm(segments.map(s => [s.window1Point, s.window2Point, s.window3Point]));
     }
 
-    const handleSave = () => {
+    const handleChange = (idx: number, iIdx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        const nForm = [...form];
+        nForm[idx] = [...nForm[idx]];
+        nForm[idx][iIdx] = Number(e.target.value);
+        setForm(nForm);
+    }
+
+    const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-
+            setSaving(true);
+            try {
+                await dispatch(setDemandSegments({
+                    segments: form.map((el, idx) => {
+                        return {
+                            id: segments[idx]?.id || 0,
+                            window1Point: el[0],
+                            window2Point: el[1],
+                            window3Point: el[2],
+                        } as ISetDemandSegmentForm
+                    }),
+                    serviceCenterId: selectedSC.id,
+                    podId: selectedPod?.id
+                }))
+                setSaving(false);
+                setEdit(false);
+                showMessage("Saved");
+            } catch (e) {
+                setSaving(false);
+                showError(e);
+            }
         }
     }
 
@@ -83,16 +119,16 @@ export const DemandSegments = () => {
                             ? <CircularProgress />
                             : <>
                             <Button
-                                onClick={handleCancel}
-                                color="secondary"
-                                className={classes.button}>
-                                Cancel
-                            </Button>
-                            <Button
                                 onClick={handleSave}
                                 color="primary"
                                 className={classes.button}>
                                 Save
+                            </Button>
+                            <Button
+                                onClick={handleCancel}
+                                color="secondary"
+                                className={classes.button}>
+                                Cancel
                             </Button>
                         </>
                     }
@@ -110,23 +146,50 @@ export const DemandSegments = () => {
                     ? <TableRow>
                         <TableCell colSpan={5} className={classes.cell}>No Segments Created</TableCell>
                     </TableRow>
-                    : segments.map((segment, idx) => {
-                        return <TableRow key={segment.id} className={classes.row}>
-                            <TableCell className={classes.cell}>
-                                {idx + 1}
-                            </TableCell>
-                            <TableCell className={classes.cell}>
-                                {segment.window1Point} %
-                            </TableCell>
-                            <TableCell className={classes.cell}>
-                                {segment.window2Point} %
-                            </TableCell>
-                            <TableCell className={classes.cell}>
-                                {segment.window3Point} %
-                            </TableCell>
-                            <TableCell className={classes.cell} />
-                        </TableRow>
-                    })
+                    : isEdit
+                        ? form.map((el, idx) => {
+                            return <TableRow key={idx} className={classes.row}>
+                                <TableCell className={classes.cell}>
+                                    {idx + 1}
+                                </TableCell>
+                                {el.map((item, iIdx) => {
+                                    return <TableCell
+                                        key={`item-${iIdx}`}
+                                        className={classes.cell}
+                                    >
+                                        <TextField
+                                            id={`item-${iIdx}`}
+                                            value={item}
+                                            type="number"
+                                            endAdornment="%"
+                                            inputProps={{
+                                                min: 0,
+                                                max: 100
+                                            }}
+                                            onChange={handleChange(idx, iIdx)}
+                                        />
+                                    </TableCell>
+                                })}
+                                <TableCell className={classes.cell} />
+                            </TableRow>
+                        })
+                        : segments.map((segment, idx) => {
+                            return <TableRow key={segment.id} className={classes.row}>
+                                <TableCell className={classes.cell}>
+                                    {idx + 1}
+                                </TableCell>
+                                <TableCell className={classes.cell}>
+                                    {segment.window1Point} %
+                                </TableCell>
+                                <TableCell className={classes.cell}>
+                                    {segment.window2Point} %
+                                </TableCell>
+                                <TableCell className={classes.cell}>
+                                    {segment.window3Point} %
+                                </TableCell>
+                                <TableCell className={classes.cell} />
+                            </TableRow>
+                        })
             }
         </TableBody>
     </AppointmentTable>;
