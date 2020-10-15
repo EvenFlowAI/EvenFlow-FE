@@ -31,7 +31,7 @@ export enum EDay {
 }
 export interface IUnplannedDemand {
     day: EDay;
-    optimizerSetting: number;
+    optimizerSetting?: number;
     serviceCenterId: number;
     historicalWalkInScheduleBlocks: number;
     podId?: number;
@@ -41,7 +41,7 @@ export interface IUnplannedDemandForm {
     optimizerSetting: number;
 }
 export interface IUnplannedDemandRequest {
-    items: IUnplannedDemand[];
+    items: IUnplannedDemandForm[];
     serviceCenterId: number;
     podId?: number;
 }
