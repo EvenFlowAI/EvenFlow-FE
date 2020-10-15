@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {TableCell, TableHead, TableRow, TableBody, Button, CircularProgress} from "@material-ui/core";
-import {AppointmentTable} from "../AppointmentValue/UI";
-import {makeStyles} from "@material-ui/core/styles";
+import {TableHead, TableBody, CircularProgress} from "@material-ui/core";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadDemandSegments, setDemandSegments} from "../../../store/reducers/demandSegments/actions";
@@ -9,29 +7,7 @@ import {RootState} from "../../../store/rootReducer";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {TextField} from "../../UI/TextField";
 import {ISetDemandSegmentForm} from "../../../store/reducers/demandSegments/types";
-
-const useStyles = makeStyles(theme => ({
-    cell: {
-        border: "none !important",
-        padding: "12px 16px !important",
-        textAlign: "center",
-    },
-    table: {
-        border: `1px solid ${theme.palette.divider}`
-    },
-    row: {
-        "&:nth-child(2n) .MuiTableCell-root": {
-            backgroundColor: "#F2F3F7"
-        }
-    },
-    headRow: {
-        borderBottom: `1px solid ${theme.palette.divider}`
-    },
-    button: {
-        textTransform: "none",
-        fontSize: 14
-    }
-}));
+import {DemandTable, TableRow, TableCell, SaveEditBlock} from "./UI";
 
 type TForm = number[][];
 export const DemandSegments = () => {
@@ -99,63 +75,44 @@ export const DemandSegments = () => {
         }
     }
 
-    const classes = useStyles();
-    return <AppointmentTable className={classes.table}>
+    return <DemandTable>
         <TableHead>
-            <TableRow className={classes.headRow}>
-                <TableCell className={classes.cell} width={200}>Demand segments</TableCell>
-                <TableCell className={classes.cell}>Window 1</TableCell>
-                <TableCell className={classes.cell}>Window 2</TableCell>
-                <TableCell className={classes.cell}>Window 3</TableCell>
-                <TableCell className={classes.cell} width={100}>
-                    {!isEdit
-                        ? <Button
-                            onClick={() => setEdit(true)}
-                            className={classes.button}
-                            color='primary'>
-                            Edit
-                        </Button>
-                        : isSaving
-                            ? <CircularProgress />
-                            : <>
-                            <Button
-                                onClick={handleSave}
-                                color="primary"
-                                className={classes.button}>
-                                Save
-                            </Button>
-                            <Button
-                                onClick={handleCancel}
-                                color="secondary"
-                                className={classes.button}>
-                                Cancel
-                            </Button>
-                        </>
-                    }
+            <TableRow>
+                <TableCell width={200}>Demand segments</TableCell>
+                <TableCell>Window 1</TableCell>
+                <TableCell>Window 2</TableCell>
+                <TableCell>Window 3</TableCell>
+                <TableCell width={100}>
+                    <SaveEditBlock
+                        onSave={handleSave}
+                        onEdit={() => setEdit(true)}
+                        onCancel={handleCancel}
+                        isSaving={isSaving}
+                        isEdit={isEdit}
+                    />
                 </TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
             {loading
                 ? <TableRow>
-                    <TableCell colSpan={5} className={classes.cell}>
+                    <TableCell colSpan={5}>
                         <CircularProgress />
                     </TableCell>
                 </TableRow>
                 : !segments.length
                     ? <TableRow>
-                        <TableCell colSpan={5} className={classes.cell}>No Segments Created</TableCell>
+                        <TableCell colSpan={5}>No Segments Created</TableCell>
                     </TableRow>
                     : isEdit
                         ? form.map((el, idx) => {
-                            return <TableRow key={idx} className={classes.row}>
-                                <TableCell className={classes.cell}>
+                            return <TableRow key={idx}>
+                                <TableCell>
                                     {idx + 1}
                                 </TableCell>
                                 {el.map((item, iIdx) => {
                                     return <TableCell
                                         key={`item-${iIdx}`}
-                                        className={classes.cell}
                                     >
                                         <TextField
                                             id={`item-${iIdx}`}
@@ -170,27 +127,27 @@ export const DemandSegments = () => {
                                         />
                                     </TableCell>
                                 })}
-                                <TableCell className={classes.cell} />
+                                <TableCell />
                             </TableRow>
                         })
                         : segments.map((segment, idx) => {
-                            return <TableRow key={segment.id} className={classes.row}>
-                                <TableCell className={classes.cell}>
+                            return <TableRow key={segment.id}>
+                                <TableCell>
                                     {idx + 1}
                                 </TableCell>
-                                <TableCell className={classes.cell}>
+                                <TableCell>
                                     {segment.window1Point} %
                                 </TableCell>
-                                <TableCell className={classes.cell}>
+                                <TableCell>
                                     {segment.window2Point} %
                                 </TableCell>
-                                <TableCell className={classes.cell}>
+                                <TableCell>
                                     {segment.window3Point} %
                                 </TableCell>
-                                <TableCell className={classes.cell} />
+                                <TableCell />
                             </TableRow>
                         })
             }
         </TableBody>
-    </AppointmentTable>;
+    </DemandTable>;
 }
