@@ -49,16 +49,16 @@ export const SaveEditBlock: React.FC<TSaveEditProps> = ({isEdit, isSaving, onEdi
     }
     return <>
         <Button
-            onClick={onSave}
-            color="primary"
-        >
-            Save
-        </Button>
-        <Button
             onClick={onCancel}
             color="secondary"
         >
             Cancel
+        </Button>
+        <Button
+            onClick={onSave}
+            color="primary"
+        >
+            Save
         </Button>
     </>
 

@@ -82,7 +82,7 @@ export const DemandSegments = () => {
                 <TableCell>Window 1</TableCell>
                 <TableCell>Window 2</TableCell>
                 <TableCell>Window 3</TableCell>
-                <TableCell width={100}>
+                <TableCell width={200} style={{textAlign: "right"}}>
                     <SaveEditBlock
                         onSave={handleSave}
                         onEdit={() => setEdit(true)}

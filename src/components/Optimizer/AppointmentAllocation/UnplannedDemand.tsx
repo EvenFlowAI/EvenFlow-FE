@@ -3,6 +3,7 @@ import {DemandTable, TableRow, TableCell, SaveEditBlock} from "./UI";
 import {TableBody, TableHead} from "@material-ui/core";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {SC_UNDEFINED} from "../../../config/constants";
+import moment from "moment";
 
 export const UnplannedDemand = () => {
     const [isEdit, setEdit] = useState<boolean>(false);
@@ -39,7 +40,7 @@ export const UnplannedDemand = () => {
                     <TableCell>Day</TableCell>
                     <TableCell>Historical Walk-in Schedule Blocks</TableCell>
                     <TableCell>Optimizer Setting</TableCell>
-                    <TableCell>
+                    <TableCell width={200} style={{textAlign: "right"}}>
                         <SaveEditBlock
                             onSave={handleSave}
                             onEdit={() => setEdit(true)}
@@ -51,9 +52,16 @@ export const UnplannedDemand = () => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                <TableRow>
-                    <TableCell />
-                </TableRow>
+                {moment.weekdays().map(d => {
+                    return <TableRow key={d}>
+                        <TableCell>
+                            {d}
+                        </TableCell>
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                    </TableRow>
+                })}
             </TableBody>
         </DemandTable>
     </div>
