@@ -26,3 +26,22 @@ export interface ISetDemandSegmentRequest {
     serviceCenterId: number;
     podId?: number;
 }
+export enum EDay {
+    Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+}
+export interface IUnplannedDemand {
+    day: EDay;
+    optimizerSetting: number;
+    serviceCenterId: number;
+    historicalWalkInScheduleBlocks: number;
+    podId?: number;
+}
+export interface IUnplannedDemandForm {
+    day: EDay;
+    optimizerSetting: number;
+}
+export interface IUnplannedDemandRequest {
+    items: IUnplannedDemand[];
+    serviceCenterId: number;
+    podId?: number;
+}

@@ -1,9 +1,11 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DemandTable, TableRow, TableCell, SaveEditBlock} from "./UI";
 import {TableBody, TableHead} from "@material-ui/core";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {SC_UNDEFINED} from "../../../config/constants";
 import moment from "moment";
+import {useDispatch} from "react-redux";
+import {loadUnplannedDemand} from "../../../store/reducers/demandSegments/actions";
 
 export const UnplannedDemand = () => {
     const [isEdit, setEdit] = useState<boolean>(false);
@@ -12,6 +14,13 @@ export const UnplannedDemand = () => {
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadUnplannedDemand(selectedSC.id, selectedPod?.id));
+        }
+    }, [dispatch, selectedSC, selectedPod]);
 
     const handleCancel = () => {
         setEdit(false);
