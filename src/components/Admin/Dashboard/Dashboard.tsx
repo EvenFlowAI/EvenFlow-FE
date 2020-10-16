@@ -21,6 +21,7 @@ import {Technicians} from "../../Modals/Technicians/Technicians";
 import {Bays} from "../../Modals/Bays/Bays";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
+import {DashPodsModal} from "../../Modals/PODModal/DashPodsModal";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -130,6 +131,11 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenBays,
         isOpen: isBaysOpen
     } = useModal();
+    const {
+        onClose: onClosePods,
+        onOpen: onOpenPods,
+        isOpen: isOpenPods,
+    } = useModal();
 
     const items: TItem[] = [
         {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
@@ -139,7 +145,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenB},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
         {label: "Technician stuff", icon: <PeopleAltOutlined />, action: onOpenTech},
-        {label: "Pods", icon: <FormatListNumbered />, action: onOpenAddress},
+        {label: "Pods", icon: <FormatListNumbered />, action: onOpenPods},
     ];
 
     const classes = useStyles();
@@ -163,5 +169,6 @@ export const AdminDashboard: React.FC = () => {
         <Holidays open={isHOpen} onClose={onCloseH} />
         <Technicians open={isTechOpen} onClose={onCloseTech} />
         <Bays open={isBaysOpen} onClose={onCloseBays} />
+        <DashPodsModal open={isOpenPods} onClose={onClosePods} />
     </div>
 }

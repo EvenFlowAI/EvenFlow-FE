@@ -19,7 +19,7 @@ const rowData: TableRowDataType<IPod>[] = [
     {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || ""}
 ]
 
-export const ProfilePODs = () => {
+export const ProfilePODs:React.FC<{dense?: boolean}> = ({dense}) => {
     const {selectedSC} = useSCs();
     const [editedItem, setEditedItem] = useState<IPod|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -97,6 +97,7 @@ export const ProfilePODs = () => {
             data={pods}
             index='id'
             rowData={rowData}
+            compact={dense}
             page={pageIndex}
             rowsPerPage={pageSize}
             onChangePage={changePage}
