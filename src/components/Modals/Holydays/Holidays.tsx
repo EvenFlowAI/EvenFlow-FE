@@ -8,7 +8,6 @@ import {MoreHoriz} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {AddHoliday} from "./AddHoliday";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
-import {DividerThin} from "../../UI/Divider";
 import {IHoliday} from "../../../store/reducers/holidays/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -118,7 +117,6 @@ export const Holidays: React.FC<DialogProps> = props => {
         <div className={classes.addHoliday}>
             <Button variant="contained" color="primary" onClick={handleOpenCreate}>Add Holiday</Button>
         </div>
-        <DividerThin />
         <Table<IHoliday>
             onChangePage={changePage}
             page={pageIndex}
@@ -131,7 +129,6 @@ export const Holidays: React.FC<DialogProps> = props => {
             rowData={rowData}
             actions={actions}
         />
-        <DividerThin />
         <DialogActions>
             <Button onClick={props.onClose} variant="contained" color="primary">
                 Close
