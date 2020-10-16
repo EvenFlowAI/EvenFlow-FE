@@ -26,6 +26,17 @@ export interface IEmployee {
     avatarPath?: string;
 }
 
+export interface IEmployeeFilters {
+    roles?: string[];
+    dealershipId?: number;
+    serviceCenterId?: number;
+    searchTerm?: string;
+}
+export interface IEmployeeOrdering {
+    isAscending: boolean;
+    orderBy: string;
+}
+
 export interface IEmployeeForm {
     firstName: string;
     lastName: string;
@@ -43,6 +54,7 @@ export type TSaving = {type: "Employees/Saving"; payload: boolean};
 export type TCreate = {type: "Employees/Create"; payload: IEmployee};
 export type TLoadingTechnicians = {type: "Employees/LoadingTechnicians", payload: boolean};
 export type TGetTechnicians = {type: "Employees/GetTechnicians", payload: IEmployee[]};
+export type TChangeFilters = {type: "Employees/ChangeFilters", payload: IEmployeeFilters};
 export type TChangeDPaging = TChangePagingGeneric<"Employees/ChangeDPaging">;
 export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
 export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
@@ -58,4 +70,5 @@ export type TEmployeeActions =
     | TChangeDPaging
     | TChangePageData
     | TChangePaging
+    | TChangeFilters
     | TGetAll;

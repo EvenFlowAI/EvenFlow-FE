@@ -1,4 +1,4 @@
-import {IEmployee, TEmployeeActions} from "./types";
+import {IEmployee, IEmployeeFilters, TEmployeeActions} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {createReducer} from "@reduxjs/toolkit";
@@ -16,6 +16,7 @@ export type TEmployeesState = {
     dealershipPaging: IPagingResponse;
     paging: IPagingResponse;
     pageData: IPageRequest;
+    filters: IEmployeeFilters;
 }
 
 const initialState: TEmployeesState = {
@@ -28,7 +29,8 @@ const initialState: TEmployeesState = {
     loading: false,
     saving: false,
     paging: {...defaultPaging},
-    pageData: {...defaultPageData}
+    pageData: {...defaultPageData},
+    filters: {}
 }
 
 export const employeesReducer = (state=initialState, action: TEmployeeActions): TEmployeesState => {
@@ -53,6 +55,8 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
             return {...state, loading: action.payload};
         case "Employees/Saving":
             return {...state, saving: action.payload};
+        case "Employees/ChangeFilters":
+            return {...state, filters: action.payload};
         default:
             return state;
     }
