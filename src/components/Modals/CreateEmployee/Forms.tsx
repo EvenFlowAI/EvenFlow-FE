@@ -13,7 +13,7 @@ export const initialAdvisorForm: TAdvisorForm = {
 }
 export const initialTechnicianForm: TTechnicianForm = {
     firstName: '', lastName: '', serviceCenter: null, phoneNumber: "",
-    hourlyRate: '', overtimeRate: '', technicianLevel: 1
+    hourlyRate: '', overtimeRate: '', email: "", technicianLevel: 1
 }
 
 
@@ -107,7 +107,17 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 name="lastName"
                 label="Last name" />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
+            <TextField
+                id="email"
+                name="email"
+                fullWidth
+                value={props.form.email}
+                onChange={props.onChange}
+                label="Email"
+            />
+        </Grid>
+        <Grid item xs={6}>
             <TextField
                 id="phoneNumber"
                 name="phoneNumber"

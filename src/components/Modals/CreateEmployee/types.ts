@@ -16,6 +16,7 @@ export type TTechnicianForm = {
     serviceCenter: IServiceCenter | null;
     hourlyRate: number | '';
     overtimeRate: number | '';
+    email?: string;
     phoneNumber?: string;
     technicianLevel: TTechnicianLevel;
 }

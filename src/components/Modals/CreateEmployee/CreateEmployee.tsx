@@ -105,11 +105,12 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
                 ...advisorForm,
                 role,
                 serviceCenterId: advisorForm.serviceCenter?.id || null
-            };
+            } as IUserForm;
         } else {
             data = {
                 firstName: technicianForm.firstName,
                 lastName: technicianForm.lastName,
+                email: technicianForm.email,
                 phoneNumber: technicianForm.phoneNumber,
                 serviceCenterId: technicianForm.serviceCenter?.id || null,
                 employeeInfo: {
@@ -117,7 +118,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
                     overtimeRate: technicianForm.overtimeRate || 0,
                     skillLevel: technicianForm.technicianLevel
                 }
-            }
+            } as IEmployeeForm;
         }
         try {
             if (role === Roles.Advisor) {
@@ -128,9 +129,9 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
                 }
             } else {
                 if (payload?.id) {
-                    await dispatch(updateEmployee(data, payload.id, avatar));
+                    await dispatch(updateEmployee(data as IEmployeeForm, payload.id, avatar));
                 } else {
-                    await dispatch(createEmployee(data, avatar));
+                    await dispatch(createEmployee(data as IEmployeeForm, avatar));
                 }
             }
             dispatch(loadAll());
