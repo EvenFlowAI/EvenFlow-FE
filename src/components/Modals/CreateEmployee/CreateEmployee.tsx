@@ -110,7 +110,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
             data = {
                 firstName: technicianForm.firstName,
                 lastName: technicianForm.lastName,
-                email: technicianForm.email,
+                email: technicianForm.email || undefined,
                 phoneNumber: technicianForm.phoneNumber,
                 serviceCenterId: technicianForm.serviceCenter?.id || null,
                 employeeInfo: {
