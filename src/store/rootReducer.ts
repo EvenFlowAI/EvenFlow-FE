@@ -11,12 +11,14 @@ import {serviceRequestsReducer} from "./reducers/serviceRequests/reducers";
 import {podsReducer} from "./reducers/pods/reducer";
 import {slotScoringReducer} from "./reducers/slotScoring/reducer";
 import {demandSegmentsReducer} from "./reducers/demandSegments/reducer";
+import {optimizationWindowsReducer} from "./reducers/optimizationWindows/reducer";
 
 export const rootReducer = combineReducers({
     users: usersReducer,
     dealershipGroups: dealershipGroupsReducer,
     demandSegments: demandSegmentsReducer,
     employees: employeesReducer,
+    optimizationWindows: optimizationWindowsReducer,
     scEmployees: scEmployees,
     pods: podsReducer,
     serviceCenters: serviceCenterReducer,

@@ -108,6 +108,7 @@ type ApiRoutes = {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
+    OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking", TApiRoute>,
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
@@ -178,6 +179,12 @@ export class Api {
             Create: {route: "/employees", method: "post"},
             Update: {route: "/employees/{id}", method: "put"},
             GetAll: {route: "/employees/by-query", method: "post"}
+        },
+        OptimizationWindows: {
+            GetParams: {route: "/optimization-windows", method: "get"},
+            SetParams: {route: "/optimization-windows", method: "put"},
+            GetOverbooking: {route: "/optimization-windows/overbooking-factor", method: "get"},
+            SetOverbooking: {route: "/optimization-windows/overbooking-factor", method: "put"},
         },
         Pods: {
             Create: {route: "/pods", method: "post"},
