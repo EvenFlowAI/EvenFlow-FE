@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {OptimizationPlate} from "./OptimizationPlate";
@@ -12,21 +12,13 @@ import {loadOptimizationWindows} from "../../../store/reducers/optimizationWindo
 import {
     EOptimizationWindowType,
     IOptimizationWindow,
-    optimizationWindowsList
+    optimizationWindowsList,
+    TOptContent
 } from "../../../store/reducers/optimizationWindows/types";
 import {OptimizationDialog} from "./OptimizationWindowDialog";
 
 type TOptParam = {
     [k in EOptimizationWindowType]: IOptimizationWindow;
-}
-type TOptContent = {
-    [k in EOptimizationWindowType]: {
-        helperText: string;
-        label: string;
-        title: string;
-        prefix?: string;
-        suffix?: string;
-    }
 }
 
 const optContent: TOptContent = {
@@ -36,7 +28,7 @@ const optContent: TOptContent = {
         title: "First Available Search",
     },
     [EOptimizationWindowType.SpecificDate]: {
-        prefix: "+/-",
+        prefix: "+/- ",
         helperText: "Set the optimization window for available time slots when a specific date search is entered",
         label: "Days",
         title: "Specific Date Search",
@@ -66,6 +58,7 @@ const blankWindowParam: IOptimizationWindow = {
     value: 0
 }
 export const OptimizationWindowsPage = () => {
+    const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);
     const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
     const {isOpen: isOptOpen, onClose: onOptClose, onOpen: onOptOpen} = useModal();
     const optParams = useSelector((state: RootState) =>
@@ -82,19 +75,19 @@ export const OptimizationWindowsPage = () => {
     }, [optParams]);
 
     const handleEdit = useCallback((type: EOptimizationWindowType) => () => {
-        // TODO: HandleSomeDataThrow
+        setSelectedOpt(type);
         onOptOpen();
     }, [onOptOpen]);
 
     useEffect(() => {
         if (selectedSC) {
-            if (!isDemandOpen && !isOptOpen) {
-                // Update after demand or other close
+            if (!isDemandOpen) {
+                // Update after demand close
                 dispatch(loadOptimizationWindows(selectedSC.id, selectedPod?.id));
             }
             dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
         }
-    }, [dispatch, selectedSC, selectedPod, isDemandOpen, isOptOpen]);
+    }, [dispatch, selectedSC, selectedPod, isDemandOpen]);
 
     return <>
         <TitleContainer title="Optimization Windows" pad parent={optimizerRoot} />
@@ -115,7 +108,12 @@ export const OptimizationWindowsPage = () => {
                     </Grid>;
                 }
             )}
-            <OptimizationDialog open={isOptOpen} onClose={onOptClose} />
+            <OptimizationDialog
+                open={isOptOpen}
+                content={optContent[selectedOpt]}
+                payload={optMapped[selectedOpt]}
+                onClose={onOptClose}
+            />
             <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
         </Grid>
     </>

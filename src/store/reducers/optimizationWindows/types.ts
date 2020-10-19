@@ -14,4 +14,14 @@ export const optimizationWindowsList: EOptimizationWindowType[] = [
     EOptimizationWindowType.DemandSegments,
     EOptimizationWindowType.OverbookingFactor,
     EOptimizationWindowType.AppointmentsPerSlot,
-]
+];
+export type TOptContentData = {
+        helperText: string;
+        label: string;
+        title: string;
+        prefix?: string;
+        suffix?: string;
+    }
+export type TOptContent = {
+    [k in EOptimizationWindowType]: TOptContentData;
+}
