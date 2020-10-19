@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useCallback, useEffect, useMemo} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {OptimizationPlate, TOptimizationPlateProps} from "./OptimizationPlate";
@@ -14,6 +14,7 @@ import {
     IOptimizationWindow,
     optimizationWindowsList
 } from "../../../store/reducers/optimizationWindows/types";
+import {OptimizationDialog} from "./OptimizationWindowDialog";
 
 const blankWindowParam: IOptimizationWindow = {
     serviceCenterId: 0,
@@ -22,6 +23,7 @@ const blankWindowParam: IOptimizationWindow = {
 }
 export const OptimizationWindowsPage = () => {
     const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
+    const {isOpen: isOptOpen, onClose: onOptClose, onOpen: onOptOpen} = useModal();
     const [demandCount, optParams] = useSelector((state: RootState) => [
         state.demandSegments.demandSegmentList.length,
         state.optimizationWindows.dataList
@@ -41,6 +43,11 @@ export const OptimizationWindowsPage = () => {
         })
     }, [optParams]);
 
+    const handleEdit = useCallback((type: EOptimizationWindowType) => () => {
+        // TODO: HandleSomeDataThrow
+        onOptOpen();
+    }, [onOptOpen]);
+
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
@@ -54,7 +61,7 @@ export const OptimizationWindowsPage = () => {
             helperText: "Set the optimization window for available time slots when first available date search is entered",
             label: "Days",
             title: "First Available Search",
-            onEdit: () => {}
+            onEdit: handleEdit(EOptimizationWindowType.FirstAvailable)
         },
         {
             count: specificDate.value,
@@ -62,7 +69,7 @@ export const OptimizationWindowsPage = () => {
             helperText: "Set the optimization window for available time slots when a specific date search is entered",
             label: "Days",
             title: "Specific Date Search",
-            onEdit: () => {}
+            onEdit: handleEdit(EOptimizationWindowType.SpecificDate)
         },
         {
             count: demandCount,
@@ -77,16 +84,17 @@ export const OptimizationWindowsPage = () => {
             suffix: "%",
             label: "percent per day",
             title: "Overbooking factor",
-            onEdit: () => {}
+            onEdit: handleEdit(EOptimizationWindowType.OverbookingFactor)
         },
         {
             count: appointmentsPerSlot.value,
             helperText: "Set the number of max scheduled appointments per appointment time slot",
             label: "appointments",
             title: "Appointments per slot",
-            onEdit: () => {}
+            onEdit: handleEdit(EOptimizationWindowType.AppointmentsPerSlot)
         },
     ], [
+        handleEdit,
         onDemandOpen,
         demandCount,
         firstAvailable,
@@ -111,6 +119,7 @@ export const OptimizationWindowsPage = () => {
                     />
                 </Grid>
             )}
+            <OptimizationDialog open={isOptOpen} onClose={onOptClose} />
             <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
         </Grid>
     </>
