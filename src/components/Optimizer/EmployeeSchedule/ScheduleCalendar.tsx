@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {calendarDateFormat, getDaysOfWeek} from "./utils";
 import {ScheduleTable} from "./UI";
 import {TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
@@ -11,13 +11,21 @@ const controlStyles = {
 }
 
 export const ScheduleCalendar = () => {
+    const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
     const now = moment();
     const daysOfWeek = getDaysOfWeek(now);
+
+    const handleChange = (date: moment.Moment) => {
+        setSelectedDate(date);
+    }
 
     return (
         <div>
             <div style={controlStyles}>
-                <WeekControls />
+                <WeekControls
+                    selectedDate={selectedDate}
+                    onChange={handleChange}
+                />
             </div>
             <ScheduleTable>
                 <TableHead>

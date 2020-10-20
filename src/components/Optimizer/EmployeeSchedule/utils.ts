@@ -8,5 +8,10 @@ export const getDaysOfWeek = (date: moment.Moment): moment.Moment[] => {
     }
     return days;
 }
+export const getFirstLastDaysOfWeek = (date: moment.Moment): string => {
+    const weekStart = moment(date).startOf("week");
+    const weekEnd = moment(date).endOf("week");
+    return `${weekStart.format("MMM D")} - ${weekEnd.format("MMM D")}`;
+}
 
 export const calendarDateFormat = "ddd, MMM D";
