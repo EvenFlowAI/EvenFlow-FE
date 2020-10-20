@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {calendarDateFormat, getDaysOfWeek} from "./utils";
 import {ScheduleTable} from "./UI";
 import {Avatar, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
@@ -12,8 +12,8 @@ const controlStyles = {
 
 export const ScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
-    const now = moment();
-    const daysOfWeek = getDaysOfWeek(now);
+    // const now = moment();
+    const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate), [selectedDate]);
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
