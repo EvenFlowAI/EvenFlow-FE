@@ -1,6 +1,6 @@
 import {withStyles, Table} from "@material-ui/core";
 
-export const ScheduleTable = withStyles(theme => ({
+export const ScheduleTable = withStyles({
     root: {
         "& .MuiTableCell-head": {
             textTransform: "uppercase",
@@ -22,4 +22,4 @@ export const ScheduleTable = withStyles(theme => ({
             backgroundColor: "#F2F3F7"
         }
     }
-}))(Table);
+})(Table);
