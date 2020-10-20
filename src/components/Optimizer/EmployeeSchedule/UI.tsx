@@ -15,10 +15,10 @@ export const ScheduleTable = withStyles(theme => ({
         "& .MuiTableCell-root:last-child, & .MuiTableCell-head": {
             borderRight: "none"
         },
-        "& .MuiTableRow-root:nth-child(1) .MuiTableCell-body": {
+        "& .MuiTableRow-root .MuiTableCell-body": {
             backgroundColor: "#fff"
         },
-        "& .MuiTableRow-root:nth-child(2) .MuiTableCell-body": {
+        "& .MuiTableRow-root:nth-child(2n) .MuiTableCell-body": {
             backgroundColor: "#F2F3F7"
         }
     }
