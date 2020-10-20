@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {calendarDateFormat, getDaysOfWeek} from "./utils";
 import {ScheduleTable} from "./UI";
-import {TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Avatar, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
 import {WeekControls} from "./WeekControls";
 
@@ -41,7 +41,7 @@ export const ScheduleCalendar = () => {
                 <TableBody>
                     {[...Array(3)].map((_,idx) => {
                         return <TableRow key={idx}>
-                            <TableCell>1</TableCell>
+                            <TableCell><Avatar>{idx}</Avatar></TableCell>
                             <TableCell>2</TableCell>
                             <TableCell>3</TableCell>
                             <TableCell>4</TableCell>
