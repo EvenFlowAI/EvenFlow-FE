@@ -72,6 +72,7 @@ const MainLinks: LinkType[] = [
     {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true},
     {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true},
     {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true},
+    {to: Routes.Optimizer.EmployeeSchedule, name: "Employee Schedule", sub: true},
     {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true},
     {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true},
     {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true},

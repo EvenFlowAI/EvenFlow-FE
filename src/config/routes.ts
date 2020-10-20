@@ -23,6 +23,7 @@ enum OptimizerRoutes {
     ServiceRequests = "/optimizer/service-requests",
     AppointmentValue = "/optimizer/appointment-value",
     CapacitySettings = "/optimizer/capacity-settings",
+    EmployeeSchedule = "/optimizer/employee-schedule",
     AppointmentSlotScoring = "/optimizer/appointment-slot-scoring",
     AppointmentAllocation = "/optimizer/appointment-allocation",
     OptimizationWindows = "/optimizer/optimization-windows"
