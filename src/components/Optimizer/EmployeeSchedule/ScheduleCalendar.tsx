@@ -3,18 +3,28 @@ import {calendarDateFormat, getDaysOfWeek} from "./utils";
 import {ScheduleTable} from "./UI";
 import {TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
+import {WeekControls} from "./WeekControls";
+
+const controlStyles = {
+    display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
+    marginBottom: 10
+}
+
 export const ScheduleCalendar = () => {
     const now = moment();
     const daysOfWeek = getDaysOfWeek(now);
 
     return (
         <div>
+            <div style={controlStyles}>
+                <WeekControls />
+            </div>
             <ScheduleTable>
                 <TableHead>
                     <TableRow>
                         <TableCell>Employees</TableCell>
                         {daysOfWeek.map(date => {
-                            return <TableCell key={date.toISOString()}>
+                            return <TableCell width={"12%"} key={date.toISOString()}>
                                 {date.format(calendarDateFormat)}
                             </TableCell>
                         })}

@@ -1,16 +1,25 @@
 import {withStyles, Table} from "@material-ui/core";
 
-export const ScheduleTable = withStyles({
+export const ScheduleTable = withStyles(theme => ({
     root: {
         "& .MuiTableCell-head": {
             textTransform: "uppercase",
             fontSize: 12,
             fontWeight: "bold",
             color: "#9FA2B4",
-            borderBottom: "none"
         },
-        "& .MuiTableRow-": {
-
+        "& .MuiTableCell-root": {
+            borderBottom: "none",
+            borderRight: `1px solid #E0E2E8`
+        },
+        "& .MuiTableCell-root:last-child, & .MuiTableCell-head": {
+            borderRight: "none"
+        },
+        "& .MuiTableRow-root:nth-child(1) .MuiTableCell-body": {
+            backgroundColor: "#fff"
+        },
+        "& .MuiTableRow-root:nth-child(2) .MuiTableCell-body": {
+            backgroundColor: "#F2F3F7"
         }
     }
-})(Table);
+}))(Table);
