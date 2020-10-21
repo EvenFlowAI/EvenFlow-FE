@@ -1,14 +1,14 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {calendarDateFormat, getDaysOfWeek, getStartEndDates} from "./utils";
 import {ScheduleTable} from "./UI";
-import {Avatar, CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
 import {WeekControls} from "./WeekControls";
 import {useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule} from "../../../store/reducers/schedules/actions";
 import {RootState} from "../../../store/rootReducer";
-import {getInitials} from "../../../utils/utils";
+import {NameCell} from "./NameCell";
 
 const controlStyles = {
     display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
@@ -67,7 +67,7 @@ export const ScheduleCalendar = () => {
                         employeesList.map(({employee, schedules}) => {
                             return <TableRow key={employee.id}>
                                 <TableCell>
-                                    <Avatar>{employee.avatarPath || getInitials(employee.fullName)}</Avatar>
+                                    <NameCell employee={employee} />
                                 </TableCell>
                             </TableRow>
                         })
