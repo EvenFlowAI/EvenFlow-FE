@@ -35,7 +35,7 @@ export const NameCell: React.FC<TProps> = ({employee}) => {
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>
-            <Avatar>{employee.avatarPath || getInitials(employee.fullName)}</Avatar>
+            <Avatar src={employee.avatarPath}>{getInitials(employee.fullName)}</Avatar>
             <div className={classes.info}>
                 <h4 className={classes.name}>{employee.fullName}</h4>
                 <span className={classes.subtitle}>{

@@ -69,6 +69,11 @@ export const ScheduleCalendar = () => {
                                 <TableCell>
                                     <NameCell employee={employee} />
                                 </TableCell>
+                                {daysOfWeek.map(date => {
+                                    return <TableCell key={date.toISOString()}>
+                                        -
+                                    </TableCell>
+                                })}
                             </TableRow>
                         })
                     }
