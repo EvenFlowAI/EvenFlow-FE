@@ -108,6 +108,7 @@ type ApiRoutes = {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
+    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking", TApiRoute>,
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -179,6 +180,13 @@ export class Api {
             Create: {route: "/employees", method: "post"},
             Update: {route: "/employees/{id}", method: "put"},
             GetAll: {route: "/employees/by-query", method: "post"}
+        },
+        EmployeeSchedule: {
+            Create: {route: "/employee-schedules", method: "post"},
+            Retrieve: {route: "/employee-schedules/{id}", method: "get"},
+            Update: {route: "/employee-schedules", method: "put"},
+            Remove: {route: "/employee-schedules/{id}", method: "delete"},
+            GetAll: {route: "/employee-schedules/by-query", method: "post"}
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

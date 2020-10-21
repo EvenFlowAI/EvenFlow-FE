@@ -12,12 +12,14 @@ import {podsReducer} from "./reducers/pods/reducer";
 import {slotScoringReducer} from "./reducers/slotScoring/reducer";
 import {demandSegmentsReducer} from "./reducers/demandSegments/reducer";
 import {optimizationWindowsReducer} from "./reducers/optimizationWindows/reducer";
+import {schedulesReducer} from "./reducers/schedules/reducer";
 
 export const rootReducer = combineReducers({
     users: usersReducer,
     dealershipGroups: dealershipGroupsReducer,
     demandSegments: demandSegmentsReducer,
     employees: employeesReducer,
+    employeesSchedule: schedulesReducer,
     optimizationWindows: optimizationWindowsReducer,
     scEmployees: scEmployees,
     pods: podsReducer,

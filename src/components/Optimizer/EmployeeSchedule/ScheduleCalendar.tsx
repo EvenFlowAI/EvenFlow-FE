@@ -1,9 +1,14 @@
-import React, {useMemo, useState} from 'react';
-import {calendarDateFormat, getDaysOfWeek} from "./utils";
+import React, {useEffect, useMemo, useState} from 'react';
+import {calendarDateFormat, getDaysOfWeek, getStartEndDates} from "./utils";
 import {ScheduleTable} from "./UI";
-import {Avatar, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Avatar, CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
 import {WeekControls} from "./WeekControls";
+import {useSCs} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {loadEmployeesSchedule} from "../../../store/reducers/schedules/actions";
+import {RootState} from "../../../store/rootReducer";
+import {getInitials} from "../../../utils/utils";
 
 const controlStyles = {
     display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
@@ -12,8 +17,22 @@ const controlStyles = {
 
 export const ScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+    const [employeesList, employeesLoading] = useSelector((state: RootState) => [
+        state.employeesSchedule.employeesList,
+        state.employeesSchedule.employeesLoading
+    ]);
+
     // const now = moment();
     const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate), [selectedDate]);
+
+    useEffect(() => {
+        if (selectedSC) {
+            const [start, end] = getStartEndDates(selectedDate);
+            dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
+        }
+    }, [dispatch, selectedSC, selectedDate]);
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
@@ -39,17 +58,20 @@ export const ScheduleCalendar = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {[...Array(3)].map((_,idx) => {
-                        return <TableRow key={idx}>
-                            <TableCell><Avatar>{idx}</Avatar></TableCell>
-                            <TableCell>2</TableCell>
-                            <TableCell>3</TableCell>
-                            <TableCell>4</TableCell>
-                            <TableCell>5</TableCell>
-                            <TableCell>6</TableCell>
-                            <TableCell>7</TableCell>
-                        </TableRow>
-                    })}
+                    {(employeesLoading || !employeesList.length) ?
+                        <TableRow>
+                            <TableCell colSpan={7} align="center">
+                                {employeesLoading ? <CircularProgress /> : <span>No employees</span>}
+                            </TableCell>
+                        </TableRow> :
+                        employeesList.map(({employee, schedules}) => {
+                            return <TableRow key={employee.id}>
+                                <TableCell>
+                                    <Avatar>{employee.avatarPath || getInitials(employee.fullName)}</Avatar>
+                                </TableCell>
+                            </TableRow>
+                        })
+                    }
                 </TableBody>
             </ScheduleTable>
         </div>

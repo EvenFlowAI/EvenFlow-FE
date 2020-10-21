@@ -15,3 +15,9 @@ export const getFirstLastDaysOfWeek = (date: moment.Moment): string => {
 }
 
 export const calendarDateFormat = "ddd, MMM D";
+export const getStartEndDates = (date: moment.Moment): [string, string] => {
+    return [
+        moment(date).startOf("week").toISOString(),
+        moment(date).endOf("week").toISOString(),
+    ]
+}
