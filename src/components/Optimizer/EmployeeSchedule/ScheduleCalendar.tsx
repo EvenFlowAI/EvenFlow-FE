@@ -4,11 +4,14 @@ import {ScheduleTable} from "./UI";
 import {CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
 import {WeekControls} from "./WeekControls";
-import {useSCs} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule} from "../../../store/reducers/schedules/actions";
 import {RootState} from "../../../store/rootReducer";
 import {NameCell} from "./NameCell";
+import {IEmployee} from "../../../store/reducers/employees/types";
+import {ISchedule} from "../../../store/reducers/schedules/types";
+import {EditSchedule} from "./EditSchedule";
 
 const controlStyles = {
     display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
@@ -17,12 +20,16 @@ const controlStyles = {
 
 export const ScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
+    const [editedDate, setEditedDate] = useState<moment.Moment>(moment());
+    const [editedEmployee, setEditedEmployee] = useState<IEmployee>({} as IEmployee);
+    const [editedSchedule, setEditedSchedule] = useState<ISchedule|undefined>(undefined);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [employeesList, employeesLoading] = useSelector((state: RootState) => [
         state.employeesSchedule.employeesList,
         state.employeesSchedule.employeesLoading
     ]);
+    const {isOpen, onOpen, onClose} = useModal();
 
     // const now = moment();
     const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate), [selectedDate]);
@@ -36,6 +43,12 @@ export const ScheduleCalendar = () => {
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
+    }
+    const handleEdit = (employee: IEmployee, date: moment.Moment, schedule?: ISchedule) => () => {
+        setEditedDate(date);
+        setEditedEmployee(employee);
+        setEditedSchedule(schedule);
+        onOpen();
     }
 
     return (
@@ -70,7 +83,10 @@ export const ScheduleCalendar = () => {
                                     <NameCell employee={employee} />
                                 </TableCell>
                                 {daysOfWeek.map(date => {
-                                    return <TableCell key={date.toISOString()}>
+                                    return <TableCell
+                                        key={date.toISOString()}
+                                        onClick={handleEdit(employee, date)}
+                                        style={{cursor: "pointer"}}>
                                         -
                                     </TableCell>
                                 })}
@@ -79,6 +95,12 @@ export const ScheduleCalendar = () => {
                     }
                 </TableBody>
             </ScheduleTable>
+            <EditSchedule
+                date={editedDate}
+                employee={editedEmployee}
+                open={isOpen}
+                payload={editedSchedule}
+                onClose={onClose} />
         </div>
     );
 };
