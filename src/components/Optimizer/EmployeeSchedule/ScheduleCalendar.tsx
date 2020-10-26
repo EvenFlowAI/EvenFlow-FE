@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {calendarDateFormat, getDaysOfWeek, getStartEndDates} from "./utils";
+import {calendarDateFormat, findScheduleDates, getDaysOfWeek, getSchedule, getStartEndDates} from "./utils";
 import {ScheduleTable} from "./UI";
 import {CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
@@ -44,10 +44,12 @@ export const ScheduleCalendar = () => {
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
     }
-    const handleEdit = (employee: IEmployee, date: moment.Moment, schedule?: ISchedule) => () => {
+
+
+    const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => () => {
         setEditedDate(date);
         setEditedEmployee(employee);
-        setEditedSchedule(schedule);
+        setEditedSchedule(getSchedule(date, schedules||[]));
         onOpen();
     }
 
@@ -85,9 +87,9 @@ export const ScheduleCalendar = () => {
                                 {daysOfWeek.map(date => {
                                     return <TableCell
                                         key={date.toISOString()}
-                                        onClick={handleEdit(employee, date)}
+                                        onClick={handleEdit(employee, date, schedules)}
                                         style={{cursor: "pointer"}}>
-                                        -
+                                        {findScheduleDates(date, schedules)}
                                     </TableCell>
                                 })}
                             </TableRow>
