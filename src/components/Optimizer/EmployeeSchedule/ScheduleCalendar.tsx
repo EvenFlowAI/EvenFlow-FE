@@ -12,6 +12,7 @@ import {NameCell} from "./NameCell";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {ISchedule} from "../../../store/reducers/schedules/types";
 import {EditSchedule} from "./EditSchedule";
+import {ScheduleFilters} from "./ScheduleFilters";
 
 const controlStyles = {
     display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
@@ -25,9 +26,10 @@ export const ScheduleCalendar = () => {
     const [editedSchedule, setEditedSchedule] = useState<ISchedule|undefined>(undefined);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [employeesList, employeesLoading] = useSelector((state: RootState) => [
+    const [employeesList, employeesLoading, filtersOpened] = useSelector((state: RootState) => [
         state.employeesSchedule.employeesList,
-        state.employeesSchedule.employeesLoading
+        state.employeesSchedule.employeesLoading,
+        state.employeesSchedule.filtersOpened
     ]);
     const {isOpen, onOpen, onClose} = useModal();
 
@@ -54,6 +56,9 @@ export const ScheduleCalendar = () => {
 
     return (
         <div>
+            <div>
+                <ScheduleFilters opened={filtersOpened} />
+            </div>
             <div style={controlStyles}>
                 <WeekControls
                     selectedDate={selectedDate}

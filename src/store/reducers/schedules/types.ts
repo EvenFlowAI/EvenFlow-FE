@@ -21,3 +21,7 @@ export interface IScheduleForm {
     serviceCenterId: number;
     podId?: number;
 }
+
+export interface IScheduleFilters {
+
+}
