@@ -45,7 +45,6 @@ export const ScheduleCalendar = () => {
         setSelectedDate(date);
     }
 
-
     const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => () => {
         setEditedDate(date);
         setEditedEmployee(employee);
