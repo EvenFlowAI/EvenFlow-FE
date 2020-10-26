@@ -13,6 +13,7 @@ import {IEmployee} from "../../../store/reducers/employees/types";
 import {ISchedule} from "../../../store/reducers/schedules/types";
 import {EditSchedule} from "./EditSchedule";
 import {ScheduleFilters} from "./ScheduleFilters";
+import { OpenedFilters } from './OpenedFilters';
 
 const controlStyles = {
     display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
@@ -58,7 +59,7 @@ export const ScheduleCalendar = () => {
     return (
         <div>
             <div>
-                {filtersOpened ? <ScheduleFilters /> : null}
+                {filtersOpened ? <ScheduleFilters /> : <OpenedFilters />}
             </div>
             <div style={controlStyles}>
                 <WeekControls
