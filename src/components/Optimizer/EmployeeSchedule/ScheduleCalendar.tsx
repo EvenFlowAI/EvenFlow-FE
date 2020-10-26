@@ -57,7 +57,7 @@ export const ScheduleCalendar = () => {
     return (
         <div>
             <div>
-                <ScheduleFilters opened={filtersOpened} />
+                {filtersOpened ? <ScheduleFilters /> : null}
             </div>
             <div style={controlStyles}>
                 <WeekControls
