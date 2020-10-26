@@ -26,10 +26,11 @@ export const ScheduleCalendar = () => {
     const [editedSchedule, setEditedSchedule] = useState<ISchedule|undefined>(undefined);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [employeesList, employeesLoading, filtersOpened] = useSelector((state: RootState) => [
+    const [employeesList, employeesLoading, filtersOpened, filters] = useSelector((state: RootState) => [
         state.employeesSchedule.employeesList,
         state.employeesSchedule.employeesLoading,
-        state.employeesSchedule.filtersOpened
+        state.employeesSchedule.filtersOpened,
+        state.employeesSchedule.filters
     ]);
     const {isOpen, onOpen, onClose} = useModal();
 
@@ -41,7 +42,7 @@ export const ScheduleCalendar = () => {
             const [start, end] = getStartEndDates(selectedDate);
             dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
         }
-    }, [dispatch, selectedSC, selectedDate]);
+    }, [dispatch, selectedSC, selectedDate, filters]);
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);

@@ -8,6 +8,12 @@ type TState = {
     filters: IScheduleFilters;
     filtersOpened: boolean;
 }
+export const blankScheduleFilters: IScheduleFilters = {
+    podId: undefined,
+    role: undefined,
+    searchTerm: undefined,
+    skillLevel: undefined
+}
 const initialState: TState = {
     employeesList: [],
     employeesLoading: false,

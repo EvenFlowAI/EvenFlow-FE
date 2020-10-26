@@ -23,5 +23,8 @@ export interface IScheduleForm {
 }
 
 export interface IScheduleFilters {
-
+    searchTerm?: string;
+    role?: string;
+    skillLevel?: number;
+    podId?: number;
 }

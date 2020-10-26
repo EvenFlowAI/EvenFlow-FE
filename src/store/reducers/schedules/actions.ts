@@ -10,12 +10,12 @@ export const setScheduleFilters = createAction<Partial<IScheduleFilters>>("Sched
 export const getEmployeesSchedule = createAction<IEmployeeSchedule[]>("Schedules/GetEmployees");
 export const loadingEmployeesSchedule = createAction<boolean>("Schedule/EmployeesLoading");
 
-export const loadEmployeesSchedule = (start: string, end: string, serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+export const loadEmployeesSchedule = (start: string, end: string, serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     dispatch(loadingEmployeesSchedule(true));
     try {
         const {data} = await Api.call<IEmployeeSchedule[]>(
             Api.endpoints.EmployeeSchedule.GetAll,
-            {data: {start, end, serviceCenterId, podId}}
+            {data: {start, end, serviceCenterId, ...getState().employeesSchedule.filters}}
         );
         dispatch(getEmployeesSchedule(data));
     } finally {
@@ -28,5 +28,5 @@ export const setEmployeesSchedule = (data: IScheduleForm): AppThunk => async dis
         {data, urlParams: {id: data.id}}
     );
     const [st, nd] = getStartEndDates(moment(data.date));
-    dispatch(loadEmployeesSchedule(st, nd, data.serviceCenterId, data.podId));
+    dispatch(loadEmployeesSchedule(st, nd, data.serviceCenterId));
 }

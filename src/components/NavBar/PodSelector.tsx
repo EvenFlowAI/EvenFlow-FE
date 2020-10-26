@@ -54,7 +54,6 @@ export const PodSelector = () => {
         <span className={classes.label}>Changes for:</span>
         <Select
             onChange={handleSelectPod}
-
             value={selectedPod?.id || 0}
             input={<TextField />}
         >
