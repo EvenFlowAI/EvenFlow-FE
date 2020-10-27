@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IOffer} from "./types";
+import {IOffer, IOfferForm} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -26,4 +26,9 @@ export const loadOffers = (serviceCenterId: number): AppThunk => async (dispatch
     } finally {
         dispatch(setOffersLoading(false));
     }
+}
+
+export const createOffer = (data: IOfferForm): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Offers.Create, {data});
+    dispatch(loadOffers(data.serviceCenterId));
 }
