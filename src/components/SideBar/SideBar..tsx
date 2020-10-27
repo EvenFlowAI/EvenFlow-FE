@@ -76,6 +76,7 @@ const MainLinks: LinkType[] = [
     {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true},
     {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true},
     {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true},
+    {to: Routes.OfferManagement.Base, name: "Offer Management", sub: false},
 ]
 
 export const SideBar = () => {

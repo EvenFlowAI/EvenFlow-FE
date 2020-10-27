@@ -17,6 +17,10 @@ enum AccountRoutes {
     Verification = "/account/email-verification"
 }
 
+enum OfferManagementRoutes {
+    Base = "/offer-management"
+}
+
 enum OptimizerRoutes {
     Base = "/optimizer",
 
@@ -35,4 +39,5 @@ export const Routes = {
     Login: LoginRoutes,
     Account: AccountRoutes,
     Optimizer: OptimizerRoutes,
+    OfferManagement: OfferManagementRoutes
 }

@@ -110,6 +110,7 @@ type ApiRoutes = {
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking", TApiRoute>,
+    Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus", TApiRoute>,
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
@@ -193,6 +194,13 @@ export class Api {
             SetParams: {route: "/optimization-windows", method: "put"},
             GetOverbooking: {route: "/optimization-windows/overbooking-factor", method: "get"},
             SetOverbooking: {route: "/optimization-windows/overbooking-factor", method: "put"},
+        },
+        Offers: {
+            Create: {route: "/offers", method: "post"},
+            GetAll: {route: "/offers/by-query", method: "post"},
+            Retrieve: {route: "/offers/{id}", method: "get"},
+            Edit: {route: "/offers/{id}", method: "put"},
+            ChangeStatus: {route: "/offers/{id}", method: "patch"},
         },
         Pods: {
             Create: {route: "/pods", method: "post"},

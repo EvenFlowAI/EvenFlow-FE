@@ -14,6 +14,7 @@ import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actio
 import {loadAllSCs} from "../../store/reducers/serviceCenters/actions";
 import {useSCs} from "../../utils/hooks";
 import {getPodsShort, loadPodsShort} from "../../store/reducers/pods/actions";
+import {OfferManagementPage} from "../OfferManagement/OfferManagementPage";
 
 
 const useStyles = makeStyles(theme => ({
@@ -57,6 +58,7 @@ export const Layout = () => {
             <Switch>
                 <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />
                 <PrivateRoute path={Routes.Optimizer.Base} component={OptimizerPage} />
+                <PrivateRoute path={Routes.OfferManagement.Base} component={OfferManagementPage} />
                 <Redirect to={Routes.Admin.Base} />
             </Switch>
         </div>
