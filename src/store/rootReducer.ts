@@ -13,6 +13,7 @@ import {slotScoringReducer} from "./reducers/slotScoring/reducer";
 import {demandSegmentsReducer} from "./reducers/demandSegments/reducer";
 import {optimizationWindowsReducer} from "./reducers/optimizationWindows/reducer";
 import {schedulesReducer} from "./reducers/schedules/reducer";
+import {offersReducer} from "./reducers/offers/reducer";
 
 export const rootReducer = combineReducers({
     users: usersReducer,
@@ -21,6 +22,7 @@ export const rootReducer = combineReducers({
     employees: employeesReducer,
     employeesSchedule: schedulesReducer,
     optimizationWindows: optimizationWindowsReducer,
+    offers: offersReducer,
     scEmployees: scEmployees,
     pods: podsReducer,
     serviceCenters: serviceCenterReducer,

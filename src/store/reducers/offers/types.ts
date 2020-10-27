@@ -47,3 +47,18 @@ export interface IOffer {
     isAllServiceRequestsIncluded: boolean;
     serviceCenterId: number;
 }
+
+export interface IOfferForm {
+    title: string;
+    value: number;
+    type: EOfferType;
+    customerSegment: ECustomerSegment;
+    dayOfWeeks: EDayOfWeek[];
+    duration: IDuration;
+    timeOfDay: ITimeOfDay;
+    serviceType: IServiceType;
+    customerPresence: ECustomerPresence;
+    isAllServiceRequestsIncluded: boolean;
+    serviceRequests: number[];
+    serviceCenterId: number;
+}
