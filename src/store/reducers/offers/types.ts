@@ -1,8 +1,14 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {TEnumMap} from "../utils";
 
 export enum EOfferType {
     AmountOff, PercentOff, FreeService
 }
+export const offerTypes: TEnumMap<EOfferType>[] = [
+    {id: EOfferType.AmountOff, label: "$ off"},
+    {id: EOfferType.FreeService, label: "free service"},
+    {id: EOfferType.PercentOff, label: "% off"},
+];
 export enum ECustomerSegment {
     All, New, LowValue, MediumValue, HighValue, EndOfWarranty
 }

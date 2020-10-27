@@ -17,3 +17,8 @@ export const changePageDataGeneric =
     <T>(t: string) => (payload: Partial<IPageRequest>): TChangePageDataGeneric<typeof t> => ({
     type: t, payload
 });
+
+export type TEnumMap<U> = {
+    label: string;
+    id: U;
+}
