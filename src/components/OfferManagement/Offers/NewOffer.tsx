@@ -27,6 +27,11 @@ import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceReque
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
 import clsx from "clsx";
+import {TEnumMap} from "../../../store/reducers/utils";
+import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
+import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
+import moment from "moment";
+import {DateRange, QueryBuilder} from "@material-ui/icons";
 
 const useStyles = makeStyles({
     inputContainer: {
@@ -55,18 +60,23 @@ type TForm = {
     offerTitle?: string;
     offerType: EOfferType;
     serviceRequests: IAssignedServiceRequestShort[];
-    customerSegment: ECustomerSegment;
+    customerSegments: TEnumMap<ECustomerSegment>[];
     customerPresence: ECustomerPresence;
-    dayOfWeek: EDayOfWeek;
+    dayOfWeek: TEnumMap<EDayOfWeek>[];
+    timeOfDayFrom?: moment.Moment;
+    timeOfDayTo?: moment.Moment;
+    durationFrom?: moment.Moment;
+    durationTo?: moment.Moment;
+
 }
 const clearForm: TForm = {
     offerValue: undefined,
     offerTitle: undefined,
     offerType: EOfferType.AmountOff,
     serviceRequests: [],
-    customerSegment: ECustomerSegment.All,
+    customerSegments: [customerSegments[0]],
     customerPresence: ECustomerPresence.Both,
-    dayOfWeek: EDayOfWeek.EveryDay,
+    dayOfWeek: [dayOfWeek[0]],
 }
 export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(clearForm);
@@ -86,10 +96,18 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                     offerTitle: payload.title,
                     offerValue: String(payload.value),
                     offerType: payload.type,
-                    serviceRequests: [],
-                    customerSegment: payload.customerSegment,
+                    serviceRequests: payload.serviceRequests,
+                    customerSegments: payload.customerSegments.map(s => {
+                        return customerSegments.find(seg => seg.id === s);
+                    }).filter(el => el !== undefined) as TEnumMap<ECustomerSegment>[],
                     customerPresence: payload.customerPresence,
-                    dayOfWeek: EDayOfWeek.EveryDay
+                    dayOfWeek: payload.dayOfWeeks.reduce((acc, el) => {
+                        const dof = dayOfWeek.find(e => e.id === el);
+                        if (dof) acc.push(dof);
+                        return acc;
+                    }, [] as TEnumMap<EDayOfWeek>[]),
+                    durationFrom: moment(payload.duration.start),
+                    durationTo: moment(payload.duration.end)
                 })
             } else {
                 setForm(clearForm);
@@ -109,6 +127,28 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
     const handleRadio = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
         setForm({...form, offerType: Number(value) as EOfferType});
     }
+    const handleSegmentsSelect = (e: any, value: TEnumMap<ECustomerSegment>[]) => {
+        if (form.customerSegments.find(d => d.id === ECustomerSegment.All && value.length > 1)) {
+            setForm({...form, customerSegments: value.filter(s => s.id !== ECustomerSegment.All)});
+        } else if (value.find(s => s.id === ECustomerSegment.All)) {
+            setForm({...form, customerSegments: [customerSegments[0]]});
+        } else {
+            setForm({...form, customerSegments: value});
+        }
+    }
+    const handleDOWSelect = (e: any, value: TEnumMap<EDayOfWeek>[]) => {
+        if (form.dayOfWeek.find(d => d.id === EDayOfWeek.EveryDay) && value.length > 1) {
+            setForm({...form, dayOfWeek: value.filter(e => e.id !== EDayOfWeek.EveryDay)});
+        } else if (value.find(d => d.id === EDayOfWeek.EveryDay)) {
+            setForm({...form, dayOfWeek: [dayOfWeek[0]]});
+        } else {
+            setForm({...form, dayOfWeek: value});
+        }
+    }
+    const handleChangeDateTime = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
+        setForm({...form, [name]: date});
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -211,17 +251,23 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                     />
                 </div>
                 <div className={classes.inputContainer}>
-                    <Select
-                        value={form.customerSegment}
-                        name={"customerSegment"}
-                        fullWidth
-                        input={<TextField label="Applicable customer segment" />}
-                        onChange={handleSelect}
-                    >
-                        {customerSegments.map(segment => {
-                            return <MenuItem key={segment.id} value={segment.id}>{segment.label}</MenuItem>;
-                        })}
-                    </Select>
+                    <Autocomplete
+                        options={customerSegments}
+                        multiple
+                        limitTags={3}
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        onChange={handleSegmentsSelect}
+                        getOptionLabel={i => i.label}
+                        renderOption={autocompleteOptionsRender((e) => e.label)}
+                        loading={false}
+                        value={form.customerSegments}
+                        renderInput={autocompleteRender({label: "Applicable customer segment", fullWidth: true})}
+                    />
                 </div>
                 <div className={clsx(classes.inputContainer, classes.rowContainer)}>
                     <div className={classes.innerContainer}>
@@ -239,17 +285,69 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                     </div>
                     <div className={classes.divider} style={{visibility: "hidden"}}>-</div>
                     <div className={classes.innerContainer}>
-                        <Select
-                            value={form.dayOfWeek}
-                            name={"dayOfWeek"}
+                        <div className={classes.inputContainer}>
+                            <Autocomplete
+                                options={dayOfWeek}
+                                multiple
+                                limitTags={2}
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                onChange={handleDOWSelect}
+                                getOptionLabel={i => i.label}
+                                renderOption={autocompleteOptionsRender((e) => e.label)}
+                                loading={false}
+                                value={form.dayOfWeek}
+                                renderInput={autocompleteRender({label: "Day of a Week", fullWidth: true})}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className={clsx(classes.inputContainer, classes.rowContainer)}>
+                    <div className={classes.innerContainer}>
+                        <TimePicker
                             fullWidth
-                            input={<TextField label="Day of a week" />}
-                            onChange={handleSelect}
-                        >
-                            {dayOfWeek.map(pr => {
-                                return <MenuItem key={pr.id} value={pr.id}>{pr.label}</MenuItem>;
-                            })}
-                        </Select>
+                            label={"Time of Day"}
+                            InputProps={{
+                                endAdornment: <QueryBuilder color={"disabled"} />
+                            }}
+                            value={form.timeOfDayFrom||null}
+                            onChange={handleChangeDateTime("timeOfDayFrom")} />
+                    </div>
+                    <div className={classes.divider}>-</div>
+                    <div className={classes.innerContainer}>
+                        <TimePicker
+                            fullWidth
+                            InputProps={{
+                                endAdornment: <QueryBuilder color={"disabled"} />
+                            }}
+                            value={form.timeOfDayTo||null}
+                            onChange={handleChangeDateTime("timeOfDayTo")} />
+                    </div>
+                </div>
+                <div className={clsx(classes.inputContainer, classes.rowContainer)}>
+                    <div className={classes.innerContainer}>
+                        <DatePicker
+                            fullWidth
+                            label={"Duration"}
+                            InputProps={{
+                                endAdornment: <DateRange color={"disabled"} />
+                            }}
+                            value={form.durationFrom||null}
+                            onChange={handleChangeDateTime("durationFrom")} />
+                    </div>
+                    <div className={classes.divider}>-</div>
+                    <div className={classes.innerContainer}>
+                        <DatePicker
+                            fullWidth
+                            InputProps={{
+                                endAdornment: <DateRange color={"disabled"} />
+                            }}
+                            value={form.durationTo||null}
+                            onChange={handleChangeDateTime("durationTo")} />
                     </div>
                 </div>
             </DialogContent>
