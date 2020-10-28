@@ -2,14 +2,31 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {TextField} from "../../UI/TextField";
-import {Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
+import {Button, FormControlLabel, MenuItem, Radio, RadioGroup, Select} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
-import {EOfferType, IOffer, IOfferForm, offerTypes} from "../../../store/reducers/offers/types";
-import {useDispatch} from "react-redux";
+import {
+    customerPresence,
+    customerSegments,
+    dayOfWeek,
+    ECustomerPresence,
+    ECustomerSegment,
+    EDayOfWeek,
+    EOfferType,
+    IOffer,
+    IOfferForm,
+    offerTypes
+} from "../../../store/reducers/offers/types";
+import {useDispatch, useSelector} from "react-redux";
 import {createOffer} from "../../../store/reducers/offers/actions";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {makeStyles} from "@material-ui/core/styles";
+import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
+import {Autocomplete} from "@material-ui/lab";
+import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
+import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
+import {RootState} from "../../../store/rootReducer";
+import clsx from "clsx";
 
 const useStyles = makeStyles({
     inputContainer: {
@@ -17,6 +34,19 @@ const useStyles = makeStyles({
         "&:first-child": {
             marginTop: 0
         }
+    },
+    rowContainer: {
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "space-between",
+        flexFlow: "row nowrap",
+    },
+    innerContainer: {
+        flexGrow: 1,
+        flexBasis: 0
+    },
+    divider: {
+        padding: 10
     }
 });
 
@@ -24,11 +54,19 @@ type TForm = {
     offerValue?: string;
     offerTitle?: string;
     offerType: EOfferType;
+    serviceRequests: IAssignedServiceRequestShort[];
+    customerSegment: ECustomerSegment;
+    customerPresence: ECustomerPresence;
+    dayOfWeek: EDayOfWeek;
 }
 const clearForm: TForm = {
     offerValue: undefined,
     offerTitle: undefined,
     offerType: EOfferType.AmountOff,
+    serviceRequests: [],
+    customerSegment: ECustomerSegment.All,
+    customerPresence: ECustomerPresence.Both,
+    dayOfWeek: EDayOfWeek.EveryDay,
 }
 export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(clearForm);
@@ -39,19 +77,31 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
 
+    const serviceRequests = useSelector((state: RootState) => state.serviceRequests.scRequestsShort);
+
     useEffect(() => {
         if (props.open) {
             if (payload) {
                 setForm({
                     offerTitle: payload.title,
                     offerValue: String(payload.value),
-                    offerType: payload.type
+                    offerType: payload.type,
+                    serviceRequests: [],
+                    customerSegment: payload.customerSegment,
+                    customerPresence: payload.customerPresence,
+                    dayOfWeek: EDayOfWeek.EveryDay
                 })
             } else {
                 setForm(clearForm);
             }
         }
     }, [props.open, payload]);
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadSCRequestsShort(selectedSC.id));
+        }
+    }, [dispatch, selectedSC]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setForm({...form, [name]: value})
@@ -78,6 +128,16 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                 setSaving(false);
                 showError(e);
             }
+        }
+    }
+
+    const handleSRChange = (e: any, value: IAssignedServiceRequestShort[]) => {
+        setForm({...form, serviceRequests: value});
+    }
+
+    const handleSelect = ({target: {name, value}}: React.ChangeEvent<{name?: string, value: unknown}>) => {
+        if (name) {
+            setForm({...form, [name]: value});
         }
     }
 
@@ -131,6 +191,66 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                         inputProps={{min: 0}}
                         value={form.offerValue||""}
                     />
+                </div>
+                <div className={classes.inputContainer}>
+                    <Autocomplete
+                        options={serviceRequests}
+                        multiple
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        onChange={handleSRChange}
+                        getOptionLabel={i => i.code}
+                        renderOption={autocompleteOptionsRender((e) => e.code)}
+                        loading={false}
+                        value={form.serviceRequests}
+                        renderInput={autocompleteRender({label: "Service request included", fullWidth: true})}
+                    />
+                </div>
+                <div className={classes.inputContainer}>
+                    <Select
+                        value={form.customerSegment}
+                        name={"customerSegment"}
+                        fullWidth
+                        input={<TextField label="Applicable customer segment" />}
+                        onChange={handleSelect}
+                    >
+                        {customerSegments.map(segment => {
+                            return <MenuItem key={segment.id} value={segment.id}>{segment.label}</MenuItem>;
+                        })}
+                    </Select>
+                </div>
+                <div className={clsx(classes.inputContainer, classes.rowContainer)}>
+                    <div className={classes.innerContainer}>
+                        <Select
+                            value={form.customerPresence}
+                            name={"customerPresence"}
+                            fullWidth
+                            input={<TextField label="Customer Presence" />}
+                            onChange={handleSelect}
+                        >
+                            {customerPresence.map(pr => {
+                                return <MenuItem key={pr.id} value={pr.id}>{pr.label}</MenuItem>;
+                            })}
+                        </Select>
+                    </div>
+                    <div className={classes.divider} style={{visibility: "hidden"}}>-</div>
+                    <div className={classes.innerContainer}>
+                        <Select
+                            value={form.dayOfWeek}
+                            name={"dayOfWeek"}
+                            fullWidth
+                            input={<TextField label="Day of a week" />}
+                            onChange={handleSelect}
+                        >
+                            {dayOfWeek.map(pr => {
+                                return <MenuItem key={pr.id} value={pr.id}>{pr.label}</MenuItem>;
+                            })}
+                        </Select>
+                    </div>
                 </div>
             </DialogContent>
             <DialogActions>

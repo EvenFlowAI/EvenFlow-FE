@@ -12,6 +12,14 @@ export const offerTypes: TEnumMap<EOfferType>[] = [
 export enum ECustomerSegment {
     All, New, LowValue, MediumValue, HighValue, EndOfWarranty
 }
+export const customerSegments: TEnumMap<ECustomerSegment>[] = [
+    {id: ECustomerSegment.All, label: "All"},
+    {id: ECustomerSegment.New, label: "New"},
+    {id: ECustomerSegment.LowValue, label: "Low Value"},
+    {id: ECustomerSegment.MediumValue, label: "Medium Value"},
+    {id: ECustomerSegment.HighValue, label: "High Value"},
+    {id: ECustomerSegment.EndOfWarranty, label: "End of Warranty"},
+];
 export enum EOfferStatus {
     None, Archived, Deleted
 }
@@ -21,9 +29,25 @@ export enum EOfferState {
 export enum EDayOfWeek {
     Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, EveryDay, LastWeekdayInMonth
 }
+export const dayOfWeek: TEnumMap<EDayOfWeek>[] = [
+    {id: EDayOfWeek.EveryDay, label: "Everyday"},
+    {id: EDayOfWeek.LastWeekdayInMonth, label: "Last Weekday in Month"},
+    {id: EDayOfWeek.Sunday, label: "Sunday"},
+    {id: EDayOfWeek.Monday, label: "Monday"},
+    {id: EDayOfWeek.Tuesday, label: "Tuesday"},
+    {id: EDayOfWeek.Wednesday, label: "Wednesday"},
+    {id: EDayOfWeek.Thursday, label: "Thursday"},
+    {id: EDayOfWeek.Friday, label: "Friday"},
+    {id: EDayOfWeek.Saturday, label: "Saturday"},
+];
 export enum ECustomerPresence {
     DropOff, Waiters, Both
 }
+export const customerPresence: TEnumMap<ECustomerPresence>[] = [
+    {id: ECustomerPresence.DropOff, label: "Drop Off"},
+    {id: ECustomerPresence.Waiters, label: "Waiters"},
+    {id: ECustomerPresence.Both, label: "Both"},
+];
 
 export interface IDuration {
     start: ParsableDate;
