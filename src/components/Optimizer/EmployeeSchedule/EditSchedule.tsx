@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals
 import {DialogProps} from "../../Modals/types";
 import {Button, Grid, MenuItem, Select} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
-import {useException, useMessage} from "../../../utils/hooks";
+import {useException, useMessage, useModal} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
 import moment from "moment";
 import {IEmployee} from "../../../store/reducers/employees/types";
@@ -14,6 +14,7 @@ import {timeSpanString} from "../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {setEmployeesSchedule} from "../../../store/reducers/schedules/actions";
 import {RootState} from "../../../store/rootReducer";
+import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 
 type TProps = DialogProps<ISchedule> & {
     date: moment.Moment;
@@ -25,6 +26,7 @@ type TForm = {
     podId?: number;
 }
 export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payload, ...props}) => {
+    const {isOpen, onClose, onOpen} = useModal();
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
     const pods = useSelector((state: RootState) => state.pods.shortPodsList);
@@ -48,7 +50,7 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
     const handleUpdate = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
         setForm({...form, [name]: moment(date)});
     }
-    const handleSelectPod = (e: React.ChangeEvent<{value: unknown, name?: string}>, value: unknown) => {
+    const handleSelectPod = (e: React.ChangeEvent<{value: unknown, name?: string}>) => {
         console.log(e.target.value);
         setForm({...form, podId: e.target.value ? Number(e.target.value) : undefined});
     }
@@ -75,10 +77,10 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
         }
     }
 
-    return <BaseModal {...props} width={400}>
+    return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>Edit employee schedule</DialogTitle>
         <DialogContent>
-            <Grid container spacing={2}>
+            <Grid container alignItems="flex-end" spacing={2}>
                 <Grid item xs={12}>
                     <TextField
                         label="Employee full name"
@@ -128,6 +130,15 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
                         })}
                     </Select>
                 </Grid>
+                <Grid item xs={6}>
+                    <Button
+                        style={{marginBottom: 3}}
+                        fullWidth
+                        color="primary"
+                        onClick={onOpen}>
+                        Employee Profile
+                    </Button>
+                </Grid>
             </Grid>
         </DialogContent>
         <DialogActions>
@@ -139,5 +150,6 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
                 Save
             </LoadingButton>
         </DialogActions>
+        <CreateEmployee open={isOpen} payload={employee} onClose={onClose} />
     </BaseModal>
 };
