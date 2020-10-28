@@ -1,3 +1,4 @@
+import React from "react";
 import moment from "moment";
 import {ISchedule} from "../../../store/reducers/schedules/types";
 import {timeSpanString, timeString} from "../../../config/constants";
@@ -23,11 +24,11 @@ export const getSchedule = (date: moment.Moment, schedules: ISchedule[]): ISched
 export const findScheduleDates = (date: moment.Moment, schedules: ISchedule[]): JSX.Element|string => {
     const schedule = getSchedule(date, schedules);
     if (schedule) {
-        return `${
-            moment(schedule.startAt, timeSpanString).format(timeString)
-        } - ${
-            moment(schedule.finishAt, timeSpanString).format(timeString)
-        }`;
+        return <>
+            <span className="nowrap">{moment(schedule.startAt, timeSpanString).format(timeString)}</span>
+            <span> - </span>
+            <span className="nowrap">{moment(schedule.finishAt, timeSpanString).format(timeString)}</span>
+        </>
     }
     return "-"
 }

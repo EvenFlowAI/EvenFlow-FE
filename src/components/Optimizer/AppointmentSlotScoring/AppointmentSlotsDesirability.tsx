@@ -6,7 +6,7 @@ import {EDesirabilityState, ETimeSlotType} from "../../../store/reducers/slotSco
 import {generateSlots, TSlot} from "./utils";
 import {DesirabilityButton} from "../../UI/ConfigButton";
 import {useDispatch, useSelector} from "react-redux";
-import {SC_UNDEFINED} from "../../../config/constants";
+import {SC_UNDEFINED, timeString} from "../../../config/constants";
 import {loadDesirability, saveDesirability} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {CheckBoxOutlined} from "@material-ui/icons";
@@ -112,10 +112,10 @@ const ButtonRow:React.FC<TRowProps> = ({slot, onClick}) => {
     const classes = useStylesBR();
     return <Grid className={classes.dataRow} container spacing={1}>
         <Grid item xs={3} className={classes.time}>
-            {slot.start.format("HH:mm a")}
+            {slot.start.format(timeString)}
         </Grid>
         <Grid item xs={2} className={classes.time}>
-            {slot.end.format("HH:mm a")}
+            {slot.end.format(timeString)}
         </Grid>
         <Grid item xs={7} className={classes.buttons}>
             <Buttons onClick={onClick} desirability={slot.desirability} />

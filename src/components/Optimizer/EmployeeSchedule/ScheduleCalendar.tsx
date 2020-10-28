@@ -94,7 +94,7 @@ export const ScheduleCalendar = () => {
                                     return <TableCell
                                         key={date.toISOString()}
                                         onClick={handleEdit(employee, date, schedules)}
-                                        style={{cursor: "pointer"}}>
+                                        style={{cursor: "pointer", fontSize: 13}}>
                                         {findScheduleDates(date, schedules)}
                                     </TableCell>
                                 })}

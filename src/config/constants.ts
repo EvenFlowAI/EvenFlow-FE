@@ -74,7 +74,7 @@ export enum Titles {
 }
 
 export const timeSpanString = "HH:mm:ss";
-export const timeString = "HH:mm a";
+export const timeString = "h:mm a";
 
 export enum LocalItems {
     selectedSC= "SSCID",

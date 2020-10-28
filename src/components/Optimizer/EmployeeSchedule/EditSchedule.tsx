@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid, MenuItem, Select} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
@@ -11,8 +11,9 @@ import {ISchedule, IScheduleForm} from "../../../store/reducers/schedules/types"
 import {TimePicker} from "../../UI/DateTimePickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../config/constants";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setEmployeesSchedule} from "../../../store/reducers/schedules/actions";
+import {RootState} from "../../../store/rootReducer";
 
 type TProps = DialogProps<ISchedule> & {
     date: moment.Moment;
@@ -21,10 +22,12 @@ type TProps = DialogProps<ISchedule> & {
 type TForm = {
     timeStart: moment.Moment|null;
     timeEnd: moment.Moment|null;
+    podId?: number;
 }
 export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
-    const [timePeriod, setTimePeriod] = useState<TForm>({timeStart: null, timeEnd: null});
+    const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
+    const pods = useSelector((state: RootState) => state.pods.shortPodsList);
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
@@ -32,18 +35,22 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
     useEffect(() => {
         if (props.open) {
             if (payload) {
-                setTimePeriod({
+                setForm({
                     timeStart: moment(payload.startAt, timeSpanString),
                     timeEnd: moment(payload.finishAt, timeSpanString)
                 });
             } else {
-                setTimePeriod({timeStart: null, timeEnd: null});
+                setForm({timeStart: null, timeEnd: null});
             }
         }
     }, [props.open, payload]);
 
     const handleUpdate = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
-        setTimePeriod({...timePeriod, [name]: moment(date)});
+        setForm({...form, [name]: moment(date)});
+    }
+    const handleSelectPod = (e: React.ChangeEvent<{value: unknown, name?: string}>, value: unknown) => {
+        console.log(e.target.value);
+        setForm({...form, podId: e.target.value ? Number(e.target.value) : undefined});
     }
 
     const handleSave = async () => {
@@ -53,9 +60,10 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
                 ...payload,
                 date: date.toISOString(),
                 employeeId: employee.id,
-                startAt: timePeriod.timeStart?.format(timeSpanString),
-                finishAt: timePeriod.timeEnd?.format(timeSpanString),
-                serviceCenterId: employee.serviceCenterId
+                startAt: form.timeStart?.format(timeSpanString),
+                finishAt: form.timeEnd?.format(timeSpanString),
+                serviceCenterId: employee.serviceCenterId,
+                podId: form.podId
             }
             await dispatch(setEmployeesSchedule(data));
             setSaving(false);
@@ -89,7 +97,7 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
                 </Grid>
                 <Grid item xs={6}>
                     <TimePicker
-                        value={timePeriod.timeStart}
+                        value={form.timeStart}
                         label="Starts at"
                         fullWidth
                         onChange={handleUpdate("timeStart")}
@@ -99,13 +107,26 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
                 </Grid>
                 <Grid item xs={6}>
                     <TimePicker
-                        value={timePeriod.timeEnd}
+                        value={form.timeEnd}
                         label="Finishes at"
                         fullWidth
                         onChange={handleUpdate("timeEnd")}
                         id="timeEnd"
                         name="timeEnd"
                     />
+                </Grid>
+                <Grid item xs={6}>
+                    <Select
+                        fullWidth
+                        onChange={handleSelectPod}
+                        input={<TextField label="Pod" />}
+                        value={form.podId||0}
+                    >
+                        <MenuItem value={0}>-</MenuItem>
+                        {pods.map(pod => {
+                            return <MenuItem key={pod.id} value={pod.id}>{pod.name}</MenuItem>
+                        })}
+                    </Select>
                 </Grid>
             </Grid>
         </DialogContent>
