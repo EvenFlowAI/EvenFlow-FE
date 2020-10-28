@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {optimizerRoot} from "../Optimizer/utils";
 import {TabList} from "../UI/Tabs";
 import {Tab} from "@material-ui/core";
 import {ActiveOffers} from "./Offers/ActiveOffers";
@@ -16,19 +15,18 @@ export const OfferManagement = () => {
         <div style={{width: "100%"}}>
             <TitleContainer title={"Offer Management"} />
             <TabContext value={selectedTab}>
-            <TitleContainer title="Appointment Value Settings" pad parent={optimizerRoot} />
-            <TabList
-                onChange={handleTabChange}
-                indicatorColor="primary"
-            >
+                <TabList
+                    onChange={handleTabChange}
+                    indicatorColor="primary"
+                >
 
-            <Tab label="Active Offers" value={"0"} />
-            <Tab label="Archive Offers" value={"1"} />
+                <Tab label="Active Offers" value={"0"} />
+                <Tab label="Archive Offers" value={"1"} />
 
-            </TabList>
-            <TabPanel style={{width: "100%"}} value={"0"}><ActiveOffers /></TabPanel>
-            <TabPanel style={{width: "100%"}} value={"1"}><ArchiveOffers /></TabPanel>
-        </TabContext>
+                </TabList>
+                <TabPanel style={{width: "100%"}} value={"0"}><ActiveOffers /></TabPanel>
+                <TabPanel style={{width: "100%"}} value={"1"}><ArchiveOffers /></TabPanel>
+            </TabContext>
         </div>
     );
 };
