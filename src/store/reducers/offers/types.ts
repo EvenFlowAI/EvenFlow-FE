@@ -71,7 +71,7 @@ export interface IOffer {
     dayOfWeeks: EDayOfWeek[];
     duration: IDuration;
     timeOfDay: ITimeOfDay;
-    serviceType: IServiceType;
+    serviceType: IServiceType[];
     status: EOfferStatus;
     state: EOfferState;
     customerPresence: ECustomerPresence;
@@ -88,7 +88,7 @@ export interface IOfferForm {
     dayOfWeeks: EDayOfWeek[];
     duration: IDuration;
     timeOfDay: ITimeOfDay;
-    serviceType: IServiceType;
+    serviceType?: IServiceType[];
     customerPresence: ECustomerPresence;
     isAllServiceRequestsIncluded: boolean;
     serviceRequests: number[];

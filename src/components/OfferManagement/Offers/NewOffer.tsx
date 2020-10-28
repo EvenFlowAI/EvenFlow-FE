@@ -14,15 +14,15 @@ import {
     EDayOfWeek,
     EOfferType,
     IOffer,
-    IOfferForm,
+    IOfferForm, IServiceType,
     offerTypes
 } from "../../../store/reducers/offers/types";
 import {useDispatch, useSelector} from "react-redux";
 import {createOffer} from "../../../store/reducers/offers/actions";
-import {SC_UNDEFINED} from "../../../config/constants";
+import {SC_UNDEFINED, timeSpanString} from "../../../config/constants";
 import {makeStyles} from "@material-ui/core/styles";
 import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
-import {Autocomplete} from "@material-ui/lab";
+import {Autocomplete, /*createFilterOptions*/} from "@material-ui/lab";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -32,6 +32,8 @@ import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
+
+// const filter = createFilterOptions<IServiceType>();
 
 const useStyles = makeStyles({
     inputContainer: {
@@ -67,7 +69,7 @@ type TForm = {
     timeOfDayTo?: moment.Moment;
     durationFrom?: moment.Moment;
     durationTo?: moment.Moment;
-
+    serviceType?: (IServiceType & {inputValue?: string})[];
 }
 const clearForm: TForm = {
     offerValue: undefined,
@@ -156,10 +158,24 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
             setSaving(true);
             try {
                 const data: IOfferForm = {
-                    title: form.offerTitle,
+                    title: form.offerTitle || "",
                     value: Number(form.offerValue),
                     serviceCenterId: selectedSC.id,
-                } as IOfferForm;
+                    type: form.offerType,
+                    customerPresence: form.customerPresence,
+                    customerSegments: form.customerSegments.map(s => s.id),
+                    dayOfWeeks: form.dayOfWeek.map(d => d.id),
+                    duration: {
+                        start: form.durationFrom?.toISOString(),
+                        end: form.durationTo?.toISOString()
+                    },
+                    timeOfDay: {
+                        start: form.timeOfDayFrom?.format(timeSpanString),
+                        end: form.timeOfDayTo?.format(timeSpanString),
+                    },
+                    isAllServiceRequestsIncluded: false,
+                    serviceRequests: form.serviceRequests.map(s => s.id),
+                };
                 await dispatch(createOffer(data));
                 showMessage("Saved");
                 setSaving(false);
@@ -231,6 +247,58 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                         inputProps={{min: 0}}
                         value={form.offerValue||""}
                     />
+                </div>
+                <div className={classes.inputContainer}>
+                    {/*<Autocomplete*/}
+                    {/*    value={form.serviceType ? form.serviceType[0] : null}*/}
+                    {/*    options={form.serviceType || []}*/}
+                    {/*    onChange={(event, newValue) => {*/}
+                    {/*        if (typeof newValue === 'string') {*/}
+                    {/*            setForm({*/}
+                    {/*                ...form, serviceType: [{name: newValue}],*/}
+                    {/*            });*/}
+                    {/*        } else if (newValue && newValue?.inputValue) {*/}
+                    {/*            // Create a new value from the user input*/}
+                    {/*            setForm({*/}
+                    {/*                ...form,*/}
+                    {/*                serviceType: [{name: newValue.inputValue}],*/}
+                    {/*            });*/}
+                    {/*        } else if (newValue) {*/}
+                    {/*            setForm({...form, serviceType: [newValue]});*/}
+                    {/*        }*/}
+                    {/*    }}*/}
+                    {/*    filterOptions={(options, params) => {*/}
+                    {/*        const filtered = filter(options, params);*/}
+
+                    {/*        // Suggest the creation of a new value*/}
+                    {/*        if (params.inputValue !== '') {*/}
+                    {/*            filtered.push({*/}
+                    {/*                name: `Add "${params.inputValue}"`,*/}
+                    {/*            });*/}
+                    {/*        }*/}
+
+                    {/*        return filtered;*/}
+                    {/*    }}*/}
+                    {/*    selectOnFocus*/}
+                    {/*    clearOnBlur*/}
+                    {/*    fullWidth*/}
+                    {/*    handleHomeEndKeys*/}
+                    {/*    id="Offer type"*/}
+                    {/*    getOptionLabel={(option) => {*/}
+                    {/*        // Value selected with enter, right from the input*/}
+                    {/*        if (typeof option === 'string') {*/}
+                    {/*            return option;*/}
+                    {/*        }*/}
+                    {/*        // Add "xxx" option created dynamically*/}
+                    {/*        if (option.inputValue) {*/}
+                    {/*            return option.inputValue;*/}
+                    {/*        }*/}
+                    {/*        // Regular option*/}
+                    {/*        return option.name;*/}
+                    {/*    }}*/}
+                    {/*    renderOption={(option) => option.name}*/}
+                    {/*    renderInput={autocompleteRender({label: "Offer type"})}*/}
+                    {/*/>*/}
                 </div>
                 <div className={classes.inputContainer}>
                     <Autocomplete
