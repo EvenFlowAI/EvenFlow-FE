@@ -22,3 +22,6 @@ export type TEnumMap<U> = {
     label: string;
     id: U;
 }
+export type TEnumKeyLabel<U extends string | number> = {
+    [k in U]: string;
+}

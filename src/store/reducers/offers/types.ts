@@ -1,5 +1,5 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {TEnumMap} from "../utils";
+import {TEnumKeyLabel, TEnumMap} from "../utils";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
 
 export enum EOfferType {
@@ -13,6 +13,14 @@ export const offerTypes: TEnumMap<EOfferType>[] = [
 export enum ECustomerSegment {
     All, New, LowValue, MediumValue, HighValue, EndOfWarranty
 }
+export const customerSegmentsMap: TEnumKeyLabel<ECustomerSegment> = {
+    [ECustomerSegment.All]: "All",
+    [ECustomerSegment.New]: "New",
+    [ECustomerSegment.LowValue]: "Low Value",
+    [ECustomerSegment.MediumValue]: "Medium Value",
+    [ECustomerSegment.HighValue]: "High Value",
+    [ECustomerSegment.EndOfWarranty]: "End of Warranty",
+}
 export const customerSegments: TEnumMap<ECustomerSegment>[] = [
     {id: ECustomerSegment.All, label: "All"},
     {id: ECustomerSegment.New, label: "New"},
@@ -21,6 +29,7 @@ export const customerSegments: TEnumMap<ECustomerSegment>[] = [
     {id: ECustomerSegment.HighValue, label: "High Value"},
     {id: ECustomerSegment.EndOfWarranty, label: "End of Warranty"},
 ];
+
 export enum EOfferStatus {
     None, Archived, Deleted
 }
