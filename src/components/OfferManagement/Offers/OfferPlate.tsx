@@ -18,13 +18,14 @@ const useStyles = makeStyles({
         margin: 0,
         fontSize: 14,
         textTransform: "uppercase",
-        paddingRight: 18
+        paddingRight: 46
     },
     edit: {
         position: "absolute",
         top: 8,
         right: 8,
-        textTransform: "none"
+        textTransform: "none",
+        zIndex: 2
     },
     label: (t: IOffer["type"]) => ({
         paddingRight: "50%",
@@ -33,7 +34,6 @@ const useStyles = makeStyles({
         textTransform: "uppercase"
     }),
     content: {
-        paddingRight: "50%",
         height: "100%",
         justifyContent: "space-between",
         display: "flex",
@@ -46,13 +46,13 @@ const useStyles = makeStyles({
     data: {
         position: "absolute",
         top: 0,
-        left: 0,
+        left: "40%",
         right: 0,
         bottom: 0,
         padding: 20,
         fontSize: 13,
-        paddingLeft: "calc(40% + 20px)",
         display: "flex",
+        zIndex: 1,
         flexFlow: "column",
         alignItems: "flex-end",
         justifyContent: "flex-end",
@@ -76,13 +76,14 @@ const useStyles = makeStyles({
     })
 });
 type TProps = {
-    offer: IOffer
+    offer: IOffer,
+    onClick: (offer: IOffer) => () => void;
 }
-export const OfferPlate: React.FC<TProps> = ({offer}) => {
+export const OfferPlate: React.FC<TProps> = ({offer, onClick}) => {
     const classes = useStyles(offer.type);
     return (
         <Paper variant="outlined" className={classes.wrapper}>
-            <Button color="primary" className={classes.edit}>Edit</Button>
+            <Button color="primary" onClick={onClick(offer)} className={classes.edit}>Edit</Button>
             <div className={classes.content}>
                 <h3 className={classes.title}>{offer.title}</h3>
                 <span className={classes.label}>

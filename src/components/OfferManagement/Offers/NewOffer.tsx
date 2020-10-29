@@ -110,7 +110,9 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                         return acc;
                     }, [] as TEnumMap<EDayOfWeek>[]),
                     durationFrom: moment(payload.duration.start),
-                    durationTo: moment(payload.duration.end)
+                    durationTo: moment(payload.duration.end),
+                    timeOfDayFrom: moment(payload.timeOfDay.start, timeSpanString),
+                    timeOfDayTo: moment(payload.timeOfDay.end, timeSpanString)
                 })
             } else {
                 setForm(clearForm);
@@ -201,7 +203,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
     const classes = useStyles();
     return (
         <BaseModal {...props} width={500}>
-            <DialogTitle onClose={props.onClose}>Add new Offer</DialogTitle>
+            <DialogTitle onClose={props.onClose}>{payload ? "Edit" : "Add new"} Offer</DialogTitle>
             <DialogContent>
                 <div className={classes.inputContainer}>
                     <TextField
