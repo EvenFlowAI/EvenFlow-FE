@@ -19,7 +19,7 @@ import {
     offerTypes
 } from "../../../store/reducers/offers/types";
 import {useDispatch, useSelector} from "react-redux";
-import {createOffer} from "../../../store/reducers/offers/actions";
+import {createOffer, updateOffer} from "../../../store/reducers/offers/actions";
 import {SC_UNDEFINED, timeSpanString} from "../../../config/constants";
 import {makeStyles} from "@material-ui/core/styles";
 import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
@@ -161,6 +161,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
             setSaving(true);
             try {
                 const data: IOfferForm = {
+                    id: payload?.id,
                     title: form.offerTitle || "",
                     value: Number(form.offerValue),
                     serviceCenterId: selectedSC.id,
@@ -179,7 +180,11 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                     isAllServiceRequestsIncluded: false,
                     serviceRequests: form.serviceRequests.map(s => s.id),
                 };
-                await dispatch(createOffer(data));
+                if (payload) {
+                    await dispatch(updateOffer(data));
+                } else {
+                    await dispatch(createOffer(data));
+                }
                 showMessage("Saved");
                 setSaving(false);
                 props.onClose();

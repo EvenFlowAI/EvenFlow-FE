@@ -101,6 +101,7 @@ export interface IOffer {
 }
 
 export interface IOfferForm {
+    id?: number;
     title: string;
     value: number;
     type: EOfferType;

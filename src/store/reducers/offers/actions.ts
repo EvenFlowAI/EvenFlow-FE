@@ -32,3 +32,7 @@ export const createOffer = (data: IOfferForm): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Offers.Create, {data});
     dispatch(loadOffers(data.serviceCenterId));
 }
+export const updateOffer = (data: IOfferForm): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Offers.Edit, {data, urlParams: {id: data?.id || 0}});
+    dispatch(loadOffers(data.serviceCenterId));
+}
