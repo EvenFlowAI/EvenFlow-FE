@@ -3,7 +3,7 @@ import {DialogProps} from "../../Modals/types";
 import {BaseModal, DialogActions, DialogTitle} from "../../Modals/BaseModal";
 import {Button} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
 import {
     customerSegments,
     dayOfWeek,
@@ -15,7 +15,7 @@ import {
     IOfferForm,
 } from "../../../store/reducers/offers/types";
 import {useDispatch} from "react-redux";
-import {createOffer, updateOffer} from "../../../store/reducers/offers/actions";
+import {createOffer, removeOffer, updateOffer} from "../../../store/reducers/offers/actions";
 import {SC_UNDEFINED, timeSpanString} from "../../../config/constants";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
@@ -44,6 +44,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
     const showError = useException();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const {askConfirm} = useConfirm();
 
     useEffect(() => {
         if (props.open) {
@@ -121,6 +122,27 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
         setViewMode(false);
     }
 
+    const askRemove = () => askConfirm({
+        title: `Are you sure want to remove offer ${payload?.title}?`,
+        isRemove: true,
+        onConfirm: async () => {
+            await handleRemove();
+        }
+    });
+    const handleRemove = async () => {
+        if (!payload) {
+            showError("Something wrong");
+        } else {
+            try {
+                await dispatch(removeOffer(payload));
+                showMessage(`Successfully removed ${payload?.title}`);
+                props.onClose();
+            } catch (e) {
+                showError(e);
+            }
+        }
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -192,7 +214,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                 <Button onClick={props.onClose}>Cancel</Button>
                 {viewMode ?
                     <>
-                        <Button color="secondary" variant="outlined">Delete</Button>
+                        <Button onClick={askRemove} color="secondary" variant="outlined">Delete</Button>
                         <Button onClick={setEditMode} color="primary" variant="contained">Edit</Button>
                     </>
                 : <LoadingButton

@@ -200,7 +200,7 @@ export class Api {
             GetAll: {route: "/offers/by-query", method: "post"},
             Retrieve: {route: "/offers/{id}", method: "get"},
             Edit: {route: "/offers/{id}", method: "put"},
-            ChangeStatus: {route: "/offers/{id}", method: "patch"},
+            ChangeStatus: {route: "/offers/{id}/status", method: "patch"},
             Remove: {route: "/offers/{id}", method: "delete"},
         },
         Pods: {

@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IOffer, IOfferForm} from "./types";
+import {EOfferStatus, IOffer, IOfferForm} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -17,6 +17,7 @@ export const loadOffers = (serviceCenterId: number): AppThunk => async (dispatch
             {
                 data: {
                     serviceCenterId,
+                    status: EOfferStatus.None,
                     ...pageData
                 }
             }
@@ -37,6 +38,8 @@ export const updateOffer = (data: IOfferForm): AppThunk => async dispatch => {
     dispatch(loadOffers(data.serviceCenterId));
 }
 export const removeOffer = (offer: IOffer): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.Offers.Remove, {urlParams: {id: offer.id}});
+    await Api.call(Api.endpoints.Offers.ChangeStatus, {
+        urlParams: {id: offer.id}, data: {stats: EOfferStatus.Deleted}
+    });
     dispatch(loadOffers(offer.serviceCenterId));
 }
