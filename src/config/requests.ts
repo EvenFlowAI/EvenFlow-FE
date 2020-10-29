@@ -110,7 +110,7 @@ type ApiRoutes = {
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking", TApiRoute>,
-    Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus", TApiRoute>,
+    Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
@@ -201,6 +201,7 @@ export class Api {
             Retrieve: {route: "/offers/{id}", method: "get"},
             Edit: {route: "/offers/{id}", method: "put"},
             ChangeStatus: {route: "/offers/{id}", method: "patch"},
+            Remove: {route: "/offers/{id}", method: "delete"},
         },
         Pods: {
             Create: {route: "/pods", method: "post"},

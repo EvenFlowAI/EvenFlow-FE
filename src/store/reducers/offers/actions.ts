@@ -36,3 +36,7 @@ export const updateOffer = (data: IOfferForm): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Offers.Edit, {data, urlParams: {id: data?.id || 0}});
     dispatch(loadOffers(data.serviceCenterId));
 }
+export const removeOffer = (offer: IOffer): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Offers.Remove, {urlParams: {id: offer.id}});
+    dispatch(loadOffers(offer.serviceCenterId));
+}
