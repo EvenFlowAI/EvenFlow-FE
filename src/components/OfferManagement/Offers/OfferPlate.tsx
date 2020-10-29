@@ -59,7 +59,20 @@ const useStyles = makeStyles({
         "&>span": {
             marginTop: 18,
         }
-    }
+    },
+    background: (t: IOffer["type"]) => ({
+        position: "absolute",
+        top: 0,
+        left: "20%",
+        right: 0,
+        lineHeight: `${t === EOfferType.FreeService ? 8 : 11}rem`,
+        userSelect: "none",
+        fontSize: `${t === EOfferType.FreeService ? 8 : 11}rem`,
+        opacity: .05,
+        color: "#7898FF",
+        fontWeight: "bold",
+        textAlign: "center"
+    })
 });
 type TProps = {
     offer: IOffer
@@ -95,6 +108,13 @@ export const OfferPlate: React.FC<TProps> = ({offer}) => {
                         {moment(offer.duration.end).format(calendarDateFormat)}
                     </span>
                 </span>
+            </div>
+            <div className={classes.background}>
+                {offer.type === EOfferType.PercentOff
+                    ? "%"
+                    : offer.type === EOfferType.AmountOff
+                        ? "$"
+                        : "FREE"}
             </div>
         </Paper>
     );
