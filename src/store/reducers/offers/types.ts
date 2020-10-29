@@ -39,6 +39,17 @@ export enum EOfferState {
 export enum EDayOfWeek {
     Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, EveryDay, LastWeekdayInMonth
 }
+export const dayOfWeekMap: TEnumKeyLabel<EDayOfWeek> = {
+    [EDayOfWeek.EveryDay]: "Everyday",
+    [EDayOfWeek.LastWeekdayInMonth]: "Last Weekday in Month",
+    [EDayOfWeek.Sunday]: "Sunday",
+    [EDayOfWeek.Monday]: "Monday",
+    [EDayOfWeek.Tuesday]: "Tuesday",
+    [EDayOfWeek.Wednesday]: "Wednesday",
+    [EDayOfWeek.Thursday]: "Thursday",
+    [EDayOfWeek.Friday]: "Friday",
+    [EDayOfWeek.Saturday]: "Saturday",
+}
 export const dayOfWeek: TEnumMap<EDayOfWeek>[] = [
     {id: EDayOfWeek.EveryDay, label: "Everyday"},
     {id: EDayOfWeek.LastWeekdayInMonth, label: "Last Weekday in Month"},
