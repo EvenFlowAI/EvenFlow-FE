@@ -64,6 +64,11 @@ export const dayOfWeek: TEnumMap<EDayOfWeek>[] = [
 export enum ECustomerPresence {
     DropOff, Waiters, Both
 }
+export const customerPresenceMap: TEnumKeyLabel<ECustomerPresence> = {
+    [ECustomerPresence.DropOff]: "Drop Off",
+    [ECustomerPresence.Both]: "Both",
+    [ECustomerPresence.Waiters]: "Waiters"
+}
 export const customerPresence: TEnumMap<ECustomerPresence>[] = [
     {id: ECustomerPresence.DropOff, label: "Drop Off"},
     {id: ECustomerPresence.Waiters, label: "Waiters"},
