@@ -40,8 +40,8 @@ export const ActiveOffers = () => {
                 {offersLoading
                     ? <Grid item xs={12} style={{textAlign: "center"}}><CircularProgress /></Grid>
                     : offers.map(offer => {
-                    return <Grid item xs={4}>
-                        <OfferPlate offer={offer} key={offer.id} />
+                    return <Grid key={offer.id} item xs={12} sm={6} md={4}>
+                        <OfferPlate offer={offer} />
                     </Grid>
                 })}
             </Grid>

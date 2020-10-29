@@ -57,6 +57,7 @@ const useStyles = makeStyles({
         alignItems: "flex-end",
         justifyContent: "flex-end",
         "&>span": {
+            textAlign: "right",
             marginTop: 18,
         }
     },

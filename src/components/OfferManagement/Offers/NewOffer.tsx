@@ -14,7 +14,8 @@ import {
     EDayOfWeek,
     EOfferType,
     IOffer,
-    IOfferForm, IServiceType,
+    IOfferForm,
+    IServiceType,
     offerTypes
 } from "../../../store/reducers/offers/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -22,7 +23,7 @@ import {createOffer} from "../../../store/reducers/offers/actions";
 import {SC_UNDEFINED, timeSpanString} from "../../../config/constants";
 import {makeStyles} from "@material-ui/core/styles";
 import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
-import {Autocomplete, /*createFilterOptions*/} from "@material-ui/lab";
+import {Autocomplete,} from "@material-ui/lab";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -222,6 +223,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                         {offerTypes.map(ot => {
                             return <FormControlLabel
                                 control={<Radio color="primary" />}
+                                disabled={ot.id === EOfferType.FreeService}
                                 label={ot.label}
                                 labelPlacement="end"
                                 key={ot.id}
