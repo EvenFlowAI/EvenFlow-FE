@@ -1,5 +1,12 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ETimeSlotType, IDesirability, IDesirabilityForm, IDesirabilityItem, IProximity} from "./types";
+import {
+    ETimeSlotType,
+    IDesirability,
+    IDesirabilityForm,
+    IDesirabilityItem,
+    IOptimizationSettingsCreateForm,
+    IProximity
+} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -33,4 +40,17 @@ export const saveDesirability = (items: IDesirabilityItem[], type: ETimeSlotType
     };
     await Api.call(Api.endpoints.SlotScoring.SetDesirability, {data});
     dispatch(loadDesirability(serviceCenterId, podId));
+}
+
+export const getOptimizationSettings = createAction<{}>("SlotScoring/GetOptimizationSettings");
+export const loadOptimizationSettings = (serviceCenterId:number, podId?:number): AppThunk => async dispatch => {
+    const {data} = await Api.call(
+        Api.endpoints.SlotScoring.SetOptimization,
+        {urlParams: {serviceCenterId, podId}}
+    );
+    dispatch(getOptimizationSettings(data));
+}
+
+export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): AppThunk => async dispatch => {
+    dispatch(loadOptimizationSettings(data.serviceCenterId, data.podId));
 }

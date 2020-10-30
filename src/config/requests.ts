@@ -119,7 +119,8 @@ type ApiRoutes = {
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
         | "EditSkills" | "Prioritize", TApiRoute>,
-    SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability", TApiRoute>,
+    SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
+        | "SetOptimization" | "GetOptimization", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar" | "GetShort", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
@@ -249,7 +250,9 @@ export class Api {
             SetProximity: {route: "/slot-scoring/proximity", method: "put"},
             GetProximity: {route: "/slot-scoring/proximity", method: "get"},
             SetDesirability: {route: "/slot-scoring/desirability", method: "put"},
-            GetDesirability: {route: "/slot-scoring/desirability", method: "get"}
+            GetDesirability: {route: "/slot-scoring/desirability", method: "get"},
+            SetOptimization: {route: "/slot-scoring/optimization-settings", method: "put"},
+            GetOptimization: {route: "/slot-scoring/optimization-settings", method: "get"},
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},
