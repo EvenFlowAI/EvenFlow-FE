@@ -38,3 +38,13 @@ export interface IDesirabilityForm {
     timeSlotType: ETimeSlotType;
     items: IDesirabilityItem[];
 }
+
+export interface IOptimizationSettingsItem {
+    from: number;
+    to: number;
+}
+export interface IOptimizationSettingsCreateForm {
+  serviceCenterId: number;
+  podId?: number;
+  items: IOptimizationSettingsItem[];
+}
