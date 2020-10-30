@@ -4,7 +4,7 @@ import {
     IDesirability,
     IDesirabilityForm,
     IDesirabilityItem, IOptimizationSetting,
-    IOptimizationSettingsCreateForm,
+    IOptimizationSettingsCreateForm, IOptimizationSettingValueForm,
     IProximity
 } from "./types";
 import {AppThunk} from "../../../types/types";
@@ -54,4 +54,9 @@ export const loadOptimizationSettings = (serviceCenterId:number, podId?:number):
 export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.SlotScoring.SetOptimization, {data});
     dispatch(loadOptimizationSettings(data.serviceCenterId, data.podId));
+}
+
+export const setSettingValues = (data: IOptimizationSettingValueForm, serviceCenterId:number, podId?: number): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
+    dispatch(loadOptimizationSettings(serviceCenterId, podId));
 }

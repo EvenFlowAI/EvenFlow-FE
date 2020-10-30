@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Paper, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
 import {AppointmentTable, ValueSlider} from "../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
@@ -63,8 +63,24 @@ const useStyles = makeStyles({
     }
 });
 
+type TForm = {
+    undesirable: number;
+    desirable: number;
+    id: number;
+}
+const initialForm: TForm[] = [
+    {undesirable: 0, desirable: 0, id: 0},
+    {undesirable: 0, desirable: 0, id: 0},
+    {undesirable: 0, desirable: 0, id: 0},
+    {undesirable: 0, desirable: 0, id: 0},
+    {undesirable: 0, desirable: 0, id: 0},
+    {undesirable: 0, desirable: 0, id: 0},
+]
+
 export const DemandSegmentsDesirability = () => {
     const {onOpen, onClose, isOpen} = useModal();
+    const [form, setForm] = useState<TForm[]>(initialForm);
+    const [edit, setEdit] = useState<boolean>(false);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
@@ -74,11 +90,43 @@ export const DemandSegmentsDesirability = () => {
         if (selectedSC) {
             dispatch(loadOptimizationSettings(selectedSC.id, selectedPod?.id));
         }
-    }, [dispatch, selectedSC, selectedPod])
+    }, [dispatch, selectedSC, selectedPod]);
+
+    useEffect(() => {
+        const nForm: TForm[] = [];
+        for (let i = 0; i < 3; i++) {
+            const row = optSettings[i];
+            const r1 = row?.values.find(v => v.type === EOptimizationSettingValueType.LessThanW3);
+            const r2 = row?.values.find(v => v.type === EOptimizationSettingValueType.GreaterOrEqualW3);
+            nForm.push({
+                undesirable: r1?.undesirablePoint || 0,
+                desirable: r1?.desirablePoint || 0,
+                id: r1?.optimizationSettingsId || row?.id || 0
+            });
+            nForm.push({
+                undesirable: r2?.undesirablePoint || 0,
+                desirable: r2?.desirablePoint || 0,
+                id: r2?.optimizationSettingsId || row?.id || 0
+            });
+        }
+        setForm(nForm);
+    }, [optSettings]);
 
     const handleOpen = () => {
         onOpen();
     }
+
+    const handleChange = (idx: number, name: keyof TForm) => (e: any, val: number | number[]) => {
+        const f = [...form];
+        const r = {...form[idx]};
+        r[name] = val as number;
+        setForm(f);
+    }
+
+    const handleSave = async () => {
+
+    }
+
     const classes = useStyles();
     return <Paper variant="outlined" style={{borderRadius: 0}}>
         <AppointmentTable className={classes.table}>
@@ -89,7 +137,30 @@ export const DemandSegmentsDesirability = () => {
                         <Button className={classes.edit} onClick={handleOpen} color="primary">Edit</Button>
                     </TableCell>
                     <TableCell width={183} rowSpan={2}>Time Windows</TableCell>
-                    <TableCell width={550} colSpan={2}>Optimization Settings</TableCell>
+                    <TableCell width={550} colSpan={2} className={classes.buttonCell}>
+                        Optimization Settings
+                        {edit
+                            ? <>
+                                <Button color="secondary"
+                                        className={classes.edit}
+                                        onClick={() => setEdit(false)}>
+                                    Cancel
+                                </Button>
+                                <Button
+                                    color="primary"
+                                    className={classes.edit}
+                                    onClick={handleSave}>
+                                    Save
+                                </Button>
+                            </>
+                            : <Button
+                                color="primary"
+                                className={classes.edit}
+                                onClick={() => setEdit(true)}>
+                                Edit
+                            </Button>
+                        }
+                    </TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell className={classes.subtitleCell}>Segment Start</TableCell>
@@ -99,7 +170,7 @@ export const DemandSegmentsDesirability = () => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {optSettings.map(seg => {
+                {optSettings.map((seg, idx) => {
                     const row1 = seg.values.find(
                         v => v.type === EOptimizationSettingValueType.LessThanW3);
                     const row2 = seg.values.find(
@@ -117,10 +188,32 @@ export const DemandSegmentsDesirability = () => {
                                     {"< W3"}
                                 </TableCell>
                                 <TableCell>
-                                    {row1?.undesirablePoint}
+                                    <Slider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        disabled={!edit}
+                                        onChange={handleChange(idx*2, "undesirable")}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={row1?.undesirablePoint || 0}
+                                        valueLabelDisplay="on"
+                                    />
                                 </TableCell>
                                 <TableCell>
-                                    {row1?.desirablePoint}
+                                    <Slider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        disabled={!edit}
+                                        onChange={handleChange(idx*2, "desirable")}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={row1?.desirablePoint || 0}
+                                        valueLabelDisplay="on"
+                                    />
                                 </TableCell>
                             </TableRow>
                             <TableRow key={`${seg.id}-2`}>
@@ -131,7 +224,8 @@ export const DemandSegmentsDesirability = () => {
                                     <Slider
                                         min={SliderRange.Min}
                                         max={SliderRange.Max}
-                                        disabled={true}
+                                        disabled={!edit}
+                                        onChange={handleChange(idx*2+1, "undesirable")}
                                         marks={[
                                             {value: SliderRange.Min, label: SliderRange.Min},
                                             {value: SliderRange.Max, label: SliderRange.Max}
@@ -144,7 +238,8 @@ export const DemandSegmentsDesirability = () => {
                                     <Slider
                                         min={SliderRange.Min}
                                         max={SliderRange.Max}
-                                        disabled={true}
+                                        disabled={!edit}
+                                        onChange={handleChange(idx*2+1, "desirable")}
                                         marks={[
                                             {value: SliderRange.Min, label: SliderRange.Min},
                                             {value: SliderRange.Max, label: SliderRange.Max}

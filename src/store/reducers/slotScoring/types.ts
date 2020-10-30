@@ -58,6 +58,9 @@ export interface IOptimizationSettingValue {
     type: EOptimizationSettingValueType;
     optimizationSettingsId: number;
 }
+export interface IOptimizationSettingValueForm {
+    items: IOptimizationSettingValue[];
+}
 export interface IOptimizationSetting {
     id: number;
     from: number;
