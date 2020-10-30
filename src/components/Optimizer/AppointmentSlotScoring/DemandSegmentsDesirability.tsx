@@ -85,7 +85,7 @@ export const DemandSegmentsDesirability = () => {
                     const row2 = seg.values.find(
                         v => v.type === EOptimizationSettingValueType.GreaterOrEqualW3);
 
-                    return <>
+                    return <React.Fragment key={seg.id}>
                             <TableRow key={`${seg.id}-1`}>
                                 <TableCell rowSpan={2}>
                                     from <span className={classes.segment}>{seg.from}</span>
@@ -114,7 +114,7 @@ export const DemandSegmentsDesirability = () => {
                                     {row2?.desirablePoint}
                                 </TableCell>
                             </TableRow>
-                        </>;
+                        </React.Fragment>;
                     }
                 )}
             </TableBody>
