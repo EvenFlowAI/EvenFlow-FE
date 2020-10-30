@@ -49,3 +49,20 @@ export interface IOptimizationSettingsCreateForm {
   podId?: number;
   items: IOptimizationSettingsItem[];
 }
+export enum EOptimizationSettingValueType {
+
+}
+export interface IOptimizationSettingValue {
+    desirablePoint: number;
+    undesirablePoint: number;
+    type: EOptimizationSettingValueType;
+    optimizationSettingsId: number;
+}
+export interface IOptimizationSetting {
+    id: number;
+    from: number;
+    to: number;
+    values: IOptimizationSettingValue[];
+    serviceCenterId: number;
+    podId?: number;
+}

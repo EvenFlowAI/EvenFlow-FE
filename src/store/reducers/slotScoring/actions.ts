@@ -3,7 +3,7 @@ import {
     ETimeSlotType,
     IDesirability,
     IDesirabilityForm,
-    IDesirabilityItem,
+    IDesirabilityItem, IOptimizationSetting,
     IOptimizationSettingsCreateForm,
     IProximity
 } from "./types";
@@ -42,9 +42,9 @@ export const saveDesirability = (items: IDesirabilityItem[], type: ETimeSlotType
     dispatch(loadDesirability(serviceCenterId, podId));
 }
 
-export const getOptimizationSettings = createAction<{}>("SlotScoring/GetOptimizationSettings");
+export const getOptimizationSettings = createAction<IOptimizationSetting[]>("SlotScoring/GetOptimizationSettings");
 export const loadOptimizationSettings = (serviceCenterId:number, podId?:number): AppThunk => async dispatch => {
-    const {data} = await Api.call(
+    const {data} = await Api.call<IOptimizationSetting[]>(
         Api.endpoints.SlotScoring.SetOptimization,
         {urlParams: {serviceCenterId, podId}}
     );
