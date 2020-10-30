@@ -39,7 +39,7 @@ export const updateOffer = (data: IOfferForm): AppThunk => async dispatch => {
 }
 export const removeOffer = (offer: IOffer): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Offers.ChangeStatus, {
-        urlParams: {id: offer.id}, data: {stats: EOfferStatus.Deleted}
+        urlParams: {id: offer.id}, data: {status: EOfferStatus.Deleted}
     });
     dispatch(loadOffers(offer.serviceCenterId));
 }
