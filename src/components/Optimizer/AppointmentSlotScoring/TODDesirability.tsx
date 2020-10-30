@@ -1,8 +1,10 @@
 import React from "react";
-import {AppointmentSlotsDesirability} from "./AppointmentSlotsDesirability";
+import {DemandSegmentsDesirability} from "./DemandSegmentsDesirability";
 
 export const TODDesirability = () => {
     return <div>
-        <AppointmentSlotsDesirability />
+        {/*TODO: Unhide*/}
+        {/*<AppointmentSlotsDesirability />*/}
+        <DemandSegmentsDesirability />
     </div>
 }

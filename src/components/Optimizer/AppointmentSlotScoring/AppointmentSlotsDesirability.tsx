@@ -14,7 +14,7 @@ import {Caption} from "../../UI/Caption";
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        marginBottom: 10,
+        marginBottom: 20,
         borderRadius: 0,
         padding: 16,
         position: "relative"
