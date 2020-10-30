@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {Button, Paper, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {AppointmentTable} from "../AppointmentValue/UI";
+import {Button, Paper, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
+import {AppointmentTable, ValueSlider} from "../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
 import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {EditDemandSegments} from './EditDemandSegments';
@@ -8,6 +8,26 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadOptimizationSettings} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EOptimizationSettingValueType} from "../../../store/reducers/slotScoring/types";
+
+enum SliderRange {
+    Min = -10,
+    Max = 10
+}
+
+const Slider = withStyles({
+    root: {
+        margin: "0 25px",
+        width: "calc(100% - 50px)"
+    },
+    markLabel: {
+        top: 5,
+        left: "-12px !important",
+        "& ~ .MuiSlider-mark ~ .MuiSlider-markLabel": {
+            left: "unset !important",
+            right: -25
+        }
+    },
+})(ValueSlider);
 
 const useStyles = makeStyles({
     table: {
@@ -108,10 +128,30 @@ export const DemandSegmentsDesirability = () => {
                                     {">= W3"}
                                 </TableCell>
                                 <TableCell>
-                                    {row2?.undesirablePoint}
+                                    <Slider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        disabled={true}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={row2?.undesirablePoint || 0}
+                                        valueLabelDisplay="on"
+                                    />
                                 </TableCell>
                                 <TableCell>
-                                    {row2?.desirablePoint}
+                                    <Slider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        disabled={true}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={row2?.desirablePoint || 0}
+                                        valueLabelDisplay="on"
+                                    />
                                 </TableCell>
                             </TableRow>
                         </React.Fragment>;
