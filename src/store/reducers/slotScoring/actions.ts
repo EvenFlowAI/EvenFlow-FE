@@ -45,12 +45,13 @@ export const saveDesirability = (items: IDesirabilityItem[], type: ETimeSlotType
 export const getOptimizationSettings = createAction<IOptimizationSetting[]>("SlotScoring/GetOptimizationSettings");
 export const loadOptimizationSettings = (serviceCenterId:number, podId?:number): AppThunk => async dispatch => {
     const {data} = await Api.call<IOptimizationSetting[]>(
-        Api.endpoints.SlotScoring.SetOptimization,
-        {urlParams: {serviceCenterId, podId}}
+        Api.endpoints.SlotScoring.GetOptimization,
+        {params: {serviceCenterId, podId}}
     );
     dispatch(getOptimizationSettings(data));
 }
 
 export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.SlotScoring.SetOptimization, {data});
     dispatch(loadOptimizationSettings(data.serviceCenterId, data.podId));
 }

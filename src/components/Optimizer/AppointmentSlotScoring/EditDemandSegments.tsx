@@ -9,6 +9,7 @@ import {useDispatch} from "react-redux";
 import {IOptimizationSettingsCreateForm, IOptimizationSettingsItem} from "../../../store/reducers/slotScoring/types";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
+import {setOptimizationSettings} from "../../../store/reducers/slotScoring/actions";
 
 const useStyles = makeStyles({
     row: {
@@ -74,7 +75,7 @@ export const EditDemandSegments:React.FC<DialogProps> = ({onAction, payload, ...
                     podId: selectedPod?.id,
                     items: [...form]
                 };
-                // await dispatch(setDemandSegmentGroups(data));
+                await dispatch(setOptimizationSettings(data));
                 setSaving(false);
                 showMessage("Saved");
                 props.onClose();
