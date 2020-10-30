@@ -40,6 +40,7 @@ export interface IDesirabilityForm {
 }
 
 export interface IOptimizationSettingsItem {
+    id?: number;
     from: number;
     to: number;
 }
