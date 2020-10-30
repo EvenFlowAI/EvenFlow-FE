@@ -150,7 +150,7 @@ export const DemandSegmentsDesirability = () => {
                 const items: IOptimizationSettingValue[] = [];
                 for (let i = 0; i < 3; i++) {
                     const r1 = form[i*2];
-                    const r2 = form[i*2_1]
+                    const r2 = form[i*2+1]
                     items.push({
                         undesirablePoint: r1.undesirable,
                         desirablePoint: r1.desirable,
