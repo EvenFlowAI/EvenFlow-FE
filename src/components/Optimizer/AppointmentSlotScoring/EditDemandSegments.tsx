@@ -6,7 +6,11 @@ import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {useDispatch} from "react-redux";
-import {IOptimizationSettingsCreateForm, IOptimizationSettingsItem} from "../../../store/reducers/slotScoring/types";
+import {
+    IOptimizationSetting,
+    IOptimizationSettingsCreateForm,
+    IOptimizationSettingsItem
+} from "../../../store/reducers/slotScoring/types";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import {setOptimizationSettings} from "../../../store/reducers/slotScoring/actions";
@@ -35,12 +39,12 @@ const useStyles = makeStyles({
 
 type TForm = IOptimizationSettingsItem[];
 const initialForm: TForm = [
-    {from: 0, to: 0},
-    {from: 0, to: 0},
-    {from: 0, to: 0}
+    {from: 1, to: 1},
+    {from: 2, to: 2},
+    {from: 3, to: 3}
 ]
 
-export const EditDemandSegments:React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const EditDemandSegments:React.FC<DialogProps<IOptimizationSetting[]>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isSaving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
@@ -51,9 +55,13 @@ export const EditDemandSegments:React.FC<DialogProps> = ({onAction, payload, ...
 
     useEffect(() => {
         if (props.open) {
-            setForm(initialForm);
+            if (payload?.length) {
+                setForm(payload.map(({from, to, id}) => ({from, to, id})));
+            } else {
+                setForm(initialForm);
+            }
         }
-    }, [props.open]);
+    }, [props.open, payload]);
 
     const handleChange = (name: keyof IOptimizationSettingsItem, idx: number) =>
         ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,9 +81,10 @@ export const EditDemandSegments:React.FC<DialogProps> = ({onAction, payload, ...
                 const data: IOptimizationSettingsCreateForm = {
                     serviceCenterId: selectedSC.id,
                     podId: selectedPod?.id,
-                    items: [...form]
+                    items: [...form],
                 };
                 await dispatch(setOptimizationSettings(data));
+
                 setSaving(false);
                 showMessage("Saved");
                 props.onClose();

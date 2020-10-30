@@ -310,6 +310,6 @@ export const DemandSegmentsDesirability = () => {
                 )}
             </TableBody>
         </AppointmentTable>
-        <EditDemandSegments onClose={onClose} open={isOpen} />
+        <EditDemandSegments payload={optSettings} onClose={onClose} open={isOpen} />
     </Paper>
 };
