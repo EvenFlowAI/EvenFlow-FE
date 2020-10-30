@@ -1,5 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Paper, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
+import {
+    Button,
+    CircularProgress,
+    Paper,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    withStyles
+} from "@material-ui/core";
 import {AppointmentTable, ValueSlider} from "../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
 import {useException, useMessage, useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
@@ -96,6 +105,7 @@ const initialForm: TForm[] = [
 export const DemandSegmentsDesirability = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const [form, setForm] = useState<TForm[]>(initialForm);
+    const [saving, setSaving] = useState<boolean>(false);
     const [edit, setEdit] = useState<boolean>(false);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -146,6 +156,7 @@ export const DemandSegmentsDesirability = () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
+            setSaving(true);
             try {
                 const items: IOptimizationSettingValue[] = [];
                 for (let i = 0; i < 3; i++) {
@@ -167,8 +178,10 @@ export const DemandSegmentsDesirability = () => {
                 const data: IOptimizationSettingValueForm = {items};
                 await dispatch(setSettingValues(data, selectedSC.id, selectedPod?.id));
                 setEdit(false);
+                setSaving(false);
                 showMessage("Saved");
             } catch (e) {
+                setSaving(false);
                 showError(e);
             }
         }
@@ -187,7 +200,9 @@ export const DemandSegmentsDesirability = () => {
                     <TableCell width={550} colSpan={2} className={classes.buttonCell}>
                         Optimization Settings
                         {edit
-                            ? <div className={classes.editWrapper}>
+                            ? saving ?
+                                <div className={classes.editWrapper}><CircularProgress /></div>
+                                : <div className={classes.editWrapper}>
                                 <Button color="secondary"
                                         className={classes.editN}
                                         onClick={() => setEdit(false)}>

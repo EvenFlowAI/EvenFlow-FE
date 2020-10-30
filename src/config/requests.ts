@@ -253,7 +253,7 @@ export class Api {
             GetDesirability: {route: "/slot-scoring/desirability", method: "get"},
             SetOptimization: {route: "/slot-scoring/optimization-settings", method: "put"},
             GetOptimization: {route: "/slot-scoring/optimization-settings", method: "get"},
-            SetValues: {route: "/slot-scoring/optimization-settings", method: "put"}
+            SetValues: {route: "/slot-scoring/optimization-settings/values", method: "put"}
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},

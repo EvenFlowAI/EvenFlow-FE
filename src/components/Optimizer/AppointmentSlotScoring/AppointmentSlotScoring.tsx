@@ -8,8 +8,7 @@ import {Proximity} from "./Proximity";
 import {TODDesirability} from "./TODDesirability";
 
 export const AppointmentSlotScoring = () => {
-    const [selectedTab, setTab] = useState<string>("1");
-    // TODO: 0 as default
+    const [selectedTab, setTab] = useState<string>("0");
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
