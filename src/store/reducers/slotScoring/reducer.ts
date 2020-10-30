@@ -1,14 +1,16 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IDesirability, IProximity} from "./types";
-import {getDesirability, getProximity} from "./actions";
+import {IDesirability, IOptimizationSetting, IProximity} from "./types";
+import {getDesirability, getOptimizationSettings, getProximity} from "./actions";
 
 type TState = {
     proximity: IProximity[];
     desirability: IDesirability[];
+    optimizationSettings: IOptimizationSetting[];
 }
 const initialState: TState = {
     proximity: [],
-    desirability: []
+    desirability: [],
+    optimizationSettings: []
 };
 
 export const slotScoringReducer = createReducer(initialState, builder => builder
@@ -17,5 +19,8 @@ export const slotScoringReducer = createReducer(initialState, builder => builder
     })
     .addCase(getDesirability, (state, {payload}) => {
         return {...state, desirability: payload};
+    })
+    .addCase(getOptimizationSettings, (state, {payload}) => {
+        return {...state, optimizationSettings: payload};
     })
 );

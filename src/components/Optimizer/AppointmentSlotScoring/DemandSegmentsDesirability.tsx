@@ -1,15 +1,27 @@
-import React from 'react';
-import {Button, Paper, TableCell, TableHead, TableRow} from "@material-ui/core";
+import React, {useEffect} from 'react';
+import {Button, Paper, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {AppointmentTable} from "../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
-import {useModal} from "../../../utils/hooks";
-import { EditDemandSegments } from './EditDemandSegments';
+import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
+import {EditDemandSegments} from './EditDemandSegments';
+import {useDispatch, useSelector} from "react-redux";
+import {loadOptimizationSettings} from "../../../store/reducers/slotScoring/actions";
+import {RootState} from "../../../store/rootReducer";
+import {EOptimizationSettingValueType} from "../../../store/reducers/slotScoring/types";
 
 const useStyles = makeStyles({
     table: {
         "& .MuiTableCell-head": {
             textAlign: "center"
+        },
+        "& .MuiTableCell-body": {
+            textAlign: "center",
+            padding: "10px !important",
+            fontSize: 12
         }
+    },
+    segment: {
+        fontWeight: "bold"
     },
     subtitleCell: {
         padding: "8px !important",
@@ -33,6 +45,16 @@ const useStyles = makeStyles({
 
 export const DemandSegmentsDesirability = () => {
     const {onOpen, onClose, isOpen} = useModal();
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
+    const optSettings = useSelector((state: RootState) => state.slotScoring.optimizationSettings);
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadOptimizationSettings(selectedSC.id, selectedPod?.id));
+        }
+    }, [dispatch, selectedSC, selectedPod])
 
     const handleOpen = () => {
         onOpen();
@@ -56,6 +78,46 @@ export const DemandSegmentsDesirability = () => {
                     <TableCell className={classes.subtitleCell}>Desirable</TableCell>
                 </TableRow>
             </TableHead>
+            <TableBody>
+                {optSettings.map(seg => {
+                    const row1 = seg.values.find(
+                        v => v.type === EOptimizationSettingValueType.LessThanW3);
+                    const row2 = seg.values.find(
+                        v => v.type === EOptimizationSettingValueType.GreaterOrEqualW3);
+
+                    return <>
+                            <TableRow key={`${seg.id}-1`}>
+                                <TableCell rowSpan={2}>
+                                    from <span className={classes.segment}>{seg.from}</span>
+                                </TableCell>
+                                <TableCell rowSpan={2}>
+                                    to <span className={classes.segment}>{seg.to}</span>
+                                </TableCell>
+                                <TableCell>
+                                    {"< W3"}
+                                </TableCell>
+                                <TableCell>
+                                    {row1?.undesirablePoint}
+                                </TableCell>
+                                <TableCell>
+                                    {row1?.desirablePoint}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow key={`${seg.id}-2`}>
+                                <TableCell>
+                                    {">= W3"}
+                                </TableCell>
+                                <TableCell>
+                                    {row2?.undesirablePoint}
+                                </TableCell>
+                                <TableCell>
+                                    {row2?.desirablePoint}
+                                </TableCell>
+                            </TableRow>
+                        </>;
+                    }
+                )}
+            </TableBody>
         </AppointmentTable>
         <EditDemandSegments onClose={onClose} open={isOpen} />
     </Paper>

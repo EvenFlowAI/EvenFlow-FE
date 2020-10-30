@@ -50,7 +50,7 @@ export interface IOptimizationSettingsCreateForm {
   items: IOptimizationSettingsItem[];
 }
 export enum EOptimizationSettingValueType {
-
+    LessThanW3, GreaterOrEqualW3
 }
 export interface IOptimizationSettingValue {
     desirablePoint: number;
