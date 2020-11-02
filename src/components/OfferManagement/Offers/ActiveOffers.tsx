@@ -8,9 +8,11 @@ import {RootState} from "../../../store/rootReducer";
 import {OfferPlate} from "./OfferPlate";
 import {EOfferStatus, IOffer} from "../../../store/reducers/offers/types";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
+import {SendOffer} from "./SendOffer";
 
 export const ActiveOffers = () => {
     const {onOpen, onClose, isOpen} = useModal();
+    const {onOpen: onOfferOpen, onClose: onOfferClose, isOpen: isOfferOpen} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [editedItem, setEditedItem] = useState<IOffer|undefined>(undefined);
@@ -58,6 +60,7 @@ export const ActiveOffers = () => {
                     color="primary"
                 >Add New Offer</Button>
                 <Button
+                    onClick={onOfferOpen}
                     style={{marginLeft: 12}}
                     variant="contained"
                     color="primary"
@@ -73,6 +76,7 @@ export const ActiveOffers = () => {
                 }) : <NoItemsLoading items={offers} label={"There are no active offers."} />}
             </Grid>
             <NewOffer open={isOpen} payload={editedItem} onClose={onClose} />
+            <SendOffer open={isOfferOpen} onClose={onOfferClose} />
         </div>
     );
 };
