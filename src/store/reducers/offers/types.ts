@@ -117,6 +117,6 @@ export interface IOfferForm {
     serviceType?: IServiceType[];
     customerPresence: ECustomerPresence;
     isAllServiceRequestsIncluded: boolean;
-    serviceRequests: number[];
+    serviceRequests: number[]|null;
     serviceCenterId: number;
 }

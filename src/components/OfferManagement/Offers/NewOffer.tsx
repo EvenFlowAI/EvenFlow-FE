@@ -205,7 +205,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                         form.serviceRequests.find(sr => sr.id === 0)
                     ),
                     serviceRequests: Boolean(form.serviceRequests.find(sr => sr.id === 0))
-                        ? [] : form.serviceRequests.map(s => s.id),
+                        ? null : form.serviceRequests.map(s => s.id),
                 };
                 if (payload) {
                     await dispatch(updateOffer(data));
