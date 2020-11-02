@@ -66,7 +66,8 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                     offerTitle: payload.title,
                     offerValue: String(payload.value),
                     offerType: payload.type,
-                    serviceRequests: payload.serviceRequests,
+                    serviceRequests: payload.isAllServiceRequestsIncluded
+                        ? [selectAllSR] : payload.serviceRequests,
                     customerSegments: payload.customerSegments.map(s => {
                         return customerSegments.find(seg => seg.id === s);
                     }).filter(el => el !== undefined) as TEnumMap<ECustomerSegment>[],
@@ -161,6 +162,22 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
         }
     }
 
+    const handleSRChange = (e: any, value: IAssignedServiceRequestShort[]) => {
+        if (form.serviceRequests.find(sr => sr.id === 0) && value.length > 1) {
+            setForm({...form, serviceRequests: value.filter(e => e.id !== 0)});
+        } else if (value.find(sr => sr.id === 0)) {
+            setForm({...form, serviceRequests: [selectAllSR]});
+        } else {
+            setForm({...form, serviceRequests: value});
+        }
+    }
+
+    const handleSelect = ({target: {name, value}}: React.ChangeEvent<{name?: string, value: unknown}>) => {
+        if (name) {
+            setForm({...form, [name]: value});
+        }
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -184,8 +201,11 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                         start: form.timeOfDayFrom?.format(timeSpanString),
                         end: form.timeOfDayTo?.format(timeSpanString),
                     },
-                    isAllServiceRequestsIncluded: false,
-                    serviceRequests: form.serviceRequests.map(s => s.id),
+                    isAllServiceRequestsIncluded: Boolean(
+                        form.serviceRequests.find(sr => sr.id === 0)
+                    ),
+                    serviceRequests: Boolean(form.serviceRequests.find(sr => sr.id === 0))
+                        ? [] : form.serviceRequests.map(s => s.id),
                 };
                 if (payload) {
                     await dispatch(updateOffer(data));
@@ -199,16 +219,6 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                 setSaving(false);
                 showError(e);
             }
-        }
-    }
-
-    const handleSRChange = (e: any, value: IAssignedServiceRequestShort[]) => {
-        setForm({...form, serviceRequests: value});
-    }
-
-    const handleSelect = ({target: {name, value}}: React.ChangeEvent<{name?: string, value: unknown}>) => {
-        if (name) {
-            setForm({...form, [name]: value});
         }
     }
     return (
