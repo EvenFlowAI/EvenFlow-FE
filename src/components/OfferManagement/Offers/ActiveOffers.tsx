@@ -27,11 +27,14 @@ export const ActiveOffers = () => {
     }, [selectedSC, dispatch, pageData]);
 
     useEffect(() => {
-        if (editedItem && editedItem.status === EOfferStatus.None) {
-            const nItem = offers.find(i => i.id === editedItem.id);
-            if (!nItem) {
+        if (editedItem) {
+            const nItem: IOffer|undefined = offers.find(i => i.id === editedItem.id);
+            if (editedItem.status === EOfferStatus.None && !nItem) {
                 // Assume offer is archived
                 setEditedItem({...editedItem, status: EOfferStatus.Archived});
+            } else if (editedItem.status === EOfferStatus.Archived
+                && nItem?.status === EOfferStatus.None) {
+                setEditedItem({...editedItem, status: EOfferStatus.None});
             }
         }
     }, [offers, editedItem]);
