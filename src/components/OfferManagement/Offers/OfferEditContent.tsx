@@ -281,6 +281,8 @@ export const OfferEditContent: React.FC<TProps> = ({
                 <DatePicker
                     fullWidth
                     label={"Duration"}
+                    disablePast
+                    maxDate={form.durationTo || undefined}
                     InputProps={{
                         endAdornment: <DateRange color={"disabled"} />
                     }}
@@ -291,6 +293,8 @@ export const OfferEditContent: React.FC<TProps> = ({
             <div className={classes.innerContainer}>
                 <DatePicker
                     fullWidth
+                    disablePast
+                    minDate={form.durationFrom || undefined}
                     InputProps={{
                         endAdornment: <DateRange color={"disabled"} />
                     }}
