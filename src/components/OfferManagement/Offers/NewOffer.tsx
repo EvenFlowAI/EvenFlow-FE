@@ -34,7 +34,7 @@ const clearForm: TOfferForm = {
     customerSegments: [customerSegments[0]],
     customerPresence: ECustomerPresence.Both,
     dayOfWeek: [dayOfWeek[0]],
-    timeOfDayFrom: moment("00:01:00", "hh:mm:ss"),
+    timeOfDayFrom: moment("00:00:00", "hh:mm:ss"),
     timeOfDayTo: moment("23:59:59", "hh:mm:ss")
 }
 export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...props}) => {
