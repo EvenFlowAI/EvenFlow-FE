@@ -8,6 +8,11 @@ export const setOffersPageData = createAction<Partial<IPageRequest>>("Offers/Pag
 export const setOffersPaging = createAction<IPagingResponse>("Offers/Paging");
 export const setOffersLoading = createAction<boolean>("Offers/Loading");
 
+export const getArchivedOffers = createAction<IOffer[]>("Offers/GetArchivedOffers");
+export const setArchivedOffersPageData = createAction<Partial<IPageRequest>>("Offers/ArchivedPageData");
+export const setArchivedOffersPaging = createAction<IPagingResponse>("Offers/ArchivedPaging");
+export const setArchivedOffersLoading = createAction<boolean>("Offers/ArchivedLoading");
+
 export const loadOffers = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     dispatch(setOffersLoading(true));
     try {
@@ -26,6 +31,27 @@ export const loadOffers = (serviceCenterId: number): AppThunk => async (dispatch
         dispatch(setOffersPaging(paging));
     } finally {
         dispatch(setOffersLoading(false));
+    }
+}
+
+export const loadArchivedOffers = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
+    dispatch(setArchivedOffersLoading(true));
+    try {
+        const pageData = getState().offers.archivedOffersPageData
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IOffer>>(
+            Api.endpoints.Offers.GetAll,
+            {
+                data: {
+                    serviceCenterId,
+                    status: EOfferStatus.Archived,
+                    ...pageData
+                }
+            }
+        );
+        dispatch(getArchivedOffers(result));
+        dispatch(setArchivedOffersPaging(paging));
+    } finally {
+        dispatch(setArchivedOffersLoading(false));
     }
 }
 

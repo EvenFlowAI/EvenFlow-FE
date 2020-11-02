@@ -6,11 +6,14 @@ type TProps = {
     label?: string;
     items: any[];
 }
+const divStyles = {textAlign: "center" as const, width: "100%"};
 export const NoItemsLoading: React.FC<TProps> = ({loading, items, label}) => {
     if (loading) {
-        return <CircularProgress />;
+        return <div style={divStyles}>
+            <CircularProgress />
+        </div>;
     } else if (!items.length) {
-        return <div style={{textAlign: "center", width: "100%"}}>
+        return <div style={divStyles}>
             {label ? label : "No items."}
         </div>
     } else {
