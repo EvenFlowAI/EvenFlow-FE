@@ -15,8 +15,8 @@ import {
     IOfferForm,
 } from "../../../store/reducers/offers/types";
 import {useDispatch} from "react-redux";
-import {createOffer, removeOffer, updateOffer} from "../../../store/reducers/offers/actions";
-import {SC_UNDEFINED, timeSpanString} from "../../../config/constants";
+import {createOffer, removeOffer, setArchiveOffer, updateOffer} from "../../../store/reducers/offers/actions";
+import {SC_UNDEFINED, SOMETHING_WRONG, timeSpanString} from "../../../config/constants";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 import {TEnumMap} from "../../../store/reducers/utils";
@@ -37,6 +37,7 @@ const clearForm: TOfferForm = {
 }
 export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TOfferForm>(clearForm);
+    const [archiving, setArchiving] = useState<boolean>(false);
     const [viewMode, setViewMode] = useState<boolean>(false);
     const [isSaving, setSaving] = useState<boolean>(false);
 
@@ -96,6 +97,21 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
     const handleRadio = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
         setForm({...form, offerType: Number(value) as EOfferType});
     }
+    const handleArchive = async () => {
+        if (!payload) {
+            showError(SOMETHING_WRONG);
+        } else {
+            setArchiving(true);
+            try {
+                await dispatch(setArchiveOffer(payload));
+                setArchiving(false);
+            } catch (e) {
+                setArchiving(false);
+                showError(e);
+            }
+        }
+    }
+
     const handleSegmentsSelect = (e: any, value: TEnumMap<ECustomerSegment>[]) => {
         if (form.customerSegments.find(d => d.id === ECustomerSegment.All && value.length > 1)) {
             setForm({...form, customerSegments: value.filter(s => s.id !== ECustomerSegment.All)});
@@ -199,7 +215,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                 viewMode ? "" : payload ? "Edit" : "Add new"
             } Offer</DialogTitle>
             {(viewMode && payload)
-                ? <ViewOfferContent offer={payload} />
+                ? <ViewOfferContent offer={payload} archiving={archiving} onArchive={handleArchive} />
                 : <OfferEditContent
                     form={form}
                     onChange={handleChange}

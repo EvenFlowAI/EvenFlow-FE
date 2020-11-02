@@ -43,3 +43,16 @@ export const removeOffer = (offer: IOffer): AppThunk => async dispatch => {
     });
     dispatch(loadOffers(offer.serviceCenterId));
 }
+export const setArchiveOffer = (data: IOffer): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.Offers.ChangeStatus,
+        {
+            data: {
+                status: data.status === EOfferStatus.Archived ? EOfferStatus.None : EOfferStatus.Archived
+            },
+            urlParams: {
+                id: data.id
+            }
+        });
+    dispatch(loadOffers(data.serviceCenterId));
+}

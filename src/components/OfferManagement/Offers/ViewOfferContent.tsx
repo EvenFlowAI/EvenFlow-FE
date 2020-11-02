@@ -1,13 +1,30 @@
 import React from 'react';
 import {DialogContent} from "../../Modals/BaseModal";
-import {customerSegmentsMap, dayOfWeekMap, EOfferType, IOffer} from "../../../store/reducers/offers/types";
-import {Grid} from "@material-ui/core";
+import {
+    customerSegmentsMap,
+    dayOfWeekMap,
+    EOfferStatus,
+    EOfferType,
+    IOffer
+} from "../../../store/reducers/offers/types";
+import {FormControlLabel, Grid, Switch, withStyles} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import moment from "moment";
 import {timeSpanString, timeString} from "../../../config/constants";
 import {calendarDateFormat} from "../../Optimizer/EmployeeSchedule/utils";
 
-export const ViewOfferContent: React.FC<{offer: IOffer}> = ({offer}) => {
+
+const Label = withStyles({
+    root: {
+        marginLeft: 0,
+    },
+    label: {
+        fontWeight: "bold"
+    }
+})(FormControlLabel);
+
+export const ViewOfferContent: React.FC<{
+    onArchive: () => void, archiving: boolean, offer: IOffer}> = ({offer, onArchive, archiving}) => {
     const getOfferValue = () => {
         return offer.type !== EOfferType.FreeService ?
             `${offer.value}${offer.type === EOfferType.AmountOff ? "$" : "%"}` :
@@ -74,6 +91,15 @@ export const ViewOfferContent: React.FC<{offer: IOffer}> = ({offer}) => {
                                 offer.duration.end
                             ).format(calendarDateFormat)}`
                         }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Label
+                        value={offer.status === EOfferStatus.None}
+                        onClick={onArchive}
+                        label="OFF/ON"
+                        labelPlacement="start"
+                        control={<Switch color="primary" />}
                     />
                 </Grid>
             </Grid>
