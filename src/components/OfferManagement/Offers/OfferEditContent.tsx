@@ -182,6 +182,9 @@ export const OfferEditContent: React.FC<TProps> = ({
                 disableCloseOnSelect
                 onChange={onSRChange}
                 getOptionLabel={i => i.code}
+                getOptionSelected={(option, value) => {
+                    return option.id === value.id;
+                }}
                 renderOption={autocompleteOptionsRender((e) => e.code)}
                 loading={false}
                 value={form.serviceRequests}
