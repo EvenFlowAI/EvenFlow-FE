@@ -8,7 +8,6 @@ import { Provider } from "react-redux";
 import {store} from "./store/store";
 import {BrowserRouter} from "react-router-dom";
 import theme from "./theme/theme";
-import {SnackbarProvider} from "notistack";
 import MomentUtils from "@date-io/moment";
 import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 
@@ -19,11 +18,7 @@ ReactDOM.render(
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                     <CssBaseline />
                     <BrowserRouter>
-                        <SnackbarProvider maxSnack={3}
-                                          anchorOrigin={{horizontal: "right", vertical: "top"}}
-                                          variant="success">
-                            <App />
-                        </SnackbarProvider>
+                        <App />
                     </BrowserRouter>
                 </MuiPickersUtilsProvider>
             </ThemeProvider>
