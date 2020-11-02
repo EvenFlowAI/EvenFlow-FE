@@ -6,7 +6,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadOffers} from "../../../store/reducers/offers/actions";
 import {RootState} from "../../../store/rootReducer";
 import {OfferPlate} from "./OfferPlate";
-import {IOffer} from "../../../store/reducers/offers/types";
+import {EOfferStatus, IOffer} from "../../../store/reducers/offers/types";
+import {NoItemsLoading} from "../../UI/NoItemsLoading";
 
 export const ActiveOffers = () => {
     const {onOpen: onOfferOpen, onClose: onOfferClose, isOpen: isOfferOpen} = useModal();
@@ -24,6 +25,16 @@ export const ActiveOffers = () => {
             dispatch(loadOffers(selectedSC.id));
         }
     }, [selectedSC, dispatch, pageData]);
+
+    useEffect(() => {
+        if (editedItem) {
+            const nItem = offers.find(i => i.id === editedItem.id);
+            if (!nItem) {
+                // Assume offer is archived
+                setEditedItem({...editedItem, status: EOfferStatus.Archived});
+            }
+        }
+    }, [offers, editedItem]);
 
     const handleNewOffer = () => {
         setEditedItem(undefined);
@@ -52,11 +63,11 @@ export const ActiveOffers = () => {
             <Grid container spacing={2} style={{marginTop: 16}}>
                 {offersLoading
                     ? <Grid item xs={12} style={{textAlign: "center"}}><CircularProgress /></Grid>
-                    : offers.map(offer => {
+                    : offers.length ? offers.map(offer => {
                     return <Grid key={offer.id} item xs={12} sm={6} md={4}>
                         <OfferPlate offer={offer} onClick={handleEdit} />
                     </Grid>
-                })}
+                }) : <NoItemsLoading items={offers} label={"There are no active offers."} />}
             </Grid>
             <NewOffer open={isOfferOpen} payload={editedItem} onClose={onOfferClose} />
         </div>

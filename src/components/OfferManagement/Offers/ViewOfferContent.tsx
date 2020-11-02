@@ -95,8 +95,9 @@ export const ViewOfferContent: React.FC<{
                 </Grid>
                 <Grid item xs={12}>
                     <Label
-                        value={offer.status === EOfferStatus.None}
-                        onClick={onArchive}
+                        checked={offer.status === EOfferStatus.None}
+                        disabled={archiving}
+                        onChange={onArchive}
                         label="OFF/ON"
                         labelPlacement="start"
                         control={<Switch color="primary" />}
