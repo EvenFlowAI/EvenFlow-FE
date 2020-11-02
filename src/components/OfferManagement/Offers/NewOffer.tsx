@@ -24,13 +24,13 @@ import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
 import {ViewOfferContent} from "./ViewOfferContent";
 import {OfferEditContent} from "./OfferEditContent";
-import {TOfferForm} from "./types";
+import {selectAllSR, TOfferForm} from "./types";
 
 const clearForm: TOfferForm = {
     offerValue: undefined,
     offerTitle: undefined,
     offerType: EOfferType.AmountOff,
-    serviceRequests: [],
+    serviceRequests: [selectAllSR],
     customerSegments: [customerSegments[0]],
     customerPresence: ECustomerPresence.Both,
     dayOfWeek: [dayOfWeek[0]],

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {TextField} from "../../UI/TextField";
 import {FormControlLabel, MenuItem, Radio, RadioGroup, Select} from "@material-ui/core";
 import {
     customerPresence,
     customerSegments,
-    dayOfWeek, ECustomerSegment, EDayOfWeek,
+    dayOfWeek,
+    ECustomerSegment,
+    EDayOfWeek,
     EOfferType,
     offerTypes
 } from "../../../store/reducers/offers/types";
@@ -15,7 +17,7 @@ import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
 import {DialogContent} from "../../Modals/BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
-import {TOfferForm} from "./types";
+import {selectAllSR, TOfferForm} from "./types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
@@ -45,7 +47,9 @@ const useStyles = makeStyles({
     }
 });
 
-type TAutoChangeEvent = React.ChangeEvent<{name?: string, value: unknown}>
+
+
+type TAutoChangeEvent = React.ChangeEvent<{name?: string, value: unknown}>;
 
 type TProps = {
     form: TOfferForm;
@@ -68,6 +72,9 @@ export const OfferEditContent: React.FC<TProps> = ({
     onSRChange,
 }) => {
     const serviceRequests = useSelector((state: RootState) => state.serviceRequests.scRequestsShort);
+    const srWithAll: IAssignedServiceRequestShort[] = useMemo(() => {
+        return [selectAllSR, ...serviceRequests];
+    }, [serviceRequests]);
 
     const classes = useStyles();
     return <DialogContent>
@@ -172,7 +179,7 @@ export const OfferEditContent: React.FC<TProps> = ({
         </div>
         <div className={classes.inputContainer}>
             <Autocomplete
-                options={serviceRequests}
+                options={srWithAll}
                 multiple
                 ChipProps={{
                     color: "primary",
