@@ -59,17 +59,25 @@ export const createOffer = (data: IOfferForm): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Offers.Create, {data});
     dispatch(loadOffers(data.serviceCenterId));
 }
-export const updateOffer = (data: IOfferForm): AppThunk => async dispatch => {
+export const updateOffer = (data: IOfferForm, archive?: boolean): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Offers.Edit, {data, urlParams: {id: data?.id || 0}});
-    dispatch(loadOffers(data.serviceCenterId));
+    if (archive) {
+        dispatch(loadArchivedOffers(data.serviceCenterId));
+    } else {
+        dispatch(loadOffers(data.serviceCenterId));
+    }
 }
-export const removeOffer = (offer: IOffer): AppThunk => async dispatch => {
+export const removeOffer = (offer: IOffer, archive?: boolean): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Offers.ChangeStatus, {
         urlParams: {id: offer.id}, data: {status: EOfferStatus.Deleted}
     });
-    dispatch(loadOffers(offer.serviceCenterId));
+    if (archive) {
+        dispatch(loadArchivedOffers(offer.serviceCenterId));
+    } else {
+        dispatch(loadOffers(offer.serviceCenterId));
+    }
 }
-export const setArchiveOffer = (data: IOffer): AppThunk => async dispatch => {
+export const setArchiveOffer = (data: IOffer, archive?: boolean): AppThunk => async dispatch => {
     await Api.call(
         Api.endpoints.Offers.ChangeStatus,
         {
@@ -80,5 +88,9 @@ export const setArchiveOffer = (data: IOffer): AppThunk => async dispatch => {
                 id: data.id
             }
         });
-    dispatch(loadOffers(data.serviceCenterId));
+    if (archive) {
+        dispatch(loadArchivedOffers(data.serviceCenterId));
+    } else {
+        dispatch(loadOffers(data.serviceCenterId));
+    }
 }

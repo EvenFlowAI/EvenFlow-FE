@@ -10,7 +10,7 @@ import {EOfferStatus, IOffer} from "../../../store/reducers/offers/types";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
 
 export const ActiveOffers = () => {
-    const {onOpen: onOfferOpen, onClose: onOfferClose, isOpen: isOfferOpen} = useModal();
+    const {onOpen, onClose, isOpen} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [editedItem, setEditedItem] = useState<IOffer|undefined>(undefined);
@@ -41,12 +41,12 @@ export const ActiveOffers = () => {
 
     const handleNewOffer = () => {
         setEditedItem(undefined);
-        onOfferOpen();
+        onOpen();
     }
 
     const handleEdit = (offer: IOffer) => () => {
         setEditedItem(offer);
-        onOfferOpen();
+        onOpen();
     }
 
     return (
@@ -72,7 +72,7 @@ export const ActiveOffers = () => {
                     </Grid>
                 }) : <NoItemsLoading items={offers} label={"There are no active offers."} />}
             </Grid>
-            <NewOffer open={isOfferOpen} payload={editedItem} onClose={onOfferClose} />
+            <NewOffer open={isOpen} payload={editedItem} onClose={onClose} />
         </div>
     );
 };

@@ -37,7 +37,7 @@ const clearForm: TOfferForm = {
     timeOfDayFrom: moment("00:00:00", "hh:mm:ss"),
     timeOfDayTo: moment("23:59:59", "hh:mm:ss")
 }
-export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...props}) => {
+export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAction, archive, payload, ...props}) => {
     const [form, setForm] = useState<TOfferForm>(clearForm);
     const [archiving, setArchiving] = useState<boolean>(false);
     const [viewMode, setViewMode] = useState<boolean>(false);
@@ -106,7 +106,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
         } else {
             setArchiving(true);
             try {
-                await dispatch(setArchiveOffer(payload));
+                await dispatch(setArchiveOffer(payload, archive));
                 setArchiving(false);
             } catch (e) {
                 setArchiving(false);
@@ -153,7 +153,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
             showError("Something wrong");
         } else {
             try {
-                await dispatch(removeOffer(payload));
+                await dispatch(removeOffer(payload, archive));
                 showMessage(`Successfully removed ${payload?.title}`);
                 props.onClose();
             } catch (e) {
@@ -208,7 +208,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>> = ({onAction, payload, ...pr
                         ? null : form.serviceRequests.map(s => s.id),
                 };
                 if (payload) {
-                    await dispatch(updateOffer(data));
+                    await dispatch(updateOffer(data, archive));
                 } else {
                     await dispatch(createOffer(data));
                 }
