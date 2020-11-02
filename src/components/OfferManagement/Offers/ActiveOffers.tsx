@@ -27,7 +27,7 @@ export const ActiveOffers = () => {
     }, [selectedSC, dispatch, pageData]);
 
     useEffect(() => {
-        if (editedItem) {
+        if (editedItem && editedItem.status === EOfferStatus.None) {
             const nItem = offers.find(i => i.id === editedItem.id);
             if (!nItem) {
                 // Assume offer is archived
