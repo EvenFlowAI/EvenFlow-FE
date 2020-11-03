@@ -1,24 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadArchivedOffers} from "../../../store/reducers/offers/actions";
-import {Grid} from "@material-ui/core";
+import {loadArchivedOffers, setArchivedOffersPageData} from "../../../store/reducers/offers/actions";
+import {Grid, TablePagination} from "@material-ui/core";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {OfferPlate} from "./OfferPlate";
 import {EOfferStatus, IOffer} from "../../../store/reducers/offers/types";
 import {NewOffer} from "./NewOffer";
+import {defaultRowsPerPageOptions} from "../../../config/config";
 
 export const ArchiveOffers = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [offers, offersLoading, pageData] = useSelector((state: RootState) => [
+    const [offers, offersLoading, pageData, count] = useSelector((state: RootState) => [
         state.offers.archivedOffersList,
         state.offers.archivedOffersLoading,
-        state.offers.archivedOffersPageData
+        state.offers.archivedOffersPageData,
+        state.offers.archivedOffersPaging.numberOfRecords
     ]);
     const [editedItem, setEditedItem] = useState<IOffer|undefined>(undefined);
+    const {changePage, changeRowsPerPage} = usePagination(
+        s => s.offers.archivedOffersPageData,
+        setArchivedOffersPageData
+    );
 
     useEffect(() => {
         if (selectedSC) {
@@ -51,6 +57,17 @@ export const ArchiveOffers = () => {
                 <OfferPlate offer={offer} onClick={handleEdit} />
             </Grid>
         })}
+        {count > pageData.pageSize ? <Grid item xs={12}>
+            <TablePagination
+                component="div"
+                count={count}
+                page={pageData.pageIndex}
+                onChangePage={changePage}
+                onChangeRowsPerPage={changeRowsPerPage}
+                rowsPerPage={pageData.pageSize}
+                rowsPerPageOptions={defaultRowsPerPageOptions}
+            />
+        </Grid> : null}
         <NewOffer open={isOpen} payload={editedItem} archive onClose={onClose} />
     </Grid>
 };

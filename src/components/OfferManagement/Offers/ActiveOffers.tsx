@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Button, CircularProgress, Grid} from "@material-ui/core";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {Button, CircularProgress, Grid, TablePagination} from "@material-ui/core";
+import {useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {NewOffer} from "./NewOffer";
 import {useDispatch, useSelector} from "react-redux";
-import {loadOffers} from "../../../store/reducers/offers/actions";
+import {loadOffers, setOffersPageData} from "../../../store/reducers/offers/actions";
 import {RootState} from "../../../store/rootReducer";
 import {OfferPlate} from "./OfferPlate";
 import {EOfferStatus, IOffer} from "../../../store/reducers/offers/types";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {SendOffer} from "./SendOffer";
+import {defaultRowsPerPageOptions} from "../../../config/config";
 
 export const ActiveOffers = () => {
     const {onOpen, onClose, isOpen} = useModal();
@@ -16,11 +17,16 @@ export const ActiveOffers = () => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [editedItem, setEditedItem] = useState<IOffer|undefined>(undefined);
-    const [offers, offersLoading, pageData] = useSelector((state: RootState) => [
+    const [offers, offersLoading, pageData, count] = useSelector((state: RootState) => [
         state.offers.offersList,
         state.offers.offersLoading,
-        state.offers.offersPageData
-    ])
+        state.offers.offersPageData,
+        state.offers.offersPaging.numberOfRecords
+    ]);
+    const {changeRowsPerPage, changePage} = usePagination(
+        (s: RootState) => s.offers.offersPageData,
+        setOffersPageData
+    );
 
     useEffect(() => {
         if (selectedSC) {
@@ -74,6 +80,17 @@ export const ActiveOffers = () => {
                         <OfferPlate offer={offer} onClick={handleEdit} />
                     </Grid>
                 }) : <NoItemsLoading items={offers} label={"There are no active offers."} />}
+                {count > pageData.pageSize ? <Grid item xs={12}>
+                    <TablePagination
+                        component="div"
+                        count={count}
+                        page={pageData.pageIndex}
+                        onChangePage={changePage}
+                        onChangeRowsPerPage={changeRowsPerPage}
+                        rowsPerPage={pageData.pageSize}
+                        rowsPerPageOptions={defaultRowsPerPageOptions}
+                    />
+                </Grid> : null}
             </Grid>
             <NewOffer open={isOpen} payload={editedItem} onClose={onClose} />
             <SendOffer open={isOfferOpen} onClose={onOfferClose} />
