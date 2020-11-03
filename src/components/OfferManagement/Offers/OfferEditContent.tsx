@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {TextField} from "../../UI/TextField";
 import {FormControlLabel, MenuItem, Radio, RadioGroup, Select} from "@material-ui/core";
 import {
@@ -10,14 +10,14 @@ import {
     EOfferType,
     offerTypes
 } from "../../../store/reducers/offers/types";
-import {Autocomplete} from "@material-ui/lab";
+import {Autocomplete, createFilterOptions} from "@material-ui/lab";
 import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
 import clsx from "clsx";
 import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
 import {DialogContent} from "../../Modals/BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
-import {selectAllSR, TOfferForm} from "./types";
+import {selectAllSR, TOfferForm, TServiceTypeWithCustom} from "./types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
@@ -47,13 +47,14 @@ const useStyles = makeStyles({
     }
 });
 
-
+const filter = createFilterOptions<TServiceTypeWithCustom>();
 
 type TAutoChangeEvent = React.ChangeEvent<{name?: string, value: unknown}>;
 
 type TProps = {
     form: TOfferForm;
     onSelect: (e: TAutoChangeEvent) => void;
+    onValueChange: (name: keyof TOfferForm, value: unknown) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onRadio: (e: React.ChangeEvent<HTMLInputElement>, value: string) => void;
     onChangeDateTime: (name: keyof TOfferForm) => (date: MaterialUiPickersDate) => void;
@@ -68,13 +69,31 @@ export const OfferEditContent: React.FC<TProps> = ({
     onRadio,
     onChangeDateTime,
     onDOWSelect,
+    onValueChange,
     onSegmentSelect,
     onSRChange,
 }) => {
+    const [options, setOptions] = useState<TServiceTypeWithCustom[]>([]);
     const serviceRequests = useSelector((state: RootState) => state.serviceRequests.scRequestsShort);
     const srWithAll: IAssignedServiceRequestShort[] = useMemo(() => {
         return [selectAllSR, ...serviceRequests];
     }, [serviceRequests]);
+
+    const handleChangeServiceType = (event: any, values: TServiceTypeWithCustom[]) => {
+        if (values.length) {
+            // Add option to list and activate
+            for (let i = 0; i < values.length; i++) {
+                let v = values[i];
+                if (v.inputValue) {
+                    const newValue = {name: v.inputValue};
+                    setOptions([...options, {name: v.inputValue}]);
+                    values[i] = newValue;
+                    break;
+                }
+            }
+        }
+        onValueChange("serviceType", values);
+    }
 
     const classes = useStyles();
     return <DialogContent>
@@ -98,7 +117,6 @@ export const OfferEditContent: React.FC<TProps> = ({
                 {offerTypes.map(ot => {
                     return <FormControlLabel
                         control={<Radio color="primary" />}
-                        disabled={ot.id === EOfferType.FreeService}
                         label={ot.label}
                         labelPlacement="end"
                         key={ot.id}
@@ -107,76 +125,67 @@ export const OfferEditContent: React.FC<TProps> = ({
                 })}
             </RadioGroup>
         </div>
-        <div className={classes.inputContainer}>
-            <TextField
-                style={{width: "50%"}}
-                label="Offer value"
-                onChange={onChange}
-                name="offerValue"
-                endAdornment={
-                    form.offerType === EOfferType.PercentOff
-                        ? "%"
-                        : form.offerType === EOfferType.AmountOff
-                            ? "$" : ""
-                }
-                id="offerValue"
-                type="number"
-                inputProps={{min: 0}}
-                value={form.offerValue||""}
-            />
-        </div>
-        <div className={classes.inputContainer}>
-            {/*<Autocomplete*/}
-            {/*    value={form.serviceType ? form.serviceType[0] : null}*/}
-            {/*    options={form.serviceType || []}*/}
-            {/*    onChange={(event, newValue) => {*/}
-            {/*        if (typeof newValue === 'string') {*/}
-            {/*            setForm({*/}
-            {/*                ...form, serviceType: [{name: newValue}],*/}
-            {/*            });*/}
-            {/*        } else if (newValue && newValue?.inputValue) {*/}
-            {/*            // Create a new value from the user input*/}
-            {/*            setForm({*/}
-            {/*                ...form,*/}
-            {/*                serviceType: [{name: newValue.inputValue}],*/}
-            {/*            });*/}
-            {/*        } else if (newValue) {*/}
-            {/*            setForm({...form, serviceType: [newValue]});*/}
-            {/*        }*/}
-            {/*    }}*/}
-            {/*    filterOptions={(options, params) => {*/}
-            {/*        const filtered = filter(options, params);*/}
+        {form.offerType === EOfferType.FreeService ?
+            <div className={classes.inputContainer}>
+                <Autocomplete
+                    multiple
+                    value={form.serviceType || []}
+                    options={options}
+                    ChipProps={{
+                        color: "primary",
+                        style: {borderRadius: 4},
+                        size: "small"
+                    }}
+                    onChange={handleChangeServiceType}
+                    filterOptions={(options, params) => {
+                        const filtered = filter(options, params);
 
-            {/*        // Suggest the creation of a new value*/}
-            {/*        if (params.inputValue !== '') {*/}
-            {/*            filtered.push({*/}
-            {/*                name: `Add "${params.inputValue}"`,*/}
-            {/*            });*/}
-            {/*        }*/}
+                        // Suggest the creation of a new value
+                        if (params.inputValue !== '' && !filtered.length) {
+                            filtered.push({
+                                name: `Add "${params.inputValue}"`,
+                                inputValue: params.inputValue
+                            });
+                        }
 
-            {/*        return filtered;*/}
-            {/*    }}*/}
-            {/*    selectOnFocus*/}
-            {/*    clearOnBlur*/}
-            {/*    fullWidth*/}
-            {/*    handleHomeEndKeys*/}
-            {/*    id="Offer type"*/}
-            {/*    getOptionLabel={(option) => {*/}
-            {/*        // Value selected with enter, right from the input*/}
-            {/*        if (typeof option === 'string') {*/}
-            {/*            return option;*/}
-            {/*        }*/}
-            {/*        // Add "xxx" option created dynamically*/}
-            {/*        if (option.inputValue) {*/}
-            {/*            return option.inputValue;*/}
-            {/*        }*/}
-            {/*        // Regular option*/}
-            {/*        return option.name;*/}
-            {/*    }}*/}
-            {/*    renderOption={(option) => option.name}*/}
-            {/*    renderInput={autocompleteRender({label: "Offer type"})}*/}
-            {/*/>*/}
-        </div>
+                        return filtered;
+                    }}
+                    getOptionSelected={((option, value) => option.name === value.name)}
+                    selectOnFocus
+                    clearOnBlur
+                    fullWidth
+                    handleHomeEndKeys
+                    id="offer_type"
+                    getOptionLabel={(option) => {
+                        // Add "xxx" option created dynamically
+                        if (option.inputValue) {
+                            return option.inputValue;
+                        }
+                        // Regular option
+                        return option.name;
+                    }}
+                    renderOption={autocompleteOptionsRender(e => e.name)}
+                    renderInput={autocompleteRender({label: "Offer type"})}
+                />
+            </div> :
+            <div className={classes.inputContainer}>
+                <TextField
+                    style={{width: "50%"}}
+                    label="Offer value"
+                    onChange={onChange}
+                    name="offerValue"
+                    endAdornment={
+                        form.offerType === EOfferType.PercentOff
+                            ? "%"
+                            : "$"
+                    }
+                    id="offerValue"
+                    type="number"
+                    inputProps={{min: 0}}
+                    value={form.offerValue||""}
+                />
+            </div>
+        }
         <div className={classes.inputContainer}>
             <Autocomplete
                 options={srWithAll}

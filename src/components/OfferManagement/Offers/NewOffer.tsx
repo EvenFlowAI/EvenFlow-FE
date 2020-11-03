@@ -98,7 +98,13 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         setForm({...form, [name]: value})
     }
     const handleRadio = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
-        setForm({...form, offerType: Number(value) as EOfferType});
+        const nForm = {...form, offerType: Number(value) as EOfferType};
+        if (nForm.offerType === EOfferType.FreeService) {
+            nForm.offerValue = undefined;
+        } else {
+            nForm.serviceType = undefined;
+        }
+        setForm(nForm);
     }
     const handleArchive = async () => {
         if (!payload) {
@@ -178,6 +184,10 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         }
     }
 
+    const handleValueChange = (name: keyof TOfferForm, value: unknown) => {
+        setForm({...form, [name]: value});
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -206,6 +216,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     ),
                     serviceRequests: Boolean(form.serviceRequests.find(sr => sr.id === 0))
                         ? null : form.serviceRequests.map(s => s.id),
+                    serviceType: form.serviceType
                 };
                 if (payload) {
                     await dispatch(updateOffer(data, archive));
@@ -230,6 +241,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                 ? <ViewOfferContent offer={payload} archiving={archiving} onArchive={handleArchive} />
                 : <OfferEditContent
                     form={form}
+                    onValueChange={handleValueChange}
                     onChange={handleChange}
                     onRadio={handleRadio}
                     onSelect={handleSelect}

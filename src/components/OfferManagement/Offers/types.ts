@@ -9,6 +9,7 @@ import {IAssignedServiceRequestShort, IServiceRequestPriority} from "../../../st
 import {TEnumMap} from "../../../store/reducers/utils";
 import moment from "moment";
 
+export type TServiceTypeWithCustom = IServiceType & {inputValue?: string};
 export type TOfferForm = {
     offerValue?: string;
     offerTitle?: string;
@@ -21,7 +22,7 @@ export type TOfferForm = {
     timeOfDayTo?: moment.Moment;
     durationFrom?: moment.Moment;
     durationTo?: moment.Moment;
-    serviceType?: (IServiceType & {inputValue?: string})[];
+    serviceType?: TServiceTypeWithCustom[];
 }
 export const selectAllSR: IAssignedServiceRequestShort = {
     id: 0,
