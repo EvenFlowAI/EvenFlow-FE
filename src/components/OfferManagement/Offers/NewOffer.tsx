@@ -80,7 +80,8 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     durationFrom: moment(payload.duration.start),
                     durationTo: moment(payload.duration.end),
                     timeOfDayFrom: moment(payload.timeOfDay.start, timeSpanString),
-                    timeOfDayTo: moment(payload.timeOfDay.end, timeSpanString)
+                    timeOfDayTo: moment(payload.timeOfDay.end, timeSpanString),
+                    serviceType: payload.serviceType?.name,
                 })
             } else {
                 setForm(clearForm);
