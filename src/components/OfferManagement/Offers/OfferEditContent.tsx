@@ -131,7 +131,7 @@ export const OfferEditContent: React.FC<TProps> = ({
                     value={form.serviceType || ""}
                     name="serviceType"
                     id="serviceType"
-                    label="Offer type"
+                    label="Service type"
                     fullWidth
                     onChange={onChange}
                 />

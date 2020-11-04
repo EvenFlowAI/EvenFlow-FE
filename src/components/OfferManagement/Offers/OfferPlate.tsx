@@ -87,8 +87,8 @@ export const OfferPlate: React.FC<TProps> = ({offer, onClick}) => {
             <div className={classes.content}>
                 <h3 className={classes.title}>{offer.title}</h3>
                 <span className={classes.label}>
-                    {offer.value}
-                    {offer.type === EOfferType.PercentOff ? "%" : "$"}
+                    {offer.type === EOfferType.FreeService ? offer.serviceType?.name || "-" : offer.value}
+                    {offer.type === EOfferType.PercentOff ? "%" : offer.type === EOfferType.AmountOff ? "$" : ""}
                 </span>
                 <span className={classes.info}>
                     {offer.customerSegments.map(s => customerSegmentsMap[s]).join(", ")}
