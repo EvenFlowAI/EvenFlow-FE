@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 import {TextField} from "../../UI/TextField";
 import {FormControlLabel, MenuItem, Radio, RadioGroup, Select} from "@material-ui/core";
 import {
@@ -10,14 +10,14 @@ import {
     EOfferType,
     offerTypes
 } from "../../../store/reducers/offers/types";
-import {Autocomplete, createFilterOptions} from "@material-ui/lab";
+import {Autocomplete} from "@material-ui/lab";
 import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
 import clsx from "clsx";
 import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
 import {DialogContent} from "../../Modals/BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
-import {selectAllSR, TOfferForm, TServiceTypeWithCustom} from "./types";
+import {selectAllSR, TOfferForm} from "./types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     }
 });
 
-const filter = createFilterOptions<TServiceTypeWithCustom>();
+// const filter = createFilterOptions<TServiceTypeWithCustom>();
 
 type TAutoChangeEvent = React.ChangeEvent<{name?: string, value: unknown}>;
 
@@ -69,31 +69,31 @@ export const OfferEditContent: React.FC<TProps> = ({
     onRadio,
     onChangeDateTime,
     onDOWSelect,
-    onValueChange,
+    // onValueChange,
     onSegmentSelect,
     onSRChange,
 }) => {
-    const [options, setOptions] = useState<TServiceTypeWithCustom[]>([]);
+    // const [options, setOptions] = useState<TServiceTypeWithCustom[]>([]);
     const serviceRequests = useSelector((state: RootState) => state.serviceRequests.scRequestsShort);
     const srWithAll: IAssignedServiceRequestShort[] = useMemo(() => {
         return [selectAllSR, ...serviceRequests];
     }, [serviceRequests]);
 
-    const handleChangeServiceType = (event: any, values: TServiceTypeWithCustom[]) => {
-        if (values.length) {
-            // Add option to list and activate
-            for (let i = 0; i < values.length; i++) {
-                let v = values[i];
-                if (v.inputValue) {
-                    const newValue = {name: v.inputValue};
-                    setOptions([...options, {name: v.inputValue}]);
-                    values[i] = newValue;
-                    break;
-                }
-            }
-        }
-        onValueChange("serviceType", values);
-    }
+    // const handleChangeServiceType = (event: any, values: TServiceTypeWithCustom[]) => {
+    //     if (values.length) {
+    //         // Add option to list and activate
+    //         for (let i = 0; i < values.length; i++) {
+    //             let v = values[i];
+    //             if (v.inputValue) {
+    //                 const newValue = {name: v.inputValue};
+    //                 setOptions([...options, {name: v.inputValue}]);
+    //                 values[i] = newValue;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     onValueChange("serviceType", values);
+    // }
 
     const classes = useStyles();
     return <DialogContent>
@@ -127,7 +127,15 @@ export const OfferEditContent: React.FC<TProps> = ({
         </div>
         {form.offerType === EOfferType.FreeService ?
             <div className={classes.inputContainer}>
-                <Autocomplete
+                <TextField
+                    value={form.serviceType || ""}
+                    name="serviceType"
+                    id="serviceType"
+                    label="Offer type"
+                    fullWidth
+                    onChange={onChange}
+                />
+                {/*<Autocomplete
                     multiple
                     value={form.serviceType || []}
                     options={options}
@@ -166,7 +174,7 @@ export const OfferEditContent: React.FC<TProps> = ({
                     }}
                     renderOption={autocompleteOptionsRender(e => e.name)}
                     renderInput={autocompleteRender({label: "Offer type"})}
-                />
+                />*/}
             </div> :
             <div className={classes.inputContainer}>
                 <TextField

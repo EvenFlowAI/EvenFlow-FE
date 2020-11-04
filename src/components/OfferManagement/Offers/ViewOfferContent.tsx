@@ -28,7 +28,7 @@ export const ViewOfferContent: React.FC<{
     const getOfferValue = () => {
         return offer.type !== EOfferType.FreeService ?
             `${offer.value}${offer.type === EOfferType.AmountOff ? "$" : "%"}` :
-            offer.serviceType.map(st => st.name).join(", ");
+            offer.serviceType || "";
     }
     return (
         <DialogContent>

@@ -22,7 +22,7 @@ export type TOfferForm = {
     timeOfDayTo?: moment.Moment;
     durationFrom?: moment.Moment;
     durationTo?: moment.Moment;
-    serviceType?: TServiceTypeWithCustom[];
+    serviceType?: string;
 }
 export const selectAllSR: IAssignedServiceRequestShort = {
     id: 0,

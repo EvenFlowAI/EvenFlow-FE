@@ -216,7 +216,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     ),
                     serviceRequests: Boolean(form.serviceRequests.find(sr => sr.id === 0))
                         ? null : form.serviceRequests.map(s => s.id),
-                    serviceType: form.serviceType
+                    serviceType: form.serviceType ? {name: form.serviceType} : undefined
                 };
                 if (payload) {
                     await dispatch(updateOffer(data, archive));
