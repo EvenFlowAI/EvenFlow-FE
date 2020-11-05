@@ -52,7 +52,7 @@ export const ScheduleCalendar = () => {
 
     const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => async () => {
         setEditedDate(date);
-        setEditedEmployee(employee);
+        setEditedEmployee({...employee, serviceCenter: selectedSC});
         try {
             const {data} = await Api.call<IEmployee>(Api.endpoints.Users.Retrieve, {urlParams: {id: employee.id}});
             setEditedEmployee(data);
