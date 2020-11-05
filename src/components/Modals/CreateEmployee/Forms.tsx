@@ -25,6 +25,7 @@ type TAFormProps = {
     shortSC: IServiceCenter[]
 };
 type TTFormProps = {
+    isEdit: boolean;
     onChange: React.ChangeEventHandler<HTMLInputElement>,
     onSelectChange: TSelectChange,
     loading: boolean,
@@ -129,6 +130,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
         </Grid>
         <Grid item xs={6}>
             <Autocomplete
+                disabled={props.isEdit}
                 options={props.shortSC}
                 onChange={props.onSelectChange}
                 getOptionLabel={i => i.name}
@@ -151,28 +153,30 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 onChange={props.onSwitch}
             />
         </Grid>
-        <Grid container item xs={6} spacing={2}>
-            <Grid item xs={6}>
-                <TextField
-                    id="hourlyRate"
-                    name="hourlyRate"
-                    label="Hourly rate"
-                    type="number"
-                    fullWidth
-                    onChange={props.onChange}
-                    value={props.form.hourlyRate}
-                />
-            </Grid>
-            <Grid item xs={6}>
-                <TextField
-                    id="overtimeRate"
-                    name="overtimeRate"
-                    label="Overtime rate"
-                    type="number"
-                    fullWidth
-                    onChange={props.onChange}
-                    value={props.form.overtimeRate}
-                />
+        <Grid item xs={6}>
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <TextField
+                        id="hourlyRate"
+                        name="hourlyRate"
+                        label="Hourly rate"
+                        type="number"
+                        fullWidth
+                        onChange={props.onChange}
+                        value={props.form.hourlyRate}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="overtimeRate"
+                        name="overtimeRate"
+                        label="Overtime rate"
+                        type="number"
+                        fullWidth
+                        onChange={props.onChange}
+                        value={props.form.overtimeRate}
+                    />
+                </Grid>
             </Grid>
         </Grid>
         <Grid item xs={6}>
