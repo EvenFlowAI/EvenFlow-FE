@@ -121,7 +121,7 @@ type ApiRoutes = {
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues", TApiRoute>,
-    Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Avatar" | "GetShort", TApiRoute>,
+    Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>
@@ -259,6 +259,7 @@ export class Api {
             GetAll: {route: "/users/by-query", method: "post"},
             Create: {route: "/users", method: "post"},
             Remove: {route: "/users/{id}", method: "delete"},
+            Retrieve: {route: "/users/{id}", method: "get"},
             Update: {route: "/users/{id}", method: "put"},
             Avatar: {route: "/users/{id}/avatar", method: "patch"},
             GetShort: {route: "/users/short-by-query", method: "post"}

@@ -14,6 +14,7 @@ import {ISchedule} from "../../../store/reducers/schedules/types";
 import {EditSchedule} from "./EditSchedule";
 import {ScheduleFilters} from "./ScheduleFilters";
 import { OpenedFilters } from './OpenedFilters';
+import {Api} from "../../../config/requests";
 
 const controlStyles = {
     display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
@@ -49,9 +50,15 @@ export const ScheduleCalendar = () => {
         setSelectedDate(date);
     }
 
-    const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => () => {
+    const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => async () => {
         setEditedDate(date);
         setEditedEmployee(employee);
+        try {
+            const {data} = await Api.call<IEmployee>(Api.endpoints.Users.Retrieve, {urlParams: {id: employee.id}});
+            setEditedEmployee(data);
+        } catch (e) {
+            console.error(e);
+        }
         setEditedSchedule(getSchedule(date, schedules||[]));
         onOpen();
     }
