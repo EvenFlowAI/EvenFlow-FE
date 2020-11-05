@@ -123,4 +123,13 @@ export const loginTheme = createMuiTheme({
         }
     }
 });
+export const endUserTheme = createMuiTheme({
+    ...theme,
+    palette: {
+        ...theme.palette,
+        primary: {
+            main: "#3855F3",
+        },
+    },
+})
 export default theme;

@@ -7,10 +7,10 @@ enum AdminRoutes {
     ServiceRequests = "/admin/service-requests"
 }
 
-enum LoginRoutes {
-    Base = "/login",
-    ForgotPassword = "/login/forgot-password",
-    ResetPassword = "/login/reset-password"
+enum AdminLogin {
+    Base = "/admin-login",
+    ForgotPassword = "/admin-login/forgot-password",
+    ResetPassword = "/admin-login/reset-password"
 }
 enum AccountRoutes {
     Base = "/account",
@@ -33,10 +33,15 @@ enum OptimizerRoutes {
     OptimizationWindows = "/optimizer/optimization-windows"
 }
 
+enum EndUser {
+    Base = "/welcome"
+}
+
 export const Routes = {
     Home: "/",
     Admin: AdminRoutes,
-    Login: LoginRoutes,
+    Login: AdminLogin,
+    EndUser: EndUser,
     Account: AccountRoutes,
     Optimizer: OptimizerRoutes,
     OfferManagement: OfferManagementRoutes
