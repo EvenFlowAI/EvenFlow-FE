@@ -50,15 +50,19 @@ export const ScheduleCalendar = () => {
         setSelectedDate(date);
     }
 
-    const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => async () => {
-        setEditedDate(date);
-        setEditedEmployee({...employee, serviceCenter: selectedSC});
+    const updateEditedEmployee = async (id: string) => {
         try {
-            const {data} = await Api.call<IEmployee>(Api.endpoints.Users.Retrieve, {urlParams: {id: employee.id}});
+            const {data} = await Api.call<IEmployee>(Api.endpoints.Users.Retrieve, {urlParams: {id}});
             setEditedEmployee(data);
         } catch (e) {
             console.error(e);
         }
+    }
+
+    const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => async () => {
+        setEditedDate(date);
+        setEditedEmployee({...employee, serviceCenter: selectedSC});
+        await updateEditedEmployee(employee.id);
         setEditedSchedule(getSchedule(date, schedules||[]));
         onOpen();
     }
@@ -113,6 +117,7 @@ export const ScheduleCalendar = () => {
             <EditSchedule
                 date={editedDate}
                 employee={editedEmployee}
+                onEmployeeUpdate={updateEditedEmployee}
                 open={isOpen}
                 payload={editedSchedule}
                 onClose={onClose} />

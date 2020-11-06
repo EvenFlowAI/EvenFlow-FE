@@ -18,7 +18,7 @@ import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
 import {Roles} from "../../../config/constants";
 
-export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...props}) => {
+export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
     const isEdit = Boolean(payload?.id);
     const [role, setRole] = useState<Roles>(Roles.Technician);
     const handleChangeRole = (role: string) => {
@@ -138,8 +138,8 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, ...pr
             showMessage(`Employee ${isEdit ? "updated" : "created"}`);
             setTechnicianForm(initialTechnicianForm);
             setAdvisorForm(initialAdvisorForm);
-            if (props.onAction) {
-                props.onAction();
+            if (onAction) {
+                onAction();
             }
             props.onClose();
         } catch (e) {

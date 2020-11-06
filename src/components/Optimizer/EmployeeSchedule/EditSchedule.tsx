@@ -19,13 +19,14 @@ import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 type TProps = DialogProps<ISchedule> & {
     date: moment.Moment;
     employee: IEmployee;
+    onEmployeeUpdate: (id: string) => void
 }
 type TForm = {
     timeStart: moment.Moment|null;
     timeEnd: moment.Moment|null;
     podId?: number;
 }
-export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payload, ...props}) => {
+export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const {isOpen, onClose, onOpen} = useModal();
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
@@ -150,6 +151,6 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onAction, payloa
                 Save
             </LoadingButton>
         </DialogActions>
-        <CreateEmployee open={isOpen} payload={employee} onClose={onClose} />
+        <CreateEmployee open={isOpen} payload={employee} onAction={() => onEmployeeUpdate(employee.id)} onClose={onClose} />
     </BaseModal>
 };
