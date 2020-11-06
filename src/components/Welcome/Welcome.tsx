@@ -8,7 +8,8 @@ import { LoginInput } from './LoginInput';
 const useStyles = makeStyles({
     container: {
         width: "100vw",
-        height: "100vh",
+        minHeight: "100vh",
+        padding: "50px 0",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -20,11 +21,12 @@ const useStyles = makeStyles({
         fontWeight: "bold",
         fontSize: 32,
         margin: 0,
-        textAlign: "center"
+        textAlign: "center",
     },
     paper: {
         borderRadius: 4,
         maxWidth: 990,
+        width: "70%",
         padding: 48,
         backgroundColor: "rgba(255,255,255,.8)"
     }
