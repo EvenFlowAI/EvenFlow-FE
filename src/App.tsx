@@ -10,6 +10,7 @@ import { ConfirmDialog } from './components/UI/ConfirmDialog';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {EndUserLayout} from "./components/Layout/EndUserLayout";
+import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
@@ -32,6 +33,7 @@ const App = () => {
                 <Switch>
                     <Route path={Routes.Login.Base} component={Login}/>
                     <Route path={Routes.Account.Verification} component={Login} />
+                    <Route path={Routes.EndUser.Appointment} component={AppointmentLayout} />
                     <Route path={Routes.EndUser.Base} component={EndUserLayout} />
                     <PrivateRoute path="/" component={Layout}/>
                 </Switch>
