@@ -4,6 +4,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import bg from "../../assets/img/welcomeBg.jpg";
 import {CustomerSelect} from "./CustomerSelect";
 import { LoginInput } from './LoginInput';
+import { useHistory } from 'react-router-dom';
+import {Routes} from "../../config/routes";
 
 const useStyles = makeStyles({
     container: {
@@ -34,8 +36,13 @@ const useStyles = makeStyles({
 
 export const Welcome = () => {
     const [isSelect, setSelect] = useState<boolean>(false);
+    const history = useHistory();
+
     const toggleSelect = (b?: boolean) => {
         setSelect(b !== undefined ? b : !isSelect);
+    }
+    const onComplete = () => {
+        history.push(Routes.EndUser.Appointment);
     }
     const classes = useStyles();
     return (
@@ -44,8 +51,8 @@ export const Welcome = () => {
                 <h1 className={classes.title}>Welcome!</h1>
                 <h2 className={classes.title}>Schedule Your Service:</h2>
                 {!isSelect
-                    ? <CustomerSelect onSelect={toggleSelect}/>
-                    : <LoginInput onSelect={toggleSelect} onComplete={() => {}} />
+                    ? <CustomerSelect onSelect={toggleSelect} onComplete={onComplete}/>
+                    : <LoginInput onSelect={toggleSelect} onComplete={onComplete} />
                 }
             </Paper>
         </div>
