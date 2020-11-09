@@ -1,6 +1,7 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Paper, TextField} from "@material-ui/core";
+import {Button, Paper} from "@material-ui/core";
+import {TextField} from "../UI/EndUserInputs";
 
 
 const useStyles = makeStyles({
@@ -11,13 +12,6 @@ const useStyles = makeStyles({
     },
     button: {
         minWidth: 144
-    },
-    input: {
-        borderRadius: 2,
-        fontWeight: "bold",
-        "&::placeholder": {
-            textTransform: "uppercase"
-        }
     },
     title: {
         fontSize: 32,
@@ -42,9 +36,8 @@ export const LoginInput: React.FC<TProps> = ({onSelect, onComplete}) => {
     return <Paper variant="outlined" className={classes.paper}>
         <h3 className={classes.title}>Enter your Email or Phone</h3>
         <TextField
-            className={classes.input}
             placeholder="Type Here"
-            InputProps={{classes: {input: classes.input}, disableUnderline: true}}
+            InputProps={{disableUnderline: true}}
             variant="standard"
             fullWidth />
         <div className={classes.buttonsRow}>
