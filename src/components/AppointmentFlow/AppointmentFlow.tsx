@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {VehicleDetailsS1} from "./Steps/VehicleDetailsS1";
-import {Container, Paper} from "@material-ui/core";
+import {Container, Paper, Step, StepButton, StepContent, StepLabel, Stepper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -20,12 +20,41 @@ const useStyles = makeStyles({
         }
     }
 });
+type TStep = {
+    label: string;
+    id: number;
+    component: React.ComponentType
+}
+const steps: TStep[] = [
+    {
+        id: 1,
+        label: "Vehicle details",
+        component: VehicleDetailsS1
+    }
+]
 
 export const AppointmentFlow = () => {
+    const [activeStep, setActiveStep] = useState<number>(1);
+    const handleStep = (idx: number) => () => {
+        setActiveStep(idx);
+    }
+
     const classes = useStyles();
     return <Container className={classes.container}>
         <Paper className={classes.paper} variant="outlined">
-            <VehicleDetailsS1 />
+            <Stepper activeStep={activeStep} orientation="vertical">
+                {steps.map(step => {
+                    return <Step key={step.id}>
+                        <StepButton
+                            active={activeStep === step.id}
+                            onClick={handleStep(step.id)}
+                            completed={step.id < activeStep}>
+                            {step.label}
+                        </StepButton>
+                        <StepContent><step.component /></StepContent>
+                    </Step>
+                })}
+            </Stepper>
         </Paper>
     </Container>
 };
