@@ -1,26 +1,114 @@
 import React from 'react';
-import {FormLabel, Grid} from "@material-ui/core";
-import {TextField} from "../UI";
+import {Button, Grid, withStyles} from "@material-ui/core";
+import {Label, TextField} from "../UI";
+
+const LabelGrid = withStyles({
+    root: {
+        textAlign: "right"
+    }
+})(Grid);
 
 export const VehicleDetailsS1 = () => {
     return (
-        <div>
-            <h4>Please tell us about your vehicle</h4>
+        <div style={{width: "100%"}}>
+            <h4 style={{textAlign: "center"}}>Please tell us about your vehicle</h4>
             <Grid container spacing={2}>
-                <Grid item xs={3}>
-                    <FormLabel htmlFor="vin">
+                <LabelGrid item xs={3}>
+                    <Label htmlFor="vin">
                         vehicle identification number (VIN)
-                    </FormLabel>
-                </Grid>
+                    </Label>
+                </LabelGrid>
                 <Grid item xs={6}>
                     <TextField
                         id="vin"
                     />
                 </Grid>
-                <Grid item xs={3}>
-
-                </Grid>
+                <Grid item xs={3} />
             </Grid>
+            <h4 style={{textAlign: "center", marginTop: 24}}>General info</h4>
+            <Grid container spacing={2} alignItems={"center"}>
+                <LabelGrid item xs={3}>
+                    <Label htmlFor="make">
+                        make
+                    </Label>
+                </LabelGrid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="make"
+                    />
+                </Grid>
+                <Grid item xs={3} />
+                <LabelGrid item xs={3}>
+                    <Label htmlFor="year">
+                        year
+                    </Label>
+                </LabelGrid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="year"
+                    />
+                </Grid>
+                <Grid item xs={3} />
+                <LabelGrid item xs={3}>
+                    <Label htmlFor="model">
+                        model
+                    </Label>
+                </LabelGrid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="model"
+                    />
+                </Grid>
+                <Grid item xs={3} />
+                <LabelGrid item xs={3}>
+                    <Label htmlFor="millage">
+                        millage
+                    </Label>
+                </LabelGrid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="millage"
+                    />
+                </Grid>
+                <Grid item xs={3} />
+            </Grid>
+            <h4 style={{textAlign: "center", marginTop: 24}}>Additional info</h4>
+            <Grid container spacing={2} alignItems={"center"}>
+                <LabelGrid item xs={3}>
+                    <Label htmlFor="transmission">
+                        transmission
+                    </Label>
+                </LabelGrid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="transmission"
+                    />
+                </Grid>
+                <Grid item xs={3} />
+                <LabelGrid item xs={3}>
+                    <Label htmlFor="driveType">
+                        drive type
+                    </Label>
+                </LabelGrid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="driveType"
+                    />
+                </Grid>
+                <Grid item xs={3} />
+                <LabelGrid item xs={3}>
+                    <Label htmlFor="engineType">
+                        engine type
+                    </Label>
+                </LabelGrid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="engineType"
+                    />
+                </Grid>
+                <Grid item xs={3} />
+            </Grid>
+            <Button variant="contained" color="primary">Continue</Button>
         </div>
     );
 };

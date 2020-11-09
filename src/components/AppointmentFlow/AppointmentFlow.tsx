@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => ({
         marginLeft: "20%",
         marginRight: "10%",
         padding: 32,
+        paddingLeft: 64,
         position: "relative",
         display: "flex",
         justifyContent: "center",
