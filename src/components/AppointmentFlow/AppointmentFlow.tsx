@@ -1,15 +1,19 @@
 import React, {useState} from 'react';
 import {VehicleDetailsS1} from "./Steps/VehicleDetailsS1";
-import {Container, Paper, Step, StepButton, StepContent, Stepper} from "@material-ui/core";
+import {Container, Paper, Step, StepButton, Stepper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
     container: {
-        padding: "40px 0"
+        padding: "40px 0",
+        height: "100vh"
     },
     paper: {
-        marginLeft: 80,
+        minHeight: "calc(100% - 64px)",
+        marginLeft: "20%",
+        marginRight: "10%",
         padding: 32,
+        position: "relative",
         display: "flex",
         justifyContent: "center",
         "& h4": {
@@ -18,6 +22,12 @@ const useStyles = makeStyles(theme => ({
             fontSize: 16,
             margin: "0 0 22px",
         }
+    },
+    stepContainer: {
+        position: "absolute",
+        left: -178,
+        width: 250,
+        background: "transparent"
     },
     step: {
         "& span[class*='MuiStepLabel-iconContainer']": {
@@ -41,13 +51,13 @@ const useStyles = makeStyles(theme => ({
 type TStep = {
     label: string;
     id: number;
-    component: React.ComponentType
+    component: JSX.Element
 }
 const steps: TStep[] = [
     {
         id: 1,
         label: "Vehicle details",
-        component: VehicleDetailsS1
+        component: <VehicleDetailsS1 />
     }
 ]
 
@@ -60,7 +70,7 @@ export const AppointmentFlow = () => {
     const classes = useStyles();
     return <Container className={classes.container}>
         <Paper className={classes.paper} variant="outlined">
-            <Stepper activeStep={activeStep} orientation="vertical">
+            <Stepper className={classes.stepContainer} activeStep={activeStep} orientation="vertical">
                 {steps.map(step => {
                     return <Step key={step.id}>
                         <StepButton
@@ -70,10 +80,10 @@ export const AppointmentFlow = () => {
                             completed={step.id < activeStep}>
                             {step.label}
                         </StepButton>
-                        <StepContent><step.component /></StepContent>
                     </Step>
                 })}
             </Stepper>
+            {steps[activeStep -1 ].component}
         </Paper>
     </Container>
 };
