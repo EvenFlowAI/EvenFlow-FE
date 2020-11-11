@@ -58,6 +58,7 @@ export const ServiceNeedsS2 = () => {
             <RadioGroup value={selectedCode} onChange={handleSelectCode}>
                 {srs.map(s => {
                     return <FormControlLabel
+                        key={s.id}
                         className={classes.item}
                         label={s.description}
                         labelPlacement={"start"}
