@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {VehicleDetailsS1} from "./Steps/VehicleDetailsS1";
 import {Container, Paper, Step, StepButton, Stepper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import {ServiceNeedsS2} from "./Steps/ServiceNeedsS2";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -59,6 +60,11 @@ const steps: TStep[] = [
         id: 1,
         label: "Vehicle details",
         component: <VehicleDetailsS1 />
+    },
+    {
+        id: 2,
+        label: "Service Needs",
+        component: <ServiceNeedsS2 />
     }
 ]
 
