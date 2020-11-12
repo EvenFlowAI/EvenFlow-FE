@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
-import {FormControlLabel, FormLabel, IconButton, Radio, RadioGroup} from "@material-ui/core";
+import React, {useEffect, useState} from 'react';
+import {CircularProgress, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup} from "@material-ui/core";
 import {TextField} from "../UI";
 import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
+import {loadSRs, selectSR} from "../../../store/reducers/appointment/actions";
+import {useDispatch, useSelector} from "react-redux";
+import { useParams } from 'react-router-dom';
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles(theme => ({
     label: {
@@ -38,21 +42,29 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-type TSRS = {
-    id: number;
-    description: string;
-}
-const srs: TSRS[] = [
-    {id: 1, description: "Engine oil & filter change with inspections"},
-    {id: 2, description: "Engine filter & oil change"},
-    {id: 3, description: "Four wheel alignment and tire rotation"},
-    {id: 4, description: "Engine filter & oil change"},
-    {id: 5, description: "Four wheel alignment and tire rotation"},
-];
-
 export const ServiceNeedsS2 = () => {
-    const [selectedCode, setCode] = useState<number|null>(null);
     const [openedCode, setOpened] = useState<number|null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const {id} = useParams();
+    const [selectedCode, srList] = useSelector((state: RootState) => [
+        state.appointment.selectedSR,
+        state.appointment.serviceRequests
+    ]);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true);
+            try {
+                await dispatch(loadSRs(id));
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchData().finally();
+    }, [id, dispatch])
+
     const handleOpen = (id: number) => () => {
         if (openedCode === id) {
             setOpened(null);
@@ -60,8 +72,9 @@ export const ServiceNeedsS2 = () => {
             setOpened(id);
         }
     }
+
     const handleSelectCode = (e: any, value: string) => {
-        setCode(Number(value));
+        dispatch(selectSR(value ? Number(value) : null));
     }
 
     const classes = useStyles();
@@ -81,7 +94,7 @@ export const ServiceNeedsS2 = () => {
                 }}
             />
             <RadioGroup className={classes.radioGroup} value={selectedCode} onChange={handleSelectCode}>
-                {srs.map(s => {
+                {srList.map(s => {
                     return <FormControlLabel
                         key={s.id}
                         className={classes.item}
@@ -92,7 +105,7 @@ export const ServiceNeedsS2 = () => {
                                 color="primary"
                                 className={clsx(...[classes.openIcon, s.id === openedCode ? classes.opened : undefined])}>
                                 <ArrowDropDownCircleOutlined />
-                            </IconButton> {s.description}
+                            </IconButton> {s?.description || s.code}
                         </span>}
                         labelPlacement={"start"}
                         value={s.id}
@@ -104,6 +117,7 @@ export const ServiceNeedsS2 = () => {
                     />
                 })}
             </RadioGroup>
+            {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
         </div>
     );
 };

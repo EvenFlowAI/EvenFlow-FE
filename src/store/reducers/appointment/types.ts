@@ -10,3 +10,8 @@ export interface IServiceCenterProfile {
     address: IAddress;
     dealershipId: number;
 }
+export interface ISR {
+    id: number;
+    code: string;
+    description?: string;
+}
