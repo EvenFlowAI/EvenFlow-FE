@@ -4,7 +4,7 @@ import {TextField} from "../UI";
 import {Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     label: {
         textTransform: "uppercase",
         fontWeight: "bold"
@@ -12,15 +12,23 @@ const useStyles = makeStyles({
     btnIcon: {
         marginLeft: 8
     },
+    title: {
+        textAlign: "center"
+    },
+    search: {
+        marginBottom: 22
+    },
+    radioGroup: {
+
+    },
     item: {
         justifyContent: "space-between",
-        marginLeft: 0,
-        border: "1px solid gray",
+        margin: "12px 0 0 0",
+        border: `1px solid ${theme.palette.divider}`,
         borderRadius: 2,
         paddingLeft: 12,
-        marginTop: 12
     }
-});
+}));
 
 type TSRS = {
     id: number;
@@ -42,11 +50,12 @@ export const ServiceNeedsS2 = () => {
 
     const classes = useStyles();
     return (
-        <div style={{width: "100%"}}>
-            <h4>What Does Your Car Need?</h4>
+        <div style={{width: "80%"}}>
+            <h4 className={classes.title}>What Does Your Car Need?</h4>
             <FormLabel className={classes.label} htmlFor="search">Search</FormLabel>
             <TextField
                 placeholder="Type here"
+                className={classes.search}
                 InputProps={{
                     startAdornment: <IconButton
                         className={classes.btnIcon}
@@ -55,7 +64,7 @@ export const ServiceNeedsS2 = () => {
                     </IconButton>
                 }}
             />
-            <RadioGroup value={selectedCode} onChange={handleSelectCode}>
+            <RadioGroup className={classes.radioGroup} value={selectedCode} onChange={handleSelectCode}>
                 {srs.map(s => {
                     return <FormControlLabel
                         key={s.id}
