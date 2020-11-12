@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {FormControlLabel, FormLabel, IconButton, Radio, RadioGroup} from "@material-ui/core";
 import {TextField} from "../UI";
-import {Search} from "@material-ui/icons";
+import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
+import clsx from "clsx";
 
 const useStyles = makeStyles(theme => ({
     label: {
@@ -20,6 +21,13 @@ const useStyles = makeStyles(theme => ({
     },
     radioGroup: {
 
+    },
+    openIcon: {
+        marginRight: 12,
+        transition: theme.transitions.create(['transform'])
+    },
+    opened: {
+        transform: "rotate(180deg)"
     },
     item: {
         justifyContent: "space-between",
@@ -44,6 +52,14 @@ const srs: TSRS[] = [
 
 export const ServiceNeedsS2 = () => {
     const [selectedCode, setCode] = useState<number|null>(null);
+    const [openedCode, setOpened] = useState<number|null>(null);
+    const handleOpen = (id: number) => () => {
+        if (openedCode === id) {
+            setOpened(null);
+        } else {
+            setOpened(id);
+        }
+    }
     const handleSelectCode = (e: any, value: string) => {
         setCode(Number(value));
     }
@@ -69,7 +85,15 @@ export const ServiceNeedsS2 = () => {
                     return <FormControlLabel
                         key={s.id}
                         className={classes.item}
-                        label={s.description}
+                        label={<span>
+                            <IconButton
+                                onClick={handleOpen(s.id)}
+                                size="small"
+                                color="primary"
+                                className={clsx(...[classes.openIcon, s.id === openedCode ? classes.opened : undefined])}>
+                                <ArrowDropDownCircleOutlined />
+                            </IconButton> {s.description}
+                        </span>}
                         labelPlacement={"start"}
                         value={s.id}
                         control={
