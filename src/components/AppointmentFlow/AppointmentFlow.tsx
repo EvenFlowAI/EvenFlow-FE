@@ -5,6 +5,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {ServiceNeedsS2} from "./Steps/ServiceNeedsS2";
 import clsx from "clsx";
 
+
 const useStyles = makeStyles(theme => ({
     container: {
         padding: "40px 0",
@@ -111,6 +112,7 @@ const steps: TStep[] = [
 
 export const AppointmentFlow = () => {
     const [activeStep, setActiveStep] = useState<number>(1);
+
     const handleStep = (idx: number) => () => {
         setActiveStep(idx);
     }

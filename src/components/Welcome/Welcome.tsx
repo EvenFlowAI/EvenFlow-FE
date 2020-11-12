@@ -6,6 +6,8 @@ import {CustomerSelect} from "./CustomerSelect";
 import { LoginInput } from './LoginInput';
 import { useHistory } from 'react-router-dom';
 import {Routes} from "../../config/routes";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/rootReducer";
 
 const useStyles = makeStyles({
     container: {
@@ -37,12 +39,15 @@ const useStyles = makeStyles({
 export const Welcome = () => {
     const [isSelect, setSelect] = useState<boolean>(false);
     const history = useHistory();
+    const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
 
     const toggleSelect = (b?: boolean) => {
         setSelect(b !== undefined ? b : !isSelect);
     }
     const onComplete = () => {
-        history.push(Routes.EndUser.Appointment);
+        history.push(
+            Routes.EndUser.Appointment.replace(":id", scProfile?.id ? String(scProfile.id) : "0")
+        );
     }
     const classes = useStyles();
     return (

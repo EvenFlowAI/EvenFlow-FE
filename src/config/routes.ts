@@ -34,8 +34,8 @@ enum OptimizerRoutes {
 }
 
 enum EndUser {
-    Base = "/welcome",
-    Appointment = "/appointment"
+    Base = "/welcome/:id",
+    Appointment = "/appointment/:id"
 }
 
 export const Routes = {

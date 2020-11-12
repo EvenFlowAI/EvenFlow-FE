@@ -1,6 +1,8 @@
 import React from 'react';
 import {AppBar, Avatar, Toolbar, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/rootReducer";
 
 const useStyles = makeStyles({
     grow: {
@@ -22,16 +24,19 @@ const useStyles = makeStyles({
 })
 
 export const EndUserBar = () => {
+    const scProfile = useSelector((state: RootState) => {
+        return state.appointment.scProfile;
+    })
     const classes = useStyles();
     return <AppBar className={classes.bar} position="static">
         <Toolbar>
-            <Avatar title={"CH"} />
+            <Avatar title={"CH"} src={scProfile?.avatarPath} />
             <Typography className={classes.serviceName} variant="h4">
-                ILTA CAR HONDA
+                {scProfile?.name}
             </Typography>
             <div className={classes.grow} />
             <Typography className={classes.contacts} variant="h6">
-                Service: 888-690-3322 Parts: (888) 689-0555
+                Service: {scProfile?.phoneNumber}
             </Typography>
         </Toolbar>
     </AppBar>
