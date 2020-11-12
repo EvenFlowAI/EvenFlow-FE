@@ -37,19 +37,19 @@ const useStyles = makeStyles(theme => ({
     },
     completedStep: {
         "& span[class*='MuiStepLabel-iconContainer']": {
-            "& svg": {
-                color: "#ffffff",
+            "&>svg": {
                 "& text": {
-                    fill: theme.palette.primary.main
+                    fill: `${theme.palette.primary.main} !important`
                 },
                 "& circle": {
-                    transform: "scale(0.98)",
-                    strokeWidth: "0.3px",
-                    stroke: theme.palette.primary.main,
-                    transformOrigin: "center"
+                    stroke: `${theme.palette.primary.main} !important`,
                 }
             }
         },
+        "& span[class*='MuiStepLabel-labelContainer'] > span": {
+            color: theme.palette.primary.main,
+            opacity: .6
+        }
     },
     step: {
         marginTop: 12,
@@ -57,8 +57,18 @@ const useStyles = makeStyles(theme => ({
             order: 1,
             padding: "0 0 0 12px",
             "&>svg": {
+                color: "#fff",
                 fontSize: 70,
-                fontWeight: "bold"
+                fontWeight: "bold",
+                "& text": {
+                    fill: theme.palette.text.hint
+                },
+                "& circle": {
+                    transform: "scale(0.98)",
+                    strokeWidth: "0.3px",
+                    stroke: theme.palette.text.hint,
+                    transformOrigin: "center"
+                }
             }
         },
         "& span[class*='MuiStepLabel-labelContainer']>span": {
@@ -66,7 +76,17 @@ const useStyles = makeStyles(theme => ({
             fontWeight: "bold"
         },
         "& span[class*='MuiStepLabel-active']": {
-            color: theme.palette.primary.main
+            color: theme.palette.primary.main,
+        },
+        "& svg[class*='MuiStepIcon-active']": {
+            color: `${theme.palette.primary.main} !important`,
+            "& text": {
+                fill: "#ffffff !important",
+            },
+            "& circle": {
+                transform: "scale(1) !important",
+                stroke: "none !important"
+            }
         }
     }
 }));
