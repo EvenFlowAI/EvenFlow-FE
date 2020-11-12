@@ -3,6 +3,7 @@ import {VehicleDetailsS1} from "./Steps/VehicleDetailsS1";
 import {Container, Paper, Step, StepButton, Stepper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ServiceNeedsS2} from "./Steps/ServiceNeedsS2";
+import clsx from "clsx";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -29,9 +30,29 @@ const useStyles = makeStyles(theme => ({
         position: "absolute",
         left: -178,
         width: 250,
-        background: "transparent"
+        background: "transparent",
+        "& div[class*='MuiStepConnector-root']": {
+            display: "none"
+        }
+    },
+    completedStep: {
+        "& span[class*='MuiStepLabel-iconContainer']": {
+            "& svg": {
+                color: "#ffffff",
+                "& text": {
+                    fill: theme.palette.primary.main
+                },
+                "& circle": {
+                    transform: "scale(0.98)",
+                    strokeWidth: "0.3px",
+                    stroke: theme.palette.primary.main,
+                    transformOrigin: "center"
+                }
+            }
+        },
     },
     step: {
+        marginTop: 12,
         "& span[class*='MuiStepLabel-iconContainer']": {
             order: 1,
             padding: "0 0 0 12px",
@@ -79,12 +100,11 @@ export const AppointmentFlow = () => {
         <Paper className={classes.paper} variant="outlined">
             <Stepper className={classes.stepContainer} activeStep={activeStep} orientation="vertical">
                 {steps.map(step => {
-                    return <Step key={step.id}>
+                    return <Step key={step.id} completed={false}>
                         <StepButton
-                            className={classes.step}
+                            className={clsx(...[classes.step, activeStep > step.id ? classes.completedStep : undefined])}
                             active={activeStep === step.id}
-                            onClick={handleStep(step.id)}
-                            completed={step.id < activeStep}>
+                            onClick={handleStep(step.id)}>
                             {step.label}
                         </StepButton>
                     </Step>
