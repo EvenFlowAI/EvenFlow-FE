@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Grid, withStyles} from "@material-ui/core";
-import {Label, TextField} from "../UI";
+import {Label, TextField, TStepProps} from "../UI";
 import {KeyboardDatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,7 +13,7 @@ const LabelGrid = withStyles({
     }
 })(Grid);
 
-export const VehicleDetailsS1 = () => {
+export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
     const dispatch = useDispatch();
     const form = useSelector((state: RootState) => {
         return state.appointment.s1Data;
@@ -22,6 +22,9 @@ export const VehicleDetailsS1 = () => {
         if (date && date.isValid()) {
             dispatch(changeS1Form({year: date.format("YYYY")}));
         }
+    }
+    const handleTextChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(changeS1Form({[name]: value}));
     }
 
     return (
@@ -91,6 +94,10 @@ export const VehicleDetailsS1 = () => {
                 </LabelGrid>
                 <Grid item xs={6}>
                     <TextField
+                        onChange={handleTextChange}
+                        type={"number"}
+                        value={form.millage}
+                        name="millage"
                         id="millage"
                     />
                 </Grid>
@@ -133,7 +140,7 @@ export const VehicleDetailsS1 = () => {
                 <Grid item xs={3} />
             </Grid>
             <div style={{textAlign: "center", marginTop: 24}}>
-                <Button variant="contained" color="primary">Continue</Button>
+                <Button variant="contained" onClick={next} color="primary">Continue</Button>
             </div>
         </div>
     );

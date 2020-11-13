@@ -9,7 +9,8 @@ type TState = {
     s1Data: TS1Form;
 }
 const initialS1Form: TS1Form = {
-    year: null
+    year: null,
+    millage: null,
 }
 const initialState: TState = {
     serviceRequests: [],

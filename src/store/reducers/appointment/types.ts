@@ -17,4 +17,5 @@ export interface ISR {
 }
 export type TS1Form = {
     year: string|null;
+    millage: string|null;
 }

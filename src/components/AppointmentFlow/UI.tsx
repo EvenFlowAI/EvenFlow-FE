@@ -15,3 +15,8 @@ export const Label = withStyles({
         color: "#9FA2B4",
     }
 })(FormLabel);
+
+export type TStepProps = {
+    next: () => void;
+    prev: () => void;
+}

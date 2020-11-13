@@ -4,6 +4,7 @@ import {Container, Paper, Step, StepButton, Stepper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ServiceNeedsS2} from "./Steps/ServiceNeedsS2";
 import clsx from "clsx";
+import {TStepProps} from "./UI";
 
 
 const useStyles = makeStyles(theme => ({
@@ -95,18 +96,18 @@ const useStyles = makeStyles(theme => ({
 type TStep = {
     label: string;
     id: number;
-    component: JSX.Element
+    component: React.FC<TStepProps>
 }
 const steps: TStep[] = [
     {
         id: 1,
         label: "Vehicle details",
-        component: <VehicleDetailsS1 />
+        component: VehicleDetailsS1
     },
     {
         id: 2,
         label: "Service Needs",
-        component: <ServiceNeedsS2 />
+        component: ServiceNeedsS2
     }
 ]
 
@@ -115,6 +116,22 @@ export const AppointmentFlow = () => {
 
     const handleStep = (idx: number) => () => {
         setActiveStep(idx);
+    }
+
+    const handleNext = () => {
+        if (activeStep < steps.length) {
+            setActiveStep(activeStep + 1);
+        }
+    }
+    const handlePrev = () => {
+        if (activeStep !== 1) {
+            setActiveStep(activeStep - 1);
+        }
+    }
+
+    const getComponent = () => {
+        const C = steps[activeStep -1 ].component;
+        return <C next={handleNext} prev={handlePrev} />;
     }
 
     const classes = useStyles();
@@ -132,7 +149,7 @@ export const AppointmentFlow = () => {
                     </Step>
                 })}
             </Stepper>
-            {steps[activeStep -1 ].component}
+            {getComponent()}
         </Paper>
     </Container>
 };
