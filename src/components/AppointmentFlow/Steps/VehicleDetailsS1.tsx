@@ -1,6 +1,11 @@
 import React from 'react';
 import {Button, Grid, withStyles} from "@material-ui/core";
 import {Label, TextField} from "../UI";
+import {KeyboardDatePicker} from "@material-ui/pickers";
+import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {changeS1Form} from "../../../store/reducers/appointment/actions";
 
 const LabelGrid = withStyles({
     root: {
@@ -9,6 +14,16 @@ const LabelGrid = withStyles({
 })(Grid);
 
 export const VehicleDetailsS1 = () => {
+    const dispatch = useDispatch();
+    const form = useSelector((state: RootState) => {
+        return state.appointment.s1Data;
+    })
+    const handleYearChange = (date: MaterialUiPickersDate) => {
+        if (date && date.isValid()) {
+            dispatch(changeS1Form({year: date.format("YYYY")}));
+        }
+    }
+
     return (
         <div style={{width: "100%"}}>
             <h4 style={{textAlign: "center"}}>Please tell us about your vehicle</h4>
@@ -44,8 +59,17 @@ export const VehicleDetailsS1 = () => {
                     </Label>
                 </LabelGrid>
                 <Grid item xs={6}>
-                    <TextField
+                    <KeyboardDatePicker
+                        value={form.year}
                         id="year"
+                        views={["year"]}
+                        allowKeyboardControl
+                        disableFuture
+                        fullWidth
+                        onChange={handleYearChange}
+                        InputProps={{
+                            disableUnderline: true
+                        }}
                     />
                 </Grid>
                 <Grid item xs={3} />
@@ -108,7 +132,9 @@ export const VehicleDetailsS1 = () => {
                 </Grid>
                 <Grid item xs={3} />
             </Grid>
-            <Button variant="contained" color="primary">Continue</Button>
+            <div style={{textAlign: "center", marginTop: 24}}>
+                <Button variant="contained" color="primary">Continue</Button>
+            </div>
         </div>
     );
 };

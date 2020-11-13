@@ -15,3 +15,6 @@ export interface ISR {
     code: string;
     description?: string;
 }
+export type TS1Form = {
+    year: string|null;
+}

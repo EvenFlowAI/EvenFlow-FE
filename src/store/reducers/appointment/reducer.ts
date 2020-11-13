@@ -1,15 +1,20 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IServiceCenterProfile, ISR} from "./types";
-import {getServiceCenterProfile, getSRs, selectSR} from "./actions";
+import {IServiceCenterProfile, ISR, TS1Form} from "./types";
+import {changeS1Form, getServiceCenterProfile, getSRs, selectSR} from "./actions";
 
 type TState = {
     scProfile?: IServiceCenterProfile;
     serviceRequests: ISR[];
-    selectedSR: number|null
+    selectedSR: number|null,
+    s1Data: TS1Form;
+}
+const initialS1Form: TS1Form = {
+    year: null
 }
 const initialState: TState = {
     serviceRequests: [],
-    selectedSR: null
+    selectedSR: null,
+    s1Data: initialS1Form
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -20,5 +25,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(selectSR, (state, {payload}) => {
         return {...state, selectedSR: payload};
+    })
+    .addCase(changeS1Form, (state, {payload}) => {
+        return {...state, s1Data: {...state.s1Data, ...payload}};
     })
 );
