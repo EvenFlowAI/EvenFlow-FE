@@ -10,6 +10,7 @@ import {AppointmentSlotScoring} from "./AppointmentSlotScoring/AppointmentSlotSc
 import { OptimizationWindowsPage } from "./OptimizationWindows/OptimizationWindowsPage";
 import {AppointmentAllocationPage} from "./AppointmentAllocation/AppointmentAllocationPage";
 import {EmployeeSchedule} from "./EmployeeSchedule/EmployeeSchedule";
+import {PricingSettingsPage} from "./PricingSettings/PricingSettingsPage";
 
 export const OptimizerPage = () => {
     return <ContentContainer>
@@ -21,6 +22,7 @@ export const OptimizerPage = () => {
             <PrivateRoute path={Routes.Optimizer.AppointmentSlotScoring} component={AppointmentSlotScoring} />
             <PrivateRoute path={Routes.Optimizer.AppointmentAllocation} component={AppointmentAllocationPage} />
             <PrivateRoute path={Routes.Optimizer.OptimizationWindows} component={OptimizationWindowsPage} />
+            <PrivateRoute path={Routes.Optimizer.PricingSettings} component={PricingSettingsPage} />
             <Redirect to={Routes.Optimizer.ServiceRequests} />
         </Switch>
     </ContentContainer>

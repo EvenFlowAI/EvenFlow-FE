@@ -30,7 +30,8 @@ enum OptimizerRoutes {
     EmployeeSchedule = "/optimizer/employee-schedule",
     AppointmentSlotScoring = "/optimizer/appointment-slot-scoring",
     AppointmentAllocation = "/optimizer/appointment-allocation",
-    OptimizationWindows = "/optimizer/optimization-windows"
+    OptimizationWindows = "/optimizer/optimization-windows",
+    PricingSettings = "/optimizer/pricing-settings",
 }
 
 enum EndUser {

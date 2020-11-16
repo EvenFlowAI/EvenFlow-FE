@@ -48,3 +48,8 @@ export const SquareIconButton = withStyles({
 })((props: ButtonProps) => {
     return <Button {...props} />
 })
+export const EditButton = withStyles({
+    root: {
+        textTransform: "none"
+    }
+})(Button);
