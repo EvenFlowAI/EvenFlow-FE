@@ -21,3 +21,4 @@ export const loadSRs = (serviceCenterId: number): AppThunk => async dispatch => 
 }
 export const selectSR = createAction<number|null>("Appointment/SelectSR");
 export const changeS1Form = createAction<Partial<TS1Form>>("Appointment/ChangeS1Form");
+export const handleSearch = createAction<string>("Appointment/Search");

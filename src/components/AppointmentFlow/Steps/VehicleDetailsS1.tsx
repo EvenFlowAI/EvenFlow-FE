@@ -96,7 +96,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                     <TextField
                         onChange={handleTextChange}
                         type={"number"}
-                        value={form.millage}
+                        value={form.millage || ""}
                         name="millage"
                         id="millage"
                     />

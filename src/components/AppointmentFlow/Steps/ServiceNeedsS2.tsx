@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {CircularProgress, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup} from "@material-ui/core";
 import {TextField} from "../UI";
 import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
-import {loadSRs, selectSR} from "../../../store/reducers/appointment/actions";
+import {handleSearch, loadSRs, selectSR} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import { useParams } from 'react-router-dom';
 import {RootState} from "../../../store/rootReducer";
+import {useDebounce} from "../../../utils/hooks";
 
 const useStyles = makeStyles(theme => ({
     label: {
@@ -45,13 +46,29 @@ const useStyles = makeStyles(theme => ({
 export const ServiceNeedsS2 = () => {
     const [openedCode, setOpened] = useState<number|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [searchInput, setSearch] = useState<string>("");
 
     const {id} = useParams();
-    const [selectedCode, srList] = useSelector((state: RootState) => [
+    const [selectedCode, srList, search] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
-        state.appointment.serviceRequests
+        state.appointment.serviceRequests,
+        state.appointment.search
     ]);
     const dispatch = useDispatch();
+    const isInit = useRef(true);
+    const debouncedSearch = useDebounce(searchInput);
+
+    useEffect(() => {
+        if (!isInit.current) {
+            dispatch(handleSearch(debouncedSearch));
+        }
+    }, [debouncedSearch, dispatch]);
+    useEffect(() => {
+        if (isInit.current) {
+            setSearch(search);
+        }
+    }, [search]);
+    useEffect(() => {isInit.current = false}, []);
 
     useEffect(() => {
         async function fetchData() {
@@ -63,7 +80,7 @@ export const ServiceNeedsS2 = () => {
             }
         }
         fetchData().finally();
-    }, [id, dispatch])
+    }, [id, dispatch, search]);
 
     const handleOpen = (id: number) => () => {
         if (openedCode === id) {
@@ -71,6 +88,10 @@ export const ServiceNeedsS2 = () => {
         } else {
             setOpened(id);
         }
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
     }
 
     const handleSelectCode = (e: any, value: string) => {
@@ -84,13 +105,20 @@ export const ServiceNeedsS2 = () => {
             <FormLabel className={classes.label} htmlFor="search">Search</FormLabel>
             <TextField
                 placeholder="Type here"
+                value={searchInput}
+                onChange={handleChange}
                 className={classes.search}
                 InputProps={{
                     startAdornment: <IconButton
                         className={classes.btnIcon}
                         size="small">
                         <Search />
-                    </IconButton>
+                    </IconButton>,
+                    endAdornment: !loading ?
+                        <span style={{paddingRight: 12, paddingTop: 6}}>
+                            <CircularProgress size={20}/>
+                        </span>
+                        : undefined
                 }}
             />
             <RadioGroup className={classes.radioGroup} value={selectedCode} onChange={handleSelectCode}>
