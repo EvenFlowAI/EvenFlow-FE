@@ -133,7 +133,7 @@ export const useStatePagination = () => {
     return {pageData, onChangePage, onChangeRowsPerPage};
 }
 
-export const useDebounce = <S=string>(val: S, delay: number=100): S => {
+export const useDebounce = <S=string>(val: S, delay: number=1000): S => {
     const [state, setState] = useState<S>(val);
 
     useEffect(() => {
