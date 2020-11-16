@@ -109,6 +109,7 @@ type ApiRoutes = {
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
+    Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
@@ -122,9 +123,9 @@ type ApiRoutes = {
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
-    Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
-        | "GetWS" | "SetWS", TApiRoute>
+        | "GetWS" | "SetWS", TApiRoute>,
+    Vehicles: Record<"GetByVIN", TApiRoute>,
 }
 
 type TOptions = {
@@ -280,6 +281,9 @@ export class Api {
             SetCTS: {route: "/customer-type-settings", method: "put"},
             GetWS: {route: "/warranty-settings", method: "get"},
             SetWS: {route: "/warranty-settings", method: "put"},
+        },
+        Vehicles: {
+            GetByVIN: {route: "/vehicles/by-vin", method: "get"}
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {

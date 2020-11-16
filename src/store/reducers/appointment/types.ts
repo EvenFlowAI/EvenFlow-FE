@@ -18,4 +18,15 @@ export interface ISR {
 export type TS1Form = {
     year: string|null;
     millage: string|null;
+    vin: string;
+}
+export interface IVehicleData {
+    vin: string;
+    make: string;
+    year: number;
+    model: string;
+    mileage: number;
+    transmission: string;
+    driveType: string;
+    engineType: string;
 }

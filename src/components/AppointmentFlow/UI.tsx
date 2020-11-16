@@ -1,5 +1,5 @@
 import React, {forwardRef} from "react";
-import {FormLabel, TextFieldProps, withStyles} from "@material-ui/core";
+import {CircularProgress, FormLabel, TextFieldProps, withStyles} from "@material-ui/core";
 import {TextField as TF} from "../UI/EndUserInputs";
 import {InputProps as StandardInputProps} from "@material-ui/core/Input/Input";
 
@@ -19,4 +19,10 @@ export const Label = withStyles({
 export type TStepProps = {
     next: () => void;
     prev: () => void;
+}
+
+export const InputLoading = () => {
+    return <span style={{paddingRight: 12, paddingTop: 6}}>
+        <CircularProgress size={20} />
+    </span>;
 }

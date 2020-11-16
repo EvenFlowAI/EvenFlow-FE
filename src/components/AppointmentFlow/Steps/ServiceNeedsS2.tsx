@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {CircularProgress, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup} from "@material-ui/core";
-import {TextField} from "../UI";
+import {InputLoading, TextField} from "../UI";
 import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -115,9 +115,7 @@ export const ServiceNeedsS2 = () => {
                         <Search />
                     </IconButton>,
                     endAdornment: loading ?
-                        <span style={{paddingRight: 12, paddingTop: 6}}>
-                            <CircularProgress size={20}/>
-                        </span>
+                        <InputLoading />
                         : undefined
                 }}
             />

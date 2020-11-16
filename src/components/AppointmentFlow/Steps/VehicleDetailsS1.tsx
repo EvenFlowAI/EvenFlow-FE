@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Grid, withStyles} from "@material-ui/core";
-import {Label, TextField, TStepProps} from "../UI";
+import {InputLoading, Label, TextField, TStepProps} from "../UI";
 import {KeyboardDatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {changeS1Form} from "../../../store/reducers/appointment/actions";
+import {Api} from "../../../config/requests";
+import {useException} from "../../../utils/hooks";
+import {IVehicleData} from "../../../store/reducers/appointment/types";
 
 const LabelGrid = withStyles({
     root: {
@@ -14,10 +17,29 @@ const LabelGrid = withStyles({
 })(Grid);
 
 export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
+    const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const form = useSelector((state: RootState) => {
         return state.appointment.s1Data;
-    })
+    });
+    const showError = useException();
+
+    useEffect(() => {
+        if (form.vin.length === 17) {
+            const t = setTimeout(() => {
+                setLoading(true);
+                Api.call<IVehicleData>(
+                    Api.endpoints.Vehicles.GetByVIN,
+                    {params: {vin: form.vin}}
+                )
+                    .then(r => console.log(r.data))
+                    .catch(e => showError(e))
+                    .finally(() => setLoading(false));
+            }, 1000);
+            return () => clearTimeout(t);
+        }
+    }, [form.vin, showError]);
+
     const handleYearChange = (date: MaterialUiPickersDate) => {
         if (date && date.isValid()) {
             dispatch(changeS1Form({year: date.format("YYYY")}));
@@ -39,6 +61,14 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                 <Grid item xs={6}>
                     <TextField
                         id="vin"
+                        name="vin"
+                        InputProps={{
+                            endAdornment: loading ?
+                                <InputLoading />
+                                : undefined
+                        }}
+                        value={form.vin}
+                        onChange={handleTextChange}
                     />
                 </Grid>
                 <Grid item xs={3} />

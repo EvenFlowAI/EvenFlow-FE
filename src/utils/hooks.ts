@@ -64,7 +64,7 @@ export const useSelectedPod = () => {
 
 export function useException() {
     const {enqueueSnackbar} = useSnackbar();
-    return (e: any) => {
+    return useCallback((e: any) => {
         if (e && e.response?.data?.errors && e.response.data.errors.length) {
             for (const error of e.response.data.errors.slice(0, 3) as {field: string; message: string}[]) {
                 enqueueSnackbar(error.message, {variant: "error"});
@@ -74,8 +74,9 @@ export function useException() {
         } else {
             enqueueSnackbar(getAPIException(e), {variant: "error"});
         }
-    };
+    }, [enqueueSnackbar]);
 }
+
 type TVariant = "default" | "warning" | "success" | "error" | "info";
 export function useMessage() {
     const {enqueueSnackbar} = useSnackbar();
