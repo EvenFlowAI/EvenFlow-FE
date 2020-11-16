@@ -7,7 +7,12 @@ import {useDispatch} from "react-redux";
 import {useException, useMessage} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
 
-export const PriceLevelsDialog: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export type TPriceLevelType = "Discount" | "Premium";
+type TProps = DialogProps & {
+    type: TPriceLevelType;
+}
+export const PriceLevelsDialog: React.FC<TProps>
+    = ({type, onAction, payload, ...props}) => {
     const [priceSetting, setSetting] = useState<string>("100");
     const [saving, setSaving] = useState<boolean>(false);
     const dispatch = useDispatch();

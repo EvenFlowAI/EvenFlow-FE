@@ -66,12 +66,12 @@ export const PricingLevels = () => {
                         </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Discount</TableCell>
+                        <TableCell>Base</TableCell>
                         <TableCell align="center">fixed to 100%</TableCell>
                         <TableCell className={classes.inputCell}>100%</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Discount</TableCell>
+                        <TableCell>Premium</TableCell>
                         <TableCell align="center">from 100% to 200%</TableCell>
                         <TableCell className={classes.inputCell}>
                             <div className={classes.editCell}>
@@ -85,6 +85,6 @@ export const PricingLevels = () => {
                 </TableBody>
             </DemandTable>
         </div>
-        <PriceLevelsDialog open={isOpen} onClose={onClose} />
+        <PriceLevelsDialog type={"Discount"} open={isOpen} onClose={onClose} />
     </Paper>
 };
