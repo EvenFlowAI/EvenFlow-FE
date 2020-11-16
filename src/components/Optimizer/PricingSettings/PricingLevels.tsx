@@ -3,6 +3,8 @@ import {Divider, Paper, TableBody, TableCell, TableHead, TableRow} from "@materi
 import {makeStyles} from "@material-ui/core/styles";
 import {DemandTable} from "../AppointmentAllocation/UI";
 import {EditButton} from "../../UI/Button";
+import {PriceLevelsDialog} from "./PriceLevelsDialog";
+import {useModal} from "../../../utils/hooks";
 
 const useStyles = makeStyles(theme => ({
     heading: {
@@ -32,6 +34,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const PricingLevels = () => {
+    const {onClose, onOpen, isOpen} = useModal();
+
+    const handleOpen = () => {
+        onOpen();
+    }
+
     const classes = useStyles();
     return <Paper className={classes.paper} variant="outlined">
         <h3 className={classes.heading}>Demand Windows Eligibility Status</h3>
@@ -51,7 +59,7 @@ export const PricingLevels = () => {
                         <TableCell className={classes.inputCell}>
                             <div className={classes.editCell}>
                                 <span>90%</span>
-                                <EditButton color="primary">
+                                <EditButton onClick={handleOpen} color="primary">
                                     Edit
                                 </EditButton>
                             </div>
@@ -68,7 +76,7 @@ export const PricingLevels = () => {
                         <TableCell className={classes.inputCell}>
                             <div className={classes.editCell}>
                                 <span>120%</span>
-                                <EditButton color="primary">
+                                <EditButton onClick={handleOpen} color="primary">
                                     Edit
                                 </EditButton>
                             </div>
@@ -77,5 +85,6 @@ export const PricingLevels = () => {
                 </TableBody>
             </DemandTable>
         </div>
+        <PriceLevelsDialog open={isOpen} onClose={onClose} />
     </Paper>
 };
