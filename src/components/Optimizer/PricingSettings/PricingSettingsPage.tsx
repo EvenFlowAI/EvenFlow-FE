@@ -18,6 +18,7 @@ export const PricingSettingsPage = () => {
             indicatorColor="primary"
         >
             <Tab label="Pricing Levels" value="0" />
+            <Tab label="Pricing Optimization" value="1" />
         </TabList>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><PricingLevels /></TabPanel>
     </TabContext>

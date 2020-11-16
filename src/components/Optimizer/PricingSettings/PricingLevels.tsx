@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Divider, Paper, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {DemandTable} from "../AppointmentAllocation/UI";
 import {EditButton} from "../../UI/Button";
 import {PriceLevelsDialog} from "./PriceLevelsDialog";
-import {useModal} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
+import {EDemandCategory, IPricingLevel} from "../../../store/reducers/pricingSettings/types";
+import {useDispatch, useSelector} from "react-redux";
+import {loadPricingLevels} from "../../../store/reducers/pricingSettings/actions";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles(theme => ({
     heading: {
@@ -32,12 +36,40 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "space-between"
     }
 }));
+type TPricingLevels = {
+    [k in EDemandCategory]: IPricingLevel;
+}
 
 export const PricingLevels = () => {
+    const [editedItem, setEditedItem] = useState<IPricingLevel|undefined>(undefined);
     const {onClose, onOpen, isOpen} = useModal();
+    const {selectedSC} = useSCs();
+    const pricingLevels = useSelector((state: RootState) => {
+        return state.pricingSettings.pricingLevels;
+    })
+    const dispatch = useDispatch();
+    const mappedPricingLevels: TPricingLevels = useMemo(() => {
+        return pricingLevels.reduce((acc, item) => {
+            acc[item.demandCategory] = item;
+            return acc;
+        }, {} as TPricingLevels);
+    }, [pricingLevels]);
 
-    const handleOpen = () => {
-        onOpen();
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadPricingLevels(selectedSC.id));
+        }
+    }, [selectedSC, dispatch]);
+
+    const handleOpen = (t: EDemandCategory) => () => {
+        if (selectedSC) {
+            const item = mappedPricingLevels[t];
+            setEditedItem({
+                serviceCenterId: selectedSC.id, percentage: 100, demandCategory: t,
+                ...item
+            });
+            onOpen();
+        }
     }
 
     const classes = useStyles();
@@ -58,8 +90,12 @@ export const PricingLevels = () => {
                         <TableCell align="center">from 0% to 100%</TableCell>
                         <TableCell className={classes.inputCell}>
                             <div className={classes.editCell}>
-                                <span>90%</span>
-                                <EditButton onClick={handleOpen} color="primary">
+                                <span>
+                                    {mappedPricingLevels[EDemandCategory.Low]?.percentage
+                                    ? `${mappedPricingLevels[EDemandCategory.Low].percentage}%`
+                                    : "-"}
+                                </span>
+                                <EditButton onClick={handleOpen(EDemandCategory.Low)} color="primary">
                                     Edit
                                 </EditButton>
                             </div>
@@ -75,8 +111,12 @@ export const PricingLevels = () => {
                         <TableCell align="center">from 100% to 200%</TableCell>
                         <TableCell className={classes.inputCell}>
                             <div className={classes.editCell}>
-                                <span>120%</span>
-                                <EditButton onClick={handleOpen} color="primary">
+                                <span>
+                                    {mappedPricingLevels[EDemandCategory.High]?.percentage
+                                    ? `${mappedPricingLevels[EDemandCategory.High].percentage}%`
+                                    : "-"}
+                                </span>
+                                <EditButton onClick={handleOpen(EDemandCategory.High)} color="primary">
                                     Edit
                                 </EditButton>
                             </div>
@@ -85,6 +125,6 @@ export const PricingLevels = () => {
                 </TableBody>
             </DemandTable>
         </div>
-        <PriceLevelsDialog type={"Discount"} open={isOpen} onClose={onClose} />
+        <PriceLevelsDialog payload={editedItem} open={isOpen} onClose={onClose} />
     </Paper>
 };

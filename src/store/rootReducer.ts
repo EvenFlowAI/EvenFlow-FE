@@ -15,6 +15,7 @@ import {optimizationWindowsReducer} from "./reducers/optimizationWindows/reducer
 import {schedulesReducer} from "./reducers/schedules/reducer";
 import {offersReducer} from "./reducers/offers/reducer";
 import {appointmentReducer} from "./reducers/appointment/reducer";
+import {pricingSettingsReducer} from "./reducers/pricingSettings/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -27,6 +28,7 @@ export const rootReducer = combineReducers({
     offers: offersReducer,
     scEmployees: scEmployees,
     pods: podsReducer,
+    pricingSettings: pricingSettingsReducer,
     serviceCenters: serviceCenterReducer,
     slotScoring: slotScoringReducer,
     modals: modalsReducer,

@@ -113,6 +113,9 @@ type ApiRoutes = {
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
+    PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
+        | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
+        | "GetLevels" | "SetLevels", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks", TApiRoute>,
@@ -212,6 +215,18 @@ export class Api {
             Remove: {route: "/pods/{id}", method: "delete"},
             GetAll: {route: "/pods/by-query", method: "post"},
             GetShort: {route: "/pods/short-by-query", method: "post"},
+        },
+        PricingSettings: {
+            GetList: {route: "/pricing-settings", method: "get"},
+            Edit: {route: "/pricing-settings", method: "put"},
+            GetDayOfWeek: {route: "/pricing-settings/day-of-week", method: "get"},
+            SetDayOfWeek: {route: "/pricing-settings/day-of-week", method: "put"},
+            CreateTimeOfYear: {route: "/pricing-settings/time-of-year", method: "post"},
+            GetTimeOfYear: {route: "/pricing-settings/time-of-year", method: "get"},
+            UpdateTimeOfYear: {route: "/pricing-settings/time-of-year/{id}", method: "put"},
+            RemoveTimeOfYear: {route: "/pricing-settings/time-of-year/{id}", method: "delete"},
+            GetLevels: {route: "/pricing-settings/levels", method: "get"},
+            SetLevels: {route: "/pricing-settings/levels", method: "put"},
         },
         ServiceCenters: {
             Create: {route: "/service-centers", method: "post"},
