@@ -108,6 +108,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                         fullWidth
                         onChange={handleYearChange}
                         InputProps={{
+                            style: {fontWeight: "bold"},
                             disableUnderline: true
                         }}
                     />
