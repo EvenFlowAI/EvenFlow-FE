@@ -13,6 +13,11 @@ const initialS1Form: TS1Form = {
     year: null,
     vin: "",
     millage: null,
+    driveType: "",
+    engineType: "",
+    make: "",
+    model: "",
+    transmission: ""
 }
 const initialState: TState = {
     serviceRequests: [],

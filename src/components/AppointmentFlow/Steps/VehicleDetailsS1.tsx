@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Button, Grid, withStyles} from "@material-ui/core";
 import {InputLoading, Label, TextField, TStepProps} from "../UI";
 import {KeyboardDatePicker} from "@material-ui/pickers";
@@ -24,6 +24,10 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
     });
     const showError = useException();
 
+    const fillDataByVin = useCallback((d: IVehicleData) => {
+        dispatch(changeS1Form({...d, year: d.year ? String(d.year) : null}));
+    }, [dispatch]);
+
     useEffect(() => {
         if (form.vin.length === 17) {
             const t = setTimeout(() => {
@@ -32,13 +36,13 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                     Api.endpoints.Vehicles.GetByVIN,
                     {params: {vin: form.vin}}
                 )
-                    .then(r => console.log(r.data))
+                    .then(r => fillDataByVin(r.data))
                     .catch(e => showError(e))
                     .finally(() => setLoading(false));
             }, 1000);
             return () => clearTimeout(t);
         }
-    }, [form.vin, showError]);
+    }, [form.vin, showError, fillDataByVin]);
 
     const handleYearChange = (date: MaterialUiPickersDate) => {
         if (date && date.isValid()) {
@@ -83,6 +87,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                 <Grid item xs={6}>
                     <TextField
                         id="make"
+                        name="make"
+                        value={form.make}
+                        onChange={handleTextChange}
                     />
                 </Grid>
                 <Grid item xs={3} />
@@ -114,6 +121,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                 <Grid item xs={6}>
                     <TextField
                         id="model"
+                        name="model"
+                        value={form.model}
+                        onChange={handleTextChange}
                     />
                 </Grid>
                 <Grid item xs={3} />
@@ -143,6 +153,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                 <Grid item xs={6}>
                     <TextField
                         id="transmission"
+                        name="transmission"
+                        onChange={handleTextChange}
+                        value={form.transmission}
                     />
                 </Grid>
                 <Grid item xs={3} />
@@ -154,6 +167,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                 <Grid item xs={6}>
                     <TextField
                         id="driveType"
+                        name="driveType"
+                        value={form.driveType}
+                        onChange={handleTextChange}
                     />
                 </Grid>
                 <Grid item xs={3} />
@@ -165,6 +181,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                 <Grid item xs={6}>
                     <TextField
                         id="engineType"
+                        name="engineType"
+                        value={form.engineType}
+                        onChange={handleTextChange}
                     />
                 </Grid>
                 <Grid item xs={3} />

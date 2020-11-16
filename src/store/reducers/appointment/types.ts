@@ -19,6 +19,11 @@ export type TS1Form = {
     year: string|null;
     millage: string|null;
     vin: string;
+    model: string;
+    make: string;
+    transmission: string;
+    driveType: string;
+    engineType: string;
 }
 export interface IVehicleData {
     vin: string;
