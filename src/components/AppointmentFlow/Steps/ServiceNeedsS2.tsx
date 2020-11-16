@@ -114,7 +114,7 @@ export const ServiceNeedsS2 = () => {
                         size="small">
                         <Search />
                     </IconButton>,
-                    endAdornment: !loading ?
+                    endAdornment: loading ?
                         <span style={{paddingRight: 12, paddingTop: 6}}>
                             <CircularProgress size={20}/>
                         </span>

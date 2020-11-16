@@ -12,10 +12,15 @@ export const loadSCProfile = (id: number): AppThunk => async dispatch => {
     dispatch(getServiceCenterProfile(data));
 }
 export const getSRs = createAction<ISR[]>("Appointment/GetSRs");
-export const loadSRs = (serviceCenterId: number): AppThunk => async dispatch => {
+export const loadSRs = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<ISR>>(
         Api.endpoints.ServiceRequests.GetShort,
-        {params: {serviceCenterId, pageSize: 0}}
+        {
+            params: {
+                serviceCenterId, pageSize: 0,
+                searchTerm: getState().appointment.search
+            }
+        }
     );
     dispatch(getSRs(result));
 }
