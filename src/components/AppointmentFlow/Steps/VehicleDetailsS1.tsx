@@ -25,7 +25,11 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
     const showError = useException();
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
-        dispatch(changeS1Form({...d, year: d.year ? String(d.year) : null}));
+        dispatch(changeS1Form({
+            ...d,
+            year: d.year ? String(d.year) : null,
+            mileage: d.mileage ? String(d.mileage) : null,
+        }));
     }, [dispatch]);
 
     useEffect(() => {
@@ -130,16 +134,16 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                 <Grid item xs={3} />
                 <LabelGrid item xs={3}>
                     <Label htmlFor="millage">
-                        millage
+                        Mileage
                     </Label>
                 </LabelGrid>
                 <Grid item xs={6}>
                     <TextField
                         onChange={handleTextChange}
                         type={"number"}
-                        value={form.millage || ""}
-                        name="millage"
-                        id="millage"
+                        value={form.mileage || ""}
+                        name="mileage"
+                        id="mileage"
                     />
                 </Grid>
                 <Grid item xs={3} />

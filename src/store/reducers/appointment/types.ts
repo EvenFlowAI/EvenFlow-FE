@@ -17,7 +17,7 @@ export interface ISR {
 }
 export type TS1Form = {
     year: string|null;
-    millage: string|null;
+    mileage: string|null;
     vin: string;
     model: string;
     make: string;

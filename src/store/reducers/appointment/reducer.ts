@@ -12,7 +12,7 @@ type TState = {
 const initialS1Form: TS1Form = {
     year: null,
     vin: "",
-    millage: null,
+    mileage: null,
     driveType: "",
     engineType: "",
     make: "",
