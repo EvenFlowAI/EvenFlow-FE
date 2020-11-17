@@ -13,7 +13,7 @@ export enum EWindowType {
 export interface ITimeWindowEl {
     type: EWindowType;
     startInHours: number;
-    durationInHours: number;
+    durationInHours?: number;
     isEligibility: boolean;
     serviceCenterId: number;
     podId?: number;
