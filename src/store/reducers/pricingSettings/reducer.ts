@@ -1,15 +1,20 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IPricingLevel} from "./types";
-import {getPricingLevels} from "./actions";
+import {IPricingLevel, ITimeWindowEl} from "./types";
+import {getPricingLevels, getTimeWindows} from "./actions";
 
 type TState = {
     pricingLevels: IPricingLevel[];
+    timeWindows: ITimeWindowEl[];
 }
 const initialState: TState = {
-    pricingLevels: []
+    pricingLevels: [],
+    timeWindows: []
 };
-export const pricingSettingsReducer = createReducer(initialState, builder => builder
+export const pricingSettingsReducer = createReducer<TState>(initialState, builder => builder
     .addCase(getPricingLevels, (state, {payload}) => {
-        return {state, pricingLevels: payload};
+        return {...state, pricingLevels: payload};
+    })
+    .addCase(getTimeWindows, (state, {payload}) => {
+        return {...state, timeWindows: payload};
     })
 );

@@ -101,6 +101,7 @@ type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
     AppointmentAllocation: Record<"SetTimeWindows" | "GetTimeWindows"
         | "CreateDemandSegment" | "GetDemandSegments"
+        | "GetTWEligibility" | "SetTWEligibility"
         | "BatchUpdateDemandSegments" | "RemoveDemandSegment"
         | "SetUnplanned" | "GetUnplanned", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
@@ -153,6 +154,8 @@ export class Api {
         AppointmentAllocation: {
             SetTimeWindows: {route: "/appointment-allocations/time-windows", method: "put"},
             GetTimeWindows: {route: "/appointment-allocations/time-windows", method: "get"},
+            GetTWEligibility: {route: "/appointment-allocations/time-windows/eligibility", method: "get"},
+            SetTWEligibility: {route: "/appointment-allocations/time-windows/eligibility", method: "patch"},
             CreateDemandSegment: {route: "/appointment-allocations/demand-segments", method: "post"},
             GetDemandSegments: {route: "/appointment-allocations/demand-segments", method: "get"},
             BatchUpdateDemandSegments: {route: "/appointment-allocations/demand-segments", method: "put"},
