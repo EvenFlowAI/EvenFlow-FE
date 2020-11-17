@@ -28,5 +28,5 @@ export const setTimeWindows = (data: ITimeWindowEl): AppThunk => async dispatch 
     await Api.call(
         Api.endpoints.AppointmentAllocation.SetTWEligibility, {data}
     );
-    dispatch(loadTimeWindows(data.serviceCenterId));
+    await dispatch(loadTimeWindows(data.serviceCenterId));
 }

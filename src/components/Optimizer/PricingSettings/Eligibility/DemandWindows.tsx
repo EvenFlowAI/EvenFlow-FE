@@ -1,11 +1,11 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {SquarePaper} from "../../../UI/Paper";
 import {PaperTitle, TableContainer} from "../UI";
 import {Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {DenseTable} from "../../AppointmentAllocation/UI";
-import {useSCs} from "../../../../utils/hooks";
-import {loadTimeWindows} from "../../../../store/reducers/pricingSettings/actions";
+import {useException, useSCs} from "../../../../utils/hooks";
+import {loadTimeWindows, setTimeWindows} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EWindowType, ITimeWindowEl} from "../../../../store/reducers/pricingSettings/types";
@@ -20,7 +20,9 @@ type TTW = {
     [k in EWindowType]: ITimeWindowEl;
 }
 export const DemandWindows = () => {
+    const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
+    const showError = useException();
     const timeWindows = useSelector((state: RootState) => {
         return state.pricingSettings.timeWindows;
     });
@@ -37,6 +39,24 @@ export const DemandWindows = () => {
             dispatch(loadTimeWindows(selectedSC.id));
         }
     }, [dispatch, selectedSC]);
+
+    const handleSwitch = (t: EWindowType) => async (e: any, checked: boolean) => {
+        if (selectedSC) {
+            try {
+                setSaving(true);
+                await dispatch(setTimeWindows({
+                    serviceCenterId: selectedSC.id,
+                    type: t,
+                    ...mappedTW[t],
+                    isEligibility: checked
+                }));
+            } catch (e) {
+                showError(e);
+            } finally {
+                setSaving(false);
+            }
+        }
+    }
 
     const classes = useStyles();
     return <SquarePaper variant="outlined">
@@ -79,17 +99,29 @@ export const DemandWindows = () => {
                         <TableCell>Eligibility Status</TableCell>
                         <TableCell className={classes.switchCell} align="center">
                             <strong>OFF</strong>
-                            <Switch color="primary" />
+                            <Switch
+                                disabled={saving}
+                                onChange={handleSwitch(EWindowType.Window1)}
+                                checked={Boolean(mappedTW[EWindowType.Window1]?.isEligibility)}
+                                color="primary" />
                             <strong>ON</strong>
                         </TableCell>
                         <TableCell className={classes.switchCell} align="center">
                             <strong>OFF</strong>
-                            <Switch color="primary" />
+                            <Switch
+                                disabled={saving}
+                                onChange={handleSwitch(EWindowType.Window2)}
+                                checked={Boolean(mappedTW[EWindowType.Window2]?.isEligibility)}
+                                color="primary" />
                             <strong>ON</strong>
                         </TableCell>
                         <TableCell className={classes.switchCell} align="center">
                             <strong>OFF</strong>
-                            <Switch color="primary" />
+                            <Switch
+                                disabled={saving}
+                                onChange={handleSwitch(EWindowType.Window3)}
+                                checked={Boolean(mappedTW[EWindowType.Window3]?.isEligibility)}
+                                color="primary" />
                             <strong>ON</strong>
                         </TableCell>
                     </TableRow>
