@@ -6,7 +6,17 @@ import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {loadSrList, setEligibleRequest} from "../../../../store/reducers/pricingSettings/actions";
 import {NoItemsLoading} from "../../../UI/NoItemsLoading";
-import {Switch} from "@material-ui/core";
+import {Divider, Switch, TableBody, TableHead} from "@material-ui/core";
+import {DemandTable, TableCell, TableRow} from "../../AppointmentAllocation/UI";
+
+const headCellStyles = {
+    fontSize: 12,
+    lineHeight: "16px",
+    color: "#9FA2B4"
+}
+const leftAlign = {
+    textAlign: "left" as const
+}
 
 export const ServiceCodes = () => {
     const [saving, setSaving] = useState<boolean>(false);
@@ -43,19 +53,60 @@ export const ServiceCodes = () => {
 
     return <SquarePaper variant="outlined">
         <PaperTitle>Service codes eligibility status</PaperTitle>
+        <Divider />
         <TableContainer>
             <NoItemsLoading items={srList} loading={loading} />
-            {srList.map(el => {
-                return <p key={el.id}>
-                    {el.serviceRequest.code}
-                    <Switch
-                        disabled={saving}
-                        onChange={handleSwitch(el.id)}
-                        checked={el.isEligibility}
-                        color="primary"
-                    />
-                </p>
-            })}
+            {srList.length ? <DemandTable>
+                <TableHead>
+                    <TableRow>
+                        <TableCell
+                            style={{...headCellStyles, ...leftAlign}}>
+                            Service Ops Code
+                        </TableCell>
+                        <TableCell
+                            width={330}
+                            style={{...headCellStyles, ...leftAlign}}>
+                            Description
+                        </TableCell>
+                        <TableCell style={headCellStyles}>Duration (hours)</TableCell>
+                        <TableCell style={headCellStyles}>Number of technicians</TableCell>
+                        <TableCell style={headCellStyles}>Skill level of technicians</TableCell>
+                        <TableCell style={headCellStyles}>Pricing optimization status (Off/ON)</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {srList.map(el => {
+                        return <TableRow key={el.id}>
+                            <TableCell style={leftAlign}>{el.serviceRequest.code}</TableCell>
+                            <TableCell style={leftAlign}>
+                                {el.serviceRequestOverride?.description
+                                || el.serviceRequest.description}
+                            </TableCell>
+                            <TableCell>
+                                {el.serviceRequestOverride?.durationInHours
+                                || el.serviceRequest.durationInHours}
+                            </TableCell>
+                            <TableCell>
+                                {el.serviceRequestOverride?.countOfTechnicians
+                                || el.serviceRequest.countOfTechnicians}
+                            </TableCell>
+                            <TableCell>
+                                {el.serviceRequestOverride?.skillLevelOfTechnicians
+                                || el.serviceRequest.skillLevelOfTechnicians}
+                            </TableCell>
+
+                            <TableCell>
+                                <Switch
+                                    disabled={saving}
+                                    onChange={handleSwitch(el.id)}
+                                    checked={el.isEligibility}
+                                    color="primary"
+                                />
+                            </TableCell>
+                        </TableRow>
+                    })}
+                </TableBody>
+            </DemandTable> : null}
         </TableContainer>
     </SquarePaper>
 };
