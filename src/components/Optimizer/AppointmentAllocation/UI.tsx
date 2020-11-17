@@ -8,6 +8,15 @@ export const DemandTable = withStyles(theme => ({
     }
 }))(AppointmentTable);
 
+export const DenseTable = withStyles({
+    root: {
+        "& .MuiTableCell-root": {
+            padding: 12,
+            fontSize: 15
+        }
+    }
+})(DemandTable);
+
 export const TableCell = withStyles({
     root: {
         border: "none !important",

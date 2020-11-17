@@ -3,11 +3,12 @@ import {makeStyles} from "@material-ui/core/styles";
 import {SquarePaper} from "../../../UI/Paper";
 import {PaperTitle, TableContainer} from "../UI";
 import {Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {DemandTable} from "../../AppointmentAllocation/UI";
+import {DenseTable} from "../../AppointmentAllocation/UI";
 
 const useStyles = makeStyles({
     switchCell: {
-        fontSize: 12
+        fontSize: "12px !important",
+        padding: "2px 12px !important"
     }
 });
 
@@ -17,7 +18,7 @@ export const DemandWindows = () => {
         <PaperTitle>Demand windows Eligibility status</PaperTitle>
         <Divider />
         <TableContainer>
-            <DemandTable>
+            <DenseTable>
                 <TableHead>
                     <TableRow>
                         <TableCell>Time Windows</TableCell>
@@ -58,7 +59,7 @@ export const DemandWindows = () => {
                         </TableCell>
                     </TableRow>
                 </TableBody>
-            </DemandTable>
+            </DenseTable>
         </TableContainer>
     </SquarePaper>
 };
