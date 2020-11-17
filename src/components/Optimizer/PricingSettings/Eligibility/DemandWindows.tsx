@@ -2,13 +2,16 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {SquarePaper} from "../../../UI/Paper";
 import {PaperTitle, TableContainer} from "../UI";
-import {Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {DenseTable} from "../../AppointmentAllocation/UI";
 import {useException, useSCs} from "../../../../utils/hooks";
 import {loadTimeWindows, setTimeWindows} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EWindowType, ITimeWindowEl} from "../../../../store/reducers/pricingSettings/types";
+import {Caption} from "../../../UI/Caption";
+import {TextLink} from "../../../UI/TextLink";
+import {Routes} from "../../../../config/routes";
 
 const useStyles = makeStyles({
     switchCell: {
@@ -127,6 +130,15 @@ export const DemandWindows = () => {
                     </TableRow>
                 </TableBody>
             </DenseTable>
+            <Box mt={2}>
+                <Caption
+                    title={<span>
+                        You can edit the Demand segment values on <TextLink to={Routes.Optimizer.AppointmentAllocation}>
+                            Appointment Allocation
+                        </TextLink> page
+                    </span>}
+                />
+            </Box>
         </TableContainer>
     </SquarePaper>
 };
