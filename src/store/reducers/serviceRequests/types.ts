@@ -48,6 +48,7 @@ export interface IAssignedServiceRequest {
     serviceRequest: IServiceRequest;
     serviceRequestId: number;
     serviceCenterId: number;
+    isEligibility: boolean;
     serviceRequestOverride?: Partial<IServiceRequestOverride>;
     priority: IServiceRequestPriority;
     requiredSkill?: IRequiredSkill;

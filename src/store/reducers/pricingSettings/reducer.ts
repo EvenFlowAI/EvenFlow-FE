@@ -1,14 +1,17 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {IPricingLevel, ITimeWindowEl} from "./types";
-import {getPricingLevels, getTimeWindows} from "./actions";
+import {getPricingLevels, getSrList, getTimeWindows} from "./actions";
+import {IAssignedServiceRequest} from "../serviceRequests/types";
 
 type TState = {
     pricingLevels: IPricingLevel[];
     timeWindows: ITimeWindowEl[];
+    srList: IAssignedServiceRequest[];
 }
 const initialState: TState = {
     pricingLevels: [],
-    timeWindows: []
+    timeWindows: [],
+    srList: [],
 };
 export const pricingSettingsReducer = createReducer<TState>(initialState, builder => builder
     .addCase(getPricingLevels, (state, {payload}) => {
@@ -16,5 +19,8 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
     })
     .addCase(getTimeWindows, (state, {payload}) => {
         return {...state, timeWindows: payload};
+    })
+    .addCase(getSrList, (state, {payload}) => {
+        return {...state, srList: payload};
     })
 );

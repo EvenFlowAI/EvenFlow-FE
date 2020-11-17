@@ -123,6 +123,7 @@ type ApiRoutes = {
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
+        | "Eligibility"
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues", TApiRoute>,
@@ -263,6 +264,7 @@ export class Api {
             AssignMultiple: {route: "/service-requests/overrides", method: "post"},
             GetShort: {route: "/service-requests/overrides/short-by-query", method: "get"},
             EditSkills: {route: "/service-requests/required-skills", method: "patch"},
+            Eligibility: {route: "/service-requests/eligibility", method: "patch"},
             Prioritize: {route: "/service-requests/prioritize", method: "patch"}
         },
         SlotScoring: {
