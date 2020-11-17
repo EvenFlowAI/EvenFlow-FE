@@ -68,10 +68,10 @@ export const DemandWindows = () => {
                     <TableRow>
                         <TableCell>Duration (hours)</TableCell>
                         <TableCell align="center">
-                            {mappedTW[EWindowType.Window1]?.durationInHours || ""}
+                            {mappedTW[EWindowType.Window1]?.durationInHours || "-"}
                         </TableCell>
                         <TableCell align="center">
-                            {mappedTW[EWindowType.Window2]?.durationInHours || ""}
+                            {mappedTW[EWindowType.Window2]?.durationInHours || "-"}
                         </TableCell>
                         <TableCell align="center" />
                     </TableRow>
