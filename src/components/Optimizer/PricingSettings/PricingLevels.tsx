@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Divider, Paper, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {DemandTable} from "../AppointmentAllocation/UI";
 import {EditButton} from "../../UI/Button";
@@ -9,19 +9,10 @@ import {EDemandCategory, IPricingLevel} from "../../../store/reducers/pricingSet
 import {useDispatch, useSelector} from "react-redux";
 import {loadPricingLevels} from "../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../store/rootReducer";
+import {PaperTitle, TableContainer} from "./UI";
+import {SquarePaper} from "../../UI/Paper";
 
 const useStyles = makeStyles(theme => ({
-    heading: {
-        textTransform: "uppercase",
-        fontWeight: "bold", fontSize: 16,
-        margin: 0, padding: "16px 36px"
-    },
-    paper: {
-        borderRadius: 0
-    },
-    tableWrapper: {
-        padding: 16
-    },
     inputCell: {
         fontSize: 16,
         fontWeight: "bold",
@@ -73,10 +64,10 @@ export const PricingLevels = () => {
     }
 
     const classes = useStyles();
-    return <Paper className={classes.paper} variant="outlined">
-        <h3 className={classes.heading}>Demand Windows Eligibility Status</h3>
+    return <SquarePaper variant="outlined">
+        <PaperTitle>Demand Windows Eligibility Status</PaperTitle>
         <Divider />
-        <div className={classes.tableWrapper}>
+        <TableContainer>
             <DemandTable>
                 <TableHead>
                     <TableRow>
@@ -124,7 +115,7 @@ export const PricingLevels = () => {
                     </TableRow>
                 </TableBody>
             </DemandTable>
-        </div>
+        </TableContainer>
         <PriceLevelsDialog payload={editedItem} open={isOpen} onClose={onClose} />
-    </Paper>
+    </SquarePaper>
 };
