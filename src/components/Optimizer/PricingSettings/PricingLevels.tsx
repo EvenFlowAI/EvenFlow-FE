@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {DemandTable} from "../AppointmentAllocation/UI";
+import {DenseTable} from "../AppointmentAllocation/UI";
 import {EditButton} from "../../UI/Button";
 import {PriceLevelsDialog} from "./PriceLevelsDialog";
 import {useModal, useSCs} from "../../../utils/hooks";
@@ -68,7 +68,7 @@ export const PricingLevels = () => {
         <PaperTitle>Demand Windows Eligibility Status</PaperTitle>
         <Divider />
         <TableContainer>
-            <DemandTable>
+            <DenseTable>
                 <TableHead>
                     <TableRow>
                         <TableCell colSpan={2}>Price levels</TableCell>
@@ -93,7 +93,7 @@ export const PricingLevels = () => {
                         </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Base</TableCell>
+                        <TableCell style={{padding: "18px 12px"}}>Base</TableCell>
                         <TableCell align="center">fixed to 100%</TableCell>
                         <TableCell className={classes.inputCell}>100%</TableCell>
                     </TableRow>
@@ -114,7 +114,7 @@ export const PricingLevels = () => {
                         </TableCell>
                     </TableRow>
                 </TableBody>
-            </DemandTable>
+            </DenseTable>
         </TableContainer>
         <PriceLevelsDialog payload={editedItem} open={isOpen} onClose={onClose} />
     </SquarePaper>
