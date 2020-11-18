@@ -3,12 +3,17 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Paper} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
 
+const mh600 = "@media (max-height: 600px)";
 
 const useStyles = makeStyles({
     paper: {
         borderRadius: 2,
-        marginTop: 62,
-        padding: "42px 20%"
+        marginTop: "5%",
+        padding: "42px 20%",
+        [mh600]: {
+            padding: "20px 20%",
+            marginTop: "2%",
+        }
     },
     button: {
         minWidth: 144
@@ -17,13 +22,19 @@ const useStyles = makeStyles({
         fontSize: 32,
         margin: "0 0 10px",
         fontWeight: "bold",
-        textAlign: "center"
+        textAlign: "center",
+        [mh600]: {
+            fontSize: 22
+        }
     },
     buttonsRow: {
-        marginTop: 50,
+        marginTop: "8%",
         display: "flex",
         justifyContent: "space-around",
-        flexFlow: "row nowrap"
+        flexFlow: "row nowrap",
+        [mh600]: {
+            marginTop: "4%"
+        }
     }
 });
 

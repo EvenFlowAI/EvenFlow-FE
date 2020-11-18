@@ -19,9 +19,13 @@ export const EndUserLayout = () => {
     }, [id, dispatch]);
 
     return <ThemeProvider theme={endUserTheme}>
-        <EndUserBar />
-        <Switch>
-            <Route path={Routes.EndUser.Base} exact component={Welcome} />
-        </Switch>
+        <div style={{display: "flex", flexFlow: "column nowrap",
+            justifyContent: "stretch",
+            width: "100%", height: "100%"}}>
+            <EndUserBar />
+            <Switch>
+                <Route path={Routes.EndUser.Base} exact component={Welcome} />
+            </Switch>
+        </div>
     </ThemeProvider>
 };

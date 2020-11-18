@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {CircularProgress, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup} from "@material-ui/core";
-import {InputLoading, TextField} from "../UI";
+import {InputLoading, ScrollableContainer, TextField} from "../UI";
 import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -100,7 +100,7 @@ export const ServiceNeedsS2 = () => {
 
     const classes = useStyles();
     return (
-        <div style={{width: "80%"}}>
+        <div style={{width: "80%", height: "100%", display: "flex", flexFlow: "column nowrap"}}>
             <h4 className={classes.title}>What Does Your Car Need?</h4>
             <FormLabel className={classes.label} htmlFor="search">Search</FormLabel>
             <TextField
@@ -119,31 +119,33 @@ export const ServiceNeedsS2 = () => {
                         : undefined
                 }}
             />
-            <RadioGroup className={classes.radioGroup} value={selectedCode} onChange={handleSelectCode}>
-                {srList.map(s => {
-                    return <FormControlLabel
-                        key={s.id}
-                        className={classes.item}
-                        label={<span>
-                            <IconButton
-                                onClick={handleOpen(s.id)}
-                                size="small"
-                                color="primary"
-                                className={clsx(...[classes.openIcon, s.id === openedCode ? classes.opened : undefined])}>
-                                <ArrowDropDownCircleOutlined />
-                            </IconButton> {s?.description || s.code}
-                        </span>}
-                        labelPlacement={"start"}
-                        value={s.id}
-                        control={
-                            <Radio
-                                color="primary"
-                            />
-                        }
-                    />
-                })}
-            </RadioGroup>
-            {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
+            <ScrollableContainer>
+                <RadioGroup className={classes.radioGroup} value={selectedCode} onChange={handleSelectCode}>
+                    {srList.map(s => {
+                        return <FormControlLabel
+                            key={s.id}
+                            className={classes.item}
+                            label={<span>
+                                <IconButton
+                                    onClick={handleOpen(s.id)}
+                                    size="small"
+                                    color="primary"
+                                    className={clsx(...[classes.openIcon, s.id === openedCode ? classes.opened : undefined])}>
+                                    <ArrowDropDownCircleOutlined />
+                                </IconButton> {s?.description || s.code}
+                            </span>}
+                            labelPlacement={"start"}
+                            value={s.id}
+                            control={
+                                <Radio
+                                    color="primary"
+                                />
+                            }
+                        />
+                    })}
+                </RadioGroup>
+                {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
+            </ScrollableContainer>
         </div>
     );
 };

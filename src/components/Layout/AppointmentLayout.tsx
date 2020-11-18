@@ -19,9 +19,17 @@ export const AppointmentLayout = () => {
     }, [id, dispatch]);
 
     return <ThemeProvider theme={endUserTheme}>
-        <EndUserBar />
-        <Switch>
-            <Route path={Routes.EndUser.Appointment} component={AppointmentFlow} />
-        </Switch>
+        <div style={{
+            display: "flex",
+            flexFlow: "column nowrap",
+            justifyContent: "stretch",
+            height: "100%",
+            width: "100%"
+        }}>
+            <EndUserBar />
+            <Switch>
+                <Route path={Routes.EndUser.Appointment} component={AppointmentFlow} />
+            </Switch>
+        </div>
     </ThemeProvider>
 };

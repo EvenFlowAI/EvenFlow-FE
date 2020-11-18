@@ -26,3 +26,32 @@ export const InputLoading = () => {
         <CircularProgress size={20} />
     </span>;
 }
+
+export const StepContainer: React.FC = ({children}) => {
+    return <div style={{
+        display: "flex",
+        flexFlow: "column nowrap",
+        justifyContent: "space-around",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+    }}>
+        {children}
+    </div>;
+}
+export const ScrollableContainer: React.FC = ({children}) => {
+    return <div style={{
+        height: "100%",
+        overflowX: "hidden",
+        overflowY: "auto",
+        background: `linear-gradient(#ffffff 33%, rgba(255,255,255, 0)),
+            linear-gradient(rgba(255,255,255, 0), #ffffff 66%) 0 100%,
+            radial-gradient(farthest-side at 50% 0, rgba(0,0,0, 0.05), rgba(0,0,0,0)),
+            radial-gradient(farthest-side at 50% 100%, rgba(0,0,0, 0.05), rgba(0,0,0,0)) 0 100%`,
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "local, local, scroll, scroll",
+        backgroundSize: "100% 72px, 100% 72px, 100% 24px, 100% 24px",
+    }}>
+        {children}
+    </div>
+}

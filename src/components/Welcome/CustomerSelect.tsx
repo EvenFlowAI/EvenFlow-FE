@@ -2,9 +2,15 @@ import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
 
+const mh400 = "@media (max-height: 400px)";
+const mh600 = "@media (max-height: 600px)";
+
 const useStyles = makeStyles(theme => ({
     buttonsContainer: {
-        marginTop: 62
+        marginTop: "5%",
+        [mh600]: {
+            marginTop: "2%"
+        }
     },
     button: {
         cursor: "pointer",
@@ -13,7 +19,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "80px 40px",
+        padding: "10%",
         height: "100%",
         textAlign: "center",
         border: "1px solid #DADADA",
@@ -21,6 +27,14 @@ const useStyles = makeStyles(theme => ({
         transition: theme.transitions.create(["box-shadow"]),
         "&:hover": {
             boxShadow: "0 2px 8px rgba(0,0,0,.1)"
+        },
+        [mh600]: {
+            fontSize: 22,
+            padding: "7%"
+        },
+        [mh400]: {
+            fontSize: 18,
+            padding: "2%"
         }
     }
 }))
