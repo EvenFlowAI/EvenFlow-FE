@@ -18,7 +18,8 @@ const useStyles = makeStyles({
         alignItems: "center",
         justifyContent: "center",
         background: `url('${bg}') top center no-repeat`,
-        backgroundSize: "cover"
+        backgroundSize: "cover",
+        flex: 1
     },
     title: {
         textTransform: "uppercase",

@@ -7,7 +7,7 @@ import {TextField} from "../UI/EndUserInputs";
 const useStyles = makeStyles({
     paper: {
         borderRadius: 2,
-        marginTop: 62,
+        marginTop: "5%",
         padding: "42px 20%"
     },
     button: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
         textAlign: "center"
     },
     buttonsRow: {
-        marginTop: 50,
+        marginTop: "8%",
         display: "flex",
         justifyContent: "space-around",
         flexFlow: "row nowrap"
