@@ -1,5 +1,5 @@
 import React, {forwardRef} from "react";
-import {CircularProgress, FormLabel, TextFieldProps, withStyles} from "@material-ui/core";
+import {CircularProgress, createStyles, FormLabel, InputBase, TextFieldProps, withStyles} from "@material-ui/core";
 import {TextField as TF} from "../UI/EndUserInputs";
 import {InputProps as StandardInputProps} from "@material-ui/core/Input/Input";
 
@@ -26,6 +26,15 @@ export const InputLoading = () => {
         <CircularProgress size={20} />
     </span>;
 }
+
+export const SelectInput = withStyles(createStyles({
+    root: {
+        borderRadius: 2,
+    },
+    input: {
+        padding: "6px 16px"
+    }
+}))(InputBase);
 
 export const StepContainer: React.FC = ({children}) => {
     return <div style={{

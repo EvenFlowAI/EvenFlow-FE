@@ -3,6 +3,7 @@ import {AppBar, Avatar, Toolbar, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
+import {ScSelector} from "../AppointmentFlow/SCSelector";
 
 const useStyles = makeStyles({
     grow: {
@@ -34,6 +35,8 @@ export const EndUserBar = () => {
             <Typography className={classes.serviceName} variant="h4">
                 {scProfile?.name}
             </Typography>
+            <div className={classes.grow} />
+            <ScSelector />
             <div className={classes.grow} />
             <Typography className={classes.contacts} variant="h6">
                 Service: {scProfile?.phoneNumber}
