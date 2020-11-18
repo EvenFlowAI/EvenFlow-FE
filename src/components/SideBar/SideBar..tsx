@@ -1,19 +1,26 @@
 import React, {useMemo} from "react";
-import {Drawer, lighten, List, ListItem} from "@material-ui/core";
+import {Button, Drawer, lighten, List, ListItem} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import logo from '../../assets/img/logoSidebar.svg';
 import {NavLink} from "react-router-dom";
 import {LinkType} from "../../types/types";
 import {sideBarWidth} from "../../theme/theme";
 import {Routes} from "../../config/routes";
-import {useCurrentUser} from "../../utils/hooks";
+import {useCurrentUser, useSCs} from "../../utils/hooks";
 import {useLocation, useHistory, matchPath} from "react-router-dom";
 import clsx from "clsx";
+import {ArrowForwardIos} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
         width: sideBarWidth,
-        flexShrink: 0
+        flexShrink: 0,
+        display: "flex",
+        flexFlow: "column",
+        position: "relative",
+    },
+    link: {
+        color: "#fff"
     },
     logo: {
         maxWidth: "80%",
@@ -85,6 +92,7 @@ export const SideBar = () => {
 
     const currentUser = useCurrentUser();
     const {pathname} = useLocation();
+    const {selectedSC} = useSCs();
     const history = useHistory();
     const links: LinkType[] = useMemo(() => {
         if (matchPath(pathname, Routes.Admin.Base))
@@ -93,6 +101,9 @@ export const SideBar = () => {
     }, [currentUser, pathname]);
     const handleLogoClick = () => {
         history.push(Routes.Admin.Base);
+    }
+    const handleGoToBooking = () => {
+        history.push(Routes.EndUser.Welcome + "/" + selectedSC?.id);
     }
 
     return <Drawer
@@ -111,5 +122,7 @@ export const SideBar = () => {
                 exact={link.exact}
                 key={link.to}>{link.name}</ListItem>)}
         </List>
+        <div style={{flex: 1}} />
+        <Button endIcon={<ArrowForwardIos />} className={classes.link} onClick={handleGoToBooking}>Go to Booking</Button>
     </Drawer>
 };
