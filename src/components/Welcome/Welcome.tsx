@@ -12,8 +12,8 @@ import {RootState} from "../../store/rootReducer";
 const useStyles = makeStyles({
     container: {
         width: "100vw",
-        minHeight: "100vh",
-        padding: "50px 0",
+        minHeight: 0,
+        padding: "5% 0",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -31,7 +31,9 @@ const useStyles = makeStyles({
         borderRadius: 4,
         maxWidth: 990,
         width: "70%",
-        padding: 48,
+        maxHeight: "100%",
+        overflowY: "auto",
+        padding: "5%",
         backgroundColor: "rgba(255,255,255,.8)"
     }
 })

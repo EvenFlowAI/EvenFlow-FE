@@ -4,7 +4,7 @@ import {Grid} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     buttonsContainer: {
-        marginTop: 62
+        marginTop: "5%"
     },
     button: {
         cursor: "pointer",
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "80px 40px",
+        padding: "10%",
         height: "100%",
         textAlign: "center",
         border: "1px solid #DADADA",
