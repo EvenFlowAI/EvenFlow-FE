@@ -10,10 +10,14 @@ import {TStepProps} from "./UI";
 const useStyles = makeStyles(theme => ({
     container: {
         padding: "40px 0",
-        height: "100vh"
+        height: "100%",
+        flex: 1,
+        minHeight: 0
     },
     paper: {
-        minHeight: "calc(100% - 64px)",
+        minHeight: 0,
+        minWidth: 0,
+        height: "100%",
         marginLeft: "20%",
         marginRight: "10%",
         padding: 32,
