@@ -9,6 +9,9 @@ import {Routes} from "../../config/routes";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 
+const mh400 = "@media (max-height: 400px)";
+const mh600 = "@media (max-height: 600px)";
+
 const useStyles = makeStyles({
     container: {
         width: "100vw",
@@ -19,7 +22,10 @@ const useStyles = makeStyles({
         justifyContent: "center",
         background: `url('${bg}') top center no-repeat`,
         backgroundSize: "cover",
-        flex: 1
+        flex: 1,
+        [mh600]: {
+            padding: "2% 0"
+        }
     },
     title: {
         textTransform: "uppercase",
@@ -27,6 +33,12 @@ const useStyles = makeStyles({
         fontSize: 32,
         margin: 0,
         textAlign: "center",
+        [mh600]: {
+            fontSize: 22
+        },
+        [mh400]: {
+            fontSize: 18
+        }
     },
     paper: {
         borderRadius: 4,
@@ -35,7 +47,10 @@ const useStyles = makeStyles({
         maxHeight: "100%",
         overflowY: "auto",
         padding: "5%",
-        backgroundColor: "rgba(255,255,255,.8)"
+        backgroundColor: "rgba(255,255,255,.8)",
+        [mh600]: {
+            padding: "2%"
+        }
     }
 })
 
