@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IPricingLevel, ITimeWindowEl} from "./types";
+import {IPricingLevel, IPricingSetting, ITimeWindowEl} from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
@@ -47,4 +47,12 @@ export const setEligibleRequest = (id: number, isEligibility: boolean, serviceCe
     if (serviceCenterId) {
         await dispatch(loadSrList(serviceCenterId));
     }
+}
+export const getPricingCalculations = createAction<IPricingSetting[]>("PricingSettings/GetCalculations");
+export const loadPricingCalculations = (serviceRequestId: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<IPricingSetting[]>(
+        Api.endpoints.PricingSettings.Calculation,
+        {params: {serviceRequestId}}
+    );
+    dispatch(getPricingCalculations(data));
 }

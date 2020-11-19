@@ -1,4 +1,3 @@
-
 export enum EDemandCategory {
     Low, Average, High
 }
@@ -17,4 +16,13 @@ export interface ITimeWindowEl {
     isEligibility: boolean;
     serviceCenterId: number;
     podId?: number;
+}
+export enum EDay {
+    Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+}
+export interface IPricingSetting {
+    day: EDay;
+    lowPrice: number;
+    averagePrice: number;
+    highPrice: number;
 }

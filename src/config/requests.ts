@@ -116,7 +116,7 @@ type ApiRoutes = {
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
-        | "GetLevels" | "SetLevels", TApiRoute>,
+        | "GetLevels" | "SetLevels" | "Calculation", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks", TApiRoute>,
@@ -231,6 +231,7 @@ export class Api {
             RemoveTimeOfYear: {route: "/pricing-settings/time-of-year/{id}", method: "delete"},
             GetLevels: {route: "/pricing-settings/levels", method: "get"},
             SetLevels: {route: "/pricing-settings/levels", method: "put"},
+            Calculation: {route: "/pricing-settings/calculation", method: "get"},
         },
         ServiceCenters: {
             Create: {route: "/service-centers", method: "post"},

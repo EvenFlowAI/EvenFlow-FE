@@ -6,6 +6,7 @@ import {Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import { PricingLevels } from './PricingLevels';
 import {Eligibility} from "./Eligibility/Eligibility";
+import {PricingOptimization} from "./PricingOptimization";
 
 export const PricingSettingsPage = () => {
     const [selectedTab, selectTab] = useState<string>("0");
@@ -24,5 +25,6 @@ export const PricingSettingsPage = () => {
         </TabList>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><Eligibility /></TabPanel>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><PricingLevels /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="2"><PricingOptimization /></TabPanel>
     </TabContext>
 };
