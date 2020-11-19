@@ -2,16 +2,19 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
-    title: {
+    title: (nPd: boolean) => ({
         fontSize: 16,
         fontWeight: "bold",
         textTransform: "uppercase",
-        margin: "16px 32px"
-    }
+        margin: nPd ? 0 : "16px 32px"
+    })
 });
 
-export const PaperTitle: React.FC = ({children}) => {
-    const classes = useStyles();
+type TProps = {
+    noPadding?: boolean;
+}
+export const PaperTitle: React.FC<TProps> = ({children, noPadding}) => {
+    const classes = useStyles(Boolean(noPadding));
     return <h4 className={classes.title}>{children}</h4>;
 }
 
