@@ -2,6 +2,7 @@ import React from "react";
 import {Button, ButtonClassKey, ButtonProps, CircularProgress, withStyles} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
+import {DesirabilityButton} from "./ConfigButton";
 
 
 const useStyles = makeStyles({
@@ -53,3 +54,30 @@ export const EditButton = withStyles({
         textTransform: "none"
     }
 })(Button);
+
+export type TSwitchButton<U> = {label: string; type: U};
+export type TSwitchButtonsProps<U=string> = {
+    onClick: (s: U) => () => void,
+    active: U,
+    buttons: TSwitchButton<U>[]
+}
+
+const getButtonColor = <U extends string | number>(ds: U, cds: U): "primary" | "default" => {
+    return ds === cds ? "primary" : "default";
+}
+
+export const SwitchButtons
+    = <U extends string | number >({onClick, buttons, active}: TSwitchButtonsProps<U>):
+    React.ReactElement<TSwitchButtonsProps<U>> => {
+    return <>
+        {buttons.map(b => {
+            return <DesirabilityButton
+                key={b.type}
+                variant="contained"
+                onClick={onClick(b.type)}
+                color={getButtonColor(active, b.type)}>
+                {b.label}
+            </DesirabilityButton>
+        })}
+    </>
+}
