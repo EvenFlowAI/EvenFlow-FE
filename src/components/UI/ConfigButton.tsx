@@ -21,9 +21,10 @@ export const ConfigButton = withStyles(theme => ({
 export const DesirabilityButton = withStyles(theme => ({
     root: {
         textTransform: "none",
-        fontSize: 11,
+        fontSize: 9,
         fontWeight: "normal",
         padding: 4,
+        minWidth: 60,
         marginRight: 8,
         "&:last-child": {
             marginRight: 0
