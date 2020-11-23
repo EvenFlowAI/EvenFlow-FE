@@ -1,3 +1,5 @@
+import {TEnumMap} from "../utils";
+
 export enum EDemandCategory {
     Low, Average, High
 }
@@ -26,3 +28,12 @@ export interface IPricingSetting {
     averagePrice: number;
     highPrice: number;
 }
+
+export enum EDayDemand {
+    High, Low
+}
+
+export const dayDemands: TEnumMap<EDayDemand>[] = [
+    {id: EDayDemand.High, label: "High"},
+    {id: EDayDemand.Low, label: "Low"}
+];
