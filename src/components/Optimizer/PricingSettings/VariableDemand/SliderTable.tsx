@@ -12,22 +12,28 @@ import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";
 
 
-enum ESliderRange {
-    Min= 0.0,
-    Max= 3.0,
-    Default= 0.0,
-    Step= 0.1
+type ESliderRange = {
+    Min: number;
+    Max: number;
+    Default: number;
+    Step: number;
 }
-const sliderMarks: Mark[] = [
-    {label: ESliderRange.Min, value: ESliderRange.Min},
-    {label: ESliderRange.Max, value: ESliderRange.Max},
-]
+const sliderRange: {[k in EDayDemand]: ESliderRange} = {
+    [EDayDemand.Low]: {Min: -10, Max: 0, Default: 0, Step: .1},
+    [EDayDemand.High]: {Min: 0, Max: 10, Default: 0, Step: .1},
+}
+
+const sliderMarks = (t: EDayDemand): Mark[] => [
+    {label: sliderRange[t].Min, value: sliderRange[t].Min},
+    {label: sliderRange[t].Max, value: sliderRange[t].Max},
+];
+
 type TForm = {
     [k in EDayDemand]: number;
 }
 const initialForm: TForm = {
-    [EDayDemand.Low]: ESliderRange.Default,
-    [EDayDemand.High]: ESliderRange.Default,
+    [EDayDemand.Low]: 0,
+    [EDayDemand.High]: 0,
 }
 
 type TProps = {
@@ -100,14 +106,14 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
                         <TableCell>
                             <Box ml={2} mr={2}>
                                 <ValueSlider
-                                    min={ESliderRange.Min}
-                                    max={ESliderRange.Max}
+                                    min={sliderRange[d.id].Min}
+                                    max={sliderRange[d.id].Max}
                                     disabled={edit !== d.id}
                                     valueLabelDisplay="on"
-                                    step={ESliderRange.Step}
-                                    defaultValue={ESliderRange.Default}
+                                    step={sliderRange[d.id].Step}
+                                    defaultValue={sliderRange[d.id].Default}
                                     value={form[d.id]}
-                                    marks={sliderMarks}
+                                    marks={sliderMarks(d.id)}
                                     onChange={handleSlide(d.id)}
                                 />
                             </Box>
