@@ -25,3 +25,6 @@ export type TEnumMap<U> = {
 export type TEnumKeyLabel<U extends string | number> = {
     [k in U]: string;
 }
+export type TEnumValueMap<U extends string | number | symbol, V> = {
+    [k in U]: V
+}

@@ -1,11 +1,17 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SquarePaper} from "../../../UI/Paper";
 import {PaperTitle, TableContainer} from "../UI";
 import {Box, Divider, Mark, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {DenseTable} from "../../AppointmentAllocation/UI";
-import {dayDemands, EDayDemand} from "../../../../store/reducers/pricingSettings/types";
+import {dayDemands, EDayDemand, EDemandCategory, EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import {EditButton} from "../../../UI/Button";
 import {ValueSlider} from "../../AppointmentValue/UI";
+import {useDispatch, useSelector} from "react-redux";
+import {mappedPricingDemandsSelectorDWeek} from "../../../../store/reducers/pricingSettings/selectors";
+import {useException, useMessage, useSCs} from "../../../../utils/hooks";
+import {SC_UNDEFINED} from "../../../../config/constants";
+import {setPricingDemand} from "../../../../store/reducers/pricingSettings/actions";
+
 
 enum ESliderRange {
     Min= 0.0,
@@ -28,6 +34,22 @@ const initialForm: TForm = {
 export const DayOfWeek = () => {
     const [edit, setEdit] = useState<EDayDemand|null>(null);
     const [form, setForm] = useState<TForm>(initialForm);
+
+    const demand = useSelector(mappedPricingDemandsSelectorDWeek);
+    const {selectedSC} = useSCs();
+    const showMessage = useMessage();
+    const showError = useException();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        setForm(f => ({
+            ...{
+                [EDayDemand.High]: demand[EDayDemand.High]?.point || f[EDayDemand.High],
+                [EDayDemand.Low]: demand[EDayDemand.Low]?.point || f[EDayDemand.Low],
+            }
+        }));
+    }, [demand]);
+
     const handleEdit = (t: EDayDemand|null) => () => {
         setEdit(t);
         if (t === null) {
@@ -37,6 +59,25 @@ export const DayOfWeek = () => {
     }
     const handleSlide = (t: EDayDemand) => (e: any, value: number|number[]) => {
         setForm({...form, [t]: value as number});
+    }
+
+    const handleSave = (t: EDayDemand) => async () => {
+        if (!selectedSC) {
+            showError(SC_UNDEFINED);
+        } else {
+            try {
+                await dispatch(setPricingDemand({
+                    serviceCenterId: selectedSC.id,
+                    point: form[t],
+                    demandCategory: EDemandCategory[String(t) as keyof typeof EDemandCategory],
+                    type: EDemandType.DayOfWeek
+                }));
+                setEdit(null);
+                showMessage("Saved");
+            } catch (e) {
+                showError(e);
+            }
+        }
     }
 
     return <SquarePaper variant="outlined">
@@ -73,8 +114,12 @@ export const DayOfWeek = () => {
                             <TableCell align="right">
                                 {(edit === d.id) ?
                                     <>
-                                        <EditButton color="secondary" onClick={handleEdit(null)}>Cancel</EditButton>
-                                        <EditButton color="primary">Save</EditButton>
+                                        <EditButton
+                                            color="secondary"
+                                            onClick={handleEdit(null)}>Cancel</EditButton>
+                                        <EditButton
+                                            color="primary"
+                                            onClick={handleSave(d.id)}>Save</EditButton>
                                     </>
                                     : <EditButton
                                         color="primary"

@@ -1,6 +1,8 @@
 import {RootState} from "../../rootReducer";
 import {createSelector} from "@reduxjs/toolkit";
-import {EDay, IPricingSetting} from "./types";
+import {EDay, EDemandCategory, EDemandType, IPricingDemand, IPricingSetting} from "./types";
+import {TEnumValueMap} from "../utils";
+
 type TMappedCalculations = {
     [k in EDay]: IPricingSetting
 }
@@ -11,4 +13,24 @@ export const mappedCalculationsSelector = createSelector(
         acc[item.day] = item;
         return acc;
     }, {} as TMappedCalculations)
+);
+export const demandSelector = (state: RootState) => state.pricingSettings.pricingDemands;
+type TMappedDemands = TEnumValueMap<EDemandCategory, IPricingDemand>;
+export const mappedPricingDemandsSelectorDWeek = createSelector(
+    demandSelector,
+    items => items
+        .filter(i => i.type === EDemandType.DayOfWeek)
+        .reduce((acc, item) => {
+            acc[item.demandCategory] = item;
+            return acc;
+        }, {} as TMappedDemands)
+);
+export const mappedPricingDemandsSelectorDYear = createSelector(
+    demandSelector,
+    items => items
+        .filter(i => i.type === EDemandType.TimeOfYear)
+        .reduce((acc, item) => {
+            acc[item.demandCategory] = item;
+            return acc;
+        }, {} as TMappedDemands)
 );

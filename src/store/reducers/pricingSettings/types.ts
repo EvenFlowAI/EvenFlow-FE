@@ -30,10 +30,20 @@ export interface IPricingSetting {
 }
 
 export enum EDayDemand {
-    High, Low
+    Low = 0,
+    High = 2
 }
 
 export const dayDemands: TEnumMap<EDayDemand>[] = [
     {id: EDayDemand.High, label: "High"},
     {id: EDayDemand.Low, label: "Low"}
 ];
+export enum EDemandType {
+    TimeOfDay, DayOfWeek, TimeOfYear
+}
+export interface IPricingDemand {
+    demandCategory: EDemandCategory;
+    type: EDemandType;
+    point: number;
+    serviceCenterId: number;
+}
