@@ -51,12 +51,12 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setForm(f => ({
+        setForm({
             ...{
-                [EDayDemand.High]: demand[EDayDemand.High]?.point || f[EDayDemand.High],
-                [EDayDemand.Low]: demand[EDayDemand.Low]?.point || f[EDayDemand.Low],
+                [EDayDemand.High]: demand[EDayDemand.High]?.point || initialForm[EDayDemand.High],
+                [EDayDemand.Low]: demand[EDayDemand.Low]?.point || initialForm[EDayDemand.Low],
             }
-        }));
+        });
     }, [demand]);
 
     const handleSlide = (t: EDayDemand) => (e: any, value: number|number[]) => {
@@ -111,7 +111,6 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
                                     disabled={edit !== d.id}
                                     valueLabelDisplay="on"
                                     step={sliderRange[d.id].Step}
-                                    defaultValue={sliderRange[d.id].Default}
                                     value={form[d.id]}
                                     marks={sliderMarks(d.id)}
                                     onChange={handleSlide(d.id)}

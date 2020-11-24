@@ -1,6 +1,6 @@
 import {RootState} from "../../rootReducer";
 import {createSelector} from "@reduxjs/toolkit";
-import {EDay, EDemandCategory, EDemandType, IDayOfWeekSetting, IPricingDemand, IPricingSetting} from "./types";
+import {EDay, EDemandCategory, EDemandType, IPricingDemand, IPricingSetting} from "./types";
 import {TEnumValueMap} from "../utils";
 
 type TMappedCalculations = {
