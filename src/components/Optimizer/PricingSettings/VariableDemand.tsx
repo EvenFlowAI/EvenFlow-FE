@@ -5,6 +5,7 @@ import {DayOfWeek} from "./VariableDemand/DayOfWeek";
 import {useDispatch} from "react-redux";
 import {useSCs} from "../../../utils/hooks";
 import {loadPricingDemand} from "../../../store/reducers/pricingSettings/actions";
+import {TimeOfYear} from "./VariableDemand/TimeOfYear";
 
 export const VariableDemand = () => {
     const dispatch = useDispatch();
@@ -19,5 +20,7 @@ export const VariableDemand = () => {
         <ToD />
         <Box p={1.5} />
         <DayOfWeek />
+        <Box p={1.5} />
+        <TimeOfYear />
     </div>
 };

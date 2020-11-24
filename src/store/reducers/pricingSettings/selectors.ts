@@ -15,7 +15,7 @@ export const mappedCalculationsSelector = createSelector(
     }, {} as TMappedCalculations)
 );
 export const demandSelector = (state: RootState) => state.pricingSettings.pricingDemands;
-type TMappedDemands = TEnumValueMap<EDemandCategory, IPricingDemand>;
+export type TMappedDemands = TEnumValueMap<EDemandCategory, IPricingDemand>;
 export const mappedPricingDemandsSelectorDWeek = createSelector(
     demandSelector,
     items => items
