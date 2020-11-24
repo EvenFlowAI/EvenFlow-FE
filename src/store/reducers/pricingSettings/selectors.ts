@@ -1,6 +1,6 @@
 import {RootState} from "../../rootReducer";
 import {createSelector} from "@reduxjs/toolkit";
-import {EDay, EDemandCategory, EDemandType, IPricingDemand, IPricingSetting} from "./types";
+import {EDay, EDemandCategory, EDemandType, IDayOfWeekSetting, IPricingDemand, IPricingSetting} from "./types";
 import {TEnumValueMap} from "../utils";
 
 type TMappedCalculations = {
@@ -34,3 +34,11 @@ export const mappedPricingDemandsSelectorDYear = createSelector(
             return acc;
         }, {} as TMappedDemands)
 );
+const dowSelector = (state: RootState) => state.pricingSettings.dWeekPricing;
+export const mappedDWeekPricingSelector = createSelector(
+    dowSelector,
+    items => items.reduce((acc, item) => {
+        acc[item.dayOfWeek] = item.demandCategory;
+        return acc;
+    }, {} as TEnumValueMap<EDay, EDemandCategory>)
+)

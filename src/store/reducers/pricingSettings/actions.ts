@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IPricingDemand, IPricingLevel, IPricingSetting, ITimeWindowEl} from "./types";
+import {IDayOfWeekSetting, IPricingDemand, IPricingLevel, IPricingSetting, ITimeWindowEl} from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
@@ -70,4 +70,18 @@ export const setPricingDemand = (data: IPricingDemand): AppThunk => async dispat
         {data}
     )
     dispatch(loadPricingDemand(data.serviceCenterId));
+}
+export const getDayOfWeekPricing = createAction<IDayOfWeekSetting[]>("PricingSettings/GetDayOfWeek");
+export const loadDayOfWeekPricing = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<IDayOfWeekSetting[]>(
+        Api.endpoints.PricingSettings.GetDayOfWeek,
+        {params: {serviceCenterId}}
+    );
+    dispatch(getDayOfWeekPricing(data));
+}
+export const setWorkWeekPricing = (data: IDayOfWeekSetting[]): AppThunk => async () => {
+    await Api.call(
+        Api.endpoints.PricingSettings.SetDayOfWeek,
+        {data: {serviceCenterId: data[0].serviceCenterId, items: data}}
+    );
 }

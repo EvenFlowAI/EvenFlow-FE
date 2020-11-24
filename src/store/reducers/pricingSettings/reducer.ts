@@ -1,6 +1,13 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IPricingDemand, IPricingLevel, IPricingSetting, ITimeWindowEl} from "./types";
-import {getPricingCalculations, getPricingDemand, getPricingLevels, getSrList, getTimeWindows} from "./actions";
+import {IDayOfWeekSetting, IPricingDemand, IPricingLevel, IPricingSetting, ITimeWindowEl} from "./types";
+import {
+    getDayOfWeekPricing,
+    getPricingCalculations,
+    getPricingDemand,
+    getPricingLevels,
+    getSrList,
+    getTimeWindows
+} from "./actions";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 
 type TState = {
@@ -9,13 +16,15 @@ type TState = {
     srList: IAssignedServiceRequest[];
     calculations: IPricingSetting[];
     pricingDemands: IPricingDemand[];
+    dWeekPricing: IDayOfWeekSetting[];
 }
 const initialState: TState = {
     pricingLevels: [],
     timeWindows: [],
     srList: [],
     calculations: [],
-    pricingDemands: []
+    pricingDemands: [],
+    dWeekPricing: []
 };
 export const pricingSettingsReducer = createReducer<TState>(initialState, builder => builder
     .addCase(getPricingLevels, (state, {payload}) => {
@@ -32,5 +41,8 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
     })
     .addCase(getPricingDemand, (state, {payload}) => {
         return {...state, pricingDemands: payload};
+    })
+    .addCase(getDayOfWeekPricing, (state, {payload}) => {
+        return {...state, dWeekPricing: payload};
     })
 );

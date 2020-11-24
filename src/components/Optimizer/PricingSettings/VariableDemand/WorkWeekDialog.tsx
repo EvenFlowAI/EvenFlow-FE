@@ -4,9 +4,12 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../Mod
 import {Box, Button} from "@material-ui/core";
 import {LoadingButton, SwitchButtons, TSwitchButton} from "../../../UI/Button";
 import {useException, useMessage, useSCs} from "../../../../utils/hooks";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
-import {EDay, EDemandCategory} from "../../../../store/reducers/pricingSettings/types";
+import {EDay, EDemandCategory, IDayOfWeekSetting} from "../../../../store/reducers/pricingSettings/types";
+import {SC_UNDEFINED} from "../../../../config/constants";
+import {loadDayOfWeekPricing, setWorkWeekPricing} from "../../../../store/reducers/pricingSettings/actions";
+import {mappedDWeekPricingSelector} from "../../../../store/reducers/pricingSettings/selectors";
 
 const buttons: TSwitchButton<number>[] = [
     {type: EDemandCategory.Low, label: "Low"},
@@ -30,19 +33,52 @@ export const WorkWeekDialog: React.FC<DialogProps> = ({onAction, payload, ...pro
     const showMessage = useMessage();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const demand = useSelector(mappedDWeekPricingSelector);
 
     useEffect(() => {
         if (props.open) {
-            setForm({...initialForm});
+            if (selectedSC) {
+                dispatch(loadDayOfWeekPricing(selectedSC.id));
+            } else {
+                setForm(initialForm);
+            }
         }
-    }, [props.open]);
+    }, [props.open, dispatch, selectedSC]);
+
+    useEffect(() => {
+        setForm({
+            ...initialForm,
+            ...demand
+        })
+    }, [demand]);
 
     const handleSwitch = (idx: EDay) => (t: EDemandCategory) => () => {
         setForm({...form, [idx]: t});
     }
 
     const handleSave = async () => {
-
+        if (!selectedSC) {
+            showError(SC_UNDEFINED);
+        } else {
+            try {
+                setSaving(true);
+                await dispatch(setWorkWeekPricing(
+                    Object.entries(form).filter(([k, v]) => !isNaN(Number(k))).map(([k, v]) => {
+                        return {
+                            demandCategory: v,
+                            dayOfWeek: Number(k) as EDay,
+                            serviceCenterId: selectedSC.id
+                        } as IDayOfWeekSetting;
+                    }))
+                )
+                showMessage("Saved");
+                setSaving(false);
+                props.onClose();
+            } catch (e) {
+                setSaving(false);
+                showError(e);
+            }
+        }
     }
     return <BaseModal {...props} width={400}>
         <DialogTitle onClose={props.onClose}>Work week settings</DialogTitle>
