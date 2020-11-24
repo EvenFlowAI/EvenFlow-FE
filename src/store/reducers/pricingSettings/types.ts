@@ -47,3 +47,8 @@ export interface IPricingDemand {
     point: number;
     serviceCenterId: number;
 }
+export interface IDayOfWeekSetting {
+    serviceCenterId: number;
+    demandCategory: EDemandCategory;
+    dayOfWeek: EDay;
+}
