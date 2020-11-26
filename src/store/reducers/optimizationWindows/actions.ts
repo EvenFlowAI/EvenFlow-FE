@@ -2,12 +2,13 @@ import {createAction} from "@reduxjs/toolkit";
 import {EOptimizationWindowType, IOptimizationWindow, IOverbookingFactor} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
+import moment from "moment";
 
 export const getOptimizationWindows = createAction<IOptimizationWindow[]>("OptimizationWindows/GetParams");
 export const loadOptimizationWindows = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
     const {data} = await Api.call<IOptimizationWindow[]>(
         Api.endpoints.OptimizationWindows.GetParams,
-        {params: {serviceCenterId, podId}}
+        {params: {serviceCenterId, podId, day: moment().day()}}
     );
     dispatch(getOptimizationWindows(data));
 }

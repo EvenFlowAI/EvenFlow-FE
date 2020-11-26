@@ -5,6 +5,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {ServiceNeedsS2} from "./Steps/ServiceNeedsS2";
 import clsx from "clsx";
 import {TStepProps} from "./UI";
+import {AppointmentTimingS3} from "./Steps/AppointmentTimingS3";
 
 
 const useStyles = makeStyles(theme => ({
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     },
     stepContainer: {
         position: "absolute",
-        left: -178,
+        left: -198,
         width: 250,
         background: "transparent",
         "& div[class*='MuiStepConnector-root']": {
@@ -58,13 +59,14 @@ const useStyles = makeStyles(theme => ({
         }
     },
     step: {
-        marginTop: 12,
+        marginTop: 8,
+        justifyContent: "flex-end",
         "& span[class*='MuiStepLabel-iconContainer']": {
             order: 1,
             padding: "0 0 0 12px",
             "&>svg": {
                 color: "#fff",
-                fontSize: 70,
+                fontSize: 60,
                 fontWeight: "bold",
                 "& text": {
                     fill: theme.palette.text.hint
@@ -78,7 +80,7 @@ const useStyles = makeStyles(theme => ({
             }
         },
         "& span[class*='MuiStepLabel-labelContainer']>span": {
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: "bold"
         },
         "& span[class*='MuiStepLabel-active']": {
@@ -112,6 +114,11 @@ const steps: TStep[] = [
         id: 2,
         label: "Service Needs",
         component: ServiceNeedsS2
+    },
+    {
+        id: 3,
+        label: "Appointment Timing",
+        component: AppointmentTimingS3
     }
 ]
 
