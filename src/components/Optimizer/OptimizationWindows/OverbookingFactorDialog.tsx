@@ -154,7 +154,7 @@ export const OverbookingFactorDialog: React.FC<DialogProps> = ({payload, onActio
                                     }}
                                     name="overbookingFactorValue"
                                     id="overbookingFactorValue"
-                                    value={form[idx as EDay].overbookingFactorValue || ""}
+                                    value={form[idx as EDay].overbookingFactorValue ?? ""}
                                     onChange={handleChange(idx as EDay)}
                                 />
                             </TableCell>
