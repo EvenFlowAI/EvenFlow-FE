@@ -4,6 +4,11 @@ import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 export enum EDemandCategory {
     Low, Average, High
 }
+export const demandCategories: TEnumMap<EDemandCategory>[] = [
+    {id: EDemandCategory.Low, label: "Low"},
+    {id: EDemandCategory.Average, label: "Average"},
+    {id: EDemandCategory.High, label: "High"},
+];
 export interface IPricingLevel {
     demandCategory: EDemandCategory;
     percentage: number;
