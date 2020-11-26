@@ -134,8 +134,8 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                     </Grid>
                     <Grid item xs={3}/>
                     <LabelGrid item xs={3}>
-                        <Label htmlFor="millage">
-                            millage
+                        <Label htmlFor="mileage">
+                            mileage
                         </Label>
                     </LabelGrid>
                     <Grid item xs={6}>
@@ -143,8 +143,8 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             onChange={handleTextChange}
                             type={"number"}
                             value={form.mileage || ""}
-                            name="millage"
-                            id="millage"
+                            name="mileage"
+                            id="mileage"
                         />
                     </Grid>
                     <Grid item xs={3}/>
