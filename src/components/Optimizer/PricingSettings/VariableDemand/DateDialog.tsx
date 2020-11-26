@@ -15,6 +15,7 @@ import {makeStyles} from "@material-ui/core/styles";
 const Date = styled("h4")(({theme}) => ({
     fontSize: 19,
     fontWeight: "normal",
+    textAlign: "center",
     margin: 0,
     color: theme.palette.text.disabled
 }));
@@ -55,6 +56,9 @@ export const DateDialog: React.FC<TProps> = ({payload, onAction, data, ...props}
         if (data) {
             setDemand(data.demandCategory);
             setComment(data.comment || "")
+        } else {
+            setDemand(EDemandCategory.Average);
+            setComment("");
         }
     }, [data]);
 

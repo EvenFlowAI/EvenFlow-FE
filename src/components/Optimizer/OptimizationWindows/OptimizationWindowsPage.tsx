@@ -16,6 +16,7 @@ import {
     TOptContent
 } from "../../../store/reducers/optimizationWindows/types";
 import {OptimizationDialog} from "./OptimizationWindowDialog";
+import {OverbookingFactorDialog} from "./OverbookingFactorDialog";
 
 type TOptParam = {
     [k in EOptimizationWindowType]: IOptimizationWindow;
@@ -60,6 +61,7 @@ const blankWindowParam: IOptimizationWindow = {
 export const OptimizationWindowsPage = () => {
     const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);
     const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
+    const {isOpen: isOverbookingOpen, onClose: onOverbookingClose, onOpen: onOverbookingOpen} = useModal();
     const {isOpen: isOptOpen, onClose: onOptClose, onOpen: onOptOpen} = useModal();
     const optParams = useSelector((state: RootState) =>
         state.optimizationWindows.dataList
@@ -97,7 +99,9 @@ export const OptimizationWindowsPage = () => {
                     return <Grid item xs={4} key={plate.title}>
                         <OptimizationPlate
                             onEdit={k === EOptimizationWindowType.DemandSegments
-                                ? onDemandOpen : handleEdit(k)}
+                                ? onDemandOpen
+                                : k === EOptimizationWindowType.OverbookingFactor ? onOverbookingOpen
+                                    : handleEdit(k)}
                             title={plate.title}
                             count={optMapped[k].value}
                             label={plate.label}
@@ -115,6 +119,7 @@ export const OptimizationWindowsPage = () => {
                 onClose={onOptClose}
             />
             <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
+            <OverbookingFactorDialog open={isOverbookingOpen} onClose={onOverbookingClose} />
         </Grid>
     </>
 }
