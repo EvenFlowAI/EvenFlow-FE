@@ -1,6 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IServiceCenterProfile, ISR, TS1Form} from "./types";
-import {changeS1Form, getServiceCenterProfile, getSRs, handleSearch, selectSR} from "./actions";
+import {IServiceCenterProfile, ISR, TAppointmentType, TS1Form, TS3Form} from "./types";
+import {changeS1Form, changeS3Form, getServiceCenterProfile, getSRs, handleSearch, selectSR} from "./actions";
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 type TState = {
     scProfile?: IServiceCenterProfile;
@@ -8,6 +9,7 @@ type TState = {
     selectedSR: number|null,
     s1Data: TS1Form;
     search: string;
+    s3Data: TS3Form;
 }
 const initialS1Form: TS1Form = {
     year: null,
@@ -19,11 +21,15 @@ const initialS1Form: TS1Form = {
     model: "",
     transmission: ""
 }
+const initialS3Form: TS3Form = {
+    appointmentType: 1
+}
 const initialState: TState = {
     serviceRequests: [],
     selectedSR: null,
     s1Data: initialS1Form,
     search: "",
+    s3Data: initialS3Form
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -40,5 +46,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(handleSearch, (state, {payload}) => {
         return {...state, search: payload};
+    })
+    .addCase(changeS3Form, (state, {payload}) => {
+        return {...state, s3Data: {...state.s3Data, ...payload}};
     })
 );

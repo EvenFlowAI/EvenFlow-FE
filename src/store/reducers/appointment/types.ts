@@ -1,4 +1,5 @@
 import {IAddress} from "../dealershipGroups/types";
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -35,3 +36,8 @@ export interface IVehicleData {
     driveType: string;
     engineType: string;
 }
+export type TS3Form = {
+    date?: ParsableDate,
+    appointmentType: TAppointmentType;
+}
+export type TAppointmentType = 1 | 2 | 3;
