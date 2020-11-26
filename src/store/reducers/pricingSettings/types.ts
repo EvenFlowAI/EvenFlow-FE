@@ -64,4 +64,5 @@ export interface ITimeOfYearSetting {
     demandCategory: EDemandCategory;
     id?: number;
     date: ParsableDate;
+    comment?: string;
 }

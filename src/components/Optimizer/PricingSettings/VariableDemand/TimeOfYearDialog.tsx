@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../Modals/BaseModal";
 import {DialogProps} from "../../../Modals/types";
 import {Button, Grid} from "@material-ui/core";
@@ -9,13 +9,21 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {ITimeOfYearSetting} from "../../../../store/reducers/pricingSettings/types";
 import {DateDialog} from "./DateDialog";
+import {loadTimeOfYearPricing} from "../../../../store/reducers/pricingSettings/actions";
 
 
 export const TimeOfYearDialog: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
     const [editedDate, setEditedDate] = useState<moment.Moment|undefined>(undefined);
+    const [toy, setToy] = useState<ITimeOfYearSetting|undefined>(undefined);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {onOpen, isOpen, onClose} = useModal();
+
+    useEffect(() => {
+        if (props.open && selectedSC) {
+            dispatch(loadTimeOfYearPricing(selectedSC.id));
+        }
+    }, [selectedSC, props.open, dispatch]);
 
     const timeOfYearData = useSelector((state: RootState) => state.pricingSettings.tYearPricing);
 
@@ -27,8 +35,10 @@ export const TimeOfYearDialog: React.FC<DialogProps> = ({onAction, payload, ...p
         return months;
     }, [timeOfYearData]);
 
-    const handleClick = (date: moment.Moment) => {
+    const handleClick = (date: moment.Moment, data?: ITimeOfYearSetting) => {
         setEditedDate(date);
+        setToy(data);
+        console.log(data);
         onOpen();
     }
 
@@ -51,6 +61,6 @@ export const TimeOfYearDialog: React.FC<DialogProps> = ({onAction, payload, ...p
                 Close
             </Button>
         </DialogActions>
-        <DateDialog open={isOpen} payload={editedDate} onClose={onClose} />
+        <DateDialog open={isOpen} payload={editedDate} data={toy} onClose={onClose} />
     </BaseModal>
 };
