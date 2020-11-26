@@ -38,7 +38,6 @@ export const TimeOfYearDialog: React.FC<DialogProps> = ({onAction, payload, ...p
     const handleClick = (date: moment.Moment, data?: ITimeOfYearSetting) => {
         setEditedDate(date);
         setToy(data);
-        console.log(data);
         onOpen();
     }
 
@@ -50,7 +49,7 @@ export const TimeOfYearDialog: React.FC<DialogProps> = ({onAction, payload, ...p
         <DialogContent>
             <Grid container spacing={3} style={{padding: "0 24px"}}>
                 {moment.months().map((m, idx) => {
-                    return <Grid item md={3} xs={12} key={idx}>
+                    return <Grid item md={3} xs={12} key={m}>
                         <Month month={idx} data={monthData[idx]} onClick={handleClick} />
                     </Grid>
                 })}

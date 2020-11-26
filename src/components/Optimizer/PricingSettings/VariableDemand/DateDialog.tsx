@@ -22,13 +22,22 @@ const Date = styled("h4")(({theme}) => ({
 
 const useStyles = makeStyles(theme => ({
     low: {
-        color: "#00ADB8"
+        color: "#00ADB8",
+        "&.Mui-checked": {
+            color: "#00ADB8"
+        }
     },
     average: {
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
+        "&.Mui-checked": {
+            color: theme.palette.primary.main
+        }
     },
     high: {
-        color: theme.palette.secondary.main
+        color: theme.palette.secondary.main,
+        ".Mui-checked": {
+            color: theme.palette.secondary.main
+        }
     }
 }));
 

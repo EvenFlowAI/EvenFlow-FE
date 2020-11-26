@@ -119,5 +119,5 @@ export const setTimeOfYearPricing = (data: ITimeOfYearSetting): AppThunk => asyn
             {data}
         );
     }
-    dispatch(loadTimeOfYearPricing(data.serviceCenterId));
+    await dispatch(loadTimeOfYearPricing(data.serviceCenterId));
 }

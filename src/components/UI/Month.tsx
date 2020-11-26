@@ -92,10 +92,10 @@ export const Month: React.FC<TProps> = ({month, data, onClick}) => {
     return <Box display="grid" gridGap={3} gridTemplateColumns="repeat(7, 1fr)">
         <MonthName>{d.format("MMMM")}</MonthName>
         {moment.weekdays().map(wd => <DayName key={wd}>{wd[0]}</DayName>)}
-        {monthDatesData.map(mdd => {
+        {monthDatesData.map((mdd, idx) => {
             const dayNumber = mdd.date.format("D");
             return <Day
-                key={mdd.date.toISOString()}
+                key={idx}
                 onClick={mdd.date.isSame(d, "month") ? handleClick(Number(dayNumber), mdd.data) : noop}
                 className={[
                     !mdd.date.isSame(d, "month") ? "nonCurrent" : "current",
