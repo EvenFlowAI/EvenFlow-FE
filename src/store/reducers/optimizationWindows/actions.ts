@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {EOptimizationWindowType, IOptimizationWindow} from "./types";
+import {EOptimizationWindowType, IOptimizationWindow, IOverbookingFactor} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -21,4 +21,25 @@ export const setOptimizationWindow = (
         }
     );
     dispatch(loadOptimizationWindows(serviceCenterId, podId));
+}
+export const getOverbookingFactor = createAction<IOverbookingFactor[]>("OptimizationWindows/GetOverbooking");
+export const loadOverbookingFactor = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<IOverbookingFactor[]>(
+        Api.endpoints.OptimizationWindows.GetOverbooking,
+        {params: {serviceCenterId, podId}}
+    );
+    dispatch(getOverbookingFactor(data));
+}
+export const setOverbookingFactor = (data: IOverbookingFactor[]): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.OptimizationWindows.SetOverbooking,
+        {
+            data: {
+                serviceCenterId: data[0].serviceCenterId,
+                podId: data[0].podId,
+                items: data
+            }
+        }
+    )
+    dispatch(loadOptimizationWindows(data[0].serviceCenterId, data[0].podId));
 }

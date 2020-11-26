@@ -1,3 +1,5 @@
+import {EDay} from "../demandSegments/types";
+
 export enum EOptimizationWindowType {
     FirstAvailable, SpecificDate, DemandSegments, OverbookingFactor, AppointmentsPerSlot
 }
@@ -24,4 +26,14 @@ export type TOptContentData = {
     }
 export type TOptContent = {
     [k in EOptimizationWindowType]: TOptContentData;
+}
+
+export interface IOverbookingFactor {
+    day: EDay;
+    overbookingFactorValue?: number;
+    noShowRate: number;
+    dayOfCancellations: number;
+    combined: number;
+    serviceCenterId: number;
+    podId?: number;
 }
