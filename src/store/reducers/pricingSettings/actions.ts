@@ -1,8 +1,16 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IDayOfWeekSetting, IPricingDemand, IPricingLevel, IPricingSetting, ITimeWindowEl} from "./types";
+import {
+    IDayOfWeekSetting,
+    IPricingDemand,
+    IPricingLevel,
+    IPricingSetting,
+    ITimeOfYearSetting,
+    ITimeWindowEl
+} from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
+import moment from "moment";
 
 export const getPricingLevels = createAction<IPricingLevel[]>("PricingSettings/GetPL");
 export const loadPricingLevels = (serviceCenterId: number): AppThunk => async dispatch => {
@@ -84,4 +92,32 @@ export const setWorkWeekPricing = (data: IDayOfWeekSetting[]): AppThunk => async
         Api.endpoints.PricingSettings.SetDayOfWeek,
         {data: {serviceCenterId: data[0].serviceCenterId, items: data}}
     );
+}
+export const getTimeOfYearPricing = createAction<ITimeOfYearSetting[]>("PricingSettings/GetTimeOfYear");
+export const loadTimeOfYearPricing = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<ITimeOfYearSetting[]>(
+        Api.endpoints.PricingSettings.GetTimeOfYear,
+        {
+            params: {
+                serviceCenterId,
+                from: moment.utc().startOf("year").hour(0).minute(0).second(0).millisecond(0).toISOString(),
+                to: moment.utc().endOf("year").hour(0).minute(0).second(0).millisecond(0).toISOString()
+            }
+        }
+    );
+    dispatch(getTimeOfYearPricing(data));
+}
+export const setTimeOfYearPricing = (data: ITimeOfYearSetting): AppThunk => async dispatch => {
+    if (data?.id) {
+        await Api.call(
+            Api.endpoints.PricingSettings.UpdateTimeOfYear,
+            {data, urlParams: {id: data.id}}
+        );
+    } else {
+        await Api.call(
+            Api.endpoints.PricingSettings.CreateTimeOfYear,
+            {data}
+        );
+    }
+    dispatch(loadTimeOfYearPricing(data.serviceCenterId));
 }
