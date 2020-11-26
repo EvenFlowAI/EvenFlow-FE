@@ -1,20 +1,31 @@
 import React, {useMemo} from 'react';
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {Box, styled} from "@material-ui/core";
 import moment from "moment";
+import {ITimeOfYearSetting} from "../../store/reducers/pricingSettings/types";
 
 type TProps = {
-    date: ParsableDate;
+    month: number;
+    data: ITimeOfYearSetting[];
 }
-const getDays = (start: moment.Moment, end: moment.Moment): moment.Moment[] => {
-    const dates: moment.Moment[] = [];
-    let d = moment(start);
+type TDate = {
+    date: moment.Moment;
+    data?: ITimeOfYearSetting;
+}
+
+const findD = (date: moment.Moment) => (sd: ITimeOfYearSetting) => {
+    const tfd = moment(sd.date);
+    return tfd.isSame(date, "day") && tfd.isSame(date, "month")
+}
+const getDays = (start: moment.Moment, end: moment.Moment, dt: ITimeOfYearSetting[]): TDate[] => {
+    const dates: TDate[] = [];
+    let date = moment(start);
     while (1) {
-        dates.push(d);
-        if (d.isSameOrAfter(end, "date")) {
+        const data = dt.find(findD(date));
+        dates.push({date, data});
+        if (date.isSameOrAfter(end, "date")) {
             break;
         }
-        d = moment(d).add(1, "day");
+        date = moment(date).add(1, "day");
     }
     return dates;
 }
@@ -36,20 +47,26 @@ const MonthName = styled("div")({
     gridColumnStart: 1,
     paddingLeft: 8
 });
-export const Month: React.FC<TProps> = ({date}) => {
-    const [d, start, end] = useMemo(() => [
-        moment.utc(date),
-        moment.utc(date).startOf("month").startOf("week"),
-        moment.utc(date).endOf("month").endOf("week")
-
-    ], [date]);
-    const monthDates = useMemo(() => getDays(start, end), [start, end]);
+export const Month: React.FC<TProps> = ({month, data}) => {
+    const [d, start, end] = useMemo(() => {
+        const dt = moment.utc().month(month);
+        return [
+            dt,
+            moment.utc(dt).startOf("month").startOf("week"),
+            moment.utc(dt).endOf("month").endOf("week")
+        ];
+    }, [month]);
+    const monthDatesData = useMemo(() => getDays(start, end, data), [start, end, data]);
 
     return <Box display="grid" gridGap={5} gridTemplateColumns="repeat(7, 1fr)">
         <MonthName>{d.format("MMMM")}</MonthName>
         {moment.weekdays().map(wd => <DayName key={wd}>{wd[0]}</DayName>)}
-        {monthDates.map(dt => {
-            return <Day key={dt.toISOString()} className={!dt.isSame(d, "month") ? "nonCurrent" : "current"}>{dt.format("D")}</Day>
+        {monthDatesData.map(mdd => {
+            return <Day
+                key={mdd.date.toISOString()}
+                className={!mdd.date.isSame(d, "month") ? "nonCurrent" : "current"}>
+                {mdd.date.format("D")}
+            </Day>
         })}
     </Box>
 };

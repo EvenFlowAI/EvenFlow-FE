@@ -1,4 +1,5 @@
 import {TEnumMap} from "../utils";
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 export enum EDemandCategory {
     Low, Average, High
@@ -51,4 +52,11 @@ export interface IDayOfWeekSetting {
     serviceCenterId: number;
     demandCategory: EDemandCategory;
     dayOfWeek: EDay;
+}
+
+export interface ITimeOfYearSetting {
+    serviceCenterId: number;
+    demandCategory: EDemandCategory;
+    id?: number;
+    date: ParsableDate;
 }

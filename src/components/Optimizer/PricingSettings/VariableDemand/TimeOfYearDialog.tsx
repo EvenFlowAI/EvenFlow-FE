@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../Modals/BaseModal";
 import {DialogProps} from "../../../Modals/types";
 import {Button, Grid} from "@material-ui/core";
@@ -7,6 +7,9 @@ import {Month} from "../../../UI/Month";
 
 
 export const TimeOfYearDialog: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+    const monthData = useMemo(() => {
+        return [[], [], [], [], [], [], [], [], [], [], [], []];
+    }, []);
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>
             Calendar settings <br/>
@@ -15,9 +18,8 @@ export const TimeOfYearDialog: React.FC<DialogProps> = ({onAction, payload, ...p
         <DialogContent>
             <Grid container spacing={3} style={{padding: "0 24px"}}>
                 {moment.months().map((m, idx) => {
-                    const date = moment.utc().month(idx);
                     return <Grid item md={3} xs={12} key={idx}>
-                        <Month date={date} />
+                        <Month month={idx} data={monthData[idx]} />
                     </Grid>
                 })}
             </Grid>
