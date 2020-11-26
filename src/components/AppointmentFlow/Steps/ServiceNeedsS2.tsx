@@ -1,6 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {CircularProgress, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup} from "@material-ui/core";
-import {InputLoading, ScrollableContainer, TextField} from "../UI";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    FormControlLabel,
+    FormLabel,
+    IconButton,
+    Radio,
+    RadioGroup
+} from "@material-ui/core";
+import {InputLoading, ScrollableContainer, TextField, TStepProps} from "../UI";
 import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -43,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const ServiceNeedsS2 = () => {
+export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next}) => {
     const [openedCode, setOpened] = useState<number|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [searchInput, setSearch] = useState<string>("");
@@ -146,6 +155,10 @@ export const ServiceNeedsS2 = () => {
                 </RadioGroup>
                 {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
             </ScrollableContainer>
+            <Box mt={1} textAlign="center">
+                <Button variant="outlined" color="primary" onClick={prev}>Previous Step</Button>
+                <Button style={{marginLeft: 16}} variant="contained" onClick={next} color="primary">Continue</Button>
+            </Box>
         </div>
     );
 };

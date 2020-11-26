@@ -16,7 +16,9 @@ const useStyles = makeStyles({
     value: {
         marginTop: 20,
         fontSize: 48,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        textOverflow: "ellipsis",
+        overflow: "hidden"
     },
     helperText: {
         fontSize: 14,
