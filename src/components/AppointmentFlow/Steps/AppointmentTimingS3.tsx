@@ -166,6 +166,7 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
                                         onChange={handleDateChange}
                                         disabled={!active}
                                         placeholder={"Choose here"}
+                                        disablePast
                                         InputProps={{
                                             disableUnderline: true,
                                             endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"} />

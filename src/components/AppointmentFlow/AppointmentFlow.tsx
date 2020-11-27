@@ -6,6 +6,7 @@ import {ServiceNeedsS2} from "./Steps/ServiceNeedsS2";
 import clsx from "clsx";
 import {TStepProps} from "./UI";
 import {AppointmentTimingS3} from "./Steps/AppointmentTimingS3";
+import {TransportationNeeds} from "./Steps/TransportationNeeds";
 
 
 const useStyles = makeStyles(theme => ({
@@ -35,8 +36,8 @@ const useStyles = makeStyles(theme => ({
     },
     stepContainer: {
         position: "absolute",
-        left: -198,
-        width: 250,
+        left: -246,
+        width: 300,
         background: "transparent",
         "& div[class*='MuiStepConnector-root']": {
             display: "none"
@@ -119,6 +120,11 @@ const steps: TStep[] = [
         id: 3,
         label: "Appointment Timing",
         component: AppointmentTimingS3
+    },
+    {
+        id: 4,
+        label: "Transportation Needs",
+        component: TransportationNeeds
     }
 ]
 
