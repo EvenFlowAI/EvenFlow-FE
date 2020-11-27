@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollableContainer, StepContainer, TStepProps} from "../UI";
+import {ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
 import {Caption} from "../../UI/Caption";
 import {Box, Button, Divider, Grid, styled} from "@material-ui/core";
 import {SquarePaper} from "../../UI/Paper";
@@ -143,7 +143,7 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
     }
 
     return <StepContainer>
-        <Box width={"80%"} height={"100%"} display="flex" flexDirection="column" flexWrap="nowrap" minWidth={0}>
+        <StepContentContainer>
             <h4 style={{textAlign: "center"}}>When would you like to bring your vehicle in for servicing?</h4>
             <ScrollableContainer>
                 <Grid container spacing={4}>
@@ -189,6 +189,6 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
                 <Button variant="outlined" color="primary" onClick={prev}>Previous Step</Button>
                 <Button style={{marginLeft: 16}} variant="contained" onClick={next} color="primary">Continue</Button>
             </Box>
-        </Box>
+        </StepContentContainer>
     </StepContainer>
 };

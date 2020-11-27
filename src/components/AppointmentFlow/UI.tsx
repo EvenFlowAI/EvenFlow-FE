@@ -1,5 +1,14 @@
 import React, {forwardRef} from "react";
-import {CircularProgress, createStyles, FormLabel, InputBase, TextFieldProps, withStyles} from "@material-ui/core";
+import {
+    Box,
+    CircularProgress,
+    createStyles,
+    FormLabel,
+    InputBase,
+    styled,
+    TextFieldProps,
+    withStyles
+} from "@material-ui/core";
 import {TextField as TF} from "../UI/EndUserInputs";
 import {InputProps as StandardInputProps} from "@material-ui/core/Input/Input";
 
@@ -64,3 +73,12 @@ export const ScrollableContainer: React.FC = ({children}) => {
         {children}
     </div>
 }
+
+export const StepContentContainer = styled("div")({
+    width: "80%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    flexWrap: "nowrap",
+    minWidth: 0
+})
