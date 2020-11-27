@@ -29,15 +29,18 @@ const LogoWrapper = styled("div")({
     marginTop: 16,
 });
 
-const Paper = styled(SquarePaper)({
+const Paper = styled(SquarePaper)(({theme}) => ({
     display: "flex",
     padding: 16,
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
     minHeight: 260,
-    cursor: "pointer"
-});
+    cursor: "pointer",
+    "&.selected": {
+        borderColor: theme.palette.primary.main
+    }
+}));
 const Description = styled("span")({
     fontSize: 15,
     marginTop: 16,
@@ -49,6 +52,47 @@ const Input = styled(DatePicker)(({theme}) => ({
         borderColor: theme.palette.primary.main
     }
 }));
+
+
+type TPlate = {
+    id: TAppointmentType;
+    description: string;
+    classActive: string;
+    classNonActive: string;
+    input: boolean;
+    iconActive: JSX.Element;
+    iconNonActive: JSX.Element;
+}
+
+const plates: TPlate[] = [
+    {
+        id: 1,
+        description: "See appointments with special offer and shorter wait times",
+        iconActive: <GreenIcon />,
+        input: false,
+        iconNonActive: <GreenIcon />,
+        classActive: "green active",
+        classNonActive: "active",
+    },
+    {
+        id: 2,
+        description: "Choose a preferred date",
+        iconActive: <MiddleActiveIcon />,
+        iconNonActive: <MiddleIcon/>,
+        input: true,
+        classActive: "active",
+        classNonActive: "active",
+    },
+    {
+        id: 3,
+        description: "Choose first available date",
+        iconActive: <RightIconActive />,
+        iconNonActive: <RightIcon />,
+        input: false,
+        classActive: "active",
+        classNonActive: ""
+    }
+]
 
 export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment.utc().add(3, "days"));
@@ -71,47 +115,35 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
             <h4 style={{textAlign: "center"}}>When would you like to bring your vehicle in for servicing?</h4>
             <ScrollableContainer>
                 <Grid container spacing={4}>
-                    <Grid item xs={12} sm={12} md={4}>
-                        <Paper variant="outlined" onClick={handleSelect(1)}>
-                            {getRadio(s3Form.appointmentType === 1)}
-                            <LogoWrapper><GreenIcon /></LogoWrapper>
-                            <div className="grow" />
-                            <Description>See appointments with special offer and shorter wait times</Description>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                        <Paper variant="outlined" onClick={handleSelect(2)}>
-                            {getRadio(s3Form.appointmentType === 2)}
-                            <LogoWrapper>
-                                {s3Form.appointmentType === 2 ? <MiddleActiveIcon/> : <MiddleIcon />}
-                            </LogoWrapper>
-                            <Input
-                                value={selectedDate}
-                                onChange={handleDateChange}
-                                disabled={s3Form.appointmentType !== 2}
-                                InputProps={{
-                                    disableUnderline: true,
-                                }}
-                            />
-                            <Description>Choose a preferred date</Description>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                        <Paper variant="outlined" onClick={handleSelect(3)}>
-                            {getRadio(s3Form.appointmentType === 3)}
-                            <LogoWrapper>
-                                {s3Form.appointmentType === 3 ? <RightIconActive /> : <RightIcon/>}
-                            </LogoWrapper>
-                            <div className="grow" />
-                            <Description>Choose first available date</Description>
-                        </Paper>
-                    </Grid>
+                    {plates.map(plate => {
+                        const active = s3Form.appointmentType === plate.id;
+                        return <Grid item xs={12} sm={12} md={4}>
+                            <Paper
+                                className={active ? plate.classActive : plate.classNonActive}
+                                variant="outlined"
+                                onClick={handleSelect(plate.id)}>
+                                {getRadio(active)}
+                                <LogoWrapper>{active ? plate.iconActive : plate.iconNonActive}</LogoWrapper>
+                                {plate.input
+                                    ? <Input
+                                        value={selectedDate}
+                                        onChange={handleDateChange}
+                                        disabled={!active}
+                                        InputProps={{
+                                            disableUnderline: true,
+                                        }}
+                                    />
+                                    : <div className="grow" />}
+                                <Description>{plate.description}</Description>
+                            </Paper>
+                        </Grid>;
+                    })}
                 </Grid>
                 <Box my={2}>
                     <Divider />
                 </Box>
                 <Caption
-                    title={<span><strong>Note:</strong> Your selection may affect appointment availability</span>}
+                    title={<Box ml={.5}><strong> Note:</strong> Your selection may affect appointment availability</Box>}
                 />
             </ScrollableContainer>
             <Box mt={1} textAlign="center">

@@ -1,7 +1,6 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IServiceCenterProfile, ISR, TAppointmentType, TS1Form, TS3Form} from "./types";
+import {IServiceCenterProfile, ISR, TS1Form, TS3Form} from "./types";
 import {changeS1Form, changeS3Form, getServiceCenterProfile, getSRs, handleSearch, selectSR} from "./actions";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 type TState = {
     scProfile?: IServiceCenterProfile;
