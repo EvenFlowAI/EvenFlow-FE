@@ -147,7 +147,7 @@ export const ScheduleCalendar = () => {
             <ScheduleTable>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Employees</TableCell>
+                        <TableCell style={{verticalAlign: "bottom"}}>Employees</TableCell>
                         {daysOfWeek.map((date) => {
                             return <HeadCell key={date.toISOString()}>
                                 <div className="content">
