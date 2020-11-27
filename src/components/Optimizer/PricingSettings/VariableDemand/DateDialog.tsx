@@ -53,14 +53,16 @@ export const DateDialog: React.FC<TProps> = ({payload, onAction, data, ...props}
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (data) {
+        if (props.open) {
+            if (data) {
             setDemand(data.demandCategory);
             setComment(data.comment || "")
-        } else {
-            setDemand(EDemandCategory.Average);
-            setComment("");
+            } else {
+                setDemand(EDemandCategory.Average);
+                setComment("");
+            }
         }
-    }, [data]);
+    }, [data, props.open]);
 
     const handleChange = (e: any, d: string) => {
         setDemand(Number(d) as EDemandCategory);
