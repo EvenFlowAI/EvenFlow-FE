@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {calendarDateFormat, findScheduleDates, getDaysOfWeek, getSchedule, getStartEndDates} from "./utils";
 import {ScheduleTable} from "./UI";
-import {CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {CircularProgress, styled, TableBody, TableCell, TableHead, TableRow, Tooltip} from "@material-ui/core";
 import moment from "moment";
 import {WeekControls} from "./WeekControls";
 import {useModal, useSCs} from "../../../utils/hooks";
@@ -18,6 +18,7 @@ import {Api} from "../../../config/requests";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {noop} from "../../../utils/utils";
+import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
 
 const controlStyles = {
     display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
@@ -35,6 +36,32 @@ const nonWorkingStyle = {
     cursor: "default"
 };
 
+const Holiday = styled("div")(({theme}) => ({
+    backgroundColor: theme.palette.secondary.main,
+    borderRadius: 2,
+    color: "#fff",
+    textOverflow: "ellipsis",
+    overflow: "auto",
+    textAlign: "center",
+    padding: "0 4px",
+    maxWidth: "100%",
+    whiteSpace: "nowrap"
+}));
+const HeadCell = styled(TableCell)({
+    width: "12%",
+    maxWidth: 0,
+    overflow: "hidden",
+    verticalAlign: "bottom",
+    "&>.content": {
+        minWidth: 0,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        alignItems: "center",
+        maxWidth: "100%"
+    }
+});
+
 export const ScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
     const [editedDate, setEditedDate] = useState<moment.Moment>(moment());
@@ -47,13 +74,15 @@ export const ScheduleCalendar = () => {
         employeesLoading,
         filtersOpened,
         filters,
-        workingDays
+        workingDays,
+        holidaysList
     ] = useSelector((state: RootState) => [
         state.employeesSchedule.employeesList,
         state.employeesSchedule.employeesLoading,
         state.employeesSchedule.filtersOpened,
         state.employeesSchedule.filters,
-        state.serviceCenters.workingDays
+        state.serviceCenters.workingDays,
+        state.holidays.weeklyHolidaysList,
     ]);
     const {isOpen, onOpen, onClose} = useModal();
 
@@ -67,6 +96,10 @@ export const ScheduleCalendar = () => {
             dispatch(loadWorkingDays(selectedSC.id));
         }
     }, [dispatch, selectedSC, selectedDate, filters]);
+
+    useEffect(() => {
+        dispatch(loadWeeklyHolidaysList(daysOfWeek[0].toISOString(), daysOfWeek[daysOfWeek.length-1].toISOString()));
+    }, [daysOfWeek, dispatch]);
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
@@ -92,6 +125,13 @@ export const ScheduleCalendar = () => {
     const getCellStyle = (nonWorking: boolean) => {
         return nonWorking ? nonWorkingStyle : {};
     }
+    const getHoliday = (date: moment.Moment) => {
+        const holiday = holidaysList.find(h => moment(h.date).isSame(date, "date"));
+        if (holiday) {
+            return <Tooltip title={holiday.description}><Holiday>{holiday.description}</Holiday></Tooltip>;
+        }
+        return null;
+    }
 
     return (
         <div>
@@ -108,10 +148,13 @@ export const ScheduleCalendar = () => {
                 <TableHead>
                     <TableRow>
                         <TableCell>Employees</TableCell>
-                        {daysOfWeek.map(date => {
-                            return <TableCell width={"12%"} key={date.toISOString()}>
-                                {date.format(calendarDateFormat)}
-                            </TableCell>
+                        {daysOfWeek.map((date) => {
+                            return <HeadCell key={date.toISOString()}>
+                                <div className="content">
+                                    {getHoliday(date)}
+                                    <span>{date.format(calendarDateFormat)}</span>
+                                </div>
+                            </HeadCell>
                         })}
                     </TableRow>
                 </TableHead>
