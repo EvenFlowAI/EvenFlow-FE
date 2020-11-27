@@ -6,7 +6,7 @@ import {ServiceNeedsS2} from "./Steps/ServiceNeedsS2";
 import clsx from "clsx";
 import {TStepProps} from "./UI";
 import {AppointmentTimingS3} from "./Steps/AppointmentTimingS3";
-import {TransportationNeeds} from "./Steps/TransportationNeeds";
+import {TransportationNeedsS4} from "./Steps/TransportationNeedsS4";
 
 
 const useStyles = makeStyles(theme => ({
@@ -124,7 +124,7 @@ const steps: TStep[] = [
     {
         id: 4,
         label: "Transportation Needs",
-        component: TransportationNeeds
+        component: TransportationNeedsS4
     }
 ]
 
