@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
+import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
 import {Caption} from "../../UI/Caption";
 import {Box, Button, Divider, Grid, styled} from "@material-ui/core";
 import {SquarePaper} from "../../UI/Paper";
@@ -185,10 +185,7 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
                     title={<Box ml={.5}><strong> Note:</strong> Your selection may affect appointment availability</Box>}
                 />
             </ScrollableContainer>
-            <Box mt={1} textAlign="center">
-                <Button variant="outlined" color="primary" onClick={prev}>Previous Step</Button>
-                <Button style={{marginLeft: 16}} variant="contained" onClick={next} color="primary">Continue</Button>
-            </Box>
+            <NextPrevBlock next={next} prev={prev} />
         </StepContentContainer>
     </StepContainer>
 };

@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IServiceCenterProfile, ISR, TS1Form, TS3Form} from "./types";
+import {ETransportation, IServiceCenterProfile, ISR, TS1Form, TS3Form} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -28,3 +28,4 @@ export const selectSR = createAction<number|null>("Appointment/SelectSR");
 export const changeS1Form = createAction<Partial<TS1Form>>("Appointment/ChangeS1Form");
 export const handleSearch = createAction<string>("Appointment/Search");
 export const changeS3Form = createAction<Partial<TS3Form>>("Appointment/ChangeS3Form");
+export const changeTransportation = createAction<ETransportation>("Appointment/Transportation");

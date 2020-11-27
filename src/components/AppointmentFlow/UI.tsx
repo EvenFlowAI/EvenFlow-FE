@@ -1,6 +1,6 @@
 import React, {forwardRef} from "react";
 import {
-    Box,
+    Box, Button,
     CircularProgress,
     createStyles,
     FormLabel,
@@ -81,4 +81,13 @@ export const StepContentContainer = styled("div")({
     flexDirection: "column",
     flexWrap: "nowrap",
     minWidth: 0
-})
+});
+
+export const NextPrevBlock: React.FC<TStepProps&{nextDisabled?: boolean}> = ({next, prev, nextDisabled}) => {
+    return <Box mt={1} textAlign="center">
+        <Button variant="outlined" color="primary" onClick={prev}>Previous Step</Button>
+        <Button style={{marginLeft: 16}} disabled={nextDisabled} variant="contained" onClick={next} color="primary">
+            Continue
+        </Button>
+    </Box>
+}

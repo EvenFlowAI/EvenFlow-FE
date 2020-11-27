@@ -1,6 +1,14 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IServiceCenterProfile, ISR, TS1Form, TS3Form} from "./types";
-import {changeS1Form, changeS3Form, getServiceCenterProfile, getSRs, handleSearch, selectSR} from "./actions";
+import {ETransportation, IServiceCenterProfile, ISR, TS1Form, TS3Form} from "./types";
+import {
+    changeS1Form,
+    changeS3Form,
+    changeTransportation,
+    getServiceCenterProfile,
+    getSRs,
+    handleSearch,
+    selectSR
+} from "./actions";
 
 type TState = {
     scProfile?: IServiceCenterProfile;
@@ -9,6 +17,7 @@ type TState = {
     s1Data: TS1Form;
     search: string;
     s3Data: TS3Form;
+    transportation: ETransportation|null;
 }
 const initialS1Form: TS1Form = {
     year: null,
@@ -28,7 +37,8 @@ const initialState: TState = {
     selectedSR: null,
     s1Data: initialS1Form,
     search: "",
-    s3Data: initialS3Form
+    s3Data: initialS3Form,
+    transportation: null,
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -48,5 +58,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(changeS3Form, (state, {payload}) => {
         return {...state, s3Data: {...state.s3Data, ...payload, date: payload.date || undefined}};
+    })
+    .addCase(changeTransportation, (state, {payload}) => {
+        return {...state, transportation: payload};
     })
 );
