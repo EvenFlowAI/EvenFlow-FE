@@ -75,7 +75,7 @@ export const ScrollableContainer: React.FC = ({children}) => {
 }
 
 export const StepContentContainer = styled("div")({
-    width: "80%",
+    width: "90%",
     height: "100%",
     display: "flex",
     flexDirection: "column",

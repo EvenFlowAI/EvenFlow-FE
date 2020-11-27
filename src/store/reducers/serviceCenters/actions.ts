@@ -7,6 +7,8 @@ import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {LocalItems} from "../../../config/constants";
 import {setSelectedPod} from "../pods/actions";
+import {createAction} from "@reduxjs/toolkit";
+import {EDay} from "../demandSegments/types";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
    type: "ServiceCenters/GetAll", payload
@@ -162,4 +164,12 @@ export const loadAllSCs = (): AppThunk => async dispatch => {
             dispatch(selectSC(result[0]))
         }
     }
+}
+export const getWorkingDays = createAction<EDay[]>("ServiceCenters/WorkingDays");
+export const loadWorkingDays = (serviceCenterId: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<EDay[]>(
+        Api.endpoints.ServiceCenters.WorkingDays,
+        {urlParams: {id: serviceCenterId}}
+    );
+    dispatch(getWorkingDays(data));
 }

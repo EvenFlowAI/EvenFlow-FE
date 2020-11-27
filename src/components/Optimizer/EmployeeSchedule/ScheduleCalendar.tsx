@@ -15,11 +15,25 @@ import {EditSchedule} from "./EditSchedule";
 import {ScheduleFilters} from "./ScheduleFilters";
 import { OpenedFilters } from './OpenedFilters';
 import {Api} from "../../../config/requests";
+import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
+import {EDay} from "../../../store/reducers/demandSegments/types";
+import {noop} from "../../../utils/utils";
 
 const controlStyles = {
     display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
     marginBottom: 10
 }
+
+const nonWorkingStyle = {
+    background: `repeating-linear-gradient(
+        45deg,
+        #ffffff,
+        #ffffff 2px,
+        #F7F8FB 2px,
+        #F7F8FB 4px
+    )`,
+    cursor: "default"
+};
 
 export const ScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
@@ -28,11 +42,18 @@ export const ScheduleCalendar = () => {
     const [editedSchedule, setEditedSchedule] = useState<ISchedule|undefined>(undefined);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [employeesList, employeesLoading, filtersOpened, filters] = useSelector((state: RootState) => [
+    const [
+        employeesList,
+        employeesLoading,
+        filtersOpened,
+        filters,
+        workingDays
+    ] = useSelector((state: RootState) => [
         state.employeesSchedule.employeesList,
         state.employeesSchedule.employeesLoading,
         state.employeesSchedule.filtersOpened,
-        state.employeesSchedule.filters
+        state.employeesSchedule.filters,
+        state.serviceCenters.workingDays
     ]);
     const {isOpen, onOpen, onClose} = useModal();
 
@@ -43,6 +64,7 @@ export const ScheduleCalendar = () => {
         if (selectedSC) {
             const [start, end] = getStartEndDates(selectedDate);
             dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
+            dispatch(loadWorkingDays(selectedSC.id));
         }
     }, [dispatch, selectedSC, selectedDate, filters]);
 
@@ -65,6 +87,10 @@ export const ScheduleCalendar = () => {
         await updateEditedEmployee(employee.id);
         setEditedSchedule(getSchedule(date, schedules||[]));
         onOpen();
+    }
+
+    const getCellStyle = (nonWorking: boolean) => {
+        return nonWorking ? nonWorkingStyle : {};
     }
 
     return (
@@ -101,11 +127,15 @@ export const ScheduleCalendar = () => {
                                 <TableCell>
                                     <NameCell employee={employee} />
                                 </TableCell>
-                                {daysOfWeek.map(date => {
+                                {daysOfWeek.map((date, idx) => {
                                     return <TableCell
                                         key={date.toISOString()}
-                                        onClick={handleEdit(employee, date, schedules)}
-                                        style={{cursor: "pointer", fontSize: 13}}>
+                                        onClick={workingDays.includes((idx as EDay)) ? handleEdit(employee, date, schedules) : noop}
+                                        style={{
+                                            cursor: "pointer",
+                                            fontSize: 13,
+                                            ...getCellStyle(!workingDays.includes(idx as EDay))
+                                        }}>
                                         {findScheduleDates(date, schedules)}
                                     </TableCell>
                                 })}

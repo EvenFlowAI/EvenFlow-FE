@@ -1,6 +1,8 @@
 import {IServiceCenter, IServiceCenterExtended, TServiceCenterActions} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {EDay} from "../demandSegments/types";
+import {getWorkingDays} from "./actions";
 
 type TServiceCenterState = {
     serviceCenters: IServiceCenterExtended[],
@@ -14,7 +16,8 @@ type TServiceCenterState = {
     saving: boolean,
     paging: IPagingResponse,
     dealershipPaging: IPagingResponse,
-    pageData: IPageRequest
+    pageData: IPageRequest,
+    workingDays: EDay[]
 };
 
 const initialState: TServiceCenterState = {
@@ -28,7 +31,8 @@ const initialState: TServiceCenterState = {
     saving: false,
     paging: {...defaultPaging},
     dealershipPaging: {...defaultPaging},
-    pageData: {...defaultPageData}
+    pageData: {...defaultPageData},
+    workingDays: [],
 };
 
 export const serviceCenterReducer = (state=initialState, action: TServiceCenterActions): TServiceCenterState => {
@@ -59,6 +63,11 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, fullSCList: action.payload};
         case "ServiceCenters/SelectSC":
             return {...state, selectedSC: action.payload};
+        case getWorkingDays.type:
+            if (getWorkingDays.match(action)) {
+                return {...state, workingDays: action.payload};
+            }
+            return state;
         default:
             return state;
     }
