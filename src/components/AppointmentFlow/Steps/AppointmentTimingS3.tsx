@@ -117,7 +117,7 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
                 <Grid container spacing={4}>
                     {plates.map(plate => {
                         const active = s3Form.appointmentType === plate.id;
-                        return <Grid item xs={12} sm={12} md={4}>
+                        return <Grid item xs={12} sm={12} md={4} key={plate.id}>
                             <Paper
                                 className={active ? plate.classActive : plate.classNonActive}
                                 variant="outlined"
