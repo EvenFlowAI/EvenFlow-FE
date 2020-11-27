@@ -27,10 +27,10 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
     const fillDataByVin = useCallback((d: IVehicleData) => {
         dispatch(changeS1Form({
             ...d,
-            year: d.year ? String(d.year) : null,
-            mileage: d.mileage ? String(d.mileage) : null,
+            year: d.year ? String(d.year) : form.year,
+            mileage: d.mileage ? String(d.mileage) : form.mileage
         }));
-    }, [dispatch]);
+    }, [dispatch, form]);
 
     useEffect(() => {
         if (form.vin.length === 17) {
