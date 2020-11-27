@@ -1,7 +1,7 @@
 import React from 'react';
 import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
 import {Caption} from "../../UI/Caption";
-import {Box, Button, Divider, Grid, styled} from "@material-ui/core";
+import {Box, Divider, Grid, styled} from "@material-ui/core";
 import {SquarePaper} from "../../UI/Paper";
 import {ReactComponent as MiddleActiveIcon} from "../../../assets/img/calendarIconMiddleActive.svg";
 import {ReactComponent as MiddleIcon} from "../../../assets/img/calendarMiddle.svg";

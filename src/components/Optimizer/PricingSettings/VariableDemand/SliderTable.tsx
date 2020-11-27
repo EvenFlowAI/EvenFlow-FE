@@ -67,7 +67,10 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
         setEdit(t);
         if (t === null) {
             // Clear form
-            setForm({...initialForm});
+            setForm({...initialForm, ...{
+                [EDayDemand.High]: demand[EDayDemand.High]?.point || initialForm[EDayDemand.High],
+                [EDayDemand.Low]: demand[EDayDemand.Low]?.point || initialForm[EDayDemand.Low],
+            }});
         }
     }
 
