@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {ScrollableContainer, StepContainer, TStepProps} from "../UI";
 import {Caption} from "../../UI/Caption";
 import {Box, Button, Divider, Grid, styled} from "@material-ui/core";
@@ -10,12 +10,12 @@ import {ReactComponent as RightIcon} from "../../../assets/img/calendarRightGray
 import {ReactComponent as GreenIcon} from "../../../assets/img/calendarGreen.svg";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {DatePicker} from "@material-ui/pickers";
-import moment from "moment";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {TAppointmentType} from "../../../store/reducers/appointment/types";
 import {changeS3Form} from "../../../store/reducers/appointment/actions";
+import {DateRangeIcon} from "@material-ui/pickers/_shared/icons/DateRangeIcon";
 
 const LogoWrapper = styled("div")({
     borderRadius: "50%",
@@ -37,8 +37,29 @@ const Paper = styled(SquarePaper)(({theme}) => ({
     alignItems: "center",
     minHeight: 260,
     cursor: "pointer",
-    "&.selected": {
-        borderColor: theme.palette.primary.main
+    color: theme.palette.text.disabled,
+    transition: theme.transitions.create(["background"]),
+    "&.active": {
+        borderColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
+        background: "rgba(217,223,253,.3)",
+        "&>.cIconWrapper": {
+            backgroundColor: "#fff",
+        },
+        "& .description": {
+            fontWeight: "bold"
+        }
+    },
+    "&>.cIconWrapper": {
+        backgroundColor: "rgba(218,218,218,.4)",
+    },
+    "&.green": {
+        borderColor: "#76CD7A",
+        color: "#76CD7A",
+        "&.active": {
+            borderColor: "#76CD7A",
+            background: "rgba(118,205,122, .2)",
+        }
     }
 }));
 const Description = styled("span")({
@@ -48,8 +69,18 @@ const Description = styled("span")({
 });
 const Input = styled(DatePicker)(({theme}) => ({
     marginTop: 16,
+    cursor: "pointer",
+    "&>div:not(.Mui-disabled)": {
+        borderColor: theme.palette.primary.main,
+        cursor: "pointer",
+        "&>input": {
+            color: theme.palette.primary.main,
+            cursor: "pointer"
+        }
+    },
     "&>div": {
-        borderColor: theme.palette.primary.main
+        paddingRight: 4,
+        backgroundColor: "#fff"
     }
 }));
 
@@ -72,7 +103,7 @@ const plates: TPlate[] = [
         input: false,
         iconNonActive: <GreenIcon />,
         classActive: "green active",
-        classNonActive: "active",
+        classNonActive: "green",
     },
     {
         id: 2,
@@ -81,7 +112,7 @@ const plates: TPlate[] = [
         iconNonActive: <MiddleIcon/>,
         input: true,
         classActive: "active",
-        classNonActive: "active",
+        classNonActive: "",
     },
     {
         id: 3,
@@ -95,19 +126,20 @@ const plates: TPlate[] = [
 ]
 
 export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
-    const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment.utc().add(3, "days"));
     const s3Form = useSelector((state: RootState) => state.appointment.s3Data);
 
     const dispatch = useDispatch();
 
     const handleDateChange = (date: MaterialUiPickersDate) => {
-        setSelectedDate(moment.utc(date));
+        dispatch(changeS3Form({date}));
     }
     const handleSelect = (val: TAppointmentType) => () => {
-        dispatch(changeS3Form({appointmentType: val}));
+        if (val !== s3Form.appointmentType) {
+            dispatch(changeS3Form({appointmentType: val}));
+        }
     }
     const getRadio = (b: boolean) => {
-        return b ? <RadioButtonChecked color="primary" /> : <RadioButtonUnchecked color="disabled" />
+        return b ? <RadioButtonChecked /> : <RadioButtonUnchecked />
     }
 
     return <StepContainer>
@@ -122,19 +154,25 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
                                 className={active ? plate.classActive : plate.classNonActive}
                                 variant="outlined"
                                 onClick={handleSelect(plate.id)}>
+
                                 {getRadio(active)}
-                                <LogoWrapper>{active ? plate.iconActive : plate.iconNonActive}</LogoWrapper>
+
+                                <LogoWrapper className="cIconWrapper">
+                                    {active ? plate.iconActive : plate.iconNonActive}
+                                </LogoWrapper>
                                 {plate.input
                                     ? <Input
-                                        value={selectedDate}
+                                        value={s3Form.date ?? null}
                                         onChange={handleDateChange}
                                         disabled={!active}
+                                        placeholder={"Choose here"}
                                         InputProps={{
                                             disableUnderline: true,
+                                            endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"} />
                                         }}
                                     />
                                     : <div className="grow" />}
-                                <Description>{plate.description}</Description>
+                                <Description className="description">{plate.description}</Description>
                             </Paper>
                         </Grid>;
                     })}

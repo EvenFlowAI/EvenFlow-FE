@@ -47,6 +47,6 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, search: payload};
     })
     .addCase(changeS3Form, (state, {payload}) => {
-        return {...state, s3Data: {...state.s3Data, ...payload}};
+        return {...state, s3Data: {...state.s3Data, ...payload, date: payload.date || undefined}};
     })
 );
