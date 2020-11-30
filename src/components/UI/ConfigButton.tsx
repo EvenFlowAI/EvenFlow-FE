@@ -5,7 +5,7 @@ export const ConfigButton = withStyles(theme => ({
         textTransform: "none",
         fontSize: 15,
         padding: "2px 5px",
-        marginRight: 8
+        margin: 4
     },
     contained: {
         "&:not(.MuiButton-containedPrimary)": {
