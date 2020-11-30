@@ -3,11 +3,20 @@ import {ScrollableContainer, StepContainer, StepContentContainer, TextField} fro
 import {FormLabel, Grid, styled} from "@material-ui/core";
 
 const LabelGrid = styled(Grid)({
-    textAlign: "right"
+    display: "flex",
+    justifyContent: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
 });
 
 const Subtitle = styled("h5")({
-    margin: 0
+    margin: 0,
+    fontSize: 16,
+    textTransform: "uppercase"
+});
+
+const Label = styled(FormLabel)({
+    fontWeight: "bold"
 });
 
 type TFormItem = {
@@ -33,9 +42,9 @@ export const AppointmentConfirmationS6 = () => {
                         formItems.map(fI =>
                             <React.Fragment key={fI.id}>
                                 <LabelGrid item xs={3}>
-                                    <FormLabel htmlFor={fI.id}>
+                                    <Label htmlFor={fI.id}>
                                         {fI.label}
-                                    </FormLabel>
+                                    </Label>
                                 </LabelGrid>
                                 <Grid item xs={9}>
                                     <TextField
