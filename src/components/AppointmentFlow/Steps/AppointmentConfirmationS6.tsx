@@ -1,6 +1,11 @@
 import React from 'react';
 import {ScrollableContainer, StepContainer, StepContentContainer, TextField} from "../UI";
-import {FormLabel, Grid, styled} from "@material-ui/core";
+import {Button, FormLabel, Grid, styled} from "@material-ui/core";
+import {EditButton} from "../../UI/Button";
+
+const Section = styled("div")({
+    padding: "16px 0"
+});
 
 const LabelGrid = styled(Grid)({
     display: "flex",
@@ -16,8 +21,24 @@ const Subtitle = styled("h5")({
 });
 
 const Label = styled(FormLabel)({
-    fontWeight: "bold"
+    fontWeight: "bold",
+    textTransform: "uppercase"
 });
+const Message = styled("div")({
+    textTransform: "uppercase",
+    fontSize: 16
+});
+const TextButton = styled(Button)({
+    textDecoration: "underline",
+    padding: 0
+});
+
+const Textarea = styled(TextField)({
+    "& textarea": {
+        padding: "8px 11px"
+    }
+});
+
 
 type TFormItem = {
     id: string;
@@ -25,8 +46,10 @@ type TFormItem = {
     type?: "email";
 }
 const formItems: TFormItem[] = [
-    {id: "fullName", label: "Full Name"}
-]
+    {id: "fullName", label: "Full Name"},
+    {id: "phoneNumber", label: "Phone Number"},
+    {id: "email", label: "E-mail"},
+];
 
 export const AppointmentConfirmationS6 = () => {
     return <StepContainer>
@@ -56,6 +79,37 @@ export const AppointmentConfirmationS6 = () => {
                             </React.Fragment>
                         )
                     }
+                    <LabelGrid item xs={3} />
+                    <Grid item xs={9}>
+                        <Section>
+                            <Subtitle>Review</Subtitle>
+                            <p>Honda CR-V</p>
+                            <p>Engine and Oil change</p>
+                            <EditButton color="primary">View Details</EditButton>
+                        </Section>
+
+                        <Section>
+                            <Subtitle>Add Comment</Subtitle>
+                            <Textarea
+                                multiline
+                                placeholder="Type here"
+                                rows={2}
+                            />
+                        </Section>
+
+                        <Section>
+                            <Subtitle>Remainders</Subtitle>
+                        </Section>
+
+                        <Section>
+                            <Message>
+                                <TextButton color="primary">
+                                    Create Account
+                                </TextButton>
+                                <span>to save time on my next visit!</span>
+                            </Message>
+                        </Section>
+                    </Grid>
                 </Grid>
             </ScrollableContainer>
         </StepContentContainer>
