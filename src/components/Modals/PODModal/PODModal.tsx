@@ -4,7 +4,7 @@ import {IPod, IPodForm} from "../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {Button, Grid} from "@material-ui/core";
-import {LoadingButton} from "../../UI/Button";
+import {LinkButton, LoadingButton} from "../../UI/Button";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../UI/TextField";
@@ -22,6 +22,7 @@ import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actio
 import {createPod, updatePod} from "../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../store/reducers/bays/actions";
 import {ConfigButton} from "../../UI/ConfigButton";
+import {Routes} from "../../../config/routes";
 
 
 type TForm = {
@@ -224,6 +225,12 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         value={form.serviceRequests}
                         renderInput={autocompleteRender({label: "Service Requests", fullWidth: true})}
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    <LinkButton to={Routes.Optimizer.EmployeeSchedule}
+                        color="primary">
+                        Go To Employees Schedule
+                    </LinkButton>
                 </Grid>
             </Grid>
         </DialogContent>
