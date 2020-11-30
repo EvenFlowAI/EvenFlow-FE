@@ -7,6 +7,7 @@ import clsx from "clsx";
 import {TStepProps} from "./UI";
 import {AppointmentTimingS3} from "./Steps/AppointmentTimingS3";
 import {TransportationNeedsS4} from "./Steps/TransportationNeedsS4";
+import {AppointmentConfirmationS6} from "./Steps/AppointmentConfirmationS6";
 
 
 const useStyles = makeStyles(theme => ({
@@ -125,6 +126,11 @@ const steps: TStep[] = [
         id: 4,
         label: "Transportation Needs",
         component: TransportationNeedsS4
+    },
+    {
+        id: 5,
+        label: "Appointment Confirmation",
+        component: AppointmentConfirmationS6
     }
 ]
 
@@ -154,7 +160,7 @@ export const AppointmentFlow = () => {
     const classes = useStyles();
     return <Container className={classes.container}>
         <Paper className={classes.paper} variant="outlined">
-            <Stepper className={classes.stepContainer} activeStep={activeStep} orientation="vertical">
+            <Stepper nonLinear className={classes.stepContainer} activeStep={activeStep} orientation="vertical">
                 {steps.map(step => {
                     return <Step key={step.id} completed={false}>
                         <StepButton
