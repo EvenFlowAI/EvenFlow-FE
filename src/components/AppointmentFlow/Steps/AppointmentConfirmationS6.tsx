@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {ScrollableContainer, StepContainer, StepContentContainer, TextField} from "../UI";
 import {Button, FormLabel, Grid, styled} from "@material-ui/core";
 import {EditButton} from "../../UI/Button";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -52,6 +54,17 @@ const formItems: TFormItem[] = [
 ];
 
 export const AppointmentConfirmationS6 = () => {
+    const carDetails = useSelector((state: RootState) => state.appointment.s1Data);
+    const [srList, selectedSR] = useSelector((state: RootState) => [
+        state.appointment.serviceRequests,
+        state.appointment.selectedSR
+    ]);
+
+    const srDescription = useMemo((): string => {
+        const sData = srList.find(s => s.id === selectedSR);
+        return sData?.description || "-";
+    }, [srList, selectedSR]);
+
     return <StepContainer>
         <StepContentContainer>
             <h4 style={{textAlign: "center"}}>Appointment Confirmation</h4>
@@ -83,8 +96,8 @@ export const AppointmentConfirmationS6 = () => {
                     <Grid item xs={9}>
                         <Section>
                             <Subtitle>Review</Subtitle>
-                            <p>Honda CR-V</p>
-                            <p>Engine and Oil change</p>
+                            <p>{`${carDetails.make} ${carDetails.model}`.trim() || "-"}</p>
+                            <p>{srDescription}</p>
                             <EditButton color="primary">View Details</EditButton>
                         </Section>
 
