@@ -8,6 +8,7 @@ import {TStepProps} from "./UI";
 import {AppointmentTimingS3} from "./Steps/AppointmentTimingS3";
 import {TransportationNeedsS4} from "./Steps/TransportationNeedsS4";
 import {AppointmentConfirmationS6} from "./Steps/AppointmentConfirmationS6";
+import {AppointmentSelectionS5} from "./Steps/AppointmentSelectionS5";
 
 
 const useStyles = makeStyles(theme => ({
@@ -132,6 +133,11 @@ const steps: TStep[] = [
     },
     {
         id: 5,
+        label: "Appointment Selection",
+        component: AppointmentSelectionS5
+    },
+    {
+        id: 6,
         label: "Appointment Confirmation",
         component: AppointmentConfirmationS6
     }
