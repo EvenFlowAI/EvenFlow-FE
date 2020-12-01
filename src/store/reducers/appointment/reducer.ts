@@ -1,6 +1,19 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {ETransportation, IServiceCenterProfile, ISR, TS1Form, TS3Form} from "./types";
 import {
+    ETransportation,
+    IPersonalInformation,
+    IPrivacy,
+    IReminders,
+    IServiceCenterProfile,
+    ISR,
+    TS1Form,
+    TS3Form
+} from "./types";
+import {
+    changeComment,
+    changePersonalInformation,
+    changePrivacy,
+    changeReminders,
     changeS1Form,
     changeS3Form,
     changeTransportation,
@@ -18,7 +31,27 @@ type TState = {
     search: string;
     s3Data: TS3Form;
     transportation: ETransportation|null;
+    personalInformation: IPersonalInformation;
+    reminders: IReminders;
+    privacy: IPrivacy;
+    comment: string;
+};
+
+const blankPersonalInfo: IPersonalInformation = {
+    fullName: "",
+    email: "",
+    phoneNumber: ""
 }
+const blankReminders: IReminders = {
+    email: false,
+    phone: false,
+    sms: false
+}
+const blankPrivacy: IPrivacy = {
+    privacy: false,
+    callback: false
+}
+
 const initialS1Form: TS1Form = {
     year: null,
     vin: "",
@@ -39,6 +72,10 @@ const initialState: TState = {
     search: "",
     s3Data: initialS3Form,
     transportation: null,
+    personalInformation: blankPersonalInfo,
+    reminders: blankReminders,
+    privacy: blankPrivacy,
+    comment: ""
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -61,5 +98,17 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(changeTransportation, (state, {payload}) => {
         return {...state, transportation: payload};
+    })
+    .addCase(changeReminders, (state, {payload}) => {
+        return {...state, reminders: {...state.reminders, ...payload}};
+    })
+    .addCase(changePrivacy, (state, {payload}) => {
+        return {...state, privacy: {...state.privacy, ...payload}};
+    })
+    .addCase(changePersonalInformation, (state, {payload}) => {
+        return {...state, personalInformation: {...state.personalInformation, ...payload}};
+    })
+    .addCase(changeComment, (state, {payload}) => {
+        return {...state, comment: payload};
     })
 );

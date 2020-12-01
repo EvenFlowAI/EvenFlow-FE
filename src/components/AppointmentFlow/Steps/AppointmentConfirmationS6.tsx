@@ -1,9 +1,10 @@
 import React, {useMemo} from 'react';
 import {ScrollableContainer, StepContainer, StepContentContainer, TextField} from "../UI";
-import {Button, FormLabel, Grid, styled} from "@material-ui/core";
+import {Button, Checkbox, FormControlLabel, FormGroup, FormLabel, Grid, styled} from "@material-ui/core";
 import {EditButton} from "../../UI/Button";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {changeComment, changePersonalInformation} from "../../../store/reducers/appointment/actions";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -35,6 +36,15 @@ const TextButton = styled(Button)({
     padding: 0
 });
 
+const FlexGroup = styled(FormGroup)({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    "& label": {
+        marginRight: 0
+    }
+})
+
 const Textarea = styled(TextField)({
     "& textarea": {
         padding: "8px 11px"
@@ -52,6 +62,11 @@ const formItems: TFormItem[] = [
     {id: "phoneNumber", label: "Phone Number"},
     {id: "email", label: "E-mail"},
 ];
+const reminderItems: TFormItem[] = [
+    {id: "email", label: "E-mail"},
+    {id: "phone", label: "Phone"},
+    {id: "sms", label: "SMS"},
+]
 
 export const AppointmentConfirmationS6 = () => {
     const carDetails = useSelector((state: RootState) => state.appointment.s1Data);
@@ -60,10 +75,20 @@ export const AppointmentConfirmationS6 = () => {
         state.appointment.selectedSR
     ]);
 
+    const dispatch = useDispatch();
+
     const srDescription = useMemo((): string => {
         const sData = srList.find(s => s.id === selectedSR);
         return sData?.description || "-";
     }, [srList, selectedSR]);
+
+    const handleTextChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(changePersonalInformation({[name]: value}));
+    }
+
+    const handleCommentChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(changeComment(value));
+    }
 
     return <StepContainer>
         <StepContentContainer>
@@ -87,6 +112,7 @@ export const AppointmentConfirmationS6 = () => {
                                         type={fI.type}
                                         id={fI.id}
                                         name={fI.id}
+                                        onChange={handleTextChange}
                                     />
                                 </Grid>
                             </React.Fragment>
@@ -106,12 +132,39 @@ export const AppointmentConfirmationS6 = () => {
                             <Textarea
                                 multiline
                                 placeholder="Type here"
+                                onChange={handleCommentChange}
                                 rows={2}
                             />
+                            <FlexGroup>
+                                <FormControlLabel
+                                    label="Privacy & Policy"
+                                    control={<Checkbox color="primary" />}
+                                />
+                                <div className="grow" />
+                                <FormControlLabel
+                                    label="Want us to call you?"
+                                    control={<Checkbox color="primary" />}
+                                />
+                            </FlexGroup>
                         </Section>
 
                         <Section>
                             <Subtitle>Remainders</Subtitle>
+                            <FlexGroup>
+                                {reminderItems.map((item, idx) =>
+                                    <React.Fragment key={item.id}>
+                                        {idx ? <div className="grow" /> : null}
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    color="primary"
+                                                />
+                                            }
+                                            label={item.label}
+                                        />
+                                    </React.Fragment>
+                                )}
+                            </FlexGroup>
                         </Section>
 
                         <Section>

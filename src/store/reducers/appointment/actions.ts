@@ -1,5 +1,14 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ETransportation, IServiceCenterProfile, ISR, TS1Form, TS3Form} from "./types";
+import {
+    ETransportation,
+    IPersonalInformation,
+    IPrivacy,
+    IReminders,
+    IServiceCenterProfile,
+    ISR,
+    TS1Form,
+    TS3Form
+} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -29,3 +38,7 @@ export const changeS1Form = createAction<Partial<TS1Form>>("Appointment/ChangeS1
 export const handleSearch = createAction<string>("Appointment/Search");
 export const changeS3Form = createAction<Partial<TS3Form>>("Appointment/ChangeS3Form");
 export const changeTransportation = createAction<ETransportation>("Appointment/Transportation");
+export const changeReminders = createAction<Partial<IReminders>>("Appointment/ChangeReminders");
+export const changePrivacy = createAction<Partial<IPrivacy>>("Appointment/ChangePrivacy");
+export const changePersonalInformation = createAction<Partial<IPersonalInformation>>("Appointment/ChangePersonalInformation");
+export const changeComment = createAction<string>("Appointment/ChangeComment");

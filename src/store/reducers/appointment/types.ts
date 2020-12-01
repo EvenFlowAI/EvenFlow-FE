@@ -62,4 +62,19 @@ export const transportations: TEnumMap<ETransportation>[][] = [
         {id: ETransportation.Shuttle, label: "I will take the shuttle"},
         {id: ETransportation.LoanerCar, label: "I would tale a loaner car"},
     ]
-]
+];
+export interface IPersonalInformation {
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+}
+
+export interface IReminders {
+    email: boolean;
+    phone: boolean;
+    sms: boolean;
+}
+export interface IPrivacy {
+    privacy: boolean;
+    callback: boolean;
+}
