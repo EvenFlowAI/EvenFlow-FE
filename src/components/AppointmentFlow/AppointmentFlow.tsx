@@ -38,6 +38,9 @@ const useStyles = makeStyles(theme => ({
     stepContainer: {
         position: "absolute",
         left: -246,
+        top: 0,
+        maxHeight: "100%",
+        overflow: "hidden auto",
         width: 300,
         background: "transparent",
         "& div[class*='MuiStepConnector-root']": {
