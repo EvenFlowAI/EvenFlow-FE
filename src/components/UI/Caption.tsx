@@ -13,10 +13,10 @@ const useStyles = makeStyles({
         }
     }
 });
-export const Caption: React.FC<{title: string|JSX.Element}> = ({title}) => {
+export const Caption: React.FC<{title: string|JSX.Element, icon?: JSX.Element}> = ({title, icon}) => {
     const classes = useStyles();
     return <div className={classes.caption}>
-        <InfoOutlined color="primary" />
+        {icon ? icon : <InfoOutlined color="primary"/>}
         <span>{title}</span>
     </div>
 }
