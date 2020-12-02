@@ -23,7 +23,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
         <StepContentContainer>
             <h4 style={{textAlign: "center"}}>Select Appointment Date & Time</h4>
 
-            <Box textAlign="center">
+            <Box textAlign="center" mb={1}>
                 <ButtonGroup color="primary">
                     {views.map(view =>
                         <Button
