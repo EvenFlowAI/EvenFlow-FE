@@ -19,9 +19,10 @@ import {
     changeTransportation,
     getServiceCenterProfile,
     getSRs,
-    handleSearch,
+    handleSearch, selectAppointment,
     selectSR
 } from "./actions";
+import {TAppointment} from "../../../components/AppointmentFlow/AppointmentSelections/mock";
 
 type TState = {
     scProfile?: IServiceCenterProfile;
@@ -35,6 +36,7 @@ type TState = {
     reminders: IReminders;
     privacy: IPrivacy;
     comment: string;
+    appointment: TAppointment|null;
 };
 
 const blankPersonalInfo: IPersonalInformation = {
@@ -75,7 +77,8 @@ const initialState: TState = {
     personalInformation: blankPersonalInfo,
     reminders: blankReminders,
     privacy: blankPrivacy,
-    comment: ""
+    comment: "",
+    appointment: null
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -110,5 +113,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(changeComment, (state, {payload}) => {
         return {...state, comment: payload};
+    })
+    .addCase(selectAppointment, (state, {payload}) => {
+        return {...state, appointment: payload};
     })
 );

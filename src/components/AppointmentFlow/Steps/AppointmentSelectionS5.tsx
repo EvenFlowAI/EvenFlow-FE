@@ -5,6 +5,8 @@ import {ListAppointmentSelection} from '../AppointmentSelections/ListAppointment
 import {CalendarAppointmentSelection} from "../AppointmentSelections/CalendarAppointmentSelection";
 import {Caption} from "../../UI/Caption";
 import {DirectionsCar} from "@material-ui/icons";
+import {useDispatch} from "react-redux";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -15,8 +17,12 @@ const views: TButton[] = [
 
 export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     const [selectedView, setSelectedView] = useState<TView>("calendar");
+
+    const dispatch = useDispatch();
+
     const handleChangeView = (type: TView) => () => {
         setSelectedView(type);
+        dispatch(selectAppointment(null));
     }
 
     return <StepContainer>
