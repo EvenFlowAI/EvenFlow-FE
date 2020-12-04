@@ -29,11 +29,11 @@ export const generateOffer = (): TOffer => {
 export const randomBool = (): boolean => {
     return (Math.random() >= .5);
 }
-export const generateAppointment = (id: number): TAppointment => {
-    const dateModifier = Math.floor(Math.random() * 10);
+export const generateAppointment = (id: number, dt?: moment.Moment): TAppointment => {
+    const dateModifier = Math.floor(Math.random() * 7);
     const hourModifier = Math.floor(Math.random() * 10);
     const minuteModifier = Math.floor(Math.random() * 10);
-    const date = moment()
+    const date = moment(dt)
         .add(dateModifier, "days")
         .add(hourModifier, "hours")
         .add(minuteModifier, "minutes")
@@ -48,10 +48,10 @@ export const generateAppointment = (id: number): TAppointment => {
     }
 }
 
-export const getAppointmentList = (count:number=15): TAppointment[] => {
+export const getAppointmentList = (count:number=15, date:moment.Moment=moment()): TAppointment[] => {
     const appointmentList: TAppointment[] = [];
     for (let i = 1; i < count + 1; i++) {
-        appointmentList.push(generateAppointment(i));
+        appointmentList.push(generateAppointment(i, date));
     }
     return appointmentList;
 }
