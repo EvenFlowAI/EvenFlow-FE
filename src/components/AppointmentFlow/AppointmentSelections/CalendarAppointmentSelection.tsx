@@ -1,12 +1,13 @@
 import React, {useMemo, useState} from 'react';
 import {getAppointmentList, TAppointment} from "./mock";
 import moment from "moment";
-import {timeString} from "../../../config/constants";
 import {MonthSelector} from "./MonthSelector";
 import {Box, styled} from "@material-ui/core";
+import {DayPlate} from "./DayPlate";
 
 type TGroupedAppointments = {
     date: moment.Moment;
+    offers: boolean;
     appointments: TAppointment[];
 }
 
@@ -19,8 +20,21 @@ const DateSelectorContainer = styled("div")(({theme}) => ({
     textTransform: "uppercase"
 }));
 
+const DaysWrapper = styled("div")(({theme}) => ({
+    marginTop: theme.spacing(2),
+    display: "flex",
+    flexFlow: "row nowrap",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    overflowX: "auto",
+    "&>div": {
+        marginRight: theme.spacing(2)
+    }
+}))
+
 export const CalendarAppointmentSelection = () => {
     const [date, setDate] = useState<moment.Moment>(moment());
+    const [selectedIdx, setSelectedIdx] = useState<number|null>(null);
     const data = useMemo(() => {
         return getAppointmentList(30);
     }, []);
@@ -31,8 +45,15 @@ export const CalendarAppointmentSelection = () => {
             const idx = date.date();
             if (appointments[idx]) {
                 appointments[idx].appointments.push(appointment);
+                if (appointment.offer) {
+                    appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offer);
+                }
             } else {
-                appointments[idx] = {date, appointments: [appointment]};
+                appointments[idx] = {
+                    date,
+                    appointments: [appointment],
+                    offers: Boolean(appointment.offer)
+                };
             }
         }
         return appointments;
@@ -41,20 +62,26 @@ export const CalendarAppointmentSelection = () => {
     const handleSetDate = (nDate: moment.Moment) => {
         setDate(nDate);
     }
+    const handleDateClick = (idx: number) => () => {
+        setSelectedIdx(idx);
+    }
 
     return <div>
         <DateSelectorContainer>
             <Box mr={2}>Select date</Box>
             <MonthSelector date={date} onChange={handleSetDate} />
         </DateSelectorContainer>
-        {groupedAppointments.map(({date, appointments}) => {
-            if (!date) return null;
-            return <div key={date.date()}>
-                day: {date.format("MMM, D YYYY - ddd")}
-                {appointments.map(appointment => {
-                    return <span key={String(appointment.date)}>{moment(appointment.date).format(timeString)}, </span>;
-                })}
-            </div>
-        })}
+        <DaysWrapper>
+            {groupedAppointments.map(({date, appointments, offers}, idx) => {
+                if (!date) return null;
+                return <DayPlate
+                    key={date.date()}
+                    date={date}
+                    selected={selectedIdx === idx}
+                    offers={offers}
+                    onClick={handleDateClick(idx)}
+                />;
+            })}
+        </DaysWrapper>
     </div>
 };

@@ -30,7 +30,7 @@ export const randomBool = (): boolean => {
     return (Math.random() >= .5);
 }
 export const generateAppointment = (id: number, dt?: moment.Moment): TAppointment => {
-    const dateModifier = Math.floor(Math.random() * 7);
+    const dateModifier = Math.floor(Math.random() * 20);
     const hourModifier = Math.floor(Math.random() * 10);
     const minuteModifier = Math.floor(Math.random() * 10);
     const date = moment(dt)
