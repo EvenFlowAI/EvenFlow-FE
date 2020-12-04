@@ -2,11 +2,13 @@ import React, {useMemo, useState} from 'react';
 import {getAppointmentList, TAppointment} from "./mock";
 import moment from "moment";
 import {MonthSelector} from "./MonthSelector";
-import {Box, styled} from "@material-ui/core";
+import {Box, Grid, IconButton, styled} from "@material-ui/core";
 import {DayPlate} from "./DayPlate";
+import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 
 type TGroupedAppointments = {
     date: moment.Moment;
+    idx: number;
     offers: boolean;
     appointments: TAppointment[];
 }
@@ -25,15 +27,13 @@ const DaysWrapper = styled("div")(({theme}) => ({
     display: "flex",
     flexFlow: "row nowrap",
     alignItems: "center",
-    justifyContent: "flex-start",
-    overflowX: "auto",
-    "&>div": {
-        marginRight: theme.spacing(2)
-    }
-}))
+    justifyContent: "space-between",
+}));
 
 export const CalendarAppointmentSelection = () => {
+    const displayItems = 6;
     const [date, setDate] = useState<moment.Moment>(moment());
+    const [sliceIdx, setSliceIdx] = useState<number>(0);
     const [selectedIdx, setSelectedIdx] = useState<number|null>(null);
     const data = useMemo(() => {
         return getAppointmentList(30);
@@ -51,12 +51,13 @@ export const CalendarAppointmentSelection = () => {
             } else {
                 appointments[idx] = {
                     date,
+                    idx,
                     appointments: [appointment],
                     offers: Boolean(appointment.offer)
                 };
             }
         }
-        return appointments;
+        return appointments.filter(v => Boolean(v));
     }, [data]);
 
     const handleSetDate = (nDate: moment.Moment) => {
@@ -65,6 +66,14 @@ export const CalendarAppointmentSelection = () => {
     const handleDateClick = (idx: number) => () => {
         setSelectedIdx(idx);
     }
+    const handleSlide = (direction: "right"|"left") => () => {
+        if (
+            (sliceIdx + displayItems < groupedAppointments.length && direction === "right")
+            || (sliceIdx > 0 && direction === "left")
+        ) {
+            setSliceIdx(direction === "right" ? sliceIdx + displayItems : sliceIdx - displayItems);
+        }
+    }
 
     return <div>
         <DateSelectorContainer>
@@ -72,16 +81,30 @@ export const CalendarAppointmentSelection = () => {
             <MonthSelector date={date} onChange={handleSetDate} />
         </DateSelectorContainer>
         <DaysWrapper>
-            {groupedAppointments.map(({date, appointments, offers}, idx) => {
-                if (!date) return null;
-                return <DayPlate
-                    key={date.date()}
-                    date={date}
-                    selected={selectedIdx === idx}
-                    offers={offers}
-                    onClick={handleDateClick(idx)}
-                />;
+            <IconButton
+                disabled={sliceIdx <= 0}
+                onClick={handleSlide("left")}>
+                <ChevronLeft />
+            </IconButton>
+            <Grid container style={{flexGrow: 1}} spacing={4}>
+            {groupedAppointments
+                .slice(sliceIdx, sliceIdx + displayItems)
+                .map(({date, appointments, offers, idx}) => {
+                return <Grid item xs={2} key={date.date()}>
+                    <DayPlate
+                        date={date}
+                        selected={selectedIdx === idx}
+                        offers={offers}
+                        onClick={handleDateClick(idx)}
+                    />
+                </Grid>;
             })}
+            </Grid>
+            <IconButton
+                disabled={sliceIdx + displayItems >= groupedAppointments.length}
+                onClick={handleSlide("right")}>
+                <ChevronRight />
+            </IconButton>
         </DaysWrapper>
     </div>
 };
