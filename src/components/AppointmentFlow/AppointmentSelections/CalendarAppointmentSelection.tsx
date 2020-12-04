@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import {getAppointmentList, TAppointment} from "./mock";
 import moment from "moment";
 import {MonthSelector} from "./MonthSelector";
-import {Box, Grid, IconButton, styled} from "@material-ui/core";
+import {Box, Divider, Grid, IconButton, styled} from "@material-ui/core";
 import {DayPlate} from "./DayPlate";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 
@@ -17,10 +17,15 @@ const DateSelectorContainer = styled("div")(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    flexFlow: "row nowrap",
-    fontWeight: "bold",
-    textTransform: "uppercase"
+    flexFlow: "row nowrap"
 }));
+
+const Title = styled("h5")({
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    fontSize: 16,
+    margin: 0
+});
 
 const DaysWrapper = styled("div")(({theme}) => ({
     marginTop: theme.spacing(2),
@@ -77,7 +82,7 @@ export const CalendarAppointmentSelection = () => {
 
     return <div>
         <DateSelectorContainer>
-            <Box mr={2}>Select date</Box>
+            <Box mr={2}><Title>Select date</Title></Box>
             <MonthSelector date={date} onChange={handleSetDate} />
         </DateSelectorContainer>
         <DaysWrapper>
@@ -106,5 +111,9 @@ export const CalendarAppointmentSelection = () => {
                 <ChevronRight />
             </IconButton>
         </DaysWrapper>
+        <Box my={2}>
+            <Divider />
+        </Box>
+        <Title>Select time</Title>
     </div>
 };
