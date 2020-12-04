@@ -21,7 +21,9 @@ const DateWrapper = styled("div")({
     display: "flex",
     flexFlow: "row nowrap",
     alignItems: "stretch",
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
+    textTransform: "none",
+    fontWeight: "normal"
 });
 
 type TProps = {

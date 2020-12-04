@@ -3,11 +3,21 @@ import {getAppointmentList, TAppointment} from "./mock";
 import moment from "moment";
 import {timeString} from "../../../config/constants";
 import {MonthSelector} from "./MonthSelector";
+import {Box, styled} from "@material-ui/core";
 
 type TGroupedAppointments = {
     date: moment.Moment;
     appointments: TAppointment[];
 }
+
+const DateSelectorContainer = styled("div")(({theme}) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexFlow: "row nowrap",
+    fontWeight: "bold",
+    textTransform: "uppercase"
+}));
 
 export const CalendarAppointmentSelection = () => {
     const [date, setDate] = useState<moment.Moment>(moment());
@@ -33,7 +43,10 @@ export const CalendarAppointmentSelection = () => {
     }
 
     return <div>
-        <h4>Select date: <MonthSelector date={date} onChange={handleSetDate} /></h4>
+        <DateSelectorContainer>
+            <Box mr={2}>Select date</Box>
+            <MonthSelector date={date} onChange={handleSetDate} />
+        </DateSelectorContainer>
         {groupedAppointments.map(({date, appointments}) => {
             if (!date) return null;
             return <div key={date.date()}>
