@@ -1,7 +1,8 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {getAppointmentList, TAppointment} from "./mock";
 import moment from "moment";
 import {timeString} from "../../../config/constants";
+import {MonthSelector} from "./MonthSelector";
 
 type TGroupedAppointments = {
     date: moment.Moment;
@@ -9,6 +10,7 @@ type TGroupedAppointments = {
 }
 
 export const CalendarAppointmentSelection = () => {
+    const [date, setDate] = useState<moment.Moment>(moment());
     const data = useMemo(() => {
         return getAppointmentList(30);
     }, []);
@@ -26,12 +28,12 @@ export const CalendarAppointmentSelection = () => {
         return appointments;
     }, [data]);
 
-    const today = useMemo(() => {
-        return moment();
-    }, []);
+    const handleSetDate = (nDate: moment.Moment) => {
+        setDate(nDate);
+    }
 
     return <div>
-        <h4>Select date: {today.format("MMM YYYY")}</h4>
+        <h4>Select date: <MonthSelector date={date} onChange={handleSetDate} /></h4>
         {groupedAppointments.map(({date, appointments}) => {
             if (!date) return null;
             return <div key={date.date()}>
