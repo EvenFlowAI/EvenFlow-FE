@@ -38,6 +38,10 @@ export const OfferChip: React.FC<{offer: TOffer}> = ({offer}) => {
         {getOfferValue()}
     </Offer>
 }
+
+export const CalendarOfferChip = styled(OfferChip)({
+
+});
 export const ShortWaitChip = () => {
     return <Offer>
         <Uppercase>Shorter</Uppercase>

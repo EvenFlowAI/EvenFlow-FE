@@ -5,6 +5,7 @@ import {MonthSelector} from "./MonthSelector";
 import {Box, Divider, Grid, IconButton, styled} from "@material-ui/core";
 import {DayPlate} from "./DayPlate";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
+import {AppointmentPlate} from "./AppointmentPlate";
 
 type TGroupedAppointments = {
     date: moment.Moment;
@@ -70,6 +71,15 @@ export const CalendarAppointmentSelection = () => {
         return appointments.filter(v => Boolean(v));
     }, [data]);
 
+    const getAppointments = () => {
+        if (selectedIdx) {
+            const app = groupedAppointments.find(a => a.idx === selectedIdx);
+            return app?.appointments || [];
+        } else {
+            return [];
+        }
+    }
+
     const handleSetDate = (nDate: moment.Moment) => {
         setDate(nDate);
     }
@@ -117,9 +127,18 @@ export const CalendarAppointmentSelection = () => {
                 <ChevronRight />
             </IconButton>
         </DaysWrapper>
-        <Box my={2}>
-            <Divider />
-        </Box>
-        <Title>Select time</Title>
+        {selectedIdx ? <Box>
+            <Box my={2}>
+                <Divider />
+            </Box>
+            <Title>Select time</Title>
+            <Grid container spacing={3}>
+                {getAppointments().map(appointment =>
+                    <Grid key={appointment.id} item xs={2}>
+                        <AppointmentPlate appointment={appointment} />
+                    </Grid>
+                )}
+            </Grid>
+        </Box> : null}
     </div>
 };
