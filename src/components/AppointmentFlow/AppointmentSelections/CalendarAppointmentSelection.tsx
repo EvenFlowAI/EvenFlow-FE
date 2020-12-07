@@ -131,7 +131,9 @@ export const CalendarAppointmentSelection = () => {
             <Box my={2}>
                 <Divider />
             </Box>
-            <Title>Select time</Title>
+            <Box mb={1}>
+                <Title>Select time</Title>
+            </Box>
             <Grid container spacing={2}>
                 {getAppointments().map(appointment =>
                     <Grid key={appointment.id} item xs={3}>

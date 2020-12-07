@@ -23,7 +23,7 @@ const BuildIcon = styled(Build)({
     fontSize: 12,
     verticalAlign: "bottom"
 })
-export const OfferChip: React.FC<{offer: TOffer}> = ({offer}) => {
+export const OfferChip: React.FC<{offer: TOffer} & React.HTMLAttributes<HTMLDivElement>> = ({offer, children, ...attrs}) => {
     const getOfferValue = () => {
         switch (offer.type) {
             case EOfferType.Amount:
@@ -34,20 +34,25 @@ export const OfferChip: React.FC<{offer: TOffer}> = ({offer}) => {
                 return `${offer.value}% off`;
         }
     }
-    return <Offer>
+    return <Offer {...attrs}>
         {getOfferValue()}
     </Offer>
 }
 
 export const CalendarOfferChip = styled(OfferChip)({
-
+    fontSize: 9,
+    borderRadius: 0
 });
-export const ShortWaitChip = () => {
-    return <Offer>
+export const ShortWaitChip: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({children, ...props}) => {
+    return <Offer {...props}>
         <Uppercase>Shorter</Uppercase>
         <Uppercase>Wait time</Uppercase>
     </Offer>
 }
+export const CalendarWaitChip = styled(ShortWaitChip)({
+    fontSize: 9,
+    borderRadius: 0
+})
 
 export const LoanerCarChip = () => {
     return <Offer>
