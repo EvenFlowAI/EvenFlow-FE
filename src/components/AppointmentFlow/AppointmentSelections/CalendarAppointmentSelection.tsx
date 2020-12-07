@@ -8,6 +8,7 @@ import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 
 type TGroupedAppointments = {
     date: moment.Moment;
+    lowestPrice: number;
     idx: number;
     offers: boolean;
     appointments: TAppointment[];
@@ -53,10 +54,14 @@ export const CalendarAppointmentSelection = () => {
                 if (appointment.offer) {
                     appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offer);
                 }
+                if (appointment.price < appointments[idx].lowestPrice) {
+                    appointments[idx].lowestPrice = appointment.price;
+                }
             } else {
                 appointments[idx] = {
                     date,
                     idx,
+                    lowestPrice: appointment.price,
                     appointments: [appointment],
                     offers: Boolean(appointment.offer)
                 };
@@ -94,12 +99,13 @@ export const CalendarAppointmentSelection = () => {
             <Grid container style={{flexGrow: 1}} spacing={4}>
             {groupedAppointments
                 .slice(sliceIdx, sliceIdx + displayItems)
-                .map(({date, appointments, offers, idx}) => {
+                .map(({date, appointments, lowestPrice, offers, idx}) => {
                 return <Grid item xs={2} key={date.date()}>
                     <DayPlate
                         date={date}
                         selected={selectedIdx === idx}
                         offers={offers}
+                        price={lowestPrice}
                         onClick={handleDateClick(idx)}
                     />
                 </Grid>;

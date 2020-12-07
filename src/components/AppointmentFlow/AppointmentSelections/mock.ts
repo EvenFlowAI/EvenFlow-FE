@@ -12,6 +12,7 @@ export type TAppointment = {
     id: number;
     date: ParsableDate;
     offer?: TOffer;
+    price: number;
     shortWait: boolean;
     loanerCar: boolean;
     earlyDropOff: boolean;
@@ -29,6 +30,10 @@ export const generateOffer = (): TOffer => {
 export const randomBool = (): boolean => {
     return (Math.random() >= .5);
 }
+export const getRandomPrice = (): number => {
+    return Math.random() * 100 + Math.random() * 10 + Math.random();
+}
+
 export const generateAppointment = (id: number, dt?: moment.Moment): TAppointment => {
     const dateModifier = Math.floor(Math.random() * 20);
     const hourModifier = Math.floor(Math.random() * 10);
@@ -44,7 +49,8 @@ export const generateAppointment = (id: number, dt?: moment.Moment): TAppointmen
         earlyDropOff: randomBool(),
         loanerCar: randomBool(),
         shortWait: randomBool(),
-        offer: randomBool() ? generateOffer() : undefined
+        offer: randomBool() ? generateOffer() : undefined,
+        price: getRandomPrice()
     }
 }
 
