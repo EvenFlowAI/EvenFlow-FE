@@ -132,9 +132,9 @@ export const CalendarAppointmentSelection = () => {
                 <Divider />
             </Box>
             <Title>Select time</Title>
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
                 {getAppointments().map(appointment =>
-                    <Grid key={appointment.id} item xs={2}>
+                    <Grid key={appointment.id} item xs={3}>
                         <AppointmentPlate appointment={appointment} />
                     </Grid>
                 )}
