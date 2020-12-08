@@ -55,7 +55,7 @@ export const ListAppointmentSelection = () => {
     return <div>
         <AppointmentHeader elevation={0}>
             {labels.map((label, idx) =>
-                <span style={!idx ? justifyStart : undefined}>{label}</span>
+                <span key={idx} style={!idx ? justifyStart : undefined}>{label}</span>
             )}
         </AppointmentHeader>
         {appointments.map(appointment => {
@@ -65,9 +65,9 @@ export const ListAppointmentSelection = () => {
                     <span style={justifyStart}>{moment(date).format("MMM D, YYYY ddd")}</span>
                     <span>{moment(date).format(timeString)}</span>
                     <span><strong>${price.toFixed(0)}</strong></span>
-                    <span>{offer ? <OfferChip offer={offer}/> : null}</span>
-                    <span>{shortWait ? <ShortWaitChip/> : null}</span>
-                    <span>{loanerCar ? <LoanerCarChip/> : null}</span>
+                    <span>{offer ? <OfferChip white offer={offer}/> : null}</span>
+                    <span>{shortWait ? <ShortWaitChip white/> : null}</span>
+                    <span>{loanerCar ? <LoanerCarChip white/> : null}</span>
                     <span>{earlyDropOff ? <DirectionsCar fontSize="small"/> : null}</span>
                     <Button
                         color="primary"

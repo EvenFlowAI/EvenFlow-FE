@@ -3,11 +3,18 @@ import {EOfferType, TOffer} from "./mock";
 import {styled} from "@material-ui/core";
 import {Build} from "@material-ui/icons";
 
-const Offer = styled("div")(({theme}) => ({
-    padding: theme.spacing(.5),
-    backgroundColor: "#56D75C",
-    color: "#fff",
+type TOfferProps = {
+    white?: boolean;
+}
+
+const Offer = styled(
+    ({white, ...props}: TOfferProps & React.HTMLAttributes<HTMLDivElement>) => <div {...props} />
+)({
+    padding: 4,
+    backgroundColor: (props: TOfferProps) => props.white ? "#fff" : "#56D75C",
+    color: (props: TOfferProps) => props.white ? "inherit" : "#fff",
     borderRadius: 2,
+    border: (props: TOfferProps) => props.white ? "1px solid #e0e0e0" : undefined,
     fontSize: 12,
     display: "flex",
     alignItems: "center",
@@ -15,7 +22,7 @@ const Offer = styled("div")(({theme}) => ({
     flexDirection: "column",
     lineHeight: "12px",
     fontWeight: "bold"
-}));
+});
 const Uppercase = styled("span")({
     textTransform: "uppercase"
 });
@@ -23,7 +30,7 @@ const BuildIcon = styled(Build)({
     fontSize: 12,
     verticalAlign: "bottom"
 })
-export const OfferChip: React.FC<{offer: TOffer} & React.HTMLAttributes<HTMLDivElement>> = ({offer, children, ...attrs}) => {
+export const OfferChip: React.FC<{offer: TOffer, white?: boolean} & React.HTMLAttributes<HTMLDivElement>> = ({offer, children, ...attrs}) => {
     const getOfferValue = () => {
         switch (offer.type) {
             case EOfferType.Amount:
@@ -40,22 +47,20 @@ export const OfferChip: React.FC<{offer: TOffer} & React.HTMLAttributes<HTMLDivE
 }
 
 export const CalendarOfferChip = styled(OfferChip)({
-    fontSize: 9,
     borderRadius: 0
 });
-export const ShortWaitChip: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({children, ...props}) => {
+export const ShortWaitChip: React.FC<TOfferProps&React.HTMLAttributes<HTMLDivElement>> = ({children, ...props}) => {
     return <Offer {...props}>
         <Uppercase>Shorter</Uppercase>
         <Uppercase>Wait time</Uppercase>
     </Offer>
 }
 export const CalendarWaitChip = styled(ShortWaitChip)({
-    fontSize: 9,
     borderRadius: 0
 })
 
-export const LoanerCarChip = () => {
-    return <Offer>
+export const LoanerCarChip: React.FC<TOfferProps&React.HTMLAttributes<HTMLDivElement>> = ({children, ...props}) => {
+    return <Offer {...props}>
         <Uppercase>Loaner car</Uppercase>
     </Offer>
 }
