@@ -70,9 +70,14 @@ const reminderItems: TFormItem[] = [
 
 export const AppointmentConfirmationS6 = () => {
     const carDetails = useSelector((state: RootState) => state.appointment.s1Data);
-    const [srList, selectedSR] = useSelector((state: RootState) => [
+    const [
+        srList,
+        selectedSR,
+        appointment
+    ] = useSelector((state: RootState) => [
         state.appointment.serviceRequests,
-        state.appointment.selectedSR
+        state.appointment.selectedSR,
+        state.appointment.appointment
     ]);
 
     const dispatch = useDispatch();
@@ -121,10 +126,18 @@ export const AppointmentConfirmationS6 = () => {
                     <LabelGrid item xs={3} />
                     <Grid item xs={9}>
                         <Section>
-                            <Subtitle>Review</Subtitle>
-                            <p>{`${carDetails.make} ${carDetails.model}`.trim() || "-"}</p>
-                            <p>{srDescription}</p>
-                            <EditButton color="primary">View Details</EditButton>
+                            <Grid container spacing={2}>
+                                <Grid item md={6}>
+                                    <Subtitle>Review</Subtitle>
+                                    <p>{`${carDetails.make} ${carDetails.model}`.trim() || "-"}</p>
+                                    <p>{srDescription}</p>
+                                    <EditButton color="primary">View Details</EditButton>
+                                </Grid>
+                                {appointment ? <Grid style={{textAlign: "right"}} item md={6}>
+                                    <Subtitle>Selected Price</Subtitle>
+                                    <p>${appointment.price.toFixed(2)}</p>
+                                </Grid> : null}
+                            </Grid>
                         </Section>
 
                         <Section>
