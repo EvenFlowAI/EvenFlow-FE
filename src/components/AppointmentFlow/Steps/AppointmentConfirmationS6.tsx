@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {ScrollableContainer, StepContainer, StepContentContainer, TextField} from "../UI";
-import {Button, Checkbox, FormControlLabel, FormGroup, FormLabel, Grid, styled} from "@material-ui/core";
+import {Checkbox, FormControlLabel, FormGroup, FormLabel, Grid, styled} from "@material-ui/core";
 import {EditButton} from "../../UI/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -31,10 +31,21 @@ const Message = styled("div")({
     textTransform: "uppercase",
     fontSize: 16
 });
-const TextButton = styled(Button)({
+const TextButton = styled("span")(({theme}) => ({
     textDecoration: "underline",
-    padding: 0
-});
+    padding: 0,
+    color: theme.palette.primary.main,
+    cursor: "pointer",
+    display: "inline-block",
+    fontWeight: "bold",
+    marginRight: theme.spacing(1),
+    userSelect: "none",
+    transition: theme.transitions.create(["text-decoration", "color"]),
+    "&:hover": {
+        textDecoration: "none",
+        color: theme.palette.primary.dark
+    }
+}));
 
 const FlexGroup = styled(FormGroup)({
     display: "flex",
@@ -182,7 +193,7 @@ export const AppointmentConfirmationS6 = () => {
 
                         <Section>
                             <Message>
-                                <TextButton color="primary">
+                                <TextButton>
                                     Create Account
                                 </TextButton>
                                 <span>to save time on my next visit!</span>
