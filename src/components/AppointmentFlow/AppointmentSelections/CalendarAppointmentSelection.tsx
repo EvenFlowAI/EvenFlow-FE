@@ -6,6 +6,9 @@ import {Box, Divider, Grid, IconButton, styled} from "@material-ui/core";
 import {DayPlate} from "./DayPlate";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {AppointmentPlate} from "./AppointmentPlate";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 type TGroupedAppointments = {
     date: moment.Moment;
@@ -42,6 +45,10 @@ export const CalendarAppointmentSelection = () => {
     const [date, setDate] = useState<moment.Moment>(moment());
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const [selectedIdx, setSelectedIdx] = useState<number|null>(null);
+    const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
+
+    const dispatch = useDispatch();
+
     const data = useMemo(() => {
         return getAppointmentList(30);
     }, []);
@@ -95,6 +102,10 @@ export const CalendarAppointmentSelection = () => {
         }
     }
 
+    const handleSelectAppointment = (a: TAppointment) => () => {
+        dispatch(selectAppointment(a));
+    }
+
     return <div>
         <DateSelectorContainer>
             <Box mr={2}><Title>Select date</Title></Box>
@@ -137,7 +148,11 @@ export const CalendarAppointmentSelection = () => {
             <Grid container spacing={2}>
                 {getAppointments().map(appointment =>
                     <Grid key={appointment.id} item xs={3}>
-                        <AppointmentPlate appointment={appointment} />
+                        <AppointmentPlate
+                            selected={appointment.id === selectedAppointment?.id}
+                            onClick={handleSelectAppointment(appointment)}
+                            appointment={appointment}
+                        />
                     </Grid>
                 )}
             </Grid>

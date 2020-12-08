@@ -8,7 +8,9 @@ const Paper = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(.5),
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    cursor: "pointer",
+    userSelect: "none"
 }));
 const DatePaper = styled(Paper)(({theme}) => ({
     padding: `${theme.spacing(.5)}px ${theme.spacing(1.5)}px`,
