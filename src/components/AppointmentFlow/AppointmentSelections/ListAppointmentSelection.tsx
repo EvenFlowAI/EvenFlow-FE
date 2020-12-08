@@ -13,12 +13,29 @@ import {RootState} from "../../../store/rootReducer";
 const Appointment = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(1),
     display: "grid",
-    gridTemplateColumns: "150px repeat(4, 2fr) 1fr 100px",
+    gridTemplateColumns: "120px 60px 40px 3fr repeat(2, 2fr) 1fr 100px",
     gridGap: theme.spacing(.5),
-    fontSize: 15,
+    fontSize: 14,
     alignItems: "center",
     justifyItems: "center"
 }));
+const AppointmentHeader = styled(Appointment)(({theme}) => ({
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    "&>span": {
+        textAlign: "center",
+    },
+    "&>span:last-child": {
+        gridColumnStart: 6,
+        gridColumnEnd: -1,
+        justifySelf: "self-start"
+    }
+}));
+const justifyStart = {justifySelf: "self-start"};
+
+const labels: string[] = [
+    "Date", "Time", "Price", "Special Offer", "Wait Time", "Loaner Car"
+]
 
 export const ListAppointmentSelection = () => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
@@ -36,12 +53,18 @@ export const ListAppointmentSelection = () => {
     }
 
     return <div>
+        <AppointmentHeader elevation={0}>
+            {labels.map((label, idx) =>
+                <span style={!idx ? justifyStart : undefined}>{label}</span>
+            )}
+        </AppointmentHeader>
         {appointments.map(appointment => {
-            const {id, date, offer, earlyDropOff, shortWait, loanerCar} = appointment;
+            const {id, date, offer, earlyDropOff, shortWait, price, loanerCar} = appointment;
             return <Box key={id} mt={.5}>
                 <Appointment variant="outlined">
-                    <span style={{justifySelf: "self-start"}}>{moment(date).format("MMM D, YYYY ddd")}</span>
+                    <span style={justifyStart}>{moment(date).format("MMM D, YYYY ddd")}</span>
                     <span>{moment(date).format(timeString)}</span>
+                    <span><strong>${price.toFixed(0)}</strong></span>
                     <span>{offer ? <OfferChip offer={offer}/> : null}</span>
                     <span>{shortWait ? <ShortWaitChip/> : null}</span>
                     <span>{loanerCar ? <LoanerCarChip/> : null}</span>
