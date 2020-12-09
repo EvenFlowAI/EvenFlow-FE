@@ -60,7 +60,7 @@ export const transportations: TEnumMap<ETransportation>[][] = [
     [
         {id: ETransportation.Rental, label: "I would like a rental"},
         {id: ETransportation.Shuttle, label: "I will take the shuttle"},
-        {id: ETransportation.LoanerCar, label: "I would tale a loaner car"},
+        {id: ETransportation.LoanerCar, label: "I would take a loaner car"},
     ]
 ];
 export interface IPersonalInformation {

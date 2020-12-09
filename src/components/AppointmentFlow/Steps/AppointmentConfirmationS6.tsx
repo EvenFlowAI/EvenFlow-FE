@@ -1,10 +1,11 @@
 import React, {useMemo} from 'react';
-import {ScrollableContainer, StepContainer, StepContentContainer, TextField} from "../UI";
+import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TextField, TStepProps} from "../UI";
 import {Checkbox, FormControlLabel, FormGroup, FormLabel, Grid, styled} from "@material-ui/core";
 import {EditButton} from "../../UI/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {changeComment, changePersonalInformation} from "../../../store/reducers/appointment/actions";
+import moment from "moment";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -79,7 +80,7 @@ const reminderItems: TFormItem[] = [
     {id: "sms", label: "SMS"},
 ]
 
-export const AppointmentConfirmationS6 = () => {
+export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, next}) => {
     const carDetails = useSelector((state: RootState) => state.appointment.s1Data);
     const [
         srList,
@@ -203,5 +204,15 @@ export const AppointmentConfirmationS6 = () => {
                 </Grid>
             </ScrollableContainer>
         </StepContentContainer>
+        <NextPrevBlock
+            next={next}
+            prev={prev}
+            nextLabel={
+                appointment?.date ?
+                    `Schedule ${moment(appointment.date).format("ddd, MMM D, h:mm a")}`
+                    : "-"
+            }
+            nextDisabled
+        />
     </StepContainer>;
 };
