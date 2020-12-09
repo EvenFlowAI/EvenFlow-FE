@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {DenseTable} from "../../AppointmentAllocation/UI";
-import {Box, Mark, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Mark, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
 import {dayDemands, EDayDemand, EDemandCategory, EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {EditButton} from "../../../UI/Button";
@@ -12,19 +12,28 @@ import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";
 
 
+const Slider = withStyles({
+
+})(ValueSlider);
+
+type TZone = "orange" | "red";
+
 type ESliderRange = {
     Min: number;
+    Zones: [string, TZone, number][]
     Max: number;
     Default: number;
     Step: number;
+    Inverted: boolean;
 }
 const sliderRange: {[k in EDayDemand]: ESliderRange} = {
-    [EDayDemand.Low]: {Min: -10, Max: 0, Default: 0, Step: .1},
-    [EDayDemand.High]: {Min: 0, Max: 10, Default: 0, Step: .1},
+    [EDayDemand.Low]: {Min: -10, Max: 0, Default: 0, Step: .1, Inverted: true, Zones: [["-2", "orange", -2], ["-4", "red", -4]]},
+    [EDayDemand.High]: {Min: 0, Max: 10, Default: 0, Step: .1, Inverted: false, Zones: [["2", "orange", 2], ["4", "red", 4]]},
 }
 
 const sliderMarks = (t: EDayDemand): Mark[] => [
     {label: sliderRange[t].Min, value: sliderRange[t].Min},
+    ...sliderRange[t].Zones.map(z => ({label: z[0], value: z[2]})),
     {label: sliderRange[t].Max, value: sliderRange[t].Max},
 ];
 
@@ -108,9 +117,10 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
                         <TableCell>{d.label}</TableCell>
                         <TableCell>
                             <Box ml={2} mr={2}>
-                                <ValueSlider
+                                <Slider
                                     min={sliderRange[d.id].Min}
                                     max={sliderRange[d.id].Max}
+                                    track={sliderRange[d.id].Inverted ? "inverted" : undefined}
                                     disabled={edit !== d.id}
                                     valueLabelDisplay="on"
                                     step={sliderRange[d.id].Step}
