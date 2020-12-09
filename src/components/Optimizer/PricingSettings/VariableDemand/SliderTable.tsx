@@ -12,9 +12,22 @@ import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";
 
 
-const Slider = ({inverted}: {inverted: boolean}) => withStyles({
+const Slider = withStyles({
     rail: {
-        background: `linear-gradient(${inverted ? "-" : ""}90deg, green 0%, green 20%, orange 20%, orange 40%, red 40%)`
+        background: "linear-gradient(90deg, green 0%, green 20%, orange 20%, orange 40%, red 40%)",
+        opacity: 1
+    },
+    track: {
+        background: "transparent"
+    }
+})(ValueSlider);
+const InvertedSlider = withStyles({
+    rail: {
+        background: "linear-gradient(-90deg, green 0%, green 20%, orange 20%, orange 40%, red 40%)",
+        opacity: 1
+    },
+    track: {
+        background: "transparent"
     }
 })(ValueSlider);
 
@@ -104,22 +117,6 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
         }
     }
 
-    const getSlider = (id: EDayDemand) => {
-        const data = sliderRange[id];
-        const C = Slider({inverted: data.Inverted});
-        return <C
-            min={data.Min}
-            max={data.Max}
-            track={data.Inverted ? "inverted" : undefined}
-            disabled={edit !== id}
-            valueLabelDisplay="on"
-            step={data.Step}
-            value={form[id]}
-            marks={sliderMarks(id)}
-            onChange={handleSlide(id)}
-        />;
-    }
-
     return <TableContainer>
         <DenseTable>
             <TableHead>
@@ -135,7 +132,28 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
                         <TableCell>{d.label}</TableCell>
                         <TableCell>
                             <Box ml={2} mr={2}>
-                                {getSlider(d.id)}
+                                {sliderRange[d.id].Inverted ?
+                                    <InvertedSlider
+                                        min={sliderRange[d.id].Min}
+                                        max={sliderRange[d.id].Max}
+                                        disabled={edit !== d.id}
+                                        valueLabelDisplay="on"
+                                        step={sliderRange[d.id].Step}
+                                        value={form[d.id]}
+                                        marks={sliderMarks(d.id)}
+                                        onChange={handleSlide(d.id)}
+                                    />
+                                    : <Slider
+                                        min={sliderRange[d.id].Min}
+                                        max={sliderRange[d.id].Max}
+                                        disabled={edit !== d.id}
+                                        valueLabelDisplay="on"
+                                        step={sliderRange[d.id].Step}
+                                        value={form[d.id]}
+                                        marks={sliderMarks(d.id)}
+                                        onChange={handleSlide(d.id)}
+                                    />
+                                }
                             </Box>
                         </TableCell>
                         <TableCell align="right">
