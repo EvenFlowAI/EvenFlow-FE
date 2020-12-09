@@ -12,8 +12,10 @@ import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";
 
 
-const Slider = withStyles({
-
+const Slider = ({inverted}: {inverted: boolean}) => withStyles({
+    rail: {
+        background: `linear-gradient(${inverted ? "-" : ""}90deg, green 0%, green 20%, orange 20%, orange 40%, red 40%)`
+    }
 })(ValueSlider);
 
 type TZone = "orange" | "red";
@@ -102,6 +104,22 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
         }
     }
 
+    const getSlider = (id: EDayDemand) => {
+        const data = sliderRange[id];
+        const C = Slider({inverted: data.Inverted});
+        return <C
+            min={data.Min}
+            max={data.Max}
+            track={data.Inverted ? "inverted" : undefined}
+            disabled={edit !== id}
+            valueLabelDisplay="on"
+            step={data.Step}
+            value={form[id]}
+            marks={sliderMarks(id)}
+            onChange={handleSlide(id)}
+        />;
+    }
+
     return <TableContainer>
         <DenseTable>
             <TableHead>
@@ -117,17 +135,7 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
                         <TableCell>{d.label}</TableCell>
                         <TableCell>
                             <Box ml={2} mr={2}>
-                                <Slider
-                                    min={sliderRange[d.id].Min}
-                                    max={sliderRange[d.id].Max}
-                                    track={sliderRange[d.id].Inverted ? "inverted" : undefined}
-                                    disabled={edit !== d.id}
-                                    valueLabelDisplay="on"
-                                    step={sliderRange[d.id].Step}
-                                    value={form[d.id]}
-                                    marks={sliderMarks(d.id)}
-                                    onChange={handleSlide(d.id)}
-                                />
+                                {getSlider(d.id)}
                             </Box>
                         </TableCell>
                         <TableCell align="right">
