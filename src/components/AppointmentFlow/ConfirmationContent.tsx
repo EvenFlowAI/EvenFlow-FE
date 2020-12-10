@@ -41,7 +41,7 @@ const rows: TRow[] = [
     {id: 8, label: "Total", key: "total"},
 ];
 const getCarInfo = (data: TS1Form):string => {
-    return `${data.make} ${data.model} ${data.year}`.trim();
+    return `${data.make ?? ""} ${data.model ?? ""} ${data.year ?? ""}`.trim() || "-";
 }
 
 export const ConfirmationContent = () => {
@@ -49,10 +49,10 @@ export const ConfirmationContent = () => {
         date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
         address: "-",
         serviceType: appointment.serviceRequests.find(s => s.id === appointment.selectedSR)?.description || "-",
-        name: appointment.personalInformation.fullName,
+        name: appointment.personalInformation.fullName || "-",
         carInfo: getCarInfo(appointment.s1Data),
-        phoneNumber: appointment.personalInformation.phoneNumber,
-        email: appointment.personalInformation.email,
+        phoneNumber: appointment.personalInformation.phoneNumber || "-",
+        email: appointment.personalInformation.email || "-",
         total: appointment.appointment?.price ? `$${appointment.appointment.price}` : "-"
     }));
 
