@@ -9,7 +9,7 @@ import {TS1Form} from "../../store/reducers/appointment/types";
 const Paper = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(2),
     borderRadius: 6,
-    maxWidth: 550,
+    maxWidth: 520,
     fontSize: 15,
     position: "relative"
 }));
