@@ -20,6 +20,7 @@ const Wrapper = styled(Container)({
 
 const ContentWrapper = styled("div")({
     flexGrow: 1,
+    zIndex: 10,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
