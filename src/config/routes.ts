@@ -38,7 +38,9 @@ enum EndUser {
     Base = "/welcome/:id",
     Welcome = "/welcome",
     Appointment = "/appointment/:id",
-    AppointmentBase = "/appointment"
+    AppointmentBase = "/appointment",
+    Confirmation = "/confirmation/:id",
+    ConfirmationBase = "/confirmation"
 }
 
 export const Routes = {

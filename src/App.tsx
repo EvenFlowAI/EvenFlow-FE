@@ -11,6 +11,7 @@ import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {EndUserLayout} from "./components/Layout/EndUserLayout";
 import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
+import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
@@ -34,6 +35,7 @@ const App = () => {
                     <Route path={Routes.Login.Base} component={Login}/>
                     <Route path={Routes.Account.Verification} component={Login} />
                     <Route path={Routes.EndUser.Appointment} component={AppointmentLayout} />
+                    <Route path={Routes.EndUser.Confirmation} component={AppointmentConfirmation} />
                     <Route path={Routes.EndUser.Base} component={EndUserLayout} />
                     <PrivateRoute path="/" component={Layout}/>
                 </Switch>
