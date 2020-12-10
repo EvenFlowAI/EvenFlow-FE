@@ -86,7 +86,6 @@ type TNextProps = {
     nextDisabled?: boolean,
     nextLabel?: string;
     prevLabel?: string;
-    onSubmit?: () => void;
 };
 export const NextPrevBlock: React.FC<TStepProps&TNextProps> = ({next, prev, nextDisabled, nextLabel, prevLabel}) => {
     return <Box mt={1} textAlign="center">

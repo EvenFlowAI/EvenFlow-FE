@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Button, Grid, withStyles} from "@material-ui/core";
 import {InputLoading, Label, ScrollableContainer, StepContainer, TextField, TStepProps} from "../UI";
 import {KeyboardDatePicker} from "@material-ui/pickers";
@@ -23,6 +23,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
         return state.appointment.s1Data;
     });
     const showError = useException();
+    const oldVin = useRef<string>("");
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         dispatch(changeS1Form({
@@ -33,8 +34,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
     }, [dispatch, form]);
 
     useEffect(() => {
-        if (form.vin.length === 17) {
+        if (form.vin.length === 17 && oldVin.current !== form.vin) {
             const t = setTimeout(() => {
+                oldVin.current = form.vin;
                 setLoading(true);
                 Api.call<IVehicleData>(
                     Api.endpoints.Vehicles.GetByVIN,

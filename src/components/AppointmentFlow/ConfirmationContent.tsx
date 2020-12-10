@@ -5,6 +5,9 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import moment from "moment";
 import {TS1Form} from "../../store/reducers/appointment/types";
+import {useHistory, useParams} from "react-router-dom";
+import {Routes} from "../../config/routes";
+import {concatAddress} from "../../utils/utils";
 
 const Paper = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(2),
@@ -85,14 +88,21 @@ const getCarInfo = (data: TS1Form):string => {
 export const ConfirmationContent = () => {
     const data: TDataMap = useSelector(({appointment}: RootState) => ({
         date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
-        address: "-",
+        address: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "-",
         serviceType: appointment.serviceRequests.find(s => s.id === appointment.selectedSR)?.description || "-",
         name: appointment.personalInformation.fullName || "-",
         carInfo: getCarInfo(appointment.s1Data),
         phoneNumber: appointment.personalInformation.phoneNumber || "-",
         email: appointment.personalInformation.email || "-",
-        total: appointment.appointment?.price ? `$${appointment.appointment.price}` : "-"
+        total: appointment.appointment?.price ? `$${appointment.appointment.price.toFixed(2)}` : "-"
     }));
+
+    const history = useHistory();
+    const {id} = useParams();
+
+    const handleBack = () => {
+        history.push(`${Routes.EndUser.AppointmentBase}/${id ?? ""}`);
+    }
 
     return <Paper elevation={8}>
         <Title>Appointment confirmed!</Title>
@@ -112,7 +122,7 @@ export const ConfirmationContent = () => {
                 <Box p={.25} />
             </Grid>
             <Grid item xs={6}>
-                <Button variant="outlined" color="primary">
+                <Button onClick={handleBack} variant="outlined" color="primary">
                     Change Appointment
                 </Button>
             </Grid>

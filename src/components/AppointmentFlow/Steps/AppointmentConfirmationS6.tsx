@@ -6,6 +6,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {changeComment, changePersonalInformation} from "../../../store/reducers/appointment/actions";
 import moment from "moment";
+import {useHistory, useParams} from "react-router-dom";
+import {Routes} from "../../../config/routes";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -80,7 +82,7 @@ const reminderItems: TFormItem[] = [
     {id: "sms", label: "SMS"},
 ]
 
-export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, next}) => {
+export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
     const carDetails = useSelector((state: RootState) => state.appointment.s1Data);
     const [
         srList,
@@ -93,6 +95,8 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, next}) =>
     ]);
 
     const dispatch = useDispatch();
+    const history = useHistory();
+    const {id} = useParams();
 
     const srDescription = useMemo((): string => {
         const sData = srList.find(s => s.id === selectedSR);
@@ -105,6 +109,9 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, next}) =>
 
     const handleCommentChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(changeComment(value));
+    }
+    const handleConfirm = () => {
+        history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);
     }
 
     return <StepContainer>
@@ -205,14 +212,13 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, next}) =>
             </ScrollableContainer>
         </StepContentContainer>
         <NextPrevBlock
-            next={next}
+            next={handleConfirm}
             prev={prev}
             nextLabel={
                 appointment?.date ?
                     `Schedule ${moment(appointment.date).format("ddd, MMM D, h:mm a")}`
                     : "-"
             }
-            nextDisabled
         />
     </StepContainer>;
 };
