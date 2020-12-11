@@ -78,6 +78,18 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down("sm")]: {
             textAlign: "center"
         }
+    },
+    countWrapper: {
+        display: "flex",
+        justifyContent: "space-around",
+        [theme.breakpoints.down("sm")]: {
+            flexWrap: "wrap",
+            "&>*": {
+                textAlign: "center",
+                padding: theme.spacing(1),
+                width: "50%"
+            }
+        }
     }
 }));
 
@@ -195,7 +207,7 @@ export const AdminDashboard: React.FC = () => {
             {selectedSC ? concatAddress(selectedSC.address) : null}
         </Box>
         <SquarePaper variant="outlined">
-            <Box p={2} display="flex" justifyContent="space-around">
+            <Box className={classes.countWrapper} p={2}>
                 {overallData.map(d =>
                     <Box key={d.label} display="flex" flexDirection="column" alignItems="center">
                         <span>{d.label}</span>
