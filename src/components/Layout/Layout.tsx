@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {SideBar} from "../SideBar/SideBar.";
 import {makeStyles} from "@material-ui/core/styles";
 import { Redirect, Switch } from "react-router-dom";
@@ -47,6 +47,17 @@ const useStyles = makeStyles(theme => ({
 export const Layout = () => {
     const classes = useStyles();
     const {isOpened, onOpen, onClose} = useSideBar();
+    const navBarRef = useRef<HTMLDivElement>(null);
+    const [navBarHeight, setNavBarHeight] = useState<number>(0);
+    useEffect(() => {
+        function updateHeight() {
+            setNavBarHeight(navBarRef.current?.clientHeight || 0);
+        }
+        window.addEventListener("resize", updateHeight);
+        return () => {
+            window.removeEventListener("resize", updateHeight);
+        }
+    })
 
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -65,12 +76,12 @@ export const Layout = () => {
 
     return <div className={classes.root}>
         <SideBar isOpened={isOpened} onClose={onClose} />
-        <NavBar sideBarOpened={isOpened} onOpen={onOpen} />
+        <NavBar ref={navBarRef} sideBarOpened={isOpened} onOpen={onOpen} />
         <div className={clsx(
             classes.main,
             {[classes.mainOpened]: isOpened}
         )}>
-            <Toolbar id="backToTopAnchor" />
+            <Toolbar id="backToTopAnchor" style={{height: navBarHeight || undefined}} />
             <Switch>
                 <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />
                 <PrivateRoute path={Routes.Optimizer.Base} component={OptimizerPage} />

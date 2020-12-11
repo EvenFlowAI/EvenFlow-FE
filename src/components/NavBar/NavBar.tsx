@@ -1,4 +1,4 @@
-import React from "react";
+import React, {forwardRef} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     AppBar,
@@ -62,7 +62,7 @@ type TProps = {
     sideBarOpened?: boolean;
     onOpen: () => void;
 }
-export const NavBar: React.FC<TProps> = ({sideBarOpened, onOpen}) => {
+export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen}, ref) => {
     const classes = useStyles();
     const history = useHistory();
     const theme = useTheme();
@@ -88,7 +88,7 @@ export const NavBar: React.FC<TProps> = ({sideBarOpened, onOpen}) => {
     }
 
     return <>
-        <AppBar className={clsx(
+        <AppBar ref={ref} className={clsx(
             classes.root,
             {[classes.openedRoot]: sideBarOpened}
         )}>
@@ -114,4 +114,4 @@ export const NavBar: React.FC<TProps> = ({sideBarOpened, onOpen}) => {
             </Toolbar>
         </AppBar>
     </>
-}
+});
