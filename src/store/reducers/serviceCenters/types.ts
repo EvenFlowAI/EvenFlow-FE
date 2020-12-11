@@ -59,6 +59,12 @@ export interface IWeeklySchedule {
 export interface IWeeklyScheduleForm {
     weeklySchedules: IWeeklySchedule[]
 }
+export interface ISCAnalytics {
+    countOfTechnicians: number;
+    countOfBays: number;
+    countOfPods: number;
+    countOfAppointmentsToday: number;
+}
 
 export type TGetAll = {type: "ServiceCenters/GetAll", payload: IServiceCenterExtended[]};
 export type TGetDealershipAll = {type: "ServiceCenters/GetDealershipAll", payload: IServiceCenterExtended[]};

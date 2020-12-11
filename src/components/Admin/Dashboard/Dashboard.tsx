@@ -182,11 +182,11 @@ export const AdminDashboard: React.FC = () => {
         isOpen: isOpenPods,
     } = useModal();
 
-    const countData: TCountData = useSelector((state:RootState) => ({
-        technicians: 0,
-        bays: 0,
-        appointments: 0,
-        pods: 0
+    const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
+        technicians: analytics.countOfTechnicians,
+        bays: analytics.countOfPods,
+        appointments: analytics.countOfAppointmentsToday,
+        pods: analytics.countOfPods
     }));
 
     const items: TItem[] = [

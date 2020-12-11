@@ -11,7 +11,7 @@ import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actions";
-import {loadAllSCs} from "../../store/reducers/serviceCenters/actions";
+import {loadAllSCs, loadSCAnalytics} from "../../store/reducers/serviceCenters/actions";
 import {useSCs, useSideBar} from "../../utils/hooks";
 import {getPodsShort, loadPodsShort} from "../../store/reducers/pods/actions";
 import {OfferManagementPage} from "../OfferManagement/OfferManagementPage";
@@ -70,6 +70,7 @@ export const Layout = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadPodsShort(selectedSC.id));
+            dispatch(loadSCAnalytics(selectedSC.id));
         } else {
             dispatch(getPodsShort([]));
         }

@@ -119,7 +119,7 @@ type ApiRoutes = {
         | "GetLevels" | "SetLevels" | "Calculation", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
-        | "GetBreaks" | "SetBreaks", TApiRoute>,
+        | "GetBreaks" | "SetBreaks" | "Analytics", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
@@ -250,6 +250,7 @@ export class Api {
             GetBreaks: {route: "/service-centers/{id}/breaks", method: "get"},
             SetBreaks: {route: "/service-centers/{id}/breaks", method: "put"},
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
+            Analytics: {route: "/service-centers/{id}/analytics", method: "get"}
         },
         ServiceRequests: {
             Create: {route: "/service-requests", method: "post"},
@@ -267,7 +268,7 @@ export class Api {
             GetShort: {route: "/service-requests/overrides/short-by-query", method: "get"},
             EditSkills: {route: "/service-requests/required-skills", method: "patch"},
             Eligibility: {route: "/service-requests/eligibility", method: "patch"},
-            Prioritize: {route: "/service-requests/prioritize", method: "patch"}
+            Prioritize: {route: "/service-requests/prioritize", method: "patch"},
         },
         SlotScoring: {
             SetProximity: {route: "/slot-scoring/proximity", method: "put"},

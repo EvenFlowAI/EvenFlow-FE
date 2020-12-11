@@ -1,4 +1,4 @@
-import {IServiceCenter, IServiceCenterExtended, IServiceCenterForm, TServiceCenterActions} from "./types";
+import {ISCAnalytics, IServiceCenter, IServiceCenterExtended, IServiceCenterForm, TServiceCenterActions} from "./types";
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
@@ -172,4 +172,12 @@ export const loadWorkingDays = (serviceCenterId: number): AppThunk => async disp
         {urlParams: {id: serviceCenterId}}
     );
     dispatch(getWorkingDays(data));
+}
+export const getSCAnalytics = createAction<ISCAnalytics>("ServiceCenters/Analytics");
+export const loadSCAnalytics = (id: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<ISCAnalytics>(
+        Api.endpoints.ServiceCenters.Analytics,
+        {urlParams: {id}}
+    );
+    dispatch(getSCAnalytics(data));
 }

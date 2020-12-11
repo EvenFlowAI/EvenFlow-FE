@@ -1,9 +1,14 @@
-import {IServiceCenter, IServiceCenterExtended, TServiceCenterActions} from "./types";
+import {ISCAnalytics, IServiceCenter, IServiceCenterExtended, TServiceCenterActions} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {EDay} from "../demandSegments/types";
-import {getWorkingDays} from "./actions";
+import {getSCAnalytics, getWorkingDays} from "./actions";
 
+
+const blankAnalytics: ISCAnalytics = {
+    countOfAppointmentsToday: 0, countOfBays: 0,
+    countOfPods: 0, countOfTechnicians: 0
+}
 type TServiceCenterState = {
     serviceCenters: IServiceCenterExtended[],
     dealershipSCs: IServiceCenterExtended[],
@@ -17,7 +22,8 @@ type TServiceCenterState = {
     paging: IPagingResponse,
     dealershipPaging: IPagingResponse,
     pageData: IPageRequest,
-    workingDays: EDay[]
+    workingDays: EDay[],
+    analytics: ISCAnalytics
 };
 
 const initialState: TServiceCenterState = {
@@ -33,6 +39,7 @@ const initialState: TServiceCenterState = {
     dealershipPaging: {...defaultPaging},
     pageData: {...defaultPageData},
     workingDays: [],
+    analytics: blankAnalytics
 };
 
 export const serviceCenterReducer = (state=initialState, action: TServiceCenterActions): TServiceCenterState => {
@@ -66,6 +73,11 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
                 return {...state, workingDays: action.payload};
+            }
+            return state;
+        case getSCAnalytics.type:
+            if (getSCAnalytics.match(action)) {
+                return {...state, analytics: action.payload};
             }
             return state;
         default:
