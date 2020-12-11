@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from "react";
-import {Button, Grid, Paper} from "@material-ui/core";
+import {Box, Button, Grid, Paper} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -22,6 +22,7 @@ import {Bays} from "../../Modals/Bays/Bays";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
 import {DashPodsModal} from "../../Modals/PODModal/DashPodsModal";
+import {SquarePaper} from "../../UI/Paper";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -62,6 +63,10 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             color: theme.palette.primary.dark
         }
+    },
+    address: {
+        fontSize: 18,
+        color: theme.palette.text.disabled
     }
 }));
 
@@ -85,7 +90,7 @@ const DashboardTitle = () => {
         pad
         actions={actions}
         title={selectedSC.name}
-        subtitle={concatAddress(selectedSC.address)}
+        // subtitle={concatAddress(selectedSC.address)}
     />;
 }
 
@@ -94,8 +99,19 @@ type TItem = {
     icon: JSX.Element;
     action: () => void;
 }
+type TDataMap = {
+    label: string;
+    value: number;
+}
+const overallData: TDataMap[] = [
+    {label: "Technicians", value: 12},
+    {label: "Bays", value: 2},
+    {label: "Pods", value: 1},
+    {label: "Appointments today", value: 20},
+]
 
 export const AdminDashboard: React.FC = () => {
+    const {selectedSC} = useSCs();
     const {
         onClose: onCloseAddress,
         onOpen: onOpenAddress,
@@ -151,9 +167,23 @@ export const AdminDashboard: React.FC = () => {
     const classes = useStyles();
     return <div className={classes.container}>
         <DashboardTitle />
+        <Box mb={2} className={classes.address}>
+            {selectedSC ? concatAddress(selectedSC.address) : null}
+        </Box>
+        <SquarePaper variant="outlined">
+            <Box p={2} display="flex" justifyContent="space-around">
+                {overallData.map(d =>
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                        <span>{d.label}</span>
+                        <strong>{d.value}</strong>
+                    </Box>
+                )}
+            </Box>
+        </SquarePaper>
+        <Box p={1.5} />
         <Grid container spacing={2}>
             {items.map(item =>
-                <Grid item xs={4} key={item.label}>
+                <Grid item xs={12} sm={4} md={3} key={item.label}>
                     <Paper variant="outlined" className={classes.paper}>
                         <span className={classes.edit} onClick={item.action}>Edit</span>
                         <div className={classes.icon}>{item.icon}</div>
