@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {Button, Drawer, lighten, List, ListItem} from "@material-ui/core";
+import {Button, Drawer, IconButton, lighten, List, ListItem, useMediaQuery, useTheme} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import logo from '../../assets/img/logoSidebar.svg';
 import {NavLink} from "react-router-dom";
@@ -9,12 +9,12 @@ import {Routes} from "../../config/routes";
 import {useCurrentUser, useSCs} from "../../utils/hooks";
 import {useLocation, useHistory, matchPath} from "react-router-dom";
 import clsx from "clsx";
-import {ArrowForwardIos} from "@material-ui/icons";
+import {ArrowForwardIos, Close} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
-        width: sideBarWidth,
         flexShrink: 0,
+        // width: sideBarWidth,
         display: "flex",
         flexFlow: "column",
         position: "relative",
@@ -85,10 +85,17 @@ const MainLinks: LinkType[] = [
     {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true},
     {to: Routes.Optimizer.PricingSettings, name: "Pricing Settings", sub: true},
     {to: Routes.OfferManagement.Base, name: "Offer Management", sub: false},
-]
+];
 
-export const SideBar = () => {
+
+type TProps = {
+    isOpened: boolean;
+    onClose: () => void;
+};
+export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const classes = useStyles();
+    const theme = useTheme();
+    const isTablet = useMediaQuery(theme.breakpoints.down("md"));
 
     const currentUser = useCurrentUser();
     const {pathname} = useLocation();
@@ -109,9 +116,11 @@ export const SideBar = () => {
     return <Drawer
         className={classes.drawer}
         classes={{paper: classes.drawerPaper}}
-        variant="permanent"
+        variant={!isTablet ? "permanent" : "persistent"}
+        open={isOpened}
         anchor="left"
     >
+        {isTablet ? <IconButton onClick={onClose}><Close style={{color: "#fff"}} /></IconButton> : null}
         <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI"/>
         <List disablePadding>
             {links.map(link => <ListItem

@@ -1,6 +1,16 @@
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {AppBar, Avatar, Menu, MenuItem, Toolbar, Typography} from "@material-ui/core";
+import {
+    AppBar,
+    Avatar,
+    IconButton,
+    Menu,
+    MenuItem,
+    Toolbar,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from "@material-ui/core";
 import {sideBarWidth} from "../../theme/theme";
 import {authService} from "../../config/requests";
 import { useHistory } from "react-router-dom";
@@ -11,18 +21,22 @@ import {ServiceCenterSelector} from "./ServiceCenterSelector";
 import {Roles} from "../../config/constants";
 import {Routes} from "../../config/routes";
 import {PodSelector} from "./PodSelector";
+import {Menu as MenuIcon} from "@material-ui/icons";
 
 
 const useStyles = makeStyles(theme => ({
-    root: {
+    root: ({sideBarOpened}: TStyleProps) => ({
         width: `calc(100% - ${sideBarWidth}px)`,
         color: "#858585",
         backgroundColor: theme.palette.background.paper,
         marginLeft: sideBarWidth,
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
         flexDirection: "row",
-        justifyContent: "space-between"
-    },
+        justifyContent: "space-between",
+        [theme.breakpoints.down("md")]: {
+            width: sideBarOpened ? `calc(100% - ${sideBarWidth}px)` : "100%",
+        }
+    }),
     toolbar: {
         justifyContent: "flex-end"
     },
@@ -37,10 +51,19 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-
-export const NavBar = () => {
-    const classes = useStyles();
+type TStyleProps = {
+    sideBarOpened?: boolean;
+}
+type TProps = {
+    sideBarOpened?: boolean;
+    onOpen: () => void;
+}
+export const NavBar: React.FC<TProps> = ({sideBarOpened, onOpen}) => {
+    const classes = useStyles({sideBarOpened});
     const history = useHistory();
+    const theme = useTheme();
+    const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+
     const {currentUser} = useSelector((state: RootState) => state.users);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -62,6 +85,7 @@ export const NavBar = () => {
 
     return <>
         <AppBar className={classes.root}>
+            {isTablet ? <IconButton onClick={onOpen}><MenuIcon /></IconButton> : null}
             <Toolbar>
                 <PodSelector />
             </Toolbar>

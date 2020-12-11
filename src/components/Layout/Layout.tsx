@@ -12,7 +12,7 @@ import {getCurrentUser} from "../../store/reducers/users/actions";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actions";
 import {loadAllSCs} from "../../store/reducers/serviceCenters/actions";
-import {useSCs} from "../../utils/hooks";
+import {useSCs, useSideBar} from "../../utils/hooks";
 import {getPodsShort, loadPodsShort} from "../../store/reducers/pods/actions";
 import {OfferManagementPage} from "../OfferManagement/OfferManagementPage";
 
@@ -35,6 +35,8 @@ const useStyles = makeStyles(theme => ({
 
 export const Layout = () => {
     const classes = useStyles();
+    const {isOpened, onOpen, onClose} = useSideBar();
+
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     useEffect(() => {
@@ -51,8 +53,8 @@ export const Layout = () => {
     }, [dispatch, selectedSC])
 
     return <div className={classes.root}>
-        <SideBar />
-        <NavBar />
+        <SideBar isOpened={isOpened} onClose={onClose} />
+        <NavBar sideBarOpened={isOpened} onOpen={onOpen} />
         <div className={classes.main}>
             <Toolbar id="backToTopAnchor" />
             <Switch>
