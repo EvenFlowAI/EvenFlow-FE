@@ -22,6 +22,11 @@ const useStyles = makeStyles(theme => ({
     link: {
         color: "#fff"
     },
+    closeButton: {
+        position: "absolute",
+        top: 10,
+        right: 10
+    },
     logo: {
         maxWidth: "80%",
         marginBottom: 60,
@@ -120,7 +125,13 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         open={isOpened}
         anchor="left"
     >
-        {isTablet ? <IconButton onClick={onClose}><Close style={{color: "#fff"}} /></IconButton> : null}
+        {isTablet
+            ? <IconButton
+                className={classes.closeButton}
+                onClick={onClose}>
+                <Close style={{color: "#fff"}} />
+            </IconButton>
+            : null}
         <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI"/>
         <List disablePadding>
             {links.map(link => <ListItem
