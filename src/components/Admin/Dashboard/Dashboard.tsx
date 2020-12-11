@@ -66,7 +66,10 @@ const useStyles = makeStyles(theme => ({
     },
     address: {
         fontSize: 18,
-        color: theme.palette.text.disabled
+        color: theme.palette.text.disabled,
+        [theme.breakpoints.down("sm")]: {
+            textAlign: "center"
+        }
     }
 }));
 
