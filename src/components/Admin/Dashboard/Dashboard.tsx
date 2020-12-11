@@ -26,6 +26,12 @@ import {SquarePaper} from "../../UI/Paper";
 
 const useStyles = makeStyles(theme => ({
     paper: {
+        display: "flex",
+        padding: theme.spacing(2),
+        minHeight: 120,
+        flexFlow: "row nowrap",
+        justifyContent: "space-between",
+        alignItems: "center",
         position: "relative",
         borderRadius: 0
     },
@@ -34,10 +40,6 @@ const useStyles = makeStyles(theme => ({
         maxWidth: theme.breakpoints.values.lg
     },
     icon: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: 120,
         "& .MuiSvgIcon-root": {
             fontSize: 40
         }
@@ -47,21 +49,25 @@ const useStyles = makeStyles(theme => ({
         fontWeight: "bold",
         textTransform: "uppercase",
         textAlign: "center",
-        marginTop: 0
+        margin: 0,
+        [theme.breakpoints.down("sm")]: {
+            fontSize: 14
+        }
     },
     edit: {
         cursor: "pointer",
+        alignSelf: "flex-start",
         fontSize: 14,
-        padding: 12,
+        padding: 0,
         display: "inline-block",
-        position: "absolute",
-        right: 0,
-        top: 0,
         fontWeight: "bold",
         color: theme.palette.primary.main,
         transition: theme.transitions.create(["color"]),
         "&:hover": {
             color: theme.palette.primary.dark
+        },
+        [theme.breakpoints.down("sm")]: {
+            alignSelf: "center"
         }
     },
     address: {
@@ -188,9 +194,9 @@ export const AdminDashboard: React.FC = () => {
             {items.map(item =>
                 <Grid item xs={12} sm={4} md={3} key={item.label}>
                     <Paper variant="outlined" className={classes.paper}>
-                        <span className={classes.edit} onClick={item.action}>Edit</span>
                         <div className={classes.icon}>{item.icon}</div>
                         <h4 className={classes.label}>{item.label}</h4>
+                        <span className={classes.edit} onClick={item.action}>Edit</span>
                     </Paper>
                 </Grid>
             )}
