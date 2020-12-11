@@ -15,6 +15,8 @@ import {loadAllSCs} from "../../store/reducers/serviceCenters/actions";
 import {useSCs, useSideBar} from "../../utils/hooks";
 import {getPodsShort, loadPodsShort} from "../../store/reducers/pods/actions";
 import {OfferManagementPage} from "../OfferManagement/OfferManagementPage";
+import {sideBarWidth} from "../../theme/theme";
+import clsx from "clsx";
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,7 +30,16 @@ const useStyles = makeStyles(theme => ({
     },
     main: {
         flexGrow: 1,
+        transition: theme.transitions.create(["margin"]),
+        marginLeft: -sideBarWidth,
         backgroundColor: theme.palette.background.default,
+        [theme.breakpoints.up("lg")]: {
+            marginLeft: 0
+        }
+    },
+    mainOpened: {
+        transition: theme.transitions.create(["margin"]),
+        marginLeft: 0,
     }
 }));
 
@@ -55,7 +66,10 @@ export const Layout = () => {
     return <div className={classes.root}>
         <SideBar isOpened={isOpened} onClose={onClose} />
         <NavBar sideBarOpened={isOpened} onOpen={onOpen} />
-        <div className={classes.main}>
+        <div className={clsx(
+            classes.main,
+            {[classes.mainOpened]: isOpened}
+        )}>
             <Toolbar id="backToTopAnchor" />
             <Switch>
                 <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />

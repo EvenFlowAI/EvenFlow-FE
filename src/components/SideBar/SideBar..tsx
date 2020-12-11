@@ -14,7 +14,7 @@ import {ArrowForwardIos, Close} from "@material-ui/icons";
 const useStyles = makeStyles(theme => ({
     drawer: {
         flexShrink: 0,
-        // width: sideBarWidth,
+        width: sideBarWidth,
         display: "flex",
         flexFlow: "column",
         position: "relative",
