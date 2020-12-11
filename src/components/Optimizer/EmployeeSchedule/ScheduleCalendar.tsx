@@ -126,7 +126,10 @@ export const ScheduleCalendar = () => {
         return nonWorking ? nonWorkingStyle : {};
     }
     const getHoliday = (date: moment.Moment) => {
-        const holiday = holidaysList.find(h => moment(h.date).isSame(date, "date"));
+        const holiday = holidaysList.find(h => {
+            const d = moment(h.date).year(date.year());
+            return d.isSame(date, "date");
+        });
         if (holiday) {
             return <Tooltip title={holiday.description}><Holiday>{holiday.description}</Holiday></Tooltip>;
         }
