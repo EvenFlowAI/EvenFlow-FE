@@ -61,6 +61,7 @@ export const Layout = () => {
 
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+
     useEffect(() => {
         dispatch(getCurrentUser());
         dispatch(loadDealershipProfile());

@@ -23,6 +23,8 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
 import {DashPodsModal} from "../../Modals/PODModal/DashPodsModal";
 import {SquarePaper} from "../../UI/Paper";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -108,16 +110,22 @@ type TItem = {
     icon: JSX.Element;
     action: () => void;
 }
+type TCountData = {
+    technicians: number;
+    bays: number;
+    pods: number;
+    appointments: number;
+}
 type TDataMap = {
     label: string;
-    value: number;
+    value: keyof TCountData;
 }
 const overallData: TDataMap[] = [
-    {label: "Technicians", value: 12},
-    {label: "Bays", value: 2},
-    {label: "Pods", value: 1},
-    {label: "Appointments today", value: 20},
-]
+    {label: "Technicians", value: "technicians"},
+    {label: "Bays", value: "bays"},
+    {label: "Pods", value: "pods"},
+    {label: "Appointments today", value: "appointments"},
+];
 
 export const AdminDashboard: React.FC = () => {
     const {selectedSC} = useSCs();
@@ -162,6 +170,13 @@ export const AdminDashboard: React.FC = () => {
         isOpen: isOpenPods,
     } = useModal();
 
+    const countData: TCountData = useSelector((state:RootState) => ({
+        technicians: 0,
+        bays: 0,
+        appointments: 0,
+        pods: 0
+    }));
+
     const items: TItem[] = [
         {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
         {label: "Hours of operation", icon: <Alarm />, action: onOpenHOO},
@@ -184,7 +199,7 @@ export const AdminDashboard: React.FC = () => {
                 {overallData.map(d =>
                     <Box key={d.label} display="flex" flexDirection="column" alignItems="center">
                         <span>{d.label}</span>
-                        <strong>{d.value}</strong>
+                        <strong>{countData[d.value]}</strong>
                     </Box>
                 )}
             </Box>

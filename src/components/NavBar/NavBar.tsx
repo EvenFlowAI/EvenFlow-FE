@@ -34,9 +34,9 @@ const useStyles = makeStyles(theme => ({
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
         flexDirection: "row",
         justifyContent: "space-between",
-        transition: theme.transitions.create(["margin"]),
+        transition: theme.transitions.create(["width"]),
         [theme.breakpoints.down("md")]: {
-            transition: theme.transitions.create(["margin"]),
+            transition: theme.transitions.create(["width"]),
             width: "100%",
         }
     },
