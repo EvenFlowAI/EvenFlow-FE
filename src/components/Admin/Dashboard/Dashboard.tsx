@@ -173,7 +173,7 @@ export const AdminDashboard: React.FC = () => {
         <SquarePaper variant="outlined">
             <Box p={2} display="flex" justifyContent="space-around">
                 {overallData.map(d =>
-                    <Box display="flex" flexDirection="column" alignItems="center">
+                    <Box key={d.label} display="flex" flexDirection="column" alignItems="center">
                         <span>{d.label}</span>
                         <strong>{d.value}</strong>
                     </Box>

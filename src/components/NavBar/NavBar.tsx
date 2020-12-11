@@ -22,10 +22,11 @@ import {Roles} from "../../config/constants";
 import {Routes} from "../../config/routes";
 import {PodSelector} from "./PodSelector";
 import {Menu as MenuIcon} from "@material-ui/icons";
+import clsx from "clsx";
 
 
 const useStyles = makeStyles(theme => ({
-    root: ({sideBarOpened}: TStyleProps) => ({
+    root: {
         width: `calc(100% - ${sideBarWidth}px)`,
         color: "#858585",
         backgroundColor: theme.palette.background.paper,
@@ -33,10 +34,17 @@ const useStyles = makeStyles(theme => ({
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
         flexDirection: "row",
         justifyContent: "space-between",
+        transition: theme.transitions.create(["margin"]),
         [theme.breakpoints.down("md")]: {
-            width: sideBarOpened ? `calc(100% - ${sideBarWidth}px)` : "100%",
+            transition: theme.transitions.create(["margin"]),
+            width: "100%",
         }
-    }),
+    },
+    openedRoot: {
+        [theme.breakpoints.down("md")]: {
+            width: `calc(100% - ${sideBarWidth}px)`,
+        }
+    },
     toolbar: {
         justifyContent: "flex-end"
     },
@@ -50,16 +58,12 @@ const useStyles = makeStyles(theme => ({
         cursor: "pointer"
     }
 }));
-
-type TStyleProps = {
-    sideBarOpened?: boolean;
-}
 type TProps = {
     sideBarOpened?: boolean;
     onOpen: () => void;
 }
 export const NavBar: React.FC<TProps> = ({sideBarOpened, onOpen}) => {
-    const classes = useStyles({sideBarOpened});
+    const classes = useStyles();
     const history = useHistory();
     const theme = useTheme();
     const isTablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -84,8 +88,11 @@ export const NavBar: React.FC<TProps> = ({sideBarOpened, onOpen}) => {
     }
 
     return <>
-        <AppBar className={classes.root}>
-            {isTablet ? <IconButton onClick={onOpen}><MenuIcon /></IconButton> : null}
+        <AppBar className={clsx(
+            classes.root,
+            {[classes.openedRoot]: sideBarOpened}
+        )}>
+            {(isTablet && !sideBarOpened) ? <IconButton onClick={onOpen}><MenuIcon /></IconButton> : null}
             <Toolbar>
                 <PodSelector />
             </Toolbar>
