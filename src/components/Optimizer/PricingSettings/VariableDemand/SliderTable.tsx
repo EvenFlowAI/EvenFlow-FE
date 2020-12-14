@@ -7,7 +7,7 @@ import {EditButton} from "../../../UI/Button";
 import {TableContainer} from "../UI";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {setPricingDemand} from "../../../../store/reducers/pricingSettings/actions";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
+import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";
 
@@ -70,6 +70,7 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
     const [edit, setEdit] = useState<EDayDemand|null>(null);
 
     const {selectedSC} = useSCs();
+    const {askConfirm} = useConfirm();
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
@@ -98,7 +99,22 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
         }
     }
 
-    const handleSave = (t: EDayDemand) => async () => {
+    const askSave = (t: EDayDemand) => async () => {
+        const val = form[t];
+        if (val <= -4 || val >= 4) {
+            await askConfirm({
+                isRemove: true,
+                title: "Are you sure want to save this value?",
+                onConfirm: () => handleSave(t),
+                onCancel: handleEdit(null),
+                confirmContent: "Confirm"
+            })
+        } else {
+            await handleSave(t);
+        }
+    }
+
+    const handleSave = async (t: EDayDemand) => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
@@ -164,7 +180,7 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
                                         onClick={handleEdit(null)}>Cancel</EditButton>
                                     <EditButton
                                         color="primary"
-                                        onClick={handleSave(d.id)}>Save</EditButton>
+                                        onClick={askSave(d.id)}>Save</EditButton>
                                 </>
                                 : <EditButton
                                     color="primary"
