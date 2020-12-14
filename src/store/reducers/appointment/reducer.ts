@@ -2,7 +2,7 @@ import {createReducer} from "@reduxjs/toolkit";
 import {
     ETransportation,
     IPersonalInformation,
-    IPrivacy,
+    IPrivacy, IRemappedAppointmentSlot,
     IReminders,
     IServiceCenterProfile,
     ISR,
@@ -22,7 +22,6 @@ import {
     handleSearch, selectAppointment,
     selectSR
 } from "./actions";
-import {TAppointment} from "../../../components/AppointmentFlow/AppointmentSelections/mock";
 
 type TState = {
     scProfile?: IServiceCenterProfile;
@@ -36,7 +35,8 @@ type TState = {
     reminders: IReminders;
     privacy: IPrivacy;
     comment: string;
-    appointment: TAppointment|null;
+    appointment: IRemappedAppointmentSlot|null;
+    appointmentSlots: IRemappedAppointmentSlot[];
 };
 
 const blankPersonalInfo: IPersonalInformation = {
@@ -78,7 +78,8 @@ const initialState: TState = {
     reminders: blankReminders,
     privacy: blankPrivacy,
     comment: "",
-    appointment: null
+    appointment: null,
+    appointmentSlots: [],
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {

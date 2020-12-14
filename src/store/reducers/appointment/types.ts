@@ -1,6 +1,9 @@
 import {IAddress} from "../dealershipGroups/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TEnumMap} from "../utils";
+import {EDemandCategory} from "../pricingSettings/types";
+import {IOffer} from "../offers/types";
+import moment from "moment";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -77,4 +80,26 @@ export interface IReminders {
 export interface IPrivacy {
     privacy: boolean;
     callback: boolean;
+}
+export interface IPrice {
+    value: number;
+    category: EDemandCategory;
+}
+export interface IAppointmentSlot {
+    date: ParsableDate;
+    time: string;
+    price: IPrice;
+    offers: IOffer[];
+    isShorterWaitTime: boolean;
+}
+export interface IAppointmentResponse {
+    items: IAppointmentSlot[];
+    searchedDateRange: {
+        from: ParsableDate;
+        to: ParsableDate;
+    }
+}
+export interface IRemappedAppointmentSlot extends IAppointmentSlot {
+    id: string;
+    date: moment.Moment;
 }

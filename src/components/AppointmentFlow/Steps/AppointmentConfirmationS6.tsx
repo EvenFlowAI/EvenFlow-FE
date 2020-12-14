@@ -154,7 +154,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
                                 </Grid>
                                 {appointment ? <Grid style={{textAlign: "right"}} item md={6}>
                                     <Subtitle>Selected Price</Subtitle>
-                                    <p>${appointment.price.toFixed(2)}</p>
+                                    <p>${appointment.price.value.toFixed(2)}</p>
                                 </Grid> : null}
                             </Grid>
                         </Section>

@@ -1,5 +1,4 @@
 import React from 'react';
-import {TAppointment} from "./mock";
 import {styled} from "@material-ui/core";
 import {timeString} from "../../../config/constants";
 import moment from "moment";
@@ -8,6 +7,7 @@ import {CalendarOfferChip, CalendarWaitChip} from "./UI";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import {DirectionsCar} from "@material-ui/icons";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 
 const Wrapper = styled("div")(({theme}) => ({
     display: "flex",
@@ -79,27 +79,27 @@ const useStyles = makeStyles({
 });
 
 type TProps = {
-    appointment: TAppointment;
+    appointment: IRemappedAppointmentSlot;
     selected: boolean;
 }
 export const AppointmentPlate: React.FC<TProps&React.HTMLAttributes<HTMLDivElement>> = ({
     appointment, selected, children, ...htmlAttributes
 }) => {
     const classes = useStyles(
-        (appointment.offer ? 1 : 0)
-        + (appointment.shortWait ? 1 : 0)
+        (appointment.offers.length ? 1 : 0)
+        + (appointment.isShorterWaitTime ? 1 : 0)
     );
     return <Wrapper {...htmlAttributes}>
         <Time>{moment(appointment.date).format(timeString)}</Time>
         <Paper variant="outlined" className={selected ? "selected" : undefined}>
             <Price className={classes.width}>
-                <span><sup>$</sup>{appointment.price.toFixed(0)}</span>
-                {appointment.earlyDropOff ? <DropOffChip /> : null}
+                <span><sup>$</sup>{appointment.price.value.toFixed(0)}</span>
+                {false ? <DropOffChip /> : null}
             </Price>
-            {(appointment.offer || appointment.shortWait) ?
+            {(appointment.offers.length || appointment.isShorterWaitTime) ?
                 <OfferContainer className={classes.width}>
-                    {appointment.offer ? <CalendarOfferChip className={clsx(classes.height, classes.border)} offer={appointment.offer} /> : null}
-                    {appointment.shortWait ? <CalendarWaitChip className={classes.height} />: null}
+                    {appointment.offers.length ? <CalendarOfferChip className={clsx(classes.height, classes.border)} offer={appointment.offers[0]} /> : null}
+                    {appointment.isShorterWaitTime ? <CalendarWaitChip className={classes.height} />: null}
                 </OfferContainer> : null
             }
         </Paper>

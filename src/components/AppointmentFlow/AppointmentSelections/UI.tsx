@@ -1,7 +1,7 @@
 import React from "react";
-import {EOfferType, TOffer} from "./mock";
 import {styled} from "@material-ui/core";
 import {Build} from "@material-ui/icons";
+import {IOffer, EOfferType} from "../../../store/reducers/offers/types";
 
 type TOfferProps = {
     white?: boolean;
@@ -30,14 +30,14 @@ const BuildIcon = styled(Build)({
     fontSize: 12,
     verticalAlign: "bottom"
 })
-export const OfferChip: React.FC<{offer: TOffer, white?: boolean} & React.HTMLAttributes<HTMLDivElement>> = ({offer, children, ...attrs}) => {
+export const OfferChip: React.FC<{offer: IOffer, white?: boolean} & React.HTMLAttributes<HTMLDivElement>> = ({offer, children, ...attrs}) => {
     const getOfferValue = () => {
         switch (offer.type) {
-            case EOfferType.Amount:
+            case EOfferType.AmountOff:
                 return `$${offer.value} off`;
-            case EOfferType.Free:
+            case EOfferType.FreeService:
                 return <span>Free <BuildIcon /></span>;
-            case EOfferType.Percentage:
+            case EOfferType.PercentOff:
                 return `${offer.value}% off`;
         }
     }

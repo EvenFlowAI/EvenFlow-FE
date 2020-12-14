@@ -1,14 +1,13 @@
-import React, {useMemo} from 'react';
-import {getAppointmentList, TAppointment} from "./mock";
+import React from 'react';
 import {Box, Button, styled} from "@material-ui/core";
 import {SquarePaper} from "../../UI/Paper";
-import moment from "moment";
 import {timeString} from "../../../config/constants";
 import {DirectionsCar} from "@material-ui/icons";
 import {LoanerCarChip, OfferChip, ShortWaitChip} from "./UI";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 
 const Appointment = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(1),
@@ -39,12 +38,10 @@ const labels: string[] = [
 
 export const ListAppointmentSelection = () => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
-    const appointments = useMemo(() => {
-        return getAppointmentList();
-    }, []);
+    const appointments = useSelector((state: RootState) => state.appointment.appointmentSlots);
     const dispatch = useDispatch();
 
-    const handleSelectAppointment = (a: TAppointment) => () => {
+    const handleSelectAppointment = (a: IRemappedAppointmentSlot) => () => {
         if (selectedAppointment?.id === a.id) {
             dispatch(selectAppointment(null));
         } else {
@@ -59,16 +56,16 @@ export const ListAppointmentSelection = () => {
             )}
         </AppointmentHeader>
         {appointments.map(appointment => {
-            const {id, date, offer, earlyDropOff, shortWait, price, loanerCar} = appointment;
+            const {id, date, offers, isShorterWaitTime, price} = appointment;
             return <Box key={id} mt={.5}>
                 <Appointment variant="outlined">
-                    <span style={justifyStart}>{moment(date).format("MMM D, YYYY ddd")}</span>
-                    <span>{moment(date).format(timeString)}</span>
-                    <span><strong>${price.toFixed(0)}</strong></span>
-                    <span>{offer ? <OfferChip white offer={offer}/> : null}</span>
-                    <span>{shortWait ? <ShortWaitChip white/> : null}</span>
-                    <span>{loanerCar ? <LoanerCarChip white/> : null}</span>
-                    <span>{earlyDropOff ? <DirectionsCar fontSize="small"/> : null}</span>
+                    <span style={justifyStart}>{date.format("MMM D, YYYY ddd")}</span>
+                    <span>{date.format(timeString)}</span>
+                    <span><strong>${price.value.toFixed(0)}</strong></span>
+                    <span>{offers ? <OfferChip white offer={offers[0]}/> : null}</span>
+                    <span>{isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
+                    <span>{false ? <LoanerCarChip white/> : null}</span>
+                    <span>{false ? <DirectionsCar fontSize="small"/> : null}</span>
                     <Button
                         color="primary"
                         fullWidth

@@ -1,8 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    ETransportation,
-    IPersonalInformation,
-    IPrivacy,
+    ETransportation, IPersonalInformation,
+    IPrivacy, IRemappedAppointmentSlot,
     IReminders,
     IServiceCenterProfile,
     ISR,
@@ -11,7 +10,6 @@ import {
 } from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {TAppointment} from "../../../components/AppointmentFlow/AppointmentSelections/mock";
 
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
 export const loadSCProfile = (id: number): AppThunk => async dispatch => {
@@ -43,4 +41,4 @@ export const changeReminders = createAction<Partial<IReminders>>("Appointment/Ch
 export const changePrivacy = createAction<Partial<IPrivacy>>("Appointment/ChangePrivacy");
 export const changePersonalInformation = createAction<Partial<IPersonalInformation>>("Appointment/ChangePersonalInformation");
 export const changeComment = createAction<string>("Appointment/ChangeComment");
-export const selectAppointment = createAction<TAppointment|null>("Appointment/SelectAppointment");
+export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");

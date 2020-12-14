@@ -1,5 +1,4 @@
 import React, {useMemo, useState} from 'react';
-import {getAppointmentList, TAppointment} from "./mock";
 import moment from "moment";
 import {MonthSelector} from "./MonthSelector";
 import {Box, Divider, Grid, IconButton, styled} from "@material-ui/core";
@@ -9,13 +8,14 @@ import {AppointmentPlate} from "./AppointmentPlate";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 
 type TGroupedAppointments = {
     date: moment.Moment;
     lowestPrice: number;
     idx: number;
     offers: boolean;
-    appointments: TAppointment[];
+    appointments: IRemappedAppointmentSlot[];
 }
 
 const DateSelectorContainer = styled("div")(({theme}) => ({
@@ -49,9 +49,7 @@ export const CalendarAppointmentSelection = () => {
 
     const dispatch = useDispatch();
 
-    const data = useMemo(() => {
-        return getAppointmentList(30);
-    }, []);
+    const data = useSelector((state: RootState) => state.appointment.appointmentSlots);
     const groupedAppointments: TGroupedAppointments[] = useMemo(() => {
         const appointments: TGroupedAppointments[] = [];
         for (let appointment of data) {
@@ -59,19 +57,19 @@ export const CalendarAppointmentSelection = () => {
             const idx = date.date();
             if (appointments[idx]) {
                 appointments[idx].appointments.push(appointment);
-                if (appointment.offer) {
-                    appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offer);
+                if (appointment.offers && appointment.offers.length) {
+                    appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offers.length);
                 }
-                if (appointment.price < appointments[idx].lowestPrice) {
-                    appointments[idx].lowestPrice = appointment.price;
+                if (appointment.price.value < appointments[idx].lowestPrice) {
+                    appointments[idx].lowestPrice = appointment.price.value;
                 }
             } else {
                 appointments[idx] = {
                     date,
                     idx,
-                    lowestPrice: appointment.price,
+                    lowestPrice: appointment.price.value,
                     appointments: [appointment],
-                    offers: Boolean(appointment.offer)
+                    offers: Boolean(appointment.offers?.length)
                 };
             }
         }
@@ -102,7 +100,7 @@ export const CalendarAppointmentSelection = () => {
         }
     }
 
-    const handleSelectAppointment = (a: TAppointment) => () => {
+    const handleSelectAppointment = (a: IRemappedAppointmentSlot) => () => {
         dispatch(selectAppointment(a));
     }
 
