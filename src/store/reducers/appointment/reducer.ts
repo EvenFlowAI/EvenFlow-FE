@@ -16,12 +16,13 @@ import {
     changeReminders,
     changeS1Form,
     changeS3Form,
-    changeTransportation,
+    changeTransportation, getAppointmentSlots,
     getServiceCenterProfile,
     getSRs,
     handleSearch, selectAppointment,
     selectSR
 } from "./actions";
+import moment from "moment";
 
 type TState = {
     scProfile?: IServiceCenterProfile;
@@ -117,5 +118,13 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(selectAppointment, (state, {payload}) => {
         return {...state, appointment: payload};
+    })
+    .addCase(getAppointmentSlots, (state, {payload}) => {
+        return {
+            ...state,
+            appointmentSlots: payload.map(sl => {
+                return {...sl, id: `${sl.date}|${sl.time}`, date: moment(sl.date)}
+            })
+        }
     })
 );

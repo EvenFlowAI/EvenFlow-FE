@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    ETransportation, IPersonalInformation,
+    ETransportation, IAppointmentResponse, IAppointmentSlot, IAppointmentSlotsRequest, IPersonalInformation,
     IPrivacy, IRemappedAppointmentSlot,
     IReminders,
     IServiceCenterProfile,
@@ -42,3 +42,12 @@ export const changePrivacy = createAction<Partial<IPrivacy>>("Appointment/Change
 export const changePersonalInformation = createAction<Partial<IPersonalInformation>>("Appointment/ChangePersonalInformation");
 export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
+
+export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
+export const loadAppointmentSlots = (data: IAppointmentSlotsRequest): AppThunk => async dispatch => {
+    const {data: {items}} = await Api.call<IAppointmentResponse>(
+        Api.endpoints.AppointmentSlots.GetSlots,
+        {data}
+    );
+    dispatch(getAppointmentSlots(items));
+}
