@@ -11,6 +11,7 @@ import {useParams} from "react-router-dom";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
 import {MonthSelector} from "../AppointmentSelections/MonthSelector";
+import {LoadingWrapper} from "../../UI/NoItemsLoading";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -35,6 +36,7 @@ const Title = styled("h5")({
 
 export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     const [selectedView, setSelectedView] = useState<TView>("calendar");
+    const [isLoading, setLoading] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -42,20 +44,31 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
         selectedAppointmentType,
         selectedDate,
         selectedServiceRequest,
-    ] = useSelector(({appointment: {s3Data, selectedSR}}: RootState) => [
+        appointmentsExist,
+    ] = useSelector(({appointment: {s3Data, selectedSR, appointmentSlots}}: RootState) => [
         s3Data.appointmentType,
         s3Data.date,
-        selectedSR
+        selectedSR,
+        Boolean(appointmentSlots.length)
     ]);
     const [date, setDate] = useState<moment.Moment>(selectedDate ? moment(selectedDate) : moment());
 
     useEffect(() => {
-        dispatch(loadAppointmentSlots({
-            appointmentTimingType: selectedAppointmentType,
-            serviceCenterId: id,
-            fromDate: selectedDate ? moment(selectedDate).toISOString() : undefined,
-            serviceRequestIds: [selectedServiceRequest || 0]
-        }));
+        async function loadData () {
+            setLoading(true);
+            try {
+                await dispatch(loadAppointmentSlots({
+                    appointmentTimingType: selectedAppointmentType,
+                    serviceCenterId: id,
+                    fromDate: selectedDate ? moment(selectedDate).toISOString() : undefined,
+                    serviceRequestIds: [selectedServiceRequest || 0],
+                    countOfDays: selectedDate ? 4 : undefined
+                }));
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadData().finally();
     }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequest]);
 
     const handleSetDate = (nDate: moment.Moment) => {
@@ -92,10 +105,14 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
                     </DateSelectorContainer>
                 </Box>
                 <Box my={2}>
-                    {selectedView === "calendar"
-                        ? <CalendarAppointmentSelection/>
-                        : <ListAppointmentSelection/>
-                    }
+                    <LoadingWrapper
+                        noItemsLabel="There is no free slots on selected date"
+                        isLoading={isLoading}
+                        itemsExist={appointmentsExist}>
+                        {selectedView === "calendar"
+                            ? <CalendarAppointmentSelection/>
+                            : <ListAppointmentSelection/>}
+                    </LoadingWrapper>
                 </Box>
                 <Divider/>
                 <Box mt={1}>

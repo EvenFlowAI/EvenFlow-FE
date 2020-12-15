@@ -1,5 +1,6 @@
-import React from 'react';
-import {CircularProgress} from "@material-ui/core";
+import React, {ReactElement} from 'react';
+import {Box, CircularProgress} from "@material-ui/core";
+import {Loading} from "./Loading";
 
 type TProps = {
     loading?: boolean;
@@ -20,3 +21,19 @@ export const NoItemsLoading: React.FC<TProps> = ({loading, items, label}) => {
         return null;
     }
 };
+
+type TWrapperProps = {
+    isLoading: boolean;
+    itemsExist: boolean;
+    noItemsLabel?: string;
+    children: ReactElement;
+}
+
+export const LoadingWrapper: React.FC<TWrapperProps> = ({
+    isLoading, itemsExist, noItemsLabel, children}) => {
+    return isLoading
+        ? <Loading />
+        : itemsExist
+            ? children
+            : <Box p={2} textAlign="center">{noItemsLabel ?? "No items..."}</Box>;
+}
