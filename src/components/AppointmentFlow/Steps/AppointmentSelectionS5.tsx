@@ -6,7 +6,7 @@ import {CalendarAppointmentSelection} from "../AppointmentSelections/CalendarApp
 import {Caption} from "../../UI/Caption";
 import {DirectionsCar} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAppointmentSlots, selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useParams} from "react-router-dom";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
