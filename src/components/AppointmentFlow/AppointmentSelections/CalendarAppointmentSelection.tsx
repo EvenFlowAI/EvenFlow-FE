@@ -1,6 +1,5 @@
 import React, {useMemo, useState} from 'react';
 import moment from "moment";
-import {MonthSelector} from "./MonthSelector";
 import {Box, Divider, Grid, IconButton, styled} from "@material-ui/core";
 import {DayPlate} from "./DayPlate";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
@@ -17,13 +16,6 @@ type TGroupedAppointments = {
     offers: boolean;
     appointments: IRemappedAppointmentSlot[];
 }
-
-const DateSelectorContainer = styled("div")(({theme}) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    flexFlow: "row nowrap"
-}));
 
 const Title = styled("h5")({
     fontWeight: "bold",
@@ -42,7 +34,7 @@ const DaysWrapper = styled("div")(({theme}) => ({
 
 export const CalendarAppointmentSelection = () => {
     const displayItems = 6;
-    const [date, setDate] = useState<moment.Moment>(moment());
+
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const [selectedIdx, setSelectedIdx] = useState<number|null>(null);
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
@@ -84,10 +76,6 @@ export const CalendarAppointmentSelection = () => {
             return [];
         }
     }
-
-    const handleSetDate = (nDate: moment.Moment) => {
-        setDate(nDate);
-    }
     const handleDateClick = (idx: number) => () => {
         setSelectedIdx(idx);
     }
@@ -105,20 +93,17 @@ export const CalendarAppointmentSelection = () => {
     }
 
     return <div>
-        <DateSelectorContainer>
-            <Box mr={2}><Title>Select date</Title></Box>
-            <MonthSelector date={date} onChange={handleSetDate} />
-        </DateSelectorContainer>
+
         <DaysWrapper>
-            <IconButton
+            {groupedAppointments.length ? <IconButton
                 disabled={sliceIdx <= 0}
                 onClick={handleSlide("left")}>
-                <ChevronLeft />
-            </IconButton>
+                <ChevronLeft/>
+            </IconButton> : null}
             <Grid container style={{flexGrow: 1}} spacing={4}>
             {groupedAppointments
                 .slice(sliceIdx, sliceIdx + displayItems)
-                .map(({date, appointments, lowestPrice, offers, idx}) => {
+                .map(({date, lowestPrice, offers, idx}) => {
                 return <Grid item xs={2} key={date.date()}>
                     <DayPlate
                         date={date}
@@ -130,11 +115,11 @@ export const CalendarAppointmentSelection = () => {
                 </Grid>;
             })}
             </Grid>
-            <IconButton
+            {groupedAppointments.length ? <IconButton
                 disabled={sliceIdx + displayItems >= groupedAppointments.length}
                 onClick={handleSlide("right")}>
-                <ChevronRight />
-            </IconButton>
+                <ChevronRight/>
+            </IconButton> : null}
         </DaysWrapper>
         {selectedIdx ? <Box>
             <Box my={2}>
