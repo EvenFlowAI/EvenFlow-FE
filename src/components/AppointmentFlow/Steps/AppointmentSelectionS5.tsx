@@ -56,13 +56,14 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     useEffect(() => {
         async function loadData () {
             setLoading(true);
+            const sd: moment.Moment|null = selectedDate ? moment(selectedDate) : null;
             try {
                 await dispatch(loadAppointmentSlots({
                     appointmentTimingType: selectedAppointmentType,
                     serviceCenterId: id,
-                    fromDate: selectedDate ? moment(selectedDate).toISOString() : undefined,
+                    fromDate: sd ? sd.toISOString() : undefined,
                     serviceRequestIds: [selectedServiceRequest || 0],
-                    countOfDays: selectedDate ? 4 : undefined
+                    countOfDays: sd ? Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1 : undefined
                 }));
             } finally {
                 setLoading(false);
