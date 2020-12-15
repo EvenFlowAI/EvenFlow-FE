@@ -62,7 +62,7 @@ export const ListAppointmentSelection = () => {
                     <span style={justifyStart}>{date.format("MMM D, YYYY ddd")}</span>
                     <span>{date.format(timeString)}</span>
                     <span><strong>${price.value.toFixed(0)}</strong></span>
-                    <span>{offers ? <OfferChip white offer={offers[0]}/> : null}</span>
+                    <span>{offers.length ? <OfferChip white offer={offers[0]}/> : null}</span>
                     <span>{isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
                     <span>{false ? <LoanerCarChip white/> : null}</span>
                     <span>{false ? <DirectionsCar fontSize="small"/> : null}</span>

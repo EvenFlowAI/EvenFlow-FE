@@ -124,14 +124,17 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, appointment: payload};
     })
     .addCase(getAppointmentSlots, (state, {payload}) => {
-        return {
-            ...state,
-            appointmentSlots: payload.map(sl => {
-                const timeSplit = sl.time.split(":");
-                return {...sl, id: `${sl.date}|${sl.time}`, date: moment(sl.date).set({
-                        hour: Number(timeSplit[0]), minute: Number(timeSplit[1]), second: Number(timeSplit[2])
-                    })}
-            })
+        let appointmentSlots = payload.map(sl => {
+            const timeSplit = sl.time.split(":");
+            return {...sl, id: `${sl.date}|${sl.time}`, date: moment(sl.date).set({
+                    hour: Number(timeSplit[0]), minute: Number(timeSplit[1]), second: Number(timeSplit[2])
+                })}
+        });
+        if (appointmentSlots.length) {
+            const monthIdx = appointmentSlots[0].date.month();
+            appointmentSlots = appointmentSlots.filter(el => el.date.month() === monthIdx);
         }
+
+        return {...state, appointmentSlots};
     })
 );
