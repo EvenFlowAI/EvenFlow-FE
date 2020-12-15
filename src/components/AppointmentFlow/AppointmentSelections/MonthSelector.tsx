@@ -34,7 +34,12 @@ type TProps = {
 }
 export const MonthSelector: React.FC<TProps> = ({date, onChange}) => {
     const handleChange = (s: "+"|"-") => () => {
-        const nDate = s === "+" ? moment(date).add(1, "month") : moment(date).subtract(1, "month");
+        let nDate = s === "+"
+            ? moment.utc(date).add(1, "month").startOf("month")
+            : moment.utc(date).subtract(1, "month").startOf("month");
+        if (nDate.isSameOrBefore(moment())) {
+            nDate = moment.utc().add(1, "days").startOf("day");
+        }
         onChange(nDate);
     }
 

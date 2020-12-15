@@ -45,9 +45,13 @@ export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Ap
 
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
 export const loadAppointmentSlots = (data: IAppointmentSlotsRequest): AppThunk => async dispatch => {
-    const {data: {items}} = await Api.call<IAppointmentResponse>(
-        Api.endpoints.AppointmentSlots.GetSlots,
-        {data}
-    );
-    dispatch(getAppointmentSlots(items));
+    try {
+        const {data: {items}} = await Api.call<IAppointmentResponse>(
+            Api.endpoints.AppointmentSlots.GetSlots,
+            {data}
+        );
+        dispatch(getAppointmentSlots(items));
+    } catch {
+        dispatch(getAppointmentSlots([]));
+    }
 }

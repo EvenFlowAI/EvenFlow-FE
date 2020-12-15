@@ -6,7 +6,7 @@ import {CalendarAppointmentSelection} from "../AppointmentSelections/CalendarApp
 import {Caption} from "../../UI/Caption";
 import {DirectionsCar} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
+import {changeS3Form, loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useParams} from "react-router-dom";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
@@ -73,8 +73,9 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequest]);
 
     const handleSetDate = (nDate: moment.Moment) => {
-        if (nDate.isSameOrAfter(moment(), "month")) {
+        if (date.month() !== nDate.month()) {
             setDate(nDate);
+            dispatch(changeS3Form({date: nDate}));
         }
     }
     const handleChangeView = (type: TView) => () => {
