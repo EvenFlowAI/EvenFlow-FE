@@ -85,7 +85,6 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     }
     const handleChangeView = (type: TView) => () => {
         setSelectedView(type);
-        dispatch(selectAppointment(null));
     }
 
     return <StepContainer>
