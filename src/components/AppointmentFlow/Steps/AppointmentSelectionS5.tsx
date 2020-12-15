@@ -35,12 +35,6 @@ const Title = styled("h5")({
 
 export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     const [selectedView, setSelectedView] = useState<TView>("calendar");
-    const [date, setDate] = useState<moment.Moment>(moment());
-
-
-    const handleSetDate = (nDate: moment.Moment) => {
-        setDate(nDate);
-    }
 
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -52,7 +46,8 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
         s3Data.appointmentType,
         s3Data.date,
         selectedSR
-    ])
+    ]);
+    const [date, setDate] = useState<moment.Moment>(selectedDate ? moment(selectedDate) : moment());
 
     useEffect(() => {
         dispatch(loadAppointmentSlots({
@@ -63,6 +58,11 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
         }));
     }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequest]);
 
+    const handleSetDate = (nDate: moment.Moment) => {
+        if (nDate.isSameOrAfter(moment(), "month")) {
+            setDate(nDate);
+        }
+    }
     const handleChangeView = (type: TView) => () => {
         setSelectedView(type);
         dispatch(selectAppointment(null));
