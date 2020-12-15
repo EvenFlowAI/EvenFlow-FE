@@ -42,9 +42,8 @@ export interface IVehicleData {
 }
 export type TS3Form = {
     date?: ParsableDate,
-    appointmentType: TAppointmentType;
+    appointmentType: EAppointmentTimingType;
 }
-export type TAppointmentType = 1 | 2 | 3;
 
 export enum ETransportation {
     HaveARide,

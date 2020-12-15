@@ -1,12 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
 import {Box, Button, ButtonGroup, Divider} from "@material-ui/core";
 import {ListAppointmentSelection} from '../AppointmentSelections/ListAppointmentSelection';
 import {CalendarAppointmentSelection} from "../AppointmentSelections/CalendarAppointmentSelection";
 import {Caption} from "../../UI/Caption";
 import {DirectionsCar} from "@material-ui/icons";
-import {useDispatch} from "react-redux";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {loadAppointmentSlots, selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {useParams} from "react-router-dom";
+import {RootState} from "../../../store/rootReducer";
+import moment from "moment";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -19,6 +22,25 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     const [selectedView, setSelectedView] = useState<TView>("calendar");
 
     const dispatch = useDispatch();
+    const {id} = useParams();
+    const [
+        selectedAppointmentType,
+        selectedDate,
+        selectedServiceRequest,
+    ] = useSelector(({appointment: {s3Data, selectedSR}}: RootState) => [
+        s3Data.appointmentType,
+        s3Data.date,
+        selectedSR
+    ])
+
+    useEffect(() => {
+        dispatch(loadAppointmentSlots({
+            appointmentTimingType: selectedAppointmentType,
+            serviceCenterId: id,
+            fromDate: selectedDate ? moment(selectedDate).toISOString() : undefined,
+            serviceRequestIds: [selectedServiceRequest || 0]
+        }));
+    }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequest]);
 
     const handleChangeView = (type: TView) => () => {
         setSelectedView(type);

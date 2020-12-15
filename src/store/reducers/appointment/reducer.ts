@@ -1,8 +1,10 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
+    EAppointmentTimingType,
     ETransportation,
     IPersonalInformation,
-    IPrivacy, IRemappedAppointmentSlot,
+    IPrivacy,
+    IRemappedAppointmentSlot,
     IReminders,
     IServiceCenterProfile,
     ISR,
@@ -16,10 +18,12 @@ import {
     changeReminders,
     changeS1Form,
     changeS3Form,
-    changeTransportation, getAppointmentSlots,
+    changeTransportation,
+    getAppointmentSlots,
     getServiceCenterProfile,
     getSRs,
-    handleSearch, selectAppointment,
+    handleSearch,
+    selectAppointment,
     selectSR
 } from "./actions";
 import moment from "moment";
@@ -66,7 +70,7 @@ const initialS1Form: TS1Form = {
     transmission: ""
 }
 const initialS3Form: TS3Form = {
-    appointmentType: 1
+    appointmentType: EAppointmentTimingType.SpecialOffers
 }
 const initialState: TState = {
     serviceRequests: [],
@@ -123,7 +127,10 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {
             ...state,
             appointmentSlots: payload.map(sl => {
-                return {...sl, id: `${sl.date}|${sl.time}`, date: moment(sl.date)}
+                const timeSplit = sl.time.split(":");
+                return {...sl, id: `${sl.date}|${sl.time}`, date: moment(sl.date).set({
+                        hour: Number(timeSplit[0]), minute: Number(timeSplit[1]), second: Number(timeSplit[2])
+                    })}
             })
         }
     })

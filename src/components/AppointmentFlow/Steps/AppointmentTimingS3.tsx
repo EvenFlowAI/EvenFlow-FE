@@ -13,7 +13,7 @@ import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {TAppointmentType} from "../../../store/reducers/appointment/types";
+import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {changeS3Form} from "../../../store/reducers/appointment/actions";
 import {DateRangeIcon} from "@material-ui/pickers/_shared/icons/DateRangeIcon";
 
@@ -86,7 +86,7 @@ const Input = styled(DatePicker)(({theme}) => ({
 
 
 type TPlate = {
-    id: TAppointmentType;
+    id: EAppointmentTimingType;
     description: string;
     classActive: string;
     classNonActive: string;
@@ -97,7 +97,7 @@ type TPlate = {
 
 const plates: TPlate[] = [
     {
-        id: 1,
+        id: EAppointmentTimingType.SpecialOffers,
         description: "See appointments with special offer and shorter wait times",
         iconActive: <GreenIcon />,
         input: false,
@@ -106,7 +106,7 @@ const plates: TPlate[] = [
         classNonActive: "green",
     },
     {
-        id: 2,
+        id: EAppointmentTimingType.PreferredDate,
         description: "Choose a preferred date",
         iconActive: <MiddleActiveIcon />,
         iconNonActive: <MiddleIcon/>,
@@ -115,7 +115,7 @@ const plates: TPlate[] = [
         classNonActive: "",
     },
     {
-        id: 3,
+        id: EAppointmentTimingType.FirstAvailable,
         description: "Choose first available date",
         iconActive: <RightIconActive />,
         iconNonActive: <RightIcon />,
@@ -133,7 +133,7 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
     const handleDateChange = (date: MaterialUiPickersDate) => {
         dispatch(changeS3Form({date}));
     }
-    const handleSelect = (val: TAppointmentType) => () => {
+    const handleSelect = (val: EAppointmentTimingType) => () => {
         if (val !== s3Form.appointmentType) {
             dispatch(changeS3Form({appointmentType: val}));
         }
