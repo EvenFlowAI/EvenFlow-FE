@@ -1,7 +1,13 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    ETransportation, IAppointmentResponse, IAppointmentSlot, IAppointmentSlotsRequest, IPersonalInformation,
-    IPrivacy, IRemappedAppointmentSlot,
+    EAppointmentTimingType,
+    ETransportation,
+    IAppointmentResponse,
+    IAppointmentSlot,
+    IAppointmentSlotsRequest,
+    IPersonalInformation,
+    IPrivacy,
+    IRemappedAppointmentSlot,
     IReminders,
     IServiceCenterProfile,
     ISR,
@@ -10,6 +16,7 @@ import {
 } from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
+import moment from "moment";
 
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
 export const loadSCProfile = (id: number): AppThunk => async dispatch => {
@@ -44,13 +51,16 @@ export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
 
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
-export const loadAppointmentSlots = (data: IAppointmentSlotsRequest): AppThunk => async dispatch => {
+export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void): AppThunk => async dispatch => {
     try {
-        const {data: {items}} = await Api.call<IAppointmentResponse>(
+        const {data: {items, searchedDateRange: {from}}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
         dispatch(getAppointmentSlots(items));
+        if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
+            cb(moment.utc(from));
+        }
     } catch {
         dispatch(getAppointmentSlots([]));
     }

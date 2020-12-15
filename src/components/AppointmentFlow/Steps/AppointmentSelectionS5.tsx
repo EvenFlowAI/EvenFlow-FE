@@ -56,15 +56,17 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     useEffect(() => {
         async function loadData () {
             setLoading(true);
-            const sd: moment.Moment|null = selectedDate ? moment(selectedDate) : null;
+            const sd: moment.Moment = selectedDate
+                ? moment(selectedDate)
+                : moment.utc().add(1, "day").startOf("day");
             try {
                 await dispatch(loadAppointmentSlots({
                     appointmentTimingType: selectedAppointmentType,
                     serviceCenterId: id,
-                    fromDate: sd ? sd.toISOString() : undefined,
+                    fromDate: sd.toISOString(),
                     serviceRequestIds: [selectedServiceRequest || 0],
-                    countOfDays: sd ? Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1 : undefined
-                }));
+                    countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1
+                }, updateDate));
             } finally {
                 setLoading(false);
             }
@@ -77,6 +79,9 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
             setDate(nDate);
             dispatch(changeS3Form({date: nDate}));
         }
+    }
+    const updateDate = (d: moment.Moment) => {
+        setDate(d);
     }
     const handleChangeView = (type: TView) => () => {
         setSelectedView(type);
