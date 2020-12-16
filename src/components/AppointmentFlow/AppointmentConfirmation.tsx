@@ -11,11 +11,13 @@ import { ConfirmationContent } from './ConfirmationContent';
 
 const Wrapper = styled(Container)({
     background: `#F2F3F7 url(${bg}) top center no-repeat`,
+    backgroundSize: "cover",
     height: "100vh",
     width: "100vw",
     display: "flex",
     flexFlow: "column nowrap",
-    alignItems: "stretch"
+    alignItems: "stretch",
+    maxWidth: "100vw"
 });
 
 const ContentWrapper = styled("div")({
@@ -24,7 +26,7 @@ const ContentWrapper = styled("div")({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
 });
 
 export const AppointmentConfirmation = () => {
