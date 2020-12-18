@@ -12,7 +12,7 @@ import {RootState} from "../../store/rootReducer";
 const mh400 = "@media (max-height: 400px)";
 const mh600 = "@media (max-height: 600px)";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     container: {
         width: "100vw",
         minHeight: 0,
@@ -25,6 +25,9 @@ const useStyles = makeStyles({
         flex: 1,
         [mh600]: {
             padding: "2% 0"
+        },
+        [theme.breakpoints.down("sm")]: {
+            padding: 0
         }
     },
     title: {
@@ -38,6 +41,9 @@ const useStyles = makeStyles({
         },
         [mh400]: {
             fontSize: 18
+        },
+        [theme.breakpoints.down("sm")]: {
+            fontSize: 18,
         }
     },
     paper: {
@@ -50,9 +56,14 @@ const useStyles = makeStyles({
         backgroundColor: "rgba(255,255,255,.8)",
         [mh600]: {
             padding: "2%"
+        },
+        [theme.breakpoints.down("sm")]: {
+            width: "100%",
+            height: "100%",
+            paddingTop: theme.spacing(6)
         }
     }
-})
+}))
 
 export const Welcome = () => {
     const [isSelect, setSelect] = useState<boolean>(false);
