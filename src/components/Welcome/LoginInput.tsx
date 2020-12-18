@@ -5,7 +5,7 @@ import {TextField} from "../UI/EndUserInputs";
 
 const mh600 = "@media (max-height: 600px)";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     paper: {
         borderRadius: 2,
         marginTop: "5%",
@@ -16,7 +16,14 @@ const useStyles = makeStyles({
         }
     },
     button: {
-        minWidth: 144
+        minWidth: 144,
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
+            "&:last-child": {
+                order: -1,
+                marginBottom: theme.spacing(2)
+            }
+        }
     },
     title: {
         fontSize: 32,
@@ -34,9 +41,12 @@ const useStyles = makeStyles({
         flexFlow: "row nowrap",
         [mh600]: {
             marginTop: "4%"
+        },
+        [theme.breakpoints.down("xs")]: {
+            flexWrap: "wrap"
         }
     }
-});
+}));
 
 type TProps = {
     onSelect: (b?: boolean) => void,
