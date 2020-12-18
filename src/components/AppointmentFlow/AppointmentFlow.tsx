@@ -16,7 +16,10 @@ const useStyles = makeStyles(theme => ({
         padding: "40px 0",
         height: "100%",
         flex: 1,
-        minHeight: 0
+        minHeight: 0,
+        [theme.breakpoints.down("xs")]: {
+            padding: theme.spacing(1)
+        }
     },
     paper: {
         minHeight: 0,
@@ -34,6 +37,9 @@ const useStyles = makeStyles(theme => ({
             textTransform: "uppercase",
             fontSize: 16,
             margin: "0 0 22px",
+        },
+        [theme.breakpoints.down("xs")]: {
+            margin: 0
         }
     },
     stepContainer: {
@@ -45,6 +51,9 @@ const useStyles = makeStyles(theme => ({
         width: 300,
         background: "transparent",
         "& div[class*='MuiStepConnector-root']": {
+            display: "none"
+        },
+        [theme.breakpoints.down("xs")]: {
             display: "none"
         }
     },
