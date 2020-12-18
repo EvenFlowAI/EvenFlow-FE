@@ -1,6 +1,6 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Paper} from "@material-ui/core";
+import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
 
 const mh600 = "@media (max-height: 600px)";
@@ -13,6 +13,11 @@ const useStyles = makeStyles((theme) => ({
         [mh600]: {
             padding: "20px 20%",
             marginTop: "2%",
+        },
+        [theme.breakpoints.down("xs")]: {
+            minHeight: "calc(90% - 26px)",
+            display: "flex",
+            flexFlow: "column nowrap"
         }
     },
     button: {
@@ -32,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
         [mh600]: {
             fontSize: 22
+        },
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 18
         }
     },
     buttonsRow: {
@@ -53,6 +61,8 @@ type TProps = {
     onComplete: () => void
 }
 export const LoginInput: React.FC<TProps> = ({onSelect, onComplete}) => {
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("sm"));
     const classes = useStyles();
     return <Paper variant="outlined" className={classes.paper}>
         <h3 className={classes.title}>Enter your Email or Phone</h3>
@@ -61,6 +71,7 @@ export const LoginInput: React.FC<TProps> = ({onSelect, onComplete}) => {
             InputProps={{disableUnderline: true}}
             variant="standard"
             fullWidth />
+        {isXS ? <div className="grow" /> : null}
         <div className={classes.buttonsRow}>
             <Button
                 variant="outlined"
