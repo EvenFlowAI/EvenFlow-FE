@@ -39,7 +39,8 @@ const useStyles = makeStyles(theme => ({
             margin: "0 0 22px",
         },
         [theme.breakpoints.down("xs")]: {
-            margin: 0
+            margin: 0,
+            padding: 32
         }
     },
     stepContainer: {

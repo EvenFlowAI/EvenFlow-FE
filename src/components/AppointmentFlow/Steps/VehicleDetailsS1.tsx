@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Button, Grid, withStyles} from "@material-ui/core";
+import {Button, Grid, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
 import {InputLoading, Label, ScrollableContainer, StepContainer, TextField, TStepProps} from "../UI";
 import {KeyboardDatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
@@ -10,11 +10,16 @@ import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
 import {IVehicleData} from "../../../store/reducers/appointment/types";
 
-const LabelGrid = withStyles({
+const LabelGrid = withStyles((theme) => ({
     root: {
-        textAlign: "right"
+        textAlign: "right",
+        [theme.breakpoints.down("xs")]: {
+            textAlign: "left",
+            position: "relative",
+            top: 12
+        }
     }
-})(Grid);
+}))(Grid);
 
 export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -24,6 +29,8 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
     });
     const showError = useException();
     const oldVin = useRef<string>("");
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         dispatch(changeS1Form({
@@ -64,12 +71,12 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
             <h4 style={{textAlign: "center"}}>Please tell us about your vehicle</h4>
             <ScrollableContainer>
                 <Grid container spacing={2}>
-                    <LabelGrid item xs={3}>
+                    <LabelGrid item xs={12} sm={3}>
                         <Label htmlFor="vin">
                             vehicle identification number (VIN)
                         </Label>
                     </LabelGrid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             id="vin"
                             name="vin"
@@ -82,16 +89,16 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             onChange={handleTextChange}
                         />
                     </Grid>
-                    <Grid item xs={3}/>
+                    {!isXS ? <Grid item xs={3} /> : null}
                 </Grid>
                 <h4 style={{textAlign: "center", marginTop: 24}}>General info</h4>
                 <Grid container spacing={2} alignItems={"center"}>
-                    <LabelGrid item xs={3}>
+                    <LabelGrid item xs={12} sm={3}>
                         <Label htmlFor="make">
                             make
                         </Label>
                     </LabelGrid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             id="make"
                             name="make"
@@ -99,13 +106,13 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             onChange={handleTextChange}
                         />
                     </Grid>
-                    <Grid item xs={3}/>
-                    <LabelGrid item xs={3}>
+                    {!isXS ? <Grid item xs={3} /> : null}
+                    <LabelGrid item xs={12} sm={3}>
                         <Label htmlFor="year">
                             year
                         </Label>
                     </LabelGrid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <KeyboardDatePicker
                             value={form.year}
                             id="year"
@@ -120,13 +127,13 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={3}/>
-                    <LabelGrid item xs={3}>
+                    {!isXS ? <Grid item xs={12} sm={3} /> : null}
+                    <LabelGrid item sm={3}>
                         <Label htmlFor="model">
                             model
                         </Label>
                     </LabelGrid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             id="model"
                             name="model"
@@ -134,13 +141,13 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             onChange={handleTextChange}
                         />
                     </Grid>
-                    <Grid item xs={3}/>
-                    <LabelGrid item xs={3}>
+                    {!isXS ? <Grid item xs={3} /> : null}
+                    <LabelGrid item xs={12} sm={3}>
                         <Label htmlFor="mileage">
                             mileage
                         </Label>
                     </LabelGrid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             onChange={handleTextChange}
                             type={"number"}
@@ -149,16 +156,16 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             id="mileage"
                         />
                     </Grid>
-                    <Grid item xs={3}/>
+                    {!isXS ? <Grid item xs={3} /> : null}
                 </Grid>
                 <h4 style={{textAlign: "center", marginTop: 24}}>Additional info</h4>
                 <Grid container spacing={2} alignItems={"center"}>
-                    <LabelGrid item xs={3}>
+                    <LabelGrid item xs={12} sm={3}>
                         <Label htmlFor="transmission">
                             transmission
                         </Label>
                     </LabelGrid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             id="transmission"
                             name="transmission"
@@ -166,13 +173,13 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             value={form.transmission}
                         />
                     </Grid>
-                    <Grid item xs={3}/>
-                    <LabelGrid item xs={3}>
+                    {!isXS ? <Grid item xs={3} /> : null}
+                    <LabelGrid item xs={12} sm={3}>
                         <Label htmlFor="driveType">
                             drive type
                         </Label>
                     </LabelGrid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             id="driveType"
                             name="driveType"
@@ -180,13 +187,13 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             onChange={handleTextChange}
                         />
                     </Grid>
-                    <Grid item xs={3}/>
-                    <LabelGrid item xs={3}>
+                    {!isXS ? <Grid item xs={3} /> : null}
+                    <LabelGrid item xs={12} sm={3}>
                         <Label htmlFor="engineType">
                             engine type
                         </Label>
                     </LabelGrid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             id="engineType"
                             name="engineType"
@@ -194,7 +201,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                             onChange={handleTextChange}
                         />
                     </Grid>
-                    <Grid item xs={3}/>
+                    {!isXS ? <Grid item xs={3} /> : null}
                 </Grid>
             </ScrollableContainer>
             <div style={{textAlign: "center", marginTop: 24}}>
