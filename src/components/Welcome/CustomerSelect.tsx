@@ -10,6 +10,9 @@ const useStyles = makeStyles(theme => ({
         marginTop: "5%",
         [mh600]: {
             marginTop: "2%"
+        },
+        [theme.breakpoints.down("sm")]: {
+            marginTop: theme.spacing(5)
         }
     },
     button: {
@@ -35,6 +38,10 @@ const useStyles = makeStyles(theme => ({
         [mh400]: {
             fontSize: 18,
             padding: "2%"
+        },
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 18,
+            padding: "5%"
         }
     }
 }))
@@ -50,14 +57,14 @@ export const CustomerSelect: React.FC<TProps> = ({onSelect, onComplete}) => {
           alignItems="stretch"
           container
           spacing={4}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12} md={6}>
             <div onClick={() => onSelect()} className={classes.button}>
                 <span>I`m a returning customer</span>
             </div>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12} md={6}>
             <div onClick={onComplete} className={classes.button}>
-                <span>I`m a new <br /> customer</span>
+                <span>I`m a new customer</span>
             </div>
         </Grid>
     </Grid>

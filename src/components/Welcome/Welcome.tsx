@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         [mh600]: {
             padding: "2% 0"
         },
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down("xs")]: {
             padding: 0
         }
     },
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
         [mh400]: {
             fontSize: 18
         },
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down("xs")]: {
             fontSize: 18,
         }
     },
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
         [mh600]: {
             padding: "2%"
         },
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down("xs")]: {
             width: "100%",
             height: "100%",
             paddingTop: theme.spacing(6)
