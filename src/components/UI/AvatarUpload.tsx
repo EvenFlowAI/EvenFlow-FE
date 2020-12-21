@@ -2,9 +2,11 @@ import React, {ChangeEventHandler, createRef, useState} from "react";
 import {Avatar} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
-
+type TStyleProps = {
+    size: number;
+}
 const useStyles = makeStyles(theme => ({
-    root: (size: number) => ({
+    root: ({size}: TStyleProps) => ({
         width: size,
         height: size,
         cursor: "pointer",
@@ -45,7 +47,7 @@ export type TAvatarProps = {
 
 export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
     const [state, setState] = useState<IAvatarState>({file: null, dataUrl: props.dataUrl || undefined});
-    const classes = useStyles(props.size || 74);
+    const classes = useStyles({size: props.size || 74});
 
     const ref = createRef<HTMLInputElement>();
 

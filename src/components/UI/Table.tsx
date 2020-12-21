@@ -16,17 +16,20 @@ import { Loading } from "./Loading";
 
 const cellPadding = 16;
 const compactPadding = "5px 15px"
+type TStyleProps = {
+    compact: boolean;
+}
 const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: theme.breakpoints.values.lg
     },
-    tableCell: (compact: boolean) => ({
+    tableCell: ({compact}: TStyleProps) => ({
         fontSize: compact ? 14 : 16,
         border: "none",
         // borderBottomColor: "#000000",
         padding: compact ? compactPadding : cellPadding
     }),
-    tableHead: (compact: boolean) => ({
+    tableHead: ({compact}: TStyleProps) => ({
         fontSize: compact ? 14 : 16,
         border: "none",
         // borderBottomColor: "#9DA8B5",
@@ -54,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITableProps<U>): JSX.Element {
-    const classes = useStyles(!!props.compact);
+    const classes = useStyles({compact: Boolean(props.compact)});
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);

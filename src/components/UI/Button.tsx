@@ -5,9 +5,11 @@ import clsx from "clsx";
 import {DesirabilityButton} from "./ConfigButton";
 import { useHistory } from "react-router-dom";
 
-
+type TStyleProps = {
+    fw: boolean;
+}
 const useStyles = makeStyles({
-    wrapper: (fw: boolean) => ({
+    wrapper: ({fw}: TStyleProps) => ({
         position: "relative",
         width: fw ? "100%" : "auto",
         display: "inline-flex"
@@ -24,7 +26,7 @@ const useStyles = makeStyles({
 type Props = {loading?: boolean, classes?: Partial<Record<ButtonClassKey, string> & {wrapper?: string}>} & ButtonProps;
 
 export const LoadingButton: React.FC<Props> = ({loading, classes, ...props}) => {
-    const classes_ = useStyles(props.fullWidth || false);
+    const classes_ = useStyles({fw: props.fullWidth || false});
     const wrapperClassName = clsx(classes?.wrapper, classes_.wrapper);
     const buttonClasses = {...classes};
     if ("wrapper" in buttonClasses) {

@@ -3,9 +3,11 @@ import {makeStyles} from "@material-ui/core/styles";
 import {ContentTitle, TTitle} from "../ContentTitle/ContentTitle";
 import {ContentActions} from "../ContentActions/ContentActions";
 
-
+type TStyleProps = {
+    pad: boolean;
+}
 const useStyles = makeStyles(theme => ({
-    container: (pad: boolean) => ({
+    container: ({pad}: TStyleProps) => ({
         display: "flex",
         flexFlow: "row",
         alignItems: "center",
@@ -34,10 +36,10 @@ type TProps = {
     parent?: TTitle;
     actions?: boolean | JSX.Element;
 }
-export const TitleContainer: React.FC<TProps> = props => {
-    const classes = useStyles(Boolean(props.pad));
+export const TitleContainer: React.FC<TProps> = ({pad, parent, title, subtitle, actions}) => {
+    const classes = useStyles({pad: Boolean(pad)});
     return <div className={classes.container}>
-        <ContentTitle parent={props.parent} title={props.title} subtitle={props.subtitle} />
-        {props.actions ? typeof props.actions === 'boolean' ? <ContentActions /> : props.actions : null}
+        <ContentTitle parent={parent} title={title} subtitle={subtitle} />
+        {actions ? typeof actions === 'boolean' ? <ContentActions /> : actions : null}
     </div>;
 }

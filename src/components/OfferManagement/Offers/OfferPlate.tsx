@@ -6,6 +6,9 @@ import moment from "moment";
 import {timeSpanString, timeString} from "../../../config/constants";
 import {calendarDateFormat} from "../../Optimizer/EmployeeSchedule/utils";
 
+type TStyleProps = {
+    t: IOffer['type']
+};
 const useStyles = makeStyles({
     wrapper: {
         borderRadius: 0,
@@ -27,7 +30,7 @@ const useStyles = makeStyles({
         textTransform: "none",
         zIndex: 2
     },
-    label: (t: IOffer["type"]) => ({
+    label: ({t}: TStyleProps) => ({
         paddingRight: "50%",
         fontSize: t === EOfferType.FreeService ? 18 : 32,
         fontWeight: "bold",
@@ -61,7 +64,7 @@ const useStyles = makeStyles({
             marginTop: 18,
         }
     },
-    background: (t: IOffer["type"]) => ({
+    background: ({t}: TStyleProps) => ({
         position: "absolute",
         top: 0,
         left: "20%",
@@ -80,7 +83,7 @@ type TProps = {
     onClick: (offer: IOffer) => () => void;
 }
 export const OfferPlate: React.FC<TProps> = ({offer, onClick}) => {
-    const classes = useStyles(offer.type);
+    const classes = useStyles({t: offer.type});
     return (
         <Paper variant="outlined" className={classes.wrapper}>
             <Button color="primary" onClick={onClick(offer)} className={classes.edit}>Edit</Button>

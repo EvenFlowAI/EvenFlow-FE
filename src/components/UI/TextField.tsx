@@ -12,8 +12,11 @@ export type TextInputProps = {
     params?: AutocompleteRenderInputParams
 } & InputBaseProps;
 
+type TStyleProps = {
+    visible: boolean;
+}
 const useStyles = makeStyles(theme => ({
-    label: (visible: boolean) =>  ({
+    label: ({visible}: TStyleProps) =>  ({
         textTransform: "uppercase",
         marginBottom: theme.spacing(.5),
         fontWeight: theme.typography.fontWeightBold,
@@ -24,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 export const TextField = forwardRef<unknown, TextInputProps>(
     ({label, params, hideLabel, spacing, ...props}, ref) => {
-    const classes = useStyles(!hideLabel);
+    const classes = useStyles({visible: !hideLabel});
     const {InputProps={}, InputLabelProps={}, ...p} = params || {};
 
     return <>

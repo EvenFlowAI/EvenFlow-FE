@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {VehicleDetailsS1} from "./Steps/VehicleDetailsS1";
-import {Container, Paper, Step, StepButton, Stepper} from "@material-ui/core";
+import {Container, Paper, Step, StepButton, Stepper, useMediaQuery, useTheme} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ServiceNeedsS2} from "./Steps/ServiceNeedsS2";
 import clsx from "clsx";
@@ -9,6 +9,7 @@ import {AppointmentTimingS3} from "./Steps/AppointmentTimingS3";
 import {TransportationNeedsS4} from "./Steps/TransportationNeedsS4";
 import {AppointmentConfirmationS6} from "./Steps/AppointmentConfirmationS6";
 import {AppointmentSelectionS5} from "./Steps/AppointmentSelectionS5";
+import {ProgressStepper} from "./ProgressStepper";
 
 
 const useStyles = makeStyles(theme => ({
@@ -73,6 +74,9 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.main,
             opacity: .6
         }
+    },
+    mobileStepper: {
+
     },
     step: {
         marginTop: 8,
@@ -156,6 +160,9 @@ const steps: TStep[] = [
 export const AppointmentFlow = () => {
     const [activeStep, setActiveStep] = useState<number>(1);
 
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
     const handleStep = (idx: number) => () => {
         setActiveStep(idx);
     }
@@ -178,8 +185,14 @@ export const AppointmentFlow = () => {
 
     const classes = useStyles();
     return <Container className={classes.container}>
+        {isXS ? <ProgressStepper
+            steps={steps.length}
+            activeStep={activeStep}
+            label={steps[activeStep-1]?.label || ""}
+            nextLabel={steps[activeStep]?.label}
+        /> : null}
         <Paper className={classes.paper} variant="outlined">
-            <Stepper nonLinear className={classes.stepContainer} activeStep={activeStep} orientation="vertical">
+            {!isXS ? <Stepper nonLinear className={classes.stepContainer} activeStep={activeStep} orientation="vertical">
                 {steps.map(step => {
                     return <Step key={step.id} completed={false}>
                         <StepButton
@@ -190,7 +203,7 @@ export const AppointmentFlow = () => {
                         </StepButton>
                     </Step>
                 })}
-            </Stepper>
+            </Stepper> : null}
             {getComponent()}
         </Paper>
     </Container>

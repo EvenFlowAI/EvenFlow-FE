@@ -66,15 +66,18 @@ const DropOffChip = styled(props => <div {...props}><DirectionsCar fontSize="sma
     flexFlow: "row nowrap"
 });
 
+type TStyleProps = {
+    width: number;
+}
 const useStyles = makeStyles({
-    width: (w: number) => ({
-        width: !w ? "100%" : "50%"
+    width: (props: TStyleProps) => ({
+        width: !props.width ? "100%" : "50%"
     }),
-    height: (w: number) => ({
-        height: w === 1 ? "100%" : "50%"
+    height: (props: TStyleProps) => ({
+        height: props.width === 1 ? "100%" : "50%"
     }),
-    border: (w: number) => ({
-        borderBottom: w !== 1 ? "1px solid #fff" : "none",
+    border: (props: TStyleProps) => ({
+        borderBottom: props.width !== 1 ? "1px solid #fff" : "none",
     })
 });
 
@@ -85,10 +88,10 @@ type TProps = {
 export const AppointmentPlate: React.FC<TProps&React.HTMLAttributes<HTMLDivElement>> = ({
     appointment, selected, children, ...htmlAttributes
 }) => {
-    const classes = useStyles(
-        (appointment.offers.length ? 1 : 0)
+    const classes = useStyles({
+        width: (appointment.offers.length ? 1 : 0)
         + (appointment.isShorterWaitTime ? 1 : 0)
-    );
+    });
     return <Wrapper {...htmlAttributes}>
         <Time>{moment(appointment.date).format(timeString)}</Time>
         <Paper variant="outlined" className={selected ? "selected" : undefined}>
