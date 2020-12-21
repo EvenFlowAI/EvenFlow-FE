@@ -31,7 +31,7 @@ export const ProgressStepper: React.FC<TProps> = ({activeStep, steps, label, nex
     }, [steps]);
     return <Wrapper>
         <Box position="relative" mr={1}>
-            <CircularProgress thickness={4} size={55} variant="static" value={100} color="inherit" style={{color: "#fff", position: "absolute", top: 0, left: 0}} />
+            <CircularProgress thickness={4} size={55} variant="determinate" value={100} color="inherit" style={{color: "#fff", position: "absolute", top: 0, left: 0}} />
             <CircularProgress thickness={4} size={55} variant="determinate" value={stepWeight * activeStep} />
             <Label>
                 {activeStep} of {steps}

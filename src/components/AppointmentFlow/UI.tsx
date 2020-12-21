@@ -1,4 +1,4 @@
-import React, {forwardRef} from "react";
+import React, {forwardRef, useLayoutEffect, useRef} from "react";
 import {
     Box, Button,
     CircularProgress,
@@ -57,19 +57,69 @@ export const StepContainer: React.FC = ({children}) => {
         {children}
     </div>;
 }
-export const ScrollableContainer = styled("div")({
+const SCContainer = styled("div")({
     height: "100%",
     overflowX: "hidden",
-    overflowY: "auto",
-    position: "relative",
-    background: `linear-gradient(#ffffff 33%, rgba(255,255,255, 0)),
-        linear-gradient(rgba(255,255,255, 0), #ffffff 66%) 0 100%,
-        radial-gradient(farthest-side at 50% 0, rgba(0,0,0, 0.2), rgba(0,0,0,0)),
-        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0, 0.2), rgba(0,0,0,0)) 0 100%`,
-    backgroundRepeat: "no-repeat",
-    backgroundAttachment: "local, local, scroll, scroll",
-    backgroundSize: "100% 72px, 100% 72px, 100% 24px, 100% 24px",
+    overflowY: "auto"
 });
+const Shadow = styled("div")({
+    bottom: 0,
+    left: 0,
+    pointerEvents: "none",
+    position: "absolute",
+    right: 0,
+    top: 0,
+    transition: "all .3s ease-out",
+    borderTop: "2px solid transparent",
+    borderBottom: "2px solid transparent",
+    "&.offTop": {
+        boxShadow: "0 3em 2em 0 white inset",
+        borderTopColor: "#cecece"
+    },
+    "&.offBottom": {
+        boxShadow: "0 -3em 2em 0 white inset",
+        borderBottomColor: "#cecece"
+    }
+});
+export const ScrollableContainer: React.FC = ({children}) => {
+    const isScrolling = useRef(false);
+    const shadowRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const handleScroll = ({currentTarget}: React.UIEvent<HTMLDivElement, UIEvent>) => {
+        if (!isScrolling.current) {
+            window.requestAnimationFrame(() => {
+                const maxScroll = currentTarget.scrollHeight - currentTarget.clientHeight;
+                if (currentTarget.scrollTop > 0) {
+                    shadowRef.current?.classList.add("offTop");
+                } else {
+                    shadowRef.current?.classList.remove("offTop");
+                }
+                if (currentTarget.scrollTop < maxScroll) {
+                    shadowRef.current?.classList.add("offBottom");
+                } else {
+                    shadowRef.current?.classList.remove("offBottom");
+                }
+                isScrolling.current = false;
+            });
+            isScrolling.current = true;
+        }
+    };
+    useLayoutEffect(() => {
+        const {current} = containerRef;
+        if (current) {
+            if (current.scrollHeight - current.clientHeight > current.scrollTop) {
+                shadowRef.current?.classList.add("offBottom");
+            }
+        }
+    }, []);
+
+    return <Box overflow="hidden" position="relative">
+        <SCContainer onScroll={handleScroll} ref={containerRef}>
+            {children}
+            <Shadow ref={shadowRef} />
+        </SCContainer>
+    </Box>
+}
 
 export const StepContentContainer = styled("div")({
     width: "90%",
