@@ -73,12 +73,15 @@ const Shadow = styled("div")({
     borderTop: "2px solid transparent",
     borderBottom: "2px solid transparent",
     "&.offTop": {
-        boxShadow: "0 3em 2em 0 white inset",
+        boxShadow: "0 4em 2em -2em white inset",
         borderTopColor: "#cecece"
     },
     "&.offBottom": {
-        boxShadow: "0 -3em 2em 0 white inset",
+        boxShadow: "0 -4em 2em -2em white inset",
         borderBottomColor: "#cecece"
+    },
+    "&.offTop.offBottom": {
+        boxShadow: "0 4em 2em -2em white inset, 0 -4em 2em -2em white inset"
     }
 });
 export const ScrollableContainer: React.FC = ({children}) => {
