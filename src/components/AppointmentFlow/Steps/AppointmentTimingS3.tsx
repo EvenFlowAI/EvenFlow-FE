@@ -52,6 +52,9 @@ const Paper = styled(SquarePaper)(({theme}) => ({
     },
     "&>.cIconWrapper": {
         backgroundColor: "rgba(218,218,218,.4)",
+        [theme.breakpoints.down("xs")]: {
+            display: "none"
+        }
     },
     "&.green": {
         borderColor: "#76CD7A",
@@ -59,6 +62,13 @@ const Paper = styled(SquarePaper)(({theme}) => ({
         "&.active": {
             borderColor: "#76CD7A",
             background: "rgba(118,205,122, .2)",
+        }
+    },
+    [theme.breakpoints.down("xs")]: {
+        flexDirection: "row",
+        minHeight: 50,
+        "&>svg": {
+            marginRight: theme.spacing(1)
         }
     }
 }));

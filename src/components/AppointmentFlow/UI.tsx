@@ -124,14 +124,17 @@ export const ScrollableContainer: React.FC = ({children}) => {
     </Box>
 }
 
-export const StepContentContainer = styled("div")({
+export const StepContentContainer = styled("div")(({theme}) => ({
     width: "90%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
     flexWrap: "nowrap",
-    minWidth: 0
-});
+    minWidth: 0,
+    [theme.breakpoints.down("xs")]: {
+        width: "100%"
+    }
+}));
 type TNextProps = {
     nextDisabled?: boolean,
     nextLabel?: string;
