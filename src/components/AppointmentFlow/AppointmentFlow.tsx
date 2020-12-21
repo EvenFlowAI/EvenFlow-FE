@@ -17,6 +17,8 @@ const useStyles = makeStyles(theme => ({
         padding: "40px 0",
         height: "100%",
         flex: 1,
+        display: "flex",
+        flexDirection: "column",
         minHeight: 0,
         [theme.breakpoints.down("xs")]: {
             padding: theme.spacing(1)
