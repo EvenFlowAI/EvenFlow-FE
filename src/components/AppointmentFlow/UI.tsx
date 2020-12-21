@@ -113,7 +113,7 @@ export const ScrollableContainer: React.FC = ({children}) => {
         }
     }, []);
 
-    return <Box overflow="hidden" position="relative">
+    return <Box height="100%" overflow="hidden" position="relative">
         <SCContainer onScroll={handleScroll} ref={containerRef}>
             {children}
             <Shadow ref={shadowRef} />
