@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Button, Grid, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
+import {Box, Button, Grid, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
 import {InputLoading, Label, ScrollableContainer, StepContainer, TextField, TStepProps} from "../UI";
 import {KeyboardDatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
@@ -204,9 +204,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
                     {!isXS ? <Grid item xs={3} /> : null}
                 </Grid>
             </ScrollableContainer>
-            <div style={{textAlign: "center", marginTop: 24}}>
-                <Button variant="contained" onClick={next} color="primary">Continue</Button>
-            </div>
+            <Box mt={2} textAlign="center" width="100%">
+                <Button fullWidth={isXS} variant="contained" onClick={next} color="primary">Continue</Button>
+            </Box>
         </StepContainer>
     );
 };

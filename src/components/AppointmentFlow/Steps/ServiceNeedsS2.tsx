@@ -1,7 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-    Box,
-    Button,
     CircularProgress,
     FormControlLabel,
     FormLabel,
@@ -9,7 +7,7 @@ import {
     Radio,
     RadioGroup
 } from "@material-ui/core";
-import {InputLoading, ScrollableContainer, TextField, TStepProps} from "../UI";
+import {InputLoading, NextPrevBlock, ScrollableContainer, TextField, TStepProps} from "../UI";
 import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -20,6 +18,15 @@ import {RootState} from "../../../store/rootReducer";
 import {useDebounce} from "../../../utils/hooks";
 
 const useStyles = makeStyles(theme => ({
+    wrapper: {
+        width: "80%",
+        height: "100%",
+        display: "flex",
+        flexFlow: "column nowrap",
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
+        }
+    },
     label: {
         textTransform: "uppercase",
         fontWeight: "bold"
@@ -109,7 +116,7 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next}) => {
 
     const classes = useStyles();
     return (
-        <div style={{width: "80%", height: "100%", display: "flex", flexFlow: "column nowrap"}}>
+        <div className={classes.wrapper}>
             <h4 className={classes.title}>What Does Your Car Need?</h4>
             <FormLabel className={classes.label} htmlFor="search">Search</FormLabel>
             <TextField
@@ -155,10 +162,7 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next}) => {
                 </RadioGroup>
                 {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
             </ScrollableContainer>
-            <Box mt={1} textAlign="center">
-                <Button variant="outlined" color="primary" onClick={prev}>Previous Step</Button>
-                <Button style={{marginLeft: 16}} variant="contained" onClick={next} color="primary">Continue</Button>
-            </Box>
+            <NextPrevBlock next={next} prev={prev} />
         </div>
     );
 };

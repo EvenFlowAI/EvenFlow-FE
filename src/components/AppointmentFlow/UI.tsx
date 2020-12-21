@@ -3,10 +3,10 @@ import {
     Box, Button,
     CircularProgress,
     createStyles,
-    FormLabel,
+    FormLabel, Grid,
     InputBase,
     styled,
-    TextFieldProps,
+    TextFieldProps, useMediaQuery, useTheme,
     withStyles
 } from "@material-ui/core";
 import {TextField as TF} from "../UI/EndUserInputs";
@@ -138,12 +138,20 @@ type TNextProps = {
     prevLabel?: string;
 };
 export const NextPrevBlock: React.FC<TStepProps&TNextProps> = ({next, prev, nextDisabled, nextLabel, prevLabel}) => {
-    return <Box mt={1} textAlign="center">
-        <Button variant="outlined" color="primary" onClick={prev}>
-            {prevLabel ?? "Previous Step"}
-        </Button>
-        <Button style={{marginLeft: 16}} disabled={nextDisabled} variant="contained" onClick={next} color="primary">
-            {nextLabel ?? "Continue"}
-        </Button>
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    return <Box mt={2} textAlign="center">
+        <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} style={{order: isXS ? 1 : undefined}}>
+                <Button fullWidth variant="outlined" color="primary" onClick={prev}>
+                    {prevLabel ?? "Previous Step"}
+                </Button>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <Button fullWidth disabled={nextDisabled} variant="contained" onClick={next} color="primary">
+                    {nextLabel ?? "Continue"}
+                </Button>
+            </Grid>
+        </Grid>
     </Box>
 }
