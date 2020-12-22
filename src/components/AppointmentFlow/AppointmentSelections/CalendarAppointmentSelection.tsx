@@ -10,11 +10,13 @@ import {RootState} from "../../../store/rootReducer";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 
 type TGroupedAppointments = {
-    date: moment.Moment;
-    lowestPrice: number;
-    idx: number;
-    offers: boolean;
-    appointments: IRemappedAppointmentSlot[];
+    [k: string]: {
+        date: moment.Moment;
+        lowestPrice: number;
+        idx: string;
+        offers: boolean;
+        appointments: IRemappedAppointmentSlot[];
+    }
 }
 
 const Title = styled("h5")({
@@ -36,17 +38,17 @@ export const CalendarAppointmentSelection = () => {
     const displayItems = 6;
 
     const [sliceIdx, setSliceIdx] = useState<number>(0);
-    const [selectedIdx, setSelectedIdx] = useState<number|null>(null);
+    const [selectedIdx, setSelectedIdx] = useState<string|null>(null);
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
 
     const dispatch = useDispatch();
 
     const data = useSelector((state: RootState) => state.appointment.appointmentSlots);
-    const groupedAppointments: TGroupedAppointments[] = useMemo(() => {
-        const appointments: TGroupedAppointments[] = [];
+    const groupedAppointments: TGroupedAppointments = useMemo(() => {
+        const appointments: TGroupedAppointments = {};
         for (let appointment of data) {
             const date = moment(appointment.date);
-            const idx = date.date();
+            const idx = appointment.id.split("|")[0];
             if (appointments[idx]) {
                 appointments[idx].appointments.push(appointment);
                 if (appointment.offer) {
@@ -65,23 +67,23 @@ export const CalendarAppointmentSelection = () => {
                 };
             }
         }
-        return appointments.filter(v => Boolean(v));
+        return appointments;
     }, [data]);
 
     const getAppointments = () => {
         if (selectedIdx) {
-            const app = groupedAppointments.find(a => a.idx === selectedIdx);
+            const app = groupedAppointments[selectedIdx];
             return app?.appointments || [];
         } else {
             return [];
         }
     }
-    const handleDateClick = (idx: number) => () => {
+    const handleDateClick = (idx: string) => () => {
         setSelectedIdx(idx);
     }
     const handleSlide = (direction: "right"|"left") => () => {
         if (
-            (sliceIdx + displayItems < groupedAppointments.length && direction === "right")
+            (sliceIdx + displayItems < Object.values(groupedAppointments).length && direction === "right")
             || (sliceIdx > 0 && direction === "left")
         ) {
             setSliceIdx(direction === "right" ? sliceIdx + displayItems : sliceIdx - displayItems);
@@ -93,7 +95,6 @@ export const CalendarAppointmentSelection = () => {
     }
 
     return <div>
-
         <DaysWrapper>
             {groupedAppointments.length ? <IconButton
                 disabled={sliceIdx <= 0}
@@ -101,7 +102,7 @@ export const CalendarAppointmentSelection = () => {
                 <ChevronLeft/>
             </IconButton> : null}
             <Grid container style={{flexGrow: 1}} spacing={4}>
-            {groupedAppointments
+            {Object.values(groupedAppointments)
                 .slice(sliceIdx, sliceIdx + displayItems)
                 .map(({date, lowestPrice, offers, idx}) => {
                 return <Grid item xs={2} key={date.date()}>
@@ -116,7 +117,7 @@ export const CalendarAppointmentSelection = () => {
             })}
             </Grid>
             {groupedAppointments.length ? <IconButton
-                disabled={sliceIdx + displayItems >= groupedAppointments.length}
+                disabled={sliceIdx + displayItems >= Object.values(groupedAppointments).length}
                 onClick={handleSlide("right")}>
                 <ChevronRight/>
             </IconButton> : null}
