@@ -138,7 +138,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
                     }/>
                 </Box>
             </ScrollableContainer>
+            <NextPrevBlock next={next} prev={prev} />
         </StepContentContainer>
-        <NextPrevBlock next={next} prev={prev}/>
     </StepContainer>
 };

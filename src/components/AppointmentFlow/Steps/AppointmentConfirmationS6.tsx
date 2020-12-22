@@ -210,15 +210,15 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
                     </Grid>
                 </Grid>
             </ScrollableContainer>
+            <NextPrevBlock
+                next={handleConfirm}
+                prev={prev}
+                nextLabel={
+                    appointment?.date ?
+                        `Schedule ${moment(appointment.date).format("ddd, MMM D, h:mm a")}`
+                        : "-"
+                }
+            />
         </StepContentContainer>
-        <NextPrevBlock
-            next={handleConfirm}
-            prev={prev}
-            nextLabel={
-                appointment?.date ?
-                    `Schedule ${moment(appointment.date).format("ddd, MMM D, h:mm a")}`
-                    : "-"
-            }
-        />
     </StepContainer>;
 };

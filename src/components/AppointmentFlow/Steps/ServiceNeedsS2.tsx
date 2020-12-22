@@ -7,7 +7,15 @@ import {
     Radio,
     RadioGroup
 } from "@material-ui/core";
-import {InputLoading, NextPrevBlock, ScrollableContainer, TextField, TStepProps} from "../UI";
+import {
+    InputLoading,
+    NextPrevBlock,
+    ScrollableContainer,
+    StepContainer,
+    StepContentContainer,
+    TextField,
+    TStepProps
+} from "../UI";
 import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -18,15 +26,6 @@ import {RootState} from "../../../store/rootReducer";
 import {useDebounce} from "../../../utils/hooks";
 
 const useStyles = makeStyles(theme => ({
-    wrapper: {
-        width: "80%",
-        height: "100%",
-        display: "flex",
-        flexFlow: "column nowrap",
-        [theme.breakpoints.down("xs")]: {
-            width: "100%",
-        }
-    },
     label: {
         textTransform: "uppercase",
         fontWeight: "bold"
@@ -116,53 +115,55 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next}) => {
 
     const classes = useStyles();
     return (
-        <div className={classes.wrapper}>
-            <h4 className={classes.title}>What Does Your Car Need?</h4>
-            <FormLabel className={classes.label} htmlFor="search">Search</FormLabel>
-            <TextField
-                placeholder="Type here"
-                value={searchInput}
-                onChange={handleChange}
-                className={classes.search}
-                InputProps={{
-                    startAdornment: <IconButton
-                        className={classes.btnIcon}
-                        size="small">
-                        <Search />
-                    </IconButton>,
-                    endAdornment: loading ?
-                        <InputLoading />
-                        : undefined
-                }}
-            />
-            <ScrollableContainer>
-                <RadioGroup className={classes.radioGroup} value={selectedCode} onChange={handleSelectCode}>
-                    {srList.map(s => {
-                        return <FormControlLabel
-                            key={s.id}
-                            className={classes.item}
-                            label={<span>
-                                <IconButton
-                                    onClick={handleOpen(s.id)}
-                                    size="small"
-                                    color="primary"
-                                    className={clsx(...[classes.openIcon, s.id === openedCode ? classes.opened : undefined])}>
-                                    <ArrowDropDownCircleOutlined />
-                                </IconButton> {s?.description || s.code}
-                            </span>}
-                            labelPlacement={"start"}
-                            value={s.id}
-                            control={
-                                <Radio
-                                    color="primary"
-                                />
-                            }
-                        />
-                    })}
-                </RadioGroup>
-                {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
-            </ScrollableContainer>
-            <NextPrevBlock next={next} prev={prev} />
-        </div>
+        <StepContainer>
+            <StepContentContainer>
+                <h4 className={classes.title}>What Does Your Car Need?</h4>
+                <FormLabel className={classes.label} htmlFor="search">Search</FormLabel>
+                <TextField
+                    placeholder="Type here"
+                    value={searchInput}
+                    onChange={handleChange}
+                    className={classes.search}
+                    InputProps={{
+                        startAdornment: <IconButton
+                            className={classes.btnIcon}
+                            size="small">
+                            <Search />
+                        </IconButton>,
+                        endAdornment: loading ?
+                            <InputLoading />
+                            : undefined
+                    }}
+                />
+                <ScrollableContainer>
+                    <RadioGroup className={classes.radioGroup} value={selectedCode} onChange={handleSelectCode}>
+                        {srList.map(s => {
+                            return <FormControlLabel
+                                key={s.id}
+                                className={classes.item}
+                                label={<span>
+                                    <IconButton
+                                        onClick={handleOpen(s.id)}
+                                        size="small"
+                                        color="primary"
+                                        className={clsx(...[classes.openIcon, s.id === openedCode ? classes.opened : undefined])}>
+                                        <ArrowDropDownCircleOutlined />
+                                    </IconButton> {s?.description || s.code}
+                                </span>}
+                                labelPlacement={"start"}
+                                value={s.id}
+                                control={
+                                    <Radio
+                                        color="primary"
+                                    />
+                                }
+                            />
+                        })}
+                    </RadioGroup>
+                    {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
+                </ScrollableContainer>
+                <NextPrevBlock next={next} prev={prev} />
+            </StepContentContainer>
+        </StepContainer>
     );
 };
