@@ -113,3 +113,22 @@ export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
     date: moment.Moment;
 }
+
+export type TAppointmentState = {
+    scProfile?: IServiceCenterProfile;
+    serviceRequests: ISR[];
+    selectedSR: number|null,
+    s1Data: TS1Form;
+    search: string;
+    s3Data: TS3Form;
+    transportation: ETransportation|null;
+    personalInformation: IPersonalInformation;
+    reminders: IReminders;
+    privacy: IPrivacy;
+    comment: string;
+    appointment: IRemappedAppointmentSlot|null;
+    appointmentSlots: IRemappedAppointmentSlot[];
+};
+
+export const APPOINTMENT_STATE_KEY = "APPOINTMENT";
+export const APPOINTMENT_STATE_SAVED_KEY = "APPOINTMENT_SAVED";

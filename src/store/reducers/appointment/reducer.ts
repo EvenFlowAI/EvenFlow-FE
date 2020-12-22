@@ -1,13 +1,10 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     EAppointmentTimingType,
-    ETransportation,
     IPersonalInformation,
     IPrivacy,
-    IRemappedAppointmentSlot,
     IReminders,
-    IServiceCenterProfile,
-    ISR,
+    TAppointmentState,
     TS1Form,
     TS3Form
 } from "./types";
@@ -24,25 +21,9 @@ import {
     getSRs,
     handleSearch,
     selectAppointment,
-    selectSR
+    selectSR, setLoadedReducer
 } from "./actions";
 import moment from "moment";
-
-type TState = {
-    scProfile?: IServiceCenterProfile;
-    serviceRequests: ISR[];
-    selectedSR: number|null,
-    s1Data: TS1Form;
-    search: string;
-    s3Data: TS3Form;
-    transportation: ETransportation|null;
-    personalInformation: IPersonalInformation;
-    reminders: IReminders;
-    privacy: IPrivacy;
-    comment: string;
-    appointment: IRemappedAppointmentSlot|null;
-    appointmentSlots: IRemappedAppointmentSlot[];
-};
 
 const blankPersonalInfo: IPersonalInformation = {
     fullName: "",
@@ -72,7 +53,7 @@ const initialS1Form: TS1Form = {
 const initialS3Form: TS3Form = {
     appointmentType: EAppointmentTimingType.SpecialOffers
 }
-const initialState: TState = {
+const initialState: TAppointmentState = {
     serviceRequests: [],
     selectedSR: null,
     s1Data: initialS1Form,
@@ -136,5 +117,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         }
 
         return {...state, appointmentSlots};
+    })
+    .addCase(setLoadedReducer, (state, {payload}) => {
+        return {...state, ...payload};
     })
 );

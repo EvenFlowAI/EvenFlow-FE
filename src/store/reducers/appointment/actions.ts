@@ -1,5 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
+    APPOINTMENT_STATE_KEY, APPOINTMENT_STATE_SAVED_KEY,
     EAppointmentTimingType,
     ETransportation,
     IAppointmentResponse,
@@ -10,7 +11,7 @@ import {
     IRemappedAppointmentSlot,
     IReminders,
     IServiceCenterProfile,
-    ISR,
+    ISR, TAppointmentState,
     TS1Form,
     TS3Form
 } from "./types";
@@ -63,5 +64,38 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: mo
         }
     } catch {
         dispatch(getAppointmentSlots([]));
+    }
+}
+export const setLoadedReducer = createAction<TAppointmentState>("Appointment/ReloadState");
+export const saveAppointmentReducer = (): AppThunk => (d, getState) => {
+    const state = JSON.stringify(getState().appointment);
+    localStorage.setItem(APPOINTMENT_STATE_KEY, state);
+    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
+}
+const clearStorage = () => {
+    localStorage.removeItem(APPOINTMENT_STATE_KEY);
+    localStorage.removeItem(APPOINTMENT_STATE_SAVED_KEY);
+}
+export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
+    const date = localStorage.getItem(APPOINTMENT_STATE_SAVED_KEY);
+    if (!date) {
+        clearStorage();
+    } else {
+        if (moment().diff(moment(date), "hours") >= 1) {
+            clearStorage();
+        } else {
+            try {
+                const i = localStorage.getItem(APPOINTMENT_STATE_KEY);
+                if (!i) {
+                    clearStorage();
+                } else {
+                    const data: TAppointmentState = JSON.parse(i);
+                    await dispatch(setLoadedReducer(data));
+                    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
+                }
+            } catch {
+                clearStorage();
+            }
+        }
     }
 }

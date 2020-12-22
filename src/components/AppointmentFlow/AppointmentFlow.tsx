@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {VehicleDetailsS1} from "./Steps/VehicleDetailsS1";
 import {Container, Paper, Step, StepButton, Stepper, useMediaQuery, useTheme} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
@@ -10,6 +10,9 @@ import {TransportationNeedsS4} from "./Steps/TransportationNeedsS4";
 import {AppointmentConfirmationS6} from "./Steps/AppointmentConfirmationS6";
 import {AppointmentSelectionS5} from "./Steps/AppointmentSelectionS5";
 import {ProgressStepper} from "./ProgressStepper";
+import {useDispatch, useSelector} from "react-redux";
+import {loadAppointmentReducer, saveAppointmentReducer} from "../../store/reducers/appointment/actions";
+import {RootState} from "../../store/rootReducer";
 
 
 const useStyles = makeStyles(theme => ({
@@ -161,6 +164,53 @@ const steps: TStep[] = [
 
 export const AppointmentFlow = () => {
     const [activeStep, setActiveStep] = useState<number>(1);
+    const dispatch = useDispatch();
+    const isSet = useRef(false);
+
+    const appState = useSelector((state: RootState) => state.appointment);
+
+    const isStepCompleted = useCallback((idx: number): boolean => {
+        switch (idx) {
+            case 5:
+                return appState.appointment !== null;
+            case 4:
+                const s4 = appState.transportation;
+                return s4 !== null;
+            case 3:
+                return true;
+            case 2:
+                return Boolean(appState.selectedSR);
+            case 1:
+                const s1 = appState.s1Data;
+                return Boolean(s1.model && s1.make && s1.year);
+            default:
+                return false;
+        }
+    }, [appState]);
+
+    useEffect(() => {
+        if (!isSet.current) {
+            const load = async () => {
+                await dispatch(loadAppointmentReducer());
+            }
+            load().then(() => {
+                for (let i=1; i <= steps.length; i++) {
+                    if (!isStepCompleted(i)) {
+                        console.log(i);
+                        setActiveStep(i);
+                        break;
+                    }
+                }
+                isSet.current = true;
+            })
+        }
+    }, [dispatch, isStepCompleted]);
+
+    useEffect(() => {
+        if (isSet.current) {
+            dispatch(saveAppointmentReducer());
+        }
+    }, [activeStep, dispatch]);
 
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
