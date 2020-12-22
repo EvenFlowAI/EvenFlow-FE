@@ -8,6 +8,7 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {TPopoverProps} from "../Steps/types";
 
 const Appointment = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(1),
@@ -36,7 +37,7 @@ const labels: string[] = [
     "Date", "Time", "Price", "Special Offer", "Wait Time", "Loaner Car"
 ]
 
-export const ListAppointmentSelection = () => {
+export const ListAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverOpen, onPopoverClose}) => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
     const appointments = useSelector((state: RootState) => state.appointment.appointmentSlots);
     const dispatch = useDispatch();
@@ -68,6 +69,8 @@ export const ListAppointmentSelection = () => {
                     <span>{false ? <DirectionsCar fontSize="small"/> : null}</span>
                     <Button
                         color="primary"
+                        onMouseEnter={onPopoverOpen(appointment)}
+                        onMouseLeave={onPopoverClose}
                         fullWidth
                         onClick={handleSelectAppointment(appointment)}
                         variant={selectedAppointment?.id === id ? "contained" : "outlined" }>

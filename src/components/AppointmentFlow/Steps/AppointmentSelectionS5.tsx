@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
-import {Box, Button, ButtonGroup, Divider, styled} from "@material-ui/core";
+import {Box, Button, ButtonGroup, Divider, Grid, Popover, styled} from "@material-ui/core";
 import {ListAppointmentSelection} from '../AppointmentSelections/ListAppointmentSelection';
 import {CalendarAppointmentSelection} from "../AppointmentSelections/CalendarAppointmentSelection";
 import {Caption} from "../../UI/Caption";
@@ -12,7 +12,9 @@ import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
 import {MonthSelector} from "../AppointmentSelections/MonthSelector";
 import {LoadingWrapper} from "../../UI/NoItemsLoading";
-import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
+import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {makeStyles} from "@material-ui/core/styles";
+import {getOfferValue} from "../AppointmentSelections/UI";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -35,9 +37,75 @@ const Title = styled("h5")({
     margin: 0
 });
 
+const useStyles = makeStyles({
+    popover: {
+        pointerEvents: "none",
+    }
+});
+
+type TPopoverState = {
+    anchor: HTMLElement|null;
+    selectedAppointment: IRemappedAppointmentSlot|null;
+}
+const usePopoverStyles = makeStyles((theme) => ({
+    wrapper: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-between",
+        minWidth: 180
+    },
+    offerType: {
+        padding: theme.spacing(2),
+        backgroundColor: "#56D75C",
+        color: "#fff",
+        fontSize: 19,
+        width: "100%",
+        flexGrow: 1,
+        textAlign: "center",
+
+    },
+    hour: {
+        textTransform: "uppercase",
+        fontSize: 16,
+        textAlign: "center"
+    },
+    day: {
+        fontSize: 15,
+        color: theme.palette.text.secondary,
+        textAlign: "center"
+    }
+}));
+const PopoverContent: React.FC<{appointment: TPopoverState['selectedAppointment']}> = ({appointment}) => {
+    const classes = usePopoverStyles();
+    if (!appointment || !appointment.offer) return null;
+    const {offer} = appointment;
+    return <div className={classes.wrapper}>
+        <div className={classes.offerType}>
+            <strong>{offer ? getOfferValue(offer, true) : null}</strong>
+        </div>
+        <Box py={2} px={1} fontSize={16}>
+            <strong>{offer?.title}</strong>
+        </Box>
+        <Divider style={{width: "100%"}} />
+
+        <Box py={2} px={1}>
+            <Grid container spacing={2} alignItems="center">
+                <Grid item xs={7} className={classes.hour}>
+                    {appointment.date.format("h:mm A")}
+                </Grid>
+                <Grid item xs={5} className={classes.day}>
+                    {appointment.date.format("MMM D")}
+                </Grid>
+            </Grid>
+        </Box>
+    </div>;
+}
+
 export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
     const [selectedView, setSelectedView] = useState<TView>("calendar");
     const [isLoading, setLoading] = useState<boolean>(false);
+    const [popover, setPopover] = useState<TPopoverState>({anchor: null, selectedAppointment: null});
 
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -81,12 +149,22 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
             dispatch(changeS3Form({date: nDate}));
         }
     }
+    const handleClosePopover = () => {
+        setPopover({selectedAppointment: null, anchor: null});
+    }
+    const handleOpenPopover = (selectedAppointment: IRemappedAppointmentSlot) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+        if (selectedAppointment.offer) {
+            setPopover({selectedAppointment, anchor: e.currentTarget});
+        }
+    }
     const updateDate = (d: moment.Moment) => {
         setDate(d);
     }
     const handleChangeView = (type: TView) => () => {
         setSelectedView(type);
     }
+
+    const classes = useStyles();
 
     return <StepContainer>
         <StepContentContainer>
@@ -117,8 +195,8 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
                         isLoading={isLoading}
                         itemsExist={appointmentsExist}>
                         {selectedView === "calendar"
-                            ? <CalendarAppointmentSelection/>
-                            : <ListAppointmentSelection/>}
+                            ? <CalendarAppointmentSelection onPopoverOpen={handleOpenPopover} onPopoverClose={handleClosePopover} />
+                            : <ListAppointmentSelection onPopoverOpen={handleOpenPopover} onPopoverClose={handleClosePopover} />}
                     </LoadingWrapper>
                 </Box>
                 <Divider/>
@@ -140,6 +218,24 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
                 </Box>
             </ScrollableContainer>
             <NextPrevBlock next={next} prev={prev} />
+            <Popover
+                id="selectedAppointment"
+                className={classes.popover}
+                anchorEl={popover.anchor}
+                open={Boolean(popover.anchor)}
+                onClose={handleClosePopover}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                disableRestoreFocus
+            >
+                <PopoverContent appointment={popover.selectedAppointment} />
+            </Popover>
         </StepContentContainer>
     </StepContainer>
 };

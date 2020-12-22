@@ -8,6 +8,7 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {TPopoverProps} from "../Steps/types";
 
 type TGroupedAppointments = {
     [k: string]: {
@@ -34,7 +35,7 @@ const DaysWrapper = styled("div")(({theme}) => ({
     justifyContent: "space-between",
 }));
 
-export const CalendarAppointmentSelection = () => {
+export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverClose, onPopoverOpen}) => {
     const displayItems = 6;
 
     const [sliceIdx, setSliceIdx] = useState<number>(0);
@@ -136,6 +137,8 @@ export const CalendarAppointmentSelection = () => {
                 {dateAppointments.map(appointment =>
                     <Grid key={appointment.id} item xs={3}>
                         <AppointmentPlate
+                            onMouseEnter={onPopoverOpen(appointment)}
+                            onMouseLeave={onPopoverClose}
                             selected={appointment.id === selectedAppointment?.id}
                             onClick={handleSelectAppointment(appointment)}
                             appointment={appointment}

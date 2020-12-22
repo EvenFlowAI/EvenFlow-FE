@@ -29,20 +29,21 @@ const Uppercase = styled("span")({
 const BuildIcon = styled(Build)({
     fontSize: 12,
     verticalAlign: "bottom"
-})
-export const OfferChip: React.FC<{offer: IOffer, white?: boolean} & React.HTMLAttributes<HTMLDivElement>> = ({offer, children, ...attrs}) => {
-    const getOfferValue = () => {
-        switch (offer.type) {
-            case EOfferType.AmountOff:
-                return `$${offer.value} off`;
-            case EOfferType.FreeService:
-                return <span>Free <BuildIcon /></span>;
-            case EOfferType.PercentOff:
-                return `${offer.value}% off`;
-        }
+});
+export const getOfferValue = (offer: IOffer, text?: boolean) => {
+    switch (offer.type) {
+        case EOfferType.AmountOff:
+            return `$${offer.value} off`;
+        case EOfferType.FreeService:
+            return text ? "Free service" : <span>Free <BuildIcon /></span>;
+        case EOfferType.PercentOff:
+            return `${offer.value}% off`;
     }
+}
+export const OfferChip: React.FC<{offer: IOffer, white?: boolean} & React.HTMLAttributes<HTMLDivElement>> = ({offer, children, ...attrs}) => {
+
     return <Offer {...attrs}>
-        {getOfferValue()}
+        {getOfferValue(offer)}
     </Offer>
 }
 
