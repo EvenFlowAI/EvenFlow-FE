@@ -1,7 +1,7 @@
 import React from 'react';
 import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
 import {Caption} from "../../UI/Caption";
-import {Box, Divider, Grid, styled} from "@material-ui/core";
+import {Box, Divider, Grid, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {SquarePaper} from "../../UI/Paper";
 import {ReactComponent as MiddleActiveIcon} from "../../../assets/img/calendarIconMiddleActive.svg";
 import {ReactComponent as MiddleIcon} from "../../../assets/img/calendarMiddle.svg";
@@ -72,11 +72,15 @@ const Paper = styled(SquarePaper)(({theme}) => ({
         }
     }
 }));
-const Description = styled("span")({
+const Description = styled("span")(({theme}) => ({
     fontSize: 15,
     marginTop: 16,
-    textAlign: "center"
-});
+    textAlign: "center",
+    [theme.breakpoints.down("xs")]: {
+        marginTop: 0,
+        flexGrow: 1
+    }
+}));
 const Input = styled(DatePicker)(({theme}) => ({
     marginTop: 16,
     cursor: "pointer",
@@ -91,8 +95,22 @@ const Input = styled(DatePicker)(({theme}) => ({
     "&>div": {
         paddingRight: 4,
         backgroundColor: "#fff"
+    },
+    [theme.breakpoints.down("xs")]: {
+        marginTop: 0
     }
 }));
+
+const MobileWrapper = styled("div")(({theme}) => ({
+    display: "flex",
+    flexGrow: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+    "&>*+*": {
+        marginTop: theme.spacing(1),
+    }
+}))
 
 
 type TPlate = {
@@ -138,6 +156,9 @@ const plates: TPlate[] = [
 export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
     const s3Form = useSelector((state: RootState) => state.appointment.s3Data);
 
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
     const dispatch = useDispatch();
 
     const handleDateChange = (date: MaterialUiPickersDate) => {
@@ -151,6 +172,21 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
     const getRadio = (b: boolean) => {
         return b ? <RadioButtonChecked /> : <RadioButtonUnchecked />
     }
+
+    const getInput = (plate: TPlate) => {
+        const active = plate.id === s3Form.appointmentType;
+        return <Input
+            value={s3Form.date ?? null}
+            onChange={handleDateChange}
+            disabled={!active}
+            placeholder={"Choose here"}
+            disablePast
+            InputProps={{
+                disableUnderline: true,
+                endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>
+            }}
+        />;
+    };
 
     return <StepContainer>
         <StepContentContainer>
@@ -170,20 +206,15 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
                                 <LogoWrapper className="cIconWrapper">
                                     {active ? plate.iconActive : plate.iconNonActive}
                                 </LogoWrapper>
-                                {plate.input
-                                    ? <Input
-                                        value={s3Form.date ?? null}
-                                        onChange={handleDateChange}
-                                        disabled={!active}
-                                        placeholder={"Choose here"}
-                                        disablePast
-                                        InputProps={{
-                                            disableUnderline: true,
-                                            endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"} />
-                                        }}
-                                    />
-                                    : <div className="grow" />}
-                                <Description className="description">{plate.description}</Description>
+                                {isXS ? <MobileWrapper>
+                                    {plate.input ? getInput(plate) : null}
+                                    <Description className="description">{plate.description}</Description>
+                                </MobileWrapper> : <>
+                                    {plate.input ? getInput(plate) : <div className="grow"/>}
+                                    <Description className="description">{plate.description}</Description>
+                                </>
+
+                                }
                             </Paper>
                         </Grid>;
                     })}
