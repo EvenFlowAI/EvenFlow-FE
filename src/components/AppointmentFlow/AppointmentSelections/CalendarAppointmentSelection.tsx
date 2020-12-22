@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import moment from "moment";
 import {Box, Divider, Grid, IconButton, styled} from "@material-ui/core";
 import {DayPlate} from "./DayPlate";
@@ -40,8 +40,16 @@ export const CalendarAppointmentSelection = () => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const [selectedIdx, setSelectedIdx] = useState<string|null>(null);
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
+    const isMount = useRef(true);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedAppointment && isMount.current) {
+            setSelectedIdx(selectedAppointment.id.split("|")[0]);
+            isMount.current = false;
+        }
+    }, [selectedAppointment]);
 
     const data = useSelector((state: RootState) => state.appointment.appointmentSlots);
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
