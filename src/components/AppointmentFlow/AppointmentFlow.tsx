@@ -196,7 +196,6 @@ export const AppointmentFlow = () => {
             load().then(() => {
                 for (let i=1; i <= steps.length; i++) {
                     if (!isStepCompleted(i)) {
-                        console.log(i);
                         setActiveStep(i);
                         break;
                     }

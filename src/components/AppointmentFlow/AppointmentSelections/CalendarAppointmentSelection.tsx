@@ -78,14 +78,9 @@ export const CalendarAppointmentSelection = () => {
         return appointments;
     }, [data]);
 
-    const getAppointments = () => {
-        if (selectedIdx) {
-            const app = groupedAppointments[selectedIdx];
-            return app?.appointments || [];
-        } else {
-            return [];
-        }
-    }
+    const dateAppointments = useMemo(() => {
+        return selectedIdx ? groupedAppointments[selectedIdx]?.appointments || [] : [];
+    }, [selectedIdx, groupedAppointments]);
     const handleDateClick = (idx: string) => () => {
         setSelectedIdx(idx);
     }
@@ -138,7 +133,7 @@ export const CalendarAppointmentSelection = () => {
                 <Title>Select time</Title>
             </Box>
             <Grid container spacing={2}>
-                {getAppointments().map(appointment =>
+                {dateAppointments.map(appointment =>
                     <Grid key={appointment.id} item xs={3}>
                         <AppointmentPlate
                             selected={appointment.id === selectedAppointment?.id}
