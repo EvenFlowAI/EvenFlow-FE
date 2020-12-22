@@ -12,6 +12,7 @@ import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
 import {MonthSelector} from "../AppointmentSelections/MonthSelector";
 import {LoadingWrapper} from "../../UI/NoItemsLoading";
+import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -104,12 +105,12 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
                 </ButtonGroup>
             </Box>
             <ScrollableContainer>
-                <Box mt={2}>
+                {selectedAppointmentType === EAppointmentTimingType.SpecialOffers ? <Box mt={2}>
                     <DateSelectorContainer>
                         <Box mr={2}><Title>Select date</Title></Box>
-                        <MonthSelector date={date} onChange={handleSetDate} />
+                        <MonthSelector date={date} onChange={handleSetDate}/>
                     </DateSelectorContainer>
-                </Box>
+                </Box> : null}
                 <Box my={2}>
                     <LoadingWrapper
                         noItemsLabel="There is no free slots on selected date"
