@@ -88,7 +88,7 @@ export interface IAppointmentSlot {
     date: ParsableDate;
     time: string;
     price: IPrice;
-    offers: IOffer[];
+    offer?: IOffer;
     isShorterWaitTime: boolean;
 }
 export interface IAppointmentResponse {

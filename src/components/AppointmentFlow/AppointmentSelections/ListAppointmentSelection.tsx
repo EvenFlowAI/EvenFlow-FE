@@ -56,13 +56,13 @@ export const ListAppointmentSelection = () => {
             )}
         </AppointmentHeader>
         {appointments.map(appointment => {
-            const {id, date, offers, isShorterWaitTime, price} = appointment;
+            const {id, date, offer, isShorterWaitTime, price} = appointment;
             return <Box key={id} mt={.5}>
                 <Appointment variant="outlined">
                     <span style={justifyStart}>{date.format("MMM D, YYYY ddd")}</span>
                     <span>{date.format(timeString)}</span>
                     <span><strong>${price.value.toFixed(0)}</strong></span>
-                    <span>{offers.length ? <OfferChip white offer={offers[0]}/> : null}</span>
+                    <span>{offer ? <OfferChip white offer={offer}/> : null}</span>
                     <span>{isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
                     <span>{false ? <LoanerCarChip white/> : null}</span>
                     <span>{false ? <DirectionsCar fontSize="small"/> : null}</span>

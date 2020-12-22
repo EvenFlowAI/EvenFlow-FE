@@ -89,7 +89,7 @@ export const AppointmentPlate: React.FC<TProps&React.HTMLAttributes<HTMLDivEleme
     appointment, selected, children, ...htmlAttributes
 }) => {
     const classes = useStyles({
-        width: (appointment.offers.length ? 1 : 0)
+        width: (appointment.offer ? 1 : 0)
         + (appointment.isShorterWaitTime ? 1 : 0)
     });
     return <Wrapper {...htmlAttributes}>
@@ -99,9 +99,9 @@ export const AppointmentPlate: React.FC<TProps&React.HTMLAttributes<HTMLDivEleme
                 <span><sup>$</sup>{appointment.price.value.toFixed(0)}</span>
                 {false ? <DropOffChip /> : null}
             </Price>
-            {(appointment.offers.length || appointment.isShorterWaitTime) ?
+            {(appointment.offer || appointment.isShorterWaitTime) ?
                 <OfferContainer className={classes.width}>
-                    {appointment.offers.length ? <CalendarOfferChip className={clsx(classes.height, classes.border)} offer={appointment.offers[0]} /> : null}
+                    {appointment.offer ? <CalendarOfferChip className={clsx(classes.height, classes.border)} offer={appointment.offer} /> : null}
                     {appointment.isShorterWaitTime ? <CalendarWaitChip className={classes.height} />: null}
                 </OfferContainer> : null
             }

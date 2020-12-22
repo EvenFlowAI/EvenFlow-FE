@@ -49,8 +49,8 @@ export const CalendarAppointmentSelection = () => {
             const idx = date.date();
             if (appointments[idx]) {
                 appointments[idx].appointments.push(appointment);
-                if (appointment.offers && appointment.offers.length) {
-                    appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offers.length);
+                if (appointment.offer) {
+                    appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offer);
                 }
                 if (appointment.price.value < appointments[idx].lowestPrice) {
                     appointments[idx].lowestPrice = appointment.price.value;
@@ -61,7 +61,7 @@ export const CalendarAppointmentSelection = () => {
                     idx,
                     lowestPrice: appointment.price.value,
                     appointments: [appointment],
-                    offers: Boolean(appointment.offers?.length)
+                    offers: Boolean(appointment.offer)
                 };
             }
         }
