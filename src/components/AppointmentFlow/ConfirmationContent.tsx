@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Button, Grid, styled} from "@material-ui/core";
+import {Box, Button, Grid, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {SquarePaper} from "../UI/Paper";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
@@ -14,7 +14,10 @@ const Paper = styled(SquarePaper)(({theme}) => ({
     borderRadius: 6,
     maxWidth: 520,
     fontSize: 15,
-    position: "relative"
+    position: "relative",
+    [theme.breakpoints.down("xs")]: {
+        margin: theme.spacing(1)
+    }
 }));
 const Highlight = styled("span")(({theme}) => ({
     display: "block",
@@ -26,7 +29,10 @@ const Highlight = styled("span")(({theme}) => ({
     position: "absolute",
     top: -8,
     left: "-3%",
-    zIndex: -1
+    zIndex: -1,
+    [theme.breakpoints.down("xs")]: {
+        display: "none"
+    }
 }));
 const Title = styled("h2")(({theme}) => ({
     textAlign: "center",
@@ -86,6 +92,8 @@ const getCarInfo = (data: TS1Form):string => {
 }
 
 export const ConfirmationContent = () => {
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const data: TDataMap = useSelector(({appointment}: RootState) => ({
         date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
         address: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "-",
@@ -107,28 +115,29 @@ export const ConfirmationContent = () => {
     return <Paper elevation={8}>
         <Title>Appointment confirmed!</Title>
         <Highlight />
-        <Grid container spacing={2}>
+        <Grid container spacing={isXS ? 1 : 2}>
             {rows.map(row => {
                 return <React.Fragment key={row.id}>
-                    <Grid item xs={5}>
+                    <Grid item xs={12} sm={5}>
                         <Label>{row.label}</Label>
                     </Grid>
-                    <Grid item xs={7}>
-                        <Box textAlign="right">{data[row.key]}</Box>
+                    <Grid item xs={12} sm={7}>
+                        <Box textAlign={isXS ? "left" : "right"}
+                             mb={isXS ? 1 : 0}>{data[row.key]}</Box>
                     </Grid>
                 </React.Fragment>
             })}
             <Grid item xs={12}>
                 <Box p={.25} />
             </Grid>
-            <Grid item xs={6}>
-                <Button onClick={handleBack} variant="outlined" color="primary">
+            <Grid item xs={12} sm={6} style={{order: isXS ? 1 : undefined}}>
+                <Button fullWidth={isXS} onClick={handleBack} variant="outlined" color="primary">
                     Change Appointment
                 </Button>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
                 <Box textAlign="right">
-                    <Button variant="contained" color="primary">
+                    <Button fullWidth={isXS} variant="contained" color="primary">
                         Add To Calendar
                     </Button>
                 </Box>
