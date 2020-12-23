@@ -56,7 +56,7 @@ const themeOptions: ThemeOptions = {
 const input = {
     border: "none",
     padding: 11,
-    fontSize: 14,
+    fontSize: 16,
     background: "transparent",
     // fontWeight: "bold" as const,
 }

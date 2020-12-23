@@ -7,7 +7,9 @@ import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 const DayContainer = styled("div")(({theme}) => ({
     height: "100%",
     display: "flex",
-    flexFlow: "column nowrap"
+    flexFlow: "column nowrap",
+    alignItems: "center",
+    cursor: "pointer"
 }));
 const Paper = styled(SquarePaper)(({theme}) => ({
     display: "flex",
@@ -24,6 +26,9 @@ const Paper = styled(SquarePaper)(({theme}) => ({
     "&.selected": {
         backgroundColor: theme.palette.primary.main,
         color: "#fff",
+    },
+    [theme.breakpoints.down("xs")]: {
+        display: "none"
     }
 }));
 
@@ -42,6 +47,37 @@ const Date = styled("span")({
     textTransform: "uppercase",
     textAlign: "center"
 });
+const Day = styled("span")({
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    fontSize: 15,
+    position: "relative",
+    zIndex: 1
+});
+const OffersCircle = styled("span")({
+    width: 10,
+    height: 10,
+    backgroundColor: "#56D75C",
+    borderRadius: 5,
+    top: 0,
+    right: -5,
+    position: "absolute",
+    zIndex: -1
+});
+const DayNumber = styled("span")(({theme}) => ({
+    height: 32,
+    width: 32,
+    borderRadius: 16,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: theme.transitions.create(["background", "color"]),
+    marginTop: theme.spacing(.5),
+    "&.active": {
+        backgroundColor: theme.palette.primary.main,
+        color: "#ffffff"
+    }
+}))
 const Offers = styled("span")({
     color: "#76FA7B",
     fontSize: 9,
@@ -66,13 +102,24 @@ type TProps = {
     selected?: boolean;
     price: number;
     onClick: () => void;
+    isXS: boolean;
 }
-export const DayPlate: React.FC<TProps> = ({date, offers, price, selected, onClick}) => {
-    return <DayContainer>
-        <Date>{moment(date).format("D, ddd")}</Date>
+export const DayPlate: React.FC<TProps> = ({date, isXS, offers, price, selected, onClick}) => {
+    return <DayContainer onClick={onClick}>
+        {!isXS ?
+            <Date>{moment(date).format("D, ddd")}</Date> :
+            <>
+                <Day>
+                    {offers ? <OffersCircle /> : null}
+                    {moment(date).format("ddd")}
+                </Day>
+                <DayNumber className={selected ? "active" : undefined}>
+                    {moment(date).format("D")}
+                </DayNumber>
+            </>
+        }
         <Paper
             variant="outlined"
-            onClick={onClick}
             className={selected ? "selected" : undefined}>
             <Label>Price as low as</Label>
             <Price><sup>$</sup>{price.toFixed(0)}</Price>

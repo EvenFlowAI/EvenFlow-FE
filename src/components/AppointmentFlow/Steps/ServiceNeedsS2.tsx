@@ -123,6 +123,7 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next}) => {
                     placeholder="Type here"
                     value={searchInput}
                     onChange={handleChange}
+                    style={{flexShrink: 0}}
                     className={classes.search}
                     InputProps={{
                         startAdornment: <IconButton

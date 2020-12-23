@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import moment from "moment";
-import {Box, Divider, Grid, IconButton, styled} from "@material-ui/core";
+import {Box, Divider, Grid, GridSize, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {DayPlate} from "./DayPlate";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {AppointmentPlate} from "./AppointmentPlate";
@@ -36,7 +36,11 @@ const DaysWrapper = styled("div")(({theme}) => ({
 }));
 
 export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverClose, onPopoverOpen}) => {
-    const displayItems = 6;
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const displayItems = useMemo(() => {
+        return isXS ? 6 : 6;
+    }, [isXS]);
 
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const [selectedIdx, setSelectedIdx] = useState<string|null>(null);
@@ -109,8 +113,9 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
             {Object.values(groupedAppointments)
                 .slice(sliceIdx, sliceIdx + displayItems)
                 .map(({date, lowestPrice, offers, idx}) => {
-                return <Grid item xs={2} key={date.date()}>
+                return <Grid item xs={Math.floor(12 / displayItems) as GridSize} key={date.date()}>
                     <DayPlate
+                        isXS={isXS}
                         date={date}
                         selected={selectedIdx === idx}
                         offers={offers}
@@ -135,7 +140,7 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
             </Box>
             <Grid container spacing={2}>
                 {dateAppointments.map(appointment =>
-                    <Grid key={appointment.id} item xs={3}>
+                    <Grid key={appointment.id} item xs={6} sm={4} md={3}>
                         <AppointmentPlate
                             onMouseEnter={onPopoverOpen(appointment)}
                             onMouseLeave={onPopoverClose}
