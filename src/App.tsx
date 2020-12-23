@@ -29,7 +29,8 @@ const App = () => {
             action={shackAction}
             anchorOrigin={{horizontal: "right", vertical: "top"}}
             variant="success">
-            <Container component="main" maxWidth={false} disableGutters style={{height: "100vh"}}>
+            <Container component="main" maxWidth={false} disableGutters style={{
+                height: "100vh", maxHeight: "-webkit-fill-available"}}>
                 <ConfirmDialog/>
                 <Switch>
                     <Route path={Routes.Login.Base} component={Login}/>
