@@ -17,7 +17,48 @@ const Appointment = styled(SquarePaper)(({theme}) => ({
     gridGap: theme.spacing(.5),
     fontSize: 14,
     alignItems: "center",
-    justifyItems: "center"
+    justifyItems: "center",
+    [theme.breakpoints.down("xs")]: {
+        gridTemplate: `
+            "date time . price"
+            "offer sw loaner drop"
+            "button button button button"
+        `,
+        padding: theme.spacing(1),
+        gridGap: theme.spacing(2),
+        "&>.price": {
+            justifySelf: "self-end",
+            textAlign: "right"
+        },
+        "&>span": {
+            width: "100%",
+            height: "100%"
+        }
+    },
+    "&>.date": {
+        gridArea: "date"
+    },
+    "&>.time": {
+        gridArea: "time"
+    },
+    "&>.price": {
+        gridArea: "price"
+    },
+    "&>.offer": {
+        gridArea: "offer"
+    },
+    "&>.sw": {
+        gridArea: "sw"
+    },
+    "&>.loaner": {
+        gridArea: "loaner"
+    },
+    "&>.drop": {
+        gridArea: "drop"
+    },
+    "&>.button": {
+        gridArea: "button"
+    }
 }));
 const AppointmentHeader = styled(Appointment)(({theme}) => ({
     fontWeight: "bold",
@@ -60,14 +101,15 @@ export const ListAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverOpen
             const {id, date, offer, isShorterWaitTime, price} = appointment;
             return <Box key={id} mt={.5}>
                 <Appointment variant="outlined">
-                    <span style={justifyStart}>{date.format("MMM D, YYYY ddd")}</span>
-                    <span>{date.format(timeString)}</span>
-                    <span><strong>${price.value.toFixed(0)}</strong></span>
-                    <span>{offer ? <OfferChip white offer={offer}/> : null}</span>
-                    <span>{isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
-                    <span>{false ? <LoanerCarChip white/> : null}</span>
-                    <span>{false ? <DirectionsCar fontSize="small"/> : null}</span>
+                    <span className="date" style={justifyStart}>{date.format("MMM D, YYYY ddd")}</span>
+                    <span className="hour">{date.format(timeString)}</span>
+                    <span className="price"><strong>${price.value.toFixed(0)}</strong></span>
+                    <span className="offer">{offer ? <OfferChip white offer={offer}/> : null}</span>
+                    <span className="sw">{isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
+                    <span className="loaner">{false ? <LoanerCarChip white/> : null}</span>
+                    <span className="drop">{false ? <DirectionsCar fontSize="small"/> : null}</span>
                     <Button
+                        className="button"
                         color="primary"
                         onMouseEnter={onPopoverOpen(appointment)}
                         onMouseLeave={onPopoverClose}
