@@ -1,6 +1,16 @@
 import React, {useMemo} from 'react';
 import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TextField, TStepProps} from "../UI";
-import {Checkbox, FormControlLabel, FormGroup, FormLabel, Grid, styled} from "@material-ui/core";
+import {
+    Box,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
+    Grid,
+    styled,
+    useMediaQuery,
+    useTheme
+} from "@material-ui/core";
 import {EditButton} from "../../UI/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -13,12 +23,15 @@ const Section = styled("div")({
     padding: "16px 0"
 });
 
-const LabelGrid = styled(Grid)({
+const LabelGrid = styled(Grid)(({theme}) => ({
     display: "flex",
     justifyContent: "flex-end",
     flexDirection: "row",
     alignItems: "center",
-});
+    [theme.breakpoints.down("xs")]: {
+        justifyContent: "flex-start"
+    }
+}));
 
 const Subtitle = styled("h5")({
     margin: 0,
@@ -30,25 +43,25 @@ const Label = styled(FormLabel)({
     fontWeight: "bold",
     textTransform: "uppercase"
 });
-const Message = styled("div")({
-    textTransform: "uppercase",
-    fontSize: 16
-});
-const TextButton = styled("span")(({theme}) => ({
-    textDecoration: "underline",
-    padding: 0,
-    color: theme.palette.primary.main,
-    cursor: "pointer",
-    display: "inline-block",
-    fontWeight: "bold",
-    marginRight: theme.spacing(1),
-    userSelect: "none",
-    transition: theme.transitions.create(["text-decoration", "color"]),
-    "&:hover": {
-        textDecoration: "none",
-        color: theme.palette.primary.dark
-    }
-}));
+// const Message = styled("div")({
+//     textTransform: "uppercase",
+//     fontSize: 16
+// });
+// const TextButton = styled("span")(({theme}) => ({
+//     textDecoration: "underline",
+//     padding: 0,
+//     color: theme.palette.primary.main,
+//     cursor: "pointer",
+//     display: "inline-block",
+//     fontWeight: "bold",
+//     marginRight: theme.spacing(1),
+//     userSelect: "none",
+//     transition: theme.transitions.create(["text-decoration", "color"]),
+//     "&:hover": {
+//         textDecoration: "none",
+//         color: theme.palette.primary.dark
+//     }
+// }));
 
 const FlexGroup = styled(FormGroup)({
     display: "flex",
@@ -97,6 +110,8 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const {id} = useParams();
+    const theme = useTheme()
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const srDescription = useMemo((): string => {
         const sData = srList.find(s => s.id === selectedSR);
@@ -119,19 +134,19 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
             <h4 style={{textAlign: "center"}}>Appointment Confirmation</h4>
             <ScrollableContainer>
                 <Grid container spacing={2}>
-                    <Grid item xs={3} />
-                    <Grid item xs={9}>
+                    {!isXS ? <Grid item xs={3}/> : null}
+                    <Grid item xs={12} sm={9}>
                         <Subtitle>Driver Info</Subtitle>
                     </Grid>
                     {
                         formItems.map(fI =>
                             <React.Fragment key={fI.id}>
-                                <LabelGrid item xs={3}>
+                                <LabelGrid item xs={12} sm={3}>
                                     <Label htmlFor={fI.id}>
                                         {fI.label}
                                     </Label>
                                 </LabelGrid>
-                                <Grid item xs={9}>
+                                <Grid item xs={12} sm={9}>
                                     <TextField
                                         type={fI.type}
                                         id={fI.id}
@@ -142,17 +157,17 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
                             </React.Fragment>
                         )
                     }
-                    <LabelGrid item xs={3} />
-                    <Grid item xs={9}>
+                    {!isXS ? <LabelGrid item xs={3}/> : null}
+                    <Grid item xs={12} sm={9}>
                         <Section>
                             <Grid container spacing={2}>
-                                <Grid item md={6}>
+                                <Grid item xs={12} sm={6}>
                                     <Subtitle>Review</Subtitle>
                                     <p>{`${carDetails.make} ${carDetails.model}`.trim() || "-"}</p>
                                     <p>{srDescription}</p>
                                     <EditButton color="primary">View Details</EditButton>
                                 </Grid>
-                                {appointment ? <Grid style={{textAlign: "right"}} item md={6}>
+                                {appointment ? <Grid style={{textAlign: isXS ? "left" : "right"}} item xs={12} sm={6}>
                                     <Subtitle>Selected Price</Subtitle>
                                     <p>${appointment.price.value.toFixed(2)}</p>
                                 </Grid> : null}
@@ -160,7 +175,9 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
                         </Section>
 
                         <Section>
-                            <Subtitle>Add Comment</Subtitle>
+                            <Box mb={1}>
+                                <Subtitle>Add Comment</Subtitle>
+                            </Box>
                             <Textarea
                                 multiline
                                 placeholder="Type here"
@@ -197,15 +214,6 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
                                     </React.Fragment>
                                 )}
                             </FlexGroup>
-                        </Section>
-
-                        <Section>
-                            <Message>
-                                <TextButton>
-                                    Create Account
-                                </TextButton>
-                                <span>to save time on my next visit!</span>
-                            </Message>
                         </Section>
                     </Grid>
                 </Grid>
