@@ -215,6 +215,9 @@ export const AppointmentFlow = () => {
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const handleStep = (idx: number) => () => {
+        for (let i = 1; i < idx; i++) {
+            if (!isStepCompleted(i)) return;
+        }
         setActiveStep(idx);
     }
 
@@ -230,8 +233,8 @@ export const AppointmentFlow = () => {
     }
 
     const getComponent = () => {
-        const C = steps[activeStep -1 ].component;
-        return <C next={handleNext} prev={handlePrev} />;
+        const C = steps[activeStep - 1].component;
+        return <C next={handleNext} prev={handlePrev} isCompleted={isStepCompleted(activeStep)} />;
     }
 
     const classes = useStyles();

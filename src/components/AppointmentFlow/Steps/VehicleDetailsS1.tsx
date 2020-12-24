@@ -1,6 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Box, Button, Grid, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
-import {InputLoading, Label, ScrollableContainer, StepContainer, TextField, TStepProps} from "../UI";
+import {Grid, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
+import {
+    InputLoading,
+    Label,
+    NextPrevBlock,
+    ScrollableContainer,
+    StepContainer,
+    StepContentContainer,
+    TextField,
+    TStepProps
+} from "../UI";
 import {KeyboardDatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {useDispatch, useSelector} from "react-redux";
@@ -21,7 +30,7 @@ const LabelGrid = withStyles((theme) => ({
     }
 }))(Grid);
 
-export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
+export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const form = useSelector((state: RootState) => {
@@ -68,145 +77,145 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next}) => {
 
     return (
         <StepContainer>
-            <h4 style={{textAlign: "center"}}>Please tell us about your vehicle</h4>
-            <ScrollableContainer>
-                <Grid container spacing={2}>
-                    <LabelGrid item xs={12} sm={3}>
-                        <Label htmlFor="vin">
-                            vehicle identification number (VIN)
-                        </Label>
-                    </LabelGrid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="vin"
-                            name="vin"
-                            InputProps={{
-                                endAdornment: loading ?
-                                    <InputLoading/>
-                                    : undefined
-                            }}
-                            value={form.vin}
-                            onChange={handleTextChange}
-                        />
+            <StepContentContainer>
+                <h4 style={{textAlign: "center"}}>Please tell us about your vehicle</h4>
+                <ScrollableContainer>
+                    <Grid container spacing={2}>
+                        <LabelGrid item xs={12} sm={3}>
+                            <Label htmlFor="vin">
+                                vehicle identification number (VIN)
+                            </Label>
+                        </LabelGrid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="vin"
+                                name="vin"
+                                InputProps={{
+                                    endAdornment: loading ?
+                                        <InputLoading/>
+                                        : undefined
+                                }}
+                                value={form.vin}
+                                onChange={handleTextChange}
+                            />
+                        </Grid>
+                        {!isXS ? <Grid item xs={3} /> : null}
                     </Grid>
-                    {!isXS ? <Grid item xs={3} /> : null}
-                </Grid>
-                <h4 style={{textAlign: "center", marginTop: 24}}>General info</h4>
-                <Grid container spacing={2} alignItems={"center"}>
-                    <LabelGrid item xs={12} sm={3}>
-                        <Label htmlFor="make">
-                            make
-                        </Label>
-                    </LabelGrid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="make"
-                            name="make"
-                            value={form.make}
-                            onChange={handleTextChange}
-                        />
+                    <h4 style={{textAlign: "center", marginTop: 24}}>General info</h4>
+                    <Grid container spacing={2} alignItems={"center"}>
+                        <LabelGrid item xs={12} sm={3}>
+                            <Label htmlFor="make">
+                                make
+                            </Label>
+                        </LabelGrid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="make"
+                                name="make"
+                                value={form.make}
+                                onChange={handleTextChange}
+                            />
+                        </Grid>
+                        {!isXS ? <Grid item xs={3} /> : null}
+                        <LabelGrid item xs={12} sm={3}>
+                            <Label htmlFor="year">
+                                year
+                            </Label>
+                        </LabelGrid>
+                        <Grid item xs={12} sm={6}>
+                            <KeyboardDatePicker
+                                value={form.year}
+                                id="year"
+                                views={["year"]}
+                                allowKeyboardControl
+                                disableFuture
+                                fullWidth
+                                onChange={handleYearChange}
+                                InputProps={{
+                                    style: {fontWeight: "bold"},
+                                    disableUnderline: true
+                                }}
+                            />
+                        </Grid>
+                        {!isXS ? <Grid item xs={12} sm={3} /> : null}
+                        <LabelGrid item sm={3}>
+                            <Label htmlFor="model">
+                                model
+                            </Label>
+                        </LabelGrid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="model"
+                                name="model"
+                                value={form.model}
+                                onChange={handleTextChange}
+                            />
+                        </Grid>
+                        {!isXS ? <Grid item xs={3} /> : null}
+                        <LabelGrid item xs={12} sm={3}>
+                            <Label htmlFor="mileage">
+                                mileage
+                            </Label>
+                        </LabelGrid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                onChange={handleTextChange}
+                                type={"number"}
+                                value={form.mileage || ""}
+                                name="mileage"
+                                id="mileage"
+                            />
+                        </Grid>
+                        {!isXS ? <Grid item xs={3} /> : null}
                     </Grid>
-                    {!isXS ? <Grid item xs={3} /> : null}
-                    <LabelGrid item xs={12} sm={3}>
-                        <Label htmlFor="year">
-                            year
-                        </Label>
-                    </LabelGrid>
-                    <Grid item xs={12} sm={6}>
-                        <KeyboardDatePicker
-                            value={form.year}
-                            id="year"
-                            views={["year"]}
-                            allowKeyboardControl
-                            disableFuture
-                            fullWidth
-                            onChange={handleYearChange}
-                            InputProps={{
-                                style: {fontWeight: "bold"},
-                                disableUnderline: true
-                            }}
-                        />
+                    <h4 style={{textAlign: "center", marginTop: 24}}>Additional info</h4>
+                    <Grid container spacing={2} alignItems={"center"}>
+                        <LabelGrid item xs={12} sm={3}>
+                            <Label htmlFor="transmission">
+                                transmission
+                            </Label>
+                        </LabelGrid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="transmission"
+                                name="transmission"
+                                onChange={handleTextChange}
+                                value={form.transmission}
+                            />
+                        </Grid>
+                        {!isXS ? <Grid item xs={3} /> : null}
+                        <LabelGrid item xs={12} sm={3}>
+                            <Label htmlFor="driveType">
+                                drive type
+                            </Label>
+                        </LabelGrid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="driveType"
+                                name="driveType"
+                                value={form.driveType}
+                                onChange={handleTextChange}
+                            />
+                        </Grid>
+                        {!isXS ? <Grid item xs={3} /> : null}
+                        <LabelGrid item xs={12} sm={3}>
+                            <Label htmlFor="engineType">
+                                engine type
+                            </Label>
+                        </LabelGrid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="engineType"
+                                name="engineType"
+                                value={form.engineType}
+                                onChange={handleTextChange}
+                            />
+                        </Grid>
+                        {!isXS ? <Grid item xs={3} /> : null}
                     </Grid>
-                    {!isXS ? <Grid item xs={12} sm={3} /> : null}
-                    <LabelGrid item sm={3}>
-                        <Label htmlFor="model">
-                            model
-                        </Label>
-                    </LabelGrid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="model"
-                            name="model"
-                            value={form.model}
-                            onChange={handleTextChange}
-                        />
-                    </Grid>
-                    {!isXS ? <Grid item xs={3} /> : null}
-                    <LabelGrid item xs={12} sm={3}>
-                        <Label htmlFor="mileage">
-                            mileage
-                        </Label>
-                    </LabelGrid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            onChange={handleTextChange}
-                            type={"number"}
-                            value={form.mileage || ""}
-                            name="mileage"
-                            id="mileage"
-                        />
-                    </Grid>
-                    {!isXS ? <Grid item xs={3} /> : null}
-                </Grid>
-                <h4 style={{textAlign: "center", marginTop: 24}}>Additional info</h4>
-                <Grid container spacing={2} alignItems={"center"}>
-                    <LabelGrid item xs={12} sm={3}>
-                        <Label htmlFor="transmission">
-                            transmission
-                        </Label>
-                    </LabelGrid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="transmission"
-                            name="transmission"
-                            onChange={handleTextChange}
-                            value={form.transmission}
-                        />
-                    </Grid>
-                    {!isXS ? <Grid item xs={3} /> : null}
-                    <LabelGrid item xs={12} sm={3}>
-                        <Label htmlFor="driveType">
-                            drive type
-                        </Label>
-                    </LabelGrid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="driveType"
-                            name="driveType"
-                            value={form.driveType}
-                            onChange={handleTextChange}
-                        />
-                    </Grid>
-                    {!isXS ? <Grid item xs={3} /> : null}
-                    <LabelGrid item xs={12} sm={3}>
-                        <Label htmlFor="engineType">
-                            engine type
-                        </Label>
-                    </LabelGrid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="engineType"
-                            name="engineType"
-                            value={form.engineType}
-                            onChange={handleTextChange}
-                        />
-                    </Grid>
-                    {!isXS ? <Grid item xs={3} /> : null}
-                </Grid>
-            </ScrollableContainer>
-            <Box mt={2} textAlign="center" width="100%">
-                <Button fullWidth={isXS} variant="contained" onClick={next} color="primary">Continue</Button>
-            </Box>
+                </ScrollableContainer>
+                <NextPrevBlock next={next} prev={prev} prevDisabled isCompleted={isCompleted} />
+            </StepContentContainer>
         </StepContainer>
     );
 };

@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next}) => {
+export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next, isCompleted}) => {
     const [openedCode, setOpened] = useState<number|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [searchInput, setSearch] = useState<string>("");
@@ -163,7 +163,7 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next}) => {
                     </RadioGroup>
                     {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
                 </ScrollableContainer>
-                <NextPrevBlock next={next} prev={prev} />
+                <NextPrevBlock next={next} prev={prev} isCompleted={isCompleted} />
             </StepContentContainer>
         </StepContainer>
     );

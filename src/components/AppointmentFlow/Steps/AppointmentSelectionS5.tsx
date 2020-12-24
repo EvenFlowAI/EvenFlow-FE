@@ -102,7 +102,7 @@ const PopoverContent: React.FC<{appointment: TPopoverState['selectedAppointment'
     </div>;
 }
 
-export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
+export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isCompleted}) => {
     const [selectedView, setSelectedView] = useState<TView>("calendar");
     const [isLoading, setLoading] = useState<boolean>(false);
     const [popover, setPopover] = useState<TPopoverState>({anchor: null, selectedAppointment: null});
@@ -217,7 +217,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next}) => {
                     }/>
                 </Box>
             </ScrollableContainer>
-            <NextPrevBlock next={next} prev={prev} />
+            <NextPrevBlock next={next} prev={prev} isCompleted={isCompleted} />
             <Popover
                 id="selectedAppointment"
                 className={classes.popover}

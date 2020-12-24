@@ -153,7 +153,7 @@ const plates: TPlate[] = [
     }
 ]
 
-export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
+export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev, isCompleted}) => {
     const s3Form = useSelector((state: RootState) => state.appointment.s3Data);
 
     const theme = useTheme();
@@ -226,7 +226,7 @@ export const AppointmentTimingS3: React.FC<TStepProps> = ({next, prev}) => {
                     title={<Box ml={.5}><strong> Note:</strong> Your selection may affect appointment availability</Box>}
                 />
             </ScrollableContainer>
-            <NextPrevBlock next={next} prev={prev} />
+            <NextPrevBlock next={next} prev={prev} isCompleted={isCompleted} />
         </StepContentContainer>
     </StepContainer>
 };

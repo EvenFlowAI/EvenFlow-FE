@@ -44,7 +44,7 @@ const Option = styled(SquarePaper)(({theme}) => ({
     }
 }));
 
-export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev}) => {
+export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev, isCompleted}) => {
     const selectedTransportation = useSelector((state: RootState) => state.appointment.transportation);
 
     const dispatch = useDispatch();
@@ -94,7 +94,7 @@ export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev}) => {
                     } />
                 </Box>
             </ScrollableContainer>
-            <NextPrevBlock next={next} prev={prev} />
+            <NextPrevBlock next={next} prev={prev} isCompleted={isCompleted} />
         </StepContentContainer>
     </StepContainer>
 };

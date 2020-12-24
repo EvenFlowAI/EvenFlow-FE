@@ -95,7 +95,7 @@ const reminderItems: TFormItem[] = [
     {id: "sms", label: "SMS"},
 ]
 
-export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
+export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isCompleted}) => {
     const carDetails = useSelector((state: RootState) => state.appointment.s1Data);
     const [
         srList,
@@ -226,6 +226,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev}) => {
                         `Schedule ${moment(appointment.date).format("ddd, MMM D, h:mm a")}`
                         : "-"
                 }
+                isCompleted={isCompleted}
             />
         </StepContentContainer>
     </StepContainer>;

@@ -28,6 +28,7 @@ export const Label = withStyles({
 export type TStepProps = {
     next: () => void;
     prev: () => void;
+    isCompleted: boolean;
 }
 
 export const InputLoading = () => {
@@ -136,22 +137,23 @@ export const StepContentContainer = styled("div")(({theme}) => ({
     }
 }));
 type TNextProps = {
-    nextDisabled?: boolean,
+    nextDisabled?: boolean;
     nextLabel?: string;
     prevLabel?: string;
+    prevDisabled?: boolean;
 };
-export const NextPrevBlock: React.FC<TStepProps&TNextProps> = ({next, prev, nextDisabled, nextLabel, prevLabel}) => {
+export const NextPrevBlock: React.FC<TStepProps&TNextProps> = ({next, prev, nextDisabled, prevDisabled, nextLabel, prevLabel, isCompleted}) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     return <Box mt={2} textAlign="center">
         <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} style={{order: isXS ? 1 : undefined}}>
+            {!prevDisabled ? <Grid item xs={12} sm={6} style={{order: isXS ? 1 : undefined}}>
                 <Button fullWidth variant="outlined" color="primary" onClick={prev}>
                     {prevLabel ?? "Previous Step"}
                 </Button>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <Button fullWidth disabled={nextDisabled} variant="contained" onClick={next} color="primary">
+            </Grid> : null}
+            <Grid item xs={12} sm={prevDisabled ? 12 : 6}>
+                <Button fullWidth disabled={nextDisabled || !isCompleted} variant="contained" onClick={next} color="primary">
                     {nextLabel ?? "Continue"}
                 </Button>
             </Grid>
