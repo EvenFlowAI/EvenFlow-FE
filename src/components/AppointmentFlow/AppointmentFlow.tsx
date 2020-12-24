@@ -171,6 +171,8 @@ export const AppointmentFlow = () => {
 
     const isStepCompleted = useCallback((idx: number): boolean => {
         switch (idx) {
+            case 6:
+                return Boolean(appState.personalInformation.email);
             case 5:
                 return appState.appointment !== null;
             case 4:
