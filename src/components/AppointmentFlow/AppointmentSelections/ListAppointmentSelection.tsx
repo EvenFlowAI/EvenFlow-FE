@@ -28,36 +28,34 @@ const Appointment = styled(SquarePaper)(({theme}) => ({
         gridGap: theme.spacing(2),
         "&>.price": {
             justifySelf: "self-end",
-            textAlign: "right"
+            textAlign: "right",
+            gridArea: "price"
         },
         "&>span": {
             width: "100%",
             height: "100%"
+        },
+        "&>.date": {
+            gridArea: "date"
+        },
+        "&>.time": {
+            gridArea: "time"
+        },
+        "&>.offer": {
+            gridArea: "offer"
+        },
+        "&>.sw": {
+            gridArea: "sw"
+        },
+        "&>.loaner": {
+            gridArea: "loaner"
+        },
+        "&>.drop": {
+            gridArea: "drop"
+        },
+        "&>.button": {
+            gridArea: "button"
         }
-    },
-    "&>.date": {
-        gridArea: "date"
-    },
-    "&>.time": {
-        gridArea: "time"
-    },
-    "&>.price": {
-        gridArea: "price"
-    },
-    "&>.offer": {
-        gridArea: "offer"
-    },
-    "&>.sw": {
-        gridArea: "sw"
-    },
-    "&>.loaner": {
-        gridArea: "loaner"
-    },
-    "&>.drop": {
-        gridArea: "drop"
-    },
-    "&>.button": {
-        gridArea: "button"
     }
 }));
 const AppointmentHeader = styled(Appointment)(({theme}) => ({
@@ -70,6 +68,9 @@ const AppointmentHeader = styled(Appointment)(({theme}) => ({
         gridColumnStart: 6,
         gridColumnEnd: -1,
         justifySelf: "self-start"
+    },
+    [theme.breakpoints.down("xs")]: {
+        display: "none"
     }
 }));
 const justifyStart = {justifySelf: "self-start"};
