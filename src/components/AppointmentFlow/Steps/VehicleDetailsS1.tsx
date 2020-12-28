@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Grid, IconButton, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
+import {Grid, IconButton, styled, Tooltip, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
 import {
     InputLoading,
     Label,
@@ -18,7 +18,13 @@ import {changeS1Form} from "../../../store/reducers/appointment/actions";
 import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
 import {IVehicleData} from "../../../store/reducers/appointment/types";
-import {HelpOutline} from "@material-ui/icons";
+import {Help} from "@material-ui/icons";
+
+const Tip = styled("p")({
+    fontSize: 14,
+    margin: 0,
+    padding: 0
+});
 
 const LabelGrid = withStyles((theme) => ({
     root: {
@@ -87,7 +93,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                                 vehicle identification number (VIN)
                             </Label>
                         </LabelGrid>
-                        <Grid item xs={11} sm={5}>
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 id="vin"
                                 name="vin"
@@ -100,12 +106,20 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                                 onChange={handleTextChange}
                             />
                         </Grid>
-                        <Grid item xs={1}>
-                            <IconButton color="primary">
-                                <HelpOutline />
-                            </IconButton>
-                        </Grid>
-                        {!isXS ? <Grid item xs={3} /> : null}
+                        {!isXS ? <>
+                            <Grid item xs={1}>
+                                <Tooltip title={<Tip>
+                                    On most passenger cars, you may find the VIN number on the front of the dashboard on the driver's side.
+                                    The best way to see it is to look through the windshield from outside the car.
+                                    You may also find the VIN number on the driver's side door pillar.
+                                </Tip>}>
+                                    <IconButton color="primary">
+                                        <Help />
+                                    </IconButton>
+                                </Tooltip>
+                            </Grid>
+                            <Grid item xs={2} />
+                        </> : null}
                     </Grid>
                     <h4 style={{textAlign: "center", marginTop: 24}}>General info</h4>
                     <Grid container spacing={2} alignItems={"center"}>
