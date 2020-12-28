@@ -80,7 +80,7 @@ export const ActiveOffers = () => {
                         <OfferPlate offer={offer} onClick={handleEdit} />
                     </Grid>
                 }) : <NoItemsLoading items={offers} label={"There are no active offers."} />}
-                {count > pageData.pageSize ? <Grid item xs={12}>
+                <Grid item xs={12}>
                     <TablePagination
                         component="div"
                         count={count}
@@ -90,7 +90,7 @@ export const ActiveOffers = () => {
                         rowsPerPage={pageData.pageSize}
                         rowsPerPageOptions={defaultRowsPerPageOptions}
                     />
-                </Grid> : null}
+                </Grid>
             </Grid>
             <NewOffer open={isOpen} payload={editedItem} onClose={onClose} />
             <SendOffer open={isOfferOpen} onClose={onOfferClose} />
