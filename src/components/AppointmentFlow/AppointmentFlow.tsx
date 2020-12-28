@@ -184,7 +184,7 @@ export const AppointmentFlow = () => {
                 return Boolean(appState.selectedSR);
             case 1:
                 const s1 = appState.s1Data;
-                return Boolean(s1.model && s1.make && s1.year);
+                return Boolean(s1.model && s1.make && s1.year && s1.vin);
             default:
                 return false;
         }

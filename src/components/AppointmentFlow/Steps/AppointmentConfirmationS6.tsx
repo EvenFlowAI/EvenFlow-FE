@@ -14,10 +14,14 @@ import {
 import {EditButton} from "../../UI/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {changeComment, changePersonalInformation} from "../../../store/reducers/appointment/actions";
+import {changeComment, changePersonalInformation, setAppointmentId} from "../../../store/reducers/appointment/actions";
 import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
 import {Routes} from "../../../config/routes";
+import {API} from "../../../api/api";
+import {EReminderType, flatTransportations} from "../../../store/reducers/appointment/types";
+import {useException} from "../../../utils/hooks";
+import {ICreateAppointment} from "../../../api/types";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -100,11 +104,13 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
     const [
         srList,
         selectedSR,
-        appointment
+        appointment,
+        forms
     ] = useSelector((state: RootState) => [
         state.appointment.serviceRequests,
         state.appointment.selectedSR,
-        state.appointment.appointment
+        state.appointment.appointment,
+        state.appointment,
     ]);
 
     const dispatch = useDispatch();
@@ -112,6 +118,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
     const {id} = useParams();
     const theme = useTheme()
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const showError = useException();
 
     const srDescription = useMemo((): string => {
         const sData = srList.find(s => s.id === selectedSR);
@@ -125,8 +132,39 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
     const handleCommentChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(changeComment(value));
     }
-    const handleConfirm = () => {
-        history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);
+    const handleConfirm = async () => {
+        const {email, phone, sms} = forms.reminders;
+        const reminderTypes: EReminderType[] = [
+            email ? EReminderType.Email : undefined,
+            phone ? EReminderType.Phone : undefined,
+            sms ? EReminderType.Sms : undefined
+        ].filter(v => !!v) as EReminderType[];
+
+        const data: ICreateAppointment = {
+            appointmentTimingType: forms.s3Data.appointmentType,
+            comment: forms.comment,
+            driver: forms.personalInformation,
+            gmt: moment().utcOffset(),
+            isNeedCall: forms.privacy.callback,
+            offerId: forms?.appointment?.offer?.id ?? null,
+            reminderTypes,
+            serviceCenterId: id,
+            vehicle: forms.s1Data,
+            transportationNeeds: {
+                isNeed: Number(forms.transportation) > 2,
+                description: flatTransportations.find(t => t.id === forms.transportation)?.label || ""
+            },
+            slot: forms.appointment?.id.split("|")[1] || "",
+            serviceRequestIds: forms.selectedSR ? [forms.selectedSR] : [],
+            date: forms.appointment?.id.split("|")[0] || ""
+        };
+        try {
+            const { data: { id: appointmentId } } = await API.appointment.create(data);
+            dispatch(setAppointmentId(appointmentId));
+            history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);
+        } catch (e) {
+            showError(e);
+        }
     }
 
     return <StepContainer>

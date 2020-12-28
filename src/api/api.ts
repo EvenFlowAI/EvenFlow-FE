@@ -1,9 +1,9 @@
-import {ICreateAppointment, TApi, TApiResponse, TApiView, ICreateAppointmentResp} from "./types";
-import axios from "axios";
+import {ICreateAppointment, TApiResponse, ICreateAppointmentResp} from "./types";
+import {request} from "../config/requests";
 
-const appointment: TApiView = {
-    create: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => axios.post("/appointments", data),
+const appointment = {
+    create: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => request.post("/appointments", data),
 };
-export const API: TApi = {
+export const API = {
     appointment
-}
+};

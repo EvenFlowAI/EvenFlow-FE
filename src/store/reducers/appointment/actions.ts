@@ -99,3 +99,4 @@ export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
         }
     }
 }
+export const setAppointmentId = createAction<number|null>("Appointments/SetAppointmentId");

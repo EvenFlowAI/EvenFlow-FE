@@ -65,6 +65,9 @@ export const transportations: TEnumMap<ETransportation>[][] = [
         {id: ETransportation.LoanerCar, label: "I would take a loaner car"},
     ]
 ];
+export const flatTransportations: TEnumMap<ETransportation>[] = transportations.reduce((acc, ta) => [
+    ...acc, ...ta
+], [] as TEnumMap<ETransportation>[]);
 export interface IPersonalInformation {
     fullName: string;
     phoneNumber: string;
@@ -117,6 +120,7 @@ export interface IRemappedAppointmentSlot extends IAppointmentSlot {
 export type TAppointmentState = {
     scProfile?: IServiceCenterProfile;
     serviceRequests: ISR[];
+    appointmentId: number|null;
     selectedSR: number|null,
     s1Data: TS1Form;
     search: string;
