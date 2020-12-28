@@ -100,12 +100,14 @@ export const ListAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverOpen
             )}
         </AppointmentHeader>
         {appointments.map(appointment => {
-            const {id, date, offer, isShorterWaitTime, price} = appointment;
+            const {id, date, offer, isShorterWaitTime, price, priceWithOffer} = appointment;
             return <Box key={id} mt={.5}>
                 <Appointment variant="outlined">
                     <span className="date" style={justifyStart}>{date.format("MMM D, YYYY ddd")}</span>
                     <span className="hour">{date.format(timeString)}</span>
-                    <span className="price"><strong>${price.value.toFixed(0)}</strong></span>
+                    <span className="price"><strong>${
+                         priceWithOffer?.value.toFixed(0) || price.value.toFixed(0)
+                    }</strong></span>
                     <span className="offer">{offer ? <OfferChip white offer={offer}/> : null}</span>
                     <span className="sw">{isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
                     <span className="loaner">{false ? <LoanerCarChip white/> : null}</span>

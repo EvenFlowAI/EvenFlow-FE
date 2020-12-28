@@ -96,7 +96,10 @@ export const AppointmentPlate: React.FC<TProps&React.HTMLAttributes<HTMLDivEleme
         <Time>{moment(appointment.date).format(timeString)}</Time>
         <Paper variant="outlined" className={selected ? "selected" : undefined}>
             <Price className={classes.width}>
-                <span><sup>$</sup>{appointment.price.value.toFixed(0)}</span>
+                <span><sup>$</sup>{
+                    appointment.priceWithOffer?.value.toFixed(0) ||
+                    appointment.price.value.toFixed(0)
+                }</span>
                 {false ? <DropOffChip/> : null}
             </Price>
             {(appointment.offer || appointment.isShorterWaitTime) ?

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Grid, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
+import {Grid, IconButton, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
 import {
     InputLoading,
     Label,
@@ -18,6 +18,7 @@ import {changeS1Form} from "../../../store/reducers/appointment/actions";
 import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
 import {IVehicleData} from "../../../store/reducers/appointment/types";
+import {HelpOutline} from "@material-ui/icons";
 
 const LabelGrid = withStyles((theme) => ({
     root: {
@@ -86,7 +87,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                                 vehicle identification number (VIN)
                             </Label>
                         </LabelGrid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={11} sm={5}>
                             <TextField
                                 id="vin"
                                 name="vin"
@@ -98,6 +99,11 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                                 value={form.vin}
                                 onChange={handleTextChange}
                             />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton color="primary">
+                                <HelpOutline />
+                            </IconButton>
                         </Grid>
                         {!isXS ? <Grid item xs={3} /> : null}
                     </Grid>

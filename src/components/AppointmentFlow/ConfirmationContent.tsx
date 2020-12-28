@@ -102,7 +102,10 @@ export const ConfirmationContent = () => {
         carInfo: getCarInfo(appointment.s1Data),
         phoneNumber: appointment.personalInformation.phoneNumber || "-",
         email: appointment.personalInformation.email || "-",
-        total: appointment.appointment?.price ? `$${appointment.appointment.price.value.toFixed(2)}` : "-"
+        total: appointment.appointment?.price ? `$${
+            appointment.appointment.priceWithOffer?.value.toFixed(2) ||
+            appointment.appointment.price.value.toFixed(2)
+        }` : "-"
     }));
 
     const history = useHistory();

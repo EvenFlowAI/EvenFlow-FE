@@ -91,6 +91,7 @@ export interface IAppointmentSlot {
     date: ParsableDate;
     time: string;
     price: IPrice;
+    priceWithOffer?: IPrice;
     offer?: IOffer;
     isShorterWaitTime: boolean;
 }

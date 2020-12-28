@@ -67,14 +67,14 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
                 if (appointment.offer) {
                     appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offer);
                 }
-                if (appointment.price.value < appointments[idx].lowestPrice) {
-                    appointments[idx].lowestPrice = appointment.price.value;
+                if ((appointment.priceWithOffer?.value || appointment.price.value) < appointments[idx].lowestPrice) {
+                    appointments[idx].lowestPrice = appointment.priceWithOffer?.value || appointment.price.value;
                 }
             } else {
                 appointments[idx] = {
                     date,
                     idx,
-                    lowestPrice: appointment.price.value,
+                    lowestPrice: appointment.priceWithOffer?.value || appointment.price.value,
                     appointments: [appointment],
                     offers: Boolean(appointment.offer)
                 };
