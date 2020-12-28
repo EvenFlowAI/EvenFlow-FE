@@ -202,6 +202,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         onChange={handleTechniciansChange}
                         getOptionLabel={i => i.fullName}
+                        getOptionSelected={(option, value) => option.id === value.id}
                         renderOption={autocompleteOptionsRender((e) => e.fullName)}
                         loading={false}
                         value={form.technicians}
