@@ -35,6 +35,9 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.default,
         [theme.breakpoints.up("lg")]: {
             marginLeft: 0
+        },
+        [theme.breakpoints.down("xs")]: {
+            marginLeft: "-100%"
         }
     },
     mainOpened: {

@@ -18,6 +18,9 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexFlow: "column",
         position: "relative",
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
+        }
     },
     link: {
         color: "#fff"
@@ -43,7 +46,10 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexFlow: "column",
         padding: "60px 30px",
-        alignItems: "center"
+        alignItems: "center",
+        [theme.breakpoints.down("xs")]: {
+            width: "100%"
+        }
     },
     listItem: {
         color: "#FFFFFF",
