@@ -2,7 +2,7 @@ import {ISCAnalytics, IServiceCenter, IServiceCenterExtended, TServiceCenterActi
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {EDay} from "../demandSegments/types";
-import {getSCAnalytics, getWorkingDays} from "./actions";
+import {getSCAnalytics, getWorkingDays, setPricingOpt} from "./actions";
 
 
 const blankAnalytics: ISCAnalytics = {
@@ -78,6 +78,21 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
         case getSCAnalytics.type:
             if (getSCAnalytics.match(action)) {
                 return {...state, analytics: action.payload};
+            }
+            return state;
+        case setPricingOpt.type:
+            if (setPricingOpt.match(action)) {
+                return {
+                    ...state,
+                    selectedSC: state.selectedSC
+                        ? {...state.selectedSC, applyPricingOptimization: action.payload.checked}
+                        : state.selectedSC,
+                    fullSCList: state.fullSCList.map(
+                        sc => sc.id !== action.payload.id
+                            ? sc
+                            : {...sc, applyPricingOptimization: action.payload.checked}
+                    )
+                }
             }
             return state;
         default:

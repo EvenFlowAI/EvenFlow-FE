@@ -181,3 +181,8 @@ export const loadSCAnalytics = (id: number): AppThunk => async dispatch => {
     );
     dispatch(getSCAnalytics(data));
 }
+export const setPricingOpt = createAction<{id: number, checked: boolean}>("ServiceCenters/ApplyPricingOpt");
+export const changePricingOpt = (id: number, applyPricingOptimization: boolean): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.ServiceCenters.ChangePricingOpt, {urlParams: {id}, data: {applyPricingOptimization}});
+    await dispatch(setPricingOpt({id, checked: applyPricingOptimization}));
+}

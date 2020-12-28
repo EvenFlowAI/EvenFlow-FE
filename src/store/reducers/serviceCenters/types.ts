@@ -6,6 +6,7 @@ export interface IServiceCenter {
     id: number;
     name: string;
     address: IAddress;
+    applyPricingOptimization: boolean;
     mainAddress: string;
     avatarPath?: string;
 }

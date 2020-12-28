@@ -120,7 +120,7 @@ type ApiRoutes = {
         | "GetLevels" | "SetLevels" | "Calculation", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
-        | "GetBreaks" | "SetBreaks" | "Analytics", TApiRoute>,
+        | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
@@ -246,6 +246,7 @@ export class Api {
             UpdateAddress: {route: "/service-centers/{id}/address", method: "put"},
             GetAll: {route: "/service-centers/by-query", method: "post"},
             Avatar: {route: "/service-centers/{id}/avatar", method: "patch"},
+            ChangePricingOpt: {route: "/service-centers/{id}/pricing-optimization", method: "patch"},
             GetSelection: {route: "/service-centers/selection", method: "get"},
             GetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "get"},
             SetHOO: {route: "/service-centers/{id}/hours-of-operations", method: "put"},
