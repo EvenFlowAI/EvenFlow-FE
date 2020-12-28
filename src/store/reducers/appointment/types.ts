@@ -129,6 +129,9 @@ export type TAppointmentState = {
     appointment: IRemappedAppointmentSlot|null;
     appointmentSlots: IRemappedAppointmentSlot[];
 };
+export enum EReminderType {
+    Email, Phone, Sms
+}
 
 export const APPOINTMENT_STATE_KEY = "APPOINTMENT";
 export const APPOINTMENT_STATE_SAVED_KEY = "APPOINTMENT_SAVED";
