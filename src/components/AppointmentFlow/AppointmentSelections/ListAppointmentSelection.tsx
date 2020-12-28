@@ -17,6 +17,7 @@ const Appointment = styled(SquarePaper)(({theme}) => ({
     gridGap: theme.spacing(.5),
     fontSize: 14,
     alignItems: "center",
+    minHeight: 54,
     justifyItems: "center",
     [theme.breakpoints.down("xs")]: {
         gridTemplate: `
