@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import {TextField as TF} from "../UI/EndUserInputs";
 import {InputProps as StandardInputProps} from "@material-ui/core/Input/Input";
+import {LoadingButton} from "../UI/Button";
 
 export const TextField: React.FC<TextFieldProps> = forwardRef((props, ref) => {
     return <TF ref={ref} fullWidth {...props} InputProps={{disableUnderline: true, ...props.InputProps} as Partial<StandardInputProps>} />;
@@ -137,12 +138,13 @@ export const StepContentContainer = styled("div")(({theme}) => ({
     }
 }));
 type TNextProps = {
+    isLoading?: boolean;
     nextDisabled?: boolean;
     nextLabel?: string;
     prevLabel?: string;
     prevDisabled?: boolean;
 };
-export const NextPrevBlock: React.FC<TStepProps&TNextProps> = ({next, prev, nextDisabled, prevDisabled, nextLabel, prevLabel, isCompleted}) => {
+export const NextPrevBlock: React.FC<TStepProps&TNextProps> = ({next, prev, isLoading, nextDisabled, prevDisabled, nextLabel, prevLabel, isCompleted}) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     return <Box mt={2} textAlign="center">
@@ -153,9 +155,12 @@ export const NextPrevBlock: React.FC<TStepProps&TNextProps> = ({next, prev, next
                 </Button>
             </Grid> : null}
             <Grid item xs={12} sm={prevDisabled ? 12 : 6}>
-                <Button fullWidth disabled={nextDisabled || !isCompleted} variant="contained" onClick={next} color="primary">
+                <LoadingButton loading={isLoading}
+                               fullWidth
+                               disabled={nextDisabled || !isCompleted}
+                               variant="contained" onClick={next} color="primary">
                     {nextLabel ?? "Continue"}
-                </Button>
+                </LoadingButton>
             </Grid>
         </Grid>
     </Box>

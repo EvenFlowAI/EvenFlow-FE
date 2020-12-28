@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TextField, TStepProps} from "../UI";
 import {
     Box,
@@ -100,6 +100,7 @@ const reminderItems: TFormItem[] = [
 ]
 
 export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isCompleted}) => {
+    const [isLoading, setLoading] = useState(false);
     const carDetails = useSelector((state: RootState) => state.appointment.s1Data);
     const [
         srList,
@@ -158,11 +159,14 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             serviceRequestIds: forms.selectedSR ? [forms.selectedSR] : [],
             date: forms.appointment?.id.split("|")[0] || ""
         };
+        setLoading(true);
         try {
             const { data: { id: appointmentId } } = await API.appointment.create(data);
             dispatch(setAppointmentId(appointmentId));
+            setLoading(false);
             history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);
         } catch (e) {
+            setLoading(false);
             showError(e);
         }
     }
@@ -257,6 +261,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                 </Grid>
             </ScrollableContainer>
             <NextPrevBlock
+                isLoading={isLoading}
                 next={handleConfirm}
                 prev={prev}
                 nextLabel={
