@@ -80,6 +80,40 @@ const labels: string[] = [
     "Date", "Time", "Price", "Special Offer", "Wait Time", "Loaner Car"
 ]
 
+type TListItemProps = {
+    appointment: IRemappedAppointmentSlot,
+    onHover: (a: IRemappedAppointmentSlot) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+    onLeave: () => void,
+    onClick: (a: IRemappedAppointmentSlot) => () => void,
+    selectedAppointment: IRemappedAppointmentSlot|null
+}
+const ListItem: React.FC<TListItemProps> = (props) => {
+    return <Box mt={.5}>
+        <Appointment variant="outlined">
+            <span className="date" style={justifyStart}>{props.appointment.date.format("MMM D, YYYY ddd")}</span>
+            <span className="hour">{props.appointment.date.format(timeString)}</span>
+            <span className="price"><strong>${
+                props.appointment.priceWithOffer?.value.toFixed(0) || props.appointment.price.value.toFixed(0)
+            }</strong></span>
+            <span className="offer">{props.appointment.offer ?
+                <OfferChip white offer={props.appointment.offer}/> : null}</span>
+            <span className="sw">{props.appointment.isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
+            <span className="loaner">{false ? <LoanerCarChip white/> : null}</span>
+            <span className="drop">{false ? <DirectionsCar fontSize="small"/> : null}</span>
+            <Button
+                className="button"
+                color="primary"
+                onMouseEnter={props.onHover(props.appointment)}
+                onMouseLeave={props.onLeave}
+                fullWidth
+                onClick={props.onClick(props.appointment)}
+                variant={props.selectedAppointment?.id === props.appointment.id ? "contained" : "outlined"}>
+                Schedule
+            </Button>
+        </Appointment>
+    </Box>;
+}
+
 export const ListAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverOpen, onPopoverClose}) => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
     const appointments = useSelector((state: RootState) => state.appointment.appointmentSlots);
@@ -99,31 +133,15 @@ export const ListAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverOpen
                 <span key={idx} style={!idx ? justifyStart : undefined}>{label}</span>
             )}
         </AppointmentHeader>
-        {appointments.map(appointment => {
-            const {id, date, offer, isShorterWaitTime, price, priceWithOffer} = appointment;
-            return <Box key={id} mt={.5}>
-                <Appointment variant="outlined">
-                    <span className="date" style={justifyStart}>{date.format("MMM D, YYYY ddd")}</span>
-                    <span className="hour">{date.format(timeString)}</span>
-                    <span className="price"><strong>${
-                         priceWithOffer?.value.toFixed(0) || price.value.toFixed(0)
-                    }</strong></span>
-                    <span className="offer">{offer ? <OfferChip white offer={offer}/> : null}</span>
-                    <span className="sw">{isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
-                    <span className="loaner">{false ? <LoanerCarChip white/> : null}</span>
-                    <span className="drop">{false ? <DirectionsCar fontSize="small"/> : null}</span>
-                    <Button
-                        className="button"
-                        color="primary"
-                        onMouseEnter={onPopoverOpen(appointment)}
-                        onMouseLeave={onPopoverClose}
-                        fullWidth
-                        onClick={handleSelectAppointment(appointment)}
-                        variant={selectedAppointment?.id === id ? "contained" : "outlined" }>
-                        Schedule
-                    </Button>
-                </Appointment>
-            </Box>;}
+        {appointments.map(appointment =>
+            <ListItem
+                key={appointment.id}
+                appointment={appointment}
+                onClick={handleSelectAppointment}
+                onHover={onPopoverOpen}
+                onLeave={onPopoverClose}
+                selectedAppointment={selectedAppointment}
+            />
         )}
     </div>
 };
