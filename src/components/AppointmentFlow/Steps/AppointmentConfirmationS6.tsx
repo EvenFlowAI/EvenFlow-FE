@@ -14,12 +14,23 @@ import {
 import {EditButton} from "../../UI/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {changeComment, changePersonalInformation, setAppointmentId} from "../../../store/reducers/appointment/actions";
+import {
+    changeComment,
+    changePersonalInformation,
+    setAppointmentId,
+    clearStorage,
+    changePrivacy, changeReminders
+} from "../../../store/reducers/appointment/actions";
 import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
 import {Routes} from "../../../config/routes";
 import {API} from "../../../api/api";
-import {EReminderType, flatTransportations} from "../../../store/reducers/appointment/types";
+import {
+    EReminderType,
+    flatTransportations,
+    IPersonalInformation,
+    IPrivacy, IReminders
+} from "../../../store/reducers/appointment/types";
 import {useException} from "../../../utils/hooks";
 import {ICreateAppointment} from "../../../api/types";
 
@@ -106,11 +117,19 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         srList,
         selectedSR,
         appointment,
+        personalInformation,
+        comment,
+        privacy,
+        reminders,
         forms
     ] = useSelector((state: RootState) => [
         state.appointment.serviceRequests,
         state.appointment.selectedSR,
         state.appointment.appointment,
+        state.appointment.personalInformation,
+        state.appointment.comment,
+        state.appointment.privacy,
+        state.appointment.reminders,
         state.appointment,
     ]);
 
@@ -133,6 +152,13 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
     const handleCommentChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(changeComment(value));
     }
+    const handlePrivacyCheck = (name: keyof IPrivacy) => (e: any, checked: boolean) => {
+        dispatch(changePrivacy({[name]: checked}));
+    }
+    const handleCheckReminders = (name: keyof IReminders) => (e: any, checked: boolean) => {
+        dispatch(changeReminders({[name]: checked}));
+    }
+
     const handleConfirm = async () => {
         const {email, phone, sms} = forms.reminders;
         const reminderTypes: EReminderType[] = [
@@ -163,6 +189,8 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         try {
             const { data: { id: appointmentId } } = await API.appointment.create(data);
             dispatch(setAppointmentId(appointmentId));
+            // Clear cached data
+            clearStorage();
             setLoading(false);
             history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);
         } catch (e) {
@@ -193,6 +221,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                                         type={fI.type}
                                         id={fI.id}
                                         name={fI.id}
+                                        value={personalInformation[fI.id as keyof IPersonalInformation]}
                                         onChange={handleTextChange}
                                     />
                                 </Grid>
@@ -227,17 +256,24 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                                 multiline
                                 placeholder="Type here"
                                 onChange={handleCommentChange}
+                                value={comment}
                                 rows={2}
                             />
                             <FlexGroup>
                                 <FormControlLabel
                                     label="Privacy & Policy"
-                                    control={<Checkbox color="primary" />}
+                                    control={<Checkbox
+                                        checked={privacy.privacy}
+                                        onChange={handlePrivacyCheck("privacy")}
+                                        color="primary" />}
                                 />
                                 <div className="grow" />
                                 <FormControlLabel
                                     label="Want us to call you?"
-                                    control={<Checkbox color="primary" />}
+                                    control={<Checkbox
+                                        checked={privacy.callback}
+                                        onChange={handlePrivacyCheck("callback")}
+                                        color="primary" />}
                                 />
                             </FlexGroup>
                         </Section>
@@ -251,6 +287,8 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
+                                                    checked={reminders[item.id as keyof IReminders]}
+                                                    onChange={handleCheckReminders(item.id as keyof IReminders)}
                                                     color="primary"
                                                 />
                                             }

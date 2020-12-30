@@ -72,7 +72,7 @@ export const saveAppointmentReducer = (): AppThunk => (d, getState) => {
     localStorage.setItem(APPOINTMENT_STATE_KEY, state);
     localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
 }
-const clearStorage = () => {
+export const clearStorage = () => {
     localStorage.removeItem(APPOINTMENT_STATE_KEY);
     localStorage.removeItem(APPOINTMENT_STATE_SAVED_KEY);
 }
