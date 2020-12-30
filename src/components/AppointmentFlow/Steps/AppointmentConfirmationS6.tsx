@@ -32,7 +32,7 @@ import {
     IPrivacy, IReminders
 } from "../../../store/reducers/appointment/types";
 import {useException} from "../../../utils/hooks";
-import {ICreateAppointment} from "../../../api/types";
+import {ICreateAppointment, ICreateAppointmentResp} from "../../../api/types";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -121,6 +121,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         comment,
         privacy,
         reminders,
+        appointmentId,
         forms
     ] = useSelector((state: RootState) => [
         state.appointment.serviceRequests,
@@ -130,6 +131,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         state.appointment.comment,
         state.appointment.privacy,
         state.appointment.reminders,
+        state.appointment.appointmentId,
         state.appointment,
     ]);
 
@@ -167,7 +169,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             sms ? EReminderType.Sms : undefined
         ].filter(v => !!v) as EReminderType[];
 
-        const data: ICreateAppointment = {
+        let formData: ICreateAppointment = {
             appointmentTimingType: forms.s3Data.appointmentType,
             comment: forms.comment,
             driver: forms.personalInformation,
@@ -187,8 +189,16 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         };
         setLoading(true);
         try {
-            const { data: { id: appointmentId } } = await API.appointment.create(data);
-            dispatch(setAppointmentId(appointmentId));
+            let resp: ICreateAppointmentResp;
+            if (appointmentId?.id) {
+                const {data} = await API.appointment.update({...formData, id: appointmentId.id, hashKey: appointmentId.hashKey});
+                resp = data;
+            } else {
+                const {data} = await API.appointment.create(formData);
+                resp = data;
+            }
+
+            dispatch(setAppointmentId(resp));
             // Clear cached data
             clearStorage();
             setLoading(false);

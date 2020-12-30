@@ -4,6 +4,7 @@ import {TEnumMap} from "../utils";
 import {EDemandCategory} from "../pricingSettings/types";
 import {EOfferType, IOffer} from "../offers/types";
 import moment from "moment";
+import {ICreateAppointmentResp} from "../../../api/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -121,7 +122,7 @@ export interface IRemappedAppointmentSlot extends IAppointmentSlot {
 export type TAppointmentState = {
     scProfile?: IServiceCenterProfile;
     serviceRequests: ISR[];
-    appointmentId: number|null;
+    appointmentId: ICreateAppointmentResp|null;
     selectedSR: number|null,
     s1Data: TS1Form;
     search: string;

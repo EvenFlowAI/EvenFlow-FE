@@ -18,6 +18,7 @@ import {
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import moment from "moment";
+import {ICreateAppointmentResp} from "../../../api/types";
 
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
 export const loadSCProfile = (id: number): AppThunk => async dispatch => {
@@ -99,4 +100,4 @@ export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
         }
     }
 }
-export const setAppointmentId = createAction<number|null>("Appointments/SetAppointmentId");
+export const setAppointmentId = createAction<ICreateAppointmentResp|null>("Appointments/SetAppointmentId");

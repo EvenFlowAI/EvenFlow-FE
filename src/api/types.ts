@@ -35,4 +35,5 @@ export interface ICreateAppointment {
     comment: string;
     serviceRequestIds: number[];
 }
-export interface ICreateAppointmentResp { id: number; }
+export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {}
+export interface ICreateAppointmentResp { id: number; hashKey: string; }
