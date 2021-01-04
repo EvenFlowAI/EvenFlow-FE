@@ -9,6 +9,8 @@ import {Typography} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import {BackLink} from "./UI";
 import {Routes} from "../../config/routes";
+import {useException} from "../../utils/hooks";
+import {API} from "../../api/api";
 
 const content = "Enter the email you registered with and we will send you a link to reset your password";
 
@@ -30,9 +32,10 @@ const Message = () => {
 };
 
 type FormProps = {
-    onChange: React.ChangeEventHandler,
-    onSubmit: React.EffectCallback
-    email: string
+    onChange: React.ChangeEventHandler;
+    onSubmit: () => void;
+    email: string;
+    loading?: boolean;
 }
 
 const ForgotPasswordForm = (props: FormProps) => {
@@ -46,7 +49,7 @@ const ForgotPasswordForm = (props: FormProps) => {
             fullWidth
             placeholder="TYPE HERE"
         />
-        <LoginButton fullWidth onClick={props.onSubmit}>Send Email</LoginButton>
+        <LoginButton loading={props.loading} fullWidth onClick={props.onSubmit}>Send Email</LoginButton>
         <Typography variant="body1" style={{marginTop: 20}}>
             Back to&nbsp;
             <BackLink to={Routes.Login.Base}>Sign In</BackLink>
@@ -56,16 +59,29 @@ const ForgotPasswordForm = (props: FormProps) => {
 
 export const ForgotPassword = () => {
     const [showMessage, changeShow] = useState(false);
+    const [loading, setLoading] = useState();
     const [email, changeEmail] = useState('');
+    const showError = useException();
 
     const handleChangeEmail: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
         = (e) => changeEmail(e.target.value);
 
-    const handleSubmit = () => changeShow(true);
+    const handleSubmit = async () => {
+        try {
+            setLoading(true);
+            await API.accounts.passwordRecovery({email});
+            setLoading(false);
+            changeShow(true);
+        } catch (e) {
+            showError(e);
+            setLoading(false)
+        }
+    }
 
     return showMessage
         ? <Message />
         : <ForgotPasswordForm
+            loading={loading}
             onChange={handleChangeEmail}
             onSubmit={handleSubmit}
             email={email}
