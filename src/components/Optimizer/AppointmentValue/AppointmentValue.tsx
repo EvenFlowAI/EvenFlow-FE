@@ -12,11 +12,15 @@ import {optimizerRoot} from "../utils";
 import {UrgentRequests} from "./UrgentRequests/UrgentRequests";
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     panel: {
-        width: "100%"
+        width: "100%",
+        overflowX: "auto",
+        [theme.breakpoints.down("xs")]: {
+            padding: `${theme.spacing(3)}px 0`
+        }
     }
-});
+}));
 
 type Tab = {
     label: string;
@@ -45,6 +49,8 @@ export const AppointmentValue = () => {
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
         >
             {tabs.map(tab =>
                 <Tab label={tab.label} key={tab.id} value={tab.id} />
