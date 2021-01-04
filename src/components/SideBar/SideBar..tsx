@@ -107,6 +107,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const classes = useStyles();
     const theme = useTheme();
     const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const currentUser = useCurrentUser();
     const {pathname} = useLocation();
@@ -122,6 +123,11 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     }
     const handleGoToBooking = () => {
         history.push(Routes.EndUser.Welcome + "/" + selectedSC?.id);
+    }
+    const closeSidebar = () => {
+        if (isXS) {
+            onClose();
+        }
     }
 
     return <Drawer
@@ -145,6 +151,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
                 className={clsx(classes.listItem, link.sub ? classes.subMenu : "")}
                 component={NavLink}
                 to={link.to}
+                onClick={closeSidebar}
                 exact={link.exact}
                 key={link.to}>{link.name}</ListItem>)}
         </List>
