@@ -21,13 +21,17 @@ type TStyleProps = {
 }
 const useStyles = makeStyles(theme => ({
     root: {
-        maxWidth: theme.breakpoints.values.lg
+        maxWidth: theme.breakpoints.values.lg,
     },
     tableCell: ({compact}: TStyleProps) => ({
         fontSize: compact ? 14 : 16,
         border: "none",
         // borderBottomColor: "#000000",
-        padding: compact ? compactPadding : cellPadding
+        padding: compact ? compactPadding : cellPadding,
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 12,
+            padding: theme.spacing(1)
+        }
     }),
     tableHead: ({compact}: TStyleProps) => ({
         fontSize: compact ? 14 : 16,
@@ -35,7 +39,11 @@ const useStyles = makeStyles(theme => ({
         // borderBottomColor: "#9DA8B5",
         padding: compact ? compactPadding : cellPadding,
         fontWeight: "bold",
-        color: "#9DA8B5"
+        color: "#9DA8B5",
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 12,
+            padding: theme.spacing(1)
+        }
     }),
     pagination: {
         flexShrink: 0,

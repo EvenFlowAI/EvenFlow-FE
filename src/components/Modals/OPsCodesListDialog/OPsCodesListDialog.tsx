@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {Button, Checkbox} from "@material-ui/core";
+import {Button, Checkbox, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -46,6 +46,9 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
     );
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<number[]>([]);
+
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     useEffect(() => {
         if (props.open) {
@@ -99,7 +102,7 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>Select Service Requests</DialogTitle>
         <DialogContent>
-            <div style={{display: "flex", justifyContent: "flex-end", marginBottom: 18}}>
+            <div style={{display: "flex", justifyContent: isXS ? "center" : "flex-end", marginBottom: 18}}>
                 <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
             </div>
             <Table<IServiceRequest>

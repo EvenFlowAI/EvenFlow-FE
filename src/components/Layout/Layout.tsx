@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         transition: theme.transitions.create(["margin"]),
         minWidth: 0,
+        position: "relative",
         marginLeft: -sideBarWidth,
         backgroundColor: theme.palette.background.default,
         [theme.breakpoints.up("lg")]: {
