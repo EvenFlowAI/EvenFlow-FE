@@ -29,6 +29,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         width: `calc(100% - ${sideBarWidth}px)`,
         color: "#858585",
+        alignItems: "center",
         backgroundColor: theme.palette.background.paper,
         marginLeft: sideBarWidth,
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
