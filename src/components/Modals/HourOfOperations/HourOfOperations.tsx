@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {Button, Grid, Switch} from "@material-ui/core";
+import {Button, Grid, Switch, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment";
 import {makeStyles} from "@material-ui/core/styles";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
@@ -34,12 +34,14 @@ const HOOForm: React.FC<{
     onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void;
     onCheck: (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }> = props => {
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const classes = useStyles();
     return <>{moment.weekdays().map((day, idx) => {
         const data: THOOForm = props.form.filter(f => f.dayOfWeek === idx)[0] || {...blankRow, dayOfWeek: idx};
         return <Grid container spacing={1} alignItems="flex-end" key={day} className={classes.row}>
             <Grid item xs={2} className={classes.switchRow}><Switch onChange={props.onCheck(idx)} checked={data.checked} color="primary"/></Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4} sm={3}>
                 <TimePicker
                     disabled={!data.checked}
                     placeholder={!data.checked ? "Closed" : ""}
@@ -53,7 +55,7 @@ const HOOForm: React.FC<{
             <Grid item xs={1}>
                 <span className={classes.toWrapper}>to</span>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4} sm={3}>
                 <TimePicker
                     fullWidth
                     value={data.to}
@@ -62,7 +64,7 @@ const HOOForm: React.FC<{
                     id={`to-${day}`}
                 />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item hidden={isXS} xs={4} sm={3}>
                 {!idx ? <Button onClick={props.onApply}>
                     Apply to all
                 </Button> : null}
