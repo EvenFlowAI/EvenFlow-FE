@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../UI";
 import {
-    Button as DefaultButton, CircularProgress,
+    Button as DefaultButton, CircularProgress, styled,
     Switch,
     TableBody,
     TableCell,
     TableCellProps,
     TableHead,
-    TableRow, withStyles
+    TableRow, useMediaQuery, useTheme, withStyles
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {loadValueSettings, setValueSettings} from "../../../../store/reducers/valueSettings/actions";
@@ -16,15 +16,25 @@ import {Indicators, IValueSettings} from "../../../../store/reducers/valueSettin
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {RootState} from "../../../../store/rootReducer";
 
-const Button = withStyles({
+const Button = withStyles(theme => ({
     root: {
         fontSize: 14,
         textTransform: "none",
         minWidth: 0,
         padding: "4px 2px",
-        marginLeft: 8
+        marginLeft: 8,
+        [theme.breakpoints.down("xs")]: {
+            marginLeft: 0
+        }
     }
-})(DefaultButton);
+}))(DefaultButton);
+
+
+const SliderCell = styled(TableCell)(({theme}) => ({
+    [theme.breakpoints.down("xs")]: {
+        padding: `${theme.spacing(1)}px ${theme.spacing(2)}px !important`
+    }
+}))
 
 
 enum SliderRange {
@@ -74,6 +84,7 @@ const columns: TColumn[] = [
 ]
 type TRowProps = {
     rowData: TRow;
+    isXS?: boolean;
     value: IValueSettings;
     loading: boolean;
     isNotSet: boolean;
@@ -89,7 +100,7 @@ type TRowProps = {
 const Row: React.FC<TRowProps> = props => {
     return <TableRow>
         <TableCell>{props.rowData.title}</TableCell>
-        <TableCell>
+        <SliderCell>
             <ValueSlider
                 min={SliderRange.Min}
                 max={SliderRange.Max}
@@ -102,8 +113,8 @@ const Row: React.FC<TRowProps> = props => {
                 valueLabelDisplay="on"
                 value={props.value.point}
             />
-        </TableCell>
-        <TableCell>
+        </SliderCell>
+        <TableCell align="center">
             <Switch
                 color="primary"
                 disabled={props.isNotSet}
@@ -111,7 +122,7 @@ const Row: React.FC<TRowProps> = props => {
                 checked={Boolean(props.value.state)}
             />
         </TableCell>
-        <TableCell align="right">
+        <TableCell align={props.isXS ? "center" : "right"}>
             {props.isNotSet
                 ? <Button color="primary" onClick={props.onTabChange}>
                     Adjust the value
@@ -155,6 +166,8 @@ export const ValueIndicators = ({onTabChange}: TProps) => {
     const showMessage = useMessage();
     const [loading, setLoading] = useState<boolean>(false);
     const [editItem, setEditItem] = useState<IValueSettings|null>(null);
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const data: TData = useMemo(() => {
         if (!valuesData.length) {
@@ -231,6 +244,7 @@ export const ValueIndicators = ({onTabChange}: TProps) => {
                         value={editItem && editItem.type === row.id ? editItem : data[row.id]}
                         rowData={row}
                         loading={loading}
+                        isXS={isXS}
                         isNotSet={!configuredValues.includes(Number(row.id))}
                         onTabChange={handleTabChange(row.tab)}
                         key={row.id}
