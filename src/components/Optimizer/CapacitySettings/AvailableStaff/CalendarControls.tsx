@@ -5,8 +5,11 @@ import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import moment, {Moment} from "moment";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     controls: {
+        [theme.breakpoints.down("xs")]: {
+            textAlign: "center"
+        }
     },
     controlButton: {
         borderRadius: 0,
@@ -17,7 +20,7 @@ const useStyles = makeStyles({
     controlDay: {
         padding: "5px 20px !important"
     }
-})
+}))
 type TProps = {
     date: Moment,
     onChange: (date: Moment) => void

@@ -11,11 +11,14 @@ import {Routes} from "../../../config/routes";
 import {TTitle} from "../../Content/ContentTitle/ContentTitle";
 import {makeStyles} from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     panel: {
-        width: "100%"
+        width: "100%",
+        [theme.breakpoints.down("xs")]: {
+            padding: `${theme.spacing(3)}px 0`
+        }
     }
-})
+}))
 
 const parent: TTitle = {
     to: Routes.Optimizer.Base,
@@ -31,6 +34,8 @@ export const CapacitySettings = () => {
         <TitleContainer title="Capacity Settings" pad parent={parent} />
         <TabList
             onChange={handleTabChange}
+            variant="scrollable"
+            scrollButtons="auto"
             indicatorColor="primary"
         >
             <Tab label="Available Staff" value="0" />

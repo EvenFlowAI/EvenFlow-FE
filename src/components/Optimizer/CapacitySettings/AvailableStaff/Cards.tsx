@@ -13,6 +13,9 @@ const useStyles = makeStyles(theme => ({
     wrapper: {
         display: "flex",
         margin: "0 -5px 12px",
+        [theme.breakpoints.down("xs")]: {
+            flexDirection: "column"
+        }
     },
     card: {
         margin: 5,
@@ -21,9 +24,11 @@ const useStyles = makeStyles(theme => ({
         position: "relative",
     },
     hElement: {
-        content: "",
         display: "block",
-        paddingBottom: "100%"
+        paddingBottom: "100%",
+        [theme.breakpoints.down("xs")]: {
+            display: "none"
+        }
     },
     cardContent: {
         position: "absolute",
@@ -32,7 +37,17 @@ const useStyles = makeStyles(theme => ({
         bottom: 0,
         right: 0,
         display: "flex",
-        flexFlow: "column"
+        flexFlow: "column",
+        [theme.breakpoints.down("xs")]: {
+            position: "static",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            "&>*": {
+                flexGrow: "initial !important",
+                padding: theme.spacing(1)
+            }
+        }
     },
     cardIcon: {
         display: "flex",

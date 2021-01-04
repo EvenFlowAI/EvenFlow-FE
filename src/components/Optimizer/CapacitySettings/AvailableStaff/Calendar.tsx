@@ -16,7 +16,11 @@ const useStyles = makeStyles(theme => ({
         left: 0,
         right: 0,
         margin: 0,
-        fontSize: 16
+        fontSize: 16,
+        [theme.breakpoints.down("xs")]: {
+            position: "static",
+            marginBottom: theme.spacing(1)
+        }
     },
     paper: {
         borderRadius: 0,
@@ -65,6 +69,7 @@ const useStyles = makeStyles(theme => ({
     },
     calendarWrapper: {
         marginTop: 11,
+        overflowX: "auto",
         gridGap: 1,
         background: theme.palette.divider,
         border: `1px solid ${theme.palette.divider}`,
