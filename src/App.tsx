@@ -33,8 +33,8 @@ const App = () => {
                 height: "100vh", maxHeight: "-webkit-fill-available"}}>
                 <ConfirmDialog/>
                 <Switch>
-                    <Route path={Routes.Login.Base} component={Login}/>
-                    <Route path={Routes.Account.Verification} component={Login} />
+                    <Route path={Routes.Login.Base} component={Login} />
+                    <Route path={Routes.Account.Base} component={Login} />
                     <Route path={Routes.EndUser.Appointment} component={AppointmentLayout} />
                     <Route path={Routes.EndUser.Confirmation} component={AppointmentConfirmation} />
                     <Route path={Routes.EndUser.Base} component={EndUserLayout} />

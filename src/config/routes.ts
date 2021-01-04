@@ -10,11 +10,11 @@ enum AdminRoutes {
 enum AdminLogin {
     Base = "/admin-login",
     ForgotPassword = "/admin-login/forgot-password",
-    ResetPassword = "/admin-login/reset-password"
 }
 enum AccountRoutes {
     Base = "/account",
-    Verification = "/account/email-verification"
+    Verification = "/account/email-verification",
+    ResetPassword = "/account/reset-password"
 }
 
 enum OfferManagementRoutes {

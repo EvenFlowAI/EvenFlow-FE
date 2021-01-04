@@ -39,3 +39,8 @@ export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointme
 export interface ICreateAppointmentResp { id: number; hashKey: string; }
 export interface IPasswordRecoveryData { email: string; }
 export interface IPasswordRecoveryResp { }
+export interface ISetNewPasswordData {
+    userId: string;
+    token: string;
+    newPassword: string;
+}

@@ -19,7 +19,7 @@ export const Login = () => {
                         <Switch>
                             <Route path={Routes.Login.Base} exact component={CustomerLogin}/>
                             <Route path={Routes.Login.ForgotPassword} component={ForgotPassword}/>
-                            <Route path={Routes.Login.ResetPassword} component={ResetPassword}/>
+                            <Route path={Routes.Account.ResetPassword} component={ResetPassword}/>
                             <Route path={Routes.Account.Verification} component={EmailVerification} />
                             <Redirect to="/login"/>
                         </Switch>
