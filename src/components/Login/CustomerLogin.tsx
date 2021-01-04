@@ -10,6 +10,7 @@ import {ICredentials} from "../../types/types";
 import {useSnackbar} from "notistack";
 import {authService} from "../../config/requests";
 import {getAPIException} from "../../utils/utils";
+import {Routes} from "../../config/routes";
 
 export const CustomerLogin = () => {
     const [loading, setLoading] = useState(false);
@@ -74,7 +75,7 @@ export const CustomerLogin = () => {
                 />
             </Grid>
             <Grid item xs={6} style={{textAlign: "right"}}>
-                <Link style={{fontWeight: "bold"}} component={RLink} to="/login/forgot-password">FORGOT PASSWORD?</Link>
+                <Link style={{fontWeight: "bold"}} component={RLink} to={Routes.Login.ForgotPassword}>FORGOT PASSWORD?</Link>
             </Grid>
         </Grid>
 
