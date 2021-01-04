@@ -12,10 +12,10 @@ import {EmailVerification} from "../Verification/EmailVerification";
 export const Login = () => {
     return <ThemeProvider theme={loginTheme}>
         <Grid container alignItems="stretch" style={{height: "100%", background: "#ffffff"}}>
-            <Grid item xs={4}><LoginSideBar/></Grid>
-            <Grid item xs={8} style={{justifyContent: "center"}}>
+            <Grid item xs={12} sm={4}><LoginSideBar/></Grid>
+            <Grid item xs={12} sm={8} style={{justifyContent: "center"}}>
                 <Grid container alignItems="center" justify="center" style={{height: "100%"}}>
-                    <Grid item xs={6}>
+                    <Grid item xs={10} sm={6}>
                         <Switch>
                             <Route path={Routes.Login.Base} exact component={CustomerLogin}/>
                             <Route path={Routes.Login.ForgotPassword} component={ForgotPassword}/>
