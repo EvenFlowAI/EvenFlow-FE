@@ -1,6 +1,16 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../AppointmentValue/UI";
-import {Button, CircularProgress, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    useMediaQuery,
+    useTheme
+} from "@material-ui/core";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
@@ -25,6 +35,22 @@ const initialForm: TForm = {
     [EProximityType.Earliest]: {...blankSlider},
 }
 
+type TRow = {
+    id: EProximityType;
+    label: string;
+};
+
+const rows: TRow[] = [
+    {
+        id: EProximityType.Closest,
+        label: "Closest available"
+    },
+    {
+        id: EProximityType.Earliest,
+        label: "Earliest available"
+    }
+]
+
 export const Proximity = () => {
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
@@ -34,6 +60,8 @@ export const Proximity = () => {
     const [form, setForm] = useState<TForm>(initialForm);
     const showMessage = useMessage();
     const showError = useException();
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const [proximity] = useSelector((state: RootState) => [
         state.slotScoring.proximity
@@ -121,52 +149,37 @@ export const Proximity = () => {
         <AppointmentTable>
             <TableHead>
                 <TableRow>
-                    <TableCell>Proximity Search</TableCell>
+                    {!isXS ? <TableCell>Proximity Search</TableCell> : null}
                     <TableCell align="center">Optimization setting</TableCell>
                     <TableCell />
                 </TableRow>
             </TableHead>
             <TableBody>
-                <TableRow>
-                    <TableCell>Closest available</TableCell>
-                    <TableCell>
-                        <ValueSlider
-                            min={SliderRange.Min}
-                            max={SliderRange.Max}
-                            onChange={handleSlide}
-                            disabled={edit !== EProximityType.Closest}
-                            marks={[
-                                {value: SliderRange.Min, label: SliderRange.Min},
-                                {value: SliderRange.Max, label: SliderRange.Max}
-                            ]}
-                            value={form[EProximityType.Closest].point}
-                            valueLabelDisplay="on"
-                        />
-                    </TableCell>
-                    <TableCell align="right">
-                        {editButton(EProximityType.Closest)}
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell>Earliest available</TableCell>
-                    <TableCell>
-                        <ValueSlider
-                            min={SliderRange.Min}
-                            max={SliderRange.Max}
-                            onChange={handleSlide}
-                            disabled={edit !== EProximityType.Earliest}
-                            marks={[
-                                {value: SliderRange.Min, label: SliderRange.Min},
-                                {value: SliderRange.Max, label: SliderRange.Max}
-                            ]}
-                            value={form[EProximityType.Earliest].point}
-                            valueLabelDisplay="on"
-                        />
-                    </TableCell>
-                    <TableCell align="right">
-                        {editButton(EProximityType.Earliest)}
-                    </TableCell>
-                </TableRow>
+                {rows.map(row =>
+                    <TableRow>
+                        {!isXS ? <TableCell>{row.label}</TableCell> : null}
+                        <TableCell>
+                            {isXS ? <span>{row.label}</span> : null}
+                            <Box p={isXS ? 1 : 0}>
+                                <ValueSlider
+                                    min={SliderRange.Min}
+                                    max={SliderRange.Max}
+                                    onChange={handleSlide}
+                                    disabled={edit !== row.id}
+                                    marks={[
+                                        {value: SliderRange.Min, label: SliderRange.Min},
+                                        {value: SliderRange.Max, label: SliderRange.Max}
+                                    ]}
+                                    value={form[row.id].point}
+                                    valueLabelDisplay="on"
+                                />
+                            </Box>
+                        </TableCell>
+                        <TableCell align="right">
+                            {editButton(row.id)}
+                        </TableCell>
+                    </TableRow>
+                )}
             </TableBody>
         </AppointmentTable>
     </div>
