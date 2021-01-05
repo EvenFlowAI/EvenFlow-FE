@@ -84,7 +84,7 @@ export const UnplannedDemand = () => {
         }
     }
 
-    return <div>
+    return <div style={{overflowX: "auto"}}>
         <DemandTable>
             <TableHead>
                 <TableRow>
