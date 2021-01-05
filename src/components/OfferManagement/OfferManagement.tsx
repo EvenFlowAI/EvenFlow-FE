@@ -16,6 +16,8 @@ export const OfferManagement = () => {
             <TitleContainer title={"Offer Management"} />
             <TabContext value={selectedTab}>
                 <TabList
+                    variant="scrollable"
+                    scrollButtons="auto"
                     style={{marginTop: 10}}
                     onChange={handleTabChange}
                     indicatorColor="primary"

@@ -59,7 +59,11 @@ export const DealershipGroupDetail = () => {
             title={dealership?.name || ""}
             subtitle={concatAddress(dealership?.address)}
             pad />
-        <TabList indicatorColor="primary" onChange={handleChangeTab}>
+        <TabList
+            variant="scrollable"
+            scrollButtons="auto"
+            indicatorColor="primary"
+            onChange={handleChangeTab}>
             {tabs.map((t) => {
                 return <Tab label={t.label} key={t.id} value={t.id} />
             })}

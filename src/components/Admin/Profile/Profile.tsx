@@ -37,7 +37,11 @@ export const Profile = () => {
     const classes = useStyles();
     return <div className={classes.container}>
         <TabContext value={selectedTab}>
-            <TabList indicatorColor="primary" onChange={handleChangeTab}>
+            <TabList
+                variant="scrollable"
+                scrollButtons="auto"
+                indicatorColor="primary"
+                onChange={handleChangeTab}>
                 {tabs.map((t) => {
                     return <Tab label={t.label} key={t.id} value={t.id} />
                 })}

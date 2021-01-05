@@ -19,6 +19,8 @@ export const AppointmentAllocationPage = () => {
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
         >
             <Tab label="Scheduled appointments" value="0" />
             <Tab label="Unplanned Demand" value="1" />

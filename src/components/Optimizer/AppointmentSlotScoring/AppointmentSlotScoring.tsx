@@ -18,6 +18,8 @@ export const AppointmentSlotScoring = () => {
         <TitleContainer title="Appointment Slot Scoring" pad parent={optimizerRoot} />
         <TabList
             onChange={handleTabChange}
+            variant="scrollable"
+            scrollButtons="auto"
             indicatorColor="primary"
         >
             <Tab label="Proximity" value="0" />

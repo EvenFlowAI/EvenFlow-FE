@@ -65,6 +65,8 @@ export const PricingSettingsPage = () => {
             } label={"Pricing optimization"} />
         } />
         <TabList
+            variant="scrollable"
+            scrollButtons="auto"
             onChange={handleTabChange}
             indicatorColor="primary"
         >
