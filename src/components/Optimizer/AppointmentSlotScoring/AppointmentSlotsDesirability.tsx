@@ -1,6 +1,15 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
-import {Button, Checkbox, CircularProgress, FormControlLabel, Grid, Paper} from "@material-ui/core";
+import {
+    Button,
+    Checkbox,
+    CircularProgress,
+    FormControlLabel,
+    Grid,
+    Paper,
+    useMediaQuery,
+    useTheme
+} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {EDesirabilityState, ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "./utils";
@@ -35,20 +44,30 @@ const useStyles = makeStyles(theme => ({
         margin: "0 -16px"
     },
     row: {
-        borderRight: `1px solid ${theme.palette.divider}`
+        borderRight: `1px solid ${theme.palette.divider}`,
+        [theme.breakpoints.down("xs")]: {
+            borderRight: "none"
+        }
     },
     checkRow: {
         display: "flex",
-        justifyContent: "space-around"
+        justifyContent: "space-around",
+        [theme.breakpoints.down("xs")]: {
+            flexDirection: "column"
+        }
     },
     titleRow: {
         textTransform: "uppercase",
         fontWeight: "bold",
         fontSize: 12,
-        color: theme.palette.text.disabled
+        color: theme.palette.text.disabled,
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 11
+        }
     },
     title: {
         fontSize: 16,
+        paddingRight: 32,
         fontWeight: "bold",
         textAlign: "center",
         textTransform: "uppercase",
@@ -87,18 +106,21 @@ const Buttons: React.FC<TButtonProps> = ({onClick, desirability}) => {
     </>
 }
 
-const useStylesBR = makeStyles({
+const useStylesBR = makeStyles(theme => ({
     dataRow: {
         marginTop: 6,
         alignItems: "center"
     },
     time: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 11
+        }
     },
     buttons: {
         textAlign: "right"
     }
-});
+}));
 type TGap = {
     label: string;
     type: ETimeSlotType;
@@ -111,13 +133,13 @@ const gaps: TGap[] = [
 const ButtonRow:React.FC<TRowProps> = ({slot, onClick}) => {
     const classes = useStylesBR();
     return <Grid className={classes.dataRow} container spacing={1}>
-        <Grid item xs={3} className={classes.time}>
+        <Grid item xs={2} sm={3} className={classes.time}>
             {slot.start.format(timeString)}
         </Grid>
-        <Grid item xs={2} className={classes.time}>
+        <Grid item xs={2} sm={2} className={classes.time}>
             {slot.end.format(timeString)}
         </Grid>
-        <Grid item xs={7} className={classes.buttons}>
+        <Grid item xs={8} sm={7} className={classes.buttons}>
             <Buttons onClick={onClick} desirability={slot.desirability} />
         </Grid>
     </Grid>
@@ -127,13 +149,13 @@ const TitleRow = () => {
     const classes = useStyles();
 
     return <Grid container spacing={1}>
-        <Grid className={classes.titleRow} item xs={3}>
+        <Grid className={classes.titleRow} item xs={2} sm={3}>
             Slot starts
         </Grid>
-        <Grid className={classes.titleRow} item xs={2}>
+        <Grid className={classes.titleRow} item xs={2} sm={2}>
             Slot ends
         </Grid>
-        <Grid item xs={7} />
+        <Grid item xs={8} sm={7} />
     </Grid>
 }
 
@@ -154,6 +176,9 @@ export const AppointmentSlotsDesirability = () => {
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
+
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const [desirabilityItems] = useSelector((state: RootState) => [
         state.slotScoring.desirability
@@ -281,14 +306,14 @@ export const AppointmentSlotsDesirability = () => {
             })}
         </div>
         <Grid className={classes.gridContainer} container spacing={4} alignItems="stretch">
-            <Grid className={classes.row} item xs={6}>
+            <Grid className={classes.row} item xs={12} sm={6}>
                 <TitleRow />
                 {slots1.map((slot) =>
                     <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
                 )}
             </Grid>
-            <Grid item xs={6}>
-                <TitleRow />
+            <Grid item xs={12} sm={6} style={{marginTop: isXS ? -theme.spacing(4) : undefined}}>
+                {!isXS ? <TitleRow/> : null}
                 {slots2.map((slot) =>
                     <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
                 )}
