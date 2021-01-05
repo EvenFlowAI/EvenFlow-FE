@@ -5,7 +5,7 @@ import {Avatar} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     wrapper: {
         display: "flex",
         flexFlow: "row no-wrap",
@@ -19,13 +19,19 @@ const useStyles = makeStyles({
         fontSize: 15,
         lineHeight: "20px",
         fontWeight: "normal",
-        margin: 0
+        margin: 0,
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 12
+        }
     },
     subtitle: {
         fontSize: 11,
-        color: "#9FA2B4"
+        color: "#9FA2B4",
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 9
+        }
     }
-});
+}));
 
 type TProps = {
     employee: IEmployee;

@@ -1,7 +1,16 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {calendarDateFormat, findScheduleDates, getDaysOfWeek, getSchedule, getStartEndDates} from "./utils";
 import {ScheduleTable} from "./UI";
-import {CircularProgress, styled, TableBody, TableCell, TableHead, TableRow, Tooltip} from "@material-ui/core";
+import {
+    CircularProgress,
+    styled,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Tooltip,
+    useMediaQuery, useTheme
+} from "@material-ui/core";
 import moment from "moment";
 import {WeekControls} from "./WeekControls";
 import {useModal, useSCs} from "../../../utils/hooks";
@@ -20,10 +29,16 @@ import {EDay} from "../../../store/reducers/demandSegments/types";
 import {noop} from "../../../utils/utils";
 import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
 
-const controlStyles = {
-    display: "flex", flexFlow: "row nowrap", justifyContent: "flex-end",
-    marginBottom: 10
-}
+
+const ControlWrapper = styled("div")(({theme}) => ({
+    display: "flex",
+    flexFlow: "row nowrap",
+    justifyContent: "flex-end",
+    marginBottom: 10,
+    [theme.breakpoints.down("xs")]: {
+        justifyContent: "center"
+    }
+}));
 
 const nonWorkingStyle = {
     background: `repeating-linear-gradient(
@@ -47,7 +62,7 @@ const Holiday = styled("div")(({theme}) => ({
     maxWidth: "100%",
     whiteSpace: "nowrap"
 }));
-const HeadCell = styled(TableCell)({
+const HeadCell = styled(TableCell)(({theme}) => ({
     width: "12%",
     maxWidth: 0,
     overflow: "hidden",
@@ -59,8 +74,11 @@ const HeadCell = styled(TableCell)({
         justifyContent: "flex-end",
         alignItems: "center",
         maxWidth: "100%"
+    },
+    [theme.breakpoints.down("xs")]: {
+        width: "35%"
     }
-});
+}));
 
 export const ScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
@@ -85,17 +103,19 @@ export const ScheduleCalendar = () => {
         state.holidays.weeklyHolidaysList,
     ]);
     const {isOpen, onOpen, onClose} = useModal();
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     // const now = moment();
-    const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate), [selectedDate]);
+    const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS]);
 
     useEffect(() => {
         if (selectedSC) {
-            const [start, end] = getStartEndDates(selectedDate);
+            const [start, end] = getStartEndDates(selectedDate, isXS);
             dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
             dispatch(loadWorkingDays(selectedSC.id));
         }
-    }, [dispatch, selectedSC, selectedDate, filters]);
+    }, [dispatch, selectedSC, selectedDate, filters, isXS]);
 
     useEffect(() => {
         dispatch(loadWeeklyHolidaysList(daysOfWeek[0].toISOString(), daysOfWeek[daysOfWeek.length-1].toISOString()));
@@ -141,12 +161,13 @@ export const ScheduleCalendar = () => {
             <div>
                 {filtersOpened ? <ScheduleFilters /> : <OpenedFilters />}
             </div>
-            <div style={controlStyles}>
+            <ControlWrapper>
                 <WeekControls
+                    isXS={isXS}
                     selectedDate={selectedDate}
                     onChange={handleChange}
                 />
-            </div>
+            </ControlWrapper>
             <ScheduleTable>
                 <TableHead>
                     <TableRow>
@@ -179,7 +200,7 @@ export const ScheduleCalendar = () => {
                                         onClick={workingDays.includes((idx + 1) as EDay) ? handleEdit(employee, date, schedules) : noop}
                                         style={{
                                             cursor: "pointer",
-                                            fontSize: 13,
+                                            fontSize: isXS ? 12 : 13,
                                             ...getCellStyle(!workingDays.includes((idx + 1) as EDay))
                                         }}>
                                         {findScheduleDates(date, schedules)}

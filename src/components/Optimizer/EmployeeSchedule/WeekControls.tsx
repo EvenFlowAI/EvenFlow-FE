@@ -27,17 +27,18 @@ const useStyles = makeStyles({
 });
 
 type TProps = {
+    isXS: boolean;
     selectedDate: moment.Moment;
     onChange: (date: moment.Moment) => void;
 }
-export const WeekControls: React.FC<TProps> = ({selectedDate, onChange}) => {
+export const WeekControls: React.FC<TProps> = ({selectedDate, isXS, onChange}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const classes = useStyles();
     const handleLeft = () => {
-        onChange(moment(selectedDate).subtract(7, "days"));
+        onChange(moment(selectedDate).subtract(!isXS ? 7 : 1, "days"));
     }
     const handleRight = () => {
-        onChange(moment(selectedDate).add(7, "days"));
+        onChange(moment(selectedDate).add(!isXS ? 7 : 1, "days"));
     }
     const handleOpen = (s: boolean) => () => {
         setIsOpen(s);
@@ -52,7 +53,7 @@ export const WeekControls: React.FC<TProps> = ({selectedDate, onChange}) => {
                 <ChevronLeft />
             </Button>
             <Button onClick={handleOpen(true)} variant="outlined" className={classes.dateButton}>
-                {getFirstLastDaysOfWeek(selectedDate)}
+                {getFirstLastDaysOfWeek(selectedDate, isXS)}
             </Button>
             <Button onClick={handleRight} variant="outlined" className={classes.arrowButton}>
                 <ChevronRight />

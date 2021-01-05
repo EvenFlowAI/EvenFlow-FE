@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
-import {Button, Grid, MenuItem, Select} from "@material-ui/core";
+import {Button, Grid, MenuItem, Select, useMediaQuery, useTheme} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useModal} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
@@ -35,6 +35,9 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate
     const showError = useException();
     const dispatch = useDispatch();
 
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
     useEffect(() => {
         if (props.open) {
             if (payload) {
@@ -52,7 +55,6 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate
         setForm({...form, [name]: moment(date)});
     }
     const handleSelectPod = (e: React.ChangeEvent<{value: unknown, name?: string}>) => {
-        console.log(e.target.value);
         setForm({...form, podId: e.target.value ? Number(e.target.value) : undefined});
     }
 
@@ -68,7 +70,7 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate
                 serviceCenterId: employee.serviceCenterId,
                 podId: form.podId
             }
-            await dispatch(setEmployeesSchedule(data));
+            await dispatch(setEmployeesSchedule(data, isXS));
             setSaving(false);
             showMessage("Saved");
             props.onClose();

@@ -3,7 +3,10 @@ import moment from "moment";
 import {ISchedule} from "../../../store/reducers/schedules/types";
 import {timeSpanString, timeString} from "../../../config/constants";
 
-export const getDaysOfWeek = (date: moment.Moment): moment.Moment[] => {
+export const getDaysOfWeek = (date: moment.Moment, isXS: boolean): moment.Moment[] => {
+    if (isXS) {
+        return [moment.utc(date).startOf("day")];
+    }
     const days = [];
     const weekStart = moment.utc(date).startOf("week");
     for (let i=1; i<7; i++) {
@@ -11,7 +14,10 @@ export const getDaysOfWeek = (date: moment.Moment): moment.Moment[] => {
     }
     return days;
 }
-export const getFirstLastDaysOfWeek = (date: moment.Moment): string => {
+export const getFirstLastDaysOfWeek = (date: moment.Moment, isSingle: boolean): string => {
+    if (isSingle) {
+        return date.format("ddd, MMM D YYYY");
+    }
     const weekStart = moment(date).startOf("week");
     const weekEnd = moment(date).endOf("week");
     return `${weekStart.format("MMM D")} - ${weekEnd.format("MMM D")}`;
@@ -34,7 +40,13 @@ export const findScheduleDates = (date: moment.Moment, schedules: ISchedule[]): 
 }
 
 export const calendarDateFormat = "ddd, MMM D";
-export const getStartEndDates = (date: moment.Moment): [string, string] => {
+export const getStartEndDates = (date: moment.Moment, isXS: boolean): [string, string] => {
+    if (isXS) {
+        return [
+            moment(date).startOf("day").toISOString(),
+            moment(date).endOf("day").toISOString()
+        ]
+    }
     return [
         moment(date).startOf("week").toISOString(),
         moment(date).endOf("week").toISOString(),

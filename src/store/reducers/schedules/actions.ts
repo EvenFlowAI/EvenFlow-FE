@@ -22,11 +22,11 @@ export const loadEmployeesSchedule = (start: string, end: string, serviceCenterI
         dispatch(loadingEmployeesSchedule(false));
     }
 }
-export const setEmployeesSchedule = (data: IScheduleForm): AppThunk => async dispatch => {
+export const setEmployeesSchedule = (data: IScheduleForm, isXS: boolean): AppThunk => async dispatch => {
     await Api.call(
         data.id ? Api.endpoints.EmployeeSchedule.Update : Api.endpoints.EmployeeSchedule.Create,
         {data, urlParams: {id: data.id}}
     );
-    const [st, nd] = getStartEndDates(moment(data.date));
+    const [st, nd] = getStartEndDates(moment(data.date), isXS);
     dispatch(loadEmployeesSchedule(st, nd, data.serviceCenterId));
 }
