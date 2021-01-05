@@ -188,7 +188,7 @@ export const DemandSegmentsDesirability = () => {
     }
 
     const classes = useStyles();
-    return <Paper variant="outlined" style={{borderRadius: 0}}>
+    return <Paper variant="outlined" style={{borderRadius: 0, overflowX: "auto"}}>
         <AppointmentTable className={classes.table}>
             <TableHead>
                 <TableRow>
@@ -197,7 +197,7 @@ export const DemandSegmentsDesirability = () => {
                         <Button className={classes.edit} onClick={handleOpen} color="primary">Edit</Button>
                     </TableCell>
                     <TableCell width={183} rowSpan={2}>Time Windows</TableCell>
-                    <TableCell width={550} colSpan={2} className={classes.buttonCell}>
+                    <TableCell width={550} colSpan={2} style={{minWidth: 400}} className={classes.buttonCell}>
                         Optimization Settings
                         {edit
                             ? saving ?
