@@ -1,6 +1,6 @@
 import React from 'react';
 import {PaperTitle, TableContainer} from "../UI";
-import {Box, Divider, Grid} from "@material-ui/core";
+import {Box, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {Caption} from "../../../UI/Caption";
 import {TextLink} from "../../../UI/TextLink";
 import {Routes} from "../../../../config/routes";
@@ -20,6 +20,11 @@ const useStyles = makeStyles(theme =>({
         [theme.breakpoints.down("lg")]: {
             fontSize: 11
         }
+    },
+    rowWrapper: {
+        [theme.breakpoints.down("xs")]: {
+            marginBottom: theme.spacing(2)
+        }
     }
 }));
 
@@ -27,23 +32,26 @@ export const ToD = () => {
     const handleSwitch = (t: string) => (s: string) => () => {
 
     }
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
     const classes = useStyles();
     return <SquarePaper variant="outlined">
         <PaperTitle>Time of day (pricing rules)</PaperTitle>
         <Divider/>
         <TableContainer>
-            <Grid container alignItems="center" justify="space-between">
-                <div>
+            <Grid container alignItems={isXS ? "flex-start" : "center"} justify={isXS ? "flex-start" : "space-between"} direction={isXS ? "column" : "row"}>
+                <div className={classes.rowWrapper}>
                     <SwitchButtons onClick={handleSwitch("1")} active={"2"} buttons={buttons} />
                     <span className={classes.message}>= Low (Discount)</span>
                 </div>
-                <Divider orientation="vertical" flexItem />
-                <div>
+                <Divider orientation="vertical" flexItem hidden={isXS} />
+                <div className={classes.rowWrapper}>
                     <SwitchButtons onClick={handleSwitch("1")} active={"1"} buttons={buttons} />
                     <span className={classes.message}>= Average (Base)</span>
                 </div>
-                <Divider orientation="vertical" flexItem />
-                <div>
+                <Divider orientation="vertical" flexItem hidden={isXS} />
+                <div className={classes.rowWrapper}>
                     <SwitchButtons onClick={handleSwitch("1")} active={"0"} buttons={buttons} />
                     <span className={classes.message}>= High (Premium)</span>
                 </div>
