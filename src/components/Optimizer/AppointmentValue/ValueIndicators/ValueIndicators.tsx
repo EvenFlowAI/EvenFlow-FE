@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AppointmentTable, ValueSlider} from "../UI";
 import {
+    Box,
     Button as DefaultButton, CircularProgress, styled,
     Switch,
     TableBody,
@@ -99,8 +100,9 @@ type TRowProps = {
 }
 const Row: React.FC<TRowProps> = props => {
     return <TableRow>
-        <TableCell>{props.rowData.title}</TableCell>
+        {!props.isXS ? <TableCell>{props.rowData.title}</TableCell> : null}
         <SliderCell>
+            {props.isXS ? <Box mb={1}>{props.rowData.title}</Box> : null}
             <ValueSlider
                 min={SliderRange.Min}
                 max={SliderRange.Max}
@@ -233,9 +235,12 @@ export const ValueIndicators = ({onTabChange}: TProps) => {
         <AppointmentTable>
             <TableHead>
                 <TableRow>
-                    {columns.map(col =>
-                        <TableCell style={{width: col.width}} key={col.id}>{col.label}</TableCell>
-                    )}
+                    {columns.map(col => {
+                        if (isXS && !col.id) {
+                            return null;
+                        }
+                        return <TableCell style={{width: col.width}} key={col.id}>{col.label}</TableCell>;
+                    })}
                 </TableRow>
             </TableHead>
             <TableBody>
