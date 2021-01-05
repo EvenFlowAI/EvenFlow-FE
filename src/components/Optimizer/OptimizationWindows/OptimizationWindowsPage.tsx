@@ -96,7 +96,7 @@ export const OptimizationWindowsPage = () => {
         <Grid container spacing={3}>
             {optimizationWindowsList.map(k => {
                 const plate = optContent[k];
-                    return <Grid item xs={4} key={plate.title}>
+                    return <Grid item xs={12} sm={6} md={4} key={plate.title}>
                         <OptimizationPlate
                             onEdit={k === EOptimizationWindowType.DemandSegments
                                 ? onDemandOpen
