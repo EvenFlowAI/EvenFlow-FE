@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Divider, Grid} from "@material-ui/core";
+import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {AvatarUpload} from "../../UI/AvatarUpload";
 import {TextField} from "../../UI/TextField";
 import {LoadingButton} from "../../UI/Button";
@@ -9,7 +9,7 @@ import {useDispatch} from "react-redux";
 import {saveEmployeeAvatar, updateUser} from "../../../store/reducers/users/actions";
 import {Api} from "../../../config/requests";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     container: {
         "& input": {
             backgroundColor: "#fff"
@@ -17,7 +17,11 @@ const useStyles = makeStyles({
     },
     avatarContainer: {
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        [theme.breakpoints.down("sm")]: {
+            justifyContent: "center",
+            marginBottom: theme.spacing(1)
+        }
     },
     divider: {
         margin: "30px 0"
@@ -25,6 +29,10 @@ const useStyles = makeStyles({
     editButtonContainer: {
         textAlign: "right",
         marginTop: 15,
+        [theme.breakpoints.down("sm")]: {
+            textAlign: "center",
+            order: 1
+        }
     },
     title: {
         marginLeft: 10,
@@ -36,7 +44,7 @@ const useStyles = makeStyles({
     centerButton: {
         minWidth: 80
     },
-});
+}));
 type TForm = {
     firstName: string;
     lastName: string;
@@ -67,6 +75,9 @@ export const UserProfile = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
+
+    const theme = useTheme();
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     useEffect(() => {
         if (profile) {
@@ -154,14 +165,14 @@ export const UserProfile = () => {
 
     return <div className={classes.container}>
         <Grid container spacing={2} alignItems="center">
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={12} md={3}>
                 <div className={classes.avatarContainer}>
                     <AvatarUpload onChange={handleChangeAvatar} dataUrl={profile.avatarPath} />
                     <span className={classes.title}>{profile.fullName}</span>
                 </div>
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={2}>
+            <Grid item xs={1} hidden={isSM} />
+            <Grid item xs={12} sm={6} md={2}>
                 <TextField
                     fullWidth
                     label="Role"
@@ -171,7 +182,7 @@ export const UserProfile = () => {
                     value={profile.role}
                 />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={6} md={3}>
                 <TextField
                     fullWidth
                     label="Email"
@@ -181,7 +192,7 @@ export const UserProfile = () => {
                     value={profile.email}
                 />
             </Grid>
-            <Grid item xs={3} className={classes.editButtonContainer}>
+            <Grid item xs={12} sm={12} md={3} className={classes.editButtonContainer}>
                 {!isEdit ? <Button
                     className={classes.centerButton}
                     variant="contained"
@@ -209,7 +220,7 @@ export const UserProfile = () => {
         </Grid>
         <Divider className={classes.divider} />
         <Grid container spacing={2}>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={6} md={4}>
                 <TextField
                     fullWidth
                     label="First name"
@@ -220,8 +231,8 @@ export const UserProfile = () => {
                     onChange={handleChange}
                 />
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={4}>
+            <Grid item xs={1} hidden={isSM} />
+            <Grid item xs={12} sm={6} md={4}>
                 <TextField
                     fullWidth
                     label="Last name"
@@ -232,7 +243,7 @@ export const UserProfile = () => {
                     onChange={handleChange}
                 />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={6} md={4}>
                 <TextField
                     fullWidth
                     label="Phone number"
@@ -243,11 +254,10 @@ export const UserProfile = () => {
                     onChange={handleChange}
                 />
             </Grid>
-            <Grid item xs={8} />
         </Grid>
         <Divider className={classes.divider} />
         <Grid container spacing={2}>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4}>
                 {!isEditPassword
                     ? <TextField
                         disabled
@@ -269,8 +279,8 @@ export const UserProfile = () => {
                     />
                 }
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={7} className={classes.editButtonContainer}>
+            <Grid item xs={1} hidden={isSM} />
+            <Grid item xs={12} sm={12} md={7} className={classes.editButtonContainer}>
                 {!isEditPassword ? <Button
                     color="primary"
                     className={classes.centerButton}
@@ -295,8 +305,8 @@ export const UserProfile = () => {
                     </LoadingButton>
                 </>}
             </Grid>
-            <Grid item xs={4}>
-                {isEditPassword ? <TextField
+            {isEditPassword ? <Grid item xs={12} sm={6} md={4}>
+                <TextField
                     label="New Password"
                     fullWidth
                     value={passwordForm.newPassword}
@@ -304,11 +314,11 @@ export const UserProfile = () => {
                     id="newPassword"
                     name="newPassword"
                     onChange={handlePasswordChange}
-                /> : null}
-            </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={4}>
-                {isEditPassword ? <TextField
+                />
+            </Grid> : null}
+            <Grid item xs={1} hidden={isSM} />
+            {isEditPassword ? <Grid item xs={12} sm={6} md={4}>
+                <TextField
                     label="Repeat Password"
                     fullWidth
                     value={passwordForm.repeatPassword}
@@ -316,8 +326,8 @@ export const UserProfile = () => {
                     id="repeatPassword"
                     name="repeatPassword"
                     onChange={handlePasswordChange}
-                /> : null}
-            </Grid>
+                />
+            </Grid> : null}
         </Grid>
     </div>
 }
