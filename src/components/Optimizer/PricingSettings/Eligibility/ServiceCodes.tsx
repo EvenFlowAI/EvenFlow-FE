@@ -6,7 +6,7 @@ import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {loadSrList, setEligibleRequest} from "../../../../store/reducers/pricingSettings/actions";
 import {NoItemsLoading} from "../../../UI/NoItemsLoading";
-import {Divider, Switch, TableBody, TableHead} from "@material-ui/core";
+import {Divider, styled, Switch, TableBody, TableHead} from "@material-ui/core";
 import {DemandTable, TableCell, TableRow} from "../../AppointmentAllocation/UI";
 
 const headCellStyles = {
@@ -17,6 +17,17 @@ const headCellStyles = {
 const leftAlign = {
     textAlign: "left" as const
 }
+
+const TableWrapper = styled("div")(({theme}) => ({
+    width: "100%",
+    overflowX: "auto",
+    "& .MuiTableCell-root": {
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "10px !important",
+            padding: "6px !important"
+        }
+    }
+}))
 
 export const ServiceCodes = () => {
     const [saving, setSaving] = useState<boolean>(false);
@@ -56,57 +67,59 @@ export const ServiceCodes = () => {
         <Divider />
         <TableContainer>
             <NoItemsLoading items={srList} loading={loading} />
-            {srList.length ? <DemandTable>
-                <TableHead>
-                    <TableRow>
-                        <TableCell
-                            style={{...headCellStyles, ...leftAlign}}>
-                            Service Ops Code
-                        </TableCell>
-                        <TableCell
-                            width={330}
-                            style={{...headCellStyles, ...leftAlign}}>
-                            Description
-                        </TableCell>
-                        <TableCell style={headCellStyles}>Duration (hours)</TableCell>
-                        <TableCell style={headCellStyles}>Number of technicians</TableCell>
-                        <TableCell style={headCellStyles}>Skill level of technicians</TableCell>
-                        <TableCell style={headCellStyles}>Pricing optimization status (Off/ON)</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {srList.map(el => {
-                        return <TableRow key={el.id}>
-                            <TableCell style={leftAlign}>{el.serviceRequest.code}</TableCell>
-                            <TableCell style={leftAlign}>
-                                {el.serviceRequestOverride?.description
-                                || el.serviceRequest.description}
+            {srList.length ? <TableWrapper>
+                <DemandTable>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell
+                                style={{...headCellStyles, ...leftAlign}}>
+                                Service Ops Code
                             </TableCell>
-                            <TableCell>
-                                {el.serviceRequestOverride?.durationInHours
-                                || el.serviceRequest.durationInHours}
+                            <TableCell
+                                width={330}
+                                style={{...headCellStyles, ...leftAlign}}>
+                                Description
                             </TableCell>
-                            <TableCell>
-                                {el.serviceRequestOverride?.countOfTechnicians
-                                || el.serviceRequest.countOfTechnicians}
-                            </TableCell>
-                            <TableCell>
-                                {el.serviceRequestOverride?.skillLevelOfTechnicians
-                                || el.serviceRequest.skillLevelOfTechnicians}
-                            </TableCell>
-
-                            <TableCell>
-                                <Switch
-                                    disabled={saving}
-                                    onChange={handleSwitch(el.id)}
-                                    checked={el.isEligibility}
-                                    color="primary"
-                                />
-                            </TableCell>
+                            <TableCell style={headCellStyles}>Duration (hours)</TableCell>
+                            <TableCell style={headCellStyles}>Number of technicians</TableCell>
+                            <TableCell style={headCellStyles}>Skill level of technicians</TableCell>
+                            <TableCell style={headCellStyles}>Pricing optimization status (Off/ON)</TableCell>
                         </TableRow>
-                    })}
-                </TableBody>
-            </DemandTable> : null}
+                    </TableHead>
+                    <TableBody>
+                        {srList.map(el => {
+                            return <TableRow key={el.id}>
+                                <TableCell style={leftAlign}>{el.serviceRequest.code}</TableCell>
+                                <TableCell style={leftAlign}>
+                                    {el.serviceRequestOverride?.description
+                                    || el.serviceRequest.description}
+                                </TableCell>
+                                <TableCell>
+                                    {el.serviceRequestOverride?.durationInHours
+                                    || el.serviceRequest.durationInHours}
+                                </TableCell>
+                                <TableCell>
+                                    {el.serviceRequestOverride?.countOfTechnicians
+                                    || el.serviceRequest.countOfTechnicians}
+                                </TableCell>
+                                <TableCell>
+                                    {el.serviceRequestOverride?.skillLevelOfTechnicians
+                                    || el.serviceRequest.skillLevelOfTechnicians}
+                                </TableCell>
+
+                                <TableCell>
+                                    <Switch
+                                        disabled={saving}
+                                        onChange={handleSwitch(el.id)}
+                                        checked={el.isEligibility}
+                                        color="primary"
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        })}
+                    </TableBody>
+                </DemandTable>
+            </TableWrapper> : null}
         </TableContainer>
     </SquarePaper>
 };

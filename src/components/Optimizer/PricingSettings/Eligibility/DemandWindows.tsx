@@ -13,12 +13,27 @@ import {Caption} from "../../../UI/Caption";
 import {TextLink} from "../../../UI/TextLink";
 import {Routes} from "../../../../config/routes";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     switchCell: {
         fontSize: "12px !important",
         padding: "2px 12px !important"
+    },
+    tableWrapper: {
+        overflowX: "auto",
+        width: "100%",
+        "& .MuiTableCell-root": {
+            [theme.breakpoints.down("xs")]: {
+                fontSize: "12px !important"
+            }
+        }
+    },
+    headerCell: {
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "12px !important"
+        }
     }
-});
+}));
+
 type TTW = {
     [k in EWindowType]: ITimeWindowEl;
 }
@@ -66,70 +81,72 @@ export const DemandWindows = () => {
         <PaperTitle>Demand windows Eligibility status</PaperTitle>
         <Divider />
         <TableContainer>
-            <DenseTable>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Time Windows</TableCell>
-                        <TableCell align="center">Window 1</TableCell>
-                        <TableCell align="center">Window 2</TableCell>
-                        <TableCell align="center">Window 3</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>Start (hours)</TableCell>
-                        <TableCell align="center">
-                            {mappedTW[EWindowType.Window1]?.startInHours || 0}
-                        </TableCell>
-                        <TableCell align="center">
-                            {mappedTW[EWindowType.Window2]?.startInHours || "-"}
-                        </TableCell>
-                        <TableCell align="center">
-                            {mappedTW[EWindowType.Window3]?.startInHours || "-"}
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Duration (hours)</TableCell>
-                        <TableCell align="center">
-                            {mappedTW[EWindowType.Window1]?.durationInHours || "-"}
-                        </TableCell>
-                        <TableCell align="center">
-                            {mappedTW[EWindowType.Window2]?.durationInHours || "-"}
-                        </TableCell>
-                        <TableCell align="center" />
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Eligibility Status</TableCell>
-                        <TableCell className={classes.switchCell} align="center">
-                            <strong>OFF</strong>
-                            <Switch
-                                disabled={saving}
-                                onChange={handleSwitch(EWindowType.Window1)}
-                                checked={Boolean(mappedTW[EWindowType.Window1]?.isEligibility)}
-                                color="primary" />
-                            <strong>ON</strong>
-                        </TableCell>
-                        <TableCell className={classes.switchCell} align="center">
-                            <strong>OFF</strong>
-                            <Switch
-                                disabled={saving}
-                                onChange={handleSwitch(EWindowType.Window2)}
-                                checked={Boolean(mappedTW[EWindowType.Window2]?.isEligibility)}
-                                color="primary" />
-                            <strong>ON</strong>
-                        </TableCell>
-                        <TableCell className={classes.switchCell} align="center">
-                            <strong>OFF</strong>
-                            <Switch
-                                disabled={saving}
-                                onChange={handleSwitch(EWindowType.Window3)}
-                                checked={Boolean(mappedTW[EWindowType.Window3]?.isEligibility)}
-                                color="primary" />
-                            <strong>ON</strong>
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
-            </DenseTable>
+            <div className={classes.tableWrapper}>
+                <DenseTable>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell className={classes.headerCell}>Time Windows</TableCell>
+                            <TableCell className={classes.headerCell} align="center">Window 1</TableCell>
+                            <TableCell className={classes.headerCell} align="center">Window 2</TableCell>
+                            <TableCell className={classes.headerCell} align="center">Window 3</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>Start (hours)</TableCell>
+                            <TableCell align="center">
+                                {mappedTW[EWindowType.Window1]?.startInHours || 0}
+                            </TableCell>
+                            <TableCell align="center">
+                                {mappedTW[EWindowType.Window2]?.startInHours || "-"}
+                            </TableCell>
+                            <TableCell align="center">
+                                {mappedTW[EWindowType.Window3]?.startInHours || "-"}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Duration (hours)</TableCell>
+                            <TableCell align="center">
+                                {mappedTW[EWindowType.Window1]?.durationInHours || "-"}
+                            </TableCell>
+                            <TableCell align="center">
+                                {mappedTW[EWindowType.Window2]?.durationInHours || "-"}
+                            </TableCell>
+                            <TableCell align="center"/>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Eligibility Status</TableCell>
+                            <TableCell className={classes.switchCell} align="center">
+                                <strong>OFF</strong>
+                                <Switch
+                                    disabled={saving}
+                                    onChange={handleSwitch(EWindowType.Window1)}
+                                    checked={Boolean(mappedTW[EWindowType.Window1]?.isEligibility)}
+                                    color="primary"/>
+                                <strong>ON</strong>
+                            </TableCell>
+                            <TableCell className={classes.switchCell} align="center">
+                                <strong>OFF</strong>
+                                <Switch
+                                    disabled={saving}
+                                    onChange={handleSwitch(EWindowType.Window2)}
+                                    checked={Boolean(mappedTW[EWindowType.Window2]?.isEligibility)}
+                                    color="primary"/>
+                                <strong>ON</strong>
+                            </TableCell>
+                            <TableCell className={classes.switchCell} align="center">
+                                <strong>OFF</strong>
+                                <Switch
+                                    disabled={saving}
+                                    onChange={handleSwitch(EWindowType.Window3)}
+                                    checked={Boolean(mappedTW[EWindowType.Window3]?.isEligibility)}
+                                    color="primary"/>
+                                <strong>ON</strong>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </DenseTable>
+            </div>
             <Box mt={2}>
                 <Caption
                     title={<span>
