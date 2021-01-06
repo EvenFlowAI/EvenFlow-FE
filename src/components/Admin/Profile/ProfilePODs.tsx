@@ -6,17 +6,17 @@ import {IPod} from "../../../store/reducers/pods/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadPods, removePod, setPodsPageData} from "../../../store/reducers/pods/actions";
 import {RootState} from "../../../store/rootReducer";
-import {TableRowDataType} from "../../UI/types";
+import {TableRowDataTypeResp} from "../../UI/types";
 import {Table} from "../../UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
 
-const rowData: TableRowDataType<IPod>[] = [
+const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "POD#", val: el => el.name},
-    {header: "Description", val: e => e.description},
+    {header: "Description", val: e => e.description, xsHidden: true},
     {header: "Advisor", val: e => e.advisor?.fullName},
     {header: "Technicians", val: e => e.technicians?.map(t => t.fullName).join(", ") || ""},
     {header: "Bays", val: e => e.bays?.map(b => b.name).join(", ") || ""},
-    {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || ""}
+    {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || "", xsHidden: true}
 ]
 
 export const ProfilePODs:React.FC<{dense?: boolean}> = ({dense}) => {

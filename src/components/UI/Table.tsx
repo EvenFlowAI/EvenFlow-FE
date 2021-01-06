@@ -6,7 +6,7 @@ import {
     TableHead,
     TableRow,
     TableCell,
-    TablePagination
+    TablePagination, useMediaQuery, useTheme
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ITableProps} from "./types";
@@ -67,6 +67,9 @@ const useStyles = makeStyles(theme => ({
 export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITableProps<U>): JSX.Element {
     const classes = useStyles({compact: Boolean(props.compact)});
 
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);
 
@@ -108,7 +111,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                     <TableRow>
                         {props.startActions ? <TableCell className={classes.tableHead} /> : null}
                         {props.rowData.map((rE, idx) => (
-                            <TableCell key={`t_${idx}`} align={rE.align || "left"} className={classes.tableHead}>
+                            isXS && rE.xsHidden ? null : <TableCell key={`t_${idx}`} align={rE.align || "left"} className={classes.tableHead}>
                                 {rE.header}
                             </TableCell>
                         ))}
@@ -126,6 +129,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                     </TableCell>
                                 :null}
                                 {props.rowData.map((cellData, cIdx) => (
+                                    isXS && cellData.xsHidden ? null :
                                     <TableCell
                                         align={cellData.align || "left"}
                                         className={classes.tableCell}
