@@ -13,7 +13,7 @@ const useStyles = makeStyles({
         marginTop: 20
     },
     panel: {
-        // padding: "20px 0"
+        padding: "20px 0"
     }
 });
 

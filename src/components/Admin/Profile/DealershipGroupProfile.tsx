@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Divider, Grid} from "@material-ui/core";
+import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {AvatarUpload} from "../../UI/AvatarUpload";
 import {useDealershipProfile, useException, useMessage} from "../../../utils/hooks";
@@ -12,7 +12,7 @@ import {states} from "../../../config/constants";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     container: {
         "& input": {
             backgroundColor: "#fff"
@@ -21,6 +21,9 @@ const useStyles = makeStyles({
     editButtonContainer: {
         textAlign: "right",
         marginTop: 15,
+        [theme.breakpoints.down("xs")]: {
+            textAlign: "center"
+        }
     },
     title: {
         marginLeft: 10,
@@ -34,12 +37,16 @@ const useStyles = makeStyles({
     },
     avatarContainer: {
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        [theme.breakpoints.down("sm")]: {
+            justifyContent: "center",
+            marginBottom: theme.spacing(1)
+        }
     },
     divider: {
         margin: "30px 0"
     }
-});
+}));
 type TForm = {
     name: string;
     phoneNumber: string;
@@ -56,6 +63,9 @@ export const DealershipGroupProfile = () => {
     const profile = useDealershipProfile();
     const showError = useException();
     const showMessage = useMessage();
+
+    const theme = useTheme();
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     useEffect(() => {
         if (profile) {
@@ -121,13 +131,13 @@ export const DealershipGroupProfile = () => {
     }
     return <div className={classes.container}>
         <Grid container spacing={2} alignItems="center">
-            <Grid item xs={5}>
+            <Grid item xs={12} sm={12} md={5}>
                 <div className={classes.avatarContainer}>
                     <AvatarUpload onChange={handleChangeAvatar} dataUrl={profile.avatarPath} />
                     <span className={classes.title}>{profile.name}</span>
                 </div>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={6} md={4}>
                 <TextField
                     fullWidth
                     label="Dealership Group Name"
@@ -138,7 +148,7 @@ export const DealershipGroupProfile = () => {
                     onChange={handleChange}
                 />
             </Grid>
-            <Grid item xs={3} className={classes.editButtonContainer}>
+            <Grid item xs={12} sm={6} md={3} className={classes.editButtonContainer}>
                 {!nameEdit ? <Button
                     className={classes.centerButton}
                     variant="contained"
@@ -166,7 +176,7 @@ export const DealershipGroupProfile = () => {
         </Grid>
         <Divider className={classes.divider} />
         <Grid container spacing={2}>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={6} md={4}>
                 <TextField
                     fullWidth
                     label="Phone number"
@@ -177,8 +187,8 @@ export const DealershipGroupProfile = () => {
                     onChange={handleChange}
                 />
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={4}>
+            <Grid item xs={1} hidden={isSM} />
+            <Grid item xs={12} sm={6} md={4}>
                 <TextField
                     fullWidth
                     label="City"
@@ -190,7 +200,7 @@ export const DealershipGroupProfile = () => {
                     onChange={handleChangeAddress}
                 />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4}>
                 <TextField
                     fullWidth
                     label="Street"
@@ -202,8 +212,8 @@ export const DealershipGroupProfile = () => {
                     onChange={handleChangeAddress}
                 />
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={2}>
+            <Grid item xs={1} hidden={isSM} />
+            <Grid item xs={6} sm={6} md={2}>
                 <Autocomplete
                     options={states}
                     disabled={!nameEdit}
@@ -214,7 +224,7 @@ export const DealershipGroupProfile = () => {
                     value={form.address.state || null}
                 />
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={6} sm={6} md={2}>
                 <TextField
                     fullWidth
                     label="ZIP Code"
