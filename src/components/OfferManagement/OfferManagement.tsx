@@ -27,8 +27,8 @@ export const OfferManagement = () => {
                 <Tab label="Archive Offers" value={"1"} />
 
                 </TabList>
-                <TabPanel style={{width: "100%"}} value={"0"}><ActiveOffers /></TabPanel>
-                <TabPanel style={{width: "100%"}} value={"1"}><ArchiveOffers /></TabPanel>
+                <TabPanel style={{width: "100%", padding: "16px 0"}} value={"0"}><ActiveOffers /></TabPanel>
+                <TabPanel style={{width: "100%", padding: "16px 0"}} value={"1"}><ArchiveOffers /></TabPanel>
             </TabContext>
         </div>
     );
