@@ -35,7 +35,7 @@ type TTFormProps = {
 };
 export const AdvisorForm: React.FC<TAFormProps> = props => {
     return <Grid container spacing={3} justify="center">
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <TextField
                 label="First name"
                 id="firstName"
@@ -45,7 +45,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 fullWidth
             />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <TextField
                 label="Last name"
                 id="lastName"
@@ -55,7 +55,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 fullWidth
             />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <TextField
                 label="Email address"
                 id="email"
@@ -65,7 +65,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 fullWidth
             />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <TextField
                 label="Phone number"
                 id="phoneNumber"
@@ -90,7 +90,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
 }
 export const TechnicianForm: React.FC<TTFormProps> = props => {
     return <Grid container spacing={3}>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <TextField
                 id="firstName"
                 value={props.form.firstName}
@@ -99,7 +99,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 fullWidth
                 label="First name" />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <TextField
                 id="lastName"
                 fullWidth
@@ -108,7 +108,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 name="lastName"
                 label="Last name" />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <TextField
                 id="email"
                 name="email"
@@ -118,7 +118,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 label="Email"
             />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <TextField
                 id="phoneNumber"
                 name="phoneNumber"
@@ -128,7 +128,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 label="Phone number"
             />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <Autocomplete
                 disabled={props.isEdit}
                 options={props.shortSC}
@@ -140,7 +140,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 renderInput={autocompleteRender({label: "Service center", fullWidth: true})}
             />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
             <ToggleButtons
                 value={props.form.technicianLevel}
                 label="Technician level"
@@ -153,8 +153,8 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 onChange={props.onSwitch}
             />
         </Grid>
-        <Grid item xs={6}>
-            <Grid container spacing={2}>
+        <Grid item xs={12} sm={12} md={6}>
+            <Grid container spacing={3}>
                 <Grid item xs={6}>
                     <TextField
                         id="hourlyRate"
@@ -179,11 +179,11 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 </Grid>
             </Grid>
         </Grid>
-        <Grid item xs={6}>
-            <Autocomplete
-                renderInput={autocompleteRender({label: "Certificate"})}
-                options={[]}
-            />
-        </Grid>
+        {/*<Grid item xs={6}>*/}
+        {/*    <Autocomplete*/}
+        {/*        renderInput={autocompleteRender({label: "Certificate"})}*/}
+        {/*        options={[]}*/}
+        {/*    />*/}
+        {/*</Grid>*/}
     </Grid>
 }
