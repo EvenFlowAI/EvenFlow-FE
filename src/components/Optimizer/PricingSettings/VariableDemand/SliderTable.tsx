@@ -1,6 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {DenseTable} from "../../AppointmentAllocation/UI";
-import {Box, Mark, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
+import {
+    Box,
+    Mark,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    useMediaQuery,
+    useTheme,
+    withStyles
+} from "@material-ui/core";
 import {dayDemands, EDayDemand, EDemandCategory, EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {EditButton} from "../../../UI/Button";
@@ -75,6 +85,9 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
     const showError = useException();
     const dispatch = useDispatch();
 
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
     useEffect(() => {
         setForm({
             ...{
@@ -137,16 +150,17 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
         <DenseTable>
             <TableHead>
                 <TableRow>
-                    <TableCell>Value</TableCell>
-                    <TableCell width="50%">Pricing Settings</TableCell>
+                    {!isXS ? <TableCell>Value</TableCell> : null}
+                    <TableCell width={!isXS ? "50%" : "80%"}>Pricing Settings</TableCell>
                     <TableCell width="20%" />
                 </TableRow>
             </TableHead>
             <TableBody>
                 {dayDemands.map(d => {
                     return <TableRow key={d.id}>
-                        <TableCell>{d.label}</TableCell>
+                        {!isXS ? <TableCell>{d.label}</TableCell> : null}
                         <TableCell>
+                            {isXS ? <Box mt={2}>{d.label}</Box> : null}
                             <Box ml={2} mr={2}>
                                 {sliderRange[d.id].Inverted ?
                                     <InvertedSlider
