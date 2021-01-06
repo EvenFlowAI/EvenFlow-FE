@@ -142,7 +142,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         </DialogTitle>
         <DialogContent>
             <Grid container spacing={3}>
-                <Grid item xs={4}>
+                <Grid item xs={12} sm={6} md={4}>
                     <TextField
                         id="name"
                         name="name"
@@ -153,7 +153,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         value={form.name}
                     />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} sm={6} md={4}>
                     <TextField
                         id="description"
                         name="description"
@@ -164,7 +164,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         value={form.description}
                     />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} sm={12} md={4}>
                     <Autocomplete
                         options={advisorsList}
                         onChange={handleSelectAdv}
@@ -190,7 +190,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         }
                     )}
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
                         options={techniciansList}
                         multiple
@@ -209,7 +209,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         renderInput={autocompleteRender({label: "Technicians", fullWidth: true})}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
                         options={serviceRequests}
                         multiple
