@@ -15,7 +15,8 @@ const useStyles = makeStyles({
         padding: 20,
         position: "relative",
         minHeight: 200,
-        height: "100%"
+        height: "100%",
+        overflow: "hidden"
     },
     title: {
         margin: 0,

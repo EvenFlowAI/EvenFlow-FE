@@ -11,14 +11,20 @@ const titleSt = {
 const useStyles = makeStyles((theme: Theme) => ({
     title: {
         ...titleSt,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        [theme.breakpoints.down("xs")]: {
+            textAlign: "center"
+        }
     },
     subtitle: {
 
     },
     titleContainer: {
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        [theme.breakpoints.down("xs")]: {
+            marginBottom: theme.spacing(2)
+        }
     },
     rootTitle: {
         ...titleSt,
@@ -30,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
                 textDecoration: "underline"
             }
         },
+        [theme.breakpoints.down("xs")]: {
+            display: "block"
+        }
     }
 }));
 export type TTitle = {

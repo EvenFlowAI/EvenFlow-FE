@@ -4,7 +4,7 @@ import {loadPricingCalculations} from "../../../store/reducers/pricingSettings/a
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {useDispatch, useSelector} from "react-redux";
 import {PaperTitle, TableContainer} from "./UI";
-import {Box, Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Divider, styled, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {DenseTable} from "../AppointmentAllocation/UI";
 import moment from "moment";
 import {mappedCalculationsSelector} from "../../../store/reducers/pricingSettings/selectors";
@@ -16,6 +16,16 @@ import {KeyboardArrowDown} from "@material-ui/icons";
 import {useException, useSCs} from "../../../utils/hooks";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
+
+const TableWrapper = styled("div")(({theme}) => ({
+    width: "100%",
+    overflowX: "auto",
+    "& .MuiTableCell-root": {
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "10px !important"
+        }
+    }
+}))
 
 export const PricingOptimization = () => {
     const [sr, setSr] = useState<IAssignedServiceRequestShort|null>(null);
@@ -72,38 +82,40 @@ export const PricingOptimization = () => {
             <PaperTitle noPadding>time of a day</PaperTitle>
         </Box>
         <TableContainer>
-            <DenseTable>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Day</TableCell>
-                        <TableCell width={"20%"} align="center">Low</TableCell>
-                        <TableCell width={"20%"} align="center">Average</TableCell>
-                        <TableCell width={"20%"} align="center">High</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {moment.weekdays().map((wd, idx) => {
-                        return <TableRow key={wd}>
-                            <TableCell>{wd}</TableCell>
-                            <TableCell align="center">
-                                {data[idx as EDay]?.lowPrice
-                                    ? data[idx as EDay].lowPrice + "$"
-                                    : "-"}
-                            </TableCell>
-                            <TableCell align="center">
-                                {data[idx as EDay]?.averagePrice
-                                    ? data[idx as EDay].averagePrice + "$"
-                                    : "-"}
-                            </TableCell>
-                            <TableCell align="center">
-                                {data[idx as EDay]?.highPrice
-                                    ? data[idx as EDay].highPrice + "$"
-                                    : "-"}
-                            </TableCell>
+            <TableWrapper>
+                <DenseTable>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Day</TableCell>
+                            <TableCell width={"20%"} align="center">Low</TableCell>
+                            <TableCell width={"20%"} align="center">Average</TableCell>
+                            <TableCell width={"20%"} align="center">High</TableCell>
                         </TableRow>
-                    })}
-                </TableBody>
-            </DenseTable>
+                    </TableHead>
+                    <TableBody>
+                        {moment.weekdays().map((wd, idx) => {
+                            return <TableRow key={wd}>
+                                <TableCell>{wd}</TableCell>
+                                <TableCell align="center">
+                                    {data[idx as EDay]?.lowPrice
+                                        ? data[idx as EDay].lowPrice + "$"
+                                        : "-"}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {data[idx as EDay]?.averagePrice
+                                        ? data[idx as EDay].averagePrice + "$"
+                                        : "-"}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {data[idx as EDay]?.highPrice
+                                        ? data[idx as EDay].highPrice + "$"
+                                        : "-"}
+                                </TableCell>
+                            </TableRow>
+                        })}
+                    </TableBody>
+                </DenseTable>
+            </TableWrapper>
         </TableContainer>
     </SquarePaper>
 };
