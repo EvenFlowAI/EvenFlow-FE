@@ -119,6 +119,11 @@ export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     date: moment.Moment;
 }
 
+export interface IAppointmentFilters {
+    offersOnly: boolean;
+    waitTimeOnly: boolean;
+}
+
 export type TAppointmentState = {
     scProfile?: IServiceCenterProfile;
     serviceRequests: ISR[];
@@ -134,6 +139,7 @@ export type TAppointmentState = {
     comment: string;
     appointment: IRemappedAppointmentSlot|null;
     appointmentSlots: IRemappedAppointmentSlot[];
+    appointmentFilters: IAppointmentFilters;
 };
 export enum EReminderType {
     Email, Phone, Sms

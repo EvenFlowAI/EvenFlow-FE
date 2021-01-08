@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from "moment";
-import {Box, styled} from "@material-ui/core";
+import {Box, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {MonthSelector} from "./AppointmentSelections/MonthSelector";
 
 
@@ -18,10 +18,16 @@ const Title = styled("h5")({
     margin: 0
 });
 
-export function DateSelector(props: { date: moment.Moment, onChange: (nDate: moment.Moment) => void }) {
-    return <Box mt={2}>
+type TProps = {
+    date: moment.Moment;
+    onChange: (nDate: moment.Moment) => void
+}
+export function DateSelector(props: TProps) {
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    return <Box>
         <DateSelectorContainer>
-            <Box mr={2}><Title>Select date</Title></Box>
+            {!isXS ? <Box mr={2}><Title>Select date</Title></Box> : null}
             <MonthSelector date={props.date} onChange={props.onChange}/>
         </DateSelectorContainer>
     </Box>;

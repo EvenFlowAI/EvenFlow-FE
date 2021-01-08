@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {
     APPOINTMENT_STATE_KEY, APPOINTMENT_STATE_SAVED_KEY,
     EAppointmentTimingType,
-    ETransportation,
+    ETransportation, IAppointmentFilters,
     IAppointmentResponse,
     IAppointmentSlot,
     IAppointmentSlotsRequest,
@@ -101,3 +101,4 @@ export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
     }
 }
 export const setAppointmentId = createAction<ICreateAppointmentResp|null>("Appointments/SetAppointmentId");
+export const setAppointmentFilters = createAction<Partial<IAppointmentFilters>>("Appointment/SetFilters");

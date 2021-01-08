@@ -21,7 +21,7 @@ import {
     getSRs,
     handleSearch,
     selectAppointment,
-    selectSR, setAppointmentId, setLoadedReducer
+    selectSR, setAppointmentFilters, setAppointmentId, setLoadedReducer
 } from "./actions";
 import moment from "moment";
 
@@ -67,6 +67,10 @@ const initialState: TAppointmentState = {
     comment: "",
     appointment: null,
     appointmentSlots: [],
+    appointmentFilters: {
+        offersOnly: false,
+        waitTimeOnly: false
+    }
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -124,5 +128,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(setAppointmentId, (state, {payload}) => {
         return {...state, appointmentId: payload};
+    })
+    .addCase(setAppointmentFilters, (state, {payload}) => {
+        return {...state, appointmentFilters: {...state.appointmentFilters, ...payload}};
     })
 );

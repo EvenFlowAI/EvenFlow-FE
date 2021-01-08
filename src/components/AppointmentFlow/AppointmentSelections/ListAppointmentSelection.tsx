@@ -7,14 +7,14 @@ import {LoanerCarChip, OfferChip, ShortWaitChip} from "./UI";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TPopoverProps} from "../Steps/types";
 import {FixedSizeList, ListChildComponentProps} from "react-window";
-import {DateSelector} from "../DateSelector";
 import moment from "moment";
 import {AppointmentSelectInfo} from "../AppointmentSelectInfo";
 import AutoSizer from "react-virtualized-auto-sizer";
 import {LoadingWrapper} from "../../UI/NoItemsLoading";
+import {AppointmentFilters} from "../AppointmentFilters";
 
 const ListWrapper = styled("div")({
     height: "100%",
@@ -133,11 +133,11 @@ const ListItem: React.FC<TListItemProps> = memo((props) => {
 type TListProps = {
     date: moment.Moment;
     onDateChange: (date: moment.Moment) => void;
+    isLoading: boolean;
 }
-export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({onPopoverOpen, date, onDateChange, onPopoverClose}) => {
+export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({onPopoverOpen, date, isLoading, onDateChange, onPopoverClose}) => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
     const appointments = useSelector((state: RootState) => state.appointment.appointmentSlots);
-    const selectedAppointmentType = useSelector((state: RootState) => state.appointment.s3Data.appointmentType);
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const dispatch = useDispatch();
@@ -161,7 +161,7 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
     }
 
     return <ListWrapper>
-        {selectedAppointmentType === EAppointmentTimingType.SpecialOffers ? <DateSelector date={date} onChange={onDateChange}/> : null}
+        <AppointmentFilters date={date} onDateChange={onDateChange} />
         <AppointmentHeader elevation={0}>
             {labels.map((label, idx) =>
                 <span key={idx} style={!idx ? justifyStart : undefined}>{label}</span>
@@ -169,7 +169,7 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
         </AppointmentHeader>
         <ListContainer>
             <LoadingWrapper
-                isLoading={false}
+                isLoading={isLoading}
                 itemsExist={Boolean(appointments.length)}
                 noItemsLabel="There is no free slots on selected date"
             >
@@ -187,6 +187,6 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
                 </AutoSizer>
             </LoadingWrapper>
         </ListContainer>
-        <AppointmentSelectInfo/>
+        {!isXS ? <AppointmentSelectInfo/> : null}
     </ListWrapper>
 };

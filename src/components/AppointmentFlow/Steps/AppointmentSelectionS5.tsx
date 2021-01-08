@@ -9,11 +9,11 @@ import {useParams} from "react-router-dom";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
 import {LoadingWrapper} from "../../UI/NoItemsLoading";
-import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {getOfferValue} from "../AppointmentSelections/UI";
 import {AppointmentSelectInfo} from "../AppointmentSelectInfo";
-import {DateSelector} from "../DateSelector";
+import {AppointmentFilters} from "../AppointmentFilters";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -99,11 +99,13 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
         selectedDate,
         selectedServiceRequest,
         appointmentsExist,
-    ] = useSelector(({appointment: {s3Data, selectedSR, appointmentSlots}}: RootState) => [
+        filters
+    ] = useSelector(({appointment: {s3Data, selectedSR, appointmentSlots, appointmentFilters}}: RootState) => [
         s3Data.appointmentType,
         s3Data.date,
         selectedSR,
-        Boolean(appointmentSlots.length)
+        Boolean(appointmentSlots.length),
+        appointmentFilters
     ]);
     const [date, setDate] = useState<moment.Moment>(selectedDate ? moment(selectedDate) : moment());
 
@@ -126,7 +128,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
             }
         }
         loadData().finally();
-    }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequest]);
+    }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequest, filters]);
 
     const handleSetDate = (nDate: moment.Moment) => {
         if (date.month() !== nDate.month()) {
@@ -168,10 +170,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                 </ButtonGroup>
             </Box>
             {selectedView === 'calendar' ? <ScrollableContainer>
-                {selectedAppointmentType === EAppointmentTimingType.SpecialOffers
-                    ? <DateSelector
-                        date={date}
-                        onChange={handleSetDate} /> : null}
+                <AppointmentFilters date={date} onDateChange={handleSetDate} />
                 <Box my={2}>
                     <LoadingWrapper
                         noItemsLabel="There is no free slots on selected date"
@@ -185,6 +184,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
             </ScrollableContainer> :
             <ListAppointmentSelection
                 date={date}
+                isLoading={isLoading}
                 onDateChange={handleSetDate}
                 onPopoverOpen={handleOpenPopover}
                 onPopoverClose={handleClosePopover} />
