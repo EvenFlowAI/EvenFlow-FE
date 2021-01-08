@@ -1,5 +1,5 @@
-import React, {FunctionComponent, memo} from 'react';
-import {Box, Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
+import React, {FunctionComponent, memo, useMemo, useState} from 'react';
+import {Box, Button, MenuItem, Select, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {SquarePaper} from "../../UI/Paper";
 import {timeString} from "../../../config/constants";
 import {DirectionsCar} from "@material-ui/icons";
@@ -15,6 +15,7 @@ import {AppointmentSelectInfo} from "../AppointmentSelectInfo";
 import AutoSizer from "react-virtualized-auto-sizer";
 import {LoadingWrapper} from "../../UI/NoItemsLoading";
 import {AppointmentFilters} from "../AppointmentFilters";
+import {TextField} from "../../UI/TextField";
 
 const ListWrapper = styled("div")({
     height: "100%",
@@ -138,9 +139,29 @@ type TListProps = {
 export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({onPopoverOpen, date, isLoading, onDateChange, onPopoverClose}) => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
     const appointments = useSelector((state: RootState) => state.appointment.appointmentSlots);
+    const [order, setOrder] = useState<number|null>(null);
+
+    const sortedAppointments = useMemo(() => {
+        if (order) {
+            return [...appointments].sort((a, b) => {
+                 const priceA = a.priceWithOffer?.value || a.price.value;
+                 const priceB = b.priceWithOffer?.value || b.price.value;
+                 return (priceB - priceA) * order;
+            });
+        }
+        return appointments;
+    }, [appointments, order]);
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const dispatch = useDispatch();
+
+    const handleOrder = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
+        if (value === "") {
+            setOrder(null);
+        } else {
+            setOrder(value as number);
+        }
+    }
 
     const handleSelectAppointment = (a: IRemappedAppointmentSlot) => () => {
         if (selectedAppointment?.id === a.id) {
@@ -154,7 +175,7 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
         return <ListItem
             key={index}
             style={style}
-            appointment={appointments[index]}
+            appointment={sortedAppointments[index]}
             onClick={handleSelectAppointment}
             selectedAppointment={selectedAppointment}
         />;
@@ -162,6 +183,13 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
 
     return <ListWrapper>
         <AppointmentFilters date={date} onDateChange={onDateChange} />
+        <Box mb={1} width={300}>
+            <Select fullWidth input={<TextField label="Sort the current results by:" />} onChange={handleOrder} value={order || ""}>
+                <MenuItem value={""}>-</MenuItem>
+                <MenuItem value={-1}>Price (low to high)</MenuItem>
+                <MenuItem value={1}>Price (high to low)</MenuItem>
+            </Select>
+        </Box>
         <AppointmentHeader elevation={0}>
             {labels.map((label, idx) =>
                 <span key={idx} style={!idx ? justifyStart : undefined}>{label}</span>
@@ -179,7 +207,7 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
                             height={height}
                             width={width}
                             itemSize={isXS ? 134 : 58}
-                            itemCount={appointments.length}
+                            itemCount={sortedAppointments.length}
                         >
                             {Item}
                         </FixedSizeList>

@@ -22,10 +22,9 @@ export const AppointmentFilters: React.FC<TProps> = ({date, onDateChange}) => {
         dispatch(setAppointmentFilters({[name]: checked}));
     }
     return <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-            {selectedAppointmentType === EAppointmentTimingType.SpecialOffers ?
-            <DateSelector date={date} onChange={onDateChange}/> : null }
-        </Grid>
+        {selectedAppointmentType === EAppointmentTimingType.SpecialOffers ? <Grid item xs={12} sm={6}>
+            <DateSelector date={date} onChange={onDateChange}/>
+        </Grid> : null}
         <Grid item xs={12} sm={6}>
             <FormControlLabel
                 control={<Checkbox
