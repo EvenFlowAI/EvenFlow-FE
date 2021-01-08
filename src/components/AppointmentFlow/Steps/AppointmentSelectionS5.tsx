@@ -1,20 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
-import {Box, Button, ButtonGroup, Divider, Grid, Popover, styled} from "@material-ui/core";
+import {Box, Button, ButtonGroup, Divider, Grid, Popover} from "@material-ui/core";
 import {ListAppointmentSelection} from '../AppointmentSelections/ListAppointmentSelection';
 import {CalendarAppointmentSelection} from "../AppointmentSelections/CalendarAppointmentSelection";
-import {Caption} from "../../UI/Caption";
-import {DirectionsCar} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {changeS3Form, loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
 import {useParams} from "react-router-dom";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
-import {MonthSelector} from "../AppointmentSelections/MonthSelector";
 import {LoadingWrapper} from "../../UI/NoItemsLoading";
 import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {getOfferValue} from "../AppointmentSelections/UI";
+import {AppointmentSelectInfo} from "../AppointmentSelectInfo";
+import {DateSelector} from "../DateSelector";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -22,20 +21,6 @@ const views: TButton[] = [
     {type: "calendar", label: "Calendar View"},
     {type: "list", label: "List View"}
 ];
-
-const DateSelectorContainer = styled("div")(({theme}) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    flexFlow: "row nowrap"
-}));
-
-const Title = styled("h5")({
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    fontSize: 16,
-    margin: 0
-});
 
 const useStyles = makeStyles({
     popover: {
@@ -182,41 +167,28 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                     )}
                 </ButtonGroup>
             </Box>
-            <ScrollableContainer>
-                {selectedAppointmentType === EAppointmentTimingType.SpecialOffers ? <Box mt={2}>
-                    <DateSelectorContainer>
-                        <Box mr={2}><Title>Select date</Title></Box>
-                        <MonthSelector date={date} onChange={handleSetDate}/>
-                    </DateSelectorContainer>
-                </Box> : null}
+            {selectedView === 'calendar' ? <ScrollableContainer>
+                {selectedAppointmentType === EAppointmentTimingType.SpecialOffers
+                    ? <DateSelector
+                        date={date}
+                        onChange={handleSetDate} /> : null}
                 <Box my={2}>
                     <LoadingWrapper
                         noItemsLabel="There is no free slots on selected date"
                         isLoading={isLoading}
                         itemsExist={appointmentsExist}>
-                        {selectedView === "calendar"
-                            ? <CalendarAppointmentSelection onPopoverOpen={handleOpenPopover} onPopoverClose={handleClosePopover} />
-                            : <ListAppointmentSelection onPopoverOpen={handleOpenPopover} onPopoverClose={handleClosePopover} />}
+                        <CalendarAppointmentSelection onPopoverOpen={handleOpenPopover}
+                                                      onPopoverClose={handleClosePopover}/>
                     </LoadingWrapper>
                 </Box>
-                <Divider/>
-                <Box mt={1}>
-                    <Caption
-                        title={<Box ml={.5}>Early drop off with self check in available</Box>}
-                        icon={<DirectionsCar/>}
-                    />
-                </Box>
-                <Box mt={1}>
-                    <Caption title={
-                        <Box ml={.5}>
-                            <strong>
-                                Disclaimer:
-                            </strong>
-                            <span> Special offers for appointment times do not apply for transmission and other power train related services.</span>
-                        </Box>
-                    }/>
-                </Box>
-            </ScrollableContainer>
+                <AppointmentSelectInfo/>
+            </ScrollableContainer> :
+            <ListAppointmentSelection
+                date={date}
+                onDateChange={handleSetDate}
+                onPopoverOpen={handleOpenPopover}
+                onPopoverClose={handleClosePopover} />
+            }
             <NextPrevBlock next={next} prev={prev} isCompleted={isCompleted} />
             <Popover
                 id="selectedAppointment"
