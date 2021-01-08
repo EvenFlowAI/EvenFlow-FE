@@ -26,6 +26,18 @@ const Tip = styled("p")({
     padding: 0
 });
 
+const TipIcon = () => {
+    return <Tooltip title={<Tip>
+        On most passenger cars, you may find the VIN number on the front of the dashboard on the driver's side.
+        The best way to see it is to look through the windshield from outside the car.
+        You may also find the VIN number on the driver's side door pillar.
+    </Tip>}>
+        <IconButton color="primary">
+            <Help />
+        </IconButton>
+    </Tooltip>;
+}
+
 const LabelGrid = withStyles((theme) => ({
     root: {
         textAlign: "right",
@@ -97,10 +109,11 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                             <TextField
                                 id="vin"
                                 name="vin"
+                                placeholder="e.g. 1HGBH41JXMN109186"
                                 InputProps={{
                                     endAdornment: loading ?
                                         <InputLoading/>
-                                        : undefined
+                                        : isXS ? <TipIcon /> : undefined
                                 }}
                                 value={form.vin}
                                 onChange={handleTextChange}
@@ -108,15 +121,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                         </Grid>
                         {!isXS ? <>
                             <Grid item xs={1}>
-                                <Tooltip title={<Tip>
-                                    On most passenger cars, you may find the VIN number on the front of the dashboard on the driver's side.
-                                    The best way to see it is to look through the windshield from outside the car.
-                                    You may also find the VIN number on the driver's side door pillar.
-                                </Tip>}>
-                                    <IconButton color="primary">
-                                        <Help />
-                                    </IconButton>
-                                </Tooltip>
+                                <TipIcon />
                             </Grid>
                             <Grid item xs={2} />
                         </> : null}
