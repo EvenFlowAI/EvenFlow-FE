@@ -25,7 +25,7 @@ import {TEnumMap} from "../../../store/reducers/utils";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     inputContainer: {
         marginTop: 10,
         "&:first-child": {
@@ -37,15 +37,24 @@ const useStyles = makeStyles({
         alignItems: "flex-end",
         justifyContent: "space-between",
         flexFlow: "row nowrap",
+        [theme.breakpoints.down("xs")]: {
+            flexDirection: "column",
+            alignItems: "stretch",
+            marginTop: theme.spacing(4)
+        }
     },
     innerContainer: {
         flexGrow: 1,
         flexBasis: 0
     },
     divider: {
-        padding: 10
+        padding: 10,
+        [theme.breakpoints.down("xs")]: {
+            visibility: "hidden",
+            height: theme.spacing(1)
+        }
     }
-});
+}));
 
 // const filter = createFilterOptions<TServiceTypeWithCustom>();
 
