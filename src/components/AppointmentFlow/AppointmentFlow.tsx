@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             padding: theme.spacing(1)
         }
     },
@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
             fontSize: 16,
             margin: "0 0 22px",
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             margin: 0,
             padding: 32
         }
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
         "& div[class*='MuiStepConnector-root']": {
             display: "none"
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             display: "none"
         }
     },
@@ -214,7 +214,7 @@ export const AppointmentFlow = () => {
     }, [activeStep, dispatch]);
 
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleStep = (idx: number) => () => {
         for (let i = 1; i < idx; i++) {
@@ -241,14 +241,14 @@ export const AppointmentFlow = () => {
 
     const classes = useStyles();
     return <Container className={classes.container}>
-        {isXS ? <ProgressStepper
+        {isSM ? <ProgressStepper
             steps={steps.length}
             activeStep={activeStep}
             label={steps[activeStep-1]?.label || ""}
             nextLabel={steps[activeStep]?.label}
         /> : null}
         <Paper className={classes.paper} variant="outlined">
-            {!isXS ? <Stepper nonLinear className={classes.stepContainer} activeStep={activeStep} orientation="vertical">
+            {!isSM ? <Stepper nonLinear className={classes.stepContainer} activeStep={activeStep} orientation="vertical">
                 {steps.map(step => {
                     return <Step key={step.id} completed={false}>
                         <StepButton
