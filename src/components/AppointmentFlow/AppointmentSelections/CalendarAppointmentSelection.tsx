@@ -38,9 +38,10 @@ const DaysWrapper = styled("div")(({theme}) => ({
 export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverClose, onPopoverOpen}) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isMD = useMediaQuery(theme.breakpoints.down("md"));
     const displayItems = useMemo(() => {
-        return isXS ? 6 : 6;
-    }, [isXS]);
+        return isMD && !isXS ? 4 : 6;
+    }, [isMD, isXS]);
 
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const [selectedIdx, setSelectedIdx] = useState<string|null>(null);
@@ -94,7 +95,8 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
             (sliceIdx + displayItems < Object.values(groupedAppointments).length && direction === "right")
             || (sliceIdx > 0 && direction === "left")
         ) {
-            setSliceIdx(direction === "right" ? sliceIdx + displayItems : sliceIdx - displayItems);
+            const newSliceIdx = direction === "right" ? sliceIdx + displayItems : sliceIdx - displayItems;
+            setSliceIdx(newSliceIdx >= 0 ? newSliceIdx : 0);
         }
     }
 
@@ -104,7 +106,7 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
 
     return <div>
         <DaysWrapper>
-            {groupedAppointments.length ? <IconButton
+            {Object.values(groupedAppointments).length ? <IconButton
                 disabled={sliceIdx <= 0}
                 onClick={handleSlide("left")}>
                 <ChevronLeft/>
@@ -125,7 +127,7 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
                 </Grid>;
             })}
             </Grid>
-            {groupedAppointments.length ? <IconButton
+            {Object.values(groupedAppointments).length ? <IconButton
                 disabled={sliceIdx + displayItems >= Object.values(groupedAppointments).length}
                 onClick={handleSlide("right")}>
                 <ChevronRight/>
