@@ -153,7 +153,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         </DialogTitle>
         <DialogContent>
             {!isEdit ? <Grid container spacing={3}>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                     <Button
                         {...buttonStyle(Roles.Technician)}
                         style={{textTransform: "capitalize"}}
@@ -163,7 +163,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                         Technician
                     </Button>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                     <Button
                         {...buttonStyle(Roles.Advisor)}
                         style={{textTransform: "capitalize"}}
