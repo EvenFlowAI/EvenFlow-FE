@@ -1,5 +1,5 @@
 import React, {FunctionComponent, memo, useMemo, useState} from 'react';
-import {Box, Button, MenuItem, Select, styled, useMediaQuery, useTheme} from "@material-ui/core";
+import {Box, Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {SquarePaper} from "../../UI/Paper";
 import {timeString} from "../../../config/constants";
 import {DirectionsCar} from "@material-ui/icons";
@@ -15,7 +15,6 @@ import {AppointmentSelectInfo} from "../AppointmentSelectInfo";
 import AutoSizer from "react-virtualized-auto-sizer";
 import {LoadingWrapper} from "../../UI/NoItemsLoading";
 import {AppointmentFilters} from "../AppointmentFilters";
-import {TextField} from "../../UI/TextField";
 
 const ListWrapper = styled("div")({
     height: "100%",
@@ -182,14 +181,7 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
     }
 
     return <ListWrapper>
-        <AppointmentFilters date={date} onDateChange={onDateChange} />
-        <Box mb={1} width={300}>
-            <Select fullWidth input={<TextField label="Sort the current results by:" />} onChange={handleOrder} value={order || ""}>
-                <MenuItem value={""}>-</MenuItem>
-                <MenuItem value={-1}>Price (low to high)</MenuItem>
-                <MenuItem value={1}>Price (high to low)</MenuItem>
-            </Select>
-        </Box>
+        <AppointmentFilters date={date} onDateChange={onDateChange} order={order} showOrder onChangeOrder={handleOrder} />
         <AppointmentHeader elevation={0}>
             {labels.map((label, idx) =>
                 <span key={idx} style={!idx ? justifyStart : undefined}>{label}</span>

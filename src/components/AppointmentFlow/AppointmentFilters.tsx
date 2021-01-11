@@ -1,17 +1,37 @@
 import React from 'react';
-import {Checkbox, FormControlLabel, Grid, useMediaQuery, useTheme} from "@material-ui/core";
+import {
+    Checkbox, FormControl,
+    FormControlLabel,
+    Grid,
+    MenuItem,
+    Select,
+    useMediaQuery,
+    useTheme, withStyles,
+} from "@material-ui/core";
 import moment from "moment";
 import {DateSelector} from "./DateSelector";
 import {EAppointmentTimingType, IAppointmentFilters} from "../../store/reducers/appointment/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {setAppointmentFilters} from "../../store/reducers/appointment/actions";
+import {TextField} from "../UI/TextField";
+
+const SelectField = withStyles({
+    root: {
+        border: "none",
+        backgroundColor: "transparent"
+    }
+})(TextField);
+
 
 type TProps = {
     date: moment.Moment;
     onDateChange: (nDate: moment.Moment) => void;
+    order?: number|null;
+    onChangeOrder?: (e: React.ChangeEvent<{value: unknown}>) => void;
+    showOrder?: boolean;
 }
-export const AppointmentFilters: React.FC<TProps> = ({date, onDateChange}) => {
+export const AppointmentFilters: React.FC<TProps> = ({date, onDateChange, order, onChangeOrder, showOrder}) => {
     const [selectedAppointmentType, filters] = useSelector((state: RootState) => [
         state.appointment.s3Data.appointmentType,
         state.appointment.appointmentFilters
@@ -24,10 +44,20 @@ export const AppointmentFilters: React.FC<TProps> = ({date, onDateChange}) => {
     const handleChange = (name: keyof IAppointmentFilters) => (e: any, checked: boolean) => {
         dispatch(setAppointmentFilters({[name]: checked}));
     }
-    return <Grid container spacing={2} alignItems={isSM ? "flex-end" : undefined}>
+    return <Grid container spacing={2} alignItems={isSM ? "flex-end" : "center"}>
         {selectedAppointmentType === EAppointmentTimingType.SpecialOffers ? <Grid item xs={12} sm={6}>
             <DateSelector date={date} onChange={onDateChange}/>
         </Grid> : null}
+        {showOrder ? <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+                <Select displayEmpty labelId="sort-results" fullWidth input={<SelectField />} onChange={onChangeOrder} value={order || ""}>
+                    <MenuItem value={""} disabled>Sort the current results by:</MenuItem>
+                    <MenuItem value={-1}>Price (low to high)</MenuItem>
+                    <MenuItem value={1}>Price (high to low)</MenuItem>
+                </Select>
+            </FormControl>
+
+        </Grid>: null}
         <Grid item xs={12} sm={6} style={{textAlign: isXS ? "center" : undefined}}>
             <FormControlLabel
                 control={<Checkbox
