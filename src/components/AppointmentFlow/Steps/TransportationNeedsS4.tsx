@@ -76,7 +76,7 @@ export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev, isCompl
                                             className={t.id === selectedTransportation ? "selected" : ""}>
                                             {t.id === selectedTransportation
                                                 ? <RadioButtonChecked /> : <RadioButtonUnchecked />}
-                                            <Box flexGrow={1} textAlign="center">{t.label}</Box>
+                                            <Box flexGrow={1} px={1} textAlign="center">{t.label}</Box>
                                         </Option>
                                     )}
                                 </Box>
