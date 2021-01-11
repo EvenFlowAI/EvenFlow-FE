@@ -31,7 +31,11 @@ const useStyles = makeStyles(theme => ({
     controlButtons: {
         position: "absolute",
         top: 0,
-        right: 0
+        right: 0,
+        [theme.breakpoints.down("xs")]: {
+            display: "flex",
+            flexDirection: "column-reverse"
+        }
     },
     progress: {
         padding: 10,
@@ -118,7 +122,17 @@ const useStylesBR = makeStyles(theme => ({
         }
     },
     buttons: {
-        textAlign: "right"
+        textAlign: "right",
+        [theme.breakpoints.down("xs")]: {
+            textAlign: "left",
+            marginBottom: theme.spacing(1),
+            display: "flex",
+            flexFlow: "row nowrap",
+            "&>button": {
+                flexGrow: 1,
+                flexBasis: 0
+            }
+        }
     }
 }));
 type TGap = {
@@ -133,13 +147,13 @@ const gaps: TGap[] = [
 const ButtonRow:React.FC<TRowProps> = ({slot, onClick}) => {
     const classes = useStylesBR();
     return <Grid className={classes.dataRow} container spacing={1}>
-        <Grid item xs={2} sm={3} className={classes.time}>
+        <Grid item xs={6} sm={2} md={3} className={classes.time}>
             {slot.start.format(timeString)}
         </Grid>
-        <Grid item xs={2} sm={2} className={classes.time}>
+        <Grid item xs={6} sm={2} md={2} className={classes.time}>
             {slot.end.format(timeString)}
         </Grid>
-        <Grid item xs={8} sm={7} className={classes.buttons}>
+        <Grid item xs={12} sm={8} md={7} className={classes.buttons}>
             <Buttons onClick={onClick} desirability={slot.desirability} />
         </Grid>
     </Grid>
@@ -149,13 +163,13 @@ const TitleRow = () => {
     const classes = useStyles();
 
     return <Grid container spacing={1}>
-        <Grid className={classes.titleRow} item xs={2} sm={3}>
+        <Grid className={classes.titleRow} item xs={6} sm={2} md={3}>
             Slot starts
         </Grid>
-        <Grid className={classes.titleRow} item xs={2} sm={2}>
+        <Grid className={classes.titleRow} item xs={6} sm={2} md={2}>
             Slot ends
         </Grid>
-        <Grid item xs={8} sm={7} />
+        <Grid item xs={12} sm={8} md={7} />
     </Grid>
 }
 
