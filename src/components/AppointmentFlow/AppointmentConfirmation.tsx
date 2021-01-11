@@ -12,7 +12,7 @@ import { ConfirmationContent } from './ConfirmationContent';
 const Wrapper = styled(Container)({
     background: `#F2F3F7 url(${bg}) top center no-repeat`,
     backgroundSize: "cover",
-    height: "100vh",
+    minHeight: "100vh",
     width: "100vw",
     display: "flex",
     flexFlow: "column nowrap",
