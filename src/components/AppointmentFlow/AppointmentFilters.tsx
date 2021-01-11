@@ -1,5 +1,5 @@
 import React from 'react';
-import {Checkbox, FormControlLabel, Grid} from "@material-ui/core";
+import {Checkbox, FormControlLabel, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment";
 import {DateSelector} from "./DateSelector";
 import {EAppointmentTimingType, IAppointmentFilters} from "../../store/reducers/appointment/types";
@@ -17,15 +17,18 @@ export const AppointmentFilters: React.FC<TProps> = ({date, onDateChange}) => {
         state.appointment.appointmentFilters
     ]);
     const dispatch = useDispatch();
+    const theme = useTheme();
+    const isSM = useMediaQuery(theme.breakpoints.only("sm"));
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const handleChange = (name: keyof IAppointmentFilters) => (e: any, checked: boolean) => {
         dispatch(setAppointmentFilters({[name]: checked}));
     }
-    return <Grid container spacing={2}>
+    return <Grid container spacing={2} alignItems={isSM ? "flex-end" : undefined}>
         {selectedAppointmentType === EAppointmentTimingType.SpecialOffers ? <Grid item xs={12} sm={6}>
             <DateSelector date={date} onChange={onDateChange}/>
         </Grid> : null}
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} style={{textAlign: isXS ? "center" : undefined}}>
             <FormControlLabel
                 control={<Checkbox
                     color="primary"

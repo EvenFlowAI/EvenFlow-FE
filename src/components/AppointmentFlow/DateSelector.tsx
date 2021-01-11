@@ -8,7 +8,10 @@ const DateSelectorContainer = styled("div")(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    flexFlow: "row nowrap"
+    flexFlow: "row wrap",
+    [theme.breakpoints.down("xs")]: {
+        justifyContent: "center"
+    }
 }));
 
 const Title = styled("h5")({

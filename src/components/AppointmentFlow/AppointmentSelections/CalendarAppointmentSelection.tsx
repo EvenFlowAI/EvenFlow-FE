@@ -20,12 +20,15 @@ type TGroupedAppointments = {
     }
 }
 
-const Title = styled("h5")({
+const Title = styled("h5")(({theme}) => ({
     fontWeight: "bold",
     textTransform: "uppercase",
     fontSize: 16,
-    margin: 0
-});
+    margin: 0,
+    [theme.breakpoints.down("xs")]: {
+        textAlign: "center"
+    }
+}));
 
 const DaysWrapper = styled("div")(({theme}) => ({
     marginTop: theme.spacing(2),
