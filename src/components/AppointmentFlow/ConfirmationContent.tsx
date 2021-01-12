@@ -87,6 +87,7 @@ const rows: TRow[] = [
     {id: 7, label: "E-Mail", key: "email"},
     {id: 8, label: "Total", key: "total"},
 ];
+const calendarIds: number[] = [3, 5, 8];
 const getCarInfo = (data: TS1Form):string => {
     return `${data.make ?? ""} ${data.model ?? ""} ${data.year ?? ""}`.trim() || "-";
 }
@@ -121,7 +122,9 @@ export const ConfirmationContent = () => {
             dates: [moment(appointment.appointment?.date).toISOString()],
             text: "Appointment",
             location: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "",
-            details: "Scheduled Appointment"
+            details: rows.filter(r => calendarIds.includes(r.id)).map(r =>
+                `${r.label}: ${data[r.key]}`
+            ).join("\n")
         });
         window.open(url);
     }
