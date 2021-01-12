@@ -1,5 +1,14 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Grid, IconButton, styled, Tooltip, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
+import {
+    ClickAwayListener,
+    Grid,
+    IconButton,
+    styled,
+    Tooltip,
+    useMediaQuery,
+    useTheme,
+    withStyles
+} from "@material-ui/core";
 import {
     InputLoading,
     Label,
@@ -27,15 +36,26 @@ const Tip = styled("p")({
 });
 
 const TipIcon = () => {
-    return <Tooltip title={<Tip>
-        On most passenger cars, you may find the VIN number on the front of the dashboard on the driver's side.
-        The best way to see it is to look through the windshield from outside the car.
-        You may also find the VIN number on the driver's side door pillar.
-    </Tip>}>
-        <IconButton color="primary">
-            <Help />
-        </IconButton>
-    </Tooltip>;
+    const [open, setOpen] = useState<boolean>(false);
+    const handleClose = () => {
+        setOpen(false);
+    }
+    return <ClickAwayListener onClickAway={handleClose}>
+        <Tooltip open={open}
+                    onClose={handleClose}
+                    disableHoverListener
+                    disableTouchListener
+                    disableFocusListener
+                    title={<Tip>
+                        On most passenger cars, you may find the VIN number on the front of the dashboard on the driver's side.
+                        The best way to see it is to look through the windshield from outside the car.
+                        You may also find the VIN number on the driver's side door pillar.
+                    </Tip>}>
+            <IconButton color="primary" onClick={() => setOpen(true)}>
+                <Help />
+            </IconButton>
+        </Tooltip>
+    </ClickAwayListener>;
 }
 
 const LabelGrid = withStyles((theme) => ({
