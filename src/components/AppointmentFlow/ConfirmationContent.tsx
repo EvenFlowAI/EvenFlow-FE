@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Box, Button, Grid, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {SquarePaper} from "../UI/Paper";
 import {useSelector} from "react-redux";
@@ -7,7 +7,7 @@ import moment from "moment";
 import {TS1Form} from "../../store/reducers/appointment/types";
 import {useHistory, useParams} from "react-router-dom";
 import {Routes} from "../../config/routes";
-import {concatAddress} from "../../utils/utils";
+import {concatAddress, getCalendarUrl} from "../../utils/utils";
 
 const Paper = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(2),
@@ -94,7 +94,8 @@ const getCarInfo = (data: TS1Form):string => {
 export const ConfirmationContent = () => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-    const data: TDataMap = useSelector(({appointment}: RootState) => ({
+    const appointment = useSelector(({appointment}: RootState) => appointment);
+    const data: TDataMap = useMemo(() => ({
         date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
         address: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "-",
         serviceType: appointment.serviceRequests.find(s => s.id === appointment.selectedSR)?.description || "-",
@@ -106,13 +107,23 @@ export const ConfirmationContent = () => {
             appointment.appointment.priceWithOffer?.value.toFixed(2) ||
             appointment.appointment.price.value.toFixed(2)
         }` : "-"
-    }));
+    }), [appointment]);
 
     const history = useHistory();
     const {id} = useParams();
 
     const handleBack = () => {
         history.push(`${Routes.EndUser.AppointmentBase}/${id ?? ""}`);
+    }
+
+    const handleAddToCalendar = () => {
+        const url = getCalendarUrl({
+            dates: [moment(appointment.appointment?.date).toISOString()],
+            text: "Appointment",
+            location: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "",
+            details: "Scheduled Appointment"
+        });
+        window.open(url);
     }
 
     return <Paper elevation={8}>
@@ -140,7 +151,7 @@ export const ConfirmationContent = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
                 <Box textAlign="right">
-                    <Button fullWidth={isXS} variant="contained" color="primary">
+                    <Button onClick={handleAddToCalendar} fullWidth={isXS} variant="contained" color="primary">
                         Add To Calendar
                     </Button>
                 </Box>

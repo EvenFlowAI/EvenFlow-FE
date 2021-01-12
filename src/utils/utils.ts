@@ -1,5 +1,7 @@
 import {IAddress} from "../store/reducers/dealershipGroups/types";
 import {ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction} from "react";
+import {TCalendarProps} from "./types";
+import * as queryString from "querystring";
 
 export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     return new Promise(resolve => {
@@ -38,4 +40,10 @@ export const baseCheckHandler = <State>(setForm: Dispatch<SetStateAction<State>>
 }
 export const baseSwitchHandler = <State>(setForm: Dispatch<SetStateAction<State>>) => (e: ChangeEvent<HTMLInputElement>, checked: boolean): void => {
     setForm(form => ({...form, [e.target.name]: checked}));
+}
+
+export const getCalendarUrl = (params: TCalendarProps): string => {
+    const data: {[k: string]: string|undefined} = {...params, dates: params.dates.join("/")};
+    data.action = "TEMPLATE";
+    return `https://calendar.google.com/calendar/event?${queryString.stringify(data)}`;
 }
