@@ -99,8 +99,8 @@ const labels: string[] = [
 type TListItemProps = {
     style?: React.CSSProperties,
     appointment: IRemappedAppointmentSlot,
-    // onHover: (a: IRemappedAppointmentSlot) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
-    // onLeave: () => void,
+    onHover: (a: IRemappedAppointmentSlot) => (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
+    onLeave: () => void,
     onClick: (a: IRemappedAppointmentSlot) => () => void,
     selectedAppointment: IRemappedAppointmentSlot|null
 }
@@ -113,7 +113,13 @@ const ListItem: React.FC<TListItemProps> = memo((props) => {
                 props.appointment.priceWithOffer?.value.toFixed(0) || props.appointment.price.value.toFixed(0)
             }</strong></span>
             <span className="offer">{props.appointment.offer ?
-                <OfferChip white offer={props.appointment.offer}/> : null}</span>
+                <OfferChip
+                    // onMouseEnter={props.onHover(props.appointment)}
+                    // onMouseLeave={props.onLeave}
+                    white
+                    offer={props.appointment.offer}
+                /> : null}
+            </span>
             <span className="sw">{props.appointment.isShorterWaitTime ? <ShortWaitChip white/> : null}</span>
             <span className="loaner">{false ? <LoanerCarChip white/> : null}</span>
             <span className="drop">{false ? <DirectionsCar fontSize="small"/> : null}</span>
@@ -174,6 +180,8 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
         return <ListItem
             key={index}
             style={style}
+            onHover={onPopoverOpen}
+            onLeave={onPopoverClose}
             appointment={sortedAppointments[index]}
             onClick={handleSelectAppointment}
             selectedAppointment={selectedAppointment}
