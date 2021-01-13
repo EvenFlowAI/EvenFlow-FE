@@ -181,7 +181,7 @@ export const AppointmentFlow = () => {
             case 3:
                 return true;
             case 2:
-                return Boolean(appState.selectedSR);
+                return Boolean(appState.selectedSR.length);
             case 1:
                 const s1 = appState.s1Data;
                 return Boolean(s1.model && s1.make && s1.year && s1.vin);

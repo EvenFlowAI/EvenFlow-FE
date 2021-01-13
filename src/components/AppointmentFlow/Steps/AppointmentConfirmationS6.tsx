@@ -143,8 +143,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
     const showError = useException();
 
     const srDescription = useMemo((): string => {
-        const sData = srList.find(s => s.id === selectedSR);
-        return sData?.description || "-";
+        return selectedSR.map(sId => srList.find(s => sId === s.id)?.description || "-").join(", ");
     }, [srList, selectedSR]);
 
     const handleTextChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -184,7 +183,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                 description: flatTransportations.find(t => t.id === forms.transportation)?.label || ""
             },
             slot: forms.appointment?.id.split("|")[1] || "",
-            serviceRequestIds: forms.selectedSR ? [forms.selectedSR] : [],
+            serviceRequestIds: forms.selectedSR,
             date: forms.appointment?.id.split("|")[0] || ""
         };
         setLoading(true);

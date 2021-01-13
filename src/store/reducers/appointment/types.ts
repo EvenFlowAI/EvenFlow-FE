@@ -128,7 +128,7 @@ export type TAppointmentState = {
     scProfile?: IServiceCenterProfile;
     serviceRequests: ISR[];
     appointmentId: ICreateAppointmentResp|null;
-    selectedSR: number|null,
+    selectedSR: number[],
     s1Data: TS1Form;
     search: string;
     s3Data: TS3Form;

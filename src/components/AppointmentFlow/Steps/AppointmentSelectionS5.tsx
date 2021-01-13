@@ -97,7 +97,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
     const [
         selectedAppointmentType,
         selectedDate,
-        selectedServiceRequest,
+        selectedServiceRequests,
         appointmentsExist,
         filters
     ] = useSelector(({appointment: {s3Data, selectedSR, appointmentSlots, appointmentFilters}}: RootState) => [
@@ -120,7 +120,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                     appointmentTimingType: selectedAppointmentType,
                     serviceCenterId: id,
                     fromDate: sd.toISOString(),
-                    serviceRequestIds: [selectedServiceRequest || 0],
+                    serviceRequestIds: selectedServiceRequests,
                     countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1
                 }, updateDate));
             } finally {
@@ -128,7 +128,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
             }
         }
         loadData().finally();
-    }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequest, filters]);
+    }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequests, filters]);
 
     const handleSetDate = (nDate: moment.Moment) => {
         if (date.month() !== nDate.month()) {

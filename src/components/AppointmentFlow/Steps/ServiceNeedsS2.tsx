@@ -1,11 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+    Checkbox,
     CircularProgress,
-    FormControlLabel,
+    FormControlLabel, FormGroup,
     FormLabel,
-    IconButton,
-    Radio,
-    RadioGroup
+    IconButton
 } from "@material-ui/core";
 import {
     InputLoading,
@@ -109,7 +108,7 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next, isCompleted}) 
         setSearch(e.target.value);
     }
 
-    const handleSelectCode = (e: any, value: string) => {
+    const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(selectSR(value ? Number(value) : null));
     }
 
@@ -137,7 +136,7 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next, isCompleted}) 
                     }}
                 />
                 <ScrollableContainer>
-                    <RadioGroup className={classes.radioGroup} value={selectedCode} onChange={handleSelectCode}>
+                    <FormGroup className={classes.radioGroup}>
                         {srList.map(s => {
                             return <FormControlLabel
                                 key={s.id}
@@ -154,13 +153,16 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next, isCompleted}) 
                                 labelPlacement={"start"}
                                 value={s.id}
                                 control={
-                                    <Radio
+                                    <Checkbox
+                                        onChange={handleSelectCode}
+                                        value={s.id}
+                                        checked={selectedCode.includes(s.id)}
                                         color="primary"
                                     />
                                 }
                             />
                         })}
-                    </RadioGroup>
+                    </FormGroup>
                     {loading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : null}
                 </ScrollableContainer>
                 <NextPrevBlock next={next} prev={prev} isCompleted={isCompleted} />

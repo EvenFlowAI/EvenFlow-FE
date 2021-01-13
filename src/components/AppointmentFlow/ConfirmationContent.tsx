@@ -99,7 +99,7 @@ export const ConfirmationContent = () => {
     const data: TDataMap = useMemo(() => ({
         date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
         address: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "-",
-        serviceType: appointment.serviceRequests.find(s => s.id === appointment.selectedSR)?.description || "-",
+        serviceType: appointment.selectedSR.map(sId => appointment.serviceRequests.find(s => s.id === sId)?.description || "-").join(", "),
         name: appointment.personalInformation.fullName || "-",
         carInfo: getCarInfo(appointment.s1Data),
         phoneNumber: appointment.personalInformation.phoneNumber || "-",
