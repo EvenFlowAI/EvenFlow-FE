@@ -147,8 +147,8 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
                 {dateAppointments.map(appointment =>
                     <Grid key={appointment.id} item xs={6} sm={4} md={3}>
                         <AppointmentPlate
-                            onMouseEnter={onPopoverOpen(appointment)}
-                            onMouseLeave={onPopoverClose}
+                            onHover={onPopoverOpen(appointment)}
+                            onLeave={onPopoverClose}
                             selected={appointment.id === selectedAppointment?.id}
                             onClick={handleSelectAppointment(appointment)}
                             appointment={appointment}

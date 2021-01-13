@@ -84,9 +84,12 @@ const useStyles = makeStyles({
 type TProps = {
     appointment: IRemappedAppointmentSlot;
     selected: boolean;
+    onHover: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    onLeave: () => void;
+    onClick: React.MouseEventHandler;
 }
-export const AppointmentPlate: React.FC<TProps&React.HTMLAttributes<HTMLDivElement>> = ({
-    appointment, selected, children, ...htmlAttributes
+export const AppointmentPlate: React.FC<TProps> = ({
+    appointment, selected, onHover, onLeave, children, ...htmlAttributes
 }) => {
     const classes = useStyles({
         width: (appointment.offer ? 1 : 0)
@@ -103,7 +106,10 @@ export const AppointmentPlate: React.FC<TProps&React.HTMLAttributes<HTMLDivEleme
                 {false ? <DropOffChip/> : null}
             </Price>
             {(appointment.offer || appointment.isShorterWaitTime) ?
-                <OfferContainer className={classes.width}>
+                <OfferContainer
+                    onMouseEnter={onHover}
+                    onMouseLeave={onLeave}
+                    className={classes.width}>
                     {appointment.offer ? <CalendarOfferChip className={clsx(classes.height, classes.border)}
                                                             offer={appointment.offer}/> : null}
                     {appointment.isShorterWaitTime ? <CalendarWaitChip className={classes.height}/> : null}
