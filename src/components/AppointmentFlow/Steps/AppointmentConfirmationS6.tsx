@@ -165,7 +165,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             email ? EReminderType.Email : undefined,
             phone ? EReminderType.Phone : undefined,
             sms ? EReminderType.Sms : undefined
-        ].filter(v => !!v) as EReminderType[];
+        ].filter(v => v !== undefined) as EReminderType[];
 
         let formData: ICreateAppointment = {
             appointmentTimingType: forms.s3Data.appointmentType,
