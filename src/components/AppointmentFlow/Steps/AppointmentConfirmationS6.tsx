@@ -11,7 +11,6 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {EditButton} from "../../UI/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -245,7 +244,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                                     <Subtitle>Review</Subtitle>
                                     <p>{`${carDetails.make} ${carDetails.model}`.trim() || "-"}</p>
                                     <p>{srDescription}</p>
-                                    <EditButton color="primary">View Details</EditButton>
+                                    {/*<EditButton color="primary">View Details</EditButton>*/}
                                 </Grid>
                                 {appointment ? <Grid style={{textAlign: isXS ? "left" : "right"}} item xs={12} sm={6}>
                                     <Subtitle>Selected Price</Subtitle>
