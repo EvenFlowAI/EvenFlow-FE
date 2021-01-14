@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {Button, Grid, Switch, Typography} from "@material-ui/core";
+import {Box, Button, Grid, Switch, Typography, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import moment from "moment";
@@ -12,11 +12,11 @@ import {LoadingButton} from "../../UI/Button";
 
 const useStyles = makeStyles(theme => ({
     container: {
-        width: `calc(100% + ${theme.spacing(2) * 2})`,
+        width: `calc(100% + ${theme.spacing(2) * 2}px)`,
         marginLeft: -theme.spacing(2),
         marginRight: -theme.spacing(2),
-        "&>.MuiGrid-item:last-child": {
-            borderLeft: `1px solid ${theme.palette.divider}`
+        "&>.border": {
+            borderRight: `1px solid ${theme.palette.divider}`
         },
         "&>.MuiGrid-item": {
             boxSizing: "border-box",
@@ -51,19 +51,21 @@ const WSForm: React.FC<{
     onChange: (day: number) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = props => {
     const classes = useStyles();
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const disabledByWD = (day: number): boolean => {
         return !props.workingDays.includes(day);
     }
 
     return <div>
-        <Grid container className={classes.container} alignItems="flex-start">
-            <Grid item xs={2}/>
-            <Grid item xs={5}>
+        <Grid container className={classes.container} alignItems="flex-end">
+            <Grid item xs={2} hidden={isXS}/>
+            <Grid item xs={6} sm={5}>
                 <Typography variant="h4" className={classes.title}>
                     Average total technicians by day
                 </Typography>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={6} sm={5}>
                 <Typography variant="h4" className={classes.title}>
                     Average level 3 technicians scheduled by day
                 </Typography>
@@ -72,10 +74,13 @@ const WSForm: React.FC<{
         {moment.weekdays().map((day, dayOfWeek) => {
             const data = props.form.find(el => el.dayOfWeek === dayOfWeek) || {...blankRow, dayOfWeek};
             return <Grid container className={classes.container} alignItems="flex-end" key={`l-${day}`}>
-                <Grid item xs={2}>
+                <Grid item xs={2} hidden={isXS}>
                     <Switch checked={data.checked} disabled={disabledByWD(dayOfWeek)} onChange={props.onCheck(dayOfWeek)} color="primary"/>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item className="border" xs={6} sm={5}>
+                    {isXS ? <Box ml={-1.5}>
+                        <Switch checked={data.checked} disabled={disabledByWD(dayOfWeek)} onChange={props.onCheck(dayOfWeek)} color="primary"/>
+                    </Box> : null }
                     <TextField
                         id={`${dayOfWeek}-averageTechnicians`}
                         disabled={!data.checked || disabledByWD(dayOfWeek)}
@@ -86,7 +91,7 @@ const WSForm: React.FC<{
                         fullWidth
                         label={day} />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={6} sm={5}>
                     <TextField
                         value={data.averageLevelThreeTechnicians}
                         disabled={!data.checked || disabledByWD(dayOfWeek)}
