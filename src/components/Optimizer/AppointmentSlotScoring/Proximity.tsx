@@ -156,7 +156,7 @@ export const Proximity = () => {
             </TableHead>
             <TableBody>
                 {rows.map(row =>
-                    <TableRow>
+                    <TableRow key={row.id}>
                         {!isXS ? <TableCell>{row.label}</TableCell> : null}
                         <TableCell>
                             {isXS ? <span>{row.label}</span> : null}
