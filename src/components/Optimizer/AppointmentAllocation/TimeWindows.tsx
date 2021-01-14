@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Button as Bt, CircularProgress, TableBody, TableCell as TC, TableRow, withStyles} from "@material-ui/core";
+import {
+    Button as Bt,
+    CircularProgress,
+    TableBody,
+    TableCell as TC,
+    TableRow,
+    useMediaQuery, useTheme,
+    withStyles
+} from "@material-ui/core";
 import {AppointmentTable} from "../AppointmentValue/UI";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegments/actions";
@@ -50,19 +58,49 @@ const InputOrValue: React.FC<{
     onChange: React.ChangeEventHandler
     isEdit: boolean;
 }> = ({name, value, isEdit, onChange}) => {
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     if (!isEdit) return <span>{value ? String(value) : "0"}</span>;
     return <TextField
         name={name}
         value={value}
         type="number"
+        style={{minWidth: 80}}
         inputProps={{
             min: 0
         }}
-        endAdornment={"hour(s)"}
+        endAdornment={!isXS ? "hour(s)" : undefined}
         onChange={onChange}
         id={name}
     />
 }
+type TItem = {
+    name?: keyof TForm;
+    value?: string;
+};
+type TRow = {
+    label: string;
+    items: TItem[];
+}
+const rows: TRow[] = [
+    {
+        label: "Start (hours)",
+        items: [
+            {value: "0"},
+            {name: "start"},
+            {name: "stop"}
+        ]
+    },
+    {
+        label: "Duration (hours)",
+        items: [
+            {name: "duration1"},
+            {name: "duration2"},
+            {value: ""}
+        ]
+    }
+]
+
 export const TimeWindows = () => {
     const [form, setForm] = useState<TForm>(defaultForm);
     const [isEdit, setEdit] = useState<boolean>(false);
@@ -156,46 +194,21 @@ export const TimeWindows = () => {
                     : <CircularProgress />}
                 </TableCell>
             </TableRow>
-            <TableRow>
-                <TableCell>Start (hours)</TableCell>
-                <TableCell>0</TableCell>
-                <TableCell>
-                    <InputOrValue
-                        name={"start"}
-                        value={form.start}
-                        onChange={handleChange}
-                        isEdit={isEdit}
-                    />
-                </TableCell>
-                <TableCell>
-                    <InputOrValue
-                        name={"stop"}
-                        value={form.stop}
-                        onChange={handleChange}
-                        isEdit={isEdit}
-                    />
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell>Duration (hours)</TableCell>
-                <TableCell>
-                    <InputOrValue
-                        name={"duration1"}
-                        value={form.duration1}
-                        onChange={handleChange}
-                        isEdit={isEdit}
-                    />
-                </TableCell>
-                <TableCell>
-                    <InputOrValue
-                        name={"duration2"}
-                        value={form.duration2}
-                        onChange={handleChange}
-                        isEdit={isEdit}
-                    />
-                </TableCell>
-                <TableCell/>
-            </TableRow>
+            {rows.map(row =>
+                <TableRow key={row.label}>
+                    <TableCell>{row.label}</TableCell>
+                    {row.items.map((item, idx) =>
+                        <TableCell key={idx}>{!item.name ? item.value :
+                            <InputOrValue
+                                name={item.name}
+                                value={form[item.name]}
+                                onChange={handleChange}
+                                isEdit={isEdit}
+                            />
+                        }</TableCell>
+                    )}
+                </TableRow>
+            )}
         </TableBody>
     </AppointmentTable>
 }
