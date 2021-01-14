@@ -9,13 +9,13 @@ import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {TableAvatar} from "../../Admin/TableAvatar";
 import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
-import {TableRowDataType} from "../../UI/types";
+import {TableRowDataTypeResp} from "../../UI/types";
 
-const rowData: TableRowDataType<IEmployee>[] = [
+const rowData: TableRowDataTypeResp<IEmployee>[] = [
     {header: "Technician Name", val: v => v.fullName},
     {header: "Level", val: v => v.employeeInfo?.skillLevel.toString() || '-', align: "center"},
     {header: "Hourly Rate", val: v => `$${v.employeeInfo?.hourlyRate || 0}`, align: "right"},
-    {header: "Overtime Rate", val: v => `$${v.employeeInfo?.overtimeRate || 0}`, align: "right"}
+    {header: "Overtime Rate", val: v => `$${v.employeeInfo?.overtimeRate || 0}`, align: "right", xsHidden: true}
 ]
 
 export const TechniciansList = () => {
