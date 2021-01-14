@@ -117,6 +117,7 @@ export const DemandSegments = () => {
                                         <TextField
                                             id={`item-${iIdx}`}
                                             value={item}
+                                            style={{minWidth: 90}}
                                             type="number"
                                             endAdornment="%"
                                             inputProps={{
