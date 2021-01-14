@@ -58,7 +58,7 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate
         setForm({...form, podId: e.target.value ? Number(e.target.value) : undefined});
     }
 
-    const handleSave = async () => {
+    const handleSave = (isRecurring: boolean) => async () => {
         setSaving(true);
         try {
             const data: IScheduleForm = {
@@ -68,7 +68,8 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate
                 startAt: form.timeStart?.format(timeSpanString),
                 finishAt: form.timeEnd?.format(timeSpanString),
                 serviceCenterId: employee.serviceCenterId,
-                podId: form.podId
+                podId: form.podId,
+                isRecurring
             }
             await dispatch(setEmployeesSchedule(data, isXS));
             setSaving(false);
@@ -148,9 +149,15 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate
             <Button onClick={props.onClose}>Cancel</Button>
             <LoadingButton
                 loading={saving}
-                onClick={handleSave}
+                onClick={handleSave(false)}
             >
-                Save
+                Save for {date.format("MMM, DD YYYY")}
+            </LoadingButton>
+            <LoadingButton
+                loading={saving}
+                onClick={handleSave(true)}
+            >
+                Save for {date.format("ddd")}
             </LoadingButton>
         </DialogActions>
         <CreateEmployee open={isOpen} payload={employee} onAction={() => onEmployeeUpdate(employee.id)} onClose={onClose} />

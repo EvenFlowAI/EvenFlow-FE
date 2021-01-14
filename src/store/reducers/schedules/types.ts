@@ -1,11 +1,16 @@
 import {IEmployee} from "../employees/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
+enum EWorkingStatus {
+    Working, NonWorking, NonActive
+}
 export interface ISchedule {
     id: number;
     date: ParsableDate;
     startAt: ParsableDate;
     finishAt: ParsableDate;
+    isRecurring: boolean;
+    status: EWorkingStatus;
 }
 export interface IEmployeeSchedule {
     employee: IEmployee,
@@ -20,6 +25,7 @@ export interface IScheduleForm {
     employeeId: string;
     serviceCenterId: number;
     podId?: number;
+    isRecurring?: boolean;
 }
 
 export interface IScheduleFilters {
