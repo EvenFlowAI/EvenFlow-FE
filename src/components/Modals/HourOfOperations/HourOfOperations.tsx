@@ -14,7 +14,7 @@ import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {timeSpanString} from "../../../config/constants";
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     row: {
         marginBottom: 16
     },
@@ -24,9 +24,16 @@ const useStyles = makeStyles({
         display: "block"
     },
     switchRow: {
-        textAlign: "right"
+        textAlign: "right",
+        [theme.breakpoints.down("xs")]: {
+            textAlign: "left",
+            "&>span": {
+                left: -theme.spacing(1.5),
+                bottom: -theme.spacing(1)
+            }
+        }
     }
-})
+}));
 
 const HOOForm: React.FC<{
     form: THOOForm[];
@@ -40,8 +47,8 @@ const HOOForm: React.FC<{
     return <>{moment.weekdays().map((day, idx) => {
         const data: THOOForm = props.form.filter(f => f.dayOfWeek === idx)[0] || {...blankRow, dayOfWeek: idx};
         return <Grid container spacing={1} alignItems="flex-end" key={day} className={classes.row}>
-            <Grid item xs={2} className={classes.switchRow}><Switch onChange={props.onCheck(idx)} checked={data.checked} color="primary"/></Grid>
-            <Grid item xs={4} sm={3}>
+            <Grid item xs={12} sm={2} className={classes.switchRow}><Switch onChange={props.onCheck(idx)} checked={data.checked} color="primary"/></Grid>
+            <Grid item xs={5} sm={4} md={3}>
                 <TimePicker
                     disabled={!data.checked}
                     placeholder={!data.checked ? "Closed" : ""}
@@ -52,10 +59,10 @@ const HOOForm: React.FC<{
                     id={`from-${day}`}
                 />
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2} sm={1}>
                 <span className={classes.toWrapper}>to</span>
             </Grid>
-            <Grid item xs={4} sm={3}>
+            <Grid item xs={5} sm={4} md={3}>
                 <TimePicker
                     fullWidth
                     value={data.to}
