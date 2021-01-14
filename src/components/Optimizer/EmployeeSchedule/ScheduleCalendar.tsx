@@ -197,11 +197,11 @@ export const ScheduleCalendar = () => {
                                 {daysOfWeek.map((date, idx) => {
                                     return <TableCell
                                         key={date.toISOString()}
-                                        onClick={workingDays.includes((idx + 1) as EDay) ? handleEdit(employee, date, schedules) : noop}
+                                        onClick={workingDays.includes((date.day() + 1) as EDay) ? handleEdit(employee, date, schedules) : noop}
                                         style={{
                                             cursor: "pointer",
                                             fontSize: isXS ? 12 : 13,
-                                            ...getCellStyle(!workingDays.includes((idx + 1) as EDay))
+                                            ...getCellStyle(!workingDays.includes((date.day() + 1) as EDay))
                                         }}>
                                         {findScheduleDates(date, schedules)}
                                     </TableCell>
