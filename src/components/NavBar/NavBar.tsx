@@ -52,7 +52,10 @@ const useStyles = makeStyles(theme => ({
     name: {
         fontSize: 16,
         marginRight: 10,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        [theme.breakpoints.down("xs")]: {
+            display: "none"
+        }
     },
     avatar: {
         backgroundColor: theme.palette.primary.dark,
