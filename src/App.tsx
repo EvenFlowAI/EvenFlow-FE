@@ -21,6 +21,7 @@ const App = () => {
     const shackAction = (key: React.ReactText) => {
         return <IconButton size="small" onClick={handleClose(key)}><Close htmlColor="#fff" /></IconButton>;
     }
+    const isWin = window.navigator.appVersion.indexOf('Win') !== -1;
 
     return (
         <SnackbarProvider
@@ -29,7 +30,7 @@ const App = () => {
             action={shackAction}
             anchorOrigin={{horizontal: "right", vertical: "top"}}
             variant="success">
-            <Container component="main" maxWidth={false} disableGutters style={{
+            <Container component="main" maxWidth={false} className={isWin ? "winos" : undefined} disableGutters style={{
                 height: "100vh", maxHeight: "-webkit-fill-available"}}>
                 <ConfirmDialog/>
                 <Switch>

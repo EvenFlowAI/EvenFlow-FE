@@ -1,3 +1,18 @@
 .grow {
     flex-grow: 1;
 }
+.winos *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.winos *:hover::-webkit-scrollbar {
+    visibility: visible;
+    opacity: 1;
+}
+.winos *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0,0,0,.4);
+}
+.winos *::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.2);
+    transition: all .1s;
+}
