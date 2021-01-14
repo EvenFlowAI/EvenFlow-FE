@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {Button, Grid, IconButton} from "@material-ui/core";
+import {Button, Grid, IconButton, useMediaQuery, useTheme} from "@material-ui/core";
 import {DeleteOutline} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import moment from "moment";
@@ -37,6 +37,8 @@ const BForm: React.FC<{
     onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void
 }> = props => {
     const classes = useStyles();
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const isClosed = (day: number): boolean => {
         return !props.workDays.includes(day);
@@ -45,7 +47,7 @@ const BForm: React.FC<{
         {moment.weekdays().map((d, dayOfWeek) => {
             const data = props.form.find(el => el.dayOfWeek === dayOfWeek) || {...blankRow, dayOfWeek};
             return <Grid container className={classes.container} alignItems="flex-end" key={d}>
-                <Grid item xs={3}>
+                <Grid item xs={12} sm={3}>
                     <Button
                         onClick={props.onCheck(dayOfWeek, true)}
                         fullWidth
@@ -56,8 +58,8 @@ const BForm: React.FC<{
                         Add Break
                     </Button>
                 </Grid>
-                <Grid item xs={1}/>
-                <Grid item xs={3}>
+                <Grid item xs={1} hidden={isXS}/>
+                <Grid item xs={4} sm={3}>
                     <TimePicker
                         label={d}
                         fullWidth
@@ -69,10 +71,10 @@ const BForm: React.FC<{
                         name={`${d}Start`}
                     />
                 </Grid>
-                <Grid item xs={1} className={classes.text}>{
+                <Grid item xs={2} sm={1} className={classes.text}>{
                     data.checked && !isClosed(dayOfWeek) ? "to" : ""
                 }</Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     {data.checked && !isClosed(dayOfWeek) ? <TimePicker
                         fullWidth
                         id={`${d}End`}
@@ -81,7 +83,7 @@ const BForm: React.FC<{
                         onChange={props.onChange(dayOfWeek, "to")}
                     /> : null}
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={2} sm={1}>
                     {data.checked ? <IconButton
                         onClick={props.onCheck(dayOfWeek, false)}
                         color="primary">
