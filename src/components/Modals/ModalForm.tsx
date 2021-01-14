@@ -37,7 +37,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                 {idx ? <Divider /> : null}
                 <Grid container spacing={2}>
                     {itemGroup.map(item =>
-                        <Grid item xs={6} key={item.id}>
+                        <Grid item xs={12} sm={6} key={item.id}>
                             {!item.variant || item.variant === 'input'
                                 ? <TextField
                                     label={item.label}
