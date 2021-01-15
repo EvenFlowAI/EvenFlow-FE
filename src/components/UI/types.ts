@@ -1,4 +1,5 @@
 import React from "react";
+import {IOrder} from "../../types/types";
 
 export type AlignTypes = "inherit" | "left" | "center" | "right" | "justify";
 export type TableRowDataType<DataEl> = {
@@ -15,6 +16,7 @@ export type TableRowDataTypeResp<DataEl> = TableRowDataType<DataEl> & {
 export interface ITableProps<Data> {
     compact?: boolean;
     order?: keyof Data;
+    onSort?: (order: IOrder<Data>) => () => void;
     isAscending?: boolean;
     hidePagination?: boolean;
     data: Data[];

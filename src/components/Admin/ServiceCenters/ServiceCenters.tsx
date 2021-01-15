@@ -7,13 +7,14 @@ import {Table} from "../../UI/Table";
 import {IServiceCenterExtended, IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadAll, removeSC} from "../../../store/reducers/serviceCenters/actions";
+import {loadAll, removeSC, setSCOrder} from "../../../store/reducers/serviceCenters/actions";
 import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
 import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
 import {CreateServiceCenter} from "../../Modals/CreateServiceCenter/CreateServiceCenter";
 import {concatAddress} from "../../../utils/utils";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {Titles} from "../../../config/constants";
+import {IOrder} from "../../../types/types";
 
 
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
@@ -52,7 +53,7 @@ export const ServiceCenters = () => {
 
     useEffect(() => {
         dispatch(loadAll())
-    }, [dispatch, pageIndex, pageSize]);
+    }, [dispatch, pageIndex, pageSize, order]);
 
     const handleView = (el: IServiceCenterExtended) => () => alert(`View ${el.name}`);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
@@ -101,6 +102,10 @@ export const ServiceCenters = () => {
         });
     }
 
+    const handleSort = (d: IOrder<IServiceCenterExtended>) => () => {
+        dispatch(setSCOrder(d));
+    }
+
     const {onOpen, onClose, isOpen} = useModal();
     const [editedItem, setEditedItem] = useState<IServiceCenterForm|undefined>();
 
@@ -109,6 +114,7 @@ export const ServiceCenters = () => {
         <Table<IServiceCenterExtended>
             data={data}
             order={order.orderBy}
+            onSort={handleSort}
             isAscending={order.isAscending}
             noDataTitle="No Service Centers present"
             isLoading={loading}

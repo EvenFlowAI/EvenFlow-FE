@@ -3,7 +3,7 @@ import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
 import {Api} from "../../../config/requests";
-import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {LocalItems} from "../../../config/constants";
 import {setSelectedPod} from "../pods/actions";
@@ -36,7 +36,10 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IServiceCenterExtended>>(
             Api.endpoints.ServiceCenters.GetAll,
-            {data: state.serviceCenters.pageData}
+            {data: {
+                ...state.serviceCenters.pageData,
+                ...state.serviceCenters.order
+            }}
         );
         dispatch(changePaging(paging));
         dispatch(getAll(result));
@@ -46,6 +49,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
         throw e;
     }
 }
+export const setSCOrder = createAction<IOrder<IServiceCenterExtended>>("ServiceCenters/ChangeOrder");
 //
 // const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
 //     type: "ServiceCenters/Create", payload

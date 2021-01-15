@@ -117,8 +117,11 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                 className={classes.tableHead}>
                                 {rE.orderId
                                     ? <TableSortLabel
-                                        onClick={() => {}}
-                                        direction={props.isAscending ? "asc" : "desc"}
+                                        onClick={props.onSort ? props.onSort({
+                                            isAscending: rE.orderId !== props.order || !props.order || (rE.orderId === props.order && !props.isAscending),
+                                            orderBy: rE.orderId
+                                        }) : undefined}
+                                        direction={props.isAscending ? "desc" : "asc"}
                                         active={rE.orderId === props.order}>
                                         {rE.header}
                                     </TableSortLabel>
