@@ -26,7 +26,7 @@ const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
 
 const rowDataA: TableRowDataType<IServiceCenterExtended>[] = [
     {val: v => v.name, header: "Name", orderId: "name"},
-    {val: v => concatAddress(v.address), header: "Address", orderId: "address"},
+    {val: v => concatAddress(v.address), header: "Address"},
     {val: v => v.countOfEmployees.toString(), header: "Employees", align: "center", orderId: "countOfEmployees"},
     {val: v => v.countOfBays.toString(), header: "Bays", align: "center", orderId: "countOfBays"}
 ];
