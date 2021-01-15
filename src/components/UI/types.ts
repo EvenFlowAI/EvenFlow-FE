@@ -4,7 +4,7 @@ import {IOrder} from "../../types/types";
 export type AlignTypes = "inherit" | "left" | "center" | "right" | "justify";
 export type TableRowDataType<DataEl> = {
     header: string;
-    orderId?: keyof DataEl;
+    orderId?: keyof DataEl | string;
     val: (el: DataEl, idx: number) => string | JSX.Element | undefined | null;
     align?: AlignTypes;
 }
@@ -15,7 +15,7 @@ export type TableRowDataTypeResp<DataEl> = TableRowDataType<DataEl> & {
 
 export interface ITableProps<Data> {
     compact?: boolean;
-    order?: keyof Data;
+    order?: keyof Data | string;
     onSort?: (order: IOrder<Data>) => () => void;
     isAscending?: boolean;
     hidePagination?: boolean;

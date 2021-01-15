@@ -7,13 +7,14 @@ import {TableAvatar} from "../TableAvatar";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadAll, removeEmployee} from "../../../store/reducers/employees/actions";
+import {loadAll, removeEmployee, setEmplOrder} from "../../../store/reducers/employees/actions";
 import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
 import {changePageData} from "../../../store/reducers/employees/actions";
 import {concatAddress} from "../../../utils/utils";
 import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 import {Roles, Titles} from "../../../config/constants";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {IOrder} from "../../../types/types";
 
 const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
@@ -23,11 +24,11 @@ const SURowData: TableRowDataType<IEmployee>[] = [
 ];
 
 const AdminRowData: TableRowDataType<IEmployee>[] = [
-    {val: el => el.fullName, header: "Name"},
-    {val: el => el.serviceCenter?.name || '-', header: "Service Center"},
+    {val: el => el.fullName, header: "Name", orderId: "name"},
+    {val: el => el.serviceCenter?.name || '-', header: "Service Center", orderId: "serviceCenterName"},
     {val: el => el.serviceCenter?.address ? concatAddress(el.serviceCenter.address) : '-', header: "Service center Address"},
-    {val: el => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role"},
-    {val: el => el.phoneNumber, header: "Phone Number"}
+    {val: el => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role", orderId: "role"},
+    {val: el => el.phoneNumber, header: "Phone Number", orderId: "phoneNumber"}
 ];
 
 
@@ -42,9 +43,12 @@ export const Employees = () => {
         changePageData
     );
     const dispatch = useDispatch();
+    const search = useSelector((state: RootState) => state.employees.searchTerm);
+    const order = useSelector((state: RootState) => state.employees.order);
+
     useEffect(() => {
         dispatch(loadAll());
-    }, [dispatch]);
+    }, [dispatch, search, order]);
     const currentUser = useCurrentUser();
 
     const rowData = useMemo<TableRowDataType<IEmployee>[]>(() => {
@@ -86,6 +90,9 @@ export const Employees = () => {
             });
         }
     }
+    const handleOrder = (order: IOrder<IEmployee>) => () => {
+        dispatch(setEmplOrder(order));
+    }
 
     const handleView = (el: IEmployee) => () => alert(`View ${el.fullName}`);
     const viewActions = (el: IEmployee) => (
@@ -106,6 +113,9 @@ export const Employees = () => {
         <TitleContainer title={Titles.Employees} pad actions />
         <Table<IEmployee>
             data={data}
+            order={order.orderBy}
+            isAscending={order.isAscending}
+            onSort={handleOrder}
             noDataTitle="No employees present"
             isLoading={isLoading}
             rowData={rowData}

@@ -1,7 +1,7 @@
 import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {Api} from "../../../config/requests";
-import {AppThunk, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {IEmployee, IEmployeeForm, TEmployeeActions} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
@@ -35,7 +35,11 @@ export const loadAll: ActionCreator<AppThunk> = () =>
     try {
         const {data: {result: employees, paging}} = await Api.call<PaginatedAPIResponse<IEmployee>>(
             Api.endpoints.Users.GetAll,
-            {data: state.employees.pageData}
+            {data: {
+                ...state.employees.pageData,
+                ...state.employees.order,
+                searchTerm: state.employees.searchTerm
+            }}
         );
         dispatch(loading(false));
         dispatch(changePaging(paging));
@@ -137,3 +141,5 @@ export const loadSCEmployees = (serviceCenterId: number): AppThunk => async disp
     );
     dispatch(getSCEmployees(result));
 }
+export const setEmplSearch = createAction<string>("SCEmployees/SetSearch");
+export const setEmplOrder = createAction<IOrder<IEmployee>>("SCEmployees/SetOrder")

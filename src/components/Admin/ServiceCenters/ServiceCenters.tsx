@@ -54,7 +54,7 @@ export const ServiceCenters = () => {
 
     useEffect(() => {
         dispatch(loadAll())
-    }, [dispatch, pageIndex, pageSize, order, search]);
+    }, [dispatch, order, search]);
 
     const handleView = (el: IServiceCenterExtended) => () => alert(`View ${el.name}`);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
