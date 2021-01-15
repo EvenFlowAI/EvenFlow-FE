@@ -1,8 +1,9 @@
 import {ISCAnalytics, IServiceCenter, IServiceCenterExtended, TServiceCenterActions} from "./types";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
+import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {EDay} from "../demandSegments/types";
 import {getSCAnalytics, getWorkingDays, setPricingOpt} from "./actions";
+import {defaultOrder} from "../../../config/config";
 
 
 const blankAnalytics: ISCAnalytics = {
@@ -22,6 +23,8 @@ type TServiceCenterState = {
     paging: IPagingResponse,
     dealershipPaging: IPagingResponse,
     pageData: IPageRequest,
+    order: IOrder<IServiceCenterExtended>,
+    searchTerm: string,
     workingDays: EDay[],
     analytics: ISCAnalytics
 };
@@ -35,6 +38,8 @@ const initialState: TServiceCenterState = {
     dealershipLoading: false,
     loading: false,
     saving: false,
+    searchTerm: "",
+    order: {...defaultOrder},
     paging: {...defaultPaging},
     dealershipPaging: {...defaultPaging},
     pageData: {...defaultPageData},

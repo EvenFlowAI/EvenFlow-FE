@@ -18,16 +18,16 @@ import {Titles} from "../../../config/constants";
 
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
     {val: (el: IServiceCenterExtended) => el.dealership.name, header: "Dealership group"},
-    {val: (el: IServiceCenterExtended) => el.name, header: "Service center name"},
-    {val: (el: IServiceCenterExtended) => el.mainAddress, header: "Service center address"},
-    {val: (el: IServiceCenterExtended) => el.countOfBays.toString(), header: "Bays", align: "center"},
+    {val: (el: IServiceCenterExtended) => el.name, header: "Service center name", orderId: "name"},
+    {val: (el: IServiceCenterExtended) => el.mainAddress, header: "Service center address", orderId: "mainAddress"},
+    {val: (el: IServiceCenterExtended) => el.countOfBays.toString(), header: "Bays", align: "center", orderId: "countOfBays"},
 ];
 
 const rowDataA: TableRowDataType<IServiceCenterExtended>[] = [
-    {val: v => v.name, header: "Name"},
-    {val: v => concatAddress(v.address), header: "Address"},
-    {val: v => v.countOfEmployees.toString(), header: "Employees", align: "center"},
-    {val: v => v.countOfBays.toString(), header: "Bays", align: "center"}
+    {val: v => v.name, header: "Name", orderId: "name"},
+    {val: v => concatAddress(v.address), header: "Address", orderId: "address"},
+    {val: v => v.countOfEmployees.toString(), header: "Employees", align: "center", orderId: "countOfEmployees"},
+    {val: v => v.countOfBays.toString(), header: "Bays", align: "center", orderId: "countOfBays"}
 ];
 
 export const ServiceCenters = () => {
@@ -40,9 +40,10 @@ export const ServiceCenters = () => {
     const rowData = useMemo(() => {
         return currentUser?.isSuperUser ? rowDataSU : rowDataA;
     }, [currentUser]);
+    const order = useSelector((state: RootState) => state.serviceCenters.order);
 
     const dispatch = useDispatch();
-    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+    const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.dealershipGroups.pageData,
         changePageData
     );
@@ -51,7 +52,7 @@ export const ServiceCenters = () => {
 
     useEffect(() => {
         dispatch(loadAll())
-    }, [dispatch]);
+    }, [dispatch, pageIndex, pageSize]);
 
     const handleView = (el: IServiceCenterExtended) => () => alert(`View ${el.name}`);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
@@ -107,6 +108,8 @@ export const ServiceCenters = () => {
         <TitleContainer title={Titles.ServiceCenters} actions pad />
         <Table<IServiceCenterExtended>
             data={data}
+            order={order.orderBy}
+            isAscending={order.isAscending}
             noDataTitle="No Service Centers present"
             isLoading={loading}
             rowData={rowData}

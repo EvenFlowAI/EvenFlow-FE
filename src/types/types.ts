@@ -65,3 +65,8 @@ export interface PaginatedAPIResponse<T> {
 export type TTechnicianLevel = 1 | 2 | 3;
 
 export type AppThunk<ReturnType=void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;
+
+export interface IOrder<D={}> {
+    orderBy?: keyof D,
+    isAscending: boolean
+}

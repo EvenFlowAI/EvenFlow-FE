@@ -6,7 +6,7 @@ import {
     TableHead,
     TableRow,
     TableCell,
-    TablePagination, useMediaQuery, useTheme
+    TablePagination, useMediaQuery, useTheme, TableSortLabel
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ITableProps} from "./types";
@@ -111,8 +111,18 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                     <TableRow>
                         {props.startActions ? <TableCell className={classes.tableHead} /> : null}
                         {props.rowData.map((rE, idx) => (
-                            isXS && rE.xsHidden ? null : <TableCell key={`t_${idx}`} align={rE.align || "left"} className={classes.tableHead}>
-                                {rE.header}
+                            isXS && rE.xsHidden ? null : <TableCell
+                                key={`t_${idx}`}
+                                align={rE.align || "left"}
+                                className={classes.tableHead}>
+                                {rE.orderId
+                                    ? <TableSortLabel
+                                        onClick={() => {}}
+                                        direction={props.isAscending ? "asc" : "desc"}
+                                        active={rE.orderId === props.order}>
+                                        {rE.header}
+                                    </TableSortLabel>
+                                    : rE.header}
                             </TableCell>
                         ))}
                         {props.actions ? <TableCell className={classes.tableHead} /> : null}
