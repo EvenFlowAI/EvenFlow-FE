@@ -79,12 +79,17 @@ const HeadCell = styled(TableCell)(({theme}) => ({
         width: "35%"
     }
 }));
+type TIds = {
+    recursiveId?: number;
+    customId?: number;
+}
 
 export const ScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
     const [editedDate, setEditedDate] = useState<moment.Moment>(moment());
     const [editedEmployee, setEditedEmployee] = useState<IEmployee>({} as IEmployee);
     const [editedSchedule, setEditedSchedule] = useState<ISchedule|undefined>(undefined);
+    const [ids, setIds] = useState<TIds>({});
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [
@@ -134,9 +139,18 @@ export const ScheduleCalendar = () => {
         }
     }
 
+    const getIds = (date: moment.Moment, schedules: ISchedule[]): TIds => {
+        const data = schedules.filter(s => moment.utc(s.date).isSame(date, "day"));
+        return {
+            customId: data.find(s => !s.isRecurring)?.id,
+            recursiveId: data.find(s => s.isRecurring)?.id
+        }
+    }
+
     const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => async () => {
         setEditedDate(date);
         setEditedEmployee({...employee, serviceCenter: selectedSC});
+        setIds(getIds(date, schedules||[]));
         await updateEditedEmployee(employee.id);
         setEditedSchedule(getSchedule(date, schedules||[]));
         onOpen();
@@ -217,6 +231,8 @@ export const ScheduleCalendar = () => {
                 onEmployeeUpdate={updateEditedEmployee}
                 open={isOpen}
                 payload={editedSchedule}
+                recursiveId={ids.recursiveId}
+                customId={ids.customId}
                 onClose={onClose} />
         </div>
     );

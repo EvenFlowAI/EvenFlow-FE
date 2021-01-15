@@ -19,14 +19,16 @@ import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 type TProps = DialogProps<ISchedule> & {
     date: moment.Moment;
     employee: IEmployee;
-    onEmployeeUpdate: (id: string) => void
+    onEmployeeUpdate: (id: string) => void;
+    recursiveId?: number;
+    customId?: number;
 }
 type TForm = {
     timeStart: moment.Moment|null;
     timeEnd: moment.Moment|null;
     podId?: number;
 }
-export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
+export const EditSchedule: React.FC<TProps> = ({date, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const {isOpen, onClose, onOpen} = useModal();
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
@@ -69,7 +71,8 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate
                 finishAt: form.timeEnd?.format(timeSpanString),
                 serviceCenterId: employee.serviceCenterId,
                 podId: form.podId,
-                isRecurring
+                isRecurring,
+                id: isRecurring ? recursiveId : customId
             }
             await dispatch(setEmployeesSchedule(data, isXS));
             setSaving(false);
@@ -146,7 +149,7 @@ export const EditSchedule: React.FC<TProps> = ({date, employee, onEmployeeUpdate
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose}>Close</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave(false)}
