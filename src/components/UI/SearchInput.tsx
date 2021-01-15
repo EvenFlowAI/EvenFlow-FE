@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {TextField, TextInputProps} from "./TextField";
 import {Search} from "@material-ui/icons";
 import {useDebounce} from "../../utils/hooks";
@@ -22,6 +22,32 @@ export const SearchInput: React.FC<TSearchInputProps> = ({onSearch, value, delay
         placeholder="Search..."
         endAdornment={<Search />}
         value={value}
+        {...props}
+    />
+}
+type TProps = TextInputProps & {
+    onSearch: (s: string) => void;
+    search: string;
+};
+export const SearchDB: React.FC<TProps> = ({onSearch, search, ...props}) => {
+    const isInit = useRef(true);
+    const [innerSearch, setInner] = useState<string>(search);
+    const dbSearch = useDebounce<string>(innerSearch, 1000);
+    useEffect(() => {
+        if (!isInit.current && onSearch) {
+            onSearch(dbSearch);
+        }
+    }, [dbSearch, onSearch]);
+    useEffect(() => {isInit.current = false}, []);
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
+        setInner(value);
+    }
+
+    return <TextField
+        placeholder="Search..."
+        endAdornment={<Search />}
+        value={innerSearch}
+        onChange={handleChange}
         {...props}
     />
 }

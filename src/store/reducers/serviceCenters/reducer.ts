@@ -2,7 +2,7 @@ import {ISCAnalytics, IServiceCenter, IServiceCenterExtended, TServiceCenterActi
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {EDay} from "../demandSegments/types";
-import {getSCAnalytics, getWorkingDays, setPricingOpt, setSCOrder} from "./actions";
+import {getSCAnalytics, getWorkingDays, setPricingOpt, setSCOrder, setSCSearch} from "./actions";
 import {defaultOrder} from "../../../config/config";
 
 
@@ -103,6 +103,11 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
         case setSCOrder.type:
             if (setSCOrder.match(action)) {
                 return {...state, order: action.payload, pageData: {...state.pageData, pageIndex: 0}};
+            }
+            return state;
+        case setSCSearch.type:
+            if (setSCSearch.match(action)) {
+                return {...state, searchTerm: action.payload, pageData: {...state.pageData, pageIndex: 0}};
             }
             return state;
         default:

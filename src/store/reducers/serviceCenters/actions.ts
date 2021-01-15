@@ -38,7 +38,8 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
             Api.endpoints.ServiceCenters.GetAll,
             {data: {
                 ...state.serviceCenters.pageData,
-                ...state.serviceCenters.order
+                ...state.serviceCenters.order,
+                searchTerm: state.serviceCenters.searchTerm
             }}
         );
         dispatch(changePaging(paging));
@@ -50,6 +51,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
     }
 }
 export const setSCOrder = createAction<IOrder<IServiceCenterExtended>>("ServiceCenters/ChangeOrder");
+export const setSCSearch = createAction<string>("ServiceCenters/SetSearch");
 //
 // const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
 //     type: "ServiceCenters/Create", payload

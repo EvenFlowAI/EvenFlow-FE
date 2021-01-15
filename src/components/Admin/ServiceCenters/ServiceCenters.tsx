@@ -42,6 +42,7 @@ export const ServiceCenters = () => {
         return currentUser?.isSuperUser ? rowDataSU : rowDataA;
     }, [currentUser]);
     const order = useSelector((state: RootState) => state.serviceCenters.order);
+    const search = useSelector((state: RootState) => state.serviceCenters.searchTerm);
 
     const dispatch = useDispatch();
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
@@ -53,7 +54,7 @@ export const ServiceCenters = () => {
 
     useEffect(() => {
         dispatch(loadAll())
-    }, [dispatch, pageIndex, pageSize, order]);
+    }, [dispatch, pageIndex, pageSize, order, search]);
 
     const handleView = (el: IServiceCenterExtended) => () => alert(`View ${el.name}`);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
