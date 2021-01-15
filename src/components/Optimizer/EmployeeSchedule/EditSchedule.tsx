@@ -15,6 +15,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {setEmployeesSchedule} from "../../../store/reducers/schedules/actions";
 import {RootState} from "../../../store/rootReducer";
 import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
+import {Close} from "@material-ui/icons";
+import {API} from "../../../api/api";
+import {TIds} from "./types";
 
 type TProps = DialogProps<ISchedule> & {
     date: moment.Moment;
@@ -22,13 +25,14 @@ type TProps = DialogProps<ISchedule> & {
     onEmployeeUpdate: (id: string) => void;
     recursiveId?: number;
     customId?: number;
+    onClear: (t: keyof TIds) => void;
 }
 type TForm = {
     timeStart: moment.Moment|null;
     timeEnd: moment.Moment|null;
     podId?: number;
 }
-export const EditSchedule: React.FC<TProps> = ({date, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
+export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const {isOpen, onClose, onOpen} = useModal();
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
@@ -58,6 +62,18 @@ export const EditSchedule: React.FC<TProps> = ({date, recursiveId, customId, emp
     }
     const handleSelectPod = (e: React.ChangeEvent<{value: unknown, name?: string}>) => {
         setForm({...form, podId: e.target.value ? Number(e.target.value) : undefined});
+    }
+
+    const handleClear = (t: keyof TIds) => async () => {
+        setSaving(true);
+        try {
+            await API.employeeSchedules.remove((t === "customId" ? customId : recursiveId) || 0);
+            onClear(t);
+        } catch (e) {
+            showError(e);
+        } finally {
+            setSaving(false);
+        }
     }
 
     const handleSave = (isRecurring: boolean) => async () => {
@@ -146,6 +162,22 @@ export const EditSchedule: React.FC<TProps> = ({date, recursiveId, customId, emp
                         Employee Profile
                     </Button>
                 </Grid>
+                {(customId || recursiveId) ? <Grid item xs={12}>
+                    {customId ? <LoadingButton
+                        onClick={handleClear("customId")}
+                        startIcon={<Close />}
+                        variant="text"
+                        color="secondary">
+                        Clear schedule for {date.format("MMM D, YYYY")}
+                    </LoadingButton> : null}
+                    {recursiveId ? <LoadingButton
+                        color="secondary"
+                        variant="text"
+                        onClick={handleClear("recursiveId")}
+                        startIcon={<Close />}>
+                        Clear schedule for {date.format("dddd")}
+                    </LoadingButton> : null}
+                </Grid> : null}
             </Grid>
         </DialogContent>
         <DialogActions>
@@ -154,13 +186,13 @@ export const EditSchedule: React.FC<TProps> = ({date, recursiveId, customId, emp
                 loading={saving}
                 onClick={handleSave(false)}
             >
-                Save for {date.format("MMM, DD YYYY")}
+                Set for {date.format("MMM, DD YYYY")}
             </LoadingButton>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave(true)}
             >
-                Save for {date.format("ddd")}
+                Set for {date.format("dddd")}
             </LoadingButton>
         </DialogActions>
         <CreateEmployee open={isOpen} payload={employee} onAction={() => onEmployeeUpdate(employee.id)} onClose={onClose} />

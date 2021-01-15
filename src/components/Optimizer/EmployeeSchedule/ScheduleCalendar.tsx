@@ -28,6 +28,7 @@ import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {noop} from "../../../utils/utils";
 import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
+import { TIds } from './types';
 
 
 const ControlWrapper = styled("div")(({theme}) => ({
@@ -79,10 +80,7 @@ const HeadCell = styled(TableCell)(({theme}) => ({
         width: "35%"
     }
 }));
-type TIds = {
-    recursiveId?: number;
-    customId?: number;
-}
+
 
 export const ScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
@@ -128,6 +126,16 @@ export const ScheduleCalendar = () => {
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
+    }
+
+    const handleRefresh = (clearId?: keyof TIds) => {
+        if (clearId) {
+            setIds({...ids, [clearId]: undefined});
+        }
+        if (selectedSC) {
+            const [start, end] = getStartEndDates(selectedDate, isXS);
+            dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
+        }
     }
 
     const updateEditedEmployee = async (id: string) => {
@@ -230,6 +238,7 @@ export const ScheduleCalendar = () => {
                 employee={editedEmployee}
                 onEmployeeUpdate={updateEditedEmployee}
                 open={isOpen}
+                onClear={handleRefresh}
                 payload={editedSchedule}
                 recursiveId={ids.recursiveId}
                 customId={ids.customId}

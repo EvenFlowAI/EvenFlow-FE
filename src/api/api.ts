@@ -15,6 +15,9 @@ const appointment = {
     create: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => request.post("/appointments", data),
     update: (data: IUpdateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(`/appointments/${data.id}`, data)
 };
+const employeeSchedules = {
+    remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),
+}
 export const API = {
-    accounts, appointment
+    accounts, appointment, employeeSchedules
 };
