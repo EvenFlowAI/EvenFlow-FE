@@ -37,7 +37,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         val: el => <CellData
             data={el.serviceRequest.durationInHours.toFixed(1)}
             override={el.serviceRequestOverride?.durationInHours?.toFixed(1)}
-        />
+        />,
+        orderId: "duration"
     },
     {
         header: "Number of technicians",
@@ -45,7 +46,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         val: el => <CellData
             data={el.serviceRequest.countOfTechnicians.toString()}
             override={el.serviceRequestOverride?.countOfTechnicians?.toString()}
-        />
+        />,
+        orderId: "countOfTechnicians"
     },
     {
         header: "Skill level of technicians",
@@ -53,7 +55,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         val: el => <CellData
             data={el.serviceRequest.skillLevelOfTechnicians.toString()}
             override={el.serviceRequestOverride?.skillLevelOfTechnicians?.toString()}
-        />
+        />,
+        orderId: "skillLevelOfTechnicians"
     },
     {
         header: "Warranty invoice",
@@ -62,7 +65,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
             prefix="$"
             data={el.serviceRequest.warrantyInvoiceAmount.toString()}
             override={el.serviceRequestOverride?.warrantyInvoiceAmount?.toString()}
-        />
+        />,
+        orderId: "warrantyInvoiceAmount"
     },
     {
         header: "Regular invoice",
@@ -71,7 +75,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
             prefix="$"
             data={el.serviceRequest.invoiceAmount.toString()}
             override={el.serviceRequestOverride?.invoiceAmount?.toString()}
-        />
+        />,
+        orderId: "invoiceAmount"
     }
 ]
 
