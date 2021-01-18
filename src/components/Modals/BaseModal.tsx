@@ -63,8 +63,7 @@ const useStyles = makeStyles({
 
 
 export const BaseModal: React.FC<DialogProps> = props => {
-    const classes = useStyles({maxWidth: props.width || 0
-});
+    const classes = useStyles({maxWidth: props.width || 0});
     return <Dialog maxWidth={"md"} fullWidth {...props} classes={{root: classes.root, paper: classes.dialogPaper}} />;
 }
 

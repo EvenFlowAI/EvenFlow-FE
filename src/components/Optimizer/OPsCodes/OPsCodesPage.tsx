@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     loadAssignedServiceRequests,
-    setAssignedFilter,
+    setAssignedFilter, setAssignedOrdering,
     setAssignedPageData
 } from "../../../store/reducers/serviceRequests/actions";
 import {TableRowDataType} from "../../UI/types";
@@ -19,15 +19,17 @@ import {OverrideOPsCodeDialog} from "../../Modals/OPsCodesListDialog/OverrideOPs
 import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {SearchInput} from "../../UI/SearchInput";
+import {IOrder} from "../../../types/types";
 
 const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
-    {header: "Service Ops Code", val: el => el.serviceRequest.code},
+    {header: "Service Ops Code", val: el => el.serviceRequest.code, orderId: "code"},
     {
         header: "Description",
         val: el => <CellData
             data={el.serviceRequest.description}
             override={el.serviceRequestOverride?.description}
-        />
+        />,
+        orderId: "description"
     },
     {
         header: "Duration (hours)",
@@ -93,13 +95,15 @@ export const OPsCodesPage = () => {
         isLoading,
         requestsCount,
         pageData,
-        search
+        search,
+        order
     ] = useSelector((state: RootState) => [
         state.serviceRequests.assignedList,
         state.serviceRequests.assignedLoading,
         state.serviceRequests.assignedPaging.numberOfRecords,
         state.serviceRequests.assignedPageData,
-        state.serviceRequests.assignedFilter.searchTerm
+        state.serviceRequests.assignedFilter.searchTerm,
+        state.serviceRequests.assignedOrdering
     ]);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>(undefined);
@@ -113,7 +117,7 @@ export const OPsCodesPage = () => {
         if (selectedSC) {
             dispatch(loadAssignedServiceRequests(selectedSC.id));
         }
-    }, [selectedSC, dispatch, pageData]);
+    }, [selectedSC, dispatch, pageData, order]);
     const actions = (el: IAssignedServiceRequest) => {
         return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
     }
@@ -136,6 +140,9 @@ export const OPsCodesPage = () => {
     }
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setAssignedFilter({searchTerm: e.target.value}));
+    }
+    const handleSort = (o: IOrder<IAssignedServiceRequest>) => () => {
+        dispatch(setAssignedOrdering(o));
     }
     const handleSearch = useCallback(() => {
         if (selectedSC) {
@@ -192,6 +199,9 @@ export const OPsCodesPage = () => {
         />
         <Table<IAssignedServiceRequest>
             data={serviceRequestsList}
+            order={order.orderBy}
+            isAscending={order.isAscending}
+            onSort={handleSort}
             index="id"
             rowData={tableRow}
             rowsPerPage={pageSize}

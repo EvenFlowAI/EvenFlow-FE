@@ -6,7 +6,7 @@ import {
     IServiceRequestNonAddedFilter,
     ISRAdmin
 } from "./types";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
+import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {createReducer} from "@reduxjs/toolkit";
 import {
@@ -33,8 +33,9 @@ import {
     setLoadingAdmin,
     setAdminPaging,
     setAdminPageData,
-    setAdminFilter,
+    setAdminFilter, setAssignedOrdering, setNonSelectedOrder,
 } from "./actions";
+import {defaultOrder} from "../../../config/config";
 
 type TState = {
     adminList: ISRAdmin[];
@@ -46,8 +47,10 @@ type TState = {
     nonSelectedLoading: boolean;
     nonSelectedPaging: IPagingResponse;
     nonSelectedPageData: IPageRequest;
-    nonSelectedFilter: IServiceRequestNonAddedFilter,
+    nonSelectedOrder: IOrder<IServiceRequest>;
+    nonSelectedFilter: IServiceRequestNonAddedFilter;
     assignedList: IAssignedServiceRequest[];
+    assignedOrdering: IOrder<IAssignedServiceRequest>;
     assignedLoading: boolean;
     assignedPaging: IPagingResponse;
     assignedPageData: IPageRequest;
@@ -69,6 +72,7 @@ const initialState: TState = {
     adminPageData: {...defaultPageData},
     adminFilters: {searchTerm: ""},
     nonSelectedList: [],
+    nonSelectedOrder: {...defaultOrder},
     nonSelectedLoading: false,
     nonSelectedPaging: {...defaultPaging},
     nonSelectedPageData: {...defaultPageData},
@@ -76,6 +80,7 @@ const initialState: TState = {
     assignedList: [],
     assignedLoading: false,
     assignedPaging: {...defaultPaging},
+    assignedOrdering: {...defaultOrder},
     assignedPageData: {...defaultPageData},
     assignedFilter: {searchTerm: ""},
     urgentList: [],
@@ -105,6 +110,9 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(setNonSelectedFilter, (state, {payload}) => {
             return {...state, nonSelectedFilter: {...state.nonSelectedFilter, ...payload}};
+        })
+        .addCase(setNonSelectedOrder, (state, {payload}) => {
+            return {...state, nonSelectedOrder: payload, nonSelectedPageData: {...state.nonSelectedPageData, pageIndex: 0}};
         })
         .addCase(getAssignedServiceRequests, (state, {payload}) => {
             return {...state, assignedList: payload};
@@ -162,5 +170,8 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(setAdminFilter, (state, {payload}) => {
             return {...state, adminFilters: {...state.adminFilters, ...payload}};
+        })
+        .addCase(setAssignedOrdering, (state, {payload}) => {
+            return {...state, assignedOrdering: payload, assignedPageData: {...state.assignedPageData, pageIndex: 0}};
         })
 )

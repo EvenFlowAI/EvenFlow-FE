@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     assignServiceRequests,
-    loadNonSelectedServiceRequests, setNonSelectedFilter,
+    loadNonSelectedServiceRequests, setNonSelectedFilter, setNonSelectedOrder,
     setNonSelectedPageData
 } from "../../../store/reducers/serviceRequests/actions";
 import {useException, useMessage, usePagination, useSCs} from "../../../utils/hooks";
@@ -16,12 +16,13 @@ import {Table} from "../../UI/Table";
 import {LoadingButton} from "../../UI/Button";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {SearchInput} from "../../UI/SearchInput";
+import {IOrder} from "../../../types/types";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
-    {header: "OPs code", val: el => el.code},
-    {header: "Description", val: el => el.description},
-    {header: "Duration", val: el => el.durationInHours.toFixed(1)},
-    {header: "Regular Invoice", val: el => `$${el.invoiceAmount}`}
+    {header: "OPs code", val: el => el.code, orderId: "code"},
+    {header: "Description", val: el => el.description, orderId: "description"},
+    {header: "Duration", val: el => el.durationInHours.toFixed(1), orderId: "duration"},
+    {header: "Regular Invoice", val: el => `$${el.invoiceAmount}`, orderId: "invoiceAmount"}
 ]
 
 export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
@@ -33,12 +34,14 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
         serviceList,
         isLoading,
         servicesCount,
-        search
+        search,
+        order
     ] = useSelector((state: RootState) => [
         state.serviceRequests.nonSelectedList,
         state.serviceRequests.nonSelectedLoading,
         state.serviceRequests.nonSelectedPaging.numberOfRecords,
-        state.serviceRequests.nonSelectedFilter.searchTerm
+        state.serviceRequests.nonSelectedFilter.searchTerm,
+        state.serviceRequests.nonSelectedOrder,
     ]);
     const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
@@ -60,7 +63,7 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
         if (props.open && selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
         }
-    }, [props.open, dispatch, selectedSC, pageSize, pageSize]);
+    }, [props.open, dispatch, selectedSC, pageSize, pageSize, order]);
     const handleSearch = useCallback(() => {
         if (selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
@@ -76,6 +79,10 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
         } else {
             setSelectedCodes(selectedCodes.filter(i => i !== el.id));
         }
+    }
+
+    const handleOrder = (o: IOrder<IServiceRequest>) => () => {
+        dispatch(setNonSelectedOrder(o));
     }
 
     const preActions = (el: IServiceRequest) => {
@@ -107,6 +114,9 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
             </div>
             <Table<IServiceRequest>
                 data={serviceList}
+                order={order.orderBy}
+                isAscending={order.isAscending}
+                onSort={handleOrder}
                 index="id"
                 startActions={preActions}
                 compact

@@ -14,18 +14,19 @@ import {
     ISRAdminFilters,
     ISRAdminForm
 } from "./types";
-import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IOrder, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
 export const getNonSelectedServiceRequests = createAction<IServiceRequest[]>("ServiceRequests/getNonSelected");
 export const setLoadingNonSelected = createAction<boolean>("ServiceRequests/loadingNonSelected");
 export const setNonSelectedPaging = createAction<IPagingResponse>("ServiceRequests/NonSelectedPaging");
+export const setNonSelectedOrder = createAction<IOrder<IServiceRequest>>("ServiceRequests/NonSelectedOrder");
 export const setNonSelectedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/NonSelectedPageData");
 export const setNonSelectedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/NonSelectedFilter");
 
 export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThunk =>
     async (dispatch, getState) => {
-    const {nonSelectedFilter, nonSelectedPageData} = getState().serviceRequests;
+    const {nonSelectedFilter, nonSelectedPageData, nonSelectedOrder} = getState().serviceRequests;
     dispatch(setLoadingNonSelected(true));
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IServiceRequest>>(
@@ -33,6 +34,7 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThun
             {
                 data: {
                     ...nonSelectedPageData, ...nonSelectedFilter,
+                    ...nonSelectedOrder,
                     status: EServiceStatus.None,
                     serviceCenterFilter: {
                         isAssigned: false,
@@ -64,14 +66,15 @@ export const setAssignedLoading = createAction<boolean>("ServiceRequests/SetAssi
 export const setAssignedPaging = createAction<IPagingResponse>("ServiceRequests/SetAssignedPaging");
 export const setAssignedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetAssignedPageData");
 export const setAssignedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/SetAssignedFilter");
+export const setAssignedOrdering = createAction<IOrder<IAssignedServiceRequest>>("ServiceRequests/SetAssignedOrder");
 export const loadAssignedServiceRequests = (serviceCenterId: number): AppThunk =>
     async (dispatch, getState) => {
-    const {assignedPageData, assignedFilter} = getState().serviceRequests;
+    const {assignedPageData, assignedFilter, assignedOrdering} = getState().serviceRequests;
     dispatch(setAssignedLoading(true));
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequest>>(
             Api.endpoints.ServiceRequests.GetAssignedOverrides,
-            {params: {...assignedPageData, ...assignedFilter, serviceCenterId}}
+            {params: {...assignedPageData, ...assignedFilter, ...assignedOrdering, serviceCenterId}}
         );
         dispatch(getAssignedServiceRequests(result));
         dispatch(setAssignedLoading(false));
