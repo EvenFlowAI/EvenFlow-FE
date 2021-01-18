@@ -77,7 +77,9 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
     const isEdit = Boolean(payload?.id);
 
     useEffect(() => {
-        setFormState(initialState);
+        if (props.open) {
+            setFormState(initialState);
+        }
     }, [props.open, initialState]);
 
     useEffect(() => {
