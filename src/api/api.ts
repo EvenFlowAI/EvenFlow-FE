@@ -3,7 +3,7 @@ import {
     TApiResponse,
     ICreateAppointmentResp,
     IUpdateAppointment,
-    IPasswordRecoveryData, IPasswordRecoveryResp, ISetNewPasswordData
+    IPasswordRecoveryData, IPasswordRecoveryResp, ISetNewPasswordData, IConfig
 } from "./types";
 import {request} from "../config/requests";
 
@@ -18,6 +18,9 @@ const appointment = {
 const employeeSchedules = {
     remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),
 }
+const configs = {
+    get: (): TApiResponse<IConfig> => request.get("/configs")
+}
 export const API = {
-    accounts, appointment, employeeSchedules
+    accounts, appointment, employeeSchedules, configs
 };

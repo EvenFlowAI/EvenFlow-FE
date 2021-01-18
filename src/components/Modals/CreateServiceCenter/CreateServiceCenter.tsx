@@ -10,6 +10,7 @@ import {useException, useMessage} from "../../../utils/hooks";
 import {createSC, updateSC} from "../../../store/reducers/serviceCenters/actions";
 import {LoadingButton} from "../../UI/Button";
 import {RootState} from "../../../store/rootReducer";
+import {API} from "../../../api/api";
 
 
 type TSCFormState = {
@@ -21,6 +22,7 @@ type TSCFormState = {
     city: string;
     state: string;
     zipCode: string;
+    timeZoneId: string;
 }
 const initialFormState: TSCFormState = {
     scName: "",
@@ -31,22 +33,8 @@ const initialFormState: TSCFormState = {
     city: "",
     state: "",
     zipCode: "",
+    timeZoneId: ""
 }
-const formItems: TFormItem<TSCFormState>[][] = [
-    [
-        {id: "scName", label: "Service center name", value: v => v.scName},
-        {id: "scEmail", label: "Service center email", inputType: "email", value: v => v.scEmail},
-        {id: "scPhoneNumber", label: "Service center phone number", value: v => v.scPhoneNumber},
-        {id: "cpEmail", label: "Contact person email", inputType: "email", value: v => v.cpEmail}
-    ],
-    [
-        {id: "street", label: "Street", value: v => v.street},
-        {id: "city", label: "City", value: v => v.city},
-        {id: "state", label: "State", variant: "select", value: v => v.state, selectOptions: states},
-        {id: "zipCode", label: "Zip code", value: v => v.zipCode}
-    ]
-];
-
 
 
 export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({payload, ...props}) => {
@@ -59,9 +47,27 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
             city: payload?.address?.city || initialFormState.city,
             zipCode: payload?.address?.zipCode || initialFormState.zipCode,
             street: payload?.address?.street || initialFormState.street,
-            state: payload?.address?.state || initialFormState.state
+            state: payload?.address?.state || initialFormState.state,
+            timeZoneId: payload?.timeZoneId || initialFormState.timeZoneId
         }
     }, [payload]);
+    const [timeZones, setTimeZones] = useState<string[]>([]);
+
+    const formItems: TFormItem<TSCFormState>[][] = useMemo(() => [
+        [
+            {id: "scName", label: "Service center name", value: v => v.scName},
+            {id: "scEmail", label: "Service center email", inputType: "email", value: v => v.scEmail},
+            {id: "scPhoneNumber", label: "Service center phone number", value: v => v.scPhoneNumber},
+            {id: "cpEmail", label: "Contact person email", inputType: "email", value: v => v.cpEmail}
+        ],
+        [
+            {id: "street", label: "Street", value: v => v.street},
+            {id: "city", label: "City", value: v => v.city},
+            {id: "state", label: "State", variant: "select", value: v => v.state, selectOptions: states, sm: 6},
+            {id: "zipCode", label: "Zip code", value: v => v.zipCode, sm: 3},
+            {id: "timeZoneId", label: "Time zone", value: v => v.timeZoneId, sm: 3, variant: "select", selectOptions: timeZones}
+        ]
+    ], [timeZones]);
 
     const saving = useSelector((state: RootState) => state.serviceCenters.saving);
 
@@ -74,6 +80,15 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
         setFormState(initialState);
     }, [props.open, initialState]);
 
+    useEffect(() => {
+        if (props.open) {
+            API.configs.get().then(r => {
+                setTimeZones(r.data.timeZones);
+            })
+                .catch(() => setTimeZones([]));
+        }
+    }, [props.open]);
+
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
@@ -81,10 +96,11 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setFormState({...formState, [e.target.name]: e.target.value});
     }, [formState]);
-    const handleSelectChange: TSelectChange = useCallback((
-        e, val, reason
+    const handleSelectChange: (name: string) => TSelectChange = useCallback((name: string) => (
+        e, val
     ) => {
-        setFormState({...formState, state: val || ""});
+        console.log(name, val);
+        setFormState({...formState, [name]: val || ""});
     }, [formState]);
 
     const handleCreate = async () => {
@@ -98,7 +114,8 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
                 city: formState.city,
                 state: formState.state,
                 zipCode: formState.zipCode
-            }
+            },
+            timeZoneId: formState.timeZoneId
         }
         try {
             if (payload?.id) {

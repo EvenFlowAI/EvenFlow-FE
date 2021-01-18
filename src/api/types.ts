@@ -44,3 +44,7 @@ export interface ISetNewPasswordData {
     token: string;
     newPassword: string;
 }
+export interface IConfig {
+    roles: string[];
+    timeZones: string[];
+}

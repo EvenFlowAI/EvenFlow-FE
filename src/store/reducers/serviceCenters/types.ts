@@ -9,6 +9,7 @@ export interface IServiceCenter {
     applyPricingOptimization: boolean;
     mainAddress: string;
     avatarPath?: string;
+    timeZoneId: string;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
@@ -22,13 +23,14 @@ export interface IServiceCenterExtended extends IServiceCenter {
     dealershipId: number;
 }
 export interface IServiceCenterForm {
-    id?: number,
-    avatarPath?: string,
-    name: string,
-    serviceCenterEmail: string,
-    contactPersonalEmail: string,
-    phoneNumber: string,
-    address: IAddress
+    id?: number;
+    avatarPath?: string;
+    name: string;
+    serviceCenterEmail: string;
+    contactPersonalEmail: string;
+    phoneNumber: string;
+    address: IAddress;
+    timeZoneId: string;
 }
 export interface IHOOData {
     dayOfWeek: number;
