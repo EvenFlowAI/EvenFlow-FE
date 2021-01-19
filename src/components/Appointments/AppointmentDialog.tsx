@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
-import {IListAppointment} from "../../api/types";
+import {ICreateAppointment, IListAppointment} from "../../api/types";
 import {Button, Checkbox, Divider, FormControlLabel, Grid} from "@material-ui/core";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage, useSCs} from "../../utils/hooks";
@@ -132,8 +132,43 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     }
 
     const handleSave = async () => {
+        if (!selectedSC) {
+            return;
+        }
         setLoading(true);
         try {
+            const data: ICreateAppointment = {
+                serviceRequestIds: selectedSR.map(sr => sr.id),
+                slot: selectedSlot?.time || "",
+                date: selectedSlot?.date,
+                transportationNeeds: {
+                    description: form.transportationDescription,
+                    isNeed: form.transportationNeeded
+                },
+                vehicle: {
+                    make: form.vehicleMake,
+                    model: form.vehicleModel,
+                    year: form.vehicleYear,
+                    driveType: form.vehicleDriveType,
+                    engineType: form.vehicleEngineType,
+                    mileage: form.vehicleMileage,
+                    transmission: form.vehicleTransmission,
+                    vin: form.vehicleVin
+                },
+                serviceCenterId: selectedSC.id,
+                isNeedCall: form.isNeedCall,
+                gmt: moment().utcOffset(),
+                offerId: selectedSlot?.offer?.id || null,
+                driver: {
+                    email: form.driverEmail,
+                    phoneNumber: form.driverPhoneNumber,
+                    fullName: form.driverName
+                },
+                comment: form.comment,
+                reminderTypes: [],
+                appointmentTimingType: EAppointmentTimingType.PreferredDate
+            }
+            await API.appointment.create(data);
             setLoading(false);
             showMessage("Saved");
             onAction && onAction();

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {timeSpanString, timeString, Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {AppointmentActions} from "./AppointmentActions";
@@ -28,8 +28,8 @@ export const Appointments = () => {
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const {isOpen, onClose, onOpen} = useModal();
 
-    useEffect(() => {
-        if (selectedSC) {
+    const refresh = useCallback(() => {
+         if (selectedSC) {
             setLoading(true);
             API.appointment.list({
                 pageIndex: pageData.pageIndex,
@@ -45,6 +45,10 @@ export const Appointments = () => {
         }
     }, [selectedSC, pageData]);
 
+    useEffect(() => {
+        refresh();
+    }, [refresh]);
+
     const handleView = (el: IListAppointment) => () => {
         setViewItem(el);
         onOpen();
@@ -59,7 +63,7 @@ export const Appointments = () => {
     }
 
     return <>
-        <TitleContainer title={Titles.Appointments} pad actions={<AppointmentActions />} />
+        <TitleContainer title={Titles.Appointments} pad actions={<AppointmentActions onAction={refresh} />} />
         <Table<IListAppointment>
             data={appointments}
             noDataTitle="No employees present"
