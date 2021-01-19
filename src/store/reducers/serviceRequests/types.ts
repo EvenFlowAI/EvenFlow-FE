@@ -9,6 +9,12 @@ export interface IServiceRequest {
     warrantyInvoiceAmount: number;
     status: EServiceStatus;
 }
+export interface IServiceRequestShort {
+    id: 0;
+    code: string;
+    description: string;
+    priority: IServiceRequestPriority
+}
 export interface IServiceRequestNonAddedFilter {
     searchTerm: string;
 }
