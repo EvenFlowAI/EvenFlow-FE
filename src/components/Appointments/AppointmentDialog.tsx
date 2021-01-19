@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {IListAppointment} from "../../api/types";
-import {Button, Checkbox, Divider, FormControlLabel, Grid} from "@material-ui/core";
+import {Box, Button, Checkbox, Divider, FormControlLabel, Grid} from "@material-ui/core";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage, useSCs} from "../../utils/hooks";
 import {EReminderType, ISR} from "../../store/reducers/appointment/types";
@@ -251,7 +251,9 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     />
                 </Grid>
                 <Grid item xs={12} sm={3} style={{alignSelf: "flex-end"}}>
-                    Price: -
+                    <Box p={1}>
+                        Price: -
+                    </Box>
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />
