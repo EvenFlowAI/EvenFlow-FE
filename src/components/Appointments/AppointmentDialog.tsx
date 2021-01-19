@@ -2,16 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {IListAppointment} from "../../api/types";
-import {Box, Button, Checkbox, Divider, FormControlLabel, Grid} from "@material-ui/core";
+import {Button, Checkbox, Divider, FormControlLabel, Grid} from "@material-ui/core";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage, useSCs} from "../../utils/hooks";
-import {EReminderType, ISR} from "../../store/reducers/appointment/types";
+import {EAppointmentTimingType, EReminderType, IAppointmentSlot, ISR} from "../../store/reducers/appointment/types";
 import {TextField} from "../UI/TextField";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../UI/AutocompleteRender";
 import {DatePicker} from "../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {API} from "../../api/api";
+import moment from "moment";
+import {timeSpanString, timeString} from "../../config/constants";
+import {CalendarToday} from "@material-ui/icons";
 
 type TForm = {
     date: string;
@@ -61,9 +64,9 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const [srList, setSrList] = useState<ISR[]>([]);
     const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
     const [srLoading, setSrLoading] = useState<boolean>(false);
-    const [slots, setSlots] = useState([]);
+    const [slots, setSlots] = useState<IAppointmentSlot[]>([]);
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
-    const [selectedSlot, setSelectedSlot] = useState(null);
+    const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const showError = useException();
     const showMessage = useMessage();
@@ -73,6 +76,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         if (props.open) {
             setForm(initialForm);
             setSelectedSR([]);
+            setDate("");
             setSelectedSlot(null);
         }
     }, [props.open]);
@@ -93,21 +97,38 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         }
     }, [selectedSC, props.open]);
     useEffect(() => {
-        if (selectedSC && props.open) {
+        if (selectedSC && props.open && selectedSR.length && filterDate) {
             setSlotsLoading(true);
-            setSlotsLoading(false);
+            API.timeSlots.list({
+                appointmentTimingType: EAppointmentTimingType.PreferredDate,
+                fromDate: moment(filterDate).toISOString(),
+                serviceRequestIds: selectedSR.map(sr => sr.id),
+                serviceCenterId: selectedSC.id
+            })
+                .then(({data: {items}}) => {
+                    setSlots(items);
+                    setSelectedSlot(null)
+                })
+                .catch((e) => {
+                    showError(e);
+                    setSlots([]);
+                    setSelectedSlot(null);
+                })
+                .finally(() => {
+                    setSlotsLoading(false);
+                });
+
         }
-    }, [selectedSC, props.open]);
+    }, [selectedSC, props.open, filterDate, selectedSR, showError]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setForm({...form, [name]: value});
     }
     const handleSRChange = (e: any, value: ISR[]) => {
         setSelectedSR(value);
-        setSelectedSlot(null);
     }
-    const handleSlotChange = (e: any, value: unknown) => {
-
+    const handleSlotChange = (e: any, value: IAppointmentSlot|null) => {
+        setSelectedSlot(value);
     }
 
     const handleSave = async () => {
@@ -262,20 +283,25 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         value={filterDate || null}
                         onChange={setDate}
                         label="Date"
+                        InputProps={{
+                            endAdornment: <CalendarToday />
+                        }}
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={12} sm={5}>
+                <Grid item xs={12} sm={8}>
                     <Autocomplete
                         loading={slotsLoading}
+                        value={selectedSlot}
+                        getOptionLabel={option =>
+                            `${moment(option.date).format("LL")} ${moment(option.time, timeSpanString).format(timeString)} - $${
+                                option.priceWithOffer?.value ? option.priceWithOffer.value.toFixed(2) : option.price.value.toFixed(2)
+                            }`
+                        }
+                        onChange={handleSlotChange}
                         renderInput={autocompleteRender({label: "Time slot"})}
-                        options={[]}
+                        options={slots}
                     />
-                </Grid>
-                <Grid item xs={12} sm={3} style={{alignSelf: "flex-end"}}>
-                    <Box p={1}>
-                        Price: -
-                    </Box>
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />

@@ -10,9 +10,9 @@ import {
     IListAppointmentRequest,
     IListAppointment
 } from "./types";
-import {request} from "../config/requests";
+import {Api, request} from "../config/requests";
 import {PaginatedAPIResponse} from "../types/types";
-import {ISR} from "../store/reducers/appointment/types";
+import {IAppointmentResponse, IAppointmentSlotsRequest, ISR} from "../store/reducers/appointment/types";
 
 const accounts = {
     passwordRecovery: (data: IPasswordRecoveryData): TApiResponse<IPasswordRecoveryResp> => request.post("/accounts/password-recovery", data),
@@ -29,6 +29,12 @@ const employeeSchedules = {
 const configs = {
     get: (): TApiResponse<IConfig> => request.get("/configs")
 }
+const timeSlots = {
+    list: (data: IAppointmentSlotsRequest): TApiResponse<IAppointmentResponse> => request.post(
+        Api.endpoints.AppointmentSlots.GetSlots.route,
+        data
+    )
+};
 const serviceRequests = {
     list: (id: number, searchTerm: string): TApiResponse<PaginatedAPIResponse<ISR>> => request.get(
         "/service-requests/overrides/short-by-query",
@@ -43,5 +49,5 @@ const serviceRequests = {
     )
 }
 export const API = {
-    accounts, appointment, employeeSchedules, configs, serviceRequests
+    accounts, appointment, employeeSchedules, configs, serviceRequests, timeSlots
 };
