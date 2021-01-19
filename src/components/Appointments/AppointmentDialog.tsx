@@ -59,7 +59,11 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const [form, setForm] = useState<TForm>(initialForm);
     const [filterDate, setDate] = useState<ParsableDate>("");
     const [srList, setSrList] = useState<ISR[]>([]);
+    const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
     const [srLoading, setSrLoading] = useState<boolean>(false);
+    const [slots, setSlots] = useState([]);
+    const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
+    const [selectedSlot, setSelectedSlot] = useState(null);
     const [loading, setLoading] = useState<boolean>(false);
     const showError = useException();
     const showMessage = useMessage();
@@ -68,6 +72,8 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     useEffect(() => {
         if (props.open) {
             setForm(initialForm);
+            setSelectedSR([]);
+            setSelectedSlot(null);
         }
     }, [props.open]);
 
@@ -81,12 +87,27 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 .catch(() => {
                     setSrList([]);
                 })
-                .finally(() => setSrLoading(false));
+                .finally(() => {
+                    setSrLoading(false);
+                });
         }
-    }, [selectedSC, props.open])
+    }, [selectedSC, props.open]);
+    useEffect(() => {
+        if (selectedSC && props.open) {
+            setSlotsLoading(true);
+            setSlotsLoading(false);
+        }
+    }, [selectedSC, props.open]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setForm({...form, [name]: value});
+    }
+    const handleSRChange = (e: any, value: ISR[]) => {
+        setSelectedSR(value);
+        setSelectedSlot(null);
+    }
+    const handleSlotChange = (e: any, value: unknown) => {
+
     }
 
     const handleSave = async () => {
@@ -223,13 +244,14 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 <Grid item xs={12}>
                     <Autocomplete
                         multiple
+                        onChange={handleSRChange}
+                        value={selectedSR}
                         ChipProps={{
                             color: "primary",
                             style: {borderRadius: 4},
                             size: "small"
                         }}
                         loading={srLoading}
-                        getOptionSelected={(o, s) => o.id === s.id}
                         getOptionLabel={(option) => `${option.code}: ${option.description}`}
                         renderInput={autocompleteRender({label: "Service Requests"})}
                         options={srList}
@@ -245,7 +267,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 </Grid>
                 <Grid item xs={12} sm={5}>
                     <Autocomplete
-                        multiple
+                        loading={slotsLoading}
                         renderInput={autocompleteRender({label: "Time slot"})}
                         options={[]}
                     />
