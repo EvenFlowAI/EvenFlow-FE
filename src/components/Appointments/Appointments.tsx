@@ -8,9 +8,9 @@ import {API} from "../../api/api";
 import {TableRowDataType} from "../UI/types";
 import {Table} from "../UI/Table";
 import moment from "moment";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
-import {AppointmentDialog} from "./AppointmentDialog";
+import {IconButton} from "@material-ui/core";
+import {Visibility} from "@material-ui/icons";
+import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
 
 const cols: TableRowDataType<IListAppointment>[] = [
     {header: "Date", val: el => moment.utc(el.dateInUtc).format("LL")},
@@ -21,8 +21,7 @@ const cols: TableRowDataType<IListAppointment>[] = [
 
 export const Appointments = () => {
     const [appointments, setAppointments] = useState<IListAppointment[]>([]);
-    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [editedItem, setEditedItem] = useState<IListAppointment|undefined>(undefined);
+    const [viewItem, setViewItem] = useState<IListAppointment|undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
     const [count, setCount] = useState<number>(0);
     const {selectedSC} = useSCs();
@@ -46,20 +45,16 @@ export const Appointments = () => {
         }
     }, [selectedSC, pageData]);
 
-    const handleMenuOpen = (el: IListAppointment) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        setAnchorEl(e.currentTarget);
-        setEditedItem(el);
-    }
-    const editAppointment = () => {
+    const handleView = (el: IListAppointment) => () => {
+        setViewItem(el);
         onOpen();
-        setAnchorEl(null);
     }
 
     const actions = (el: IListAppointment) => {
         return <IconButton
             size="small"
-            onClick={handleMenuOpen(el)}>
-            <MoreHoriz />
+            onClick={handleView(el)}>
+            <Visibility />
         </IconButton>
     }
 
@@ -78,9 +73,6 @@ export const Appointments = () => {
             index="id"
             actions={actions}
         />
-        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-            <MenuItem onClick={editAppointment}>Edit</MenuItem>
-        </Menu>
-        <AppointmentDialog open={isOpen} payload={editedItem} onClose={onClose} />
+        <ViewAppointmentDialog open={isOpen} payload={viewItem} onClose={onClose} />
     </>
 };
