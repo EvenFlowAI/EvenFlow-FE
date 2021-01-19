@@ -12,6 +12,7 @@ import {
 } from "./types";
 import {request} from "../config/requests";
 import {PaginatedAPIResponse} from "../types/types";
+import {ISR} from "../store/reducers/appointment/types";
 
 const accounts = {
     passwordRecovery: (data: IPasswordRecoveryData): TApiResponse<IPasswordRecoveryResp> => request.post("/accounts/password-recovery", data),
@@ -28,6 +29,19 @@ const employeeSchedules = {
 const configs = {
     get: (): TApiResponse<IConfig> => request.get("/configs")
 }
+const serviceRequests = {
+    list: (id: number, searchTerm: string): TApiResponse<PaginatedAPIResponse<ISR>> => request.get(
+        "/service-requests/overrides/short-by-query",
+        {
+            params: {
+                serviceCenterId: id,
+                searchTerm,
+                pageSize: 0,
+                pageIndex: 0
+            }
+        }
+    )
+}
 export const API = {
-    accounts, appointment, employeeSchedules, configs
+    accounts, appointment, employeeSchedules, configs, serviceRequests
 };

@@ -2,11 +2,16 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {IListAppointment} from "../../api/types";
-import {Button, Divider, Grid} from "@material-ui/core";
+import {Button, Checkbox, Divider, FormControlLabel, Grid} from "@material-ui/core";
 import {LoadingButton} from "../UI/Button";
-import {useException, useMessage} from "../../utils/hooks";
-import {EReminderType} from "../../store/reducers/appointment/types";
+import {useException, useMessage, useSCs} from "../../utils/hooks";
+import {EReminderType, ISR} from "../../store/reducers/appointment/types";
 import {TextField} from "../UI/TextField";
+import {Autocomplete} from "@material-ui/lab";
+import {autocompleteRender} from "../UI/AutocompleteRender";
+import {DatePicker} from "../UI/DateTimePickers";
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {API} from "../../api/api";
 
 type TForm = {
     date: string;
@@ -15,10 +20,8 @@ type TForm = {
     driverName: string;
     driverPhoneNumber: string;
     driverEmail: string;
-    // transportationNeeds: {
-    //     isNeed: boolean;
-    //     description: string;
-    // },
+    transportationNeeded: boolean;
+    transportationDescription: string;
     vehicleVin: string;
     vehicleMake: string;
     vehicleYear: string;
@@ -38,10 +41,8 @@ const initialForm: TForm = {
     driverName: "",
     driverPhoneNumber: "",
     driverEmail: "",
-    // transportationNeeds: {
-    //     isNeed: boolean,
-    //     description: string,
-    // },
+    transportationDescription: "",
+    transportationNeeded: false,
     vehicleVin: "",
     vehicleMake: "",
     vehicleYear: "",
@@ -56,15 +57,33 @@ const initialForm: TForm = {
 };
 export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
+    const [filterDate, setDate] = useState<ParsableDate>("");
+    const [srList, setSrList] = useState<ISR[]>([]);
+    const [srLoading, setSrLoading] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const showError = useException();
     const showMessage = useMessage();
+    const {selectedSC} = useSCs();
 
     useEffect(() => {
         if (props.open) {
             setForm(initialForm);
         }
     }, [props.open]);
+
+    useEffect(() => {
+        if (props.open && selectedSC) {
+            setSrLoading(true);
+            API.serviceRequests.list(selectedSC.id, "")
+                .then(({data: {result}}) => {
+                    setSrList(result);
+                })
+                .catch(() => {
+                    setSrList([]);
+                })
+                .finally(() => setSrLoading(false));
+        }
+    }, [selectedSC, props.open])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setForm({...form, [name]: value});
@@ -188,7 +207,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
-                        label="Millage"
+                        label="Mileage"
                         value={form.vehicleMileage}
                         id="vehicleMileage"
                         type="number"
@@ -200,6 +219,65 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <Autocomplete
+                        multiple
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        loading={srLoading}
+                        getOptionSelected={(o, s) => o.id === s.id}
+                        getOptionLabel={(option) => `${option.code}: ${option.description}`}
+                        renderInput={autocompleteRender({label: "Service Requests"})}
+                        options={srList}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <DatePicker
+                        value={filterDate || null}
+                        onChange={setDate}
+                        label="Date"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={5}>
+                    <Autocomplete
+                        multiple
+                        renderInput={autocompleteRender({label: "Time slot"})}
+                        options={[]}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={3} style={{alignSelf: "flex-end"}}>
+                    Price: -
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                    <TextField
+                        label="Transportation Description"
+                        value={form.transportationDescription}
+                        id="transportationDescription"
+                        name="transportationDescription"
+                        onChange={handleChange}
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4} style={{alignSelf: "flex-end"}}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                color="primary"
+                                checked={form.transportationNeeded}
+                                onChange={(e, checked) =>
+                                    setForm({...form, transportationNeeded: checked})}
+                            />
+                        }
+                        label="Transportation"
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
