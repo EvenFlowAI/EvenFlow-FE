@@ -81,6 +81,7 @@ const SULinks: LinkType[] = [
 ];
 const AdminLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true},
+    {to: Routes.Admin.Appointments, name: "Appointments"},
     {to: Routes.Admin.ServiceCenters, name: "Service Centers"},
     {to: Routes.Admin.Employees, name: "Employees"}
 ]

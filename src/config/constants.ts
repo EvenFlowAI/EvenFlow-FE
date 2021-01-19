@@ -70,7 +70,8 @@ export enum Roles {
 export enum Titles {
     DealershipGroups = "Dealership Groups",
     Employees = "Employees",
-    ServiceCenters = "Service Centers"
+    ServiceCenters = "Service Centers",
+    Appointments = "Appointments"
 }
 
 export const timeSpanString = "HH:mm:ss";

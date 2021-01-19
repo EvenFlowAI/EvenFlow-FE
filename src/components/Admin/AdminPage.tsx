@@ -12,6 +12,7 @@ import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDe
 import {Roles} from "../../config/constants";
 import {Profile} from "./Profile/Profile";
 import {ServiceRequests} from "./ServiceRequets/ServiceRequets";
+import {Appointments} from "../Appointments/Appointments";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
@@ -29,6 +30,9 @@ export const AdminPage = () => {
                     path={`${Routes.Admin.ServiceRequests}`} component={ServiceRequests} />
                 : null}
             <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>
+            {!currentUser.isSuperUser ?
+                <PrivateRoute path={Routes.Admin.Appointments} component={Appointments} />
+                : null}
             {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null}

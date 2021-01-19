@@ -1,6 +1,7 @@
 enum AdminRoutes {
     Base = "/admin",
     DealershipGroups = "/admin/dealership-groups",
+    Appointments = "/admin/appointments",
     Employees = "/admin/employees",
     Profile = "/admin/profile",
     ServiceCenters = "/admin/service-centers",
