@@ -198,6 +198,21 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         fullWidth
                     />
                 </Grid>
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        label="Comment"
+                        value={form.comment}
+                        id="comment"
+                        name="comment"
+                        rows={3}
+                        multiline
+                        onChange={handleChange}
+                        fullWidth
+                    />
+                </Grid>
             </Grid>
         </DialogContent>
         <DialogActions>

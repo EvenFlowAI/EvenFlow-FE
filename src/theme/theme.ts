@@ -82,6 +82,9 @@ theme.overrides = {
                 borderColor: theme.palette.grey.A200
             },
         },
+        inputMultiline: {
+            padding: theme.spacing(2)
+        },
         input: {
             ...input,
         }
