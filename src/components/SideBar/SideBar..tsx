@@ -74,29 +74,29 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SULinks: LinkType[] = [
-    {to: Routes.Admin.DealershipGroups, name: "Dealership Groups"},
-    {to: Routes.Admin.Employees, name: "Employees"},
-    {to: Routes.Admin.ServiceCenters, name: "Service Centers"},
-    {to: Routes.Admin.ServiceRequests, name: "Service Requests"}
+    {to: Routes.Admin.DealershipGroups, name: "Dealership Groups", roles: ["Super Admin"]},
+    {to: Routes.Admin.Employees, name: "Employees", roles: ["Super Admin"]},
+    {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Super Admin"]},
+    {to: Routes.Admin.ServiceRequests, name: "Service Requests", roles: ["Super Admin"]}
 ];
 const AdminLinks: LinkType[] = [
-    {to: Routes.Admin.Base, name: "Dashboard", exact: true},
-    {to: Routes.Admin.Appointments, name: "Appointments"},
-    {to: Routes.Admin.ServiceCenters, name: "Service Centers"},
-    {to: Routes.Admin.Employees, name: "Employees"}
+    {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: true},
+    {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
+    {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner"]},
+    {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager", "Advisor"]}
 ]
 const MainLinks: LinkType[] = [
-    {to: Routes.Admin.Base, name: "Dashboard", exact: true},
-    {to: Routes.Optimizer.Base, name: "Optimizer Settings", exact: true},
-    {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true},
-    {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true},
-    {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true},
-    {to: Routes.Optimizer.EmployeeSchedule, name: "Employee Schedule", sub: true},
-    {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true},
-    {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true},
-    {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true},
-    {to: Routes.Optimizer.PricingSettings, name: "Pricing Settings", sub: true},
-    {to: Routes.OfferManagement.Base, name: "Offer Management", sub: false},
+    {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: true},
+    {to: Routes.Optimizer.Base, name: "Optimizer Settings", exact: true, roles: true},
+    {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager", "Advisor"]},
+    {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.EmployeeSchedule, name: "Employee Schedule", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.PricingSettings, name: "Pricing Settings", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.OfferManagement.Base, name: "Offer Management", sub: false, roles: ["Owner", "Manager"]},
 ];
 
 
@@ -147,14 +147,23 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
             : null}
         <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI"/>
         <List disablePadding>
-            {links.map(link => <ListItem
-                disableGutters
-                className={clsx(classes.listItem, link.sub ? classes.subMenu : "")}
-                component={NavLink}
-                to={link.to}
-                onClick={closeSidebar}
-                exact={link.exact}
-                key={link.to}>{link.name}</ListItem>)}
+            {links.map(link => {
+                if (typeof link.roles === "boolean") {
+                    if (!link.roles) {
+                        return null;
+                    }
+                } else if (currentUser?.role && !link.roles.includes(currentUser.role)) {
+                    return null;
+                }
+                return <ListItem
+                    disableGutters
+                    className={clsx(classes.listItem, link.sub ? classes.subMenu : "")}
+                    component={NavLink}
+                    to={link.to}
+                    onClick={closeSidebar}
+                    exact={link.exact}
+                    key={link.to}>{link.name}</ListItem>;
+            })}
         </List>
         <div style={{flex: 1}} />
         <Button endIcon={<ArrowForwardIos />} className={classes.link} onClick={handleGoToBooking}>Go to Booking</Button>

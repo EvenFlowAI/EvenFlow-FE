@@ -1,10 +1,12 @@
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../store/rootReducer";
 import {Action} from "redux";
+import {TRole} from "../store/reducers/users/types";
 
 export type LinkType = {
     to: string;
     name: string;
+    roles: TRole[]|boolean;
     exact?: boolean;
     sub?: boolean;
 }
