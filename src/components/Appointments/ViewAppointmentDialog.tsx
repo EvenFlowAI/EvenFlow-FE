@@ -1,20 +1,16 @@
 import React from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {
-    Box,
     Button,
-    CircularProgress,
-    Grid,
+    CircularProgress, Divider,
     List,
     ListItem,
     ListItemIcon,
-    ListItemText,
-    Paper,
-    Typography
+    ListItemText
 } from "@material-ui/core";
 import {DialogProps} from "../Modals/types";
 import {IListAppointment} from "../../api/types";
-import {Settings, EmailOutlined, Phone, LocalOffer, Schedule} from "@material-ui/icons";
+import {Settings, LocalOffer, Schedule, MonetizationOn} from "@material-ui/icons";
 import {getOfferValue} from "../AppointmentFlow/AppointmentSelections/UI";
 import moment from "moment";
 import {timeSpanString, timeString} from "../../config/constants";
@@ -50,12 +46,10 @@ const Offer: React.FC<{offer: IListAppointment['offer']}> = ({offer}) => {
     if (!offer) {
         return null;
     }
-    return <List>
-        <ListItem>
-            <ListItemIcon><LocalOffer color="primary" /></ListItemIcon>
-            <ListItemText primary={offer.title} secondary={getOfferValue(offer, offer.serviceType?.name || "")} />
-        </ListItem>
-    </List>
+    return <ListItem>
+        <ListItemIcon><LocalOffer color="primary" /></ListItemIcon>
+        <ListItemText primary={offer.title} secondary={getOfferValue(offer, offer.serviceType?.name || "")} />
+    </ListItem>;
 }
 
 export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
@@ -76,10 +70,21 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({
                             <ListItemText primary={sr.code} secondary={sr.description} />
                         </ListItem>
                     })}
+                    <Divider />
                     <Info appointment={payload} />
+                    <Divider />
                     <ContactInfo driver={payload.driver} />
+                    <Divider />
+                    <Offer offer={payload.offer}/>
+                    {payload.offer ? <Divider /> : null}
+                    <ListItem>
+                        <ListItemIcon><MonetizationOn /></ListItemIcon>
+                        <ListItemText
+                            primary="Total"
+                            secondary={`$${payload.transactionValue.toFixed(2)}`}
+                        />
+                    </ListItem>
                 </List>
-                <Offer offer={payload.offer} />
             </>}
         </DialogContent>
         <DialogActions>
