@@ -1,3 +1,5 @@
+import {TRole} from "../store/reducers/users/types";
+
 export enum States {
     AL = "Alabama",
     AK = "Alaska",
@@ -66,6 +68,10 @@ export enum Roles {
     Technician='Technician',
     Owner='Owner'
 }
+
+export const userRoles: TRole[] = [
+    "Manager", "Advisor", "Call Centre Administrator"
+];
 
 export enum Titles {
     DealershipGroups = "Dealership Groups",

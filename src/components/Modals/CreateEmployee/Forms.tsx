@@ -6,10 +6,12 @@ import {TextField} from "../../UI/TextField";
 import {TAdvisorForm, TSelectChange, TTechnicianForm} from "./types";
 import {ToggleButtons} from "../../UI/ToggleButtons";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {TRole} from "../../../store/reducers/users/types";
+import {userRoles} from "../../../config/constants";
 
 
 export const initialAdvisorForm: TAdvisorForm = {
-    firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null
+    firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null, role: "Manager"
 }
 export const initialTechnicianForm: TTechnicianForm = {
     firstName: '', lastName: '', serviceCenter: null, phoneNumber: "",
@@ -19,6 +21,7 @@ export const initialTechnicianForm: TTechnicianForm = {
 
 type TAFormProps = {
     onChange: React.ChangeEventHandler<HTMLInputElement>,
+    onRoleChange: (e: any, value: TRole) => void,
     onSelectChange: TSelectChange,
     form: TAdvisorForm,
     loading: boolean,
@@ -75,7 +78,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 fullWidth
             />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
             <Autocomplete
                 options={props.shortSC}
                 onChange={props.onSelectChange}
@@ -85,6 +88,24 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 value={props.form.serviceCenter || null}
                 renderInput={autocompleteRender({label: "Service Center", fullWidth: true})}
             />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+            {props.form.role && !userRoles.includes(props.form.role) ?
+                <TextField
+                    disabled
+                    value={props.form.role}
+                    fullWidth
+                    label="Role"
+                />
+            : <Autocomplete
+                options={userRoles}
+                onChange={props.onRoleChange}
+                loading={props.loading}
+                disableClearable
+                value={props.form.role || null}
+                renderInput={autocompleteRender({label: "Role", fullWidth: true})}
+            />}
+
         </Grid>
     </Grid>
 }

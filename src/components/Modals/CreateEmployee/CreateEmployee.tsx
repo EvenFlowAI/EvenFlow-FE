@@ -13,7 +13,7 @@ import {TSelectChange} from "./types";
 import {IEmployee, IEmployeeForm} from "../../../store/reducers/employees/types";
 import {createEmployee, loadAll, updateEmployee} from "../../../store/reducers/employees/actions";
 import {useException, useMessage} from "../../../utils/hooks";
-import {IUserForm} from "../../../store/reducers/users/types";
+import {IUserForm, TRole} from "../../../store/reducers/users/types";
 import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
 import {Roles} from "../../../config/constants";
@@ -90,6 +90,9 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             setTechnicianForm({...technicianForm, serviceCenter: typeof value !== 'string' ? value : null});
         }
     }
+    const handleRoleChange = (e: any, value: TRole) => {
+        setAdvisorForm({...advisorForm, role: value});
+    }
     const handleSwitchChange = (e: React.ChangeEvent<{}>, newVal: number) => {
         if (newVal) {
             setTechnicianForm({
@@ -103,7 +106,6 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         if (role === Roles.Advisor) {
             data = {
                 ...advisorForm,
-                role,
                 serviceCenterId: advisorForm.serviceCenter?.id || null
             } as IUserForm;
         } else {
@@ -170,7 +172,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                         fullWidth
                         variant="outlined"
                         onClick={() => handleChangeRole(Roles.Advisor)}>
-                        Service center advisor
+                        User Account
                     </Button>
                 </Grid>
             </Grid> : null}
@@ -180,6 +182,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                 ? <AdvisorForm
                     form={advisorForm}
                     onSelectChange={handleSelectChange(Roles.Advisor)}
+                    onRoleChange={handleRoleChange}
                     shortSC={shortSC}
                     loading={shortLoading}
                     onChange={handleChange(Roles.Advisor)} />
