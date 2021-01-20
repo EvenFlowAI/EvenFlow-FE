@@ -77,9 +77,8 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({
                         </ListItem>
                     })}
                     <Info appointment={payload} />
+                    <ContactInfo driver={payload.driver} />
                 </List>
-                <Box p={1} />
-                <ContactInfo driver={payload.driver} />
                 <Offer offer={payload.offer} />
             </>}
         </DialogContent>
