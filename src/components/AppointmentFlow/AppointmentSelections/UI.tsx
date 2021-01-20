@@ -30,12 +30,12 @@ const BuildIcon = styled(Build)({
     fontSize: 12,
     verticalAlign: "bottom"
 });
-export const getOfferValue = (offer: IOffer, text?: boolean) => {
+export const getOfferValue = (offer: IOffer, text?: boolean|string) => {
     switch (offer.type) {
         case EOfferType.AmountOff:
             return `$${offer.value} off`;
         case EOfferType.FreeService:
-            return text ? "Free service" : <span>Free <BuildIcon /></span>;
+            return text ? typeof text === "boolean" ? "Free service" : text : <span>Free <BuildIcon /></span>;
         case EOfferType.PercentOff:
             return `${offer.value}% off`;
     }

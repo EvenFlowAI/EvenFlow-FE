@@ -1,14 +1,86 @@
 import React from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
-import {Button, CircularProgress} from "@material-ui/core";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Grid,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Paper,
+    Typography
+} from "@material-ui/core";
 import {DialogProps} from "../Modals/types";
+import {IListAppointment} from "../../api/types";
+import {Settings, EmailOutlined, Phone, LocalOffer, Schedule} from "@material-ui/icons";
+import {getOfferValue} from "../AppointmentFlow/AppointmentSelections/UI";
+import moment from "moment";
+import {timeSpanString, timeString} from "../../config/constants";
 
-export const ViewAppointmentDialog: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
-    return <BaseModal {...props}>
+const Info: React.FC<{appointment: IListAppointment}> = ({appointment}) => {
+    return <><ListItem>
+            Car info
+        </ListItem>
+        <ListItem>
+            <ListItemText
+                primary={appointment.vehicle.vin}
+                secondary={`${appointment.vehicle.make} ${appointment.vehicle.model} ${appointment.vehicle.year}`}
+            />
+        </ListItem>
+    </>
+}
+
+const ContactInfo: React.FC<{driver: IListAppointment["driver"]}> = ({driver}) => {
+    return <>
+        <ListItem>
+            Customer info
+        </ListItem>
+        <ListItem>
+            <ListItemText
+                primary={driver.fullName}
+                secondary={`${driver.email} ${driver.phoneNumber}`}
+            />
+        </ListItem>
+    </>
+}
+
+const Offer: React.FC<{offer: IListAppointment['offer']}> = ({offer}) => {
+    if (!offer) {
+        return null;
+    }
+    return <List>
+        <ListItem>
+            <ListItemIcon><LocalOffer color="primary" /></ListItemIcon>
+            <ListItemText primary={offer.title} secondary={getOfferValue(offer, offer.serviceType?.name || "")} />
+        </ListItem>
+    </List>
+}
+
+export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
+    return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
             {!payload ? <CircularProgress /> : <>
-                View
+                <List dense>
+                    <ListItem>
+                        <ListItemIcon><Schedule /></ListItemIcon>
+                        <ListItemText
+                            primary={ `${moment(payload.dateInUtc).format("LL")} ${moment(payload.timeSlot, timeSpanString).format(timeString)}`}
+                        />
+                    </ListItem>
+                    {payload.serviceRequests.map(sr => {
+                        return <ListItem>
+                            <ListItemIcon><Settings /></ListItemIcon>
+                            <ListItemText primary={sr.code} secondary={sr.description} />
+                        </ListItem>
+                    })}
+                    <Info appointment={payload} />
+                </List>
+                <Box p={1} />
+                <ContactInfo driver={payload.driver} />
+                <Offer offer={payload.offer} />
             </>}
         </DialogContent>
         <DialogActions>
