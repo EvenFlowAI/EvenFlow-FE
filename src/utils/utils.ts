@@ -2,6 +2,9 @@ import {IAddress} from "../store/reducers/dealershipGroups/types";
 import {ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction} from "react";
 import {TCalendarProps} from "./types";
 import * as queryString from "querystring";
+import {ICurrentUser} from "../store/reducers/users/types";
+import {PERMISSIONS} from "../permissions";
+import {matchPath} from "react-router-dom";
 
 export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     return new Promise(resolve => {
@@ -46,4 +49,18 @@ export const getCalendarUrl = (params: TCalendarProps): string => {
     const data: {[k: string]: string|undefined} = {...params, dates: params.dates.join("/")};
     data.action = "TEMPLATE";
     return `https://calendar.google.com/calendar/event?${queryString.stringify(data)}`;
+}
+export const hasPermission = (user: ICurrentUser|undefined, route: string): boolean => {
+    if (!user) {
+        return true;
+    }
+    for (let row of PERMISSIONS) {
+        if (matchPath(route, row.route)) {
+            if (typeof row.roles === "boolean") {
+                return row.roles;
+            }
+            return row.roles.includes(user.role);
+        }
+    }
+    return true;
 }

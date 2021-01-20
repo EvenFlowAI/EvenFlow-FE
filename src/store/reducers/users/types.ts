@@ -7,7 +7,7 @@ export interface ICurrentUser {
     serviceCenterId: number;
     userName: string;
     email: string;
-    role: string;
+    role: TRole;
     phoneNumber: string;
     emailConfirmed: boolean;
     avatarPath: string;
@@ -18,12 +18,12 @@ export interface IUserForm {
     lastName: string;
     email: string;
     phoneNumber: string;
-    role: string;
+    role: TRole;
     serviceCenterId: number;
 }
 export interface IAdvisorShort {
     id: string;
-    role: string;
+    role: TRole;
     firstName: string;
     lastName: string;
     fullName: string;
@@ -34,3 +34,10 @@ export interface IAdvisorShort {
 export type TGetCurrentUser = {type: "User/GetCurrentUser", payload: ICurrentUser};
 type TSaving = {type: "User/Saving", payload: boolean};
 export type TUserActions = TSaving | TGetCurrentUser;
+export type TRole =
+    | "Super Admin"
+    | "Owner"
+    | "Manager"
+    | "Advisor"
+    | "Technician"
+    | "Call Centre Administrator"
