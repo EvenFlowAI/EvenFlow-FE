@@ -24,6 +24,7 @@ type TAFormProps = {
     onRoleChange: (e: any, value: TRole) => void,
     onSelectChange: TSelectChange,
     form: TAdvisorForm,
+    isEdit: boolean,
     loading: boolean,
     shortSC: IServiceCenter[]
 };
@@ -90,7 +91,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
             />
         </Grid>
         <Grid item xs={12} sm={6}>
-            {props.form.role && !userRoles.includes(props.form.role) ?
+            {(props.isEdit || (props.form.role && !userRoles.includes(props.form.role))) ?
                 <TextField
                     disabled
                     value={props.form.role}

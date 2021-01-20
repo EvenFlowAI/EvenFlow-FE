@@ -181,6 +181,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             {role === Roles.Advisor
                 ? <AdvisorForm
                     form={advisorForm}
+                    isEdit={Boolean(payload)}
                     onSelectChange={handleSelectChange(Roles.Advisor)}
                     onRoleChange={handleRoleChange}
                     shortSC={shortSC}
