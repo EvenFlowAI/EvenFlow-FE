@@ -184,7 +184,7 @@ export const AdminDashboard: React.FC = () => {
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
-        bays: analytics.countOfPods,
+        bays: analytics.countOfBays,
         appointments: analytics.countOfAppointmentsToday,
         pods: analytics.countOfPods
     }));
