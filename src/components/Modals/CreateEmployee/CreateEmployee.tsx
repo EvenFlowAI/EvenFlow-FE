@@ -7,9 +7,8 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
-import {TAdvisorForm, TTechnicianForm} from "./types";
+import {TAdvisorForm, TSelectChange, TTechnicianForm} from "./types";
 import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
-import {TSelectChange} from "./types";
 import {IEmployee, IEmployeeForm} from "../../../store/reducers/employees/types";
 import {createEmployee, loadAll, updateEmployee} from "../../../store/reducers/employees/actions";
 import {useException, useMessage} from "../../../utils/hooks";
@@ -72,7 +71,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         setAdvisorForm(startAdvisorForm);
         setTechnicianForm(startTechnicianForm);
         if (payload) {
-            setRole(payload.role as Roles);
+            setRole(payload.role === Roles.Technician ? Roles.Technician : Roles.Advisor);
         }
     }, [props.open, startAdvisorForm, startTechnicianForm, payload]);
 
@@ -103,7 +102,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     }
     const handleCreate = async () => {
         let data: IEmployeeForm | IUserForm;
-        if (role === Roles.Advisor) {
+        if (role !== Roles.Technician) {
             data = {
                 ...advisorForm,
                 serviceCenterId: advisorForm.serviceCenter?.id || null
@@ -123,7 +122,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             } as IEmployeeForm;
         }
         try {
-            if (role === Roles.Advisor) {
+            if (role !== Roles.Technician) {
                 if (payload?.id) {
                     await dispatch(updateUser(data as IUserForm, payload.id, avatar));
                 } else {
