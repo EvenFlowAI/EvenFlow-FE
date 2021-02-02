@@ -217,6 +217,7 @@ export const DemandSegmentsDesirability = () => {
                             </div>
                             : <Button
                                 color="primary"
+                                disabled={!optSettings.length}
                                 className={classes.edit}
                                 onClick={() => setEdit(true)}>
                                 Edit
