@@ -6,7 +6,7 @@ import {TechniciansList} from "../../Optimizer/Technicians/TechniciansList";
 
 export const Technicians: React.FC<DialogProps> = props => {
     return <BaseModal {...props}>
-        <DialogTitle onClose={props.onClose}>Technician Stuff</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Technician Staff</DialogTitle>
         <TechniciansList />
         <DialogActions>
             <Button variant="contained" color="primary" onClick={props.onClose}>Close</Button>

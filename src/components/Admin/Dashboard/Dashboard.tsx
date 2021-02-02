@@ -196,7 +196,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Bays", icon: <Build />, action: onOpenBays},
         {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenB},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
-        {label: "Technician stuff", icon: <PeopleAltOutlined />, action: onOpenTech},
+        {label: "Technician staff", icon: <PeopleAltOutlined />, action: onOpenTech},
         {label: "Pods", icon: <FormatListNumbered />, action: onOpenPods},
     ];
 
