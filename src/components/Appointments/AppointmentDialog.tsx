@@ -262,7 +262,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         label="Drive Type"
                         value={form.vehicleDriveType}
@@ -272,7 +272,17 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        label="Transmission"
+                        value={form.vehicleTransmission}
+                        id="vehicleTransmission"
+                        name="vehicleTransmission"
+                        onChange={handleChange}
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         label="Engine Type"
                         value={form.vehicleEngineType}
@@ -282,7 +292,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         label="Mileage"
                         value={form.vehicleMileage}
