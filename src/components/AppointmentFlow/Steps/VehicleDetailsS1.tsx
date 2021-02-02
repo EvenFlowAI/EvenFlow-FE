@@ -28,6 +28,7 @@ import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
 import {IVehicleData} from "../../../store/reducers/appointment/types";
 import {Help} from "@material-ui/icons";
+import { VIN_LENGTH } from '../../../config/constants';
 
 const Tip = styled("p")({
     fontSize: 14,
@@ -89,7 +90,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
     }, [dispatch, form]);
 
     useEffect(() => {
-        if (form.vin.length === 17 && oldVin.current !== form.vin) {
+        if (form.vin.length === VIN_LENGTH && oldVin.current !== form.vin) {
             const t = setTimeout(() => {
                 oldVin.current = form.vin;
                 setLoading(true);
@@ -205,7 +206,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 onChange={handleTextChange}
+                                placeholder="e.g. 110 456"
                                 type={"number"}
+                                inputProps={{min: 0}}
                                 value={form.mileage || ""}
                                 name="mileage"
                                 id="mileage"

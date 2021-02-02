@@ -73,6 +73,7 @@ type TDataMap = {
     serviceType: string;
     name: string;
     carInfo: string;
+    scPhoneNumber?: string;
     phoneNumber: string;
     email: string;
     total: string;
@@ -99,6 +100,7 @@ export const ConfirmationContent = () => {
     const data: TDataMap = useMemo(() => ({
         date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
         address: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "-",
+        scPhoneNumber: appointment.scProfile?.phoneNumber,
         serviceType: appointment.selectedSR.map(sId => appointment.serviceRequests.find(s => s.id === sId)?.description || "-").join(", "),
         name: appointment.personalInformation.fullName || "-",
         carInfo: getCarInfo(appointment.s1Data),
@@ -122,9 +124,11 @@ export const ConfirmationContent = () => {
             dates: [moment(appointment.appointment?.date).toISOString()],
             text: "Appointment",
             location: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "",
-            details: rows.filter(r => calendarIds.includes(r.id)).map(r =>
+            details: [...rows.filter(r => calendarIds.includes(r.id)).map(r =>
                 `${r.label}: ${data[r.key]}`
-            ).join("\n")
+            ),
+                `Contact number: ${data.scPhoneNumber}`
+            ].join("\n")
         });
         window.open(url);
     }

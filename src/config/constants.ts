@@ -88,3 +88,4 @@ export enum LocalItems {
 }
 export const SC_UNDEFINED = "Service center is not loaded";
 export const SOMETHING_WRONG = "Something wrong";
+export const VIN_LENGTH = 17;
