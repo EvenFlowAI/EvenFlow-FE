@@ -13,7 +13,6 @@ import {ProgressStepper} from "./ProgressStepper";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAppointmentReducer, saveAppointmentReducer} from "../../store/reducers/appointment/actions";
 import {RootState} from "../../store/rootReducer";
-import {VIN_LENGTH} from "../../config/constants";
 
 
 const useStyles = makeStyles(theme => ({
@@ -185,7 +184,7 @@ export const AppointmentFlow = () => {
                 return Boolean(appState.selectedSR.length);
             case 1:
                 const s1 = appState.s1Data;
-                return Boolean((s1.model && s1.make && s1.year) || (s1.vin && s1.vin.length === VIN_LENGTH));
+                return Boolean(s1.model && s1.make && s1.year);
             default:
                 return false;
         }

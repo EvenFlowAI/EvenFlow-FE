@@ -8,6 +8,7 @@ import {TS1Form} from "../../store/reducers/appointment/types";
 import {useHistory, useParams} from "react-router-dom";
 import {Routes} from "../../config/routes";
 import {concatAddress, getCalendarUrl} from "../../utils/utils";
+import {G_CALENDAR_FORMAT} from "../../config/constants";
 
 const Paper = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(2),
@@ -120,9 +121,13 @@ export const ConfirmationContent = () => {
     }
 
     const handleAddToCalendar = () => {
+        const date = moment.utc(appointment.appointment?.date);
         const url = getCalendarUrl({
-            dates: [moment(appointment.appointment?.date).toISOString()],
+            dates: [
+                date.format(G_CALENDAR_FORMAT) + `${appointment.appointment?.time.split(":").join("")}Z`,
+                date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${appointment.appointment?.time.split(":").join("")}Z`],
             text: "Appointment",
+            timeZone: moment().format("Z"),
             location: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "",
             details: [...rows.filter(r => calendarIds.includes(r.id)).map(r =>
                 `${r.label}: ${data[r.key]}`

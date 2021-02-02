@@ -4,6 +4,7 @@ export type TCalendarProps = {
     text: string;
     dates: string[];
     location: string;
+    timeZone?: string;
     details?: string;
 }
 export type TRouteRoleMap = {
