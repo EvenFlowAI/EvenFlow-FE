@@ -114,7 +114,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
             setLoading(true);
             const sd: moment.Moment = selectedDate
                 ? moment(selectedDate)
-                : moment.utc().add(1, "day").startOf("day");
+                : moment.utc().startOf("day");
             try {
                 await dispatch(loadAppointmentSlots({
                     appointmentTimingType: selectedAppointmentType,
