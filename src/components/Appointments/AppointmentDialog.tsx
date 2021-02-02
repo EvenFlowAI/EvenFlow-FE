@@ -1,11 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {ICreateAppointment, IListAppointment} from "../../api/types";
 import {Button, Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, Grid} from "@material-ui/core";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage, useSCs} from "../../utils/hooks";
-import {EAppointmentTimingType, EReminderType, IAppointmentSlot, ISR} from "../../store/reducers/appointment/types";
+import {
+    EAppointmentTimingType,
+    EReminderType,
+    IAppointmentSlot,
+    ISR,
+    IVehicleData
+} from "../../store/reducers/appointment/types";
 import {TextField} from "../UI/TextField";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../UI/AutocompleteRender";
@@ -13,8 +19,10 @@ import {DatePicker} from "../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {API} from "../../api/api";
 import moment from "moment";
-import {timeSpanString, timeString} from "../../config/constants";
+import {timeSpanString, timeString, VIN_LENGTH} from "../../config/constants";
 import {CalendarToday} from "@material-ui/icons";
+import {Api} from "../../config/requests";
+import {InputLoading} from "../AppointmentFlow/UI";
 
 type TForm = {
     date: string;
@@ -60,6 +68,7 @@ const initialForm: TForm = {
 };
 export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
+    const [vinLoading, setVinLoading] = useState<boolean>(false);
     const [filterDate, setDate] = useState<ParsableDate>("");
     const [srList, setSrList] = useState<ISR[]>([]);
     const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
@@ -71,6 +80,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
+    const oldVin = useRef<string>("");
 
     useEffect(() => {
         if (props.open) {
@@ -120,6 +130,36 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
 
         }
     }, [selectedSC, props.open, filterDate, selectedSR, showError]);
+
+    const fillDataByVin = useCallback((d: IVehicleData) => {
+        setForm(f => ({
+            ...f,
+            vehicleModel: d.model || f.vehicleModel,
+            vehicleMake: d.make || f.vehicleMake,
+            vehicleEngineType: d.engineType || f.vehicleEngineType,
+            vehicleTransmission: d.transmission || f.vehicleTransmission,
+            vehicleDriveType: d.driveType || f.vehicleDriveType,
+            vehicleYear: d.year ? String(d.year) : f.vehicleYear,
+            vehicleMileage: d.mileage ? String(d.mileage) : f.vehicleMileage
+        }))
+    }, []);
+
+    useEffect(() => {
+        if (form.vehicleVin.length === VIN_LENGTH && oldVin.current !== form.vehicleVin) {
+            const t = setTimeout(() => {
+                oldVin.current = form.vehicleVin;
+                setVinLoading(true);
+                Api.call<IVehicleData>(
+                    Api.endpoints.Vehicles.GetByVIN,
+                    {params: {vin: form.vehicleVin}}
+                )
+                    .then(r => fillDataByVin(r.data))
+                    .catch(e => showError(e))
+                    .finally(() => setVinLoading(false))
+            }, 1000);
+            return () => clearTimeout(t);
+        }
+    }, [form.vehicleVin, showError, fillDataByVin]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setForm({...form, [name]: value});
@@ -236,6 +276,11 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         value={form.vehicleVin}
                         id="vehicleVin"
                         name="vehicleVin"
+                        endAdornment={
+                            vinLoading ?
+                                <InputLoading />
+                                : undefined
+                        }
                         onChange={handleChange}
                         fullWidth
                     />
