@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {ICreateAppointment, IListAppointment} from "../../api/types";
-import {Button, Checkbox, Divider, FormControlLabel, Grid} from "@material-ui/core";
+import {Button, Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, Grid} from "@material-ui/core";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage, useSCs} from "../../utils/hooks";
 import {EAppointmentTimingType, EReminderType, IAppointmentSlot, ISR} from "../../store/reducers/appointment/types";
@@ -127,6 +127,14 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const handleSRChange = (e: any, value: ISR[]) => {
         setSelectedSR(value);
     }
+    const handleReminderChange = (t: EReminderType) => () => {
+        setForm({
+            ...form,
+            reminderTypes: form.reminderTypes.includes(t)
+                ? form.reminderTypes.filter(rt => rt !== t)
+                : [...form.reminderTypes, t]
+        });
+    }
     const handleSlotChange = (e: any, value: IAppointmentSlot|null) => {
         setSelectedSlot(value);
     }
@@ -165,7 +173,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     fullName: form.driverName
                 },
                 comment: form.comment,
-                reminderTypes: [],
+                reminderTypes: form.reminderTypes,
                 appointmentTimingType: EAppointmentTimingType.PreferredDate
             }
             await API.appointment.create(data);
@@ -328,6 +336,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         value={filterDate || null}
                         onChange={setDate}
                         label="Date"
+                        disablePast
                         InputProps={{
                             endAdornment: <CalendarToday />
                         }}
@@ -373,6 +382,34 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         }
                         label="Transportation"
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    <FormLabel
+                        style={{fontWeight: "bold", textTransform: "uppercase",
+                            fontSize: "12px", marginBottom: 4, color: "#000"}}>Reminders</FormLabel>
+                    <FormGroup row>
+                        <FormControlLabel
+                            control={<Checkbox
+                                color="primary"
+                                checked={form.reminderTypes.includes(EReminderType.Email)}
+                                onChange={handleReminderChange(EReminderType.Email)} name="reminders"/>}
+                            label="Email"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox
+                                color="primary"
+                                checked={form.reminderTypes.includes(EReminderType.Sms)}
+                                onChange={handleReminderChange(EReminderType.Sms)} name="reminders"/>}
+                            label="SMS"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox
+                                color="primary"
+                                checked={form.reminderTypes.includes(EReminderType.Phone)}
+                                onChange={handleReminderChange(EReminderType.Phone)} name="reminders"/>}
+                            label="Phone"
+                        />
+                    </FormGroup>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
