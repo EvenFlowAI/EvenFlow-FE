@@ -70,7 +70,7 @@ export enum Roles {
 }
 
 export const userRoles: TRole[] = [
-    "Manager", "Advisor", "Call Centre Rep"
+    "Manager", "Advisor", "Call Center Rep"
 ];
 
 export enum Titles {
