@@ -129,7 +129,7 @@ export const ConfirmationContent = () => {
             text: "Appointment",
             location: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "",
             details: [
-                `Contact number: ${data.scPhoneNumber}`,
+                `Contact number: ${data.scPhoneNumber}\n`,
             ...rows.filter(r => calendarIds.includes(r.id)).map(r =>
                 `${r.label}: ${data[r.key]}`
             )].join("\n")
