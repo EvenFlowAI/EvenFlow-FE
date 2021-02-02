@@ -124,16 +124,15 @@ export const ConfirmationContent = () => {
         const date = moment.utc(appointment.appointment?.date);
         const url = getCalendarUrl({
             dates: [
-                date.format(G_CALENDAR_FORMAT) + `${appointment.appointment?.time.split(":").join("")}Z`,
-                date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${appointment.appointment?.time.split(":").join("")}Z`],
+                date.format(G_CALENDAR_FORMAT) + appointment.appointment?.time.split(":").join(""),
+                date.add(1, "hour").format(G_CALENDAR_FORMAT) + appointment.appointment?.time.split(":").join("")],
             text: "Appointment",
-            timeZone: moment().format("Z"),
             location: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "",
-            details: [...rows.filter(r => calendarIds.includes(r.id)).map(r =>
+            details: [
+                `Contact number: ${data.scPhoneNumber}`,
+            ...rows.filter(r => calendarIds.includes(r.id)).map(r =>
                 `${r.label}: ${data[r.key]}`
-            ),
-                `Contact number: ${data.scPhoneNumber}`
-            ].join("\n")
+            )].join("\n")
         });
         window.open(url);
     }
