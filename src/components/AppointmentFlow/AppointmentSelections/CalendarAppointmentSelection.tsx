@@ -7,7 +7,7 @@ import {AppointmentPlate} from "./AppointmentPlate";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TPopoverProps} from "../Steps/types";
 
 type TGroupedAppointments = {
@@ -45,10 +45,14 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
     const displayItems = useMemo(() => {
         return isMD && !isXS ? 4 : 6;
     }, [isMD, isXS]);
+    const sliceSet = useRef<boolean>(false);
 
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const [selectedIdx, setSelectedIdx] = useState<string|null>(null);
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
+    const [appointmentType, appointmentDate] = useSelector(
+        ({appointment: {s3Data}}: RootState) => [s3Data.appointmentType, s3Data.date]
+    );
     const isMount = useRef(true);
 
     const dispatch = useDispatch();
@@ -86,6 +90,22 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
         }
         return appointments;
     }, [data]);
+
+    useEffect(() => {
+        if (
+            !sliceSet.current
+            && appointmentType === EAppointmentTimingType.PreferredDate
+            && !sliceIdx
+            && Object.keys(groupedAppointments).length > displayItems
+            && appointmentDate
+        ) {
+            const idxToSet = Math.floor(Object.keys(groupedAppointments).findIndex(
+                app => moment(app).isSameOrAfter(moment(appointmentDate))
+            ) / displayItems)
+            setSliceIdx(idxToSet);
+            sliceSet.current = true;
+        }
+    }, [groupedAppointments, sliceIdx, displayItems, appointmentType, appointmentDate]);
 
     const dateAppointments = useMemo(() => {
         return selectedIdx ? groupedAppointments[selectedIdx]?.appointments || [] : [];
