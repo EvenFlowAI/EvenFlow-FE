@@ -238,7 +238,7 @@ export const AdminDashboard: React.FC = () => {
                 </Grid>
             )}
         </Grid>
-        <EditAddress open={isAddressOpen} onClose={onCloseAddress} />
+        <EditAddress open={isAddressOpen} viewMode={isCCRView} onClose={onCloseAddress} />
         <HourOfOperations open={isHOOOpen} onClose={onCloseHOO} />
         <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
         <Break open={isBOpen} onClose={onCloseB} />

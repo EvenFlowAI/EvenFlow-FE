@@ -7,3 +7,4 @@ type DialogData<U={}> = {
     width?: number
 }
 export type DialogProps<U={}> = DP & DialogData<U>;
+export type TViewMode = {viewMode?: boolean;};

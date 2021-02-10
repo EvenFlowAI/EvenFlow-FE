@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../types";
+import {DialogProps, TViewMode} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Grid} from "@material-ui/core";
 import {IAddress} from "../../../store/reducers/dealershipGroups/types";
@@ -17,12 +17,13 @@ import {LoadingButton} from "../../UI/Button";
 const EditForm: React.FC<{
     onChange: React.ChangeEventHandler<HTMLInputElement>,
     onSelect: TSelectChange,
-    form: IAddress
-}> = (props) => {
+    form: IAddress,
+}&TViewMode> = ({viewMode, ...props}) => {
     return <Grid container spacing={3}>
         <Grid item xs={12}>
             <TextField
                 fullWidth
+                disabled={viewMode}
                 id="street"
                 name="street"
                 label="Street"
@@ -33,6 +34,7 @@ const EditForm: React.FC<{
         <Grid item xs={12}>
             <TextField
                 fullWidth
+                disabled={viewMode}
                 id="city"
                 name="city"
                 label="City"
@@ -43,6 +45,7 @@ const EditForm: React.FC<{
         <Grid item xs={6}>
             <Autocomplete
                 options={states}
+                disabled={viewMode}
                 onChange={props.onSelect}
                 renderInput={autocompleteRender({label: "State", fullWidth: true})}
                 value={props.form.state}
@@ -54,6 +57,7 @@ const EditForm: React.FC<{
                 id="zipCode"
                 name="zipCode"
                 label="Zip code"
+                disabled={viewMode}
                 onChange={props.onChange}
                 value={props.form.zipCode}
             />
@@ -68,7 +72,7 @@ const initialAddress: IAddress = {
     zipCode: ""
 }
 
-export const EditAddress: React.FC<DialogProps> = props => {
+export const EditAddress: React.FC<DialogProps&TViewMode> = props => {
     const [form, setForm] = useState<IAddress>(initialAddress);
     const [saving, setSave] = useState<boolean>(false);
     const showError = useException();
@@ -114,20 +118,20 @@ export const EditAddress: React.FC<DialogProps> = props => {
 
     return <BaseModal {...props} maxWidth="sm">
         <DialogTitle onClose={props.onClose}>
-            Edit Address
+            {props.viewMode ? "View" : "Edit"} Address
         </DialogTitle>
         <DialogContent>
-            <EditForm onChange={handleChange} onSelect={handleSelectState} form={form} />
+            <EditForm viewMode={props.viewMode} onChange={handleChange} onSelect={handleSelectState} form={form} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
-            <LoadingButton
+            <Button onClick={props.onClose}>Close</Button>
+            {!props.viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"
                 color="primary"
                 onClick={handleSave}>
                 Save
-            </LoadingButton>
+            </LoadingButton> : null}
         </DialogActions>
     </BaseModal>
 }
