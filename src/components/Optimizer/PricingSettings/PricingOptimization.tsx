@@ -98,17 +98,17 @@ export const PricingOptimization = () => {
                                 <TableCell>{wd}</TableCell>
                                 <TableCell align="center">
                                     {data[idx as EDay]?.lowPrice
-                                        ? data[idx as EDay].lowPrice + "$"
+                                        ? Math.round(data[idx as EDay].lowPrice) + "$"
                                         : "-"}
                                 </TableCell>
                                 <TableCell align="center">
                                     {data[idx as EDay]?.averagePrice
-                                        ? data[idx as EDay].averagePrice + "$"
+                                        ? Math.round(data[idx as EDay].averagePrice) + "$"
                                         : "-"}
                                 </TableCell>
                                 <TableCell align="center">
                                     {data[idx as EDay]?.highPrice
-                                        ? data[idx as EDay].highPrice + "$"
+                                        ? Math.round(data[idx as EDay].highPrice) + "$"
                                         : "-"}
                                 </TableCell>
                             </TableRow>
