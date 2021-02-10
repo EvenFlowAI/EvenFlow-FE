@@ -42,7 +42,7 @@ export const ToD = () => {
         <TableContainer>
             <Grid container alignItems={isXS ? "flex-start" : "center"} justify={isXS ? "flex-start" : "space-between"} direction={isXS ? "column" : "row"}>
                 <div className={classes.rowWrapper}>
-                    <SwitchButtons onClick={handleSwitch("1")} active={"2"} buttons={buttons} />
+                    <SwitchButtons onClick={handleSwitch("1")} active={"0"} buttons={buttons} />
                     <span className={classes.message}>= Low (Discount)</span>
                 </div>
                 <Divider orientation="vertical" flexItem hidden={isXS} />
@@ -52,7 +52,7 @@ export const ToD = () => {
                 </div>
                 <Divider orientation="vertical" flexItem hidden={isXS} />
                 <div className={classes.rowWrapper}>
-                    <SwitchButtons onClick={handleSwitch("1")} active={"0"} buttons={buttons} />
+                    <SwitchButtons onClick={handleSwitch("1")} active={"2"} buttons={buttons} />
                     <span className={classes.message}>= High (Premium)</span>
                 </div>
             </Grid>
