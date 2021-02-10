@@ -15,7 +15,7 @@ import {HourOfOperations} from "../../Modals/HourOfOperations/HourOfOperations";
 import {WeeklySchedule} from "../../Modals/WeeklySchedule/WeeklySchedule";
 import {Holidays} from "../../Modals/Holydays/Holidays";
 import {Break} from "../../Modals/Breaks/Break";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useCurrentUser, useModal, useSCs} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Technicians} from "../../Modals/Technicians/Technicians";
 import {Bays} from "../../Modals/Bays/Bays";
@@ -141,6 +141,11 @@ const overallData: TDataMap[] = [
 
 export const AdminDashboard: React.FC = () => {
     const {selectedSC} = useSCs();
+    const currentUser = useCurrentUser();
+    const isCCRView: boolean = useMemo(() => {
+        return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
+    }, [currentUser]);
+
     const {
         onClose: onCloseAddress,
         onOpen: onOpenAddress,
@@ -223,7 +228,12 @@ export const AdminDashboard: React.FC = () => {
                     <Paper variant="outlined" className={classes.paper}>
                         <div className={classes.icon}>{item.icon}</div>
                         <h4 className={classes.label}>{item.label}</h4>
-                        <span className={classes.edit} onClick={item.action}>Edit</span>
+                        <span className={classes.edit} onClick={item.action}>
+                            {isCCRView
+                                ? "View"
+                                : "Edit"
+                            }
+                        </span>
                     </Paper>
                 </Grid>
             )}
