@@ -56,7 +56,7 @@ export const PricingOptimization = () => {
     }
 
     return <SquarePaper variant="outlined">
-        <PaperTitle>Demand windows Eligibility status</PaperTitle>
+        <PaperTitle>Check Pricing</PaperTitle>
         <Divider />
         <Box p={2} mt={1.5} width={300}>
             <Label style={{color: "#252733"}} htmlFor="serviceRequest">
