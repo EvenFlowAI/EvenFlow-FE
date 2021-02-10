@@ -1,4 +1,4 @@
-import React, {FunctionComponent, memo, useMemo, useState} from 'react';
+import React, {FunctionComponent, memo, useEffect, useMemo, useRef, useState} from 'react';
 import {Box, Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {SquarePaper} from "../../UI/Paper";
 import {timeString} from "../../../config/constants";
@@ -7,7 +7,7 @@ import {LoanerCarChip, OfferChip, ShortWaitChip} from "./UI";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TPopoverProps} from "../Steps/types";
 import {FixedSizeList, ListChildComponentProps} from "react-window";
 import moment from "moment";
@@ -143,8 +143,14 @@ type TListProps = {
 }
 export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({onPopoverOpen, date, isLoading, onDateChange, onPopoverClose}) => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
+    const positionSet = useRef<boolean>(false);
+    const listRef = useRef<FixedSizeList>(null);
+    const [waitForRef, setWaitForRef] = useState<boolean>(false);
     const appointments = useSelector((state: RootState) => state.appointment.appointmentSlots);
     const [order, setOrder] = useState<number|null>(null);
+    const [appointmentType, appointmentDate] = useSelector(
+        ({appointment: {s3Data}}: RootState) => [s3Data.appointmentType, s3Data.date]
+    );
 
     const sortedAppointments = useMemo(() => {
         if (order) {
@@ -156,6 +162,29 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
         }
         return appointments;
     }, [appointments, order]);
+
+    useEffect(() => {
+        if (!positionSet.current) {
+            if (!listRef.current) {
+                setTimeout(() => {
+                    setWaitForRef(!waitForRef);
+                }, 200);
+            } else if (
+                sortedAppointments.length
+                && appointmentType === EAppointmentTimingType.PreferredDate
+                && appointmentDate
+            ) {
+                const indexToScroll = sortedAppointments.findIndex(
+                    el => el.date.isSameOrAfter(moment(appointmentDate))
+                );
+                if (indexToScroll > 0) {
+                    listRef.current.scrollToItem(indexToScroll, "center");
+                }
+                positionSet.current = true;
+            }
+        }
+    }, [sortedAppointments, waitForRef, listRef, appointmentDate, appointmentType]);
+
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const dispatch = useDispatch();
@@ -204,6 +233,7 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
                 <AutoSizer>
                     {({height, width}) => (
                         <FixedSizeList
+                            ref={listRef}
                             height={height}
                             width={width}
                             itemSize={isXS ? 134 : 58}
