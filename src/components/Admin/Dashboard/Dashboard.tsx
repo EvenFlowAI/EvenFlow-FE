@@ -242,9 +242,9 @@ export const AdminDashboard: React.FC = () => {
         <HourOfOperations viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
         <WeeklySchedule viewMode={isCCRView} open={isWSOpen} onClose={onCloseWS} />
         <Break viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
-        <Holidays open={isHOpen} onClose={onCloseH} />
+        <Holidays viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
         <Technicians open={isTechOpen} onClose={onCloseTech} />
-        <Bays open={isBaysOpen} onClose={onCloseBays} />
-        <DashPodsModal open={isOpenPods} onClose={onClosePods} />
+        <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
+        <DashPodsModal viewMode={isCCRView} open={isOpenPods} onClose={onClosePods} />
     </div>
 }

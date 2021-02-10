@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../types";
+import {DialogProps, TViewMode} from "../types";
 import {BaseModal, DialogActions, DialogTitle} from "../BaseModal";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {Table} from "../../UI/Table";
@@ -33,7 +33,7 @@ const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
-export const Holidays: React.FC<DialogProps> = props => {
+export const Holidays: React.FC<DialogProps&TViewMode> = props => {
     const [
         holidays,
         isLoading
@@ -114,12 +114,13 @@ export const Holidays: React.FC<DialogProps> = props => {
     const classes = useStyles();
     return <BaseModal {...props} width={720}>
         <DialogTitle onClose={props.onClose}>Holidays</DialogTitle>
-        <div className={classes.addHoliday}>
+        {!props.viewMode ? <div className={classes.addHoliday}>
             <Button variant="contained" color="primary" onClick={handleOpenCreate}>Add Holiday</Button>
-        </div>
+        </div> : null}
         <Table<IHoliday>
             onChangePage={changePage}
             page={pageIndex}
+            viewMode={props.viewMode}
             rowsPerPage={pageSize}
             onChangeRowsPerPage={changeRowsPerPage}
             compact

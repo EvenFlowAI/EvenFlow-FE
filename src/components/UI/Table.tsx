@@ -128,7 +128,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                     : rE.header}
                             </TableCell>
                         ))}
-                        {props.actions ? <TableCell className={classes.tableHead} /> : null}
+                        {(props.actions && !props.viewMode) ? <TableCell className={classes.tableHead} /> : null}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -150,7 +150,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                         {cellData.val(row, idx) || '-'}
                                     </TableCell>
                                 ))}
-                                {props.actions
+                                {(props.actions && !props.viewMode)
                                     ?   <TableCell align="right" className={classes.tableCell}>
                                             {props.actions(row)}
                                         </TableCell>

@@ -9,6 +9,7 @@ import {RootState} from "../../../store/rootReducer";
 import {TableRowDataTypeResp} from "../../UI/types";
 import {Table} from "../../UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
+import {TViewMode} from "../../Modals/types";
 
 const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "POD#", val: el => el.name},
@@ -19,7 +20,7 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || "", xsHidden: true}
 ]
 
-export const ProfilePODs:React.FC<{dense?: boolean}> = ({dense}) => {
+export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {
     const {selectedSC} = useSCs();
     const [editedItem, setEditedItem] = useState<IPod|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -84,7 +85,7 @@ export const ProfilePODs:React.FC<{dense?: boolean}> = ({dense}) => {
     }
 
     return <div>
-        <div style={{textAlign: "right"}}>
+        {!viewMode ? <div style={{textAlign: "right"}}>
             <Button
                 onClick={handleAdd}
                 variant="contained"
@@ -92,9 +93,10 @@ export const ProfilePODs:React.FC<{dense?: boolean}> = ({dense}) => {
             >
                 Create New POD
             </Button>
-        </div>
+        </div> : null}
         <Table<IPod>
             data={pods}
+            viewMode={viewMode}
             index='id'
             rowData={rowData}
             compact={dense}

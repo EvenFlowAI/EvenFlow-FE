@@ -10,6 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadBays, removeBay, setPageData} from "../../../store/reducers/bays/actions";
 import {CreateBay} from "../../Modals/Bays/CreateBay";
+import {TViewMode} from "../../Modals/types";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -27,7 +28,7 @@ const rowData: TableRowDataType<IBay>[] = [
     {header: "Only Quick Service", val: v => v.onlyQuickService ? <CheckCircle color="primary" /> : "-", align: "center"},
 ];
 
-export const RequiredEquipment = () => {
+export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
     const {onOpen, onClose, isOpen} = useModal();
     const [editedItem, setEditedItem] = useState<IBay|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -104,7 +105,7 @@ export const RequiredEquipment = () => {
 
     const classes = useStyles();
     return <div className={classes.wrapper}>
-        <div className={classes.actionRow}>
+        {!viewMode ? <div className={classes.actionRow}>
             <Button
                 color="primary"
                 variant="contained"
@@ -112,11 +113,12 @@ export const RequiredEquipment = () => {
             >
                 Add Bay
             </Button>
-        </div>
+        </div> : null}
         <Table<IBay>
             data={bays}
             compact
             isLoading={loading}
+            viewMode={viewMode}
             index="id"
             onChangePage={changePage}
             onChangeRowsPerPage={changeRowsPerPage}

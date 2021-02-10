@@ -33,4 +33,5 @@ export interface ITableProps<Data> {
     actions?: (el: Data) => JSX.Element;
     noDataTitle?: string;
     isLoading?: boolean;
+    viewMode?: boolean;
 }
