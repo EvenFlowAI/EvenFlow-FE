@@ -5,6 +5,9 @@ import * as queryString from "querystring";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
+import {EAppointmentTimingType} from "../store/reducers/appointment/types";
+import {TGroupedAppointments} from "../components/AppointmentFlow/AppointmentSelections/types";
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     return new Promise(resolve => {
@@ -63,4 +66,16 @@ export const hasPermission = (user: ICurrentUser|undefined, route: string): bool
         }
     }
     return true;
+}
+
+export const preCenterNeeded = (
+    isSet: boolean, appointmentType: EAppointmentTimingType,
+    sliceIdx: number, groupedAppointments: TGroupedAppointments, displayItems: number,
+    appointmentDate: ParsableDate|undefined
+): boolean => {
+    return !isSet
+        && appointmentType === EAppointmentTimingType.PreferredDate
+        && !sliceIdx
+        && Object.keys(groupedAppointments).length > displayItems
+        && Boolean(appointmentDate)
 }

@@ -9,16 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TPopoverProps} from "../Steps/types";
-
-type TGroupedAppointments = {
-    [k: string]: {
-        date: moment.Moment;
-        lowestPrice: number;
-        idx: string;
-        offers: boolean;
-        appointments: IRemappedAppointmentSlot[];
-    }
-}
+import {TGroupedAppointments} from "./types";
+import {preCenterNeeded} from "../../../utils/utils";
 
 const Title = styled("h5")(({theme}) => ({
     fontWeight: "bold",
@@ -92,13 +84,14 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
     }, [data]);
 
     useEffect(() => {
-        if (
-            !sliceSet.current
-            && appointmentType === EAppointmentTimingType.PreferredDate
-            && !sliceIdx
-            && Object.keys(groupedAppointments).length > displayItems
-            && appointmentDate
-        ) {
+        if (preCenterNeeded(
+            sliceSet.current,
+            appointmentType,
+            sliceIdx,
+            groupedAppointments,
+            displayItems,
+            appointmentDate
+        )) {
             const idxToSet = Object.keys(groupedAppointments).findIndex(
                 app => moment(app).isSameOrAfter(moment(appointmentDate))
             );
