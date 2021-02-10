@@ -7,7 +7,7 @@ import {AppointmentPlate} from "./AppointmentPlate";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TPopoverProps} from "../Steps/types";
 import {TGroupedAppointments} from "./types";
 import {preCenterNeeded} from "../../../utils/utils";
