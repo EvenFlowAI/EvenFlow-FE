@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../types";
+import {DialogProps, TViewMode} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Grid, IconButton, useMediaQuery, useTheme} from "@material-ui/core";
 import {DeleteOutline} from "@material-ui/icons";
@@ -35,7 +35,7 @@ const BForm: React.FC<{
     workDays: number[],
     onCheck: (day: number, check: boolean) => () => void;
     onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void
-}> = props => {
+}&TViewMode> = props => {
     const classes = useStyles();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
@@ -51,7 +51,7 @@ const BForm: React.FC<{
                     <Button
                         onClick={props.onCheck(dayOfWeek, true)}
                         fullWidth
-                        disabled={data.checked || isClosed(dayOfWeek)}
+                        disabled={data.checked || isClosed(dayOfWeek) || props.viewMode}
                         className={classes.button}
                         variant="contained"
                         color="primary">
@@ -63,7 +63,7 @@ const BForm: React.FC<{
                     <TimePicker
                         label={d}
                         fullWidth
-                        disabled={!data.checked}
+                        disabled={!data.checked || props.viewMode}
                         placeholder={isClosed(dayOfWeek) ? "Closed" : ""}
                         value={data.from}
                         onChange={props.onChange(dayOfWeek, "from")}
@@ -80,11 +80,12 @@ const BForm: React.FC<{
                         id={`${d}End`}
                         name={`${d}End`}
                         value={data.to}
+                        disabled={props.viewMode}
                         onChange={props.onChange(dayOfWeek, "to")}
                     /> : null}
                 </Grid>
                 <Grid item xs={2} sm={1}>
-                    {data.checked ? <IconButton
+                    {(data.checked && !props.viewMode) ? <IconButton
                         onClick={props.onCheck(dayOfWeek, false)}
                         color="primary">
                         <DeleteOutline/>
@@ -107,7 +108,7 @@ const blankRow: TBreak = {
 const initialBreaks: TBreak[] = moment.weekdays().map((day, dayOfWeek) => ({
     ...blankRow, dayOfWeek
 }));
-export const Break: React.FC<DialogProps> = props => {
+export const Break: React.FC<DialogProps&TViewMode> = props => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TBreak[]>(initialBreaks);
     const [wd, setWD] = useState<number[]>([]);
@@ -185,23 +186,24 @@ export const Break: React.FC<DialogProps> = props => {
     }
 
     return <BaseModal {...props} width={780}>
-        <DialogTitle onClose={props.onClose}>Edit Breaks</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{props.viewMode ? "View" : "Edit"} Breaks</DialogTitle>
         <DialogContent>
             <BForm
+                viewMode={props.viewMode}
                 workDays={wd}
                 onChange={handleChange}
                 onCheck={handleCheck}
                 form={form} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
-            <LoadingButton
+            <Button onClick={props.onClose}>Close</Button>
+            {!props.viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"
                 color="primary"
                 onClick={handleSave}>
                 Save
-            </LoadingButton>
+            </LoadingButton> : null}
         </DialogActions>
     </BaseModal>;
 }

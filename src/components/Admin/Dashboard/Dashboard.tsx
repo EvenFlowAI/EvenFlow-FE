@@ -240,8 +240,8 @@ export const AdminDashboard: React.FC = () => {
         </Grid>
         <EditAddress open={isAddressOpen} viewMode={isCCRView} onClose={onCloseAddress} />
         <HourOfOperations viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
-        <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
-        <Break open={isBOpen} onClose={onCloseB} />
+        <WeeklySchedule viewMode={isCCRView} open={isWSOpen} onClose={onCloseWS} />
+        <Break viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
         <Holidays open={isHOpen} onClose={onCloseH} />
         <Technicians open={isTechOpen} onClose={onCloseTech} />
         <Bays open={isBaysOpen} onClose={onCloseBays} />
