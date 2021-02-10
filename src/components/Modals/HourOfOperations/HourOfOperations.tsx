@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../types";
+import {DialogProps, TViewMode} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Grid, Switch, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment";
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const HOOForm: React.FC<{
+const HOOForm: React.FC<TViewMode&{
     form: THOOForm[];
     onApply: () => void;
     onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void;
@@ -47,10 +47,12 @@ const HOOForm: React.FC<{
     return <>{moment.weekdays().map((day, idx) => {
         const data: THOOForm = props.form.filter(f => f.dayOfWeek === idx)[0] || {...blankRow, dayOfWeek: idx};
         return <Grid container spacing={1} alignItems="flex-end" key={day} className={classes.row}>
-            <Grid item xs={12} sm={2} className={classes.switchRow}><Switch onChange={props.onCheck(idx)} checked={data.checked} color="primary"/></Grid>
+            <Grid item xs={12} sm={2} className={classes.switchRow}>
+                <Switch onChange={props.onCheck(idx)} disabled={props.viewMode} checked={data.checked} color="primary"/>
+            </Grid>
             <Grid item xs={5} sm={4} md={3}>
                 <TimePicker
-                    disabled={!data.checked}
+                    disabled={!data.checked || props.viewMode}
                     placeholder={!data.checked ? "Closed" : ""}
                     fullWidth
                     value={data.from}
@@ -66,13 +68,13 @@ const HOOForm: React.FC<{
                 <TimePicker
                     fullWidth
                     value={data.to}
-                    disabled={!data.checked}
+                    disabled={!data.checked || props.viewMode}
                     onChange={props.onChange(idx, "to")}
                     id={`to-${day}`}
                 />
             </Grid>
             <Grid item hidden={isXS} xs={4} sm={3}>
-                {!idx ? <Button onClick={props.onApply}>
+                {(!idx && !props.viewMode) ? <Button onClick={props.onApply}>
                     Apply to all
                 </Button> : null}
             </Grid>
@@ -93,7 +95,7 @@ const initialForm: THOOForm[] = moment.weekdays().map((w, idx) => {
     return {...blankRow, dayOfWeek: idx};
 });
 
-export const HourOfOperations: React.FC<DialogProps> = props => {
+export const HourOfOperations: React.FC<DialogProps&TViewMode> = props => {
     const {selectedSC} = useSCs();
     const [form, setForm] = useState<THOOForm[]>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
@@ -153,19 +155,19 @@ export const HourOfOperations: React.FC<DialogProps> = props => {
     }
 
     return <BaseModal {...props} maxWidth="sm">
-        <DialogTitle onClose={props.onClose}>Edit Hours of Operations</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{props.viewMode ? "View" : "Edit"} Hours of Operations</DialogTitle>
         <DialogContent>
-            <HOOForm onApply={handleApplyToAll} onCheck={handleCheck} form={form} onChange={handleChange} />
+            <HOOForm viewMode={props.viewMode} onApply={handleApplyToAll} onCheck={handleCheck} form={form} onChange={handleChange} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
-            <LoadingButton
+            <Button onClick={props.onClose}>Close</Button>
+            {!props.viewMode ? <LoadingButton
                 variant="contained"
                 color="primary"
                 loading={saving}
                 onClick={handleUpdate}>
                 Save
-            </LoadingButton>
+            </LoadingButton> : null}
         </DialogActions>
     </BaseModal>
 }
