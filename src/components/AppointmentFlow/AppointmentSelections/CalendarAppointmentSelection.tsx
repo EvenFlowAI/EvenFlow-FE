@@ -99,10 +99,10 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
             && Object.keys(groupedAppointments).length > displayItems
             && appointmentDate
         ) {
-            const idxToSet = Math.floor(Object.keys(groupedAppointments).findIndex(
+            const idxToSet = Object.keys(groupedAppointments).findIndex(
                 app => moment(app).isSameOrAfter(moment(appointmentDate))
-            ) / displayItems)
-            setSliceIdx(idxToSet);
+            );
+            setSliceIdx(Math.floor(idxToSet - displayItems / 2));
             sliceSet.current = true;
         }
     }, [groupedAppointments, sliceIdx, displayItems, appointmentType, appointmentDate]);
