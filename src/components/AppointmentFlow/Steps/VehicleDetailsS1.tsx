@@ -23,7 +23,7 @@ import {KeyboardDatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {changeS1Form} from "../../../store/reducers/appointment/actions";
+import {changeS1Form, setCustomerVehicle} from "../../../store/reducers/appointment/actions";
 import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
 import {IVehicleData} from "../../../store/reducers/appointment/types";
@@ -31,6 +31,7 @@ import {Add, Help} from "@material-ui/icons";
 import { VIN_LENGTH } from '../../../config/constants';
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {ILoadedVehicle} from "../../../api/types";
 
 const Tip = styled("p")({
     fontSize: 14,
@@ -82,7 +83,10 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
     const oldVin = useRef<string>("");
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const [customerLoadedData, selectedVehicle] = useSelector((state: RootState) => [
+        state.appointment.customerLoadedData,
+        state.appointment.customerSelectedVehicle
+    ]);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         dispatch(changeS1Form({
@@ -117,7 +121,8 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
     const handleTextChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(changeS1Form({[name]: value}));
     }
-    const handleVehicleChange = () => {
+    const handleVehicleChange = (e: any, value: ILoadedVehicle|null) => {
+        dispatch(setCustomerVehicle(value));
     }
 
     return (
@@ -138,11 +143,11 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                                         options={customerLoadedData?.vehicles}
                                         onChange={handleVehicleChange}
                                         getOptionLabel={option => option.vin}
-                                        getOptionSelected={(option, value) => option.vin === ""}
+                                        getOptionSelected={(option, value) => option.vin === value.vin}
                                         fullWidth
                                         autoComplete={true}
                                         renderInput={autocompleteRender({label: ""})}
-                                        value={null}
+                                        value={selectedVehicle}
                                     />
                                 </Grid>
                                 {!isXS

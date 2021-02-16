@@ -4,7 +4,7 @@ import {TEnumMap} from "../utils";
 import {EDemandCategory} from "../pricingSettings/types";
 import {EOfferType, IOffer} from "../offers/types";
 import moment from "moment";
-import {ICreateAppointmentResp, ICustomerLoadedData} from "../../../api/types";
+import {ICreateAppointmentResp, ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -126,6 +126,7 @@ export interface IAppointmentFilters {
 
 export type TAppointmentState = {
     customerEnteredEmail: string;
+    customerSelectedVehicle: ILoadedVehicle|null;
     scProfile?: IServiceCenterProfile;
     serviceRequests: ISR[];
     customerLoadedData: ICustomerLoadedData|null;
