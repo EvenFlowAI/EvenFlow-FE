@@ -44,6 +44,22 @@ export interface ICreateAppointment {
 }
 export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {}
 export interface ICreateAppointmentResp { id: number; hashKey: string; }
+export interface ICustomerLoadedData {
+    emails: string[];
+    firstName: string;
+    lastName: string;
+    id: string;
+    phoneNumbers: string[];
+    vehicles: ILoadedVehicle[];
+}
+export interface ILoadedVehicle {
+    dmsId: string;
+    vin: string;
+    make: string;
+    model: string;
+    year: number;
+    mileage: number;
+}
 export interface IPasswordRecoveryData { email: string; }
 export interface IPasswordRecoveryResp { }
 export interface ISetNewPasswordData {
