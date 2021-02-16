@@ -198,8 +198,13 @@ export const AppointmentFlow = () => {
             load().then(() => {
                 for (let i=1; i <= steps.length; i++) {
                     if (!isStepCompleted(i)) {
+                        if (i === 2) {
+                            break;
+                        }
                         setActiveStep(i);
                         break;
+                    } else if (i === 6) {
+                        setActiveStep(6);
                     }
                 }
                 isSet.current = true;
