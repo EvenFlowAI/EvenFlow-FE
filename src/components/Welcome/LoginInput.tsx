@@ -1,7 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
+import {useDispatch, useSelector} from "react-redux";
+import {setCustomerEnteredEmail} from "../../store/reducers/appointment/actions";
+import {RootState} from "../../store/rootReducer";
+import {API} from "../../api/api";
+import {useParams} from "react-router-dom";
+import {LoadingButton} from "../UI/Button";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -61,15 +67,38 @@ type TProps = {
     onComplete: () => void
 }
 export const LoginInput: React.FC<TProps> = ({onSelect, onComplete}) => {
+    const [loading, setLoading] = useState<boolean>(false);
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("sm"));
     const classes = useStyles();
+    const {id: serviceCenterId} = useParams();
+    const dispatch = useDispatch();
+    const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
+        dispatch(setCustomerEnteredEmail(value));
+    }
+    const handleComplete = async () => {
+        setLoading(true);
+        try {
+            const {data} = await API.appointment.searchCustomer({
+                serviceCenterId,
+                searchTerm: customerEnteredEmail
+            });
+            console.log(data);
+        } finally {
+            setLoading(false);
+            // onComplete();
+        }
+    }
+
     return <Paper variant="outlined" className={classes.paper}>
         <h3 className={classes.title}>Enter your Email or Phone</h3>
         <TextField
             placeholder="Type Here"
             InputProps={{disableUnderline: true}}
             variant="standard"
+            onChange={handleChange}
+            value={customerEnteredEmail}
             fullWidth />
         {isXS ? <div className="grow" /> : null}
         <div className={classes.buttonsRow}>
@@ -80,13 +109,14 @@ export const LoginInput: React.FC<TProps> = ({onSelect, onComplete}) => {
                 onClick={() => onSelect(false)}>
                 Back
             </Button>
-            <Button
+            <LoadingButton
+                loading={loading}
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={onComplete}>
+                onClick={handleComplete}>
                 Search
-            </Button>
+            </LoadingButton>
         </div>
     </Paper>
 };

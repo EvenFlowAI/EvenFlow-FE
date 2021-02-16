@@ -8,7 +8,7 @@ import {
     ISetNewPasswordData,
     IConfig,
     IListAppointmentRequest,
-    IListAppointment
+    IListAppointment, ISearchCustomerParams
 } from "./types";
 import {Api, request} from "../config/requests";
 import {PaginatedAPIResponse} from "../types/types";
@@ -21,7 +21,8 @@ const accounts = {
 const appointment = {
     create: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => request.post("/appointments", data),
     update: (data: IUpdateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(`/appointments/${data.id}`, data),
-    list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IListAppointment>> => request.post("/appointments/by-query", data)
+    list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IListAppointment>> => request.post("/appointments/by-query", data),
+    searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params})
 };
 const employeeSchedules = {
     remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),

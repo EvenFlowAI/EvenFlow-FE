@@ -125,6 +125,7 @@ export interface IAppointmentFilters {
 }
 
 export type TAppointmentState = {
+    customerEnteredEmail: string;
     scProfile?: IServiceCenterProfile;
     serviceRequests: ISR[];
     appointmentId: ICreateAppointmentResp|null;

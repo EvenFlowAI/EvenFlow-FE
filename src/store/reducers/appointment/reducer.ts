@@ -55,6 +55,7 @@ const initialS3Form: TS3Form = {
 }
 const initialState: TAppointmentState = {
     serviceRequests: [],
+    customerEnteredEmail: "",
     appointmentId: null,
     selectedSR: [],
     s1Data: initialS1Form,

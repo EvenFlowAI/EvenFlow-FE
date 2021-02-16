@@ -95,3 +95,7 @@ export interface IListAppointment {
     "reminderTypes": EReminderType[];
     "serviceRequests": IServiceRequestShort[];
 }
+export interface ISearchCustomerParams {
+    serviceCenterId: number;
+    searchTerm: string;
+}

@@ -102,3 +102,4 @@ export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
 }
 export const setAppointmentId = createAction<ICreateAppointmentResp|null>("Appointments/SetAppointmentId");
 export const setAppointmentFilters = createAction<Partial<IAppointmentFilters>>("Appointment/SetFilters");
+export const setCustomerEnteredEmail = createAction<string>("Appointment/SetCustomerEnteredEmail");
