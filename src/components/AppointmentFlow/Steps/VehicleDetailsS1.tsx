@@ -27,8 +27,10 @@ import {changeS1Form} from "../../../store/reducers/appointment/actions";
 import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
 import {IVehicleData} from "../../../store/reducers/appointment/types";
-import {Help} from "@material-ui/icons";
+import {Add, Help} from "@material-ui/icons";
 import { VIN_LENGTH } from '../../../config/constants';
+import {Autocomplete} from "@material-ui/lab";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
 
 const Tip = styled("p")({
     fontSize: 14,
@@ -115,6 +117,8 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
     const handleTextChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(changeS1Form({[name]: value}));
     }
+    const handleVehicleChange = () => {
+    }
 
     return (
         <StepContainer>
@@ -122,8 +126,32 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                 <h4 style={{textAlign: "center"}}>Please tell us about your vehicle</h4>
                 <ScrollableContainer>
                     {
-                        customerLoadedData?.vehicles.length > 1
-                            ? null
+                        !form.vin && customerLoadedData && customerLoadedData?.vehicles.length > 1
+                            ? <Grid container spacing={2}>
+                                <LabelGrid item xs={12} sm={3}>
+                                    <Label htmlFor="vin">
+                                        Select vehicle
+                                    </Label>
+                                </LabelGrid>
+                                <Grid item xs={12} sm={6}>
+                                    <Autocomplete
+                                        options={customerLoadedData?.vehicles}
+                                        onChange={handleVehicleChange}
+                                        getOptionLabel={option => option.vin}
+                                        getOptionSelected={(option, value) => option.vin === ""}
+                                        fullWidth
+                                        autoComplete={true}
+                                        renderInput={autocompleteRender({label: ""})}
+                                        value={null}
+                                    />
+                                </Grid>
+                                {!isXS
+                                    ? <Grid item xs={3}>
+                                        <IconButton color="primary">
+                                            <Add />
+                                        </IconButton>
+                                    </Grid> : null}
+                            </Grid>
                             : <Grid container spacing={2}>
                                 <LabelGrid item xs={12} sm={3}>
                                     <Label htmlFor="vin">
