@@ -80,6 +80,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
     const oldVin = useRef<string>("");
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         dispatch(changeS1Form({
@@ -120,33 +121,37 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
             <StepContentContainer>
                 <h4 style={{textAlign: "center"}}>Please tell us about your vehicle</h4>
                 <ScrollableContainer>
-                    <Grid container spacing={2}>
-                        <LabelGrid item xs={12} sm={3}>
-                            <Label htmlFor="vin">
-                                vehicle identification number (VIN)
-                            </Label>
-                        </LabelGrid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                id="vin"
-                                name="vin"
-                                placeholder="e.g. 1HGBH41JXMN109186"
-                                InputProps={{
-                                    endAdornment: loading ?
-                                        <InputLoading/>
-                                        : isXS ? <TipIcon /> : undefined
-                                }}
-                                value={form.vin}
-                                onChange={handleTextChange}
-                            />
-                        </Grid>
-                        {!isXS ? <>
-                            <Grid item xs={1}>
-                                <TipIcon />
+                    {
+                        customerLoadedData?.vehicles.length > 1
+                            ? null
+                            : <Grid container spacing={2}>
+                                <LabelGrid item xs={12} sm={3}>
+                                    <Label htmlFor="vin">
+                                        vehicle identification number (VIN)
+                                    </Label>
+                                </LabelGrid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        id="vin"
+                                        name="vin"
+                                        placeholder="e.g. 1HGBH41JXMN109186"
+                                        InputProps={{
+                                            endAdornment: loading ?
+                                                <InputLoading/>
+                                                : isXS ? <TipIcon/> : undefined
+                                        }}
+                                        value={form.vin}
+                                        onChange={handleTextChange}
+                                    />
+                                </Grid>
+                                {!isXS ? <>
+                                    <Grid item xs={1}>
+                                        <TipIcon/>
+                                    </Grid>
+                                    <Grid item xs={2}/>
+                                </> : null}
                             </Grid>
-                            <Grid item xs={2} />
-                        </> : null}
-                    </Grid>
+                    }
                     <h4 style={{textAlign: "center", marginTop: 24}}>General info</h4>
                     <Grid container spacing={2} alignItems={"center"}>
                         <LabelGrid item xs={12} sm={3}>
