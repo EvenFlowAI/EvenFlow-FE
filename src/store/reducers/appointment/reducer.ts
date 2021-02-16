@@ -143,6 +143,30 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, customerEnteredEmail: payload};
     })
     .addCase(setCustomerLoadedData, (state, {payload}) => {
-        return {...state, customerLoadedData: payload};
+        if (payload) {
+            const nState = {
+                ...state,
+                customerLoadedData: payload,
+                personalInformation: {
+                    ...state.personalInformation,
+                    fullName: `${payload.firstName} ${payload.lastName}`,
+                    email: payload.emails[0] || state.customerEnteredEmail,
+                    phoneNumber: payload.phoneNumbers[0] || ""
+                }
+            };
+            if (payload.vehicles.length === 1) {
+                nState.s1Data = {
+                    ...nState.s1Data,
+                    ...payload.vehicles[0],
+                    year: String(payload.vehicles[0].year),
+                    mileage: String(payload.vehicles[0].mileage)
+                }
+            }
+            return nState;
+        }
+        return {
+            ...state,
+            customerLoadedData: payload
+        };
     })
 );
