@@ -21,7 +21,13 @@ import {
     getSRs,
     handleSearch,
     selectAppointment,
-    selectSR, setAppointmentFilters, setAppointmentId, setCustomerEnteredEmail, setCustomerLoadedData, setLoadedReducer
+    selectSR,
+    setAppointmentFilters,
+    setAppointmentId,
+    setCustomerEnteredEmail,
+    setCustomerLoadedData,
+    setCustomerVehicle,
+    setLoadedReducer
 } from "./actions";
 import moment from "moment";
 
@@ -168,6 +174,25 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {
             ...state,
             customerLoadedData: payload
+        };
+    })
+    .addCase(setCustomerVehicle, (state, {payload}) => {
+        if (payload) {
+            return {
+                ...state,
+                customerSelectedVehicle: payload,
+                s1Data: {
+                    ...state.s1Data,
+                    ...payload,
+                    mileage: String(payload.mileage),
+                    year: String(payload.year)
+                }
+            }
+        }
+        return {
+            ...state,
+            customerSelectedVehicle: payload,
+            s1Data: {...initialS1Form}
         };
     })
 );

@@ -75,6 +75,7 @@ const LabelGrid = withStyles((theme) => ({
 
 export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const [addNewCar, setAddNewCar] = useState<boolean>(false);
     const dispatch = useDispatch();
     const form = useSelector((state: RootState) => {
         return state.appointment.s1Data;
@@ -124,6 +125,10 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
     const handleVehicleChange = (e: any, value: ILoadedVehicle|null) => {
         dispatch(setCustomerVehicle(value));
     }
+    const handleAddNewCar = () => {
+        dispatch(setCustomerVehicle(null));
+        setAddNewCar(true);
+    }
 
     return (
         <StepContainer>
@@ -131,7 +136,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                 <h4 style={{textAlign: "center"}}>Please tell us about your vehicle</h4>
                 <ScrollableContainer>
                     {
-                        !form.vin && customerLoadedData && customerLoadedData?.vehicles.length > 1
+                        !addNewCar && customerLoadedData && customerLoadedData?.vehicles.length > 1
                             ? <Grid container spacing={2}>
                                 <LabelGrid item xs={12} sm={3}>
                                     <Label htmlFor="vin">
@@ -152,7 +157,7 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                                 </Grid>
                                 {!isXS
                                     ? <Grid item xs={3}>
-                                        <IconButton color="primary">
+                                        <IconButton color="primary" onClick={handleAddNewCar}>
                                             <Add />
                                         </IconButton>
                                     </Grid> : null}
