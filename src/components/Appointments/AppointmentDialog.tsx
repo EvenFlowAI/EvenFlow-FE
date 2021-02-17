@@ -201,7 +201,8 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     engineType: form.vehicleEngineType,
                     mileage: form.vehicleMileage,
                     transmission: form.vehicleTransmission,
-                    vin: form.vehicleVin
+                    vin: form.vehicleVin,
+                    dmsId: null
                 },
                 serviceCenterId: selectedSC.id,
                 isNeedCall: form.isNeedCall,

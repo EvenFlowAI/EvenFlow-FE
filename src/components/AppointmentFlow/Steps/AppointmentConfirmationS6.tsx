@@ -176,7 +176,16 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             offerId: forms?.appointment?.offer?.id ?? null,
             reminderTypes,
             serviceCenterId: id,
-            vehicle: forms.s1Data,
+            vehicle: {
+                ...forms.s1Data,
+                dmsId: forms.customerSelectedVehicle
+                    ? forms.customerSelectedVehicle.dmsId
+                    : (forms.customerLoadedData
+                        && forms.customerLoadedData.vehicles.length === 1
+                        && forms.s1Data.vin === forms.customerLoadedData.vehicles[0].vin)
+                        ? forms.customerLoadedData.vehicles[0].dmsId
+                        : null
+            },
             transportationNeeds: {
                 isNeed: Number(forms.transportation) > 2,
                 description: flatTransportations.find(t => t.id === forms.transportation)?.label || ""

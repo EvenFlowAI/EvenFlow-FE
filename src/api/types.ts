@@ -29,6 +29,7 @@ export interface ICreateAppointment {
         description: string;
     },
     vehicle: {
+        dmsId: string|null;
         vin: string;
         make: string;
         year: string|null;
