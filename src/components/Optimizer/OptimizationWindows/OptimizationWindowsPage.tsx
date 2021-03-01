@@ -17,6 +17,7 @@ import {
 } from "../../../store/reducers/optimizationWindows/types";
 import {OptimizationDialog} from "./OptimizationWindowDialog";
 import {OverbookingFactorDialog} from "./OverbookingFactorDialog";
+import {AppointmentCutoffDialog} from "./AppointmentCutoffDialog";
 
 type TOptParam = {
     [k in EOptimizationWindowType]: IOptimizationWindow;
@@ -50,6 +51,11 @@ const optContent: TOptContent = {
         label: "appointments",
         title: "Appointments per slot",
     },
+    [EOptimizationWindowType.AppointmentCutoff]: {
+        helperText: "Set the hour that the last appointment will be accepted",
+        label: "pm",
+        title: "Appointment Cutoff"
+    }
 }
 
 
@@ -62,6 +68,7 @@ export const OptimizationWindowsPage = () => {
     const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);
     const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
     const {isOpen: isOverbookingOpen, onClose: onOverbookingClose, onOpen: onOverbookingOpen} = useModal();
+    const {isOpen: isCutoffOpen, onClose: onCutoffClose, onOpen: onCutoffOpen} = useModal();
     const {isOpen: isOptOpen, onClose: onOptClose, onOpen: onOptOpen} = useModal();
     const optParams = useSelector((state: RootState) =>
         state.optimizationWindows.dataList
@@ -81,6 +88,19 @@ export const OptimizationWindowsPage = () => {
         onOptOpen();
     }, [onOptOpen]);
 
+    const getPlateEdit = (k: EOptimizationWindowType) => {
+        switch (k) {
+            case EOptimizationWindowType.DemandSegments:
+                return onDemandOpen;
+            case EOptimizationWindowType.OverbookingFactor:
+                return onOverbookingOpen;
+            case EOptimizationWindowType.AppointmentCutoff:
+                return onCutoffOpen;
+            default:
+                return handleEdit(k);
+        }
+    }
+
     useEffect(() => {
         if (selectedSC) {
             if (!isDemandOpen) {
@@ -98,13 +118,12 @@ export const OptimizationWindowsPage = () => {
                 const plate = optContent[k];
                     return <Grid item xs={12} sm={6} md={4} key={plate.title}>
                         <OptimizationPlate
-                            onEdit={k === EOptimizationWindowType.DemandSegments
-                                ? onDemandOpen
-                                : k === EOptimizationWindowType.OverbookingFactor ? onOverbookingOpen
-                                    : handleEdit(k)}
+                            onEdit={getPlateEdit(k)}
                             title={plate.title}
                             count={optMapped[k].value}
-                            label={plate.label}
+                            label={k === EOptimizationWindowType.AppointmentCutoff
+                                ? String(optMapped[k].value)
+                                : plate.label}
                             prefix={plate.prefix}
                             suffix={plate.suffix}
                             helperText={plate.helperText}
@@ -120,6 +139,7 @@ export const OptimizationWindowsPage = () => {
             />
             <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
             <OverbookingFactorDialog open={isOverbookingOpen} onClose={onOverbookingClose} />
+            <AppointmentCutoffDialog open={isCutoffOpen} onClose={onCutoffClose} />
         </Grid>
     </>
 }
