@@ -122,7 +122,9 @@ export const OptimizationWindowsPage = () => {
                             title={plate.title}
                             count={optMapped[k].value}
                             label={k === EOptimizationWindowType.AppointmentCutoff
-                                ? String(optMapped[k].value)
+                                ? optMapped[k].value
+                                    ? String(optMapped[k].value)
+                                    : "-"
                                 : plate.label}
                             prefix={plate.prefix}
                             suffix={plate.suffix}
