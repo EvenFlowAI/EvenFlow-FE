@@ -3,20 +3,23 @@ import {DialogProps} from "../../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {Button} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
-import {SC_UNDEFINED} from "../../../config/constants";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
-import {useDispatch} from "react-redux";
+import {SC_UNDEFINED, timeSpanString} from "../../../config/constants";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import moment from "moment";
-import {TextField} from "../../UI/TextField";
+import {loadAppointmentCutoff, setAppointmentCutoff} from "../../../store/reducers/optimizationWindows/actions";
+import {RootState} from "../../../store/rootReducer";
+import {TimePicker} from "../../UI/DateTimePickers";
+import {IAppointmentCutoff} from "../../../store/reducers/optimizationWindows/types";
 
 type TForm = {
     [k in EDay]: ParsableDate;
 }
 
 const initialState: TForm = moment.weekdays().reduce((acc, d, dayOfWeek) => {
-    acc[dayOfWeek as EDay] = "";
+    acc[dayOfWeek as EDay] = null;
     return acc;
 }, {} as TForm);
 
@@ -25,19 +28,33 @@ export const AppointmentCutoffDialog: React.FC<DialogProps> = ({payload, onActio
     const [form, setForm] = useState<TForm>(initialState);
 
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
+    const cutoffValues = useSelector((state: RootState) => state.optimizationWindows.appointmentCutoff);
 
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
 
     useEffect(() => {
-        if (props.open) {
+        if (selectedSC && props.open) {
+            dispatch(loadAppointmentCutoff(selectedSC.id, selectedPod?.id));
+        }
+    }, [props.open, selectedSC, selectedPod, dispatch]);
+
+    useEffect(() => {
+        const nForm = {} as TForm;
+        if (cutoffValues.length) {
+            for (let cutOff of cutoffValues) {
+                nForm[cutOff.day] = cutOff.value ? moment(cutOff.value, timeSpanString) : null;
+            }
+            setForm(nForm);
+        } else {
             setForm(initialState);
         }
-    }, [props.open]);
+    }, [cutoffValues]);
 
-    const handleChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({...form, [Number(name)]: value});
+    const handleChange = (day: EDay) => (date: ParsableDate) => {
+        setForm({...form, [day]: date});
     }
 
     const handleSave = async () => {
@@ -46,7 +63,13 @@ export const AppointmentCutoffDialog: React.FC<DialogProps> = ({payload, onActio
         } else {
             try {
                 setSaving(true);
-                // TODO: Send date request
+                const data: IAppointmentCutoff[] = moment.weekdays().map((d, idx) => ({
+                    day: idx,
+                    value: form[idx as EDay] ? moment(form[idx as EDay]).format(timeSpanString) : "",
+                    podId: selectedPod?.id,
+                    serviceCenterId: selectedSC.id
+                })).filter(v => Boolean(v.value));
+                await dispatch(setAppointmentCutoff(data, selectedSC.id, selectedPod?.id));
                 setSaving(false);
                 showMessage("Saved");
                 props.onClose();
@@ -57,19 +80,18 @@ export const AppointmentCutoffDialog: React.FC<DialogProps> = ({payload, onActio
         }
     }
 
-    return <BaseModal {...props}>
+    return <BaseModal {...props} width={400}>
         <DialogTitle onClose={props.onClose}>Set Appointment Cutoff</DialogTitle>
         <DialogContent>
             {moment.weekdays().map((day, idx) => {
-                return <TextField
+                return <TimePicker
                     key={idx}
                     value={form[idx as EDay]}
+                    clearable
                     fullWidth
                     name={String(idx)}
                     label={day}
-                    type="number"
-                    endAdornment={undefined}
-                    onChange={handleChange}
+                    onChange={handleChange(idx)}
                 />
             })}
         </DialogContent>
