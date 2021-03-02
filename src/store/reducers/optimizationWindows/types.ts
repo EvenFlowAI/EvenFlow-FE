@@ -39,3 +39,9 @@ export interface IOverbookingFactor {
     serviceCenterId: number;
     podId?: number;
 }
+export interface IAppointmentCutoff {
+    day: EDay;
+    value: string;
+    serviceCenterId: number;
+    podId?: number;
+}
