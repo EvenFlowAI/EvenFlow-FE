@@ -47,7 +47,7 @@ export const AppointmentCutoffDialog: React.FC<DialogProps> = ({payload, onActio
             for (let cutOff of cutoffValues) {
                 nForm[cutOff.day] = cutOff.value ? moment(cutOff.value, timeSpanString) : null;
             }
-            setForm(nForm);
+            setForm({...initialState, ...nForm});
         } else {
             setForm(initialState);
         }

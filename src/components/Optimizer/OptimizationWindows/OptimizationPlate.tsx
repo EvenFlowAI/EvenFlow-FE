@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 export type TOptimizationPlateProps = {
     onEdit: () => void;
     title: string;
-    count: number;
+    count: number|string;
     prefix?: string;
     suffix?: string;
     label: string;

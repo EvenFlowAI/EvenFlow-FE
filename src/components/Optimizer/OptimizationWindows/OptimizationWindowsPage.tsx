@@ -18,6 +18,8 @@ import {
 import {OptimizationDialog} from "./OptimizationWindowDialog";
 import {OverbookingFactorDialog} from "./OverbookingFactorDialog";
 import {AppointmentCutoffDialog} from "./AppointmentCutoffDialog";
+import moment from "moment";
+import {timeSpanString} from "../../../config/constants";
 
 type TOptParam = {
     [k in EOptimizationWindowType]: IOptimizationWindow;
@@ -120,10 +122,16 @@ export const OptimizationWindowsPage = () => {
                         <OptimizationPlate
                             onEdit={getPlateEdit(k)}
                             title={plate.title}
-                            count={optMapped[k].value}
+                            count={
+                                k === EOptimizationWindowType.AppointmentCutoff
+                                    ? optMapped[k].value
+                                        ? moment(optMapped[k].value, timeSpanString).format("h:mm")
+                                        : "-"
+                                    : optMapped[k].value
+                            }
                             label={k === EOptimizationWindowType.AppointmentCutoff
                                 ? optMapped[k].value
-                                    ? String(optMapped[k].value)
+                                    ? moment(optMapped[k].value, timeSpanString).format("a")
                                     : "-"
                                 : plate.label}
                             prefix={plate.prefix}
