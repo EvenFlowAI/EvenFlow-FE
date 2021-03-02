@@ -20,6 +20,7 @@ import {OverbookingFactorDialog} from "./OverbookingFactorDialog";
 import {AppointmentCutoffDialog} from "./AppointmentCutoffDialog";
 import moment from "moment";
 import {timeSpanString} from "../../../config/constants";
+import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 
 type TOptParam = {
     [k in EOptimizationWindowType]: IOptimizationWindow;
@@ -110,6 +111,7 @@ export const OptimizationWindowsPage = () => {
                 dispatch(loadOptimizationWindows(selectedSC.id, selectedPod?.id));
             }
             dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
+            dispatch(loadWorkingDays(selectedSC.id));
         }
     }, [dispatch, selectedSC, selectedPod, isDemandOpen]);
 

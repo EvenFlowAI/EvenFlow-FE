@@ -13,6 +13,7 @@ import {loadAppointmentCutoff, setAppointmentCutoff} from "../../../store/reduce
 import {RootState} from "../../../store/rootReducer";
 import {TimePicker} from "../../UI/DateTimePickers";
 import {IAppointmentCutoff} from "../../../store/reducers/optimizationWindows/types";
+import {AccessTime} from "@material-ui/icons";
 
 type TForm = {
     [k in EDay]: ParsableDate;
@@ -30,6 +31,7 @@ export const AppointmentCutoffDialog: React.FC<DialogProps> = ({payload, onActio
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const cutoffValues = useSelector((state: RootState) => state.optimizationWindows.appointmentCutoff);
+    const workingDays = useSelector((state: RootState) => state.serviceCenters.workingDays);
 
     const dispatch = useDispatch();
     const showError = useException();
@@ -80,15 +82,21 @@ export const AppointmentCutoffDialog: React.FC<DialogProps> = ({payload, onActio
         }
     }
 
-    return <BaseModal {...props} width={400}>
+    return <BaseModal {...props} width={300}>
         <DialogTitle onClose={props.onClose}>Set Appointment Cutoff</DialogTitle>
         <DialogContent>
             {moment.weekdays().map((day, idx) => {
+                const isDisabled = Boolean(workingDays.length && !workingDays.includes(idx as EDay));
                 return <TimePicker
                     key={idx}
                     value={form[idx as EDay]}
                     clearable
                     fullWidth
+                    style={{cursor: "pointer"}}
+                    InputProps={{
+                        endAdornment: <AccessTime color={!isDisabled ? "primary" : undefined} />
+                    }}
+                    disabled={isDisabled}
                     name={String(idx)}
                     label={day}
                     onChange={handleChange(idx)}
