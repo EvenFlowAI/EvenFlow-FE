@@ -169,6 +169,6 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
                     </Grid>
                 )}
             </Grid>
-        </Box> : null}
+        </Box> : <Box textAlign="center" mt={2}>Please, click on date to see available times</Box>}
     </div>
 };
