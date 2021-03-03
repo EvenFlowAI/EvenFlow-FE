@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TPopoverProps} from "../Steps/types";
-import {TGroupedAppointments} from "./types";
+import {TGroupedAppointment, TGroupedAppointments} from "./types";
 import {preCenterNeeded} from "../../../utils/utils";
 
 const Title = styled("h5")(({theme}) => ({
@@ -29,6 +29,8 @@ const DaysWrapper = styled("div")(({theme}) => ({
     alignItems: "center",
     justifyContent: "space-between",
 }));
+
+type TGroupedAppointmentsList = [keyof TGroupedAppointments, TGroupedAppointment];
 
 export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverClose, onPopoverOpen}) => {
     const theme = useTheme();
@@ -83,6 +85,24 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
         return appointments;
     }, [data]);
 
+    const groupedAppointmentsSortedList: TGroupedAppointmentsList[] = useMemo(() => {
+        const arr: TGroupedAppointmentsList[] = [];
+        for (let k in groupedAppointments) {
+            if (groupedAppointments.hasOwnProperty(k)) {
+                arr.push([k, groupedAppointments[k]]);
+            }
+        }
+        arr.sort((a, b) => {
+            if (a > b) {
+                return 1;
+            } else if (a < b) {
+                return -1;
+            }
+            return 0;
+        });
+        return arr;
+    }, [groupedAppointments]);
+
     useEffect(() => {
         if (preCenterNeeded(
             sliceSet.current,
@@ -92,10 +112,16 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
             displayItems,
             appointmentDate
         )) {
-            const idxToSet = Object.keys(groupedAppointments).findIndex(
+            let idxToSet = Object.keys(groupedAppointments).findIndex(
                 app => moment(app).isSameOrAfter(moment(appointmentDate))
             );
-            setSliceIdx(Math.floor(idxToSet - displayItems / 2));
+            console.log("idx1", idxToSet);
+            idxToSet = Math.floor(idxToSet - displayItems / 2);
+            console.log("idx2", idxToSet);
+            console.log(displayItems);
+            if (idxToSet > 0 && idxToSet < Object.keys(groupedAppointments).length) {
+                setSliceIdx(idxToSet);
+            }
             sliceSet.current = true;
         }
     }, [groupedAppointments, sliceIdx, displayItems, appointmentType, appointmentDate]);
@@ -120,17 +146,19 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
         dispatch(selectAppointment(a));
     }
 
+    const appointmentsLength = groupedAppointmentsSortedList.length;
+
     return <div>
         <DaysWrapper>
-            {Object.values(groupedAppointments).length ? <IconButton
+            {appointmentsLength ? <IconButton
                 disabled={sliceIdx <= 0}
                 onClick={handleSlide("left")}>
                 <ChevronLeft/>
             </IconButton> : null}
             <Grid container style={{flexGrow: 1}} spacing={4}>
-            {Object.values(groupedAppointments)
+            {groupedAppointmentsSortedList
                 .slice(sliceIdx, sliceIdx + displayItems)
-                .map(({date, lowestPrice, offers, idx}) => {
+                .map(([_, {date, lowestPrice, offers, idx}]) => {
                 return <Grid item xs={Math.floor(12 / displayItems) as GridSize} key={date.date()}>
                     <DayPlate
                         isXS={isXS}
@@ -143,8 +171,8 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
                 </Grid>;
             })}
             </Grid>
-            {Object.values(groupedAppointments).length ? <IconButton
-                disabled={sliceIdx + displayItems >= Object.values(groupedAppointments).length}
+            {appointmentsLength ? <IconButton
+                disabled={sliceIdx + displayItems >= appointmentsLength}
                 onClick={handleSlide("right")}>
                 <ChevronRight/>
             </IconButton> : null}
