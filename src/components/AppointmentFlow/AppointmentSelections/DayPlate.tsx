@@ -43,9 +43,9 @@ const Price = styled("span")({
     }
 });
 const Date = styled("span")({
-    fontSize: 14,
-    textTransform: "uppercase",
-    textAlign: "center"
+    fontSize: 13,
+    textAlign: "center",
+    marginBottom: 4
 });
 const Day = styled("span")({
     fontWeight: "bold",
@@ -107,7 +107,7 @@ type TProps = {
 export const DayPlate: React.FC<TProps> = ({date, isXS, offers, price, selected, onClick}) => {
     return <DayContainer onClick={onClick}>
         {!isXS ?
-            <Date>{moment(date).format("D, ddd")}</Date> :
+            <Date>{moment(date).format("MMM  D, ddd")}</Date> :
             <>
                 <Day>
                     {offers ? <OffersCircle /> : null}

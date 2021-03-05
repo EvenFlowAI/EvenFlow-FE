@@ -43,7 +43,7 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
         state.serviceRequests.nonSelectedFilter.searchTerm,
         state.serviceRequests.nonSelectedOrder,
     ]);
-    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+    const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
         setNonSelectedPageData
     );
@@ -58,12 +58,12 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
             setSelectedCodes([]);
         }
     }, [props.open]);
-
     useEffect(() => {
         if (props.open && selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
         }
-    }, [props.open, dispatch, selectedSC, pageSize, pageSize, order]);
+    }, [props.open, dispatch, selectedSC, pageSize, pageIndex, order]);
+
     const handleSearch = useCallback(() => {
         if (selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));

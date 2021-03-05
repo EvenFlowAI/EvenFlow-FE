@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {EOptimizationWindowType, IOptimizationWindow, IOverbookingFactor} from "./types";
+import {EOptimizationWindowType, IAppointmentCutoff, IOptimizationWindow, IOverbookingFactor} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import moment from "moment";
@@ -43,4 +43,25 @@ export const setOverbookingFactor = (data: IOverbookingFactor[]): AppThunk => as
         }
     )
     dispatch(loadOptimizationWindows(data[0].serviceCenterId, data[0].podId));
+}
+export const getAppointmentCutoff = createAction<IAppointmentCutoff[]>("OptimizationWindows/GetAppointmentCutoff");
+export const loadAppointmentCutoff = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+    const {data} = await Api.call<IAppointmentCutoff[]>(
+        Api.endpoints.OptimizationWindows.GetAppointmentCutoff,
+        { params: {serviceCenterId, podId} }
+    );
+    dispatch(getAppointmentCutoff(data));
+}
+export const setAppointmentCutoff = (data: IAppointmentCutoff[], serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.OptimizationWindows.SetAppointmentCutoff,
+        {
+            data: {
+                items: data,
+                serviceCenterId,
+                podId
+            }
+        }
+    )
+    dispatch(loadOptimizationWindows(serviceCenterId, podId));
 }

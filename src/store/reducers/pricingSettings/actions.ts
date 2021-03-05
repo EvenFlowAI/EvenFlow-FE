@@ -1,5 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
+    EDemandCategory,
     IDayOfWeekSetting,
     IPricingDemand,
     IPricingLevel,
@@ -57,10 +58,10 @@ export const setEligibleRequest = (id: number, isEligibility: boolean, serviceCe
     }
 }
 export const getPricingCalculations = createAction<IPricingSetting[]>("PricingSettings/GetCalculations");
-export const loadPricingCalculations = (serviceRequestId: number): AppThunk => async dispatch => {
+export const loadPricingCalculations = (serviceRequestId: number, timeOfYearCategory?: EDemandCategory): AppThunk => async dispatch => {
     const {data} = await Api.call<IPricingSetting[]>(
         Api.endpoints.PricingSettings.Calculation,
-        {params: {serviceRequestId}}
+        { params: {serviceRequestId, timeOfYearCategory} }
     );
     dispatch(getPricingCalculations(data));
 }

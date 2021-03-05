@@ -112,7 +112,8 @@ type ApiRoutes = {
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
-    OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking", TApiRoute>,
+    OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
+        | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
@@ -207,6 +208,8 @@ export class Api {
             SetParams: {route: "/optimization-windows", method: "put"},
             GetOverbooking: {route: "/optimization-windows/overbooking-factor", method: "get"},
             SetOverbooking: {route: "/optimization-windows/overbooking-factor", method: "put"},
+            GetAppointmentCutoff: {route: "/optimization-windows/appointment-cutoff", method: "get"},
+            SetAppointmentCutoff: {route: "/optimization-windows/appointment-cutoff", method: "put"},
         },
         Offers: {
             Create: {route: "/offers", method: "post"},
