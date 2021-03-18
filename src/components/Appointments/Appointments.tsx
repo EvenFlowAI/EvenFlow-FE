@@ -34,7 +34,8 @@ export const Appointments = () => {
             API.appointment.list({
                 pageIndex: pageData.pageIndex,
                 pageSize: pageData.pageSize,
-                serviceCenterId: selectedSC.id
+                serviceCenterId: selectedSC.id,
+                orderBy: "date"
             })
                 .then(({data: {paging, result}}) => {
                     setAppointments(result);
