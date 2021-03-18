@@ -19,7 +19,7 @@ import {DatePicker} from "../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {API} from "../../api/api";
 import moment from "moment";
-import {timeSpanString, timeString, VIN_LENGTH} from "../../config/constants";
+import {timeString, VIN_LENGTH} from "../../config/constants";
 import {CalendarToday} from "@material-ui/icons";
 import {Api} from "../../config/requests";
 import {InputLoading} from "../AppointmentFlow/UI";
@@ -228,6 +228,11 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         }
     }
 
+    const getDate = (option: IAppointmentSlot) => {
+        const date = `${String(option.date).split("T")[0]}T${option.time}Z`;
+        return moment(date).format(`LL - ${timeString}`);
+    }
+
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Update"} Appointment</DialogTitle>
         <DialogContent>
@@ -394,7 +399,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         loading={slotsLoading}
                         value={selectedSlot}
                         getOptionLabel={option =>
-                            `${moment(option.date).format("LL")} ${moment(option.time, timeSpanString).format(timeString)} - $${
+                            `${getDate(option)} - $${
                                 option.priceWithOffer?.value ? option.priceWithOffer.value.toFixed(2) : option.price.value.toFixed(2)
                             }`
                         }
