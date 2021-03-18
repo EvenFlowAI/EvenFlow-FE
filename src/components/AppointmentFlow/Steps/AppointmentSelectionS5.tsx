@@ -119,6 +119,8 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                 await dispatch(loadAppointmentSlots({
                     appointmentTimingType: selectedAppointmentType,
                     serviceCenterId: id,
+                    onlyOffers: filters.offersOnly,
+                    shorterWaitTime: filters.waitTimeOnly,
                     fromDate: sd.toISOString(),
                     serviceRequestIds: selectedServiceRequests,
                     countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1

@@ -112,6 +112,8 @@ export interface IAppointmentSlotsRequest {
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;
     offerType?: EOfferType;
+    onlyOffers?: boolean;
+    shorterWaitTime?: boolean;
     serviceRequestIds: number[];
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
