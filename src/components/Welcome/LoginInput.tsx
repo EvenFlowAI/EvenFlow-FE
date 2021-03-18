@@ -3,7 +3,11 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
 import {useDispatch, useSelector} from "react-redux";
-import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {
+    saveAppointmentReducer,
+    setCustomerEnteredEmail,
+    setCustomerLoadedData
+} from "../../store/reducers/appointment/actions";
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
 import {useParams} from "react-router-dom";
@@ -85,8 +89,10 @@ export const LoginInput: React.FC<TProps> = ({onSelect, onComplete}) => {
                 searchTerm: customerEnteredEmail
             });
             dispatch(setCustomerLoadedData(data));
+            dispatch(saveAppointmentReducer());
         } catch {
             dispatch(setCustomerLoadedData(null));
+            dispatch(saveAppointmentReducer());
         } finally {
             setLoading(false);
             onComplete();
