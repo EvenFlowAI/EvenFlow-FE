@@ -169,6 +169,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
 
         let formData: ICreateAppointment = {
             appointmentTimingType: forms.s3Data.appointmentType,
+            customerId: forms.customerLoadedData?.id,
             comment: forms.comment,
             driver: forms.personalInformation,
             gmt: moment().utcOffset(),

@@ -18,6 +18,7 @@ export type TApi = Record<string, TApiView>;
 export interface ICreateAppointment {
     date: ParsableDate;
     slot: string;
+    customerId?: string;
     reminderTypes: EReminderType[];
     gmt: number;
     appointmentTimingType: EAppointmentTimingType;
