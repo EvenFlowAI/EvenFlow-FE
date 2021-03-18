@@ -230,7 +230,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
 
     const getDate = (option: IAppointmentSlot) => {
         const date = `${String(option.date).split("T")[0]}T${option.time}Z`;
-        return moment(date).format(`LL - ${timeString}`);
+        return moment.utc(date).format(`LL - ${timeString}`);
     }
 
     return <BaseModal {...props}>

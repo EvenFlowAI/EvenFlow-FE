@@ -130,7 +130,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getAppointmentSlots, (state, {payload}) => {
         let appointmentSlots = payload.map(sl => {
             const date = `${String(sl.date).split("T")[0]}T${sl.time}Z`;
-            return {...sl, id: `${sl.date}|${sl.time}`, date: moment(date)}
+            return {...sl, id: `${sl.date}|${sl.time}`, date: moment.utc(date)}
         });
 
         return {...state, appointmentSlots};
