@@ -23,6 +23,7 @@ import {timeString, VIN_LENGTH} from "../../config/constants";
 import {CalendarToday} from "@material-ui/icons";
 import {Api} from "../../config/requests";
 import {InputLoading} from "../AppointmentFlow/UI";
+import {validatePhoneNumber} from "../../utils/utils";
 
 type TForm = {
     date: string;
@@ -162,6 +163,9 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     }, [form.vehicleVin, showError, fillDataByVin]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
+        if (name === "driverPhoneNumber") {
+            value = validatePhoneNumber(value);
+        }
         setForm({...form, [name]: value});
     }
     const handleSRChange = (e: any, value: ISR[]) => {
