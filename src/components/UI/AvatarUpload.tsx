@@ -4,18 +4,19 @@ import {makeStyles} from "@material-ui/core/styles";
 
 type TStyleProps = {
     size: number;
+    disabled?: boolean
 }
 const useStyles = makeStyles(theme => ({
-    root: ({size}: TStyleProps) => ({
+    root: ({size, disabled}: TStyleProps) => ({
         width: size,
         height: size,
-        cursor: "pointer",
+        cursor: !disabled ? "pointer" : "auto",
         backgroundColor: "#919191",
         transition: theme.transitions.create(["opacity", "box-shadow"]),
         opacity: .9,
         "&:hover": {
-            boxShadow: theme.shadows[5],
-            opacity: 1
+            boxShadow: !disabled ? theme.shadows[5] : undefined,
+            opacity: !disabled ? 1 : undefined
         }
     }),
     sign: {
@@ -43,11 +44,12 @@ export type TAvatarProps = {
     dataUrl?: string;
     onChange?: (file: File) => void;
     size?: number;
+    disabled?: boolean;
 }
 
 export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
     const [state, setState] = useState<IAvatarState>({file: null, dataUrl: props.dataUrl || undefined});
-    const classes = useStyles({size: props.size || 74});
+    const classes = useStyles({size: props.size || 74, disabled: props.disabled});
 
     const ref = createRef<HTMLInputElement>();
 
@@ -83,6 +85,7 @@ export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
         </Avatar>
         <input
             onChange={handleChange}
+            disabled={props.disabled}
             type="file"
             id="avatarInput"
             className={classes.input}

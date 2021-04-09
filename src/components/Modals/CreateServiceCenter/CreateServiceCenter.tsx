@@ -38,20 +38,21 @@ const initialFormState: TSCFormState = {
 }
 
 
-export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({payload, ...props}) => {
-    const initialState: TSCFormState = useMemo(() => {
-        return {
-            scName: payload?.name || initialFormState.scName,
-            scEmail: payload?.serviceCenterEmail || initialFormState.scEmail,
-            scPhoneNumber: payload?.phoneNumber || initialFormState.scPhoneNumber,
-            cpEmail: payload?.contactPersonalEmail || initialFormState.cpEmail,
-            city: payload?.address?.city || initialFormState.city,
-            zipCode: payload?.address?.zipCode || initialFormState.zipCode,
-            street: payload?.address?.street || initialFormState.street,
-            state: payload?.address?.state || initialFormState.state,
-            timeZoneId: payload?.timeZoneId || initialFormState.timeZoneId
-        }
-    }, [payload]);
+export const CreateServiceCenter:
+    React.FC<DialogProps<IServiceCenterForm>&{readOnly?: boolean}> =
+    ({payload, readOnly, ...props}) =>
+    {
+    const initialState: TSCFormState = useMemo(() => ({
+        scName: payload?.name || initialFormState.scName,
+        scEmail: payload?.serviceCenterEmail || initialFormState.scEmail,
+        scPhoneNumber: payload?.phoneNumber || initialFormState.scPhoneNumber,
+        cpEmail: payload?.contactPersonalEmail || initialFormState.cpEmail,
+        city: payload?.address?.city || initialFormState.city,
+        zipCode: payload?.address?.zipCode || initialFormState.zipCode,
+        street: payload?.address?.street || initialFormState.street,
+        state: payload?.address?.state || initialFormState.state,
+        timeZoneId: payload?.timeZoneId || initialFormState.timeZoneId
+    }), [payload]);
     const [timeZones, setTimeZones] = useState<string[]>([]);
 
     const formItems: TFormItem<TSCFormState>[][] = useMemo(() => [
@@ -137,10 +138,15 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
     }
 
     return <BaseModal {...props}>
-        <DialogTitle onClose={props.onClose}>{isEdit ? "Update" : "Add"} service center</DialogTitle>
+        <DialogTitle onClose={props.onClose}>
+            {readOnly
+                ? "View" : isEdit
+                    ? "Update" : "Add"} service center
+        </DialogTitle>
         <DialogContent>
-            <AvatarContainer dataUrl={payload?.avatarPath} onChange={(f: File) => setAvatar(f)} />
+            <AvatarContainer disabled={readOnly} dataUrl={payload?.avatarPath} onChange={(f: File) => setAvatar(f)} />
             <ModalForm
+                readOnly={readOnly}
                 items={formItems}
                 values={formState}
                 onChange={handleChange}
@@ -148,13 +154,13 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
-            <LoadingButton
+            <Button onClick={props.onClose}>Close</Button>
+            {!readOnly ? <LoadingButton
                 color="primary"
                 loading={saving}
                 variant="contained"
                 onClick={handleCreate}
-                type="submit">Save</LoadingButton>
+                type="submit">Save</LoadingButton> : null}
         </DialogActions>
     </BaseModal>;
 }
