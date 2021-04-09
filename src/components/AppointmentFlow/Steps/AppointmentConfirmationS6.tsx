@@ -32,6 +32,7 @@ import {
 } from "../../../store/reducers/appointment/types";
 import {useException} from "../../../utils/hooks";
 import {ICreateAppointment, ICreateAppointmentResp} from "../../../api/types";
+import {validatePhoneNumber} from "../../../utils/utils";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -146,6 +147,9 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
     }, [srList, selectedSR]);
 
     const handleTextChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        if (name === "phoneNumber") {
+            value = validatePhoneNumber(value);
+        }
         dispatch(changePersonalInformation({[name]: value}));
     }
 

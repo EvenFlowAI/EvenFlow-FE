@@ -79,3 +79,10 @@ export const preCenterNeeded = (
         && Object.keys(groupedAppointments).length > displayItems
         && Boolean(appointmentDate)
 }
+
+export const validatePhoneNumber = (value: string): string => {
+    if (value) {
+        value = `+${value.replace(/[^0-9.]/g, '')}`;
+    }
+    return value;
+}
