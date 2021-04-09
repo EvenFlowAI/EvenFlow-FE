@@ -11,6 +11,7 @@ import {createSC, updateSC} from "../../../store/reducers/serviceCenters/actions
 import {LoadingButton} from "../../UI/Button";
 import {RootState} from "../../../store/rootReducer";
 import {API} from "../../../api/api";
+import {validatePhoneNumber} from "../../../utils/utils";
 
 
 type TSCFormState = {
@@ -95,13 +96,15 @@ export const CreateServiceCenter: React.FC<DialogProps<IServiceCenterForm>> = ({
     const showError = useException();
     const showMessage = useMessage();
 
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormState({...formState, [e.target.name]: e.target.value});
+    const handleChange = useCallback(({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        if (name === "scPhoneNumber") {
+            value = validatePhoneNumber(value);
+        }
+        setFormState({...formState, [name]: value});
     }, [formState]);
     const handleSelectChange: (name: string) => TSelectChange = useCallback((name: string) => (
         e, val
     ) => {
-        console.log(name, val);
         setFormState({...formState, [name]: val || ""});
     }, [formState]);
 
