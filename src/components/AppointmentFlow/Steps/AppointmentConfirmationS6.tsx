@@ -203,7 +203,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         try {
             let resp: ICreateAppointmentResp;
             if (appointmentId?.id) {
-                const {data} = await API.appointment.update({...formData, id: appointmentId.id, hashKey: appointmentId.hashKey});
+                const {data} = await API.appointment.updateByKey({...formData, id: appointmentId.id, hashKey: appointmentId.hashKey});
                 resp = data;
             } else {
                 const {data} = await API.appointment.create(formData);
