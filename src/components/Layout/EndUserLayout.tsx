@@ -7,6 +7,7 @@ import {Welcome} from "../Welcome/Welcome";
 import {EndUserBar} from "../NavBar/EndUserBar";
 import {useDispatch} from "react-redux";
 import {loadSCProfile} from "../../store/reducers/appointment/actions";
+import {CancelAppointment} from "../Welcome/CancelAppointment";
 
 export const EndUserLayout = () => {
     const {id} = useParams();
@@ -25,6 +26,7 @@ export const EndUserLayout = () => {
             <EndUserBar />
             <Switch>
                 <Route path={Routes.EndUser.Base} exact component={Welcome} />
+                <Route path={Routes.EndUser.CancelAppointment} exact component={CancelAppointment} />
             </Switch>
         </div>
     </ThemeProvider>

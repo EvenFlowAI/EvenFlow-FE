@@ -22,7 +22,9 @@ const appointment = {
     create: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => request.post("/appointments", data),
     update: (data: IUpdateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(`/appointments/${data.id}`, data),
     list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IListAppointment>> => request.post("/appointments/by-query", data),
-    searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params})
+    searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params}),
+    cancelByKey: (key: string): TApiResponse => request.put(`/appointments/${key}/cancel/by-key`),
+    getByKey: (key: string): TApiResponse<ICreateAppointmentResp> => request.get(`/appointments/${key}/by-key`)
 };
 const employeeSchedules = {
     remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),

@@ -8,6 +8,7 @@ import {
 } from "../store/reducers/appointment/types";
 import {IOffer, IServiceType} from "../store/reducers/offers/types";
 import {IServiceRequestShort} from "../store/reducers/serviceRequests/types";
+import {ICurrentUser} from "../store/reducers/users/types";
 
 export type TApiResponse<R=any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T=any, R=any> = (arg: T) => TApiResponse<R>;
@@ -45,7 +46,11 @@ export interface ICreateAppointment {
     serviceRequestIds: number[];
 }
 export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {}
-export interface ICreateAppointmentResp { id: number; hashKey: string; }
+export interface ICreateAppointmentResp {
+    id: number;
+    hashKey: string;
+}
+
 export interface ICustomerLoadedData {
     emails: string[];
     firstName: string;
@@ -94,6 +99,7 @@ export interface ITransportationNeeds {
 
 export interface IListAppointment {
     id: number;
+    hashKey: string;
     requestDate: ParsableDate;
     dateInUtc: ParsableDate;
     remindAtInUtc: ParsableDate;
@@ -110,8 +116,10 @@ export interface IListAppointment {
     comment: string;
     offerId: number;
     offer: IOffer;
-    "reminderTypes": EReminderType[];
-    "serviceRequests": IServiceRequestShort[];
+    reminderTypes: EReminderType[];
+    serviceRequests: IServiceRequestShort[];
+    createdBy: string;
+    user?: ICurrentUser;
 }
 export interface ISearchCustomerParams {
     serviceCenterId: number;
