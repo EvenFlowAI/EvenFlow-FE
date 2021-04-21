@@ -97,9 +97,14 @@ export interface ITransportationNeeds {
     description: string;
 }
 
+export enum AppointmentStatus {
+    Active, Cancelled
+}
+
 export interface IListAppointment {
     id: number;
     hashKey: string;
+    appointmentStatus: AppointmentStatus;
     requestDate: ParsableDate;
     dateInUtc: ParsableDate;
     remindAtInUtc: ParsableDate;

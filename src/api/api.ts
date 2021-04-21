@@ -27,7 +27,7 @@ const appointment = {
     list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IListAppointment>> => request.post("/appointments/by-query", data),
     searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params}),
     cancelByKey: (key: string): TApiResponse => request.put(`/appointments/${key}/cancel/by-key`),
-    getByKey: (key: string): TApiResponse<ICreateAppointmentResp> => request.get(`/appointments/${key}/by-key`)
+    getByKey: (key: string): TApiResponse<IListAppointment> => request.get(`/appointments/${key}/by-key`)
 };
 const employeeSchedules = {
     remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),
