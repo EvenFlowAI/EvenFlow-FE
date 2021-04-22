@@ -6,6 +6,8 @@ import {AppointmentStatus, IListAppointment} from "../../api/types";
 import {useException} from "../../utils/hooks";
 import {LoadingButton} from "../UI/Button";
 import {Loading} from "../UI/Loading";
+import {useDispatch} from "react-redux";
+import {loadSCProfile} from "../../store/reducers/appointment/actions";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled"
 
@@ -15,6 +17,7 @@ export const CancelAppointment = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
     const {id} = useParams();
+    const dispatch = useDispatch();
     const showError = useException();
 
     const decodedId: string = useMemo(() => {
@@ -37,6 +40,12 @@ export const CancelAppointment = () => {
             })
             .finally(() => { setLoading(false); })
     }, [id]);
+
+    useEffect(() => {
+        if (appointment?.serviceCenterId) {
+            dispatch(loadSCProfile(appointment.serviceCenterId));
+        }
+    }, [appointment, dispatch]);
 
     const handleCancel = async () => {
         setSaving(true);

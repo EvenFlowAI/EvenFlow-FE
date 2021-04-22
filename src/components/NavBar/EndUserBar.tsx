@@ -4,6 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {ScSelector} from "../AppointmentFlow/SCSelector";
+import {getInitials} from "../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
     grow: {
@@ -37,13 +38,15 @@ export const EndUserBar = () => {
     const classes = useStyles();
     return <AppBar className={classes.bar} position="static">
         <Toolbar>
-            <Avatar title={"CH"} src={scProfile?.avatarPath} />
+            <Avatar title={getInitials(scProfile?.name)} src={scProfile?.avatarPath}>
+                {getInitials(scProfile?.name)}
+            </Avatar>
             {isXS ? <div className="grow" /> : null}
             <Typography className={classes.serviceName} variant="h4">
                 {scProfile?.name}
             </Typography>
             <div className={classes.grow} />
-            {!isXS ? <ScSelector/> : null}
+            {/*{!isXS ? <ScSelector/> : null}*/}
             <div className={classes.grow} />
             <Typography className={classes.contacts} variant="h6">
                 Service: {scProfile?.phoneNumber}

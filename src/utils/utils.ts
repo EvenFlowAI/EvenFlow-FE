@@ -16,7 +16,10 @@ export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     );
 }
 
-export const getInitials = (name: string) => {
+export const getInitials = (name?: string) => {
+    if (!name) {
+        return "-";
+    }
     const data = name.split(' ').slice(0, 2);
     return data.filter(v => !!v).map(l => l[0].toUpperCase()).join('');
 }
