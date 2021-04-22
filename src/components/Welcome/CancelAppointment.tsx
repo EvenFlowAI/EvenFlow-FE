@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {WelcomeLayout} from "./WelcomeLayout";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../api/api";
 import {AppointmentStatus, IListAppointment} from "../../api/types";
 import {useException} from "../../utils/hooks";
@@ -8,8 +8,23 @@ import {LoadingButton} from "../UI/Button";
 import {Loading} from "../UI/Loading";
 import {useDispatch} from "react-redux";
 import {loadSCProfile} from "../../store/reducers/appointment/actions";
+import {Button, styled} from "@material-ui/core";
+import moment from "moment";
+import {Edit} from "@material-ui/icons";
+import {Routes} from "../../config/routes";
 
-type TState = "loading" | "new" | "canceled" | "already_canceled"
+type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
+
+const ContentContainer = styled("div")({
+    fontSize: 22,
+    textAlign: "center",
+    fontWeight: "bold"
+});
+
+const Info = styled("p")({
+    fontSize: 12,
+    fontWeight: "normal"
+})
 
 export const CancelAppointment = () => {
     const [appointment, setAppointment] = useState<IListAppointment|null>(null);
@@ -19,6 +34,7 @@ export const CancelAppointment = () => {
     const {id} = useParams();
     const dispatch = useDispatch();
     const showError = useException();
+    const history = useHistory();
 
     const decodedId: string = useMemo(() => {
         return decodeURIComponent(id);
@@ -36,7 +52,7 @@ export const CancelAppointment = () => {
                 }
             })
             .catch(() => {
-
+                setTState("error");
             })
             .finally(() => { setLoading(false); })
     }, [id]);
@@ -59,34 +75,49 @@ export const CancelAppointment = () => {
         }
     }
 
-    const getTitle = (): string => {
-        switch (tState) {
-            case "canceled":
-                return "Your appointment was successfully canceled"
-            case "already_canceled":
-                return "You've already canceled your appointment"
-            case "new":
-                return "Do you want to cancel appointment?"
-            default:
-                return ""
+    const handleCreateNew = () => {
+        if (appointment?.serviceCenterId) {
+            history.replace(`${Routes.EndUser.Welcome}/${appointment.serviceCenterId}`);
         }
     }
 
     const getData = (): JSX.Element|null => {
         switch (tState) {
             case "already_canceled":
-                return null;
+                return <p>Your appointment is already canceled.</p>;
             case "canceled":
-                return null;
+                return <div>
+                    <p>You've successfully canceled your appointment.</p>
+                    <p>
+                        <small>If you want to schedule a different one,
+                            please click a button below</small>
+                    </p> <br/>
+                    <Button
+                        onClick={handleCreateNew}
+                        startIcon={<Edit />}
+                        color="primary" variant="contained">
+                        Schedule appointment
+                    </Button>
+                </div>;
+            case "error":
+                return <p>
+                    Sorry, we can't find your appointment.
+                    <br />
+                    Please check your link or contact service center directly.
+                </p>
             case "new":
-                return <LoadingButton
-                    onClick={handleCancel}
-                    loading={saving}
-                    fullWidth
-                    variant="contained"
-                    color="secondary">
-                    Cancel Appointment
-                </LoadingButton>;
+                return <div>
+                    <p>Are you sure want to cancel your appointment for {moment(appointment?.requestDate).format("dddd, MMM Do, h:mm a")}?</p>
+                    <LoadingButton
+                        onClick={handleCancel}
+                        loading={saving}
+                        fullWidth
+                        variant="contained"
+                        color="secondary">
+                        Cancel Appointment
+                    </LoadingButton>
+                    <Info>If you've changed your mind - you can close this window.</Info>
+                </div>;
             default:
                 if (loading) {
                     return <Loading />
@@ -95,7 +126,9 @@ export const CancelAppointment = () => {
         }
     }
 
-    return <WelcomeLayout title={getTitle()}>
-        {getData()}
+    return <WelcomeLayout title={""}>
+        <ContentContainer>
+            {getData()}
+        </ContentContainer>
     </WelcomeLayout>
 };
