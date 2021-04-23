@@ -14,7 +14,7 @@ import {
     IReminders,
     IServiceCenterProfile,
     ISR,
-    TAppointmentState,
+    TAppointmentState, transportations,
     TS1Form,
     TS3Form
 } from "./types";
@@ -129,8 +129,12 @@ export const loadEditAppointment = (appointment: IListAppointment): AppThunk => 
         ...state.s3Data,
         appointmentType: EAppointmentTimingType.FirstAvailable,
     }
-    // TODO: Think about transportation
-    state.transportation = ETransportation.Rental;
+    const tr = transportations.reduce((acc,i) => {
+        return [...acc, ...i];
+    }, []);
+    const foundTransportation = tr.find(el => el.label === appointment.transportationNeeds.description);
+    state.transportation = foundTransportation?.id ?? ETransportation.Rental;
+
     const date = `${
         String(appointment.dateInUtc).split("T")[0]
     }T${

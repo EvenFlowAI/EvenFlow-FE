@@ -7,6 +7,7 @@ import {styled} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {loadEditAppointment, loadSCProfile} from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
+import {AppointmentStatus} from "../../api/types";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -27,14 +28,12 @@ export const EditAppointment = () => {
         API.appointment.getByKey(id)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
-                // TODO: Uncomment
-                /*if (data.appointmentStatus === AppointmentStatus.Cancelled) {
+                if (data.appointmentStatus === AppointmentStatus.Cancelled) {
                     setState("canceled");
                     return;
-                }*/
+                }
                 await dispatch(loadEditAppointment({...data, hashKey: data.hashKey || decodeURIComponent(id)}));
-                // TODO: Change to replace
-                history.push(`${Routes.EndUser.AppointmentBase}/${data.serviceCenterId}`);
+                history.replace(`${Routes.EndUser.AppointmentBase}/${data.serviceCenterId}`);
             })
             .catch(() => {
                 setState("error");
