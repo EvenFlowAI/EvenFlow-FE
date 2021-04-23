@@ -196,15 +196,15 @@ export const AppointmentFlow = () => {
                 await dispatch(loadAppointmentReducer());
             }
             load().then(() => {
-                for (let i=1; i <= steps.length; i++) {
+                for (let i=1; i < steps.length; i++) {
                     if (!isStepCompleted(i)) {
                         if (i === 2) {
                             break;
                         }
                         setActiveStep(i);
                         break;
-                    } else if (i === 6) {
-                        setActiveStep(6);
+                    } else if (i === 5) {
+                        setActiveStep(5);
                     }
                 }
                 isSet.current = true;

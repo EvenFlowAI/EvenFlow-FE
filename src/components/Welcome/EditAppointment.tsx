@@ -3,7 +3,6 @@ import {WelcomeLayout} from "./WelcomeLayout";
 import {Loading} from "../UI/Loading";
 import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../api/api";
-import {AppointmentStatus, IListAppointment} from "../../api/types";
 import {styled} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {loadEditAppointment, loadSCProfile} from "../../store/reducers/appointment/actions";
@@ -19,7 +18,6 @@ type TState = "loading" | "error" | "canceled";
 
 export const EditAppointment = () => {
     const [state, setState] = useState<TState>("loading");
-    const [appointment, setAppointment] = useState<IListAppointment|null>(null);
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -29,7 +27,6 @@ export const EditAppointment = () => {
         API.appointment.getByKey(id)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
-                setAppointment(data);
                 // TODO: Uncomment
                 /*if (data.appointmentStatus === AppointmentStatus.Cancelled) {
                     setState("canceled");
