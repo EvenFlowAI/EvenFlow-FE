@@ -79,6 +79,15 @@ export const CancelAppointment = () => {
         }
     }
 
+    const getDate = () => {
+        if (appointment) {
+            const {dateInUtc, timeSlot} = appointment;
+            return moment.utc(`${String(dateInUtc).split("T")[0]}T${timeSlot}Z`)
+        } else {
+            return moment();
+        }
+    }
+
     const getData = (): JSX.Element|null => {
         switch (tState) {
             case "already_canceled":
@@ -101,7 +110,7 @@ export const CancelAppointment = () => {
                 return <NotFoundError />
             case "new":
                 return <div>
-                    <p>Are you sure want to cancel your appointment for {moment(appointment?.requestDate).format("dddd, MMM Do, h:mm a")}?</p>
+                    <p>Are you sure want to cancel your appointment for {getDate().format("dddd, MMM Do, h:mm a")}?</p>
                     <LoadingButton
                         onClick={handleCancel}
                         loading={saving}
