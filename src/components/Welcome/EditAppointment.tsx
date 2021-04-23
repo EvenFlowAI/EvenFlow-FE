@@ -32,7 +32,7 @@ export const EditAppointment = () => {
                     setState("canceled");
                     return;
                 }*/
-                await dispatch(loadEditAppointment(data));
+                await dispatch(loadEditAppointment({...data, hashKey: data.hashKey || decodeURIComponent(id)}));
                 // TODO: Change to replace
                 history.push(`${Routes.EndUser.AppointmentBase}/${data.serviceCenterId}`);
             })
