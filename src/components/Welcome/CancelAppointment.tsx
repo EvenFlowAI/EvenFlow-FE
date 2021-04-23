@@ -12,6 +12,7 @@ import {Button, styled} from "@material-ui/core";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
 import {Routes} from "../../config/routes";
+import {NotFoundError} from "./NotFoundError";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
 
@@ -97,11 +98,7 @@ export const CancelAppointment = () => {
                     </Button>
                 </div>;
             case "error":
-                return <p>
-                    Sorry, we can't find your appointment.
-                    <br />
-                    Please check your link or contact service center directly.
-                </p>
+                return <NotFoundError />
             case "new":
                 return <div>
                     <p>Are you sure want to cancel your appointment for {moment(appointment?.requestDate).format("dddd, MMM Do, h:mm a")}?</p>

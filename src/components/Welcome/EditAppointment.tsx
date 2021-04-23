@@ -8,13 +8,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     clearStorage,
     loadEditAppointment,
-    loadSCProfile,
-    selectAppointment
+    loadSCProfile
 } from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {AppointmentStatus} from "../../api/types";
 import {Edit} from "@material-ui/icons";
 import {RootState} from "../../store/rootReducer";
+import {NotFoundError} from "./NotFoundError";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -60,7 +60,7 @@ export const EditAppointment = () => {
     const getContent = () => {
         switch (state) {
             case "error":
-                return <p>Error</p>
+                return <NotFoundError />
             case "canceled":
                 return <div>
                     <p>Appointment is already cancelled.</p>
