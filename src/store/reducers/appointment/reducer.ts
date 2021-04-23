@@ -26,7 +26,7 @@ import {
     setAppointmentId,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
-    setCustomerVehicle,
+    setCustomerVehicle, setEditAppointment,
     setLoadedReducer
 } from "./actions";
 import moment from "moment";
@@ -200,5 +200,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
             customerSelectedVehicle: payload,
             s1Data: {...initialS1Form}
         };
+    })
+    .addCase(setEditAppointment, (state, {payload}) => {
+        return payload;
     })
 );

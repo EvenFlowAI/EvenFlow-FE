@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {WelcomeLayout} from "./WelcomeLayout";
 import {Loading} from "../UI/Loading";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../api/api";
 import {AppointmentStatus, IListAppointment} from "../../api/types";
 import {styled} from "@material-ui/core";
 import {useDispatch} from "react-redux";
-import {loadSCProfile} from "../../store/reducers/appointment/actions";
+import {loadEditAppointment, loadSCProfile} from "../../store/reducers/appointment/actions";
+import {Routes} from "../../config/routes";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -19,22 +20,29 @@ type TState = "loading" | "error" | "canceled";
 export const EditAppointment = () => {
     const [state, setState] = useState<TState>("loading");
     const [appointment, setAppointment] = useState<IListAppointment|null>(null);
+
+    const history = useHistory();
     const dispatch = useDispatch();
     const {id} = useParams();
 
     useEffect(() => {
         API.appointment.getByKey(id)
-            .then(({data}) => {
-                dispatch(loadSCProfile(data.serviceCenterId));
+            .then(async ({data}) => {
+                await dispatch(loadSCProfile(data.serviceCenterId));
                 setAppointment(data);
-                if (data.appointmentStatus === AppointmentStatus.Cancelled) {
-                    setState("canceled")
-                }
+                // TODO: Uncomment
+                /*if (data.appointmentStatus === AppointmentStatus.Cancelled) {
+                    setState("canceled");
+                    return;
+                }*/
+                await dispatch(loadEditAppointment(data));
+                // TODO: Change to replace
+                history.push(`${Routes.EndUser.AppointmentBase}/${data.serviceCenterId}`);
             })
             .catch(() => {
                 setState("error");
             })
-    }, [id, dispatch]);
+    }, [id, dispatch, history]);
 
     const getContent = () => {
         switch (state) {
