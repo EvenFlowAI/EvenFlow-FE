@@ -39,7 +39,7 @@ enum EndUser {
     Base = "/welcome/:id",
     Welcome = "/welcome",
     CancelAppointment = "/appointment-cancel/:id",
-    EditAppointment = "/appointment-edit/:id",
+    EditAppointment = "/appointment-update/:id",
     Appointment = "/appointment/:id",
     AppointmentBase = "/appointment",
     Confirmation = "/confirmation/:id",

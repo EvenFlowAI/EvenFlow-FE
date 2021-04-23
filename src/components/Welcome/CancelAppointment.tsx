@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {WelcomeLayout} from "./WelcomeLayout";
 import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../api/api";
@@ -35,10 +35,6 @@ export const CancelAppointment = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
-
-    const decodedId: string = useMemo(() => {
-        return decodeURIComponent(id);
-    }, [id]);
 
     useEffect(() => {
         setLoading(true);

@@ -6,7 +6,7 @@ import {
     IPersonalInformation,
     IVehicleData
 } from "../store/reducers/appointment/types";
-import {IOffer, IServiceType} from "../store/reducers/offers/types";
+import {IOffer} from "../store/reducers/offers/types";
 import {IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 

@@ -3,7 +3,6 @@ import {AppBar, Avatar, Toolbar, Typography, useMediaQuery, useTheme} from "@mat
 import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
-import {ScSelector} from "../AppointmentFlow/SCSelector";
 import {getInitials} from "../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
