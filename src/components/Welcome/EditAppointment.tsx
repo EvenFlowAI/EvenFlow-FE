@@ -3,11 +3,18 @@ import {WelcomeLayout} from "./WelcomeLayout";
 import {Loading} from "../UI/Loading";
 import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../api/api";
-import {styled} from "@material-ui/core";
-import {useDispatch} from "react-redux";
-import {loadEditAppointment, loadSCProfile} from "../../store/reducers/appointment/actions";
+import {Button, styled} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    clearStorage,
+    loadEditAppointment,
+    loadSCProfile,
+    selectAppointment
+} from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {AppointmentStatus} from "../../api/types";
+import {Edit} from "@material-ui/icons";
+import {RootState} from "../../store/rootReducer";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -19,6 +26,9 @@ type TState = "loading" | "error" | "canceled";
 
 export const EditAppointment = () => {
     const [state, setState] = useState<TState>("loading");
+    const selectedSC: number|undefined = useSelector((state: RootState) => {
+        return state.appointment.scProfile?.id
+    });
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -40,12 +50,31 @@ export const EditAppointment = () => {
             })
     }, [id, dispatch, history]);
 
+    const handleCreateNew = () => {
+        if (selectedSC) {
+            clearStorage();
+            history.replace(`${Routes.EndUser.Welcome}/${selectedSC}`);
+        }
+    }
+
     const getContent = () => {
         switch (state) {
             case "error":
                 return <p>Error</p>
             case "canceled":
-                return <p>Appointment is canceled, it can't be updated</p>
+                return <div>
+                    <p>Appointment is already cancelled.</p>
+                    <p>
+                        <small>If you want to schedule a different one,
+                            please click a button below</small>
+                    </p> <br/>
+                    <Button
+                        onClick={handleCreateNew}
+                        startIcon={<Edit />}
+                        color="primary" variant="contained">
+                        Schedule appointment
+                    </Button>
+                </div>
             case "loading":
             default:
                 return <Loading />

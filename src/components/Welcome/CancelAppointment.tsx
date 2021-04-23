@@ -7,7 +7,7 @@ import {useException} from "../../utils/hooks";
 import {LoadingButton} from "../UI/Button";
 import {Loading} from "../UI/Loading";
 import {useDispatch} from "react-redux";
-import {loadSCProfile} from "../../store/reducers/appointment/actions";
+import {clearStorage, loadSCProfile} from "../../store/reducers/appointment/actions";
 import {Button, styled} from "@material-ui/core";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
@@ -73,6 +73,7 @@ export const CancelAppointment = () => {
 
     const handleCreateNew = () => {
         if (appointment?.serviceCenterId) {
+            clearStorage();
             history.replace(`${Routes.EndUser.Welcome}/${appointment.serviceCenterId}`);
         }
     }
