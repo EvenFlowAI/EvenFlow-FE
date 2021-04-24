@@ -27,7 +27,7 @@ import {
     setCustomerEnteredEmail,
     setCustomerLoadedData,
     setCustomerVehicle, setEditAppointment,
-    setLoadedReducer
+    setLoadedReducer, setSessionId
 } from "./actions";
 import moment from "moment";
 
@@ -60,6 +60,7 @@ const initialS3Form: TS3Form = {
     appointmentType: EAppointmentTimingType.SpecialOffers
 }
 const initialState: TAppointmentState = {
+    sessionId: "",
     serviceRequests: [],
     customerLoadedData: null,
     customerSelectedVehicle: null,
@@ -203,5 +204,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(setEditAppointment, (state, {payload}) => {
         return payload;
+    })
+    .addCase(setSessionId, (state, {payload}) => {
+        return {...state, sessionId: payload};
     })
 );

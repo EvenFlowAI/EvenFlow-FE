@@ -7,27 +7,41 @@ import {Routes} from "../../config/routes";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {WelcomeLayout} from "./WelcomeLayout";
+import {TView} from "./types";
 
 
 export const Welcome = () => {
-    const [isSelect, setSelect] = useState<boolean>(false);
+    const [view, setView] = useState<TView>("select");
     const history = useHistory();
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
 
-    const toggleSelect = (b?: boolean) => {
-        setSelect(b !== undefined ? b : !isSelect);
-    }
     const onComplete = () => {
         history.push(
             Routes.EndUser.Appointment.replace(":id", scProfile?.id ? String(scProfile.id) : "0")
         );
     }
+
+    const getComponent = () => {
+        switch (view) {
+            case "search":
+            case "confirm":
+                return <LoginInput
+                    view={view}
+                    onConfirm={() => setView("confirm")}
+                    onReturn={() => setView("select")}
+                />;
+            case "select":
+            default:
+                return <CustomerSelect
+                    onComplete={onComplete}
+                    onLogin={() => setView("search")}
+                />;
+        }
+    }
+
     return (
         <WelcomeLayout title="Welcome!" subtitle="Schedule Your Service:">
-            {!isSelect
-                ? <CustomerSelect onSelect={toggleSelect} onComplete={onComplete}/>
-                : <LoginInput onSelect={toggleSelect} onComplete={onComplete}/>
-            }
+            {getComponent()}
         </WelcomeLayout>
     );
 };

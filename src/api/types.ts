@@ -130,3 +130,12 @@ export interface ISearchCustomerParams {
     serviceCenterId: number;
     searchTerm: string;
 }
+export interface ISearchTerm {
+    searchTerm: string;
+}
+export interface ISecurityCode {
+    securityCode: string;
+}
+export interface ISessionId {
+    "session-id": string;
+}

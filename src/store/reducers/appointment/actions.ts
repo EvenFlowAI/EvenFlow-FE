@@ -111,6 +111,7 @@ export const setCustomerLoadedData = createAction<ICustomerLoadedData|null>("App
 export const setCustomerVehicle = createAction<ILoadedVehicle|null>("Appointment/SetCustomerVehicle");
 
 
+export const setSessionId = createAction<string>("Appointment/SetSessionId");
 export const setEditAppointment = createAction<TAppointmentState>("Appointment/SetEditAppointment");
 export const loadEditAppointment = (appointment: IListAppointment): AppThunk => (dispatch, getState) => {
     const state = {...getState().appointment};
