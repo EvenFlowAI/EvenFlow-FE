@@ -12,7 +12,6 @@ import {API} from "../../api/api";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage} from "../../utils/hooks";
 import {TView} from "./types";
-import {useHistory} from "react-router-dom";
 
 const mh600 = "@media (max-height: 600px)";
 
