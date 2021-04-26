@@ -10,7 +10,7 @@ import {
     IListAppointmentRequest,
     IListAppointment, ISearchCustomerParams, ISearchTerm, ISecurityCode, ISessionId
 } from "./types";
-import {Api, request} from "../config/requests";
+import {Api, endUserRequest, request} from "../config/requests";
 import {PaginatedAPIResponse} from "../types/types";
 import {IAppointmentResponse, IAppointmentSlotsRequest, ISR} from "../store/reducers/appointment/types";
 import axios from "axios";
@@ -28,9 +28,10 @@ const appointment = {
     ),
     list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IListAppointment>> => request.post("/appointments/by-query", data),
     searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params}),
+    searchCustomerByKey: (headers: ISessionId, params: ISearchCustomerParams): TApiResponse => endUserRequest.get("/customers/by-session", {params, headers}),
     sendConfirmation: (data: ISearchTerm): TApiResponse<string> => request.post("/sessions/open", data),
-    confirm: (headers: ISessionId,  data: ISecurityCode): TApiResponse => axios.post(
-        `${APIUrl}/sessions/activate`, data, {headers}),
+    confirm: (headers: ISessionId,  data: ISecurityCode): TApiResponse => endUserRequest.post(
+        '/sessions/activate', data, {headers}),
     cancelByKey: (key: string): TApiResponse => request.put(`/appointments/${key}/cancel/by-key`),
     getByKey: (key: string): TApiResponse<IListAppointment> => request.get(`/appointments/${key}/by-key`)
 };

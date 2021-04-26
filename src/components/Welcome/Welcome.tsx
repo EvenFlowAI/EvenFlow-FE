@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {CustomerSelect} from "./CustomerSelect";
 import { LoginInput } from './LoginInput';
@@ -8,12 +8,17 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
+import {clearStorage} from "../../store/reducers/appointment/actions";
 
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
     const history = useHistory();
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+
+    useEffect(() => {
+        clearStorage();
+    }, [])
 
     const onComplete = () => {
         history.push(
@@ -27,6 +32,7 @@ export const Welcome = () => {
             case "confirm":
                 return <LoginInput
                     view={view}
+                    onComplete={onComplete}
                     onConfirm={() => setView("confirm")}
                     onReturn={() => setView("select")}
                 />;

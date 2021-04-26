@@ -67,6 +67,9 @@ export const request = axios.create({
     baseURL: APIUrl,
     headers: {Authorization: `Bearer ${authService.getLocalToken()}`}
 });
+export const endUserRequest = axios.create({
+    baseURL: APIUrl
+});
 
 request.interceptors.response.use(
     resp => resp,

@@ -4,7 +4,7 @@ import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    setCustomerEnteredEmail,
+    setCustomerEnteredEmail, setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
 import {RootState} from "../../store/rootReducer";
@@ -12,6 +12,7 @@ import {API} from "../../api/api";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage} from "../../utils/hooks";
 import {TView} from "./types";
+import {useHistory} from "react-router-dom";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -69,9 +70,10 @@ const useStyles = makeStyles((theme) => ({
 type TProps = {
     onReturn: () => void;
     onConfirm: () => void;
+    onComplete: () => void;
     view: TView;
 }
-export const LoginInput: React.FC<TProps> = ({onReturn, view, onConfirm}) => {
+export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConfirm}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [securityCode, setSecurityCode] = useState<string>("");
     const theme = useTheme();
@@ -82,6 +84,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, view, onConfirm}) => {
     const dispatch = useDispatch();
     const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
     const sessionId = useSelector((state: RootState) => state.appointment.sessionId);
+    const serviceCenter = useSelector((state: RootState) => state.appointment.scProfile)
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setCustomerEnteredEmail(value));
     }
@@ -109,6 +112,16 @@ export const LoginInput: React.FC<TProps> = ({onReturn, view, onConfirm}) => {
             await API.appointment.confirm(
                 {"session-id": sessionId}, {securityCode}
             );
+            try {
+                const {data} = await API.appointment.searchCustomerByKey(
+                    {"session-id": sessionId},
+                    {serviceCenterId: serviceCenter?.id || 0, searchTerm: ""}
+                );
+                dispatch(setCustomerLoadedData(data));
+            } catch {
+            } finally {
+                onComplete();
+            }
         } catch {
             showError("Invalid code");
         } finally {
@@ -157,7 +170,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, view, onConfirm}) => {
                     || (!customerEnteredEmail && view === "search")
                 }
                 onClick={view === "search" ? handleComplete : handleConfirm}>
-                Search
+                {view === "search" ? "Search" : "Confirm"}
             </LoadingButton>
         </div>
     </Paper>
