@@ -8,10 +8,9 @@ import {API} from "../../api/api";
 import {AppointmentStatus, appointmentStatuses, IListAppointment} from "../../api/types";
 import {Table} from "../UI/Table";
 import {TableRowDataType} from "../UI/types";
-import moment from "moment";
 import {MoreHoriz} from "@material-ui/icons";
 import {useConfirm, useException, useMessage} from "../../utils/hooks";
-import {getAppointmentDate} from "../../utils/utils";
+import {getAppointmentDate, getAppointmentVehicle} from "../../utils/utils";
 
 
 const cols: TableRowDataType<IListAppointment>[] = [
@@ -23,6 +22,10 @@ const cols: TableRowDataType<IListAppointment>[] = [
     {
         header: "Status",
         val: el => appointmentStatuses[el.appointmentStatus]
+    },
+    {
+        header: "Vehicle",
+        val: el => getAppointmentVehicle(el)
     },
     {
         header: "Price",
@@ -37,7 +40,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         appointment.scProfile
     ]);
     const [editedItem, setEditedItem] = useState<IListAppointment|null>(null);
-    const {askConfirm, closeConfirm} = useConfirm();
+    const {askConfirm} = useConfirm();
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const showError = useException();
     const showMessage = useMessage();
@@ -93,6 +96,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
             try {
                 await API.appointment.cancelByKey(editedItem.hashKey);
                 setEditedItem(null);
+                showMessage("Canceled");
                 await loadAppointments(sessionId, serviceCenter?.id||0);
             } catch (e) {
                 showError(e);
