@@ -136,6 +136,9 @@ export interface ISearchTerm {
 export interface ISecurityCode {
     securityCode: string;
 }
+export interface IServiceCenterId {
+    serviceCenterId: number;
+}
 export interface ISessionId {
     "session-id": string;
 }

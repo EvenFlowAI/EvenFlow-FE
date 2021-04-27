@@ -4,6 +4,7 @@ import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    saveAppointmentReducer,
     setCustomerEnteredEmail, setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
@@ -94,6 +95,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 searchTerm: customerEnteredEmail
             });
             dispatch(setSessionId(data));
+            dispatch(saveAppointmentReducer());
             showMessage("We've send a code with an email for confirmation.");
             onConfirm();
         } catch {

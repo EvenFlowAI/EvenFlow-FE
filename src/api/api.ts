@@ -8,13 +8,11 @@ import {
     ISetNewPasswordData,
     IConfig,
     IListAppointmentRequest,
-    IListAppointment, ISearchCustomerParams, ISearchTerm, ISecurityCode, ISessionId
+    IListAppointment, ISearchCustomerParams, ISearchTerm, ISecurityCode, ISessionId, IServiceCenterId
 } from "./types";
 import {Api, endUserRequest, request} from "../config/requests";
 import {PaginatedAPIResponse} from "../types/types";
 import {IAppointmentResponse, IAppointmentSlotsRequest, ISR} from "../store/reducers/appointment/types";
-import axios from "axios";
-import {APIUrl} from "../config/config";
 
 const accounts = {
     passwordRecovery: (data: IPasswordRecoveryData): TApiResponse<IPasswordRecoveryResp> => request.post("/accounts/password-recovery", data),
@@ -27,6 +25,10 @@ const appointment = {
       `/appointments/${data.hashKey}/by-key`, data
     ),
     list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IListAppointment>> => request.post("/appointments/by-query", data),
+    customerList:
+        (headers: ISessionId, params: IServiceCenterId):
+            TApiResponse<IListAppointment[]> =>
+            endUserRequest.get("/appointments", {headers, params}),
     searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params}),
     searchCustomerByKey: (headers: ISessionId, params: ISearchCustomerParams): TApiResponse => endUserRequest.get("/customers/by-session", {params, headers}),
     sendConfirmation: (data: ISearchTerm): TApiResponse<string> => request.post("/sessions/open", data),
