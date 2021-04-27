@@ -1,23 +1,24 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BaseModal, DialogContent, DialogTitle, DialogActions} from "../Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {DialogProps} from "../Modals/types";
-import {Button} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
-import {appointmentStatuses, IListAppointment} from "../../api/types";
+import {AppointmentStatus, appointmentStatuses, IListAppointment} from "../../api/types";
 import {Table} from "../UI/Table";
 import {TableRowDataType} from "../UI/types";
 import moment from "moment";
+import {MoreHoriz} from "@material-ui/icons";
+import {useConfirm, useException, useMessage} from "../../utils/hooks";
+import {getAppointmentDate} from "../../utils/utils";
 
 
 const cols: TableRowDataType<IListAppointment>[] = [
     {
         header: "Date",
         val: el =>
-            moment.utc(
-                `${String(el.dateInUtc).split("T")[0]}T${el.timeSlot}Z`
-            ).format("LLL")
+            getAppointmentDate(el).format("LLL")
     },
     {
         header: "Status",
@@ -35,6 +36,11 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         appointment.sessionId,
         appointment.scProfile
     ]);
+    const [editedItem, setEditedItem] = useState<IListAppointment|null>(null);
+    const {askConfirm, closeConfirm} = useConfirm();
+    const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
+    const showError = useException();
+    const showMessage = useMessage();
 
     const [appointments, setAppointments] = useState<IListAppointment[]>([]);
 
@@ -58,6 +64,48 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         }
     }, [sessionId, props.open, loadAppointments, serviceCenter]);
 
+    const openMenu = (item: IListAppointment) => (e: React.MouseEvent<HTMLButtonElement>) => {
+        setEditedItem(item);
+        setAnchorEl(e.currentTarget);
+    }
+
+    const cancelAppointment = () => {
+        setAnchorEl(null);
+        if (editedItem?.appointmentStatus === AppointmentStatus.Cancelled) {
+            showError("Appointment is already canceled");
+        } else {
+            if (editedItem) {
+                askConfirm({
+                    isRemove: true,
+                    confirmContent: "Cancel appointment",
+                    title: "Cancel appointment",
+                    content: <span>
+                        Are you sure want to cancel appointment on <br />
+                        {getAppointmentDate(editedItem).format("LLL")}?
+                    </span>,
+                    onConfirm: handleCancel
+                });
+            }
+        }
+    }
+    const handleCancel = async () => {
+        if (editedItem) {
+            try {
+                await API.appointment.cancelByKey(editedItem.hashKey);
+                setEditedItem(null);
+                await loadAppointments(sessionId, serviceCenter?.id||0);
+            } catch (e) {
+                showError(e);
+            }
+        }
+    }
+
+    const actions = (el: IListAppointment) => {
+        return <IconButton onClick={openMenu(el)}>
+            <MoreHoriz />
+        </IconButton>;
+    }
+
 
     return <BaseModal {...props}>
         <DialogTitle>My appointments</DialogTitle>
@@ -68,11 +116,16 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
                 isLoading={loading}
                 rowData={cols}
                 compact
+                actions={actions}
                 index="id"
             />
         </DialogContent>
         <DialogActions>
             <Button variant="outlined" color="primary" onClick={props.onClose}>Close</Button>
         </DialogActions>
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+            {/*<MenuItem onClick={editEmployee}>Edit</MenuItem>*/}
+            <MenuItem onClick={cancelAppointment}>Cancel</MenuItem>
+        </Menu>
     </BaseModal>
 };
