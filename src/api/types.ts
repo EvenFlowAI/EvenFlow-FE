@@ -9,6 +9,7 @@ import {
 import {IOffer} from "../store/reducers/offers/types";
 import {IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
+import {TEnumKeyLabel} from "../store/reducers/utils";
 
 export type TApiResponse<R=any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T=any, R=any> = (arg: T) => TApiResponse<R>;
@@ -99,6 +100,10 @@ export interface ITransportationNeeds {
 
 export enum AppointmentStatus {
     Active, Cancelled
+}
+export const appointmentStatuses: TEnumKeyLabel<AppointmentStatus> = {
+    [AppointmentStatus.Active]: "Active",
+    [AppointmentStatus.Cancelled]: "Canceled"
 }
 
 export interface IListAppointment {

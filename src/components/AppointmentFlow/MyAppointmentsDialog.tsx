@@ -5,7 +5,7 @@ import {Button} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
-import {IListAppointment} from "../../api/types";
+import {appointmentStatuses, IListAppointment} from "../../api/types";
 import {Table} from "../UI/Table";
 import {TableRowDataType} from "../UI/types";
 import moment from "moment";
@@ -19,6 +19,14 @@ const cols: TableRowDataType<IListAppointment>[] = [
                 `${String(el.dateInUtc).split("T")[0]}T${el.timeSlot}Z`
             ).format("LLL")
     },
+    {
+        header: "Status",
+        val: el => appointmentStatuses[el.appointmentStatus]
+    },
+    {
+        header: "Price",
+        val: el => `$${el.transactionValue.toFixed(2)}`
+    }
 ];
 
 export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
