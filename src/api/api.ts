@@ -35,6 +35,7 @@ const appointment = {
     confirm: (headers: ISessionId,  data: ISecurityCode): TApiResponse => endUserRequest.post(
         '/sessions/activate', data, {headers}),
     cancelByKey: (key: string): TApiResponse => request.put(`/appointments/${key}/cancel/by-key`),
+    cancel: (id: number): TApiResponse => request.put(`/appointments/${id}/cancel`),
     getByKey: (key: string): TApiResponse<IListAppointment> => request.get(`/appointments/${key}/by-key`)
 };
 const employeeSchedules = {
