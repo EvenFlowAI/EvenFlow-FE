@@ -17,8 +17,7 @@ import {
     changeComment,
     changePersonalInformation,
     setAppointmentId,
-    clearStorage,
-    changePrivacy, changeReminders
+    changePrivacy, changeReminders, saveAppointmentReducer
 } from "../../../store/reducers/appointment/actions";
 import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
@@ -211,8 +210,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             }
 
             dispatch(setAppointmentId(resp));
-            // Clear cached data
-            clearStorage();
+            dispatch(saveAppointmentReducer());
             setLoading(false);
             history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);
         } catch (e) {

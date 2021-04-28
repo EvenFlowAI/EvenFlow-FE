@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {DialogProps} from "../Modals/types";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
 import {AppointmentStatus, appointmentStatuses, IListAppointment} from "../../api/types";
@@ -11,6 +11,9 @@ import {TableRowDataType} from "../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {useConfirm, useException, useMessage} from "../../utils/hooks";
 import {getAppointmentDate, getAppointmentVehicle} from "../../utils/utils";
+import {loadEditAppointment, saveAppointmentReducer} from "../../store/reducers/appointment/actions";
+import {Routes} from "../../config/routes";
+import {useHistory} from "react-router-dom";
 
 
 const cols: TableRowDataType<IListAppointment>[] = [
@@ -43,6 +46,8 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     const {askConfirm} = useConfirm();
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const showError = useException();
+    const history = useHistory();
+    const dispatch = useDispatch();
     const showMessage = useMessage();
 
     const [appointments, setAppointments] = useState<IListAppointment[]>([]);
@@ -70,6 +75,16 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     const openMenu = (item: IListAppointment) => (e: React.MouseEvent<HTMLButtonElement>) => {
         setEditedItem(item);
         setAnchorEl(e.currentTarget);
+    }
+
+    const editAppointment = async () => {
+        setAnchorEl(null);
+        if (editedItem && serviceCenter) {
+            await dispatch(loadEditAppointment(editedItem));
+            await dispatch(saveAppointmentReducer());
+            history.replace(`${Routes.EndUser.AppointmentBase}/${serviceCenter.id}`);
+            window.location.reload();
+        }
     }
 
     const cancelAppointment = () => {
@@ -128,7 +143,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
             <Button variant="outlined" color="primary" onClick={props.onClose}>Close</Button>
         </DialogActions>
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-            {/*<MenuItem onClick={editEmployee}>Edit</MenuItem>*/}
+            <MenuItem disabled={editedItem?.appointmentStatus === AppointmentStatus.Cancelled} onClick={editAppointment}>Edit</MenuItem>
             <MenuItem onClick={cancelAppointment}>Cancel</MenuItem>
         </Menu>
     </BaseModal>

@@ -1,7 +1,7 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import {Box, Button, Grid, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {SquarePaper} from "../UI/Paper";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import moment from "moment";
 import {TS1Form} from "../../store/reducers/appointment/types";
@@ -9,6 +9,9 @@ import {useHistory, useParams} from "react-router-dom";
 import {Routes} from "../../config/routes";
 import {concatAddress, getCalendarUrl} from "../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../config/constants";
+import {loadAppointmentReducer} from "../../store/reducers/appointment/actions";
+import {useModal} from "../../utils/hooks";
+import {MyAppointmentsDialog} from "./MyAppointmentsDialog";
 
 const Paper = styled(SquarePaper)(({theme}) => ({
     padding: theme.spacing(2),
@@ -97,6 +100,9 @@ const getCarInfo = (data: TS1Form):string => {
 export const ConfirmationContent = () => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSet = useRef(false);
+    const {isOpen, onClose, onOpen} = useModal();
+    const dispatch = useDispatch();
     const appointment = useSelector(({appointment}: RootState) => appointment);
     const data: TDataMap = useMemo(() => ({
         date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
@@ -115,6 +121,12 @@ export const ConfirmationContent = () => {
 
     const history = useHistory();
     const {id} = useParams();
+
+    useEffect(() => {
+        if (!isSet.current) {
+            dispatch(loadAppointmentReducer());
+        }
+    }, [dispatch]);
 
     const handleBack = () => {
         history.push(`${Routes.EndUser.AppointmentBase}/${id ?? ""}`);
@@ -137,6 +149,12 @@ export const ConfirmationContent = () => {
         window.open(url);
     }
 
+    const handleMyAppointments = () => {
+        onOpen();
+    }
+
+    const showMy = Boolean(appointment.sessionId);
+
     return <Paper elevation={8}>
         <Title>Appointment confirmed!</Title>
         <Highlight />
@@ -155,12 +173,19 @@ export const ConfirmationContent = () => {
             <Grid item xs={12}>
                 <Box p={.25} />
             </Grid>
-            <Grid item xs={12} sm={6} style={{order: isXS ? 1 : undefined}}>
+            <Grid item xs={12} sm={showMy ? 4 : 6} style={{order: isXS ? 1 : undefined}}>
                 <Button fullWidth={isXS} onClick={handleBack} variant="outlined" color="primary">
                     Change Appointment
                 </Button>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {showMy ?
+                <Grid item xs={12} sm={4}>
+                    <Button fullWidth={isXS} onClick={handleMyAppointments} variant="outlined" color="primary">
+                        My Appointments
+                    </Button>
+                </Grid>
+                : null}
+            <Grid item xs={12} sm={showMy ? 4 : 6}>
                 <Box textAlign="right">
                     <Button onClick={handleAddToCalendar} fullWidth={isXS} variant="contained" color="primary">
                         Add To Calendar
@@ -174,5 +199,6 @@ export const ConfirmationContent = () => {
         <Box>
             <Message>We will see you soon !</Message>
         </Box>
+        <MyAppointmentsDialog open={isOpen} onClose={onClose} />
     </Paper>
 };
