@@ -65,7 +65,7 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({
                         />
                     </ListItem>
                     {payload.serviceRequests.map(sr => {
-                        return <ListItem>
+                        return <ListItem key={sr.id}>
                             <ListItemIcon><Settings /></ListItemIcon>
                             <ListItemText primary={sr.code} secondary={sr.description} />
                         </ListItem>

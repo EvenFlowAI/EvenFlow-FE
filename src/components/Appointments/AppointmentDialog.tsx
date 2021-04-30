@@ -112,6 +112,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     transportationNeeded: payload.transportationNeeds.isNeed
 
                 });
+                setSelectedSR(payload.serviceRequests)
             }
         }
     }, [props.open, payload]);
@@ -405,6 +406,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                             size: "small"
                         }}
                         loading={srLoading}
+                        getOptionSelected={(option, value) => option.id === value.id}
                         getOptionLabel={(option) => `${option.code}: ${option.description}`}
                         renderInput={autocompleteRender({label: "Service Requests"})}
                         options={srList}
