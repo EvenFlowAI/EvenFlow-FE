@@ -103,6 +103,15 @@ export const Appointments = () => {
         }
     }
 
+    const handleEditCallback = () => {
+        onClose();
+        handleEdit();
+    }
+    const handleCancelCallback = () => {
+        onClose();
+        handleCancel();
+    }
+
     const actions = (el: IListAppointment) => {
         return <IconButton
             size="small"
@@ -131,7 +140,10 @@ export const Appointments = () => {
             <MenuItem disabled={viewItem?.appointmentStatus === AppointmentStatus.Cancelled} onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={handleCancel}>Cancel</MenuItem>
         </Menu>
-        <ViewAppointmentDialog open={isOpen} payload={viewItem} onClose={onClose} />
-        <AppointmentDialog payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />
+        <ViewAppointmentDialog
+            onEditAppointment={handleEditCallback} onCancelAppointment={handleCancelCallback}
+            open={isOpen} payload={viewItem} onClose={onClose} />
+        <AppointmentDialog
+            payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />
     </>
 };

@@ -52,7 +52,11 @@ const Offer: React.FC<{offer: IListAppointment['offer']}> = ({offer}) => {
     </ListItem>;
 }
 
-export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
+type TCallbackProps = {
+    onEditAppointment: () => void;
+    onCancelAppointment: () => void;
+}
+export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>&TCallbackProps> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
@@ -88,6 +92,12 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({
             </>}
         </DialogContent>
         <DialogActions>
+            <Button onClick={onCancelAppointment} color="secondary" variant="outlined">
+                Cancel Appointment
+            </Button>
+            <Button onClick={onEditAppointment} color="primary" variant="outlined">
+                Edit
+            </Button>
             <Button onClick={props.onClose}>
                 Close
             </Button>
