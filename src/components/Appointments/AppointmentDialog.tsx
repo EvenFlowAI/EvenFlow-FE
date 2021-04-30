@@ -112,7 +112,8 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     transportationNeeded: payload.transportationNeeds.isNeed
 
                 });
-                setSelectedSR(payload.serviceRequests)
+                setSelectedSR(payload.serviceRequests);
+                setDate(payload.dateInUtc)
             }
         }
     }, [props.open, payload]);
