@@ -89,8 +89,32 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
             setSelectedSR([]);
             setDate("");
             setSelectedSlot(null);
+            if (payload) {
+                setForm({
+                    date: String(payload.dateInUtc),
+                    slot: payload.timeSlot,
+                    vehicleMake: payload.vehicle.make,
+                    vehicleModel: payload.vehicle.model,
+                    vehicleVin: payload.vehicle.vin,
+                    vehicleMileage: String(payload.vehicle.mileage),
+                    vehicleDriveType: payload.vehicle.driveType,
+                    vehicleTransmission: payload.vehicle.transmission,
+                    vehicleYear: String(payload.vehicle.year),
+                    vehicleEngineType: payload.vehicle.engineType,
+                    driverName: payload.driver.fullName,
+                    driverEmail: payload.driver.email,
+                    driverPhoneNumber: payload.driver.phoneNumber,
+                    isNeedCall: payload.isNeedCall,
+                    reminderTypes: payload.reminderTypes,
+                    comment: payload.comment,
+                    serviceRequestIds: payload.serviceRequests.map(sr => sr.id),
+                    transportationDescription: payload.transportationNeeds.description,
+                    transportationNeeded: payload.transportationNeeds.isNeed
+
+                });
+            }
         }
-    }, [props.open]);
+    }, [props.open, payload]);
 
     useEffect(() => {
         if (props.open && selectedSC) {

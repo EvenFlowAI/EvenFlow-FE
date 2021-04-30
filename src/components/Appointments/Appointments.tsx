@@ -12,6 +12,7 @@ import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
 import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
 import {getAppointmentDate} from "../../utils/utils";
+import {AppointmentDialog} from "./AppointmentDialog";
 
 const cols: TableRowDataType<IListAppointment>[] = [
     {header: "Date", val: el => moment.utc(el.dateInUtc).format("LL")},
@@ -30,6 +31,7 @@ export const Appointments = () => {
     const {selectedSC} = useSCs();
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const {isOpen, onClose, onOpen} = useModal();
+    const {isOpen: isEditOpen, onClose: onEditClose, onOpen: onEditOpen} = useModal();
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
@@ -67,6 +69,7 @@ export const Appointments = () => {
     }
     const handleEdit = () => {
         setAnchorEl(null);
+        onEditOpen();
     }
     const handleCancel = () => {
         setAnchorEl(null);
@@ -125,9 +128,10 @@ export const Appointments = () => {
         />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
             <MenuItem onClick={handleView}>View</MenuItem>
-            <MenuItem disabled onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem disabled={viewItem?.appointmentStatus === AppointmentStatus.Cancelled} onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={handleCancel}>Cancel</MenuItem>
         </Menu>
         <ViewAppointmentDialog open={isOpen} payload={viewItem} onClose={onClose} />
+        <AppointmentDialog payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />
     </>
 };
