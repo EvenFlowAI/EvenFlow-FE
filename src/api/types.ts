@@ -18,6 +18,7 @@ export type TApiView = Record<string, TApiEndpoint>;
 export type TApi = Record<string, TApiView>;
 
 export interface ICreateAppointment {
+    id?: number;
     date: ParsableDate;
     slot: string;
     customerId?: string;
@@ -46,7 +47,9 @@ export interface ICreateAppointment {
     comment: string;
     serviceRequestIds: number[];
 }
-export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {}
+export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {
+    id: number;
+}
 export interface ICreateAppointmentResp {
     id: number;
     hashKey: string;

@@ -98,7 +98,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     vehicleMake: payload.vehicle.make,
                     vehicleModel: payload.vehicle.model,
                     vehicleVin: payload.vehicle.vin,
-                    vehicleMileage: String(payload.vehicle.mileage),
+                    vehicleMileage: payload.vehicle.mileage ? String(payload.vehicle.mileage) : "",
                     vehicleDriveType: payload.vehicle.driveType,
                     vehicleTransmission: payload.vehicle.transmission,
                     vehicleYear: String(payload.vehicle.year),
@@ -112,7 +112,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     serviceRequestIds: payload.serviceRequests.map(sr => sr.id),
                     transportationDescription: payload.transportationNeeds.description,
                     transportationNeeded: payload.transportationNeeds.isNeed
-
                 });
                 setSelectedSR(payload.serviceRequests);
                 setDate(payload.dateInUtc);
@@ -250,7 +249,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     year: form.vehicleYear,
                     driveType: form.vehicleDriveType,
                     engineType: form.vehicleEngineType,
-                    mileage: form.vehicleMileage,
+                    mileage: form.vehicleMileage ? String(form.vehicleMileage) : "",
                     transmission: form.vehicleTransmission,
                     vin: form.vehicleVin,
                     dmsId: null
@@ -268,7 +267,12 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 reminderTypes: form.reminderTypes,
                 appointmentTimingType: EAppointmentTimingType.PreferredDate
             }
-            await API.appointment.create(data);
+            if (payload) {
+                data.id = payload.id;
+                await API.appointment.update(data);
+            } else {
+                await API.appointment.create(data);
+            }
             setLoading(false);
             showMessage("Saved");
             onAction && onAction();

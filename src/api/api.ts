@@ -20,7 +20,7 @@ const accounts = {
 }
 const appointment = {
     create: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => request.post("/appointments", data),
-    update: (data: IUpdateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(`/appointments/${data.id}`, data),
+    update: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(`/appointments/${data.id}`, data),
     updateByKey: (data: IUpdateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(
       `/appointments/${data.hashKey}/by-key`, data
     ),
