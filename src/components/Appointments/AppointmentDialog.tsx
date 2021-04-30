@@ -2,12 +2,22 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {ICreateAppointment, IListAppointment} from "../../api/types";
-import {Button, Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, Grid} from "@material-ui/core";
+import {
+    Button,
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
+    Grid,
+    MenuItem,
+    Select
+} from "@material-ui/core";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage, useSCs} from "../../utils/hooks";
 import {
     EAppointmentTimingType,
-    EReminderType,
+    EReminderType, flatTransportations,
     IAppointmentSlot,
     ISR,
     IVehicleData
@@ -68,6 +78,7 @@ const initialForm: TForm = {
     comment: "",
     serviceRequestIds: [],
 };
+
 export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
@@ -227,6 +238,14 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     }
     const handleSlotChange = (e: any, value: IAppointmentSlot|null) => {
         setSelectedSlot(value);
+    }
+
+    const handleChangeTransportationNeeds = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
+        setForm({
+            ...form,
+            transportationDescription: value as string,
+            transportationNeeded: flatTransportations.findIndex(el => el.label === String(value)) > 2,
+        });
     }
 
     const handleSave = async () => {
@@ -468,23 +487,28 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     <Divider />
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                    <TextField
+                    <Select
                         label="Transportation Description"
-                        value={form.transportationDescription}
                         id="transportationDescription"
+                        placeholder="Transportation needs"
                         name="transportationDescription"
-                        onChange={handleChange}
+                        value={form.transportationDescription}
+                        onChange={handleChangeTransportationNeeds}
                         fullWidth
-                    />
+                    >
+                        {flatTransportations.map(option =>
+                            <MenuItem key={option.label} value={option.label}>{option.label}</MenuItem>
+                        )}
+                    </Select>
                 </Grid>
                 <Grid item xs={12} sm={4} style={{alignSelf: "flex-end"}}>
                     <FormControlLabel
+                        aria-readonly="true"
                         control={
                             <Checkbox
+                                readOnly
                                 color="primary"
                                 checked={form.transportationNeeded}
-                                onChange={(e, checked) =>
-                                    setForm({...form, transportationNeeded: checked})}
                             />
                         }
                         label="Transportation"
