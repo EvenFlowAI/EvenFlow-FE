@@ -24,6 +24,7 @@ import {CalendarToday} from "@material-ui/icons";
 import {Api} from "../../config/requests";
 import {InputLoading} from "../AppointmentFlow/UI";
 import {validatePhoneNumber} from "../../utils/utils";
+import {EDemandCategory} from "../../store/reducers/pricingSettings/types";
 
 type TForm = {
     date: string;
@@ -75,6 +76,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
     const [srLoading, setSrLoading] = useState<boolean>(false);
     const [slots, setSlots] = useState<IAppointmentSlot[]>([]);
+    const [preloadedSlot, setPreloadedSlot] = useState<IAppointmentSlot|null>(null);
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
     const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -113,7 +115,18 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
 
                 });
                 setSelectedSR(payload.serviceRequests);
-                setDate(payload.dateInUtc)
+                setDate(payload.dateInUtc);
+                const slot: IAppointmentSlot = {
+                    date: payload.dateInUtc,
+                    time: payload.timeSlot,
+                    price: {
+                        value: payload.transactionValue,
+                        category: EDemandCategory.Average
+                    },
+                    isShorterWaitTime: false
+                }
+                setSelectedSlot(slot);
+                setPreloadedSlot(slot);
             }
         }
     }, [props.open, payload]);
@@ -143,20 +156,28 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 serviceCenterId: selectedSC.id
             })
                 .then(({data: {items}}) => {
+                    if (preloadedSlot) {
+                        items = [preloadedSlot, ...items];
+                    } else {
+                        setSelectedSlot(null);
+                    }
                     setSlots(items);
-                    setSelectedSlot(null)
                 })
                 .catch((e) => {
                     showError(e);
-                    setSlots([]);
-                    setSelectedSlot(null);
+                    if (preloadedSlot) {
+                        setSlots([preloadedSlot]);
+                    } else {
+                        setSlots([]);
+                        setSelectedSlot(null);
+                    }
                 })
                 .finally(() => {
                     setSlotsLoading(false);
                 });
 
         }
-    }, [selectedSC, props.open, filterDate, selectedSR, showError]);
+    }, [selectedSC, props.open, filterDate, selectedSR, showError, preloadedSlot]);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
