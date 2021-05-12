@@ -38,6 +38,8 @@ const App = () => {
                     <Route path={Routes.Account.Base} component={Login} />
                     <Route path={Routes.EndUser.Appointment} component={AppointmentLayout} />
                     <Route path={Routes.EndUser.Confirmation} component={AppointmentConfirmation} />
+                    <Route path={Routes.EndUser.CancelAppointment} component={EndUserLayout} />
+                    <Route path={Routes.EndUser.EditAppointment} component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} component={EndUserLayout} />
                     <PrivateRoute path="/" component={Layout}/>
                 </Switch>

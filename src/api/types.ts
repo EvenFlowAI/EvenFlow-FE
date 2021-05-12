@@ -6,8 +6,10 @@ import {
     IPersonalInformation,
     IVehicleData
 } from "../store/reducers/appointment/types";
-import {IOffer, IServiceType} from "../store/reducers/offers/types";
+import {IOffer} from "../store/reducers/offers/types";
 import {IServiceRequestShort} from "../store/reducers/serviceRequests/types";
+import {ICurrentUser} from "../store/reducers/users/types";
+import {TEnumKeyLabel} from "../store/reducers/utils";
 
 export type TApiResponse<R=any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T=any, R=any> = (arg: T) => TApiResponse<R>;
@@ -16,8 +18,10 @@ export type TApiView = Record<string, TApiEndpoint>;
 export type TApi = Record<string, TApiView>;
 
 export interface ICreateAppointment {
+    id?: number;
     date: ParsableDate;
     slot: string;
+    customerId?: string;
     reminderTypes: EReminderType[];
     gmt: number;
     appointmentTimingType: EAppointmentTimingType;
@@ -43,8 +47,14 @@ export interface ICreateAppointment {
     comment: string;
     serviceRequestIds: number[];
 }
-export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {}
-export interface ICreateAppointmentResp { id: number; hashKey: string; }
+export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {
+    id: number;
+}
+export interface ICreateAppointmentResp {
+    id: number;
+    hashKey: string;
+}
+
 export interface ICustomerLoadedData {
     emails: string[];
     firstName: string;
@@ -91,8 +101,18 @@ export interface ITransportationNeeds {
     description: string;
 }
 
+export enum AppointmentStatus {
+    Active, Cancelled
+}
+export const appointmentStatuses: TEnumKeyLabel<AppointmentStatus> = {
+    [AppointmentStatus.Active]: "Active",
+    [AppointmentStatus.Cancelled]: "Canceled"
+}
+
 export interface IListAppointment {
     id: number;
+    hashKey: string;
+    appointmentStatus: AppointmentStatus;
     requestDate: ParsableDate;
     dateInUtc: ParsableDate;
     remindAtInUtc: ParsableDate;
@@ -109,10 +129,24 @@ export interface IListAppointment {
     comment: string;
     offerId: number;
     offer: IOffer;
-    "reminderTypes": EReminderType[];
-    "serviceRequests": IServiceRequestShort[];
+    reminderTypes: EReminderType[];
+    serviceRequests: IServiceRequestShort[];
+    createdBy: string;
+    user?: ICurrentUser;
 }
 export interface ISearchCustomerParams {
     serviceCenterId: number;
     searchTerm: string;
+}
+export interface ISearchTerm {
+    searchTerm: string;
+}
+export interface ISecurityCode {
+    securityCode: string;
+}
+export interface IServiceCenterId {
+    serviceCenterId: number;
+}
+export interface ISessionId {
+    "session-id": string;
 }

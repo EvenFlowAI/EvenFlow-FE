@@ -17,8 +17,7 @@ import {
     changeComment,
     changePersonalInformation,
     setAppointmentId,
-    clearStorage,
-    changePrivacy, changeReminders
+    changePrivacy, changeReminders, saveAppointmentReducer
 } from "../../../store/reducers/appointment/actions";
 import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
@@ -32,6 +31,7 @@ import {
 } from "../../../store/reducers/appointment/types";
 import {useException} from "../../../utils/hooks";
 import {ICreateAppointment, ICreateAppointmentResp} from "../../../api/types";
+import {validatePhoneNumber} from "../../../utils/utils";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -146,6 +146,9 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
     }, [srList, selectedSR]);
 
     const handleTextChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        if (name === "phoneNumber") {
+            value = validatePhoneNumber(value);
+        }
         dispatch(changePersonalInformation({[name]: value}));
     }
 
@@ -169,6 +172,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
 
         let formData: ICreateAppointment = {
             appointmentTimingType: forms.s3Data.appointmentType,
+            customerId: forms.customerLoadedData?.id,
             comment: forms.comment,
             driver: forms.personalInformation,
             gmt: moment().utcOffset(),
@@ -198,7 +202,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         try {
             let resp: ICreateAppointmentResp;
             if (appointmentId?.id) {
-                const {data} = await API.appointment.update({...formData, id: appointmentId.id, hashKey: appointmentId.hashKey});
+                const {data} = await API.appointment.updateByKey({...formData, id: appointmentId.id, hashKey: appointmentId.hashKey});
                 resp = data;
             } else {
                 const {data} = await API.appointment.create(formData);
@@ -206,8 +210,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             }
 
             dispatch(setAppointmentId(resp));
-            // Clear cached data
-            clearStorage();
+            dispatch(saveAppointmentReducer());
             setLoading(false);
             history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);
         } catch (e) {

@@ -11,6 +11,7 @@ import {IAddress} from "../../../store/reducers/dealershipGroups/types";
 import {states} from "../../../config/constants";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
+import {validatePhoneNumber} from "../../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -86,8 +87,11 @@ export const DealershipGroupProfile = () => {
         setNameEdit(false);
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({...form, [e.target.name]: e.target.value});
+    const handleChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        if (name === "phoneNumber") {
+            value = validatePhoneNumber(value);
+        }
+        setForm({...form, [name]: value});
     }
     const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, address: {...form.address, [e.target.name]: e.target.value}});

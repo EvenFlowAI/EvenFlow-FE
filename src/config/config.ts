@@ -3,7 +3,7 @@ import {TRole} from "../store/reducers/users/types";
 
 export const APIHost = process.env.REACT_APP_ENV === "stage"
     ? "https://be.stage.evenflow.ai"
-    : "http://3.129.173.158:8008";
+    : "https://be.dev.evenflow.ai";
 export const APIUrl = `${APIHost}/api/v0`;
 
 export const defaultRowsPerPageOptions = [10, 50, 100];

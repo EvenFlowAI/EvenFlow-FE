@@ -56,7 +56,10 @@ export const ServiceCenters = () => {
         dispatch(loadAll())
     }, [dispatch, order, search]);
 
-    const handleView = (el: IServiceCenterExtended) => () => alert(`View ${el.name}`);
+    const handleView = (el: IServiceCenterExtended) => () => {
+        setEditedItem(el);
+        onOpen();
+    };
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
 
     const openEdit = () => {
@@ -134,6 +137,10 @@ export const ServiceCenters = () => {
             <MenuItem onClick={openEdit}>Edit</MenuItem>
             <MenuItem onClick={openRemove}>Remove</MenuItem>
         </Menu>
-        <CreateServiceCenter open={isOpen} onClose={onClose} payload={editedItem} />
+        <CreateServiceCenter
+            readOnly={currentUser?.isSuperUser}
+            open={isOpen}
+            onClose={onClose}
+            payload={editedItem} />
     </>
 }

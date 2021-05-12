@@ -2,12 +2,22 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
 import {ICreateAppointment, IListAppointment} from "../../api/types";
-import {Button, Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, Grid} from "@material-ui/core";
+import {
+    Button,
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
+    Grid,
+    MenuItem,
+    Select
+} from "@material-ui/core";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage, useSCs} from "../../utils/hooks";
 import {
     EAppointmentTimingType,
-    EReminderType,
+    EReminderType, flatTransportations,
     IAppointmentSlot,
     ISR,
     IVehicleData
@@ -19,10 +29,12 @@ import {DatePicker} from "../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {API} from "../../api/api";
 import moment from "moment";
-import {timeSpanString, timeString, VIN_LENGTH} from "../../config/constants";
+import {timeString, VIN_LENGTH} from "../../config/constants";
 import {CalendarToday} from "@material-ui/icons";
 import {Api} from "../../config/requests";
 import {InputLoading} from "../AppointmentFlow/UI";
+import {validatePhoneNumber} from "../../utils/utils";
+import {EDemandCategory} from "../../store/reducers/pricingSettings/types";
 
 type TForm = {
     date: string;
@@ -66,6 +78,7 @@ const initialForm: TForm = {
     comment: "",
     serviceRequestIds: [],
 };
+
 export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
@@ -74,6 +87,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
     const [srLoading, setSrLoading] = useState<boolean>(false);
     const [slots, setSlots] = useState<IAppointmentSlot[]>([]);
+    const [preloadedSlot, setPreloadedSlot] = useState<IAppointmentSlot|null>(null);
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
     const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -88,8 +102,44 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
             setSelectedSR([]);
             setDate("");
             setSelectedSlot(null);
+            if (payload) {
+                setForm({
+                    date: String(payload.dateInUtc),
+                    slot: payload.timeSlot,
+                    vehicleMake: payload.vehicle.make,
+                    vehicleModel: payload.vehicle.model,
+                    vehicleVin: payload.vehicle.vin,
+                    vehicleMileage: payload.vehicle.mileage ? String(payload.vehicle.mileage) : "",
+                    vehicleDriveType: payload.vehicle.driveType,
+                    vehicleTransmission: payload.vehicle.transmission,
+                    vehicleYear: String(payload.vehicle.year),
+                    vehicleEngineType: payload.vehicle.engineType,
+                    driverName: payload.driver.fullName,
+                    driverEmail: payload.driver.email,
+                    driverPhoneNumber: payload.driver.phoneNumber,
+                    isNeedCall: payload.isNeedCall,
+                    reminderTypes: payload.reminderTypes,
+                    comment: payload.comment,
+                    serviceRequestIds: payload.serviceRequests.map(sr => sr.id),
+                    transportationDescription: payload.transportationNeeds.description,
+                    transportationNeeded: payload.transportationNeeds.isNeed
+                });
+                setSelectedSR(payload.serviceRequests);
+                setDate(payload.dateInUtc);
+                const slot: IAppointmentSlot = {
+                    date: payload.dateInUtc,
+                    time: payload.timeSlot,
+                    price: {
+                        value: payload.transactionValue,
+                        category: EDemandCategory.Average
+                    },
+                    isShorterWaitTime: false
+                }
+                setSelectedSlot(slot);
+                setPreloadedSlot(slot);
+            }
         }
-    }, [props.open]);
+    }, [props.open, payload]);
 
     useEffect(() => {
         if (props.open && selectedSC) {
@@ -116,20 +166,28 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 serviceCenterId: selectedSC.id
             })
                 .then(({data: {items}}) => {
+                    if (preloadedSlot) {
+                        items = [preloadedSlot, ...items];
+                    } else {
+                        setSelectedSlot(null);
+                    }
                     setSlots(items);
-                    setSelectedSlot(null)
                 })
                 .catch((e) => {
                     showError(e);
-                    setSlots([]);
-                    setSelectedSlot(null);
+                    if (preloadedSlot) {
+                        setSlots([preloadedSlot]);
+                    } else {
+                        setSlots([]);
+                        setSelectedSlot(null);
+                    }
                 })
                 .finally(() => {
                     setSlotsLoading(false);
                 });
 
         }
-    }, [selectedSC, props.open, filterDate, selectedSR, showError]);
+    }, [selectedSC, props.open, filterDate, selectedSR, showError, preloadedSlot]);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
@@ -162,6 +220,9 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     }, [form.vehicleVin, showError, fillDataByVin]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
+        if (name === "driverPhoneNumber") {
+            value = validatePhoneNumber(value);
+        }
         setForm({...form, [name]: value});
     }
     const handleSRChange = (e: any, value: ISR[]) => {
@@ -177,6 +238,14 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     }
     const handleSlotChange = (e: any, value: IAppointmentSlot|null) => {
         setSelectedSlot(value);
+    }
+
+    const handleChangeTransportationNeeds = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
+        setForm({
+            ...form,
+            transportationDescription: value as string,
+            transportationNeeded: flatTransportations.findIndex(el => el.label === String(value)) > 2,
+        });
     }
 
     const handleSave = async () => {
@@ -199,7 +268,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     year: form.vehicleYear,
                     driveType: form.vehicleDriveType,
                     engineType: form.vehicleEngineType,
-                    mileage: form.vehicleMileage,
+                    mileage: form.vehicleMileage ? String(form.vehicleMileage) : "",
                     transmission: form.vehicleTransmission,
                     vin: form.vehicleVin,
                     dmsId: null
@@ -217,7 +286,12 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 reminderTypes: form.reminderTypes,
                 appointmentTimingType: EAppointmentTimingType.PreferredDate
             }
-            await API.appointment.create(data);
+            if (payload) {
+                data.id = payload.id;
+                await API.appointment.update(data);
+            } else {
+                await API.appointment.create(data);
+            }
             setLoading(false);
             showMessage("Saved");
             onAction && onAction();
@@ -226,6 +300,11 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
             setLoading(false);
             showError(e);
         }
+    }
+
+    const getDate = (option: IAppointmentSlot) => {
+        const date = `${String(option.date).split("T")[0]}T${option.time}Z`;
+        return moment.utc(date).format(`LL - ${timeString}`);
     }
 
     return <BaseModal {...props}>
@@ -372,6 +451,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                             size: "small"
                         }}
                         loading={srLoading}
+                        getOptionSelected={(option, value) => option.id === value.id}
                         getOptionLabel={(option) => `${option.code}: ${option.description}`}
                         renderInput={autocompleteRender({label: "Service Requests"})}
                         options={srList}
@@ -394,7 +474,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         loading={slotsLoading}
                         value={selectedSlot}
                         getOptionLabel={option =>
-                            `${moment(option.date).format("LL")} ${moment(option.time, timeSpanString).format(timeString)} - $${
+                            `${getDate(option)} - $${
                                 option.priceWithOffer?.value ? option.priceWithOffer.value.toFixed(2) : option.price.value.toFixed(2)
                             }`
                         }
@@ -407,23 +487,28 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     <Divider />
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                    <TextField
+                    <Select
                         label="Transportation Description"
-                        value={form.transportationDescription}
                         id="transportationDescription"
+                        placeholder="Transportation needs"
                         name="transportationDescription"
-                        onChange={handleChange}
+                        value={form.transportationDescription}
+                        onChange={handleChangeTransportationNeeds}
                         fullWidth
-                    />
+                    >
+                        {flatTransportations.map(option =>
+                            <MenuItem key={option.label} value={option.label}>{option.label}</MenuItem>
+                        )}
+                    </Select>
                 </Grid>
                 <Grid item xs={12} sm={4} style={{alignSelf: "flex-end"}}>
                     <FormControlLabel
+                        aria-readonly="true"
                         control={
                             <Checkbox
+                                readOnly
                                 color="primary"
                                 checked={form.transportationNeeded}
-                                onChange={(e, checked) =>
-                                    setForm({...form, transportationNeeded: checked})}
                             />
                         }
                         label="Transportation"

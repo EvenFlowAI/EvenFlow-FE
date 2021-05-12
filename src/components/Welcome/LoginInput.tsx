@@ -3,11 +3,16 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
 import {useDispatch, useSelector} from "react-redux";
-import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {
+    saveAppointmentReducer,
+    setCustomerEnteredEmail, setCustomerLoadedData,
+    setSessionId
+} from "../../store/reducers/appointment/actions";
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
-import {useParams} from "react-router-dom";
 import {LoadingButton} from "../UI/Button";
+import {useException, useMessage} from "../../utils/hooks";
+import {TView} from "./types";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -63,52 +68,97 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type TProps = {
-    onSelect: (b?: boolean) => void,
-    onComplete: () => void
+    onReturn: () => void;
+    onConfirm: () => void;
+    onComplete: () => void;
+    view: TView;
 }
-export const LoginInput: React.FC<TProps> = ({onSelect, onComplete}) => {
+export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConfirm}) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const [securityCode, setSecurityCode] = useState<string>("");
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("sm"));
     const classes = useStyles();
-    const {id: serviceCenterId} = useParams();
+    const showError = useException();
+    const showMessage = useMessage();
     const dispatch = useDispatch();
     const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
+    const sessionId = useSelector((state: RootState) => state.appointment.sessionId);
+    const serviceCenter = useSelector((state: RootState) => state.appointment.scProfile)
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setCustomerEnteredEmail(value));
     }
     const handleComplete = async () => {
         setLoading(true);
         try {
-            const {data} = await API.appointment.searchCustomer({
-                serviceCenterId,
+            const {data} = await API.appointment.sendConfirmation({
                 searchTerm: customerEnteredEmail
             });
-            dispatch(setCustomerLoadedData(data));
+            dispatch(setSessionId(data));
+            dispatch(saveAppointmentReducer());
+            showMessage("We've send a code with an email for confirmation.");
+            onConfirm();
         } catch {
-            dispatch(setCustomerLoadedData(null));
+            dispatch(setSessionId(""));
+            showError("We can't find your vehicle data, you can proceed as a new customer");
+            onReturn();
         } finally {
             setLoading(false);
-            onComplete();
         }
     }
 
+    const handleConfirm = async () => {
+        setLoading(true);
+        try {
+            await API.appointment.confirm(
+                {"session-id": sessionId}, {securityCode}
+            );
+            try {
+                const {data} = await API.appointment.searchCustomerByKey(
+                    {"session-id": sessionId},
+                    {serviceCenterId: serviceCenter?.id || 0, searchTerm: ""}
+                );
+                dispatch(setCustomerLoadedData(data));
+                dispatch(saveAppointmentReducer());
+            } catch {
+            } finally {
+                onComplete();
+            }
+        } catch {
+            showError("Invalid code");
+        } finally {
+            setLoading(false);
+        }
+
+    }
+
     return <Paper variant="outlined" className={classes.paper}>
-        <h3 className={classes.title}>Enter your Email or Phone</h3>
-        <TextField
-            placeholder="Type Here"
-            InputProps={{disableUnderline: true}}
-            variant="standard"
-            onChange={handleChange}
-            value={customerEnteredEmail}
-            fullWidth />
+        {view === "search" ? <>
+            <h3 className={classes.title}>Enter your Email or Phone</h3>
+            <TextField
+                placeholder="Type Here"
+                InputProps={{disableUnderline: true}}
+                variant="standard"
+                onChange={handleChange}
+                value={customerEnteredEmail}
+                fullWidth/>
+        </> : <>
+            <h3 className={classes.title}>Enter security code</h3>
+            <TextField
+                placeholder="Please enter a code from an email"
+                InputProps={{disableUnderline: true}}
+                variant="standard"
+                onChange={({target: {value}}) => setSecurityCode(value)}
+                value={securityCode}
+                fullWidth />
+        </>}
         {isXS ? <div className="grow" /> : null}
         <div className={classes.buttonsRow}>
             <Button
                 variant="outlined"
                 color="primary"
                 className={classes.button}
-                onClick={() => onSelect(false)}>
+                onClick={onReturn}>
                 Back
             </Button>
             <LoadingButton
@@ -116,8 +166,13 @@ export const LoginInput: React.FC<TProps> = ({onSelect, onComplete}) => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={handleComplete}>
-                Search
+                disabled={
+                    loading
+                    || (!securityCode && view === "confirm")
+                    || (!customerEnteredEmail && view === "search")
+                }
+                onClick={view === "search" ? handleComplete : handleConfirm}>
+                {view === "search" ? "Search" : "Confirm"}
             </LoadingButton>
         </div>
     </Paper>

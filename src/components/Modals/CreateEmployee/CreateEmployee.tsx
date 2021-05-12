@@ -16,6 +16,7 @@ import {IUserForm, TRole} from "../../../store/reducers/users/types";
 import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
 import {Roles} from "../../../config/constants";
+import {validatePhoneNumber} from "../../../utils/utils";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
     const isEdit = Boolean(payload?.id);
@@ -75,11 +76,14 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         }
     }, [props.open, startAdvisorForm, startTechnicianForm, payload]);
 
-    const handleChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler<HTMLInputElement> => e => {
+    const handleChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler<HTMLInputElement> => ({target: {name, value}}) => {
+        if (name === "phoneNumber") {
+            value = validatePhoneNumber(value);
+        }
         if (r === Roles.Advisor) {
-            setAdvisorForm({...advisorForm, [e.target.name]: e.target.value});
+            setAdvisorForm({...advisorForm, [name]: value});
         } else {
-            setTechnicianForm({...technicianForm, [e.target.name]: e.target.value});
+            setTechnicianForm({...technicianForm, [name]: value});
         }
     }
     const handleSelectChange = (r: Roles.Advisor | Roles.Technician): TSelectChange => (e, value) => {

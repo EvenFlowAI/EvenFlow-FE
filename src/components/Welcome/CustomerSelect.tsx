@@ -46,11 +46,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 type TProps = {
-    onSelect: (b?: boolean) => void,
-    onComplete: () => void
+    onLogin: () => void;
+    onComplete: () => void;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({onSelect, onComplete}) => {
+export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
     const classes = useStyles();
 
     return <Grid className={classes.buttonsContainer}
@@ -58,7 +58,7 @@ export const CustomerSelect: React.FC<TProps> = ({onSelect, onComplete}) => {
           container
           spacing={4}>
         <Grid item xs={12} sm={12} md={6}>
-            <div onClick={() => onSelect()} className={classes.button}>
+            <div onClick={onLogin} className={classes.button}>
                 <span>I`m a returning customer</span>
             </div>
         </Grid>

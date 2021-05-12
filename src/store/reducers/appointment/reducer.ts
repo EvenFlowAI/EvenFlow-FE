@@ -26,8 +26,8 @@ import {
     setAppointmentId,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
-    setCustomerVehicle,
-    setLoadedReducer
+    setCustomerVehicle, setEditAppointment,
+    setLoadedReducer, setSessionId
 } from "./actions";
 import moment from "moment";
 
@@ -60,6 +60,7 @@ const initialS3Form: TS3Form = {
     appointmentType: EAppointmentTimingType.SpecialOffers
 }
 const initialState: TAppointmentState = {
+    sessionId: "",
     serviceRequests: [],
     customerLoadedData: null,
     customerSelectedVehicle: null,
@@ -128,11 +129,17 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, appointment: payload};
     })
     .addCase(getAppointmentSlots, (state, {payload}) => {
+        if (payload.length && state.appointment) {
+            const {appointment} = state;
+            if (!Boolean(payload.find(sl =>
+                sl.time === appointment.time && sl.date === appointment.id.split("|")[0]
+            ))) {
+                payload = [{...appointment, date: appointment.id.split("|")[0]}, ...payload];
+            }
+        }
         let appointmentSlots = payload.map(sl => {
-            const timeSplit = sl.time.split(":");
-            return {...sl, id: `${sl.date}|${sl.time}`, date: moment(sl.date).set({
-                    hour: Number(timeSplit[0]), minute: Number(timeSplit[1]), second: Number(timeSplit[2])
-                })}
+            const date = `${String(sl.date).split("T")[0]}T${sl.time}Z`;
+            return {...sl, id: `${sl.date}|${sl.time}`, date: moment.utc(date)}
         });
 
         return {...state, appointmentSlots};
@@ -194,5 +201,11 @@ export const appointmentReducer = createReducer(initialState, builder => builder
             customerSelectedVehicle: payload,
             s1Data: {...initialS1Form}
         };
+    })
+    .addCase(setEditAppointment, (state, {payload}) => {
+        return payload;
+    })
+    .addCase(setSessionId, (state, {payload}) => {
+        return {...state, sessionId: payload};
     })
 );

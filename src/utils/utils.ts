@@ -8,6 +8,8 @@ import {matchPath} from "react-router-dom";
 import {EAppointmentTimingType} from "../store/reducers/appointment/types";
 import {TGroupedAppointments} from "../components/AppointmentFlow/AppointmentSelections/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {IListAppointment} from "../api/types";
+import moment from "moment";
 
 export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     return new Promise(resolve => {
@@ -16,7 +18,10 @@ export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     );
 }
 
-export const getInitials = (name: string) => {
+export const getInitials = (name?: string) => {
+    if (!name) {
+        return "-";
+    }
     const data = name.split(' ').slice(0, 2);
     return data.filter(v => !!v).map(l => l[0].toUpperCase()).join('');
 }
@@ -78,4 +83,19 @@ export const preCenterNeeded = (
         && !sliceIdx
         && Object.keys(groupedAppointments).length > displayItems
         && Boolean(appointmentDate)
+}
+
+export const validatePhoneNumber = (value: string): string => {
+    if (value) {
+        value = `+${value.replace(/[^0-9.]/g, '')}`;
+    }
+    return value;
+}
+
+export const getAppointmentDate = (appointment: IListAppointment) => {
+    const date = `${String(appointment.dateInUtc).split("T")[0]}T${appointment.timeSlot}Z`;
+    return moment.utc(date);
+}
+export const getAppointmentVehicle = ({vehicle}: IListAppointment) => {
+    return `${vehicle.make} ${vehicle.model} ${vehicle.year}`;
 }

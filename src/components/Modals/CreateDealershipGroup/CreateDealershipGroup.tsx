@@ -22,6 +22,7 @@ import {useException, useMessage, useValidation} from "../../../utils/hooks";
 import {ValidationKeyPairs} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
+import {validatePhoneNumber} from "../../../utils/utils";
 
 
 type KeyPair<U> = {
@@ -93,6 +94,9 @@ export const CreateDealershipGroup: React.FC<DialogProps> = props => {
     );
 
     const handleChange = (v: "dealership" | "cp") => ({target: {value, name}}: React.ChangeEvent<HTMLInputElement>) => {
+        if (name === "phoneNumber") {
+            value = validatePhoneNumber(value);
+        }
         if (v === "dealership") {
             setDealership({...dealership, [name]: value});
         } else {

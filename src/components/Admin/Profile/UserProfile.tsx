@@ -8,6 +8,7 @@ import {useCurrentUser, useException, useMessage} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {saveEmployeeAvatar, updateUser} from "../../../store/reducers/users/actions";
 import {Api} from "../../../config/requests";
+import {validatePhoneNumber} from "../../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -97,8 +98,11 @@ export const UserProfile = () => {
         setPasswordForm(initialPasswordForm);
         setEditPassword(false);
     }
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({...form, [e.target.name]: e.target.value});
+    const handleChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        if (name === "phoneNumber") {
+            value = validatePhoneNumber(value);
+        }
+        setForm({...form, [name]: value});
     }
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordForm({...passwordForm, [e.target.name]: e.target.value});

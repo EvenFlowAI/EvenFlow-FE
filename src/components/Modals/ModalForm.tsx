@@ -30,6 +30,7 @@ export type TModalFormProps<D> = {
     values: D,
     onChange: TInputChange;
     onSelectChange?: (name: string) => TSelectChange;
+    readOnly?: boolean;
 }
 
 export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.Element => {
@@ -46,6 +47,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                                     name={item.name || item.id}
                                     value={item.value(props.values)}
                                     onChange={props.onChange}
+                                    disabled={props.readOnly}
                                     fullWidth
                                     {...item.inputProps}
                                 />
@@ -54,6 +56,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                                         options={item.selectOptions || []}
                                         onChange={props?.onSelectChange ? props.onSelectChange(item.name || item.id) : noop}
                                         value={item.value(props.values) || null}
+                                        disabled={props.readOnly}
                                         renderInput={autocompleteRender({label: item.label || ""})}
                                     />
                                     : null}

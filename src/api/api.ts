@@ -8,9 +8,9 @@ import {
     ISetNewPasswordData,
     IConfig,
     IListAppointmentRequest,
-    IListAppointment, ISearchCustomerParams
+    IListAppointment, ISearchCustomerParams, ISearchTerm, ISecurityCode, ISessionId, IServiceCenterId
 } from "./types";
-import {Api, request} from "../config/requests";
+import {Api, endUserRequest, request} from "../config/requests";
 import {PaginatedAPIResponse} from "../types/types";
 import {IAppointmentResponse, IAppointmentSlotsRequest, ISR} from "../store/reducers/appointment/types";
 
@@ -20,9 +20,23 @@ const accounts = {
 }
 const appointment = {
     create: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => request.post("/appointments", data),
-    update: (data: IUpdateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(`/appointments/${data.id}`, data),
+    update: (data: ICreateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(`/appointments/${data.id}`, data),
+    updateByKey: (data: IUpdateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(
+      `/appointments/${data.hashKey}/by-key`, data
+    ),
     list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IListAppointment>> => request.post("/appointments/by-query", data),
-    searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params})
+    customerList:
+        (headers: ISessionId, params: IServiceCenterId):
+            TApiResponse<IListAppointment[]> =>
+            endUserRequest.get("/appointments", {headers, params}),
+    searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params}),
+    searchCustomerByKey: (headers: ISessionId, params: ISearchCustomerParams): TApiResponse => endUserRequest.get("/customers/by-session", {params, headers}),
+    sendConfirmation: (data: ISearchTerm): TApiResponse<string> => request.post("/sessions/open", data),
+    confirm: (headers: ISessionId,  data: ISecurityCode): TApiResponse => endUserRequest.post(
+        '/sessions/activate', data, {headers}),
+    cancelByKey: (key: string): TApiResponse => request.put(`/appointments/${key}/cancel/by-key`),
+    cancel: (id: number): TApiResponse => request.put(`/appointments/${id}/cancel`),
+    getByKey: (key: string): TApiResponse<IListAppointment> => request.get(`/appointments/${key}/by-key`)
 };
 const employeeSchedules = {
     remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),

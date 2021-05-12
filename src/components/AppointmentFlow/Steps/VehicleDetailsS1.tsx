@@ -25,13 +25,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {changeS1Form, setCustomerVehicle} from "../../../store/reducers/appointment/actions";
 import {Api} from "../../../config/requests";
-import {useException} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import {IVehicleData} from "../../../store/reducers/appointment/types";
 import {Add, Help} from "@material-ui/icons";
 import { VIN_LENGTH } from '../../../config/constants';
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {ILoadedVehicle} from "../../../api/types";
+import {MyAppointmentsDialog} from "../MyAppointmentsDialog";
 
 const Tip = styled("p")({
     fontSize: 14,
@@ -80,13 +81,15 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
     const form = useSelector((state: RootState) => {
         return state.appointment.s1Data;
     });
+    const {onOpen, onClose, isOpen} = useModal();
     const showError = useException();
     const oldVin = useRef<string>("");
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-    const [customerLoadedData, selectedVehicle] = useSelector((state: RootState) => [
+    const [customerLoadedData, selectedVehicle, sessionId] = useSelector((state: RootState) => [
         state.appointment.customerLoadedData,
-        state.appointment.customerSelectedVehicle
+        state.appointment.customerSelectedVehicle,
+        state.appointment.sessionId
     ]);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
@@ -124,6 +127,9 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
     }
     const handleVehicleChange = (e: any, value: ILoadedVehicle|null) => {
         dispatch(setCustomerVehicle(value));
+    }
+    const handleOpenMyAppointments = () => {
+        onOpen();
     }
     const handleAddNewCar = () => {
         dispatch(setCustomerVehicle(null));
@@ -305,7 +311,8 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                         {!isXS ? <Grid item xs={3} /> : null}
                     </Grid>
                 </ScrollableContainer>
-                <NextPrevBlock next={next} prev={prev} prevDisabled isCompleted={isCompleted} />
+                <MyAppointmentsDialog open={isOpen} onClose={onClose} />
+                <NextPrevBlock next={next} prev={handleOpenMyAppointments} prevLabel="My Appointments" prevDisabled={!sessionId} isCompleted={isCompleted} />
             </StepContentContainer>
         </StepContainer>
     );
