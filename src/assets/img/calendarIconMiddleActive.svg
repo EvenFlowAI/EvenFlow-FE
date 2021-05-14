@@ -1,0 +1,27 @@
+<svg width="38" height="36" viewBox="0 0 38 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0.584961" y="3.19141" width="36.8309" height="31.4265" rx="3.5" stroke="#3855F3"/>
+<path opacity="0.2" d="M0.851562 6.6914C0.851562 4.75841 2.41857 3.19141 4.35156 3.19141H33.2817C35.2147 3.19141 36.7817 4.75841 36.7817 6.69141V9.39729H0.851562V6.6914Z" fill="#3855F3" stroke="#3855F3"/>
+<g opacity="0.34">
+<rect opacity="0.5" x="2.78711" y="12.5996" width="9.00735" height="9.00735" rx="4.50368" fill="#3855F3"/>
+</g>
+<rect x="14.9971" y="13.0996" width="8.00735" height="8.00735" rx="4.00368" stroke="#3855F3"/>
+<g opacity="0.34">
+<rect x="14.9971" y="13.0996" width="8.00735" height="8.00735" rx="4.00368" fill="white" stroke="#3855F3"/>
+</g>
+<g opacity="0.34">
+<rect opacity="0.5" x="26.2061" y="12.5996" width="9.00735" height="9.00735" rx="4.50368" fill="#3855F3"/>
+</g>
+<g opacity="0.34">
+<rect opacity="0.5" x="2.78711" y="23.4102" width="9.00735" height="9.00735" rx="4.50368" fill="#3855F3"/>
+</g>
+<g opacity="0.34">
+<rect opacity="0.5" x="14.4971" y="23.4082" width="9.00735" height="9.00735" rx="4.50368" fill="#3855F3"/>
+</g>
+<g opacity="0.34">
+<rect opacity="0.5" x="26.2061" y="23.4082" width="9.00735" height="9.00735" rx="4.50368" fill="#3855F3"/>
+</g>
+<rect x="9.09277" y="0.890625" width="1.80147" height="4.50368" fill="#3855F3"/>
+<rect x="27.1074" y="0.890625" width="1.80147" height="4.50368" fill="#3855F3"/>
+<rect x="0.0849609" y="9.89844" width="37.8309" height="0.900735" fill="#3855F3"/>
+<path d="M16.749 17.1035L18.3252 18.5091L21.3072 15.5272" stroke="#3855F3"/>
+</svg>

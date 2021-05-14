@@ -1,9 +1,12 @@
 import {DealershipActions, DealershipState} from "./types";
+import {defaultPageData, defaultPaging} from "../defaultInitials";
 
 const initialState: DealershipState = {
     dealershipList: [],
     loading: false,
-    saving: false
+    saving: false,
+    paging: {...defaultPaging},
+    pageData: {...defaultPageData}
 };
 
 export const dealershipGroupsReducer =(
@@ -14,12 +17,20 @@ export const dealershipGroupsReducer =(
             return {...state, dealershipList: [
                 action.payload, ...state.dealershipList
             ]};
+        case "Dealership/Profile":
+            return {...state, profile: action.payload};
+        case "Dealership/Remove":
+            return {...state, dealershipList: state.dealershipList.filter(d => d.id !== action.payload)};
         case "Dealership/GetAll":
             return {...state, dealershipList: action.payload};
         case "Dealership/Loading":
             return {...state, loading: action.payload};
         case "Dealership/Saving":
             return {...state, saving: action.payload};
+        case "Dealership/ChangePageData":
+            return {...state, pageData: {...state.pageData, ...action.payload}};
+        case "Dealership/ChangePaging":
+            return {...state, paging: action.payload};
         default:
             return state;
     }

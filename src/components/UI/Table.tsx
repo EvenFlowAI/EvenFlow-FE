@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useMemo} from "react";
 import {
     TableContainer,
     Table as BaseTable,
@@ -6,7 +6,7 @@ import {
     TableHead,
     TableRow,
     TableCell,
-    TablePagination
+    TablePagination, useMediaQuery, useTheme, TableSortLabel
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ITableProps} from "./types";
@@ -14,45 +14,92 @@ import {defaultRowsPerPage, defaultRowsPerPageOptions} from "../../config/config
 import { NoData } from "./NoData";
 import { Loading } from "./Loading";
 
-const cellPadding = "28px 16px 9px";
-const useStyles = makeStyles({
-    root: {},
-    tableCell: {
-        fontSize: 16,
-        borderBottomColor: "#000000",
-        padding: cellPadding
+const cellPadding = 16;
+const compactPadding = "5px 15px"
+type TStyleProps = {
+    compact: boolean;
+}
+const useStyles = makeStyles(theme => ({
+    root: {
+        maxWidth: theme.breakpoints.values.lg,
     },
-    tableHead: {
-        fontSize: 16,
-        borderBottomColor: "#9DA8B5",
-        padding: cellPadding,
+    tableCell: ({compact}: TStyleProps) => ({
+        fontSize: compact ? 14 : 16,
+        border: "none",
+        // borderBottomColor: "#000000",
+        padding: compact ? compactPadding : cellPadding,
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 12,
+            padding: theme.spacing(1)
+        }
+    }),
+    tableHead: ({compact}: TStyleProps) => ({
+        fontSize: compact ? 14 : 16,
+        border: "none",
+        // borderBottomColor: "#9DA8B5",
+        padding: compact ? compactPadding : cellPadding,
         fontWeight: "bold",
-        color: "#9DA8B5"
-    },
+        color: "#9DA8B5",
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 12,
+            padding: theme.spacing(1)
+        }
+    }),
     pagination: {
         flexShrink: 0,
         width: "100%",
+    },
+    tableRow: {
+        "&:nth-of-type(odd)": {
+            background: "#FFFFFF"
+        },
+        "&:nth-of-type(even)": {
+            background: "#F2F3F7"
+        }
     },
     select: {
         background: "transparent",
         border: "none"
     }
-});
+}));
 
 
-export function Table<U>(props: ITableProps<U>): JSX.Element {
-    const classes = useStyles();
+export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITableProps<U>): JSX.Element {
+    const classes = useStyles({compact: Boolean(props.compact)});
+
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);
 
+    const nPage = useMemo(() => {
+        return props.page !== undefined ? props.page : page;
+    }, [page, props.page]);
+    const nRowsPerPage = useMemo(() => {
+        return props.rowsPerPage || rowsPerPage;
+    }, [rowsPerPage, props.rowsPerPage]);
+    const count = useMemo(() => {
+        return props.count || props.data.length
+    }, [props.data, props.count])
+
     const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {
-        setPage(newPage);
+        props.onChangePage ? props.onChangePage(e, newPage) : setPage(newPage);
     };
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+e.target.value);
-        setPage(0);
+        props.onChangeRowsPerPage
+            ? props.onChangeRowsPerPage(e)
+            : setRowsPerPage(+e.target.value);
+        handleChangePage(null, 0);
     }
+
+    useEffect(() => {
+        if (changePageCb) {
+            changePageCb(page, rowsPerPage);
+        } else if (changeRowsPerPageCb) {
+            changeRowsPerPageCb(rowsPerPage);
+        }
+    }, [changePageCb, changeRowsPerPageCb, page, rowsPerPage]);
 
     if (props.isLoading) return <Loading />;
     if (!props.data.length) return <NoData title={props.noDataTitle} />;
@@ -62,28 +109,48 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
             <BaseTable>
                 <TableHead>
                     <TableRow>
+                        {props.startActions ? <TableCell className={classes.tableHead} /> : null}
                         {props.rowData.map((rE, idx) => (
-                            <TableCell key={`t_${idx}`} align={rE.align || "left"} className={classes.tableHead}>
-                                {rE.header}
+                            isXS && rE.xsHidden ? null : <TableCell
+                                key={`t_${idx}`}
+                                align={rE.align || "left"}
+                                className={classes.tableHead}>
+                                {rE.orderId
+                                    ? <TableSortLabel
+                                        onClick={props.onSort ? props.onSort({
+                                            isAscending: rE.orderId !== props.order || !props.order || (rE.orderId === props.order && !props.isAscending),
+                                            orderBy: rE.orderId
+                                        }) : undefined}
+                                        direction={props.isAscending ? "desc" : "asc"}
+                                        active={rE.orderId === props.order}>
+                                        {rE.header}
+                                    </TableSortLabel>
+                                    : rE.header}
                             </TableCell>
                         ))}
-                        {props.actions ? <TableCell className={classes.tableHead} /> : null}
+                        {(props.actions && !props.viewMode) ? <TableCell className={classes.tableHead} /> : null}
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {props.data.map((row, idx) => {
                         const rIdx = props.index ? row[props.index] : idx;
                         return (
-                            <TableRow key={`${rIdx}`}>
+                            <TableRow key={`${rIdx}`} className={classes.tableRow}>
+                                {props.startActions
+                                    ? <TableCell className={classes.tableCell}>
+                                        {props.startActions(row)}
+                                    </TableCell>
+                                :null}
                                 {props.rowData.map((cellData, cIdx) => (
+                                    isXS && cellData.xsHidden ? null :
                                     <TableCell
                                         align={cellData.align || "left"}
                                         className={classes.tableCell}
                                         key={`${rIdx}_${cIdx}`}>
-                                        {cellData.val(row)}
+                                        {cellData.val(row, idx) || '-'}
                                     </TableCell>
                                 ))}
-                                {props.actions
+                                {(props.actions && !props.viewMode)
                                     ?   <TableCell align="right" className={classes.tableCell}>
                                             {props.actions(row)}
                                         </TableCell>
@@ -94,16 +161,16 @@ export function Table<U>(props: ITableProps<U>): JSX.Element {
                 </TableBody>
             </BaseTable>
         </TableContainer>
-        <TablePagination
+        {!props.hidePagination ? <TablePagination
             className={classes.pagination}
             classes={{select: classes.select}}
             component="div"
-            count={props.data.length}
-            page={page}
+            count={count}
+            page={nPage}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            rowsPerPage={rowsPerPage}
+            rowsPerPage={nRowsPerPage}
             rowsPerPageOptions={defaultRowsPerPageOptions}
-        />
+        /> : null}
     </>
 }

@@ -2,20 +2,23 @@ import React, {ChangeEventHandler, createRef, useState} from "react";
 import {Avatar} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
-
+type TStyleProps = {
+    size: number;
+    disabled?: boolean
+}
 const useStyles = makeStyles(theme => ({
-    root: {
-        width: 74,
-        height: 74,
-        cursor: "pointer",
+    root: ({size, disabled}: TStyleProps) => ({
+        width: size,
+        height: size,
+        cursor: !disabled ? "pointer" : "auto",
         backgroundColor: "#919191",
         transition: theme.transitions.create(["opacity", "box-shadow"]),
         opacity: .9,
         "&:hover": {
-            boxShadow: theme.shadows[5],
-            opacity: 1
+            boxShadow: !disabled ? theme.shadows[5] : undefined,
+            opacity: !disabled ? 1 : undefined
         }
-    },
+    }),
     sign: {
         fontSize: 25,
         fontWeight: "bold",
@@ -37,9 +40,16 @@ interface IAvatarState {
     dataUrl?: string;
 }
 
-export const AvatarUpload = () => {
-    const [state, setState] = useState<IAvatarState>({file: null});
-    const classes = useStyles();
+export type TAvatarProps = {
+    dataUrl?: string;
+    onChange?: (file: File) => void;
+    size?: number;
+    disabled?: boolean;
+}
+
+export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
+    const [state, setState] = useState<IAvatarState>({file: null, dataUrl: props.dataUrl || undefined});
+    const classes = useStyles({size: props.size || 74, disabled: props.disabled});
 
     const ref = createRef<HTMLInputElement>();
 
@@ -60,6 +70,9 @@ export const AvatarUpload = () => {
                  ref.current.files = null;
                  ref.current.value = "";
              }
+             if (props.onChange) {
+                 props.onChange(file);
+             }
         }
 
     }
@@ -72,6 +85,7 @@ export const AvatarUpload = () => {
         </Avatar>
         <input
             onChange={handleChange}
+            disabled={props.disabled}
             type="file"
             id="avatarInput"
             className={classes.input}

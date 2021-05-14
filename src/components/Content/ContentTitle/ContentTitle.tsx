@@ -1,41 +1,79 @@
-import React, {useMemo} from 'react';
-import {useLocation, matchPath} from "react-router-dom";
-import {Typography} from "@material-ui/core";
+import React from 'react';
+import {Theme, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {Routes} from "../../../config/routes";
+import {Link} from "react-router-dom";
 
-const useStyles = makeStyles({
+const titleSt = {
+    fontSize: 24,
+    lineHeight: "29px",
+    margin: 0
+}
+const useStyles = makeStyles((theme: Theme) => ({
     title: {
+        ...titleSt,
         fontWeight: "bold",
-        fontSize: 24,
-        lineHeight: "29px",
-        margin: 0
-    }
-});
+        [theme.breakpoints.down("xs")]: {
+            textAlign: "center"
+        }
+    },
+    subtitle: {
 
-type TTitle = {route: string; title: string};
-
-const getTitle = (match: any): TTitle => {
-    for (let path of titles) {
-        if (matchPath(match, path.route) !== null) {
-            return path;
+    },
+    titleContainer: {
+        display: "flex",
+        flexDirection: "column",
+        [theme.breakpoints.down("xs")]: {
+            marginBottom: theme.spacing(2)
+        }
+    },
+    rootTitle: {
+        ...titleSt,
+        "&>a": {
+            fontWeight: "normal",
+            textDecoration: "none",
+            color: theme.palette.text.primary,
+            "&:hover": {
+                textDecoration: "underline"
+            }
+        },
+        [theme.breakpoints.down("xs")]: {
+            display: "block"
         }
     }
-    return {route: "~", title: "Not Found"};
+}));
+export type TTitle = {
+    title: string;
+    to: string;
+    parent?: TTitle;
+}
+type TTitleProps = {
+    title: string;
+    parent?: TTitle;
+    subtitle?: string;
 }
 
-const titles: TTitle[] = [
-    {route: Routes.Admin.DealershipGroups, title: "Dealership Groups"},
-    {route: Routes.Admin.ServiceCenters, title: "Service Centers"},
-    {route: Routes.Admin.Employees, title: "Employees"}
-];
+const collectParents = (title: TTitle): JSX.Element => {
+    const link = <Link to={title.to}>{title.title}</Link>;
+    if (title.parent) {
+        return <>{collectParents(title.parent)} / {link}</>;
+    }
+    return link;
+}
 
-export const ContentTitle = () => {
-    const {pathname} = useLocation();
+export const ContentTitle: React.FC<TTitleProps> = (props) => {
     const classes = useStyles();
-
-    const path = useMemo(() => getTitle(pathname), [pathname]);
-
-    return <Typography className={classes.title} variant="h1">{path.title}</Typography>
+    return <div className={classes.titleContainer}>
+        <Typography className={classes.title} variant="h1">
+            {props.parent
+                ? <span className={classes.rootTitle}>{collectParents(props.parent)} / </span>
+                : null
+            }
+            {props.title}
+        </Typography>
+        {props.subtitle
+            ? <Typography className={classes.subtitle} variant="subtitle1">{props.subtitle}</Typography>
+            : null
+        }
+    </div>
 }
 

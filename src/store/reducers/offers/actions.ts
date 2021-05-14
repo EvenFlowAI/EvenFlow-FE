@@ -1,0 +1,96 @@
+import {createAction} from "@reduxjs/toolkit";
+import {EOfferStatus, IOffer, IOfferForm} from "./types";
+import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {Api} from "../../../config/requests";
+
+export const getOffers = createAction<IOffer[]>("Offers/GetOffers");
+export const setOffersPageData = createAction<Partial<IPageRequest>>("Offers/PageData");
+export const setOffersPaging = createAction<IPagingResponse>("Offers/Paging");
+export const setOffersLoading = createAction<boolean>("Offers/Loading");
+
+export const getArchivedOffers = createAction<IOffer[]>("Offers/GetArchivedOffers");
+export const setArchivedOffersPageData = createAction<Partial<IPageRequest>>("Offers/ArchivedPageData");
+export const setArchivedOffersPaging = createAction<IPagingResponse>("Offers/ArchivedPaging");
+export const setArchivedOffersLoading = createAction<boolean>("Offers/ArchivedLoading");
+
+export const loadOffers = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
+    dispatch(setOffersLoading(true));
+    try {
+        const pageData = getState().offers.offersPageData
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IOffer>>(
+            Api.endpoints.Offers.GetAll,
+            {
+                data: {
+                    serviceCenterId,
+                    status: EOfferStatus.None,
+                    ...pageData
+                }
+            }
+        );
+        dispatch(getOffers(result));
+        dispatch(setOffersPaging(paging));
+    } finally {
+        dispatch(setOffersLoading(false));
+    }
+}
+
+export const loadArchivedOffers = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
+    dispatch(setArchivedOffersLoading(true));
+    try {
+        const pageData = getState().offers.archivedOffersPageData
+        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IOffer>>(
+            Api.endpoints.Offers.GetAll,
+            {
+                data: {
+                    serviceCenterId,
+                    status: EOfferStatus.Archived,
+                    ...pageData
+                }
+            }
+        );
+        dispatch(getArchivedOffers(result));
+        dispatch(setArchivedOffersPaging(paging));
+    } finally {
+        dispatch(setArchivedOffersLoading(false));
+    }
+}
+
+export const createOffer = (data: IOfferForm): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Offers.Create, {data});
+    dispatch(loadOffers(data.serviceCenterId));
+}
+export const updateOffer = (data: IOfferForm, archive?: boolean): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Offers.Edit, {data, urlParams: {id: data?.id || 0}});
+    if (archive) {
+        dispatch(loadArchivedOffers(data.serviceCenterId));
+    } else {
+        dispatch(loadOffers(data.serviceCenterId));
+    }
+}
+export const removeOffer = (offer: IOffer, archive?: boolean): AppThunk => async dispatch => {
+    await Api.call(Api.endpoints.Offers.ChangeStatus, {
+        urlParams: {id: offer.id}, data: {status: EOfferStatus.Deleted}
+    });
+    if (archive) {
+        dispatch(loadArchivedOffers(offer.serviceCenterId));
+    } else {
+        dispatch(loadOffers(offer.serviceCenterId));
+    }
+}
+export const setArchiveOffer = (data: IOffer, archive?: boolean): AppThunk => async dispatch => {
+    await Api.call(
+        Api.endpoints.Offers.ChangeStatus,
+        {
+            data: {
+                status: data.status === EOfferStatus.Archived ? EOfferStatus.None : EOfferStatus.Archived
+            },
+            urlParams: {
+                id: data.id
+            }
+        });
+    if (archive) {
+        dispatch(loadArchivedOffers(data.serviceCenterId));
+    } else {
+        dispatch(loadOffers(data.serviceCenterId));
+    }
+}

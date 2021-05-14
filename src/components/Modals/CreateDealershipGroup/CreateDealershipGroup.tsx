@@ -1,55 +1,51 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     BaseModal,
     DialogContent,
     DialogContentTitle,
     DialogTitle,
-    DialogActions
+    DialogActions, AvatarContainer
 } from "../BaseModal";
 import {DialogProps} from "../types";
 import {
-    Divider, Button, Grid, Container
+    Divider, Button, Grid
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
-import {useSnackbar} from "notistack";
-import {IDealershipForm} from "../../../store/reducers/dealershipGroups/types";
+import {
+    IContactPersonForm,
+    IDealershipForm,
+    IDealershipGroupForm
+} from "../../../store/reducers/dealershipGroups/types";
 import {create} from "../../../store/reducers/dealershipGroups/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useValidation} from "../../../utils/hooks";
+import {useException, useMessage, useValidation} from "../../../utils/hooks";
 import {ValidationKeyPairs} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
-import {AvatarUpload} from "../../UI/AvatarUpload";
-import {makeStyles} from "@material-ui/core/styles";
+import {validatePhoneNumber} from "../../../utils/utils";
 
 
-const useStyles = makeStyles({
-    avatarWrapper: {
-        display: "flex",
-        justifyContent: "center",
-        marginBottom: 38
-    }
-});
-
-type KeyPair = {
-    name: keyof IDealershipForm,
+type KeyPair<U> = {
+    name: keyof U,
     label: string;
 }
 
-type FormElementProps = {
-    elements: KeyPair[];
-    data: IDealershipForm,
+type FormElementProps<U> = {
+    elements: KeyPair<U>[];
+    data: U,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-const FormElements: React.FC<FormElementProps> = props => {
+
+const FormElements: <T>(p: FormElementProps<T>) => React.ReactElement<FormElementProps<T>>
+    = props => {
     return <Grid container spacing={2}>
         {props.elements.map(element => {
-            return <Grid item xs={6} key={element.name}>
+            return <Grid item xs={6} key={element.name as string}>
                 <TextField
                     fullWidth
                     label={element.label}
-                    name={element.name}
-                    id={element.name}
+                    name={element.name as string}
+                    id={element.name as string}
                     value={props.data[element.name]}
                     onChange={props.onChange}
                 />
@@ -58,49 +54,54 @@ const FormElements: React.FC<FormElementProps> = props => {
     </Grid>
 }
 
-const elementsGroup1: KeyPair[] = [
+const elementsGroup1: KeyPair<IDealershipForm>[] = [
     {name: "name", label: "Dealership group name"},
-    {name: "email", label: "Dealership email"},
-    {name: "phone", label: "Phone"},
-    {name: "mainAddress", label: "Address"},
+    {name: "phoneNumber", label: "Phone"},
 ];
 
-const elementsGroup2: KeyPair[] = [
-    {name: "contactPersonName", label: "Contact person name"},
-    {name: "contactPersonPhone", label: "Contact person phone"},
-    {name: "contactPersonEmail", label: "Contact person email"}
+const elementsGroup2: KeyPair<IContactPersonForm>[] = [
+    {name: "firstName", label: "Contact person first name"},
+    {name: "lastName", label: "Contact person last name"},
+    {name: "phoneNumber", label: "Contact person phone"},
+    {name: "email", label: "Contact person email"}
 ];
 
-const requiredFields: ValidationKeyPairs<IDealershipForm>[] = [
-    {field: "name", message: "Dealership Group name is required"},
-    {field: "email", message: "Dealership Email is required"},
-    {field: "mainAddress", message: "Dealership Main Address is required"}
+const requiredFields: ValidationKeyPairs<IDealershipForm & IContactPersonForm>[] = [
 ];
 
+const initialStateDealershipState: IDealershipForm = {
+    name: "", phoneNumber: "",
+};
+const initialCPState: IContactPersonForm = {
+    phoneNumber: "", firstName: "", lastName: "", email: ""
+}
 
-export const CreateDealershipGroup: React.FC<
-    DialogProps> = props => {
 
-    const [data, setData] = useState<IDealershipForm>({
-        name: "",
-        mainAddress: "",
-        phone: "",
-        email: "",
-        contactPersonEmail: "",
-        contactPersonName: "",
-        contactPersonPhone: ""
-    });
+export const CreateDealershipGroup: React.FC<DialogProps> = props => {
+    const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
+    const [contactPerson, setCP] = useState<IContactPersonForm>({...initialCPState});
+    useEffect(() => {
+        setDealership({...initialStateDealershipState});
+        setCP({...initialCPState});
+    }, [props.open]);
 
-    const classes = useStyles();
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
-    const {enqueueSnackbar} = useSnackbar();
-    const validate = useValidation<IDealershipForm>(
-        requiredFields, data
+    const setException = useException();
+    const showMessage = useMessage();
+    const validate = useValidation(
+        requiredFields, {...dealership, ...contactPerson}
     );
 
-    const handleChange = ({target: {value, name}}: React.ChangeEvent<HTMLInputElement>) => {
-        setData({...data, [name]: value});
+    const handleChange = (v: "dealership" | "cp") => ({target: {value, name}}: React.ChangeEvent<HTMLInputElement>) => {
+        if (name === "phoneNumber") {
+            value = validatePhoneNumber(value);
+        }
+        if (v === "dealership") {
+            setDealership({...dealership, [name]: value});
+        } else {
+            setCP({...contactPerson, [name]: value});
+        }
     }
 
     const handleCreate = async () => {
@@ -108,33 +109,37 @@ export const CreateDealershipGroup: React.FC<
         if (errors.length) {
             return;
         }
-        await dispatch(create(data));
-        enqueueSnackbar("Created", {variant: "success"});
-        props.onClose();
+        const data: IDealershipGroupForm = {contactPerson, dealership};
+        try {
+            await dispatch(create(data));
+            showMessage("Created");
+            props.onClose();
+        } catch (e) {
+            setException(e);
+        }
+
     }
 
     return <BaseModal {...props} onClose={props.onClose}>
         <DialogTitle onClose={props.onClose}>New dealership group</DialogTitle>
         <DialogContent>
-            <Container className={classes.avatarWrapper}>
-                <AvatarUpload />
-            </Container>
+            <AvatarContainer />
 
             <DialogContentTitle
                 title="Dealership group info"
             />
-            <FormElements
+            <FormElements<IDealershipForm>
                 elements={elementsGroup1}
-                data={data}
-                onChange={handleChange} />
+                data={dealership}
+                onChange={handleChange("dealership")} />
 
             <Divider />
 
             <DialogContentTitle title="Contact personal info" />
-            <FormElements
+            <FormElements<IContactPersonForm>
                 elements={elementsGroup2}
-                data={data}
-                onChange={handleChange} />
+                data={contactPerson}
+                onChange={handleChange("cp")} />
 
 
         </DialogContent>

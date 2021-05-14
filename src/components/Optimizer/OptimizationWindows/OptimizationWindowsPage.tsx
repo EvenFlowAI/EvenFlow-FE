@@ -1,0 +1,157 @@
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {optimizerRoot} from "../utils";
+import {OptimizationPlate} from "./OptimizationPlate";
+import {Grid} from "@material-ui/core";
+import {DemandSegments} from "../../Modals/DemandSegments/DemandSegments";
+import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {loadDemandSegments} from "../../../store/reducers/demandSegments/actions";
+import {loadOptimizationWindows} from "../../../store/reducers/optimizationWindows/actions";
+import {
+    EOptimizationWindowType,
+    IOptimizationWindow,
+    optimizationWindowsList,
+    TOptContent
+} from "../../../store/reducers/optimizationWindows/types";
+import {OptimizationDialog} from "./OptimizationWindowDialog";
+import {OverbookingFactorDialog} from "./OverbookingFactorDialog";
+import {AppointmentCutoffDialog} from "./AppointmentCutoffDialog";
+import moment from "moment";
+import {timeSpanString} from "../../../config/constants";
+import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
+
+type TOptParam = {
+    [k in EOptimizationWindowType]: IOptimizationWindow;
+}
+
+const optContent: TOptContent = {
+    [EOptimizationWindowType.FirstAvailable]: {
+        helperText: "Set the optimization window for available time slots when first available date search is entered",
+        label: "Days",
+        title: "First Available Search",
+    },
+    [EOptimizationWindowType.SpecificDate]: {
+        prefix: "+/- ",
+        helperText: "Set the optimization window for available time slots when a specific date search is entered",
+        label: "Days",
+        title: "Specific Date Search",
+    },
+    [EOptimizationWindowType.DemandSegments]: {
+        helperText: "Set the number of demand value segments to group service requests of equal value",
+        label: "Segments",
+        title: "Demand Segments",
+    },
+    [EOptimizationWindowType.OverbookingFactor]: {
+        helperText: "Set the percent of appointments the center is willing to overbook beyond capacity.",
+        suffix: "%",
+        label: "percent per day",
+        title: "Overbooking factor",
+    },
+    [EOptimizationWindowType.AppointmentsPerSlot]: {
+        helperText: "Set the number of max scheduled appointments per appointment time slot",
+        label: "appointments",
+        title: "Appointments per slot",
+    },
+    [EOptimizationWindowType.AppointmentCutoff]: {
+        helperText: "Set the hour that the last appointment will be accepted",
+        label: "pm",
+        title: "Appointment Cutoff"
+    }
+}
+
+
+const blankWindowParam: IOptimizationWindow = {
+    serviceCenterId: 0,
+    type: EOptimizationWindowType.OverbookingFactor,
+    value: 0
+}
+export const OptimizationWindowsPage = () => {
+    const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);
+    const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
+    const {isOpen: isOverbookingOpen, onClose: onOverbookingClose, onOpen: onOverbookingOpen} = useModal();
+    const {isOpen: isCutoffOpen, onClose: onCutoffClose, onOpen: onCutoffOpen} = useModal();
+    const {isOpen: isOptOpen, onClose: onOptClose, onOpen: onOptOpen} = useModal();
+    const optParams = useSelector((state: RootState) =>
+        state.optimizationWindows.dataList
+    );
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
+    const optMapped: TOptParam = useMemo(() => {
+        return optimizationWindowsList.reduce((acc, k) => {
+            acc[k] = optParams.find(el => el.type === k) || {...blankWindowParam, type: k};
+            return acc;
+        }, {} as TOptParam)
+    }, [optParams]);
+
+    const handleEdit = useCallback((type: EOptimizationWindowType) => () => {
+        setSelectedOpt(type);
+        onOptOpen();
+    }, [onOptOpen]);
+
+    const getPlateEdit = (k: EOptimizationWindowType) => {
+        switch (k) {
+            case EOptimizationWindowType.DemandSegments:
+                return onDemandOpen;
+            case EOptimizationWindowType.OverbookingFactor:
+                return onOverbookingOpen;
+            case EOptimizationWindowType.AppointmentCutoff:
+                return onCutoffOpen;
+            default:
+                return handleEdit(k);
+        }
+    }
+
+    useEffect(() => {
+        if (selectedSC) {
+            if (!isDemandOpen) {
+                // Update after demand close
+                dispatch(loadOptimizationWindows(selectedSC.id, selectedPod?.id));
+            }
+            dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
+            dispatch(loadWorkingDays(selectedSC.id));
+        }
+    }, [dispatch, selectedSC, selectedPod, isDemandOpen]);
+
+    return <>
+        <TitleContainer title="Optimization Windows" pad parent={optimizerRoot} />
+        <Grid container spacing={3}>
+            {optimizationWindowsList.map(k => {
+                const plate = optContent[k];
+                    return <Grid item xs={12} sm={6} md={4} key={plate.title}>
+                        <OptimizationPlate
+                            onEdit={getPlateEdit(k)}
+                            title={plate.title}
+                            count={
+                                k === EOptimizationWindowType.AppointmentCutoff
+                                    ? optMapped[k].value
+                                        ? moment(optMapped[k].value, timeSpanString).format("h:mm")
+                                        : "-"
+                                    : optMapped[k].value
+                            }
+                            label={k === EOptimizationWindowType.AppointmentCutoff
+                                ? optMapped[k].value
+                                    ? moment(optMapped[k].value, timeSpanString).format("a")
+                                    : "-"
+                                : plate.label}
+                            prefix={plate.prefix}
+                            suffix={plate.suffix}
+                            helperText={plate.helperText}
+                        />
+                    </Grid>;
+                }
+            )}
+            <OptimizationDialog
+                open={isOptOpen}
+                content={optContent[selectedOpt]}
+                payload={optMapped[selectedOpt]}
+                onClose={onOptClose}
+            />
+            <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
+            <OverbookingFactorDialog open={isOverbookingOpen} onClose={onOverbookingClose} />
+            <AppointmentCutoffDialog open={isCutoffOpen} onClose={onCutoffClose} />
+        </Grid>
+    </>
+}

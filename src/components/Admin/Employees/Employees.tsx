@@ -1,43 +1,137 @@
-import React from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Table} from "../../UI/Table";
-import {IconButton} from "@material-ui/core";
-import {Visibility} from "@material-ui/icons";
+import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {MoreHoriz, Visibility} from "@material-ui/icons";
 import {TableRowDataType} from "../../UI/types";
+import {TableAvatar} from "../TableAvatar";
+import {IEmployee} from "../../../store/reducers/employees/types";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {loadAll, removeEmployee, setEmplOrder} from "../../../store/reducers/employees/actions";
+import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
+import {changePageData} from "../../../store/reducers/employees/actions";
+import {concatAddress} from "../../../utils/utils";
+import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
+import {Roles, Titles} from "../../../config/constants";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {IOrder} from "../../../types/types";
 
-
-interface EmployeeRow {
-    technicianName: string; serviceName: string; serviceLocation: string; serviceLevel: number;
-}
-
-const data: EmployeeRow[] = [
-    {technicianName: "Devon Lane", serviceName: "Honda Service",
-        serviceLocation: "1901 Thornridge Cir. Shiloh, Chicago 39495", serviceLevel: 1},
-    {technicianName: "Wade Warren", serviceName: "Honda Service",
-        serviceLocation: "2118 Thornridge Cir. Syracuse, Chicago 39495", serviceLevel: 1},
-    {technicianName: "Dianne Russell", serviceName: "Audi service",
-        serviceLocation: "2715 Ash Dr. San Jose, Chicago 39495", serviceLevel: 2},
+const SURowData: TableRowDataType<IEmployee>[] = [
+    {val: (el: IEmployee) => el.fullName, header: "Name"},
+    {val: (el: IEmployee) => el.dealership?.name, header: "Dealership group"},
+    {val: (el: IEmployee) => concatAddress(el.dealership?.address), header: "Service center address"},
+    {val: (el: IEmployee) => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role"},
 ];
 
-const rowData: TableRowDataType<EmployeeRow>[] = [
-    {val: (el: EmployeeRow) => el.technicianName, header: "Technician Name"},
-    {val: (el: EmployeeRow) => el.serviceName, header: "Service Name"},
-    {val: (el: EmployeeRow) => el.serviceLocation, header: "Service Location"},
-    {val: (el: EmployeeRow) => el.serviceLevel.toString(), header: "Level", align: "center"},
+const AdminRowData: TableRowDataType<IEmployee>[] = [
+    {val: el => el.fullName, header: "Name", orderId: "name"},
+    {val: el => el.serviceCenter?.name || '-', header: "Service Center", orderId: "serviceCenterName"},
+    {val: el => el.serviceCenter?.address ? concatAddress(el.serviceCenter.address) : '-', header: "Service center Address"},
+    {val: el => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role", orderId: "role"},
+    {val: el => el.phoneNumber, header: "Phone Number", orderId: "phoneNumber"}
 ];
 
 
 export const Employees = () => {
-    const handleView = (el: EmployeeRow) => () => alert(`View ${el.technicianName}`);
-    const viewActions = (el: EmployeeRow) => (
-        <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
+    const {data, isLoading, count} = useSelector((state: RootState) => ({
+        data: state.employees.employeesList,
+        isLoading: state.employees.loading,
+        count: state.employees.paging.numberOfRecords
+    }));
+    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+        (s: RootState) => s.employees.pageData,
+        changePageData
     );
+    const dispatch = useDispatch();
+    const search = useSelector((state: RootState) => state.employees.searchTerm);
+    const order = useSelector((state: RootState) => state.employees.order);
 
-    return <Table
-        data={data}
-        noDataTitle="No employees present"
-        isLoading={false}
-        rowData={rowData}
-        index="technicianName"
-        actions={viewActions}
-    />
+    useEffect(() => {
+        dispatch(loadAll());
+    }, [dispatch, search, order]);
+    const currentUser = useCurrentUser();
+
+    const rowData = useMemo<TableRowDataType<IEmployee>[]>(() => {
+        return currentUser?.isSuperUser ? SURowData : AdminRowData;
+    }, [currentUser]);
+
+    const {askConfirm} = useConfirm();
+    const showError = useException();
+    const showMessage = useMessage();
+    const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
+    const {onOpen, isOpen, onClose} = useModal();
+    const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
+    const handleMenuOpen = (item: IEmployee) => (e: React.MouseEvent<HTMLButtonElement>) => {
+        setEditedItem(item);
+        setAnchorEl(e.currentTarget);
+    }
+    const editEmployee = () => {
+        onOpen();
+        setAnchorEl(null);
+    }
+    const handleRemove = async () => {
+        try {
+            await dispatch(removeEmployee(editedItem?.id || ''))
+            showMessage(`Successfully removed ${editedItem?.fullName}`);
+            setEditedItem(undefined);
+        } catch (e) {
+            showError(e);
+        }
+    }
+    const deleteEmployee = () => {
+        setAnchorEl(null);
+        if (editedItem?.role === 'Owner') {
+            showError("You can not remove dealership account");
+        } else {
+            askConfirm({
+                isRemove: true,
+                title: `Are you sure want to remove ${editedItem?.fullName}?`,
+                onConfirm: handleRemove
+            });
+        }
+    }
+    const handleOrder = (order: IOrder<IEmployee>) => () => {
+        dispatch(setEmplOrder(order));
+    }
+
+    const handleView = (el: IEmployee) => () => alert(`View ${el.fullName}`);
+    const viewActions = (el: IEmployee) => (
+        currentUser?.isSuperUser
+            ? <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
+            : <IconButton
+                disabled={el.role === Roles.Owner || el.id === currentUser?.id}
+                size="small"
+                onClick={handleMenuOpen(el)}>
+                <MoreHoriz />
+            </IconButton>
+    );
+    const startActions = (el: IEmployee) => (
+        <TableAvatar name={el.fullName} src={el?.avatarPath} />
+    )
+
+    return <>
+        <TitleContainer title={Titles.Employees} pad actions />
+        <Table<IEmployee>
+            data={data}
+            order={order.orderBy}
+            isAscending={order.isAscending}
+            onSort={handleOrder}
+            noDataTitle="No employees present"
+            isLoading={isLoading}
+            rowData={rowData}
+            onChangePage={changePage}
+            onChangeRowsPerPage={changeRowsPerPage}
+            count={count}
+            page={pageIndex}
+            rowsPerPage={pageSize}
+            startActions={startActions}
+            index="id"
+            actions={viewActions}
+        />
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+            <MenuItem onClick={editEmployee}>Edit</MenuItem>
+            <MenuItem onClick={deleteEmployee}>Delete</MenuItem>
+        </Menu>
+        <CreateEmployee open={isOpen} payload={editedItem} onClose={onClose} />
+    </>
 }

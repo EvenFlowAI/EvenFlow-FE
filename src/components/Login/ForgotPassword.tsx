@@ -5,19 +5,14 @@ import {LoginHeader} from "./LoginHeader";
 import {LoginTextContent} from "./LoginTextContent";
 import {TextField} from "../UI/TextField";
 import {LoginButton} from "./LoginButton";
-import {Link, Typography, LinkProps} from "@material-ui/core";
-import {Link as BLink, useHistory} from "react-router-dom";
+import {Typography} from "@material-ui/core";
+import {useHistory} from "react-router-dom";
+import {BackLink} from "./UI";
+import {Routes} from "../../config/routes";
+import {useException} from "../../utils/hooks";
+import {API} from "../../api/api";
 
 const content = "Enter the email you registered with and we will send you a link to reset your password";
-
-
-const BackLink: React.FC<LinkProps & {to: string}> = props => {
-    return <Link
-        style={{fontWeight: "bold", textTransform: "uppercase"}}
-        component={BLink}
-        to={props.to}
-    >{props.children}</Link>;
-};
 
 
 const messageContent = (
@@ -32,14 +27,15 @@ const Message = () => {
     return <LoginContainer>
         <LoginHeader title="Check your email" />
         <LoginTextContent content={messageContent} />
-        <LoginButton onClick={handleBack}>Close</LoginButton>
+        <LoginButton fullWidth onClick={handleBack}>Close</LoginButton>
     </LoginContainer>;
 };
 
 type FormProps = {
-    onChange: React.ChangeEventHandler,
-    onSubmit: React.EffectCallback
-    email: string
+    onChange: React.ChangeEventHandler;
+    onSubmit: () => void;
+    email: string;
+    loading?: boolean;
 }
 
 const ForgotPasswordForm = (props: FormProps) => {
@@ -53,26 +49,39 @@ const ForgotPasswordForm = (props: FormProps) => {
             fullWidth
             placeholder="TYPE HERE"
         />
-        <LoginButton onClick={props.onSubmit}>Send Email</LoginButton>
+        <LoginButton loading={props.loading} fullWidth onClick={props.onSubmit}>Send Email</LoginButton>
         <Typography variant="body1" style={{marginTop: 20}}>
             Back to&nbsp;
-            <BackLink to='/login'>Sign In</BackLink>
+            <BackLink to={Routes.Login.Base}>Sign In</BackLink>
         </Typography>
     </LoginContainer>;
 };
 
 export const ForgotPassword = () => {
     const [showMessage, changeShow] = useState(false);
+    const [loading, setLoading] = useState();
     const [email, changeEmail] = useState('');
+    const showError = useException();
 
     const handleChangeEmail: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
         = (e) => changeEmail(e.target.value);
 
-    const handleSubmit = () => changeShow(true);
+    const handleSubmit = async () => {
+        try {
+            setLoading(true);
+            await API.accounts.passwordRecovery({email});
+            setLoading(false);
+            changeShow(true);
+        } catch (e) {
+            showError(e);
+            setLoading(false)
+        }
+    }
 
     return showMessage
         ? <Message />
         : <ForgotPasswordForm
+            loading={loading}
             onChange={handleChangeEmail}
             onSubmit={handleSubmit}
             email={email}
