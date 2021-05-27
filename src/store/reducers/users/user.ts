@@ -18,6 +18,7 @@ export function usersReducer(state=initialState, action: TUserActions): IUsersSt
             if (action.payload.role === superUser) {
                 if (action.payload.dealershipId) {
                     additional.role = Roles.Owner;
+                    additional.adminDealership = true;
                 } else {
                     additional.isSuperUser = true;
                 }

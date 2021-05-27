@@ -80,6 +80,11 @@ class AuthService {
     logout (): void {
         localStorage.removeItem(LocalTokens.authToken);
         localStorage.removeItem(LocalTokens.refreshToken);
+        const suTokens = localStorage.getItem(LocalTokens.suToken);
+        if (suTokens) {
+            localStorage.removeItem(LocalTokens.suToken);
+            this.setTokens(JSON.parse(suTokens) as ITokens);
+        }
         this.refreshRequest();
     }
 }

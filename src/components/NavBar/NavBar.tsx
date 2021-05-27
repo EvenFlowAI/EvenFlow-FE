@@ -87,6 +87,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
     }
 
     const handleLogout = () => {
+        setAnchorEl(null);
         authService.logout();
         history.push("/");
     }
