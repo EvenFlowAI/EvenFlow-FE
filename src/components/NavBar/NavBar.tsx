@@ -21,7 +21,7 @@ import {ServiceCenterSelector} from "./ServiceCenterSelector";
 import {Roles} from "../../config/constants";
 import {Routes} from "../../config/routes";
 import {PodSelector} from "./PodSelector";
-import {Menu as MenuIcon} from "@material-ui/icons";
+import {Menu as MenuIcon, SupervisorAccount} from "@material-ui/icons";
 import clsx from "clsx";
 
 
@@ -89,7 +89,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
     const handleLogout = () => {
         setAnchorEl(null);
         authService.logout();
-        history.push("/");
+        window.location.reload();
     }
 
     return <>
@@ -113,8 +113,12 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
                     open={open}
                     onClose={handleClose}
                 >
+                    {currentUser?.adminDealership ? <MenuItem disabled>
+                        <SupervisorAccount style={{marginRight: 8}} color="secondary" />
+                        <Typography color="secondary">Root Access</Typography>
+                    </MenuItem> : null}
                     {currentUser?.role === Roles.Owner ? <MenuItem onClick={openProfile}>Company Settings</MenuItem> : null}
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    <MenuItem onClick={handleLogout}>{currentUser?.adminDealership ? "Exit" : "Logout"}</MenuItem>
                 </Menu>
             </Toolbar>
         </AppBar>
