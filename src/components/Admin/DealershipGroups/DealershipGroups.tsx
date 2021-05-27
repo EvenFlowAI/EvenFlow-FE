@@ -14,7 +14,6 @@ import {Titles} from "../../../config/constants";
 import {useHistory} from "react-router-dom";
 import {Routes} from "../../../config/routes";
 import {concatAddress} from "../../../utils/utils";
-import {API} from "../../../api/api";
 import {authService} from "../../../config/requests";
 
 

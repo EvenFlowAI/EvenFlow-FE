@@ -99,3 +99,10 @@ export const getAppointmentDate = (appointment: IListAppointment) => {
 export const getAppointmentVehicle = ({vehicle}: IListAppointment) => {
     return `${vehicle.make} ${vehicle.model} ${vehicle.year}`;
 }
+
+export const encodeSCID = (id: number): string => {
+    return encodeURIComponent(btoa(String(id)));
+}
+export const decodeSCID = (id: string): number => {
+    return Number(atob(decodeURIComponent(id)));
+}
