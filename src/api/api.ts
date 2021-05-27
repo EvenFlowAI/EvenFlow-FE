@@ -38,6 +38,10 @@ const appointment = {
     cancel: (id: number): TApiResponse => request.put(`/appointments/${id}/cancel`),
     getByKey: (key: string): TApiResponse<IListAppointment> => request.get(`/appointments/${key}/by-key`)
 };
+const authentication = {
+    dealership: (dealershipId: number): TApiResponse<{}> =>
+        request.post("/authentications/dealership", { dealershipId })
+}
 const employeeSchedules = {
     remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),
 }
@@ -64,5 +68,11 @@ const serviceRequests = {
     )
 }
 export const API = {
-    accounts, appointment, employeeSchedules, configs, serviceRequests, timeSlots
+    accounts,
+    appointment,
+    authentication,
+    configs,
+    employeeSchedules,
+    serviceRequests,
+    timeSlots
 };
