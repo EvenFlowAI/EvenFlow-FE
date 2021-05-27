@@ -11,7 +11,7 @@ import {
     IListAppointment, ISearchCustomerParams, ISearchTerm, ISecurityCode, ISessionId, IServiceCenterId
 } from "./types";
 import {Api, endUserRequest, request} from "../config/requests";
-import {PaginatedAPIResponse} from "../types/types";
+import {ITokens, PaginatedAPIResponse} from "../types/types";
 import {IAppointmentResponse, IAppointmentSlotsRequest, ISR} from "../store/reducers/appointment/types";
 
 const accounts = {
@@ -39,7 +39,7 @@ const appointment = {
     getByKey: (key: string): TApiResponse<IListAppointment> => request.get(`/appointments/${key}/by-key`)
 };
 const authentication = {
-    dealership: (dealershipId: number): TApiResponse<{}> =>
+    dealership: (dealershipId: number): TApiResponse<ITokens> =>
         request.post("/authentications/dealership", { dealershipId })
 }
 const employeeSchedules = {

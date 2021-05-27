@@ -14,6 +14,8 @@ import {Titles} from "../../../config/constants";
 import {useHistory} from "react-router-dom";
 import {Routes} from "../../../config/routes";
 import {concatAddress} from "../../../utils/utils";
+import {API} from "../../../api/api";
+import {authService} from "../../../config/requests";
 
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
@@ -72,7 +74,13 @@ export const DealershipGroups = () => {
     }
 
     const handleLogin = async () => {
-
+        setAnchorEl(null);
+        try {
+            await authService.dealershipLogin(editedItem?.id??0);
+            window.location.reload();
+        } catch (e) {
+            showError(e);
+        }
     }
 
     const closeMenu = () => {
@@ -113,7 +121,7 @@ export const DealershipGroups = () => {
         />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
             <MenuItem onClick={handleView}>View</MenuItem>
-            <MenuItem>Login</MenuItem>
+            <MenuItem onClick={handleLogin}>Login</MenuItem>
             <MenuItem onClick={handleRemoveAction}>
                 <Typography color="secondary">Remove</Typography>
             </MenuItem>
