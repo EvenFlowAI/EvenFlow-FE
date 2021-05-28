@@ -124,7 +124,7 @@ export const Appointments = () => {
         <TitleContainer title={Titles.Appointments} pad actions={<AppointmentActions onAction={refresh} />} />
         <Table<IListAppointment>
             data={appointments}
-            noDataTitle="No employees present"
+            noDataTitle="No upcoming appointments scheduled"
             isLoading={loading}
             rowData={cols}
             onChangePage={onChangePage}
