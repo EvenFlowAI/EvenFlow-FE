@@ -10,6 +10,7 @@ import {TGroupedAppointments} from "../components/AppointmentFlow/AppointmentSel
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {IListAppointment} from "../api/types";
 import moment from "moment";
+import {encode, decode} from 'url-safe-base64';
 
 export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     return new Promise(resolve => {
@@ -101,8 +102,17 @@ export const getAppointmentVehicle = ({vehicle}: IListAppointment) => {
 }
 
 export const encodeSCID = (id: number): string => {
-    return encodeURIComponent(btoa(String(id)));
+    return encode(btoa(String(id)));
 }
 export const decodeSCID = (id: string): number => {
-    return Number(atob(decodeURIComponent(id)));
+    try {
+        const decodedId = Number(atob(decode(id)));
+        if (isNaN(decodedId)) {
+            window.location.href = "/";
+        }
+        return decodedId;
+    } catch {
+        window.location.href = "/";
+        return 0;
+    }
 }

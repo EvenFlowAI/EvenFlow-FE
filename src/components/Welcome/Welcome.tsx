@@ -9,6 +9,7 @@ import {RootState} from "../../store/rootReducer";
 import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
 import {clearStorage} from "../../store/reducers/appointment/actions";
+import {encodeSCID} from "../../utils/utils";
 
 
 export const Welcome = () => {
@@ -22,7 +23,7 @@ export const Welcome = () => {
 
     const onComplete = () => {
         history.push(
-            Routes.EndUser.Appointment.replace(":id", scProfile?.id ? String(scProfile.id) : "0")
+            Routes.EndUser.Appointment.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );
     }
 
