@@ -146,7 +146,7 @@ export const Appointments = () => {
             <MenuItem
                 disabled={
                     viewItem?.appointmentStatus === AppointmentStatus.Cancelled
-                    || viewItem?.isEditable
+                    || !viewItem?.isEditable
                 }
                 onClick={handleCancel}>Cancel</MenuItem>
         </Menu>
