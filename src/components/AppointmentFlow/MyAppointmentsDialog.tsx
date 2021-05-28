@@ -143,6 +143,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
                 noDataTitle="You have no appointments yet"
                 isLoading={loading}
                 rowData={cols}
+                hidePagination
                 compact
                 actions={actions}
                 index="id"
