@@ -129,7 +129,7 @@ export const ConfirmationContent = () => {
     }, [dispatch]);
 
     const handleBack = () => {
-        history.push(`${Routes.EndUser.AppointmentBase}/${id ?? ""}`);
+        history.push(`${Routes.EndUser.AppointmentBase}/${id}`);
     }
 
     const handleAddToCalendar = () => {

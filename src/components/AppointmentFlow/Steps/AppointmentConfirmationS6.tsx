@@ -31,7 +31,7 @@ import {
 } from "../../../store/reducers/appointment/types";
 import {useException} from "../../../utils/hooks";
 import {ICreateAppointment, ICreateAppointmentResp} from "../../../api/types";
-import {validatePhoneNumber} from "../../../utils/utils";
+import {decodeSCID, validatePhoneNumber} from "../../../utils/utils";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -179,7 +179,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             isNeedCall: forms.privacy.callback,
             offerId: forms?.appointment?.offer?.id ?? null,
             reminderTypes,
-            serviceCenterId: id,
+            serviceCenterId: decodeSCID(id),
             vehicle: {
                 ...forms.s1Data,
                 dmsId: forms.customerSelectedVehicle

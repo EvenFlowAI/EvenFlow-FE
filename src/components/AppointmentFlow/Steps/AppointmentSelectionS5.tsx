@@ -14,6 +14,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {getOfferValue} from "../AppointmentSelections/UI";
 import {AppointmentSelectInfo} from "../AppointmentSelectInfo";
 import {AppointmentFilters} from "../AppointmentFilters";
+import {decodeSCID} from "../../../utils/utils";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -118,7 +119,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
             try {
                 await dispatch(loadAppointmentSlots({
                     appointmentTimingType: selectedAppointmentType,
-                    serviceCenterId: id,
+                    serviceCenterId: decodeSCID(id),
                     onlyOffers: filters.offersOnly,
                     shorterWaitTime: filters.waitTimeOnly,
                     fromDate: sd.toISOString(),

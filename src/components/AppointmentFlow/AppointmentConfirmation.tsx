@@ -7,6 +7,7 @@ import {endUserTheme} from "../../theme/theme";
 import {EndUserBar} from "../NavBar/EndUserBar";
 import bg from "../../assets/img/confirmationBg.png";
 import { ConfirmationContent } from './ConfirmationContent';
+import {decodeSCID} from "../../utils/utils";
 
 
 const Wrapper = styled(Container)({
@@ -34,8 +35,8 @@ export const AppointmentConfirmation = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (id && Number(id)) {
-            dispatch(loadSCProfile(Number(id)));
+        if (id) {
+            dispatch(loadSCProfile(decodeSCID(id)));
         }
     }, [id, dispatch]);
 
