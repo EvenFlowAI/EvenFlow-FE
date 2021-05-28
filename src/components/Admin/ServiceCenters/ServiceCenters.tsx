@@ -19,7 +19,7 @@ import {IOrder} from "../../../types/types";
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
     {val: (el: IServiceCenterExtended) => el.dealership.name, header: "Dealership group"},
     {val: (el: IServiceCenterExtended) => el.name, header: "Service center name", orderId: "name"},
-    {val: (el: IServiceCenterExtended) => el.mainAddress, header: "Service center address", orderId: "mainAddress"},
+    {val: (el: IServiceCenterExtended) => concatAddress(el.address), header: "Service center address"},
     {val: (el: IServiceCenterExtended) => el.countOfBays.toString(), header: "Bays", align: "center", orderId: "countOfBays"},
 ];
 
