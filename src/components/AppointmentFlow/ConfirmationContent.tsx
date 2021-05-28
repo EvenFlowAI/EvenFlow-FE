@@ -105,7 +105,7 @@ export const ConfirmationContent = () => {
     const dispatch = useDispatch();
     const appointment = useSelector(({appointment}: RootState) => appointment);
     const data: TDataMap = useMemo(() => ({
-        date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
+        date: moment.utc(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
         address: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "-",
         scPhoneNumber: appointment.scProfile?.phoneNumber,
         serviceType: appointment.selectedSR.map(sId => appointment.serviceRequests.find(s => s.id === sId)?.description || "-").join(", "),
