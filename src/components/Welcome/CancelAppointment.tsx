@@ -96,6 +96,7 @@ export const CancelAppointment = () => {
             case "canceled":
                 return <div>
                     <p>You've successfully canceled your appointment.</p>
+                    <p><small><em>Please do not forget to update the appointment in your calendar.</em></small></p>
                     <p>
                         <small>If you want to schedule a different one,
                             please click a button below</small>
