@@ -111,7 +111,12 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
             try {
                 await API.appointment.cancelByKey(editedItem.hashKey);
                 setEditedItem(null);
-                showMessage("Canceled");
+                showMessage(
+                    <div>
+                        Your appointment has been canceled. <br/>
+                        Please do not forget to update the appointment in your calendar.
+                    </div>
+                );
                 await loadAppointments(sessionId, serviceCenter?.id||0);
             } catch (e) {
                 showError(e);
