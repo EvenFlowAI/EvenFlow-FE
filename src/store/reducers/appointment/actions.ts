@@ -73,7 +73,7 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: mo
 }
 export const setLoadedReducer = createAction<TAppointmentState>("Appointment/ReloadState");
 export const saveAppointmentReducer = (): AppThunk => (d, getState) => {
-    const state = JSON.stringify(getState().appointment);
+    const state = JSON.stringify({...getState().appointment});
     localStorage.setItem(APPOINTMENT_STATE_KEY, state);
     localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
 }
@@ -104,7 +104,7 @@ export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
         }
     }
 }
-export const setAppointmentId = createAction<ICreateAppointmentResp|null>("Appointments/SetAppointmentId");
+export const setAppointmentId = createAction<ICreateAppointmentResp&{updated: boolean}>("Appointments/SetAppointmentId");
 export const setAppointmentFilters = createAction<Partial<IAppointmentFilters>>("Appointment/SetFilters");
 export const setCustomerEnteredEmail = createAction<string>("Appointment/SetCustomerEnteredEmail");
 export const setCustomerLoadedData = createAction<ICustomerLoadedData|null>("Appointment/SetCustomerLoadedData");

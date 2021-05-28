@@ -128,6 +128,7 @@ export interface IAppointmentFilters {
 
 export type TAppointmentState = {
     sessionId: string;
+    updated: boolean;
     customerEnteredEmail: string;
     customerSelectedVehicle: ILoadedVehicle|null;
     scProfile?: IServiceCenterProfile;

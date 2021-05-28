@@ -61,6 +61,7 @@ const initialS3Form: TS3Form = {
 }
 const initialState: TAppointmentState = {
     sessionId: "",
+    updated: false,
     serviceRequests: [],
     customerLoadedData: null,
     customerSelectedVehicle: null,
@@ -147,8 +148,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(setLoadedReducer, (state, {payload}) => {
         return {...state, ...payload};
     })
-    .addCase(setAppointmentId, (state, {payload}) => {
-        return {...state, appointmentId: payload};
+    .addCase(setAppointmentId, (state, {payload: {updated, ...payload}}) => {
+        return {...state, appointmentId: payload, updated};
     })
     .addCase(setAppointmentFilters, (state, {payload}) => {
         return {...state, appointmentFilters: {...state.appointmentFilters, ...payload}};
