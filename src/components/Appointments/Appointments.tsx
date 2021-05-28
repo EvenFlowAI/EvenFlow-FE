@@ -138,10 +138,16 @@ export const Appointments = () => {
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
             <MenuItem onClick={handleView}>View</MenuItem>
             <MenuItem
-                disabled={viewItem?.appointmentStatus === AppointmentStatus.Cancelled}
+                disabled={
+                    viewItem?.appointmentStatus === AppointmentStatus.Cancelled
+                    || !viewItem?.isEditable
+                }
                 onClick={handleEdit}>Edit</MenuItem>
             <MenuItem
-                disabled={viewItem?.appointmentStatus === AppointmentStatus.Cancelled}
+                disabled={
+                    viewItem?.appointmentStatus === AppointmentStatus.Cancelled
+                    || viewItem?.isEditable
+                }
                 onClick={handleCancel}>Cancel</MenuItem>
         </Menu>
         <ViewAppointmentDialog

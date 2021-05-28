@@ -94,15 +94,20 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>&TCall
         <DialogActions>
             <Button
                 onClick={onCancelAppointment}
-                disabled={payload?.appointmentStatus === AppointmentStatus.Cancelled}
+                disabled={
+                    payload?.appointmentStatus === AppointmentStatus.Cancelled || !payload?.isEditable
+                }
                 color="secondary"
                 variant="outlined">
                 Cancel Appointment
             </Button>
-            <Button onClick={onEditAppointment}
-                    disabled={payload?.appointmentStatus === AppointmentStatus.Cancelled}
-                    color="primary"
-                    variant="outlined">
+            <Button
+                onClick={onEditAppointment}
+                disabled={
+                    payload?.appointmentStatus === AppointmentStatus.Cancelled || !payload?.isEditable
+                }
+                color="primary"
+                variant="outlined">
                 Edit
             </Button>
             <Button onClick={props.onClose}>

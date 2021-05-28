@@ -120,7 +120,11 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     }
 
     const actions = (el: IListAppointment) => {
-        return <IconButton disabled={el?.appointmentStatus === AppointmentStatus.Cancelled} onClick={openMenu(el)}>
+        return <IconButton
+            disabled={
+                el.appointmentStatus === AppointmentStatus.Cancelled || !el.isEditable
+            }
+            onClick={openMenu(el)}>
             <MoreHoriz />
         </IconButton>;
     }
