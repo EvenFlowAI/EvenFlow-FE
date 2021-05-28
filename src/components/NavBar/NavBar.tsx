@@ -14,7 +14,7 @@ import {
 import {sideBarWidth} from "../../theme/theme";
 import {authService} from "../../config/requests";
 import { useHistory } from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {getInitials} from "../../utils/utils";
 import {ServiceCenterSelector} from "./ServiceCenterSelector";
@@ -23,6 +23,7 @@ import {Routes} from "../../config/routes";
 import {PodSelector} from "./PodSelector";
 import {Menu as MenuIcon, SupervisorAccount} from "@material-ui/icons";
 import clsx from "clsx";
+import {clearSC} from "../../store/reducers/serviceCenters/actions";
 
 
 const useStyles = makeStyles(theme => ({
@@ -78,6 +79,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
     const {currentUser} = useSelector((state: RootState) => state.users);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const dispatch = useDispatch();
     const isAdminDealership = currentUser?.adminDealership ?? false;
     const handleClick: React.MouseEventHandler<HTMLElement> = e => {
         setAnchorEl(e.currentTarget);
@@ -93,6 +95,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
     const handleLogout = () => {
         setAnchorEl(null);
         authService.logout();
+        dispatch(clearSC());
         window.location.reload();
     }
 

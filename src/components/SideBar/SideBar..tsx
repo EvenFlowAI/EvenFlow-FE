@@ -168,6 +168,13 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
             })}
         </List>
         <div style={{flex: 1}} />
-        <Button endIcon={<ArrowForwardIos />} className={classes.link} onClick={handleGoToBooking}>Go to Booking</Button>
+        {selectedSC
+            ? <Button
+                endIcon={<ArrowForwardIos/>}
+                className={classes.link}
+                onClick={handleGoToBooking}>
+                Go to Booking
+            </Button>
+            : null}
     </Drawer>
 };
