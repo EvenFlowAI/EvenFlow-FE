@@ -227,6 +227,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     }
     const handleSRChange = (e: any, value: ISR[]) => {
         setSelectedSR(value);
+        setSelectedSlot(null);
     }
     const handleReminderChange = (t: EReminderType) => () => {
         setForm({
