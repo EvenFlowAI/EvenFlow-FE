@@ -120,7 +120,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     }
 
     const actions = (el: IListAppointment) => {
-        return <IconButton onClick={openMenu(el)}>
+        return <IconButton disabled={el?.appointmentStatus === AppointmentStatus.Cancelled} onClick={openMenu(el)}>
             <MoreHoriz />
         </IconButton>;
     }
@@ -143,7 +143,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
             <Button variant="outlined" color="primary" onClick={props.onClose}>Close</Button>
         </DialogActions>
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-            <MenuItem disabled={editedItem?.appointmentStatus === AppointmentStatus.Cancelled} onClick={editAppointment}>Edit</MenuItem>
+            <MenuItem onClick={editAppointment}>Edit</MenuItem>
             <MenuItem onClick={cancelAppointment}>Cancel</MenuItem>
         </Menu>
     </BaseModal>
