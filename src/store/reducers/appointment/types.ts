@@ -115,6 +115,8 @@ export interface IAppointmentSlotsRequest {
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
     serviceRequestIds: number[];
+    customerId?: string;
+    warrantyExpiration?: ParsableDate;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;

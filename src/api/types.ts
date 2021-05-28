@@ -70,6 +70,7 @@ export interface ILoadedVehicle {
     model: string;
     year: number;
     mileage: number;
+    warrantyExpiration?: ParsableDate;
 }
 export interface IPasswordRecoveryData { email: string; }
 export interface IPasswordRecoveryResp { }
@@ -129,6 +130,7 @@ export interface IListAppointment {
     comment: string;
     offerId: number;
     offer: IOffer;
+    isEditable: boolean;
     reminderTypes: EReminderType[];
     serviceRequests: IServiceRequestShort[];
     createdBy: string;

@@ -100,13 +100,22 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
         selectedDate,
         selectedServiceRequests,
         appointmentsExist,
-        filters
-    ] = useSelector(({appointment: {s3Data, selectedSR, appointmentSlots, appointmentFilters}}: RootState) => [
+        filters,
+        customerData,
+        selectedVehicle
+    ] = useSelector(({
+            appointment: {
+                s3Data, selectedSR, appointmentSlots, appointmentFilters,
+                customerLoadedData, customerSelectedVehicle
+            }
+        }: RootState) => [
         s3Data.appointmentType,
         s3Data.date,
         selectedSR,
         Boolean(appointmentSlots.length),
-        appointmentFilters
+        appointmentFilters,
+        customerLoadedData,
+        customerSelectedVehicle
     ]);
     const [date, setDate] = useState<moment.Moment>(selectedDate ? moment(selectedDate) : moment());
 
@@ -124,14 +133,20 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                     shorterWaitTime: filters.waitTimeOnly,
                     fromDate: sd.toISOString(),
                     serviceRequestIds: selectedServiceRequests,
-                    countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1
+                    countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
+                    customerId: customerData?.id,
+                    warrantyExpiration: selectedVehicle?.warrantyExpiration
                 }, updateDate));
             } finally {
                 setLoading(false);
             }
         }
         loadData().finally();
-    }, [id, dispatch, selectedAppointmentType, selectedDate, selectedServiceRequests, filters]);
+    }, [
+        id, dispatch, selectedAppointmentType,
+        selectedDate, selectedServiceRequests, filters,
+        customerData, selectedVehicle
+    ]);
 
     const handleSetDate = (nDate: moment.Moment) => {
         if (date.month() !== nDate.month()) {
