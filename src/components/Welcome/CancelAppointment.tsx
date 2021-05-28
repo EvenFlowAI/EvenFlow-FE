@@ -13,6 +13,7 @@ import moment from "moment";
 import {Edit} from "@material-ui/icons";
 import {Routes} from "../../config/routes";
 import {NotFoundError} from "./NotFoundError";
+import {encodeSCID} from "../../utils/utils";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
 
@@ -75,7 +76,7 @@ export const CancelAppointment = () => {
     const handleCreateNew = () => {
         if (appointment?.serviceCenterId) {
             clearStorage();
-            history.replace(`${Routes.EndUser.Welcome}/${appointment.serviceCenterId}`);
+            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(appointment.serviceCenterId)}`);
         }
     }
 

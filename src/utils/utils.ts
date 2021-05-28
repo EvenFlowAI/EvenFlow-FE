@@ -106,13 +106,8 @@ export const encodeSCID = (id: number): string => {
 }
 export const decodeSCID = (id: string): number => {
     try {
-        const decodedId = Number(atob(decode(id)));
-        if (isNaN(decodedId)) {
-            window.location.href = "/";
-        }
-        return decodedId;
+        return Number(atob(decode(id)));
     } catch {
-        window.location.href = "/";
         return 0;
     }
 }
