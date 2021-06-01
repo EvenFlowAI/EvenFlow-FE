@@ -157,14 +157,18 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         }
     }, [selectedSC, props.open]);
     useEffect(() => {
-        if (selectedSC && props.open && selectedSR.length && filterDate) {
+        if (selectedSC && props.open && filterDate) {
             setSlotsLoading(true);
-            API.timeSlots.list({
-                appointmentTimingType: EAppointmentTimingType.PreferredDate,
-                fromDate: moment(filterDate).toISOString(),
-                serviceRequestIds: selectedSR.map(sr => sr.id),
-                serviceCenterId: selectedSC.id
-            })
+            if (!selectedSR.length) {
+                setSlots([]);
+                setSlotsLoading(false);
+            } else {
+                API.timeSlots.list({
+                    appointmentTimingType: EAppointmentTimingType.PreferredDate,
+                    fromDate: moment(filterDate).toISOString(),
+                    serviceRequestIds: selectedSR.map(sr => sr.id),
+                    serviceCenterId: selectedSC.id
+                })
                 .then(({data: {items}}) => {
                     if (preloadedSlot) {
                         items = [preloadedSlot, ...items];
@@ -185,7 +189,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 .finally(() => {
                     setSlotsLoading(false);
                 });
-
+            }
         }
     }, [selectedSC, props.open, filterDate, selectedSR, showError, preloadedSlot]);
 
