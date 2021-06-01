@@ -81,6 +81,7 @@ const initialForm: TForm = {
 
 export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
+    const initialRef = useRef(false);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
     const [filterDate, setDate] = useState<ParsableDate>("");
     const [srList, setSrList] = useState<ISR[]>([]);
@@ -98,6 +99,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
 
     useEffect(() => {
         if (props.open) {
+            initialRef.current = false;
             setForm(initialForm);
             setSelectedSR([]);
             setDate("");
@@ -157,6 +159,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         }
     }, [selectedSC, props.open]);
     useEffect(() => {
+        let waiting = true;
         if (selectedSC && props.open && filterDate) {
             setSlotsLoading(true);
             if (!selectedSR.length) {
@@ -170,20 +173,27 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     serviceCenterId: selectedSC.id
                 })
                 .then(({data: {items}}) => {
-                    if (preloadedSlot) {
-                        items = [preloadedSlot, ...items];
-                    } else {
-                        setSelectedSlot(null);
+                    if (waiting) {
+                        if (preloadedSlot) {
+                            items = [preloadedSlot, ...items];
+                            initialRef.current = true;
+                        } else {
+                            setSelectedSlot(null);
+                        }
+                        setSlots(items);
                     }
-                    setSlots(items);
+
                 })
                 .catch((e) => {
-                    showError(e);
-                    if (preloadedSlot) {
-                        setSlots([preloadedSlot]);
-                    } else {
-                        setSlots([]);
-                        setSelectedSlot(null);
+                    if (waiting) {
+                        showError(e);
+                        if (preloadedSlot) {
+                            setSlots([preloadedSlot]);
+                            initialRef.current = true;
+                        } else {
+                            setSlots([]);
+                            setSelectedSlot(null);
+                        }
                     }
                 })
                 .finally(() => {
@@ -191,7 +201,16 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 });
             }
         }
+        return () => {
+            waiting = false;
+        };
     }, [selectedSC, props.open, filterDate, selectedSR, showError, preloadedSlot]);
+
+    useEffect(() => {
+        if (preloadedSlot && initialRef.current) {
+            setPreloadedSlot(null);
+        }
+    }, [filterDate, selectedSR, preloadedSlot]);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
@@ -478,6 +497,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     <Autocomplete
                         loading={slotsLoading}
                         value={selectedSlot}
+                        getOptionSelected={(option, value) => option.date === value.date && option.time === value.time}
                         getOptionLabel={option =>
                             `${getDate(option)} - $${
                                 option.priceWithOffer?.value ? option.priceWithOffer.value.toFixed(2) : option.price.value.toFixed(2)
