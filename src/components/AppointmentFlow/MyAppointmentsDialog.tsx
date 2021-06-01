@@ -10,7 +10,7 @@ import {Table} from "../UI/Table";
 import {TableRowDataType} from "../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {useConfirm, useException, useMessage} from "../../utils/hooks";
-import {getAppointmentDate, getAppointmentVehicle} from "../../utils/utils";
+import {encodeSCID, getAppointmentDate, getAppointmentVehicle} from "../../utils/utils";
 import {loadEditAppointment, saveAppointmentReducer} from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {useHistory} from "react-router-dom";
@@ -82,7 +82,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         if (editedItem && serviceCenter) {
             await dispatch(loadEditAppointment(editedItem));
             await dispatch(saveAppointmentReducer());
-            history.replace(`${Routes.EndUser.AppointmentBase}/${serviceCenter.id}`);
+            history.replace(`${Routes.EndUser.AppointmentBase}/${encodeSCID(serviceCenter.id)}`);
             window.location.reload();
         }
     }
