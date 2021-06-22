@@ -9,14 +9,16 @@ import {useDispatch} from "react-redux";
 import {loadSCProfile} from "../../store/reducers/appointment/actions";
 import {CancelAppointment} from "../Welcome/CancelAppointment";
 import {EditAppointment} from "../Welcome/EditAppointment";
+import {decodeSCID} from "../../utils/utils";
 
 export const EndUserLayout = () => {
     const {id} = useParams();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (id && Number(id)) {
-            dispatch(loadSCProfile(Number(id)));
+        const decoded = decodeSCID(id);
+        if (id && decoded) {
+            dispatch(loadSCProfile(decoded));
         }
     }, [id, dispatch]);
 

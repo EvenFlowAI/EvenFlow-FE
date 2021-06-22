@@ -10,6 +10,7 @@ import {useCurrentUser, useSCs} from "../../utils/hooks";
 import {useLocation, useHistory, matchPath} from "react-router-dom";
 import clsx from "clsx";
 import {ArrowForwardIos, Close} from "@material-ui/icons";
+import {encodeSCID} from "../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -123,7 +124,8 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         history.push(Routes.Admin.Base);
     }
     const handleGoToBooking = () => {
-        history.push(Routes.EndUser.Welcome + "/" + selectedSC?.id);
+        const encoded = encodeSCID(selectedSC?.id??0);
+        history.push(Routes.EndUser.Welcome + "/" + encoded);
     }
     const closeSidebar = () => {
         if (isXS) {
@@ -166,6 +168,13 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
             })}
         </List>
         <div style={{flex: 1}} />
-        <Button endIcon={<ArrowForwardIos />} className={classes.link} onClick={handleGoToBooking}>Go to Booking</Button>
+        {selectedSC
+            ? <Button
+                endIcon={<ArrowForwardIos/>}
+                className={classes.link}
+                onClick={handleGoToBooking}>
+                Go to Booking
+            </Button>
+            : null}
     </Drawer>
 };

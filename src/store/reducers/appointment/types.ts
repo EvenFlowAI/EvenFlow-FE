@@ -115,6 +115,8 @@ export interface IAppointmentSlotsRequest {
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
     serviceRequestIds: number[];
+    customerId?: string;
+    warrantyExpiration?: ParsableDate;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
@@ -128,6 +130,7 @@ export interface IAppointmentFilters {
 
 export type TAppointmentState = {
     sessionId: string;
+    updated: boolean;
     customerEnteredEmail: string;
     customerSelectedVehicle: ILoadedVehicle|null;
     scProfile?: IServiceCenterProfile;

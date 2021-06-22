@@ -9,7 +9,7 @@ import {
     ListItemText
 } from "@material-ui/core";
 import {DialogProps} from "../Modals/types";
-import {IListAppointment} from "../../api/types";
+import {AppointmentStatus, IListAppointment} from "../../api/types";
 import {Settings, LocalOffer, Schedule, MonetizationOn} from "@material-ui/icons";
 import {getOfferValue} from "../AppointmentFlow/AppointmentSelections/UI";
 import moment from "moment";
@@ -92,10 +92,22 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>&TCall
             </>}
         </DialogContent>
         <DialogActions>
-            <Button onClick={onCancelAppointment} color="secondary" variant="outlined">
+            <Button
+                onClick={onCancelAppointment}
+                disabled={
+                    payload?.appointmentStatus === AppointmentStatus.Cancelled || !payload?.isEditable
+                }
+                color="secondary"
+                variant="outlined">
                 Cancel Appointment
             </Button>
-            <Button onClick={onEditAppointment} color="primary" variant="outlined">
+            <Button
+                onClick={onEditAppointment}
+                disabled={
+                    payload?.appointmentStatus === AppointmentStatus.Cancelled || !payload?.isEditable
+                }
+                color="primary"
+                variant="outlined">
                 Edit
             </Button>
             <Button onClick={props.onClose}>

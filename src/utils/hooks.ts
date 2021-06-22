@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {ReactNode, useCallback, useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import {IPageRequest, ValidationKeyPairs} from "../types/types";
 import {getAPIException} from "./utils";
@@ -80,7 +80,7 @@ export function useException() {
 type TVariant = "default" | "warning" | "success" | "error" | "info";
 export function useMessage() {
     const {enqueueSnackbar} = useSnackbar();
-    return (message: string, variant?: TVariant) => {
+    return (message: ReactNode, variant?: TVariant) => {
         enqueueSnackbar(message, {variant: variant || "success"})
     }
 }

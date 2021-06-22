@@ -32,7 +32,8 @@ export interface ICredentials {
 
 export enum LocalTokens {
     authToken = 'at',
-    refreshToken = 'rt'
+    refreshToken = 'rt',
+    suToken = 'st'
 }
 
 export interface ITimeSpan {

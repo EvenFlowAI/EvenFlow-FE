@@ -146,7 +146,7 @@ export const loadDealershipSCs = (dealershipId: number, pageData: IPageRequest):
     }
 }
 const _loadAllSCS = (payload: IServiceCenter[]): TServiceCenterActions => ({type: "ServiceCenters/FullSCList", payload});
-const _selectSc = (payload: IServiceCenter): TServiceCenterActions => {
+const _selectSc = (payload: IServiceCenter|undefined): TServiceCenterActions => {
     return {type: "ServiceCenters/SelectSC", payload};
 }
 export const selectSC = (payload: IServiceCenter): AppThunk => dispatch => {
@@ -154,20 +154,26 @@ export const selectSC = (payload: IServiceCenter): AppThunk => dispatch => {
     dispatch(_selectSc(payload));
     dispatch(setSelectedPod(null));
 };
-export const loadAllSCs = (): AppThunk => async dispatch => {
+export const clearSC = (): AppThunk => dispatch => {
+    localStorage.removeItem(LocalItems.selectedSC);
+    dispatch(_selectSc(undefined));
+}
+export const loadAllSCs = (): AppThunk => async (dispatch, getState) => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params: {pageSize: 0, pageIndex: 0}});
     if (result.length) {
         dispatch(_loadAllSCS(result));
-        const prevSelected = localStorage.getItem(LocalItems.selectedSC);
-        if (prevSelected) {
-            const selected = result.find(i => i.id === Number(prevSelected));
-            if (selected) {
-                dispatch(selectSC(selected));
+        if (!getState().users.currentUser?.isSuperUser) {
+            const prevSelected = localStorage.getItem(LocalItems.selectedSC);
+            if (prevSelected) {
+                const selected = result.find(i => i.id === Number(prevSelected));
+                if (selected) {
+                    dispatch(selectSC(selected));
+                } else {
+                    dispatch(selectSC(result[0]));
+                }
             } else {
                 dispatch(selectSC(result[0]))
             }
-        } else {
-            dispatch(selectSC(result[0]))
         }
     }
 }

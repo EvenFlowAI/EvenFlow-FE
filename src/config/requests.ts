@@ -2,6 +2,7 @@ import axios, {AxiosResponse} from "axios";
 import {APIUrl} from "./config";
 import {ICredentials, IRefreshTokenData, ITokens, LocalTokens} from "../types/types";
 import {pathReplace} from "../utils/utils";
+import {API} from "../api/api";
 
 
 class AuthService {
@@ -13,6 +14,16 @@ class AuthService {
     }
 
     setTokens ({accessToken, refreshToken}: ITokens): void {
+        localStorage.setItem(LocalTokens.authToken, accessToken);
+        localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+    }
+
+    setDealershipTokens({accessToken, refreshToken}: ITokens) {
+        const tokens: ITokens = {
+            accessToken: this.getLocalToken(),
+            refreshToken: this.getRefreshToken()
+        };
+        localStorage.setItem(LocalTokens.suToken, JSON.stringify(tokens));
         localStorage.setItem(LocalTokens.authToken, accessToken);
         localStorage.setItem(LocalTokens.refreshToken, refreshToken);
     }
@@ -44,6 +55,17 @@ class AuthService {
         }
     }
 
+    async dealershipLogin(dealershipId: number) {
+        try {
+            const {data: tokens} = await API.authentication.dealership(dealershipId);
+            this.setDealershipTokens(tokens);
+            this.refreshRequest();
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
+
     async login(data: ICredentials) {
         try {
             const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Request, {data});
@@ -58,6 +80,11 @@ class AuthService {
     logout (): void {
         localStorage.removeItem(LocalTokens.authToken);
         localStorage.removeItem(LocalTokens.refreshToken);
+        const suTokens = localStorage.getItem(LocalTokens.suToken);
+        if (suTokens) {
+            localStorage.removeItem(LocalTokens.suToken);
+            this.setTokens(JSON.parse(suTokens) as ITokens);
+        }
         this.refreshRequest();
     }
 }

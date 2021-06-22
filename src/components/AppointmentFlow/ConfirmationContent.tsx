@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef} from 'react';
-import {Box, Button, Grid, styled, useMediaQuery, useTheme} from "@material-ui/core";
+import {Box, Button, Grid, styled, Typography, useMediaQuery, useTheme} from "@material-ui/core";
 import {SquarePaper} from "../UI/Paper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
@@ -105,7 +105,7 @@ export const ConfirmationContent = () => {
     const dispatch = useDispatch();
     const appointment = useSelector(({appointment}: RootState) => appointment);
     const data: TDataMap = useMemo(() => ({
-        date: moment(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
+        date: moment.utc(appointment.appointment?.date).format("ddd, MMM D, h:mm A"),
         address: appointment.scProfile?.address ? concatAddress(appointment.scProfile.address) : "-",
         scPhoneNumber: appointment.scProfile?.phoneNumber,
         serviceType: appointment.selectedSR.map(sId => appointment.serviceRequests.find(s => s.id === sId)?.description || "-").join(", "),
@@ -129,7 +129,7 @@ export const ConfirmationContent = () => {
     }, [dispatch]);
 
     const handleBack = () => {
-        history.push(`${Routes.EndUser.AppointmentBase}/${id ?? ""}`);
+        history.push(`${Routes.EndUser.AppointmentBase}/${id}`);
     }
 
     const handleAddToCalendar = () => {
@@ -196,6 +196,11 @@ export const ConfirmationContent = () => {
         <Box my={3}>
             <Divider />
         </Box>
+        {appointment.updated ? <Box>
+            <Typography align={"center"} style={{marginBottom: 8}}>
+                <em>Please do not forget to update the appointment in your calendar.</em>
+            </Typography>
+        </Box> : null}
         <Box>
             <Message>We will see you soon !</Message>
         </Box>
