@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
         margin: "0 0 10px",
         fontWeight: "bold",
         textAlign: "center",
-        [mh600]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 22
         },
         [theme.breakpoints.down("xs")]: {
@@ -57,12 +57,16 @@ const useStyles = makeStyles((theme) => ({
         marginTop: "8%",
         display: "flex",
         justifyContent: "space-around",
+        gap: '12px',
         flexFlow: "row nowrap",
         [mh600]: {
             marginTop: "4%"
         },
         [theme.breakpoints.down("xs")]: {
-            flexWrap: "wrap"
+            flexWrap: "wrap",
+            "&> div": {
+                width: '100%'
+            }
         }
     }
 }));
