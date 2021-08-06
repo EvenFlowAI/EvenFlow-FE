@@ -10,6 +10,8 @@ import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
 import {clearStorage} from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
+import {useLayout} from "../../utils/hooks";
+import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 
 
 export const Welcome = () => {
@@ -17,6 +19,7 @@ export const Welcome = () => {
     const history = useHistory();
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const {id} = useParams();
+    const isFrame = useLayout();
 
     useEffect(() => {
         clearStorage();
@@ -52,7 +55,9 @@ export const Welcome = () => {
         }
     }
 
-    return (
+    return (isFrame ? <FrameWelcomeLayout>
+                {getComponent()}
+            </FrameWelcomeLayout> :
         <WelcomeLayout title="Welcome!" subtitle="Schedule Your Service:">
             {getComponent()}
         </WelcomeLayout>
