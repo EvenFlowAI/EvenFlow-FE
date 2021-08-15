@@ -32,7 +32,8 @@ const stepsMap: {[K in TScreen]: number} = {
 const Index = styled('span')({
     fontSize: 32,
     display: "inline-block",
-    paddingRight: 8
+    paddingRight: 8,
+    minWidth: 28
 })
 
 const menuItems: string[] = [
