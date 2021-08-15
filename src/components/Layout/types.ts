@@ -3,6 +3,7 @@ export type TScreen =
     | "serviceNeeds"
     | "maintenanceDetails"
     | "consultantSelection"
+    | "appointmentTiming"
     | "appointmentSelection"
     | "transportationNeeds"
     | "appointmentConfirmation"

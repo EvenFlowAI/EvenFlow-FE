@@ -8,6 +8,10 @@ import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
 import {MaintenanceDetails} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 import { ConsultantSelection } from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
+import { AppointmentTiming } from '../AppointmentFlow/AppointmentFrame/AppointmentTiming';
+import { AppointmentSelection } from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
+import { TransportationNeeds } from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
+import { AppointmentConfirmationFrame } from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
 
 const Container = styled('div')({
     display: "flex",
@@ -47,11 +51,24 @@ export const AppointmentFrameLayout = () => {
             />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('maintenanceDetails')}
+                onNext={handleChangeScreen('appointmentTiming')}
+            />,
+            appointmentTiming: <AppointmentTiming
+                onBack={handleChangeScreen('consultantSelection')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
-            appointmentSelection: <div />,
-            appointmentConfirmation: <div />,
-            transportationNeeds: <div />,
+            appointmentSelection: <AppointmentSelection
+                onBack={handleChangeScreen('appointmentTiming')}
+                onNext={handleChangeScreen('transportationNeeds')}
+            />,
+            transportationNeeds: <TransportationNeeds
+                onBack={handleChangeScreen('appointmentSelection')}
+                onNext={handleChangeScreen('appointmentConfirmation')}
+            />,
+            appointmentConfirmation: <AppointmentConfirmationFrame
+                onBack={handleChangeScreen('transportationNeeds')}
+                onNext={handleChangeScreen('appointmentConfirmation')}
+            />
         }
         return carSelections[currentScreen];
     }, [currentScreen, handleChangeScreen]);
@@ -64,6 +81,14 @@ export const AppointmentFrameLayout = () => {
                 return "How can we help you?";
             case "consultantSelection":
                 return "Do you have a preferred consultant?";
+            case "appointmentTiming":
+                return "When would you like your vehicle serviced?";
+            case "appointmentSelection":
+                return "Select Appointment date & time"
+            case "transportationNeeds":
+                return "Will you be waiting at the dealership?";
+            case "appointmentConfirmation":
+                return "Appointment Confirmation";
             default:
                 return null;
         }

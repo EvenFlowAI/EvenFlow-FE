@@ -25,6 +25,7 @@ const stepsMap: {[K in TScreen]: number} = {
     serviceNeeds: 1,
     maintenanceDetails: 1,
     consultantSelection: 2,
+    appointmentTiming: 3,
     appointmentSelection: 3,
     transportationNeeds: 4,
     appointmentConfirmation: 5,
