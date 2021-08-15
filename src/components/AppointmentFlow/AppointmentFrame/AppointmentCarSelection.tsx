@@ -4,6 +4,7 @@ import {CarCard} from "./CarCard";
 import {styled} from "@material-ui/core";
 import {ILoadedVehicle} from "../../../api/types";
 import {Actions} from "./Actions";
+import {TCallback} from "../../../types/types";
 
 const Wrapper = styled('div')({
     display: "flex",
@@ -27,7 +28,10 @@ const car: ILoadedVehicle = {
     vin: '1FTMF1EP1MKD85171'
 }
 
-export const AppointmentCarSelection = () => {
+type TProps = {
+    onNext: TCallback
+}
+export const AppointmentCarSelection: React.FC<TProps> = ({onNext}) => {
     return (
         <Wrapper>
             <Title>Which vehicle are you coming in for?</Title>
@@ -35,7 +39,7 @@ export const AppointmentCarSelection = () => {
                 <CarCard car={car} />
                 <CarCard car={car} />
             </CarsWrapper>
-            <Actions onBack={() => {}} onNext={() => {}} />
+            <Actions onBack={() => {}} onNext={onNext} />
         </Wrapper>
     );
 };

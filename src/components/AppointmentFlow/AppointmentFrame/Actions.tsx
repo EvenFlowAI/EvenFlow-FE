@@ -18,8 +18,8 @@ const ButtonsRow = styled('div')({
 export const Actions: React.FC<TProps> = ({onBack, onNext}) => {
     return (
         <ButtonsRow>
-            <Button color={'primary'} variant='outlined'>Back</Button>
-            <Button color={'primary'} variant='contained'>Submit</Button>
+            <Button onClick={onBack} color={'primary'} variant='outlined'>Back</Button>
+            <Button onClick={onNext} color={'primary'} variant='contained'>Submit</Button>
         </ButtonsRow>
     );
 };
