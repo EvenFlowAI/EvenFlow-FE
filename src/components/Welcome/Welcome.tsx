@@ -31,8 +31,9 @@ export const Welcome = () => {
     }, [id]);
 
     const onComplete = () => {
+        const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         history.push(
-            Routes.EndUser.Appointment.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
+            route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );
     }
 
