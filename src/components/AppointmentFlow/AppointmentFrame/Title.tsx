@@ -26,3 +26,11 @@ export const Subtitle: React.FC = ({children}) => {
         {children}
     </SubtitleWrapper>
 }
+
+export const ConfirmationTitle = styled("h4")({
+    fontWeight: 700,
+    fontSize: 16,
+    textTransform: "uppercase",
+    margin: 0,
+    padding: 0
+});
