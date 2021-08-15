@@ -1,10 +1,8 @@
 import React from 'react';
 import {Button, styled} from "@material-ui/core";
+import { TActionProps } from './types';
 
-type TProps = {
-    onBack: () => void;
-    onNext: () => void;
-};
+
 const ButtonsRow = styled('div')({
     display: "flex",
     alignItems: "center",
@@ -15,7 +13,7 @@ const ButtonsRow = styled('div')({
         minWidth: 144
     }
 });
-export const Actions: React.FC<TProps> = ({onBack, onNext}) => {
+export const Actions: React.FC<TActionProps> = ({onBack, onNext}) => {
     return (
         <ButtonsRow>
             <Button onClick={onBack} color={'primary'} variant='outlined'>Back</Button>

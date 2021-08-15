@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {MuiThemeProvider, styled} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
 import {frameTheme} from "../../theme/theme";
@@ -7,6 +7,7 @@ import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeed
 import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
 import {MaintenanceDetails} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import { ConsultantSelection } from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
 
 const Container = styled('div')({
     display: "flex",
@@ -29,18 +30,31 @@ const SidebarWrapper = styled('div')({
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
+
+    const handleChangeScreen = useCallback((name: TScreen) => () => {
+        setCurrentScreen(name);
+    }, []);
+
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
             carSelection: <AppointmentCarSelection onNext={() => setCurrentScreen('serviceNeeds')} />,
-            serviceNeeds: <ServiceNeedsFrame onSelect={() => setCurrentScreen('maintenanceDetails')} />,
-            maintenanceDetails: <MaintenanceDetails />,
+            serviceNeeds: <ServiceNeedsFrame
+                onBack={handleChangeScreen('carSelection')}
+                onSelect={handleChangeScreen('maintenanceDetails')} />,
+            maintenanceDetails: <MaintenanceDetails
+                onBack={handleChangeScreen('serviceNeeds')}
+                onNext={handleChangeScreen('consultantSelection')}
+            />,
+            consultantSelection: <ConsultantSelection
+                onBack={handleChangeScreen('maintenanceDetails')}
+                onNext={handleChangeScreen('appointmentSelection')}
+            />,
             appointmentSelection: <div />,
             appointmentConfirmation: <div />,
             transportationNeeds: <div />,
-            consultantSelection: <div />
         }
         return carSelections[currentScreen];
-    }, [currentScreen]);
+    }, [currentScreen, handleChangeScreen]);
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":

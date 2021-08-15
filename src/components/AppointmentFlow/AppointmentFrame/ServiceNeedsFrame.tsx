@@ -52,9 +52,10 @@ const ServiceCard: React.FC<TSCProps> = ({card, onSelect}) => {
 }
 
 type TProps = {
-    onSelect: TCallback
+    onSelect: TCallback;
+    onBack: TCallback;
 }
-export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect}) => {
+export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
     const handleSelectCard = (card: TCard) => () => {
         onSelect();
     }
@@ -65,7 +66,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect}) => {
                     return <ServiceCard onSelect={handleSelectCard(card)} card={card} key={card.label} />
                 })}
             </CardsWrapper>
-            <Actions onNext={onSelect} onBack={() => {}} />
+            <Actions onNext={onSelect} onBack={onBack} />
         </StepWrapper>
     );
 };
