@@ -7,7 +7,7 @@ import {ILoadedVehicle} from "../../../api/types";
 const CarsWrapper = styled('div')({
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "20px",
     justifyContent: "stretch"
 });
 const car: ILoadedVehicle = {

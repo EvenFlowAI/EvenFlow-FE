@@ -25,6 +25,10 @@ const CarInfo = styled('ul')({
     padding: 0,
     alignSelf: 'flex-start',
     fontWeight: 'bold',
+    '&>li span': {
+        color: "#BDBDBD",
+        fontWeight: "normal"
+    }
 });
 const ActionButton = styled(Button)({
     fontSize: 20
@@ -39,7 +43,7 @@ export const CarCard: React.FC<TProps> = ({car}) => {
             <img src={carImage} alt="Car"/>
             <CarInfo>
                 <li>{car.year} {car.make} {car.model}</li>
-                <li>VIN: {car.vin}</li>
+                <li>VIN: <span>{car.vin}</span></li>
             </CarInfo>
             <Action car={car} />
         </Wrapper>

@@ -1,6 +1,7 @@
 import React from 'react';
-import {styled} from "@material-ui/core";
+import {MuiThemeProvider, styled} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
+import {frameTheme} from "../../theme/theme";
 
 const Container = styled('div')({
     display: "flex",
@@ -10,8 +11,10 @@ const Container = styled('div')({
 
 export const AppointmentFrameLayout = () => {
     return (
-        <Container>
-            <AppointmentCarSelection />
-        </Container>
+        <MuiThemeProvider theme={frameTheme}>
+            <Container>
+                <AppointmentCarSelection />
+            </Container>
+        </MuiThemeProvider>
     );
 };
