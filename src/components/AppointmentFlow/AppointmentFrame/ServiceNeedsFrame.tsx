@@ -6,6 +6,7 @@ import tireIcon from "../../../assets/img/tire-rotation-icon.png";
 import worksIcon from "../../../assets/img/oil-icon.png";
 import recallIcon from "../../../assets/img/recallIcon.png";
 import moreIcon from "../../../assets/img/tellUsMoreIcon.png";
+import {TCallback} from "../../../types/types";
 
 
 const CardsWrapper = styled("div")({
@@ -39,22 +40,32 @@ const cards: TCard[] = [
     {label: "Tell us more", icon: moreIcon},
 ]
 
-const ServiceCard: React.FC<{card: TCard}> = ({card}) => {
-    return <CardWrapper>
+type TSCProps = {
+    card: TCard;
+    onSelect: TCallback;
+}
+const ServiceCard: React.FC<TSCProps> = ({card, onSelect}) => {
+    return <CardWrapper onClick={onSelect}>
         <span><img src={card.icon} alt={card.label}/></span>
         <span>{card.label}</span>
     </CardWrapper>
 }
 
-export const ServiceNeedsFrame = () => {
+type TProps = {
+    onSelect: TCallback
+}
+export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect}) => {
+    const handleSelectCard = (card: TCard) => () => {
+        onSelect();
+    }
     return (
         <StepWrapper>
             <CardsWrapper>
                 {cards.map(card => {
-                    return <ServiceCard card={card} key={card.label} />
+                    return <ServiceCard onSelect={handleSelectCard(card)} card={card} key={card.label} />
                 })}
             </CardsWrapper>
-            <Actions onNext={() => {}} onBack={() => {}} />
+            <Actions onNext={onSelect} onBack={() => {}} />
         </StepWrapper>
     );
 };

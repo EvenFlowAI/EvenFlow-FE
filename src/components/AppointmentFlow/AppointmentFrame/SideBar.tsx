@@ -23,6 +23,7 @@ const Wrapper = styled('ul')({
 const stepsMap: {[K in TScreen]: number} = {
     carSelection: 0,
     serviceNeeds: 1,
+    maintenanceDetails: 1,
     consultantSelection: 2,
     appointmentSelection: 3,
     transportationNeeds: 4,

@@ -5,7 +5,8 @@ import {frameTheme} from "../../theme/theme";
 import {TScreen} from "./types";
 import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeedsFrame";
 import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
-import {Title} from "../AppointmentFlow/AppointmentFrame/Title";
+import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
+import {MaintenanceDetails} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 
 const Container = styled('div')({
     display: "flex",
@@ -22,7 +23,8 @@ const SidebarWrapper = styled('div')({
     gridTemplateColumns: "1fr 3fr",
     gap: "20px",
     alignItems: "flex-start",
-    width: "100%"
+    width: "100%",
+    marginTop: 28
 });
 
 export const AppointmentFrameLayout = () => {
@@ -30,7 +32,8 @@ export const AppointmentFrameLayout = () => {
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
             carSelection: <AppointmentCarSelection onNext={() => setCurrentScreen('serviceNeeds')} />,
-            serviceNeeds: <ServiceNeedsFrame />,
+            serviceNeeds: <ServiceNeedsFrame onSelect={() => setCurrentScreen('maintenanceDetails')} />,
+            maintenanceDetails: <MaintenanceDetails />,
             appointmentSelection: <div />,
             appointmentConfirmation: <div />,
             transportationNeeds: <div />,
@@ -43,6 +46,7 @@ export const AppointmentFrameLayout = () => {
             case "carSelection":
                 return null;
             case "serviceNeeds":
+            case "maintenanceDetails":
                 return "How can we help you?";
             default:
                 return null;
@@ -51,7 +55,10 @@ export const AppointmentFrameLayout = () => {
     return (
         <MuiThemeProvider theme={frameTheme}>
             <Container>
-                {currentScreen !== 'carSelection' ? <Title>{getTitle()}</Title> : null}
+                {currentScreen !== 'carSelection'
+                    ? <Title>{getTitle()}</Title> : null}
+                {currentScreen === 'maintenanceDetails'
+                    ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
                 {currentScreen === 'carSelection'
                     ? component
                     : <SidebarWrapper>
