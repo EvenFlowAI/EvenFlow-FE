@@ -62,6 +62,8 @@ export const AppointmentFrameLayout = () => {
             case "serviceNeeds":
             case "maintenanceDetails":
                 return "How can we help you?";
+            case "consultantSelection":
+                return "Do you have a preferred consultant?";
             default:
                 return null;
         }
