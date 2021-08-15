@@ -25,6 +25,7 @@ const CardWrapper = styled("div")({
     textAlign: "center",
     alignItems: "center",
     padding: 10,
+    cursor: "pointer"
 });
 
 type TCard = {
