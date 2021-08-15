@@ -14,7 +14,7 @@ const Wrapper = styled('ul')({
     "& button": {
         justifyContent: "flex-start",
         textAlign: "left",
-        fontSize: 16,
+        fontSize: 18,
         textTransform: "none"
     }
 });

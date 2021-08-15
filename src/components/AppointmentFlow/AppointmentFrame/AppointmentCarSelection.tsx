@@ -5,14 +5,9 @@ import {styled} from "@material-ui/core";
 import {ILoadedVehicle} from "../../../api/types";
 import {Actions} from "./Actions";
 import {TCallback} from "../../../types/types";
+import { StepWrapper } from './StepWrapper';
 
-const Wrapper = styled('div')({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "20px",
-    flexDirection: "column"
-})
+
 const CarsWrapper = styled('div')({
     display: "flex",
     alignItems: "center",
@@ -33,13 +28,13 @@ type TProps = {
 }
 export const AppointmentCarSelection: React.FC<TProps> = ({onNext}) => {
     return (
-        <Wrapper>
+        <StepWrapper>
             <Title>Which vehicle are you coming in for?</Title>
             <CarsWrapper>
                 <CarCard car={car} />
                 <CarCard car={car} />
             </CarsWrapper>
             <Actions onBack={() => {}} onNext={onNext} />
-        </Wrapper>
+        </StepWrapper>
     );
 };
