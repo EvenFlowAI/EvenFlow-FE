@@ -6,7 +6,8 @@ import {frameTheme} from "../../theme/theme";
 const Container = styled('div')({
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    height: "100%"
 })
 
 export const AppointmentFrameLayout = () => {
