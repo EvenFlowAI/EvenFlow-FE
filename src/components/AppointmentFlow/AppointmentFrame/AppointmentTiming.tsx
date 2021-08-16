@@ -8,6 +8,8 @@ import {ReactComponent as FirstAvailableIcon} from "../../../assets/img/firstAva
 import {ReactComponent as OffersIcon} from "../../../assets/img/offersIcon.svg";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {TCallback} from "../../../types/types";
+import {DatePicker} from "@material-ui/pickers";
+import {DateRangeIcon} from "@material-ui/pickers/_shared/icons/DateRangeIcon";
 
 
 const TimingWrapper = styled('div')({
@@ -17,6 +19,25 @@ const TimingWrapper = styled('div')({
     alignItems: "stretch",
     gap: "20px"
 });
+const StyledDate = styled(DatePicker)(({theme}) => ({
+    marginTop: 16,
+    cursor: "pointer",
+    "&>div:not(.Mui-disabled)": {
+        borderColor: theme.palette.primary.main,
+        cursor: "pointer",
+        "&>input": {
+            color: theme.palette.primary.main,
+            cursor: "pointer"
+        }
+    },
+    "&>div": {
+        paddingRight: 4,
+        backgroundColor: "#fff"
+    },
+    [theme.breakpoints.down("xs")]: {
+        marginTop: 0
+    }
+}))
 const CardWrapper = styled('div')<Theme, {active?: boolean}>({
     border: "1px solid #DADADA",
     borderColor: ({active}) => active ? "#000000" : "#DADADA",
@@ -76,6 +97,20 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick}) => {
     return <CardWrapper active={active} onClick={onClick}>
         {active ? <RadioButtonChecked /> : <RadioButtonUnchecked />}
         <div className="icon">{card.icon}</div>
+        {card.name === "selectDate"
+            ? <StyledDate
+                value={null}
+                onChange={() => {}}
+                disabled={!active}
+                placeholder={"Choose here"}
+                disablePast
+                InputProps={{
+                    disableUnderline: true,
+                    endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>
+                }}
+            />
+            : null
+        }
         <div>{card.description}</div>
     </CardWrapper>
 }
