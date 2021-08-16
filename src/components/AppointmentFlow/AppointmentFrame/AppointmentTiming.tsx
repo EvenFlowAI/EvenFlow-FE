@@ -59,6 +59,9 @@ const CardWrapper = styled('div')<Theme, {active?: boolean}>({
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
+    },
+    "&>div:last-child": {
+        marginTop: "auto"
     }
 });
 type TCardName =
