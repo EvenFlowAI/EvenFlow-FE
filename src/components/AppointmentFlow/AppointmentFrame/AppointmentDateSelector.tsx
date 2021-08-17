@@ -23,7 +23,12 @@ const MonthSelectorWrapper = styled('div')({
             padding: "0 10px"
         }
     }
-})
+});
+
+
+const DaySelectorWrapper = styled('div')({
+
+});
 
 
 type TMonthProps = {
@@ -55,11 +60,23 @@ const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
     </MonthSelectorWrapper>
 }
 
+const DaySelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
+    return <DaySelectorWrapper>
+        <div className="arrow">
+            <ChevronLeft />
+        </div>
+        <div className="arrow">
+            <ChevronRight />
+        </div>
+    </DaySelectorWrapper>
+}
+
 export const AppointmentDateSelector: React.FC<TProps> = ({date, onDateChange}) => {
     return (
         <div>
             <h4>Select Date</h4>
             <MonthSelector date={date} onDateChange={onDateChange} />
+            <DaySelector date={date} onDateChange={onDateChange} />
         </div>
     );
 };
