@@ -74,4 +74,4 @@ export interface IOrder<D={}> {
     isAscending: boolean
 }
 export type TCallback = () => void;
-export type TArgCallback = <T=any>(arg: T) => void;
+export type TArgCallback<T> = (arg: T) => void;

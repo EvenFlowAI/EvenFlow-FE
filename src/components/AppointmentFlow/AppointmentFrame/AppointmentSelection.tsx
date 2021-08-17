@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {TActionProps} from "./types";
 import { StepWrapper } from './StepWrapper';
 import { Actions } from './Actions';
@@ -6,6 +6,7 @@ import {SelectedAppointment} from "./SelectedAppointment";
 import {AppointmentDateSelector} from "./AppointmentDateSelector";
 import {AppointmentTimeSelector} from "./AppointmentTimeSelector";
 import {styled} from "@material-ui/core";
+import moment from "moment";
 
 
 const Wrapper = styled('div')({
@@ -29,11 +30,15 @@ const Wrapper = styled('div')({
 })
 
 export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
+    const [date, setDate] = useState<moment.Moment>(moment().utc());
+    const handleChangeMonth = (m: moment.Moment) => {
+        setDate(m);
+    }
     return (
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
-                <AppointmentDateSelector />
+                <AppointmentDateSelector date={date} onDateChange={handleChangeMonth} />
                 <AppointmentTimeSelector />
             </Wrapper>
             <Actions onBack={onBack} onNext={onNext} />
