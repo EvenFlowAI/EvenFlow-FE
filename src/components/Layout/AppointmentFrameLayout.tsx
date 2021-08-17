@@ -33,7 +33,8 @@ const SidebarWrapper = styled('div')({
 });
 
 export const AppointmentFrameLayout = () => {
-    const [currentScreen, setCurrentScreen] = useState<TScreen>("appointmentTiming");
+    // TODO: Replace with carSelection
+    const [currentScreen, setCurrentScreen] = useState<TScreen>("appointmentSelection");
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
