@@ -18,7 +18,7 @@ const Container = styled('div')({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
-    height: "100%",
+    minHeight: "100%",
     padding: 20,
     maxWidth: 1280,
     margin: "auto"
