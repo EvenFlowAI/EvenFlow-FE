@@ -21,7 +21,7 @@ const DayCard = styled('div')<Theme, TDayCardProps>({
         padding: 12,
         display: "flex",
         alignItems: "center",
-        background: ({isCurrent}) => isCurrent ? "#000000" : "transparent",
+        background: ({isCurrent}) => isCurrent ? "#000000" : "#FAFAFA",
         color: ({isCurrent}) => isCurrent ? "#FFFFFF" : "#252733",
         justifyContent: "center",
         textAlign: "center",
