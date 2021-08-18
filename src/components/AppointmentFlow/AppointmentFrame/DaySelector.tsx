@@ -35,7 +35,7 @@ type TProps = {
 export const DaySelector: React.FC<TProps> = ({date, onDateChange}) => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const daysPerScreen: number = useMemo(() => {
-        return 5;
+        return 6;
     }, []);
 
     const initRef = useRef<boolean>(false);
