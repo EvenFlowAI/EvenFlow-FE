@@ -13,11 +13,17 @@ const ButtonsRow = styled('div')({
         minWidth: 144
     }
 });
-export const Actions: React.FC<TActionProps> = ({onBack, onNext}) => {
+export const Actions: React.FC<TActionProps> = ({onBack, onNext, nextDisabled, nextLabel}) => {
     return (
         <ButtonsRow>
             <Button onClick={onBack} color={'primary'} variant='outlined'>Back</Button>
-            <Button onClick={onNext} color={'primary'} variant='contained'>Submit</Button>
+            <Button
+                disabled={nextDisabled}
+                onClick={onNext}
+                color={'primary'}
+                variant='contained'>
+                {nextLabel ?? 'Submit'}
+            </Button>
         </ButtonsRow>
     );
 };

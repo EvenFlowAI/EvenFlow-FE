@@ -12,6 +12,8 @@ import {clearStorage} from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
+import {MuiThemeProvider} from "@material-ui/core";
+import {frameTheme} from "../../theme/theme";
 
 
 export const Welcome = () => {
@@ -56,11 +58,13 @@ export const Welcome = () => {
         }
     }
 
-    return (isFrame ? <FrameWelcomeLayout>
+    return (isFrame ? <MuiThemeProvider theme={frameTheme}>
+                <FrameWelcomeLayout>
+                    {getComponent()}
+                </FrameWelcomeLayout>
+            </MuiThemeProvider> :
+            <WelcomeLayout title="Welcome!" subtitle="Schedule Your Service:">
                 {getComponent()}
-            </FrameWelcomeLayout> :
-        <WelcomeLayout title="Welcome!" subtitle="Schedule Your Service:">
-            {getComponent()}
-        </WelcomeLayout>
+            </WelcomeLayout>
     );
 };
