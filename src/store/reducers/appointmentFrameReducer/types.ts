@@ -11,7 +11,7 @@ export type TCardName =
 
 export type TServiceCard = {
     label: string;
-    icon: string;
+    icon: JSX.Element;
     name: TCardName;
     type: ECardType
 }

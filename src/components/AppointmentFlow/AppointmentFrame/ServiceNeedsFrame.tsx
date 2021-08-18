@@ -2,10 +2,10 @@ import React from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
 import {styled, Theme} from "@material-ui/core";
-import tireIcon from "../../../assets/img/tire-rotation-icon.png";
-import worksIcon from "../../../assets/img/oil-icon.png";
-import recallIcon from "../../../assets/img/recallIcon.png";
-import moreIcon from "../../../assets/img/tellUsMoreIcon.png";
+import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
+import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
+import {ReactComponent as RecallIcon} from "../../../assets/img/recall.svg";
+import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
 import {TCallback} from "../../../types/types";
 import {ECardType, TServiceCard} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -25,6 +25,8 @@ const CardWrapper = styled("div")<Theme, {active?: boolean}>({
     gridTemplateColumns: "1fr",
     gridTemplateRows: "1fr 1fr",
     width: "100%",
+    background: ({active}) => active ? '#000000' : "transparent",
+    color: ({active}) => active ? "#FFFFFF" : "#252733",
     border: ({active}) => `1px solid ${active ? '#000000' : '#DADADA'}`,
     fontSize: 24,
     textAlign: "center",
@@ -34,10 +36,30 @@ const CardWrapper = styled("div")<Theme, {active?: boolean}>({
 });
 
 const cards: TServiceCard[] = [
-    {name: "FoD", label: "Factory or Dealer Scheduled Maintenance", icon: tireIcon, type: ECardType.Maintenance},
-    {name: "QLC", label: "The Works Quick Lane Checkup", icon: worksIcon, type: ECardType.Other},
-    {name: "R", label: "Recall", icon: recallIcon, type: ECardType.Other},
-    {name: "TM", label: "Tell us more", icon: moreIcon, type: ECardType.TellMore},
+    {
+        name: "FoD",
+        label: "Factory or Dealer Scheduled Maintenance",
+        icon: <TireIcon />,
+        type: ECardType.Maintenance
+    },
+    {
+        name: "QLC",
+        label: "The Works Quick Lane Checkup",
+        icon: <WorksIcon />,
+        type: ECardType.Other
+    },
+    {
+        name: "R",
+        label: "Recall",
+        icon: <RecallIcon />,
+        type: ECardType.Other
+    },
+    {
+        name: "TM",
+        label: "Tell us more",
+        icon: <MoreIcon />,
+        type: ECardType.TellMore
+    },
 ]
 
 type TSCProps = {
@@ -47,7 +69,7 @@ type TSCProps = {
 }
 const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active}) => {
     return <CardWrapper onClick={onSelect} active={active}>
-        <span><img src={card.icon} alt={card.label}/></span>
+        <span>{card.icon}</span>
         <span>{card.label}</span>
     </CardWrapper>
 }
