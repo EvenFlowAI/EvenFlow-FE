@@ -11,6 +11,7 @@ const Wrapper = styled('div')<Theme, {available?: boolean}>({
     gap: "6px",
     opacity: ({available}) => available ? 1 : .3,
     '& .availability': {
+        cursor: "pointer",
         border: '1px solid #DADADA',
         padding: 20,
         minHeight: 80,
