@@ -25,6 +25,7 @@ const CardWrapper = styled("div")<Theme, {active?: boolean}>({
     gridTemplateColumns: "1fr",
     gridTemplateRows: "1fr 1fr",
     width: "100%",
+    transition: "all .2s",
     background: ({active}) => active ? '#000000' : "transparent",
     color: ({active}) => active ? "#FFFFFF" : "#252733",
     border: ({active}) => `1px solid ${active ? '#000000' : '#DADADA'}`,
