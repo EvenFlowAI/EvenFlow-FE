@@ -39,7 +39,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             <Wrapper>
                 <SelectedAppointment />
                 <AppointmentDateSelector date={date} onDateChange={handleChangeMonth} />
-                <AppointmentTimeSelector />
+                <AppointmentTimeSelector date={date} slot={null} />
             </Wrapper>
             <Actions onBack={onBack} onNext={onNext} />
         </StepWrapper>
