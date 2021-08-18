@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {TArgCallback} from "../../../types/types";
 import {styled, Theme} from "@material-ui/core";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
@@ -55,6 +55,7 @@ const DayCard = styled('div')<Theme, TDayCardProps>({
     flexGrow: 1,
     opacity: ({available, isCurrent}) => (!available && !isCurrent) ? .3 : 1,
     display: "flex",
+    textTransform: "uppercase",
     flexDirection: "column",
     gap: "8px",
     fontWeight: "bold",
@@ -110,6 +111,8 @@ const DaySelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
         return 5;
     }, []);
 
+    const initRef = useRef<boolean>(false);
+
     const [daysInMonth, days]: [number, number[]] = useMemo(() => {
         const dim = date.daysInMonth();
         return [
@@ -117,6 +120,20 @@ const DaySelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
             Array(dim).fill(0).map((e, idx) => idx + 1)
         ];
     }, [date]);
+
+    useEffect(() => {
+        if (!initRef.current) {
+            const nD = date.date() - Math.floor(daysPerScreen / 2);
+            if (nD + daysPerScreen > daysInMonth) {
+                // Handle right date edge
+                setSliceIdx(daysInMonth - daysPerScreen);
+            } else {
+                // Handle left date edge
+                setSliceIdx(nD >= 0 ? nD : 0);
+            }
+            initRef.current = true;
+        }
+    }, [date, daysPerScreen, daysInMonth]);
 
     const handleChangeDay = (day: number) => () => {
         onDateChange(moment.utc(date).date(day));
@@ -156,7 +173,7 @@ const DaySelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
                 available={false}
                 isCurrent={date.date() === day}
             >
-                <div>{day}</div>
+                <div>{day}, {moment.utc(date).date(day).format('ddd')}</div>
                 <div className="day" onClick={handleChangeDay(day)}>
                     Not Available
                 </div>
