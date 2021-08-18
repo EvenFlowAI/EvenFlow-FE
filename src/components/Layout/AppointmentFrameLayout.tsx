@@ -39,13 +39,16 @@ export const AppointmentFrameLayout = () => {
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
     }, []);
+    const handleSetScreen = useCallback((screen: TScreen) => {
+        setCurrentScreen(screen);
+    }, []);
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
             carSelection: <AppointmentCarSelection onNext={() => setCurrentScreen('serviceNeeds')} />,
             serviceNeeds: <ServiceNeedsFrame
                 onBack={handleChangeScreen('carSelection')}
-                onSelect={handleChangeScreen('maintenanceDetails')} />,
+                onSelect={handleSetScreen} />,
             maintenanceDetails: <MaintenanceDetails
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('consultantSelection')}
@@ -75,7 +78,7 @@ export const AppointmentFrameLayout = () => {
             />
         }
         return carSelections[currentScreen];
-    }, [currentScreen, handleChangeScreen]);
+    }, [currentScreen, handleChangeScreen, handleSetScreen]);
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":

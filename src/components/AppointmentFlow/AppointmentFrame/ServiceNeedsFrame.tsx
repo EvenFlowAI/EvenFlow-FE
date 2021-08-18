@@ -6,11 +6,12 @@ import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon
 import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
 import {ReactComponent as RecallIcon} from "../../../assets/img/recall.svg";
 import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
-import {TCallback} from "../../../types/types";
+import {TArgCallback, TCallback} from "../../../types/types";
 import {ECardType, TServiceCard} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectService} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {TScreen} from "../../Layout/types";
 
 
 const CardsWrapper = styled("div")({
@@ -76,7 +77,7 @@ const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active}) => {
 }
 
 type TProps = {
-    onSelect: TCallback;
+    onSelect: TArgCallback<TScreen>;
     onBack: TCallback;
 }
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
@@ -84,6 +85,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
     const dispatch = useDispatch();
     const handleSelectCard = (card: TServiceCard) => () => {
         dispatch(selectService(card));
+    }
+    const handleSubmit = () => {
+        onSelect('maintenanceDetails');
     }
     return (
         <StepWrapper>
@@ -98,7 +102,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
             </CardsWrapper>
             <Actions
                 nextDisabled={!selectedService}
-                onNext={onSelect}
+                onNext={handleSubmit}
                 onBack={onBack} />
         </StepWrapper>
     );
