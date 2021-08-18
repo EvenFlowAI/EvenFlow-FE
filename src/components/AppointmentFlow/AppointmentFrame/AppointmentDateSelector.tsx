@@ -27,6 +27,7 @@ const MonthSelectorWrapper = styled('div')({
 
 
 const DaySelectorWrapper = styled('div')({
+    marginTop: 20,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -41,22 +42,35 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
     flexGrow: 0,
     opacity: ({disabled}) => disabled ? .5 : 1,
     display: "flex",
+    marginTop: 12,
     alignItems: "center",
     justifyContent: "center",
     cursor: ({disabled}) => disabled ? "default" : "pointer",
 });
-const DayCard = styled('div')({
+type TDayCardProps = {
+    available?: boolean;
+    isCurrent?: boolean;
+}
+const DayCard = styled('div')<Theme, TDayCardProps>({
     flexGrow: 1,
+    opacity: ({available, isCurrent}) => (!available && !isCurrent) ? .3 : 1,
     display: "flex",
     flexDirection: "column",
-    gap: "12px",
+    gap: "8px",
+    fontWeight: "bold",
     "& .day": {
-        border: "1px solid #DADADA",
+        border: ({isCurrent}) => isCurrent ? "1px solid #000000" : "1px solid #DADADA",
         padding: 12,
         display: "flex",
         alignItems: "center",
+        background: ({isCurrent}) => isCurrent ? "#000000" : "transparent",
+        color: ({isCurrent}) => isCurrent ? "#FFFFFF" : "#252733",
         justifyContent: "center",
-        textAlign: "center"
+        textAlign: "center",
+        minHeight: 80,
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        cursor: "pointer"
     }
 });
 
@@ -104,6 +118,10 @@ const DaySelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
         ];
     }, [date]);
 
+    const handleChangeDay = (day: number) => () => {
+        onDateChange(moment.utc(date).date(day));
+    }
+
     const nextAvailable = (): boolean => {
         return (sliceIdx + daysPerScreen) < daysInMonth;
     }
@@ -113,8 +131,8 @@ const DaySelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
     const handleNext = () => {
         if (nextAvailable()) {
             setSliceIdx(s => {
-                const nS = s + daysPerScreen;
-                return nS <= daysInMonth ? nS : daysInMonth - daysPerScreen;
+                const nS = s + (daysPerScreen * 2);
+                return nS <= daysInMonth ? s + daysPerScreen : daysInMonth - daysPerScreen;
             });
         }
     }
@@ -133,9 +151,13 @@ const DaySelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
         {days
             .slice(sliceIdx, sliceIdx + daysPerScreen)
             .map(day =>
-            <DayCard>
+            <DayCard
+                key={day}
+                available={false}
+                isCurrent={date.date() === day}
+            >
                 <div>{day}</div>
-                <div className="day">
+                <div className="day" onClick={handleChangeDay(day)}>
                     Not Available
                 </div>
             </DayCard>
