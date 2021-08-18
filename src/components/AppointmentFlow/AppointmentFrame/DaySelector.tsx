@@ -18,7 +18,7 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
     border: "1px solid #DADADA",
     width: 30,
     height: 30,
-    flexGrow: 0,
+    flexShrink: 0,
     opacity: ({disabled}) => disabled ? .5 : 1,
     display: "flex",
     marginTop: 12,
