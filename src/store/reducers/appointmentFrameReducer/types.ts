@@ -7,7 +7,11 @@ export type TCardName =
     | "FoD"
     | "QLC"
     | "R"
-    | "TM";
+    | "TM"
+    | "engineLight"
+    | "tireReplacement"
+    | "individual"
+    | "describe";
 
 export type TServiceCard = {
     label: string;

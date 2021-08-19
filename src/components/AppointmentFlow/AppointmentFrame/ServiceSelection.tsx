@@ -16,26 +16,26 @@ import {ServiceCard} from "./ServiceCard";
 
 const cards: TServiceCard[] = [
     {
-        name: "FoD",
-        label: "Factory or Dealer Scheduled Maintenance",
+        name: "engineLight",
+        label: "Engine Light On",
         icon: <TireIcon />,
         type: ECardType.Maintenance
     },
     {
-        name: "QLC",
-        label: "The Works Quick Lane Checkup",
+        name: "tireReplacement",
+        label: "Tire Repair and Replacement",
         icon: <WorksIcon />,
         type: ECardType.Other
     },
     {
-        name: "R",
-        label: "Recall",
+        name: "individual",
+        label: "Search Individual Services",
         icon: <RecallIcon />,
         type: ECardType.Other
     },
     {
-        name: "TM",
-        label: "Tell us more",
+        name: "describe",
+        label: "Describe What’s Going On",
         icon: <MoreIcon />,
         type: ECardType.TellMore
     },
@@ -55,7 +55,16 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
     }
 
     const handleSubmit = () => {
-        // onNext('selectScreen')
+        switch (subService?.name) {
+            case "engineLight":
+            case "tireReplacement":
+            case "describe":
+                return onNext('describeMore');
+            case "individual":
+                return onNext('opsCode');
+            default:
+                return;
+        }
     }
     return (
         <StepWrapper>
