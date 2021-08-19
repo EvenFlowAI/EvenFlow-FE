@@ -1,7 +1,6 @@
 import React from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
-import {styled, Theme} from "@material-ui/core";
 import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
 import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
 import {ReactComponent as RecallIcon} from "../../../assets/img/recall.svg";
@@ -12,30 +11,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectService} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
+import {CardsWrapper} from "./styled";
+import {ServiceCard} from "./ServiceCard";
 
-
-const CardsWrapper = styled("div")({
-    display: "flex",
-    alignItems: "stretch",
-    justifyContent: "center",
-    gap: "18px",
-});
-
-const CardWrapper = styled("div")<Theme, {active?: boolean}>({
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gridTemplateRows: "1fr 1fr",
-    width: "100%",
-    transition: "all .2s",
-    background: ({active}) => active ? '#000000' : "transparent",
-    color: ({active}) => active ? "#FFFFFF" : "#252733",
-    border: ({active}) => `1px solid ${active ? '#000000' : '#DADADA'}`,
-    fontSize: 24,
-    textAlign: "center",
-    alignItems: "center",
-    padding: 10,
-    cursor: "pointer",
-});
 
 const cards: TServiceCard[] = [
     {
@@ -63,18 +41,6 @@ const cards: TServiceCard[] = [
         type: ECardType.TellMore
     },
 ]
-
-type TSCProps = {
-    card: TServiceCard;
-    onSelect: TCallback;
-    active: boolean;
-}
-const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active}) => {
-    return <CardWrapper onClick={onSelect} active={active}>
-        <span>{card.icon}</span>
-        <span>{card.label}</span>
-    </CardWrapper>
-}
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;

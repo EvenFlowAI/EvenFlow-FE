@@ -16,6 +16,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, service: payload, subService: null};
     })
     .addCase(selectSubService, (state, {payload}) => {
-        return {...state, service: payload};
+        return {...state, subService: payload};
     })
 )
