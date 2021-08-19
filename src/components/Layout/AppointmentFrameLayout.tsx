@@ -15,6 +15,7 @@ import { AppointmentConfirmationFrame } from '../AppointmentFlow/AppointmentFram
 import {AddInfo} from "../AppointmentFlow/AppointmentFrame/AddInfo";
 import {ServiceSelection} from "../AppointmentFlow/AppointmentFrame/ServiceSelection";
 import {PackageSelection} from "../AppointmentFlow/AppointmentFrame/PackageSelection";
+import {SelectOpsCode} from "../AppointmentFlow/AppointmentFrame/SelectOpsCode";
 
 const Container = styled('div')({
     display: "flex",
@@ -68,7 +69,10 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('consultantSelection')}
             />,
-            opsCode: <div />,
+            opsCode: <SelectOpsCode
+                onBack={handleChangeScreen('serviceSelection')}
+                onNext={handleChangeScreen('consultantSelection')}
+            />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('appointmentTiming')}
