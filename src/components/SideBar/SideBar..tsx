@@ -125,7 +125,8 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     }
     const handleGoToBooking = () => {
         const encoded = encodeSCID(selectedSC?.id??0);
-        history.push(Routes.EndUser.Welcome + "/" + encoded);
+        // TODO: Handle Frame
+        history.push(Routes.EndUser.Welcome + "/" + encoded + "?frame=1");
     }
     const closeSidebar = () => {
         if (isXS) {
