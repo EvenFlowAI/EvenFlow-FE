@@ -38,7 +38,7 @@ const SidebarWrapper = styled('div')({
 
 export const AppointmentFrameLayout = () => {
     // TODO: Replace with carSelection
-    const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
+    const [currentScreen, setCurrentScreen] = useState<TScreen>("packageSelection");
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
@@ -132,7 +132,7 @@ export const AppointmentFrameLayout = () => {
                     ? <Title>{getTitle()}</Title> : null}
                 {currentScreen === 'maintenanceDetails'
                     ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
-                {currentScreen === 'carSelection'
+                {['carSelection', 'packageSelection'].includes(currentScreen)
                     ? component
                     : <SidebarWrapper>
                         <SideBar screen={currentScreen} />

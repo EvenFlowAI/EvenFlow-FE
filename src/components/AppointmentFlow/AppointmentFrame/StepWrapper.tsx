@@ -5,5 +5,6 @@ export const StepWrapper = styled('div')({
     alignItems: "center",
     justifyContent: "center",
     gap: "20px",
-    flexDirection: "column"
+    flexDirection: "column",
+    width: "100%"
 })
