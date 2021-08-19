@@ -56,16 +56,16 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleSetScreen}
             />,
-            packageSelection: <PackageSelection
-                onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleChangeScreen('maintenanceDetails')}
-            />,
             maintenanceDetails: <MaintenanceDetails
-                onBack={handleChangeScreen('packageSelection')}
+                onBack={handleChangeScreen('serviceNeeds')}
+                onNext={handleChangeScreen('packageSelection')}
+            />,
+            packageSelection: <PackageSelection
+                onBack={handleChangeScreen('maintenanceDetails')}
                 onNext={handleChangeScreen('consultantSelection')}
             />,
             describeMore: <AddInfo
-                onBack={handleChangeScreen('serviceSelection')}
+                onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('consultantSelection')}
             />,
             consultantSelection: <ConsultantSelection

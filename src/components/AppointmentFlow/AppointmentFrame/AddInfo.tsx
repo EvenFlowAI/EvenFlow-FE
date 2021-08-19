@@ -6,7 +6,7 @@ import {StepWrapper} from "./StepWrapper";
 export const AddInfo: React.FC<TActionProps> = ({onNext, onBack}) => {
     return (
         <StepWrapper>
-            <div>AI</div>
+            <div>Describe</div>
             <Actions onBack={onBack} onNext={onNext} />
         </StepWrapper>
     );

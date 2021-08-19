@@ -87,7 +87,17 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
         dispatch(selectService(card));
     }
     const handleSubmit = () => {
-        onSelect('maintenanceDetails');
+        switch (selectedService?.name) {
+            case "TM":
+                return onSelect('serviceSelection');
+            case "R":
+            case "QLC":
+                return onSelect('describeMore');
+            case "FoD":
+                return onSelect('maintenanceDetails');
+            default:
+                return;
+        }
     }
     return (
         <StepWrapper>
