@@ -12,6 +12,9 @@ import { AppointmentTiming } from '../AppointmentFlow/AppointmentFrame/Appointme
 import { AppointmentSelection } from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
 import { TransportationNeeds } from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
 import { AppointmentConfirmationFrame } from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
+import {AddInfo} from "../AppointmentFlow/AppointmentFrame/AddInfo";
+import {ServiceSelection} from "../AppointmentFlow/AppointmentFrame/ServiceSelection";
+import {PackageSelection} from "../AppointmentFlow/AppointmentFrame/PackageSelection";
 
 const Container = styled('div')({
     display: "flex",
@@ -49,15 +52,24 @@ export const AppointmentFrameLayout = () => {
             serviceNeeds: <ServiceNeedsFrame
                 onBack={handleChangeScreen('carSelection')}
                 onSelect={handleSetScreen} />,
-            maintenanceDetails: <MaintenanceDetails
+            serviceSelection: <ServiceSelection
                 onBack={handleChangeScreen('serviceNeeds')}
+                onNext={handleSetScreen}
+            />,
+            packageSelection: <PackageSelection
+                onBack={handleChangeScreen('serviceNeeds')}
+                onNext={handleChangeScreen('maintenanceDetails')}
+            />,
+            maintenanceDetails: <MaintenanceDetails
+                onBack={handleChangeScreen('packageSelection')}
                 onNext={handleChangeScreen('consultantSelection')}
             />,
-            serviceSelection: <div />,
-            describeMore: <div />,
-            packageSelection: <div />,
+            describeMore: <AddInfo
+                onBack={handleChangeScreen('serviceSelection')}
+                onNext={handleChangeScreen('consultantSelection')}
+            />,
             consultantSelection: <ConsultantSelection
-                onBack={handleChangeScreen('maintenanceDetails')}
+                onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('appointmentTiming')}
             />,
             appointmentTiming: <AppointmentTiming
@@ -84,8 +96,14 @@ export const AppointmentFrameLayout = () => {
             case "carSelection":
                 return null;
             case "serviceNeeds":
-            case "maintenanceDetails":
+            case "serviceSelection":
                 return "How can we help you?";
+            case "maintenanceDetails":
+                return "Please provide the maintenance details for your vehicle"
+            case "describeMore":
+                return "Please describe what’s going on";
+            case "packageSelection":
+                return "Please select the maintenance package for your vehicle"
             case "consultantSelection":
                 return "Do you have a preferred consultant?";
             case "appointmentTiming":
