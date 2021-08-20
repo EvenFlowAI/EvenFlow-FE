@@ -7,7 +7,7 @@ import {
     IVehicleData
 } from "../store/reducers/appointment/types";
 import {IOffer} from "../store/reducers/offers/types";
-import {IServiceRequestShort} from "../store/reducers/serviceRequests/types";
+import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
 
@@ -16,6 +16,10 @@ export type TApiEndpoint<T=any, R=any> = (arg: T) => TApiResponse<R>;
 export type TApiView = Record<string, TApiEndpoint>;
 
 export type TApi = Record<string, TApiView>;
+export enum EServiceCategoryPage {
+    Page1="Page1",
+    Page2="Page2"
+}
 
 export interface ICreateAppointment {
     id?: number;
@@ -151,4 +155,12 @@ export interface IServiceCenterId {
 }
 export interface ISessionId {
     "session-id": string;
+}
+
+export interface IServiceCategory {
+    id: number;
+    name: string;
+    page: EServiceCategoryPage;
+    iconPath: string;
+    serviceRequests: IServiceRequest[];
 }

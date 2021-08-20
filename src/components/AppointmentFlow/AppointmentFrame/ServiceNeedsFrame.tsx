@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
 import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
@@ -13,6 +13,10 @@ import {selectService} from "../../../store/reducers/appointmentFrameReducer/act
 import {TScreen} from "../../Layout/types";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
+import {Api} from "../../../config/requests";
+import {decodeSCID} from "../../../utils/utils";
+import {useParams} from "react-router-dom";
+import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 
 
 const cards: TServiceCard[] = [
@@ -47,8 +51,26 @@ type TProps = {
     onBack: TCallback;
 }
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
+    const [loading, setLoading] = useState<boolean>(false);
     const selectedService = useSelector((state: RootState) => state.appointmentFrame.service);
+    const {id} = useParams();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        setLoading(true);
+        Api.call<IServiceCategory[]>(
+            Api.endpoints.ServiceCategories.GetByPage,
+            {data: {
+                serviceCenterId: decodeSCID(id),
+                page: EServiceCategoryPage.Page1
+            }}
+        )
+            .then(({data}) => {
+                console.log(data);
+            })
+            .finally(() => {setLoading(false)});
+    }, [id]);
+
     const handleSelectCard = (card: TServiceCard) => () => {
         dispatch(selectService(card));
     }

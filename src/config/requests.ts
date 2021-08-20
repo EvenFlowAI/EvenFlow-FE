@@ -149,6 +149,8 @@ type ApiRoutes = {
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation", TApiRoute>,
+    ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
+        | "GetByQuery" | "GetByPage", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt", TApiRoute>,
@@ -269,6 +271,15 @@ export class Api {
             GetLevels: {route: "/pricing-settings/levels", method: "get"},
             SetLevels: {route: "/pricing-settings/levels", method: "put"},
             Calculation: {route: "/pricing-settings/calculation", method: "get"},
+        },
+        ServiceCategories: {
+            Create: {route: "/service-categories", method: "post"},
+            UpdateIcon: {route: "/service-categories/{id}/icon", method: "patch"},
+            Update: {route: "/service-categories/{id}", method: "put"},
+            Remove: {route: "/service-categories/{id}", method: "delete"},
+            Retrieve: {route: "/service-categories/{id}", method: "get"},
+            GetByQuery: {route: "/service-categories/by-query", method: "post"},
+            GetByPage: {route: "/service-categories/by-page", method: "post"},
         },
         ServiceCenters: {
             Create: {route: "/service-centers", method: "post"},
