@@ -27,7 +27,7 @@ export const AddInfo: React.FC<TActionProps> = ({onNext, onBack}) => {
                 value={description}
                 rows={4}
                 placeholder={
-                    subService?.label ?? service?.label ?? "Type Here"
+                    subService?.name ?? service?.name ?? "Type Here"
                 }
             />
             <Actions onBack={onBack} onNext={onNext} nextDisabled={!description} />

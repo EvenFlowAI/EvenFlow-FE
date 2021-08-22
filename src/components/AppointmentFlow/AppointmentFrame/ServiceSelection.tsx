@@ -13,6 +13,7 @@ import {ReactComponent as RecallIcon} from "../../../assets/img/recall.svg";
 import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
+import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 
 const cards: TServiceCard[] = [
     {
@@ -26,18 +27,23 @@ const cards: TServiceCard[] = [
         label: "Tire Repair and Replacement",
         icon: <WorksIcon />,
         type: ECardType.Other
+    }
+]
+
+const addServices: IServiceCategory[] = [
+    {
+        id: -1,
+        name: "Search Individual Services",
+        loadedIcon: <RecallIcon />,
+        page: EServiceCategoryPage.Page2,
+        serviceRequests: []
     },
     {
-        name: "individual",
-        label: "Search Individual Services",
-        icon: <RecallIcon />,
-        type: ECardType.Other
-    },
-    {
-        name: "describe",
-        label: "Describe What’s Going On",
-        icon: <MoreIcon />,
-        type: ECardType.TellMore
+        id: -2,
+        name: "Describe What’s Going On",
+        loadedIcon: <MoreIcon />,
+        page: EServiceCategoryPage.Page2,
+        serviceRequests: []
     },
 ]
 
@@ -50,28 +56,26 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
 
 
-    const handleSelectCard = (card: TServiceCard) => () => {
+    const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectSubService(card));
     }
 
     const handleSubmit = () => {
-        switch (subService?.name) {
-            case "engineLight":
-            case "tireReplacement":
-            case "describe":
-                return onNext('describeMore');
-            case "individual":
-                return onNext('opsCode');
-            default:
-                return;
+        if (subService) {
+            switch (subService.id) {
+                case -1:
+                    return onNext('opsCode');
+                default:
+                    return onNext('describeMore');
+            }
         }
     }
     return (
         <StepWrapper>
             <CardsWrapper>
-                {cards.map(card => {
+                {addServices.map(card => {
                     return <ServiceCard
-                        active={subService?.name === card.name}
+                        active={subService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
                         key={card.name} />

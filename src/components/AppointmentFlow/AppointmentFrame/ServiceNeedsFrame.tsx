@@ -6,7 +6,6 @@ import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
 import {ReactComponent as RecallIcon} from "../../../assets/img/recall.svg";
 import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
 import {TArgCallback, TCallback} from "../../../types/types";
-import {ECardType, TServiceCard} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectService} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -19,32 +18,26 @@ import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 
 
-const cards: TServiceCard[] = [
-    {
-        name: "FoD",
-        label: "Factory or Dealer Scheduled Maintenance",
-        icon: <TireIcon />,
-        type: ECardType.Maintenance
-    },
-    {
-        name: "QLC",
-        label: "The Works Quick Lane Checkup",
-        icon: <WorksIcon />,
-        type: ECardType.Other
-    },
-    {
-        name: "R",
-        label: "Recall",
-        icon: <RecallIcon />,
-        type: ECardType.Other
-    },
-    {
-        name: "TM",
-        label: "Tell us more",
-        icon: <MoreIcon />,
-        type: ECardType.TellMore
-    },
-]
+const icons: JSX.Element[] = [
+    <WorksIcon />,
+    <RecallIcon />
+];
+
+
+const packageCard: IServiceCategory = {
+    id: -1,
+    name: "Factory or Dealer Scheduled Maintenance",
+    loadedIcon: <TireIcon />,
+    page: EServiceCategoryPage.Page1,
+    serviceRequests: []
+};
+const tellMoreCard: IServiceCategory = {
+    id: -2,
+    name: "Tell us more",
+    loadedIcon: <MoreIcon />,
+    page: EServiceCategoryPage.Page1,
+    serviceRequests: []
+};
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -52,9 +45,13 @@ type TProps = {
 }
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>(
+        [packageCard, tellMoreCard]
+    );
     const selectedService = useSelector((state: RootState) => state.appointmentFrame.service);
     const {id} = useParams();
     const dispatch = useDispatch();
+
 
     useEffect(() => {
         setLoading(true);
@@ -66,33 +63,46 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
             }}
         )
             .then(({data}) => {
-                console.log(data);
+                setServiceCategories([
+                    packageCard, ...data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el), tellMoreCard
+                ]);
+               /* data.forEach(el => {
+                    if (el.iconPath) {
+                        // TODO: Load icons after BE Fix <CORS>
+                        /!*fetch(el.iconPath)
+                            .then(r => r.text())
+                            .then(loadedIcon =>
+                                setServiceCategories(c =>
+                                    c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
+                                )
+                            )*!/
+                    }
+                });*/
             })
             .finally(() => {setLoading(false)});
     }, [id]);
 
-    const handleSelectCard = (card: TServiceCard) => () => {
+    const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectService(card));
     }
     const handleSubmit = () => {
-        switch (selectedService?.name) {
-            case "TM":
-                return onSelect('serviceSelection');
-            case "R":
-            case "QLC":
-                return onSelect('describeMore');
-            case "FoD":
-                return onSelect('maintenanceDetails');
-            default:
-                return;
+        if (selectedService) {
+            switch (selectedService?.id) {
+                case -1:
+                    return onSelect('serviceSelection');
+                case -2:
+                    return onSelect('maintenanceDetails');
+                default:
+                    return onSelect('describeMore');
+            }
         }
     }
     return (
         <StepWrapper>
             <CardsWrapper>
-                {cards.map(card => {
+                {serviceCategories.map(card => {
                     return <ServiceCard
-                        active={selectedService?.name === card.name}
+                        active={selectedService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
                         key={card.name} />

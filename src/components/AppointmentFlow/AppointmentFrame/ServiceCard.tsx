@@ -1,16 +1,22 @@
 import React from 'react';
-import {TServiceCard} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TCallback} from "../../../types/types";
 import {CardWrapper} from "./styled";
+import {IServiceCategory} from "../../../api/types";
+import {ReactComponent as Icon} from "../../../assets/img/oil-icon.svg";
 
 type TSCProps = {
-    card: TServiceCard;
+    card: IServiceCategory;
     onSelect: TCallback;
     active: boolean;
 }
 export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active}) => {
     return <CardWrapper onClick={onSelect} active={active}>
-        <span>{card.icon}</span>
-        <span>{card.label}</span>
+        {card.loadedIcon
+            ? typeof card.loadedIcon === 'string'
+                ? <span dangerouslySetInnerHTML={{__html: card.loadedIcon}} />
+                : <span>{card.loadedIcon}</span>
+            : <span><Icon /></span>
+        }
+        <span>{card.name}</span>
     </CardWrapper>
 }

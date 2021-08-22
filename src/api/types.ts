@@ -161,6 +161,7 @@ export interface IServiceCategory {
     id: number;
     name: string;
     page: EServiceCategoryPage;
-    iconPath: string;
+    iconPath?: string;
+    loadedIcon?: JSX.Element | string;
     serviceRequests: IServiceRequest[];
 }

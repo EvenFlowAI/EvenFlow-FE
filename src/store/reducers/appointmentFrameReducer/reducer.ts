@@ -1,10 +1,10 @@
-import {TServiceCard} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {selectService, selectSubService, setFrameDescription, setPackage} from "./actions";
+import {IServiceCategory} from "../../../api/types";
 
 type TState = {
-    service: TServiceCard|null;
-    subService: TServiceCard|null;
+    service: IServiceCategory|null;
+    subService: IServiceCategory|null;
     description: string;
     selectedPackage: number|null;
 }
