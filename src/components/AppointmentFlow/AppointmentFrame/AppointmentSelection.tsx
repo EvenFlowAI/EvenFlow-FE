@@ -40,9 +40,11 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     const [loading, setLoading] = useState<boolean>(false);
     const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[]>([]);
     const [
-        selectedTimingType
+        selectedTimingType,
+        selectedTime,
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.selectedTiming,
+        state.appointmentFrame.selectedTime
     ]);
 
     const {id} = useParams();
@@ -50,15 +52,18 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     useEffect(() => {
         if (id) {
             setLoading(true);
+            const sd: moment.Moment = selectedTime
+                ? moment(selectedTime)
+                : moment.utc().startOf("day");
             Api.call<IAppointmentResponse>(
                 Api.endpoints.AppointmentSlots.GetSlots,
                 {
                     data: {
                         appointmentTimingType: selectedTimingType,
                         serviceCenterId: decodeSCID(id),
+                        fromDate: sd.toISOString(),
                         // onlyOffers: filters.offersOnly,
                         // shorterWaitTime: filters.waitTimeOnly,
-                        // fromDate: sd.toISOString(),
                         // serviceRequestIds: selectedServiceRequests,
                         // countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         // customerId: customerData?.id,
