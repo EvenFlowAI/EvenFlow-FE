@@ -6,9 +6,12 @@ import {styled, Theme} from "@material-ui/core";
 import anyConsultant from '../../../assets/img/anyConsultantIcon.png';
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
-import {PaginatedAPIResponse} from "../../../types/types";
+import {PaginatedAPIResponse, TCallback} from "../../../types/types";
 import { IServiceConsultant } from '../../../api/types';
 import {decodeSCID} from "../../../utils/utils";
+import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 
 const ConsultantsWrapper = styled('div')({
@@ -42,10 +45,11 @@ const Avatar = styled('div')<Theme, {src?: string}>({
 type TCardProps = {
     advisor?: IServiceConsultant;
     blank?: boolean;
-    active?: boolean
+    active?: boolean;
+    onClick: TCallback;
 }
-const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active}) => {
-    return <ConsultantWrapper active={active}>
+const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
+    return <ConsultantWrapper active={active} onClick={onClick}>
         {blank
             ? <img src={anyConsultant} alt="Any available consultant"/>
             : <Avatar src={advisor?.iconPath}/>}
@@ -58,6 +62,8 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active}) => {
 export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [consultants, setConsultants] = useState<IServiceConsultant[]>([]);
+    const dispatch = useDispatch();
+    const selectedConsultant = useSelector((state: RootState) => state.appointmentFrame.advisor);
 
     const {id} = useParams();
 
@@ -78,11 +84,23 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             })
     }, [id]);
 
+    const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
+        dispatch(setAdvisor(c));
+    }
+
     return (<StepWrapper>
         <ConsultantsWrapper>
-            <ConsultantCard blank />
+            <ConsultantCard
+                blank
+                onClick={handleSelectConsultant(null)}
+                active={selectedConsultant === null}
+            />
             {consultants.map(c =>
-                <ConsultantCard advisor={c} key={c.id} />
+                <ConsultantCard
+                    onClick={handleSelectConsultant(c)}
+                    advisor={c}
+                    key={c.id}
+                    active={selectedConsultant?.id === c.id} />
             )}
         </ConsultantsWrapper>
         <Actions onNext={onNext} onBack={onBack} />
