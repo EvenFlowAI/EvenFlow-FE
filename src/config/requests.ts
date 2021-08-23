@@ -154,6 +154,8 @@ type ApiRoutes = {
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt", TApiRoute>,
+    ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
+        | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
@@ -300,6 +302,14 @@ export class Api {
             SetBreaks: {route: "/service-centers/{id}/breaks", method: "put"},
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
             Analytics: {route: "/service-centers/{id}/analytics", method: "get"}
+        },
+        ServiceConsultants: {
+            Create: {route: "/service-consultants", method: "post"},
+            Update: {route: "/service-consultants/{id}", method: "put"},
+            Remove: {route: "/service-consultants/{id}", method: "delete"},
+            Retrieve: {route: "/service-consultants/{id}", method: "get"},
+            GetByQuery: {route: "/service-consultants/by-query", method: "post"},
+            GetDmsAdvisors: {route: "/service-consultants/{id}/dms-service-advisors", method: "get"},
         },
         ServiceRequests: {
             Create: {route: "/service-requests", method: "post"},

@@ -165,3 +165,15 @@ export interface IServiceCategory {
     loadedIcon?: JSX.Element | string;
     serviceRequests: IServiceRequest[];
 }
+export interface IServiceConsultantShort {
+    id: string;
+    name: string
+}
+export interface IServiceConsultant {
+    id: string;
+    name: string;
+    dmsId: string;
+    dmsName: string;
+    position: string;
+    iconPath: string;
+}

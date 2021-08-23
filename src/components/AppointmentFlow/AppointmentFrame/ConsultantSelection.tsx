@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import { Actions } from './Actions';
 import {styled, Theme} from "@material-ui/core";
-import {IEmployee} from "../../../store/reducers/employees/types";
 import anyConsultant from '../../../assets/img/anyConsultantIcon.png';
+import {useParams} from "react-router-dom";
+import {Api} from "../../../config/requests";
+import {PaginatedAPIResponse} from "../../../types/types";
+import { IServiceConsultant } from '../../../api/types';
+import {decodeSCID} from "../../../utils/utils";
 
 
 const ConsultantsWrapper = styled('div')({
@@ -36,7 +40,7 @@ const Avatar = styled('div')<Theme, {src?: string}>({
 })
 
 type TCardProps = {
-    advisor?: IEmployee;
+    advisor?: IServiceConsultant;
     blank?: boolean;
     active?: boolean
 }
@@ -44,20 +48,42 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active}) => {
     return <ConsultantWrapper active={active}>
         {blank
             ? <img src={anyConsultant} alt="Any available consultant"/>
-            : <Avatar src={advisor?.avatarPath}/>}
+            : <Avatar src={advisor?.iconPath}/>}
         <div>
-            {blank ? "Any available consultant" : advisor?.fullName ?? "-"}
+            {blank ? "Any available consultant" : advisor?.name ?? "-"}
         </div>
     </ConsultantWrapper>
 }
 
 export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [consultants, setConsultants] = useState<IServiceConsultant[]>([]);
+
+    const {id} = useParams();
+
+    useEffect(() => {
+        setLoading(true);
+        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+            Api.endpoints.ServiceConsultants.GetDmsAdvisors,
+            {
+                urlParams: {
+                    id: decodeSCID(id)
+                }
+            })
+            .then(({data: {result}}) => {
+                setConsultants(result);
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+    }, [id]);
+
     return (<StepWrapper>
         <ConsultantsWrapper>
             <ConsultantCard blank />
-            <ConsultantCard blank />
-            <ConsultantCard blank active />
-            <ConsultantCard blank />
+            {consultants.map(c =>
+                <ConsultantCard advisor={c} key={c.id} />
+            )}
         </ConsultantsWrapper>
         <Actions onNext={onNext} onBack={onBack} />
     </StepWrapper>);
