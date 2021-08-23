@@ -70,10 +70,10 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     useEffect(() => {
         setLoading(true);
         Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-            Api.endpoints.ServiceConsultants.GetDmsAdvisors,
+            Api.endpoints.ServiceConsultants.GetByQuery,
             {
-                urlParams: {
-                    id: decodeSCID(id)
+                data: {
+                    serviceCenterId: decodeSCID(id)
                 }
             })
             .then(({data: {result}}) => {
