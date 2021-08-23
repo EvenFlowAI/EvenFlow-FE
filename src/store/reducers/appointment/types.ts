@@ -108,6 +108,7 @@ export enum EAppointmentTimingType {
 }
 export interface IAppointmentSlotsRequest {
     serviceCenterId: number;
+    maintenancePackageOptionId?: number|null;
     fromDate?: ParsableDate;
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;

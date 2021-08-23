@@ -14,6 +14,7 @@ import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments, TGroupedAppointmentsList} from "../../../utils/types";
+import {IServiceCategory} from "../../../api/types";
 
 
 const Wrapper = styled('div')({
@@ -34,7 +35,22 @@ const Wrapper = styled('div')({
             textTransform: "uppercase"
         }
     }
-})
+});
+
+const collectServiceRequestIds = (s: IServiceCategory|null, sub: IServiceCategory|null): number[] => {
+    const ids = [];
+    if (s) {
+        for (let i=0; i<s.serviceRequests.length; i++) {
+            ids.push(s.serviceRequests[i].id);
+        }
+    }
+    if (sub) {
+        for (let i=0; i < sub.serviceRequests.length; i++) {
+            ids.push(sub.serviceRequests[i].id);
+        }
+    }
+    return ids;
+}
 
 export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [date, setDate] = useState<moment.Moment>(moment().utc());
@@ -45,12 +61,16 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         selectedTime,
         customerData,
         selectedVehicle,
+        service,
+        subService
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
         state.appointmentFrame.selectedTime,
         state.appointment.customerLoadedData,
-        state.appointment.customerSelectedVehicle
+        state.appointment.customerSelectedVehicle,
+        state.appointmentFrame.service,
+        state.appointmentFrame.subService,
     ]);
     const dispatch = useDispatch();
 
@@ -69,7 +89,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                 // shorterWaitTime: filters.waitTimeOnly,
                 fromDate: sd.toISOString(),
                 // serviceRequestIds: selectedServiceRequests,
-                serviceRequestIds: [],
+                // TODO: Connect after packages
+                maintenancePackageOptionId: null,
+                serviceRequestIds: collectServiceRequestIds(service, subService),
                 countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                 customerId: customerData?.id,
                 warrantyExpiration: selectedVehicle?.warrantyExpiration
@@ -77,7 +99,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         }
     }, [
         dispatch, id, selectedTimingType, selectedTime,
-        selectedVehicle, customerData
+        selectedVehicle, customerData, service,
+        subService
     ]);
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
