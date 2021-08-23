@@ -1,11 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {ECardType, TServiceCard} from "../../../store/reducers/appointmentFrameReducer/types";
 import {selectSubService} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
 import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
@@ -14,8 +13,11 @@ import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
+import {Api} from "../../../config/requests";
+import {decodeSCID} from "../../../utils/utils";
+import {useParams} from "react-router-dom";
 
-const cards: TServiceCard[] = [
+/*const cards: TServiceCard[] = [
     {
         name: "engineLight",
         label: "Engine Light On",
@@ -28,7 +30,11 @@ const cards: TServiceCard[] = [
         icon: <WorksIcon />,
         type: ECardType.Other
     }
-]
+]*/
+
+const icons: JSX.Element[] = [
+    <TireIcon />, <WorksIcon />, <MoreIcon />
+];
 
 const addServices: IServiceCategory[] = [
     {
@@ -38,13 +44,13 @@ const addServices: IServiceCategory[] = [
         page: EServiceCategoryPage.Page2,
         serviceRequests: []
     },
-    {
+    /*{
         id: -2,
         name: "Describe What’s Going On",
         loadedIcon: <MoreIcon />,
         page: EServiceCategoryPage.Page2,
         serviceRequests: []
-    },
+    },*/
 ]
 
 type TProps = {
@@ -54,7 +60,29 @@ type TProps = {
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
     const subService = useSelector((state: RootState) => state.appointmentFrame.subService);
     const dispatch = useDispatch();
+    const {id} = useParams();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [services, setServices] = useState<IServiceCategory[]>([...addServices]);
 
+    useEffect(() => {
+        setLoading(true);
+        Api.call<IServiceCategory[]>(
+            Api.endpoints.ServiceCategories.GetByPage,
+            {data: {
+                serviceCenterId: decodeSCID(id),
+                page: EServiceCategoryPage.Page2
+            }}
+        )
+            .then(({data}) => {
+                data = data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el);
+                const more = data.pop();
+                const nServices = [...data, ...addServices];
+                if (more) {
+                    nServices.push(more);
+                }
+                setServices(nServices);
+            })
+    }, [id]);
 
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectSubService(card));
@@ -73,7 +101,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
     return (
         <StepWrapper>
             <CardsWrapper>
-                {addServices.map(card => {
+                {services.map(card => {
                     return <ServiceCard
                         active={subService?.id === card.id}
                         onSelect={handleSelectCard(card)}

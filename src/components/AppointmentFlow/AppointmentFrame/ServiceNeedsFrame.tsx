@@ -20,7 +20,7 @@ import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 
 const icons: JSX.Element[] = [
     <WorksIcon />,
-    <RecallIcon />
+    <RecallIcon />,
 ];
 
 
@@ -88,9 +88,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
     const handleSubmit = () => {
         if (selectedService) {
             switch (selectedService?.id) {
-                case -1:
-                    return onSelect('serviceSelection');
                 case -2:
+                    return onSelect('serviceSelection');
+                case -1:
                     return onSelect('maintenanceDetails');
                 default:
                     return onSelect('describeMore');
