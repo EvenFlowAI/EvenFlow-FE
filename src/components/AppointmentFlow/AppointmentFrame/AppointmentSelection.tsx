@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TActionProps} from "./types";
 import { StepWrapper } from './StepWrapper';
 import { Actions } from './Actions';
@@ -7,6 +7,12 @@ import {AppointmentDateSelector} from "./AppointmentDateSelector";
 import {AppointmentTimeSelector} from "./AppointmentTimeSelector";
 import {styled} from "@material-ui/core";
 import moment from "moment";
+import {useParams} from "react-router-dom";
+import {Api} from "../../../config/requests";
+import {decodeSCID} from "../../../utils/utils";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {IAppointmentResponse, IAppointmentSlot} from "../../../store/reducers/appointment/types";
 
 
 const Wrapper = styled('div')({
@@ -31,6 +37,42 @@ const Wrapper = styled('div')({
 
 export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [date, setDate] = useState<moment.Moment>(moment().utc());
+    const [loading, setLoading] = useState<boolean>(false);
+    const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[]>([]);
+    const [
+        selectedTimingType
+    ] = useSelector((state: RootState) => [
+        state.appointmentFrame.selectedTiming,
+    ]);
+
+    const {id} = useParams();
+
+    useEffect(() => {
+        if (id) {
+            setLoading(true);
+            Api.call<IAppointmentResponse>(
+                Api.endpoints.AppointmentSlots.GetSlots,
+                {
+                    data: {
+                        appointmentTimingType: selectedTimingType,
+                        serviceCenterId: decodeSCID(id),
+                        // onlyOffers: filters.offersOnly,
+                        // shorterWaitTime: filters.waitTimeOnly,
+                        // fromDate: sd.toISOString(),
+                        // serviceRequestIds: selectedServiceRequests,
+                        // countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
+                        // customerId: customerData?.id,
+                        // warrantyExpiration: selectedVehicle?.warrantyExpiration
+                    }
+                }
+            )
+                .then(({data}) => {
+                    setAppointmentSlots(data.items);
+                })
+                .finally(() => {setLoading(false)})
+        }
+    }, [id, selectedTimingType]);
+
     const handleChangeMonth = (m: moment.Moment) => {
         setDate(m);
     }

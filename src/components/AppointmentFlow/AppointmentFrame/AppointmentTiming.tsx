@@ -10,11 +10,11 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {DatePicker} from "@material-ui/pickers";
 import {DateRangeIcon} from "@material-ui/pickers/_shared/icons/DateRangeIcon";
-import {ETiming} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
+import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 
 
 const TimingWrapper = styled('div')({
@@ -71,24 +71,24 @@ const CardWrapper = styled('div')<Theme, {active?: boolean}>({
 });
 type TCard = {
     description: string;
-    name: ETiming;
+    name: EAppointmentTimingType;
     icon: JSX.Element;
 }
 const cards: TCard[] = [
     {
         description: "See appointments with special offer and shorter wait times",
         icon: <OffersIcon />,
-        name: ETiming.Offers
+        name: EAppointmentTimingType.SpecialOffers
     },
     {
         description: "Choose a preferred date",
         icon: <SelectDateIcon />,
-        name: ETiming.SelectDate
+        name: EAppointmentTimingType.PreferredDate
     },
     {
         description: "Choose first available date",
         icon: <FirstAvailableIcon />,
-        name: ETiming.FirstAvailable
+        name: EAppointmentTimingType.FirstAvailable
     }
 ];
 
@@ -104,7 +104,7 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
     return <CardWrapper active={active} onClick={onClick}>
         {active ? <RadioButtonChecked /> : <RadioButtonUnchecked />}
         <div className="icon">{card.icon}</div>
-        {card.name === ETiming.SelectDate
+        {card.name === EAppointmentTimingType.PreferredDate
             ? <StyledDate
                 value={selectedTime}
                 onChange={onChangeTime}
@@ -131,14 +131,17 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         ]
     );
 
-    const handleSelectTiming = (t: ETiming) => () => {
+    const handleSelectTiming = (t: EAppointmentTimingType) => () => {
         dispatch(setTiming(t));
     }
     const handleChangeTime = (t: moment.Moment|null) => {
         dispatch(setTime(t));
     }
 
-    const isValid = Boolean(selectedType !== null && (selectedType !== ETiming.SelectDate || selectedTime));
+    const isValid = Boolean(
+        selectedType !== null
+        && (selectedType !== EAppointmentTimingType.PreferredDate || selectedTime)
+    );
 
     return (
         <StepWrapper>

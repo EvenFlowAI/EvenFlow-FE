@@ -9,8 +9,8 @@ import {
     setTiming
 } from "./actions";
 import {IServiceCategory, IServiceConsultant} from "../../../api/types";
-import {ETiming} from "./types";
 import moment from "moment";
+import {EAppointmentTimingType} from "../appointment/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -18,7 +18,7 @@ type TState = {
     description: string;
     selectedPackage: number|null;
     advisor: IServiceConsultant|null;
-    selectedTiming: ETiming|null;
+    selectedTiming: EAppointmentTimingType|null;
     selectedTime: moment.Moment|null;
 }
 const initialState: TState = {
@@ -51,7 +51,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {
             ...state,
             selectedTiming: payload,
-            selectedTime: payload !== ETiming.SelectDate ? null : state.selectedTime
+            selectedTime: payload !== EAppointmentTimingType.PreferredDate ? null : state.selectedTime
         };
     })
     .addCase(setTime, (state, {payload}) => {
