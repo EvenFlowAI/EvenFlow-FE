@@ -19,3 +19,6 @@ export type TServiceCard = {
     name: TCardName;
     type: ECardType
 }
+export enum ETiming {
+    Offers, SelectDate, FirstAvailable
+}

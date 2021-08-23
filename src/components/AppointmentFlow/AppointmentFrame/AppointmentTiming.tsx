@@ -1,15 +1,20 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
-import { Actions } from './Actions';
+import {Actions} from './Actions';
 import {styled, Theme} from '@material-ui/core';
 import {ReactComponent as SelectDateIcon} from "../../../assets/img/selectDateIcon.svg";
 import {ReactComponent as FirstAvailableIcon} from "../../../assets/img/firstAvailableIcon.svg";
 import {ReactComponent as OffersIcon} from "../../../assets/img/offersIcon.svg";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
-import {TCallback} from "../../../types/types";
+import {TArgCallback, TCallback} from "../../../types/types";
 import {DatePicker} from "@material-ui/pickers";
 import {DateRangeIcon} from "@material-ui/pickers/_shared/icons/DateRangeIcon";
+import {ETiming} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
+import moment from "moment";
 
 
 const TimingWrapper = styled('div')({
@@ -64,30 +69,26 @@ const CardWrapper = styled('div')<Theme, {active?: boolean}>({
         marginTop: "auto"
     }
 });
-type TCardName =
-    | "offers"
-    | "selectDate"
-    | "firstAvailable";
 type TCard = {
     description: string;
-    name: TCardName;
+    name: ETiming;
     icon: JSX.Element;
 }
 const cards: TCard[] = [
     {
         description: "See appointments with special offer and shorter wait times",
         icon: <OffersIcon />,
-        name: "offers"
+        name: ETiming.Offers
     },
     {
         description: "Choose a preferred date",
         icon: <SelectDateIcon />,
-        name: "selectDate"
+        name: ETiming.SelectDate
     },
     {
         description: "Choose first available date",
         icon: <FirstAvailableIcon />,
-        name: "firstAvailable"
+        name: ETiming.FirstAvailable
     }
 ];
 
@@ -95,15 +96,18 @@ type TCardProps = {
     card: TCard;
     active?: boolean;
     onClick: TCallback;
+    selectedTime: moment.Moment|null;
+    onChangeTime: TArgCallback<moment.Moment|null>;
 }
-const TimingCard: React.FC<TCardProps> = ({card, active, onClick}) => {
+const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
+                                              onChangeTime, selectedTime}) => {
     return <CardWrapper active={active} onClick={onClick}>
         {active ? <RadioButtonChecked /> : <RadioButtonUnchecked />}
         <div className="icon">{card.icon}</div>
-        {card.name === "selectDate"
+        {card.name === ETiming.SelectDate
             ? <StyledDate
-                value={null}
-                onChange={() => {}}
+                value={selectedTime}
+                onChange={onChangeTime}
                 disabled={!active}
                 placeholder={"Choose here"}
                 disablePast
@@ -119,18 +123,37 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick}) => {
 }
 
 export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const [selected, setSelected] = useState<TCardName>("offers");
+    const dispatch = useDispatch();
+    const [selectedType, selectedTime] = useSelector(
+        (state: RootState) => [
+            state.appointmentFrame.selectedTiming,
+            state.appointmentFrame.selectedTime
+        ]
+    );
+
+    const handleSelectTiming = (t: ETiming) => () => {
+        dispatch(setTiming(t));
+    }
+    const handleChangeTime = (t: moment.Moment|null) => {
+        dispatch(setTime(t));
+    }
+
+    const isValid = Boolean(selectedType !== null && (selectedType !== ETiming.SelectDate || selectedTime));
+
     return (
         <StepWrapper>
             <TimingWrapper>
                 {cards.map((card) => {
                     return <TimingCard
-                        onClick={() => setSelected(card.name)}
+                        onClick={handleSelectTiming(card.name)}
                         card={card}
-                        active={selected === card.name} key={card.name} />
+                        onChangeTime={handleChangeTime}
+                        selectedTime={selectedTime}
+                        active={selectedType === card.name}
+                        key={card.name} />
                 })}
             </TimingWrapper>
-            <Actions onBack={onBack} onNext={onNext} />
+            <Actions onBack={onBack} onNext={onNext} nextDisabled={!isValid} />
         </StepWrapper>
     );
 };
