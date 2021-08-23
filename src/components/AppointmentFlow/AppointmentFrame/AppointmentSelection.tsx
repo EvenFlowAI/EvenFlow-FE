@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from './StepWrapper';
 import {Actions} from './Actions';
@@ -8,11 +8,12 @@ import {AppointmentTimeSelector} from "./AppointmentTimeSelector";
 import {styled} from "@material-ui/core";
 import moment from "moment";
 import {useParams} from "react-router-dom";
-import {decodeSCID} from "../../../utils/utils";
+import {decodeSCID, getGroupedAppointmentList, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
+import {TGroupedAppointments, TGroupedAppointmentsList} from "../../../utils/types";
 
 
 const Wrapper = styled('div')({
@@ -38,13 +39,14 @@ const Wrapper = styled('div')({
 export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [date, setDate] = useState<moment.Moment>(moment().utc());
     const [loading, setLoading] = useState<boolean>(false);
-    const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[]>([]);
     const [
+        slots,
         selectedTimingType,
         selectedTime,
         customerData,
-        selectedVehicle
+        selectedVehicle,
     ] = useSelector((state: RootState) => [
+        state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
         state.appointmentFrame.selectedTime,
         state.appointment.customerLoadedData,
@@ -77,6 +79,14 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         dispatch, id, selectedTimingType, selectedTime,
         selectedVehicle, customerData
     ]);
+
+    const groupedAppointments: TGroupedAppointments = useMemo(() => {
+        return groupAppointments(slots);
+    }, [slots]);
+
+    const groupedAppointmentsSortedList: TGroupedAppointmentsList[] = useMemo(() => {
+        return getGroupedAppointmentList(groupedAppointments);
+    }, [groupedAppointments]);
 
     const updateDate = (d: moment.Moment) => {
         setDate(d);

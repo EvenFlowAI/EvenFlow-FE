@@ -1,12 +1,11 @@
 import {IAddress} from "../store/reducers/dealershipGroups/types";
 import {ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction} from "react";
-import {TCalendarProps} from "./types";
+import {TCalendarProps, TGroupedAppointments, TGroupedAppointmentsList} from "./types";
 import * as queryString from "querystring";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
-import {EAppointmentTimingType} from "../store/reducers/appointment/types";
-import {TGroupedAppointments} from "../components/AppointmentFlow/AppointmentSelections/types";
+import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../store/reducers/appointment/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {IListAppointment} from "../api/types";
 import moment from "moment";
@@ -110,4 +109,48 @@ export const decodeSCID = (id: string): number => {
     } catch {
         return 0;
     }
+}
+
+export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAppointments => {
+    const appointments: TGroupedAppointments = {};
+    for (let appointment of slots) {
+        const date = moment(appointment.date);
+        const idx = appointment.id.split("|")[0];
+        if (appointments[idx]) {
+            appointments[idx].appointments.push(appointment);
+            if (appointment.offer) {
+                appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offer);
+            }
+            if ((appointment.priceWithOffer?.value || appointment.price.value) < appointments[idx].lowestPrice) {
+                appointments[idx].lowestPrice = appointment.priceWithOffer?.value || appointment.price.value;
+            }
+        } else {
+            appointments[idx] = {
+                date,
+                idx,
+                lowestPrice: appointment.priceWithOffer?.value || appointment.price.value,
+                appointments: [appointment],
+                offers: Boolean(appointment.offer)
+            };
+        }
+    }
+    return appointments;
+}
+
+export const getGroupedAppointmentList = (slots: TGroupedAppointments): TGroupedAppointmentsList[] => {
+    const arr: TGroupedAppointmentsList[] = [];
+    for (let k in slots) {
+        if (slots.hasOwnProperty(k)) {
+            arr.push([k, slots[k]]);
+        }
+    }
+    arr.sort((a, b) => {
+        if (a > b) {
+            return 1;
+        } else if (a < b) {
+            return -1;
+        }
+        return 0;
+    });
+    return arr;
 }

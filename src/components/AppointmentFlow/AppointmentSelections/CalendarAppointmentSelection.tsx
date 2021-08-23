@@ -9,8 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TPopoverProps} from "../Steps/types";
-import {TGroupedAppointment, TGroupedAppointments} from "./types";
-import {preCenterNeeded} from "../../../utils/utils";
+import {getGroupedAppointmentList, groupAppointments, preCenterNeeded} from "../../../utils/utils";
+import {TGroupedAppointmentsList, TGroupedAppointments} from "../../../utils/types";
 
 const Title = styled("h5")(({theme}) => ({
     fontWeight: "bold",
@@ -29,8 +29,6 @@ const DaysWrapper = styled("div")(({theme}) => ({
     alignItems: "center",
     justifyContent: "space-between",
 }));
-
-type TGroupedAppointmentsList = [keyof TGroupedAppointments, TGroupedAppointment];
 
 export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopoverClose, onPopoverOpen}) => {
     const theme = useTheme();
@@ -60,47 +58,11 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
 
     const data = useSelector((state: RootState) => state.appointment.appointmentSlots);
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
-        const appointments: TGroupedAppointments = {};
-        for (let appointment of data) {
-            const date = moment(appointment.date);
-            const idx = appointment.id.split("|")[0];
-            if (appointments[idx]) {
-                appointments[idx].appointments.push(appointment);
-                if (appointment.offer) {
-                    appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offer);
-                }
-                if ((appointment.priceWithOffer?.value || appointment.price.value) < appointments[idx].lowestPrice) {
-                    appointments[idx].lowestPrice = appointment.priceWithOffer?.value || appointment.price.value;
-                }
-            } else {
-                appointments[idx] = {
-                    date,
-                    idx,
-                    lowestPrice: appointment.priceWithOffer?.value || appointment.price.value,
-                    appointments: [appointment],
-                    offers: Boolean(appointment.offer)
-                };
-            }
-        }
-        return appointments;
+        return groupAppointments(data);
     }, [data]);
 
     const groupedAppointmentsSortedList: TGroupedAppointmentsList[] = useMemo(() => {
-        const arr: TGroupedAppointmentsList[] = [];
-        for (let k in groupedAppointments) {
-            if (groupedAppointments.hasOwnProperty(k)) {
-                arr.push([k, groupedAppointments[k]]);
-            }
-        }
-        arr.sort((a, b) => {
-            if (a > b) {
-                return 1;
-            } else if (a < b) {
-                return -1;
-            }
-            return 0;
-        });
-        return arr;
+        return getGroupedAppointmentList(groupedAppointments);
     }, [groupedAppointments]);
 
     useEffect(() => {
