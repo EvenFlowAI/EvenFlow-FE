@@ -1,5 +1,7 @@
 import React from 'react';
 import {styled} from "@material-ui/core";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 
 const Wrapper = styled('div')({
@@ -51,13 +53,19 @@ const PriceWrapper = styled('div')({
 })
 
 export const SelectedAppointment = () => {
+    const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     return (
         <div>
             <h4>Your selections</h4>
             <Wrapper>
                 <List>
-                    <li>Service Needed: Service</li>
-                    <li>Consultant: Any Available</li>
+                    <li>Service Needed: {
+                        appointmentData.subService?.name ?? appointmentData.service?.name ?? "-"
+                    }
+                    </li>
+                    <li>Consultant: {
+                        appointmentData.advisor?.name ?? "Any available"
+                    }</li>
                     <ul>
                         <li>See available times for any Consultant</li>
                     </ul>
