@@ -30,7 +30,7 @@ export const AddInfo: React.FC<TActionProps> = ({onNext, onBack}) => {
                     subService?.name ?? service?.name ?? "Type Here"
                 }
             />
-            <Actions onBack={onBack} onNext={onNext} nextDisabled={!description} />
+            <Actions onBack={onBack} onNext={onNext} />
         </StepWrapper>
     );
 };
