@@ -3,6 +3,7 @@ import moment from "moment";
 import {IAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
 import {styled} from "@material-ui/core";
+import {Loading} from "../../UI/Loading";
 
 
 const TimeSlotsWrapper = styled('div')({
@@ -18,9 +19,10 @@ const TimeSlotsWrapper = styled('div')({
 
 type TProps = {
     date: moment.Moment;
-    slot: IAppointmentSlot|null
+    slot: IAppointmentSlot | null;
+    loading: boolean;
 }
-export const AppointmentTimeSelector: React.FC<TProps> = ({date, slot}) => {
+export const AppointmentTimeSelector: React.FC<TProps> = ({date, slot, loading}) => {
     const slots = useMemo(() => {
         // TODO: Start end dates?
         const start = moment.utc(date).hour(8).minute(0).second(0).millisecond(0);
@@ -36,14 +38,16 @@ export const AppointmentTimeSelector: React.FC<TProps> = ({date, slot}) => {
     return (
         <div>
             <h4>Select Time</h4>
-            <TimeSlotsWrapper>
-                {slots.map(timeSlot =>
-                    <TimeSlotCard
-                        timeSlot={timeSlot}
-                        slot={slot}
-                        key={timeSlot}
-                    />)}
-            </TimeSlotsWrapper>
+            {!loading
+                ? <TimeSlotsWrapper>
+                    {slots.map(timeSlot =>
+                        <TimeSlotCard
+                            timeSlot={timeSlot}
+                            slot={slot}
+                            key={timeSlot}
+                        />)}
+                </TimeSlotsWrapper>
+                : <Loading/>}
         </div>
     );
 };

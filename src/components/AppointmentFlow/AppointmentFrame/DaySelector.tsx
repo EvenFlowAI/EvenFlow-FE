@@ -4,6 +4,7 @@ import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {DaySelectCard} from "./DaySelectCard";
 import {TArgCallback} from "../../../types/types";
 import {styled, Theme} from "@material-ui/core";
+import {TGroupedAppointments} from "../../../utils/types";
 
 const DaySelectorWrapper = styled('div')({
     marginTop: 20,
@@ -31,8 +32,10 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
 type TProps = {
     date: moment.Moment,
     onDateChange: TArgCallback<moment.Moment>;
+    loading: boolean;
+    appointments: TGroupedAppointments;
 }
-export const DaySelector: React.FC<TProps> = ({date, onDateChange}) => {
+export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments}) => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const daysPerScreen: number = useMemo(() => {
         return 6;
@@ -88,6 +91,9 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange}) => {
             })
         }
     }
+    const getDate = (d: number) => {
+        return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
+    }
     return <DaySelectorWrapper>
         <Arrow onClick={handlePrev} disabled={!prevAvailable()}>
             <ChevronLeft  />
@@ -98,6 +104,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange}) => {
                 <DaySelectCard
                     key={day}
                     date={date}
+                    appointment={appointments[getDate(day)]}
                     onClick={handleChangeDay(day)}
                     day={day}
                 />

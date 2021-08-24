@@ -63,12 +63,13 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: mo
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
-        dispatch(getAppointmentSlots(items));
+        const res = dispatch(getAppointmentSlots(items));
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
-            cb(moment.utc(from));
+            return cb(moment.utc(from));
         }
+        return res;
     } catch {
-        dispatch(getAppointmentSlots([]));
+        return dispatch(getAppointmentSlots([]));
     }
 }
 export const setLoadedReducer = createAction<TAppointmentState>("Appointment/ReloadState");

@@ -2,6 +2,7 @@ import React from 'react';
 import {TCallback} from "../../../types/types";
 import {styled, Theme} from "@material-ui/core";
 import moment from "moment";
+import {TGroupedAppointment} from "../../../utils/types";
 
 
 type TDayCardProps = {
@@ -36,18 +37,18 @@ type TProps = {
     day: number;
     onClick: TCallback;
     date: moment.Moment;
-    available?: boolean;
+    appointment?: TGroupedAppointment;
 };
 export const DaySelectCard: React.FC<TProps> = ({
-    day, onClick, date, available
+    day, onClick, date, appointment
 }) => {
     return <DayCard
-            available={available}
+            available={Boolean(appointment)}
             isCurrent={date.date() === day}
         >
         <div>{day}, {moment.utc(date).date(day).format('ddd')}</div>
         <div className="day" onClick={onClick}>
-            Not Available
+            {appointment ? "Available" : "Not Available"}
         </div>
     </DayCard>
 };

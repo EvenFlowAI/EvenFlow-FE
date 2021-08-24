@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from './StepWrapper';
 import {Actions} from './Actions';
@@ -15,6 +15,7 @@ import {EAppointmentTimingType, IAppointmentSlot} from "../../../store/reducers/
 import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments, TGroupedAppointmentsList} from "../../../utils/types";
 import {IServiceCategory} from "../../../api/types";
+import {ThunkAction} from "redux-thunk";
 
 
 const Wrapper = styled('div')({
@@ -53,8 +54,6 @@ const collectServiceRequestIds = (s: IServiceCategory|null, sub: IServiceCategor
 }
 
 export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
-    const [date, setDate] = useState<moment.Moment>(moment().utc());
-    const [loading, setLoading] = useState<boolean>(false);
     const [
         slots,
         selectedTimingType,
@@ -72,35 +71,57 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
     ]);
+
+    const [date, setDate] = useState<moment.Moment>(
+        selectedTime ? moment.utc(selectedTime) : moment.utc()
+    );
+    const [month, setMonth] = useState<moment.Moment>(
+        selectedTime ? moment.utc(selectedTime) : moment.utc()
+    );
+    const [loading, setLoading] = useState<boolean>(false);
+
     const dispatch = useDispatch();
 
     const {id} = useParams();
 
-    useEffect(() => {
-        if (id) {
-            setLoading(true);
-            const sd: moment.Moment = selectedTime
-                ? moment(selectedTime)
-                : moment.utc().startOf("day");
-            dispatch(loadAppointmentSlots({
-                appointmentTimingType: selectedTimingType ?? EAppointmentTimingType.FirstAvailable,
-                serviceCenterId: decodeSCID(id),
-                // onlyOffers: filters.offersOnly,
-                // shorterWaitTime: filters.waitTimeOnly,
-                fromDate: sd.toISOString(),
-                // serviceRequestIds: selectedServiceRequests,
-                // TODO: Connect after packages
-                maintenancePackageOptionId: null,
-                serviceRequestIds: collectServiceRequestIds(service, subService),
-                countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
-                customerId: customerData?.id,
-                warrantyExpiration: selectedVehicle?.warrantyExpiration
-            }, updateDate));
+    const updateDate = useCallback((d: moment.Moment) => {
+        setDate(d);
+        if (!d.isSame(month, 'month')) {
+            setMonth(d);
         }
+    }, [month]);
+
+    useEffect(() => {
+        async function loadData () {
+            if (id) {
+                setLoading(true);
+                const sd: moment.Moment = month
+                    ? moment(month)
+                    : moment.utc().startOf("day");
+                try {
+                    await dispatch(loadAppointmentSlots({
+                        appointmentTimingType: selectedTimingType ?? EAppointmentTimingType.FirstAvailable,
+                        serviceCenterId: decodeSCID(id),
+                        // onlyOffers: filters.offersOnly,
+                        // shorterWaitTime: filters.waitTimeOnly,
+                        fromDate: sd.toISOString(),
+                        // TODO: Connect after packages
+                        maintenancePackageOptionId: null,
+                        serviceRequestIds: collectServiceRequestIds(service, subService),
+                        countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
+                        customerId: customerData?.id,
+                        warrantyExpiration: selectedVehicle?.warrantyExpiration
+                    }, updateDate));
+                } finally {
+                    setLoading(false);
+                }
+            }
+        }
+        loadData().finally();
     }, [
-        dispatch, id, selectedTimingType, selectedTime,
+        dispatch, id, selectedTimingType, month,
         selectedVehicle, customerData, service,
-        subService
+        subService, updateDate
     ]);
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
@@ -111,19 +132,15 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         return getGroupedAppointmentList(groupedAppointments);
     }, [groupedAppointments]);
 
-    const updateDate = (d: moment.Moment) => {
-        setDate(d);
-    }
-
-    const handleChangeMonth = (m: moment.Moment) => {
-        setDate(m);
-    }
     return (
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
-                <AppointmentDateSelector date={date} onDateChange={handleChangeMonth} />
-                <AppointmentTimeSelector date={date} slot={null} />
+                <AppointmentDateSelector
+                    appointments={groupedAppointments}
+                    date={date}
+                    loading={loading} onDateChange={updateDate} />
+                <AppointmentTimeSelector date={date} loading={loading} slot={null} />
             </Wrapper>
             <Actions onBack={onBack} onNext={onNext} />
         </StepWrapper>

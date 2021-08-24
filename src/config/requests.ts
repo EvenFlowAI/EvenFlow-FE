@@ -142,6 +142,8 @@ type ApiRoutes = {
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
+    MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
+        | "GetByQuery" | "PackageOptions" | "ByVehicle", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -236,6 +238,16 @@ export class Api {
             Update: {route: "/employee-schedules", method: "put"},
             Remove: {route: "/employee-schedules/{id}", method: "delete"},
             GetAll: {route: "/employee-schedules/by-query", method: "post"}
+        },
+        MaintenancePackages: {
+            Create: {route: "/maintenance-packages", method: "post"},
+            Update: {route: "/maintenance-packages/{id}", method: "put"},
+            Remove: {route: "/maintenance-packages/{id}", method: "delete"},
+            Retrieve: {route: "/maintenance-packages/{id}", method: "get"},
+            SetPricingOptimization: {route: "/maintenance-packages/{id}/pricing-optimization", method: "patch"},
+            GetByQuery: {route: "/maintenance-packages/by-query", method: "post"},
+            PackageOptions: {route: "/maintenance-packages/{id}/options", method: "put"},
+            ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "get"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

@@ -4,6 +4,7 @@ import {styled} from "@material-ui/core";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import moment from "moment";
 import {DaySelector} from "./DaySelector";
+import {TGroupedAppointments} from "../../../utils/types";
 
 
 const MonthSelectorWrapper = styled('div')({
@@ -27,16 +28,17 @@ const MonthSelectorWrapper = styled('div')({
 });
 
 
+
 type TMonthProps = {
     date: moment.Moment,
+    loading: boolean;
     onDateChange: TArgCallback<moment.Moment>;
 }
-
 type TProps = {
-
+    appointments: TGroupedAppointments;
 } & TMonthProps;
 
-const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
+const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange, loading}) => {
     const handleNext = () => {
         onDateChange(moment.utc(date).startOf('month').add(1, 'month'));
     }
@@ -56,12 +58,19 @@ const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange}) => {
     </MonthSelectorWrapper>
 }
 
-export const AppointmentDateSelector: React.FC<TProps> = ({date, onDateChange}) => {
+export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDateChange, appointments}) => {
     return (
         <div>
             <h4>Select Date</h4>
-            <MonthSelector date={date} onDateChange={onDateChange} />
-            <DaySelector date={date} onDateChange={onDateChange} />
+            <MonthSelector
+                date={date}
+                loading={loading}
+                onDateChange={onDateChange} />
+            <DaySelector
+                date={date}
+                appointments={appointments}
+                loading={loading}
+                onDateChange={onDateChange} />
         </div>
     );
 };
