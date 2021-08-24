@@ -34,19 +34,19 @@ const DayCard = styled('div')<Theme, TDayCardProps>({
 });
 
 type TProps = {
-    day: number;
+    day: string;
     onClick: TCallback;
-    date: moment.Moment;
+    isCurrent: boolean;
     appointment?: TGroupedAppointment;
 };
 export const DaySelectCard: React.FC<TProps> = ({
-    day, onClick, date, appointment
+    day, onClick, appointment, isCurrent
 }) => {
     return <DayCard
             available={Boolean(appointment)}
-            isCurrent={date.date() === day}
+            isCurrent={isCurrent}
         >
-        <div>{day}, {moment.utc(date).date(day).format('ddd')}</div>
+        <div>{moment.utc(day).format('D, ddd')}</div>
         <div className="day" onClick={onClick}>
             {appointment ? "Available" : "Not Available"}
         </div>

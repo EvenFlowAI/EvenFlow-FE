@@ -29,6 +29,11 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
 });
 
 
+const getDate = (date: moment.Moment, d: number) => {
+    return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
+}
+
+
 type TProps = {
     date: moment.Moment,
     onDateChange: TArgCallback<moment.Moment>;
@@ -43,11 +48,11 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
 
     const initRef = useRef<boolean>(false);
 
-    const [daysInMonth, days]: [number, number[]] = useMemo(() => {
+    const [daysInMonth, days]: [number, string[]] = useMemo(() => {
         const dim = date.daysInMonth();
         return [
             dim,
-            Array(dim).fill(0).map((e, idx) => idx + 1)
+            Array(dim).fill(0).map((e, idx) => getDate(date, idx+1))
         ];
     }, [date]);
 
@@ -65,8 +70,8 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         }
     }, [date, daysPerScreen, daysInMonth]);
 
-    const handleChangeDay = (day: number) => () => {
-        onDateChange(moment.utc(date).date(day));
+    const handleChangeDay = (date: string) => () => {
+        onDateChange(moment.utc(date));
     }
 
     const nextAvailable = (): boolean => {
@@ -91,9 +96,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
             })
         }
     }
-    const getDate = (d: number) => {
-        return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
-    }
     return <DaySelectorWrapper>
         <Arrow onClick={handlePrev} disabled={!prevAvailable()}>
             <ChevronLeft  />
@@ -103,8 +105,8 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
             .map(day =>
                 <DaySelectCard
                     key={day}
-                    date={date}
-                    appointment={appointments[getDate(day)]}
+                    isCurrent={date.isSame(moment.utc(day), 'date')}
+                    appointment={appointments[day]}
                     onClick={handleChangeDay(day)}
                     day={day}
                 />
