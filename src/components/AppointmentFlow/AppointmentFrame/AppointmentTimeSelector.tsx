@@ -1,9 +1,13 @@
 import React, {useMemo} from 'react';
 import moment from "moment";
-import {IAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {IAppointmentSlot, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
 import {styled} from "@material-ui/core";
 import {Loading} from "../../UI/Loading";
+import {TGroupedAppointment} from "../../../utils/types";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 
 const TimeSlotsWrapper = styled('div')({
@@ -15,37 +19,60 @@ const TimeSlotsWrapper = styled('div')({
     "&>div": {
         flexGrow: 1
     }
-})
+});
+
+type TSlot = {
+    date: moment.Moment;
+    label: string;
+}
 
 type TProps = {
     date: moment.Moment;
     slot: IAppointmentSlot | null;
     loading: boolean;
+    appointments?: TGroupedAppointment;
 }
-export const AppointmentTimeSelector: React.FC<TProps> = ({date, slot, loading}) => {
-    const slots = useMemo(() => {
+export const AppointmentTimeSelector: React.FC<TProps> =
+    ({date, slot, loading, appointments}) => {
+    const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
+    const dispatch = useDispatch();
+
+    const slots: TSlot[] = useMemo(() => {
         // TODO: Start end dates?
         const start = moment.utc(date).hour(8).minute(0).second(0).millisecond(0);
         const end = moment.utc(start).hour(18);
-        const slots: string[] = [];
+        const slots: TSlot[] = [];
         let cDate = moment.utc(start);
         while (cDate.isSameOrBefore(end, 'minute')) {
-            slots.push(cDate.format("h:mm a"));
+            slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
             cDate = moment.utc(cDate).add(30, 'minutes');
         }
         return slots;
     }, [date]);
+
+    const handleSelect = (a: IRemappedAppointmentSlot|null) => {
+        dispatch(selectAppointment(a));
+    }
+
     return (
         <div>
             <h4>Select Time</h4>
             {!loading
                 ? <TimeSlotsWrapper>
-                    {slots.map(timeSlot =>
-                        <TimeSlotCard
-                            timeSlot={timeSlot}
-                            slot={slot}
-                            key={timeSlot}
-                        />)}
+                    {slots.map(timeSlot => {
+                        const appointment = appointments?.appointments.find(
+                            a => a.date.isSame(timeSlot.date, 'minute')
+                        );
+                        return <TimeSlotCard
+                            slot={appointment}
+                            onSelect={handleSelect}
+                            selected={Boolean(
+                                selectedAppointment && appointment?.id === selectedAppointment.id
+                            )}
+                            timeSlot={timeSlot.label}
+                            key={timeSlot.label}
+                        />
+                    })}
                 </TimeSlotsWrapper>
                 : <Loading/>}
         </div>

@@ -8,14 +8,14 @@ import {AppointmentTimeSelector} from "./AppointmentTimeSelector";
 import {styled} from "@material-ui/core";
 import moment from "moment";
 import {useParams} from "react-router-dom";
-import {decodeSCID, getGroupedAppointmentList, groupAppointments} from "../../../utils/utils";
+import {decodeSCID, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAppointmentTimingType, IAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
-import {TGroupedAppointments, TGroupedAppointmentsList} from "../../../utils/types";
+import {TGroupedAppointments} from "../../../utils/types";
 import {IServiceCategory} from "../../../api/types";
-import {ThunkAction} from "redux-thunk";
+import {getAppointmentDate} from "./utils";
 
 
 const Wrapper = styled('div')({
@@ -128,10 +128,6 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         return groupAppointments(slots);
     }, [slots]);
 
-    const groupedAppointmentsSortedList: TGroupedAppointmentsList[] = useMemo(() => {
-        return getGroupedAppointmentList(groupedAppointments);
-    }, [groupedAppointments]);
-
     return (
         <StepWrapper>
             <Wrapper>
@@ -140,7 +136,12 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     appointments={groupedAppointments}
                     date={date}
                     loading={loading} onDateChange={updateDate} />
-                <AppointmentTimeSelector date={date} loading={loading} slot={null} />
+                <AppointmentTimeSelector
+                    appointments={groupedAppointments[date.toISOString().replace('.000', '')]}
+                    date={date}
+                    loading={loading}
+                    slot={null}
+                />
             </Wrapper>
             <Actions onBack={onBack} onNext={onNext} />
         </StepWrapper>

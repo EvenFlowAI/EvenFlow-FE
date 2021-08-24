@@ -5,6 +5,7 @@ import {DaySelectCard} from "./DaySelectCard";
 import {TArgCallback} from "../../../types/types";
 import {styled, Theme} from "@material-ui/core";
 import {TGroupedAppointments} from "../../../utils/types";
+import {getAppointmentDate} from "./utils";
 
 const DaySelectorWrapper = styled('div')({
     marginTop: 20,
@@ -29,11 +30,6 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
 });
 
 
-const getDate = (date: moment.Moment, d: number) => {
-    return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
-}
-
-
 type TProps = {
     date: moment.Moment,
     onDateChange: TArgCallback<moment.Moment>;
@@ -52,7 +48,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         const dim = date.daysInMonth();
         return [
             dim,
-            Array(dim).fill(0).map((e, idx) => getDate(date, idx+1))
+            Array(dim).fill(0).map((e, idx) => getAppointmentDate(date, idx+1))
         ];
     }, [date]);
 
