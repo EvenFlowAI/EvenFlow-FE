@@ -179,3 +179,8 @@ export interface IServiceConsultant {
     position: string;
     iconPath: string;
 }
+export interface ICustomer {
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+}

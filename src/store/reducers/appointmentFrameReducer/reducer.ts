@@ -2,13 +2,13 @@ import {createReducer} from "@reduxjs/toolkit";
 import {
     selectService,
     selectSubService,
-    setAdvisor,
+    setAdvisor, setCustomer,
     setFrameDescription,
     setPackage,
     setTime,
     setTiming, setVehicle
 } from "./actions";
-import {ILoadedVehicle, IServiceCategory, IServiceConsultant} from "../../../api/types";
+import {ICustomer, ILoadedVehicle, IServiceCategory, IServiceConsultant} from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType} from "../appointment/types";
 
@@ -21,6 +21,7 @@ type TState = {
     selectedTiming: EAppointmentTimingType|null;
     selectedTime: moment.Moment|null;
     selectedVehicle: ILoadedVehicle|null;
+    customer: ICustomer|null;
 }
 const initialState: TState = {
     service: null,
@@ -30,7 +31,8 @@ const initialState: TState = {
     advisor: null,
     selectedTime: null,
     selectedTiming: null,
-    selectedVehicle: null
+    selectedVehicle: null,
+    customer: null
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -61,5 +63,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setVehicle, (state, {payload}) => {
         return {...state, selectedVehicle: payload};
+    })
+    .addCase(setCustomer, (state, {payload}) => {
+        return {...state, customer: payload};
     })
 )
