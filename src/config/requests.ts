@@ -165,6 +165,7 @@ type ApiRoutes = {
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues", TApiRoute>,
+    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
@@ -349,6 +350,12 @@ export class Api {
             SetOptimization: {route: "/slot-scoring/optimization-settings", method: "put"},
             GetOptimization: {route: "/slot-scoring/optimization-settings", method: "get"},
             SetValues: {route: "/slot-scoring/optimization-settings/values", method: "put"}
+        },
+        TransportationOptions: {
+            Edit: {route: "/transportation-options", method: "put"},
+            Get: {route: "/transportation-options", method: "get"},
+            GetActive: {route: "/transportation-options/active/by-query", method: "post"},
+            Rules: {route: "/transportation-options/{id}/rules", method: "put"},
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},

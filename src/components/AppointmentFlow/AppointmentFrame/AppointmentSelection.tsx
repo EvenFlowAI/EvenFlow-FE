@@ -15,7 +15,7 @@ import {EAppointmentTimingType} from "../../../store/reducers/appointment/types"
 import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {IServiceCategory} from "../../../api/types";
-import {getAppointmentDate} from "./utils";
+import {collectServiceRequestIds, getAppointmentDate} from "./utils";
 
 
 const Wrapper = styled('div')({
@@ -38,20 +38,7 @@ const Wrapper = styled('div')({
     }
 });
 
-const collectServiceRequestIds = (s: IServiceCategory|null, sub: IServiceCategory|null): number[] => {
-    const ids = [];
-    if (s) {
-        for (let i=0; i<s.serviceRequests.length; i++) {
-            ids.push(s.serviceRequests[i].id);
-        }
-    }
-    if (sub) {
-        for (let i=0; i < sub.serviceRequests.length; i++) {
-            ids.push(sub.serviceRequests[i].id);
-        }
-    }
-    return ids;
-}
+
 
 export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [

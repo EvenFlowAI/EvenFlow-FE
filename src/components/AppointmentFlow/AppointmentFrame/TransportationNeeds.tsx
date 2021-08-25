@@ -1,8 +1,14 @@
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import { Actions } from './Actions';
 import {styled, Theme} from "@material-ui/core";
+import {Api} from "../../../config/requests";
+import {decodeSCID} from "../../../utils/utils";
+import {useParams} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {collectServiceRequestIds} from "./utils";
 
 const CardWrapper = styled('div')<Theme, {active?: boolean}>({
     minHeight: 264,
@@ -42,6 +48,30 @@ const TransportationCard: React.FC<TTransportationProps> = ({transportation, act
 }
 
 export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
+    const {id} = useParams();
+    const [
+        s, ss
+    ] = useSelector((state: RootState) => [
+        state.appointmentFrame.service,
+        state.appointmentFrame.subService
+    ]);
+    const serviceRequestIds = useMemo(() => {
+        return collectServiceRequestIds(s, ss);
+    }, [s, ss]);
+    useEffect(() => {
+        Api.call(
+            Api.endpoints.TransportationOptions.GetActive,
+            {
+                data: {
+                    serviceCenterId: decodeSCID(id),
+                    serviceRequestIds,
+                    maintenancePackageOptionId: null
+                }
+            }
+        ).then(({data}) => {
+            console.log(data)
+        })
+    }, [id, serviceRequestIds]);
     return <StepWrapper>
         <TransportationWrapper>
             {transportationNeeds.map((t, idx) => {
