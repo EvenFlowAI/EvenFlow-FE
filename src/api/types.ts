@@ -76,6 +76,7 @@ export interface ILoadedVehicle {
     year: number;
     mileage: number;
     warrantyExpiration?: ParsableDate;
+    appointmentHashKeys?: string[];
 }
 export interface IPasswordRecoveryData { email: string; }
 export interface IPasswordRecoveryResp { }

@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {Title} from "./Title";
 import {CarCard} from "./CarCard";
 import {styled} from "@material-ui/core";
-import {ILoadedVehicle} from "../../../api/types";
 import {Actions} from "./Actions";
 import {TCallback} from "../../../types/types";
 import { StepWrapper } from './StepWrapper';
@@ -16,22 +15,15 @@ const CarsWrapper = styled('div')({
     gap: "20px",
     justifyContent: "stretch"
 });
-const car: ILoadedVehicle = {
-    model: "F-150",
-    make: "Ford",
-    year: 2020,
-    mileage: 0,
-    dmsId: 'asd',
-    vin: '1FTMF1EP1MKD85171'
-}
 
 type TProps = {
     onNext: TCallback
 }
 export const AppointmentCarSelection: React.FC<TProps> = ({onNext}) => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     useEffect(() => {
-        if (!customerLoadedData?.id) {
+        if (customerLoadedData && !customerLoadedData?.id) {
             onNext();
         }
     }, [customerLoadedData]);
@@ -39,10 +31,16 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext}) => {
         <StepWrapper>
             <Title>Which vehicle are you coming in for?</Title>
             <CarsWrapper>
-                <CarCard car={car} />
-                <CarCard car={car} />
+                {customerLoadedData?.vehicles.length ?
+                    customerLoadedData.vehicles.map(vehicle =>
+                        <CarCard
+                            selected={selectedVehicle?.vin === vehicle.vin}
+                            car={vehicle}
+                            key={vehicle.vin} />
+                    ) : <p>No vehicles present</p>
+                }
             </CarsWrapper>
-            <Actions onBack={() => {}} onNext={onNext} />
+            <Actions onBack={() => {}} onNext={onNext} nextDisabled={!selectedVehicle} />
         </StepWrapper>
     );
 };

@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IServiceCategory, IServiceConsultant} from "../../../api/types";
+import {ILoadedVehicle, IServiceCategory, IServiceConsultant} from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType} from "../appointment/types";
 
@@ -10,3 +10,4 @@ export const setPackage = createAction<number>("fAppointment/setPackage");
 export const setAdvisor = createAction<IServiceConsultant|null>("fAppointment/setAdvisor");
 export const setTiming = createAction<EAppointmentTimingType|null>("fAppointment/setTiming");
 export const setTime = createAction<moment.Moment|null>("fAppointment/setTime");
+export const setVehicle = createAction<ILoadedVehicle|null>("fAppointment/setVehicle");
