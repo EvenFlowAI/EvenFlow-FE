@@ -28,12 +28,11 @@ type TSlot = {
 
 type TProps = {
     date: moment.Moment;
-    slot: IAppointmentSlot | null;
     loading: boolean;
     appointments?: TGroupedAppointment;
 }
 export const AppointmentTimeSelector: React.FC<TProps> =
-    ({date, slot, loading, appointments}) => {
+    ({date, loading, appointments}) => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
     const dispatch = useDispatch();
 

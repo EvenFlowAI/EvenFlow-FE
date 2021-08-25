@@ -140,7 +140,6 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     appointments={groupedAppointments[date.toISOString().replace('.000', '')]}
                     date={date}
                     loading={loading}
-                    slot={null}
                 />
             </Wrapper>
             <Actions onBack={onBack} onNext={onNext} />
