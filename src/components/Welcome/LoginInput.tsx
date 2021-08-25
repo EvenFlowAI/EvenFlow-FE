@@ -126,7 +126,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 dispatch(setCustomerLoadedData({...data, sessionId}));
                 dispatch(saveAppointmentReducer());
             } catch {
-                const c = getBlankCustomer();
+                const c = getBlankCustomer(sessionId);
                 dispatch(setCustomerLoadedData(c));
                 saveCustomerCache(c);
             } finally {

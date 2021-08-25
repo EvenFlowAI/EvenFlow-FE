@@ -190,13 +190,14 @@ const CUSTOMER_CACHE = 'fCC';
 export const saveCustomerCache = (data: ICustomerLoadedData): void => {
     localStorage.setItem(CUSTOMER_CACHE, JSON.stringify(data));
 }
-export const getBlankCustomer = (): ICustomerLoadedData => {
+export const getBlankCustomer = (sessionId?: string): ICustomerLoadedData => {
     return  {
         id: "",
         vehicles: [],
         lastName: "",
         firstName: "",
         emails: [],
+        sessionId,
         phoneNumbers: []
     };
 }
