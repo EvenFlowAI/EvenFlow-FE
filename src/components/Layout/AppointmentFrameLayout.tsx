@@ -120,6 +120,7 @@ export const AppointmentFrameLayout = () => {
             appointmentConfirmation: <AppointmentConfirmationFrame
                 onBack={handleChangeScreen('transportationNeeds')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
+                onChangeSlot={handleChangeScreen('appointmentSelection')}
             />
         }
         return carSelections[currentScreen];

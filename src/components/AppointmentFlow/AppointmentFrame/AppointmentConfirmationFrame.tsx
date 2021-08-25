@@ -8,6 +8,7 @@ import {SelectedDate} from "./confirmationSections/SelectedDate";
 import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
+import {TCallback} from "../../../types/types";
 
 const Wrapper = styled('div')({
     width: "100%",
@@ -27,13 +28,15 @@ const Info = styled('div')({
     fontSize: 12
 });
 
-
-export const AppointmentConfirmationFrame: React.FC<TActionProps> = ({onBack, onNext}) => {
+type TProps = {
+    onChangeSlot: TCallback;
+} & TActionProps;
+export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     return <StepWrapper>
         <Wrapper>
             <div>
                 <UserData />
-                <SelectedDate />
+                <SelectedDate onChangeSlot={onChangeSlot} />
             </div>
             <div>
                 <Review />
