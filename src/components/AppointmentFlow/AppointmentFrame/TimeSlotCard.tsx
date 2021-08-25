@@ -34,7 +34,7 @@ export const TimeSlotCard: React.FC<TProps> =
     return (
         <Wrapper available={Boolean(slot)} selected={selected}>
             <div>{timeSlot}</div>
-            <div onClick={() => onSelect(slot ?? null)} className="availability">{slot ? "Slot" : "Not Available"}</div>
+            <div onClick={() => onSelect(slot ?? null)} className="availability">{slot ? "Available" : "Not Available"}</div>
         </Wrapper>
     );
 };
