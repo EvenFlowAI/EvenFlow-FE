@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {MuiThemeProvider, styled} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
 import {frameTheme} from "../../theme/theme";
@@ -16,6 +16,11 @@ import {AddInfo} from "../AppointmentFlow/AppointmentFrame/AddInfo";
 import {ServiceSelection} from "../AppointmentFlow/AppointmentFrame/ServiceSelection";
 import {PackageSelection} from "../AppointmentFlow/AppointmentFrame/PackageSelection";
 import {SelectOpsCode} from "../AppointmentFlow/AppointmentFrame/SelectOpsCode";
+import {Routes} from "../../config/routes";
+import {useHistory, useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/rootReducer";
+import {clearCustomerCache, getCustomerCache, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -39,6 +44,29 @@ const SidebarWrapper = styled('div')({
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
 
+    const {id} = useParams();
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+
+    const handleLogin = useCallback(() => {
+        clearCustomerCache();
+        dispatch(setCustomerLoadedData(null));
+        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    }, [id, history, dispatch]);
+
+    useEffect(() => {
+        if (!customerLoadedData) {
+            const data = getCustomerCache();
+            if (data) {
+                dispatch(setCustomerLoadedData(data));
+            } else {
+                handleLogin();
+            }
+        }
+    }, [customerLoadedData, dispatch, handleLogin]);
+
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
     }, []);
@@ -50,6 +78,7 @@ export const AppointmentFrameLayout = () => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
             carSelection: <AppointmentCarSelection onNext={() => setCurrentScreen('serviceNeeds')} />,
             serviceNeeds: <ServiceNeedsFrame
+                onLogin={handleLogin}
                 onBack={handleChangeScreen('carSelection')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection

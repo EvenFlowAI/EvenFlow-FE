@@ -64,6 +64,7 @@ export interface ICustomerLoadedData {
     firstName: string;
     lastName: string;
     id: string;
+    sessionId?: string;
     phoneNumbers: string[];
     vehicles: ILoadedVehicle[];
 }

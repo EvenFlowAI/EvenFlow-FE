@@ -43,15 +43,26 @@ const tellMoreCard: IServiceCategory = {
 type TProps = {
     onSelect: TArgCallback<TScreen>;
     onBack: TCallback;
+    onLogin: TCallback;
 }
-export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
+export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>(
         [packageCard, tellMoreCard]
     );
     const selectedService = useSelector((state: RootState) => state.appointmentFrame.service);
+    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
     const dispatch = useDispatch();
+
+    const handleBack = () => {
+        if (!customerLoadedData?.id) {
+            onLogin();
+        } else {
+            onBack();
+        }
+
+    }
 
 
     useEffect(() => {
@@ -112,7 +123,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
             <Actions
                 nextDisabled={!selectedService}
                 onNext={handleSubmit}
-                onBack={onBack} />
+                onBack={handleBack} />
         </StepWrapper>
     );
 };

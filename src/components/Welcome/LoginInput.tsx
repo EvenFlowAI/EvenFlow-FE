@@ -122,7 +122,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                     {"session-id": sessionId},
                     {serviceCenterId: serviceCenter?.id || 0, searchTerm: ""}
                 );
-                dispatch(setCustomerLoadedData(data));
+                dispatch(setCustomerLoadedData({...data, sessionId}));
                 dispatch(saveAppointmentReducer());
             } catch {
             } finally {

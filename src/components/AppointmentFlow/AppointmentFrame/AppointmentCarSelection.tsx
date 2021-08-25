@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Title} from "./Title";
 import {CarCard} from "./CarCard";
 import {styled} from "@material-ui/core";
@@ -6,6 +6,8 @@ import {ILoadedVehicle} from "../../../api/types";
 import {Actions} from "./Actions";
 import {TCallback} from "../../../types/types";
 import { StepWrapper } from './StepWrapper';
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 
 const CarsWrapper = styled('div')({
@@ -27,6 +29,12 @@ type TProps = {
     onNext: TCallback
 }
 export const AppointmentCarSelection: React.FC<TProps> = ({onNext}) => {
+    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    useEffect(() => {
+        if (!customerLoadedData?.id) {
+            onNext();
+        }
+    }, [customerLoadedData]);
     return (
         <StepWrapper>
             <Title>Which vehicle are you coming in for?</Title>

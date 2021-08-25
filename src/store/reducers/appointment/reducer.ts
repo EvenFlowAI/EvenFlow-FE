@@ -207,6 +207,13 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return payload;
     })
     .addCase(setSessionId, (state, {payload}) => {
+        if (state.customerLoadedData) {
+            return {
+                ...state,
+                sessionId: payload,
+                customerLoadedData: {...state.customerLoadedData, sessionId: payload}
+            };
+        }
         return {...state, sessionId: payload};
     })
 );
