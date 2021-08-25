@@ -51,7 +51,7 @@ type TCardProps = {
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
     return <ConsultantWrapper active={active} onClick={onClick}>
         {blank
-            ? <img src={anyConsultant} alt="Any available consultant"/>
+            ? <img width={50} height={50} src={anyConsultant} alt="Any available consultant"/>
             : <Avatar src={advisor?.iconPath}/>}
         <div>
             {blank ? "Any available consultant" : advisor?.name ?? "-"}
