@@ -187,8 +187,18 @@ export const loadEditAppointment = (appointment: IListAppointment): AppThunk => 
 }
 
 const CUSTOMER_CACHE = 'fCC';
-const saveCustomerCache = (data: ICustomerLoadedData): void => {
+export const saveCustomerCache = (data: ICustomerLoadedData): void => {
     localStorage.setItem(CUSTOMER_CACHE, JSON.stringify(data));
+}
+export const getBlankCustomer = (): ICustomerLoadedData => {
+    return  {
+        id: "",
+        vehicles: [],
+        lastName: "",
+        firstName: "",
+        emails: [],
+        phoneNumbers: []
+    };
 }
 export const clearCustomerCache = (): void => {
     localStorage.removeItem(CUSTOMER_CACHE);

@@ -4,7 +4,8 @@ import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    saveAppointmentReducer,
+    getBlankCustomer,
+    saveAppointmentReducer, saveCustomerCache,
     setCustomerEnteredEmail, setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
@@ -125,6 +126,9 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 dispatch(setCustomerLoadedData({...data, sessionId}));
                 dispatch(saveAppointmentReducer());
             } catch {
+                const c = getBlankCustomer();
+                dispatch(setCustomerLoadedData(c));
+                saveCustomerCache(c);
             } finally {
                 onComplete();
             }
