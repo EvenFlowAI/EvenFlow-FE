@@ -16,6 +16,7 @@ import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
+import {Loading} from "../../UI/Loading";
 
 /*const cards: TServiceCard[] = [
     {
@@ -82,6 +83,9 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 }
                 setServices(nServices);
             })
+            .finally(() => {
+                setLoading(false);
+            })
     }, [id]);
 
     const handleSelectCard = (card: IServiceCategory) => () => {
@@ -100,15 +104,15 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
     }
     return (
         <StepWrapper>
-            <CardsWrapper>
+            {!loading ? <CardsWrapper>
                 {services.map(card => {
                     return <ServiceCard
                         active={subService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
-                        key={card.name} />
+                        key={card.name}/>
                 })}
-            </CardsWrapper>
+            </CardsWrapper> : <Loading />}
             <Actions
                 nextDisabled={!subService}
                 onNext={handleSubmit}

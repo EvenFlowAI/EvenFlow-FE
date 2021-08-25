@@ -16,6 +16,7 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
+import { Loading } from '../../UI/Loading';
 
 
 const icons: JSX.Element[] = [
@@ -99,15 +100,15 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack}) => {
     }
     return (
         <StepWrapper>
-            <CardsWrapper>
+            {!loading ? <CardsWrapper>
                 {serviceCategories.map(card => {
                     return <ServiceCard
                         active={selectedService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
-                        key={card.name} />
+                        key={card.name}/>
                 })}
-            </CardsWrapper>
+            </CardsWrapper> : <Loading />}
             <Actions
                 nextDisabled={!selectedService}
                 onNext={handleSubmit}
