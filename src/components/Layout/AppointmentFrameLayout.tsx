@@ -123,7 +123,7 @@ export const AppointmentFrameLayout = () => {
             />
         }
         return carSelections[currentScreen];
-    }, [currentScreen, handleChangeScreen, handleSetScreen]);
+    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin]);
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":
