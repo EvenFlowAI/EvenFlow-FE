@@ -87,6 +87,7 @@ export interface IPrivacy {
 export interface IPrice {
     value: number;
     category: EDemandCategory;
+    amountOfSavingMoney?: number
 }
 export interface IAppointmentSlot {
     date: ParsableDate;

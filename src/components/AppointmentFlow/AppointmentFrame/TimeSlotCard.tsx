@@ -1,9 +1,10 @@
 import React from 'react';
-import {IAppointmentSlot, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
+import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
-const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean}>({
+const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, offPeak?: boolean}>({
     display: "flex",
     alignItems: "center",
     fontWeight: "bold",
@@ -13,7 +14,9 @@ const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean}>(
     opacity: ({available}) => available ? 1 : .3,
     '& .availability': {
         cursor: "pointer",
-        border: ({selected}) => `1px solid ${selected ? '#000000' : '#DADADA'}`,
+        border: ({selected, offPeak}) =>
+            `1px solid ${(offPeak && selected) ? "#237243" : offPeak ? "#89E5AB" : selected ? '#000000' : '#DADADA'}`,
+        background: ({offPeak}) => offPeak ? "#DEFFDF" : "transparent",
         padding: 20,
         minHeight: 80,
         display: "flex",
@@ -31,10 +34,20 @@ type TProps = {
 }
 export const TimeSlotCard: React.FC<TProps> =
     ({timeSlot, slot, onSelect, selected}) => {
+    const getContent = () => {
+        if (!slot) {
+            return "Not Available";
+        }
+        if (slot.price.amountOfSavingMoney) {
+            return `Save $${Math.abs(slot.price.amountOfSavingMoney)}`;
+        }
+        return "Available";
+    }
+    const isOffPeak = slot?.price.category === EDemandCategory.Low;
     return (
-        <Wrapper available={Boolean(slot)} selected={selected}>
+        <Wrapper available={Boolean(slot)} selected={selected} offPeak={isOffPeak}>
             <div>{timeSlot}</div>
-            <div onClick={() => onSelect(slot ?? null)} className="availability">{slot ? "Available" : "Not Available"}</div>
+            <div onClick={() => onSelect(slot ?? null)} className="availability">{getContent()}</div>
         </Wrapper>
     );
 };

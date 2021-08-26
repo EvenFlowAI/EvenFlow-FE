@@ -54,6 +54,7 @@ const PriceWrapper = styled('div')({
 
 export const SelectedAppointment = () => {
     const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
+    const appointment = useSelector((state: RootState) => state.appointment.appointment);
     return (
         <div>
             <h4>Your selections</h4>
@@ -66,14 +67,16 @@ export const SelectedAppointment = () => {
                     <li>Consultant: {
                         appointmentData.advisor?.name ?? "Any available"
                     }</li>
-                    <ul>
-                        <li>See available times for any Consultant</li>
-                    </ul>
+                    {/*<ul>*/}
+                    {/*    <li>See available times for any Consultant</li>*/}
+                    {/*</ul>*/}
                 </List>
-                <PriceWrapper>
-                    <div className="price">$148<span>.00</span></div>
-                    <div className="info">Save by booking at off peak times!</div>
-                </PriceWrapper>
+                {appointment
+                    ? <PriceWrapper>
+                        <div className="price">${appointment.price.value}<span>.00</span></div>
+                        <div className="info">Save by booking at off peak times!</div>
+                    </PriceWrapper>
+                    : null}
             </Wrapper>
         </div>
     );
