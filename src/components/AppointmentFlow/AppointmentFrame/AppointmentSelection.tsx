@@ -124,7 +124,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     date={date}
                     loading={loading} onDateChange={updateDate} />
                 <AppointmentTimeSelector
-                    appointments={groupedAppointments[date.toISOString().replace('.000', '')]}
+                    appointments={
+                        groupedAppointments[date.toISOString().replace('.000', '')]
+                    }
                     date={date}
                     loading={loading}
                 />

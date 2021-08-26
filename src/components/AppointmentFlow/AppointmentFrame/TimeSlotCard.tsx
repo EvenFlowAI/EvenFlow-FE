@@ -43,7 +43,7 @@ export const TimeSlotCard: React.FC<TProps> =
         }
         return "Available";
     }
-    const isOffPeak = slot?.price.category === EDemandCategory.Low;
+    const isOffPeak = slot?.price.category === EDemandCategory.High;
     return (
         <Wrapper available={Boolean(slot)} selected={selected} offPeak={isOffPeak}>
             <div>{timeSlot}</div>

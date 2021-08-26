@@ -2,6 +2,7 @@ import React from 'react';
 import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
 
 const Wrapper = styled('div')({
@@ -74,7 +75,8 @@ export const SelectedAppointment = () => {
                 {appointment
                     ? <PriceWrapper>
                         <div className="price">${appointment.price.value}<span>.00</span></div>
-                        <div className="info">Save by booking at off peak times!</div>
+                        {appointment?.price?.category !== EDemandCategory.High
+                            ? <div className="info">Save by booking at off peak times!</div> : null}
                     </PriceWrapper>
                     : null}
             </Wrapper>
