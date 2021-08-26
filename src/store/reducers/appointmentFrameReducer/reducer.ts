@@ -4,13 +4,13 @@ import {
     selectSubService,
     setAdvisor, setCustomer,
     setFrameDescription,
-    setPackage,
+    setPackage, setReminders,
     setTime,
     setTiming, setVehicle
 } from "./actions";
 import {ICustomer, ILoadedVehicle, IServiceCategory, IServiceConsultant} from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -22,6 +22,7 @@ type TState = {
     selectedTime: moment.Moment|null;
     selectedVehicle: ILoadedVehicle|null;
     customer: ICustomer|null;
+    reminders: EReminderType[];
 }
 const initialState: TState = {
     service: null,
@@ -32,7 +33,8 @@ const initialState: TState = {
     selectedTime: null,
     selectedTiming: null,
     selectedVehicle: null,
-    customer: null
+    customer: null,
+    reminders: []
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -66,5 +68,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setCustomer, (state, {payload}) => {
         return {...state, customer: payload};
+    })
+    .addCase(setReminders, (state, {payload}) => {
+        return {...state, reminders: payload};
     })
 )
