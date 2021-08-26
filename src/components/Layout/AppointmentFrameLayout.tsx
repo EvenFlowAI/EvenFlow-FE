@@ -28,6 +28,7 @@ import moment from "moment";
 import {decodeSCID} from "../../utils/utils";
 import {collectServiceRequestIds} from "../AppointmentFlow/AppointmentFrame/utils";
 import {setAppointmentId} from "../../store/reducers/appointmentFrameReducer/actions";
+import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 
 const Container = styled('div')({
     display: "flex",
@@ -56,10 +57,6 @@ export const AppointmentFrameLayout = () => {
     const dispatch = useDispatch();
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
-    const [appointment, appointmentFrame] = useSelector((state: RootState) => [
-        state.appointment,
-        state.appointmentFrame
-    ])
 
     const handleLogin = useCallback(() => {
         clearCustomerCache();
@@ -85,57 +82,7 @@ export const AppointmentFrameLayout = () => {
         setCurrentScreen(screen);
     }, []);
 
-    const handleCreateAppointment = () => {
-        // TODO: UpdateFlow?
-        const data: ICreateAppointment = {
-            appointmentTimingType: appointmentFrame.selectedTiming ?? EAppointmentTimingType.FirstAvailable,
-            customerId: appointment.customerLoadedData?.id,
-            comment: appointmentFrame.description,
-            driver: appointmentFrame.customer,
-            gmt: moment().utcOffset(),
-            isNeedCall: false,
-            offerId: appointment.appointment?.offer?.id ?? null,
-            reminderTypes: appointmentFrame.reminders,
-            serviceCenterId: decodeSCID(id),
-            vehicle: {
-                dmsId: null,
-                vin: "",
-                driveType: "",
-                engineType: "",
-                make: "",
-                model: "",
-                transmission: "",
-                ...(appointmentFrame.selectedVehicle ?? {}),
-                year: appointmentFrame?.selectedVehicle?.year
-                    ? String(appointmentFrame.selectedVehicle.year) : null,
-                mileage: appointmentFrame?.selectedVehicle?.mileage
-                    ? String(appointmentFrame.selectedVehicle.mileage) : null,
-            },
-            transportationNeeds: {
-                isNeed: false,
-                description: ""
-            },
-            slot: appointment.appointment?.id.split("|")[1] || "",
-            serviceRequestIds: collectServiceRequestIds(
-                appointmentFrame.service,
-                appointmentFrame.subService
-            ),
-            date: appointment.appointment?.id.split("|")[0] || "",
-            serviceCategoryId: appointmentFrame.subService?.id ?? appointmentFrame.service?.id ?? null,
-            maintenancePackageOptionId: null
-        }
-        Api.call<ICreateAppointmentResp>(
-            Api.endpoints.Appointments.Create,
-            {
-                data
-            }
-        ).then(({data}) => {
-            dispatch(setAppointmentId({
-                id: data.id,
-                hashKey: data.hashKey
-            }))
-        })
-    }
+
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
@@ -182,8 +129,11 @@ export const AppointmentFrameLayout = () => {
             />,
             appointmentConfirmation: <AppointmentConfirmationFrame
                 onBack={handleChangeScreen('transportationNeeds')}
-                onNext={handleCreateAppointment}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
+                onNext={() => {}}
+            />,
+            appointmentConfirmed: <AppointmentConfirmed
+
             />
         }
         return carSelections[currentScreen];
@@ -192,11 +142,10 @@ export const AppointmentFrameLayout = () => {
         switch (currentScreen) {
             case "carSelection":
                 return null;
+            case "maintenanceDetails":
             case "serviceNeeds":
             case "serviceSelection":
                 return "How can we help you?";
-            case "maintenanceDetails":
-                return "Please provide the maintenance details for your vehicle"
             case "describeMore":
                 return "Please describe what’s going on";
             case "opsCode":
@@ -220,11 +169,11 @@ export const AppointmentFrameLayout = () => {
     return (
         <MuiThemeProvider theme={frameTheme}>
             <Container>
-                {currentScreen !== 'carSelection'
+                {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
                 {currentScreen === 'maintenanceDetails'
                     ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
-                {['carSelection', 'packageSelection'].includes(currentScreen)
+                {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? component
                     : <SidebarWrapper>
                         <SideBar screen={currentScreen} />

@@ -3,4 +3,5 @@ export type TActionProps = {
     onNext: () => void;
     nextDisabled?: boolean;
     nextLabel?: string;
+    loading?: boolean;
 };

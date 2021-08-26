@@ -33,6 +33,7 @@ const stepsMap: {[K in TScreen]: number} = {
     appointmentSelection: 3,
     transportationNeeds: 4,
     appointmentConfirmation: 5,
+    appointmentConfirmed: 5
 }
 const Index = styled('span')({
     fontSize: 32,
