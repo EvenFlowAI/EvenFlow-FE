@@ -63,9 +63,9 @@ export const SideBar: React.FC<TProps> = ({screen}) => {
                 return <li key={item}>
                     <Button
                         fullWidth
-                        disabled={stepsMap[screen] < idx}
+                        disabled={stepsMap[screen] < idx+1}
                         color="primary"
-                        variant={isActive(idx) ? "contained" : "outlined"}>
+                        variant={isActive(idx+1) ? "contained" : "outlined"}>
                         <Index>{idx + 1}</Index> {item}
                     </Button>
                 </li>
