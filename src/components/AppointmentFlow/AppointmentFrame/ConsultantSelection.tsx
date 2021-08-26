@@ -38,8 +38,10 @@ const Avatar = styled('div')<Theme, {src?: string}>({
     width: 50,
     height: 50,
     borderRadius: "50%",
-    background: ({src}) => src ? `url('${src}') center center no-repeat` : undefined ,
     backgroundSize: "cover",
+    backgroundImage: ({src}) => src ? `url('${src}')` : undefined,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat"
 })
 
 type TCardProps = {
