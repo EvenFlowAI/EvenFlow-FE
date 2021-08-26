@@ -29,6 +29,7 @@ import {decodeSCID} from "../../utils/utils";
 import {collectServiceRequestIds} from "../AppointmentFlow/AppointmentFrame/utils";
 import {setAppointmentId} from "../../store/reducers/appointmentFrameReducer/actions";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
+import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 
 const Container = styled('div')({
     display: "flex",
@@ -109,6 +110,10 @@ export const AppointmentFrameLayout = () => {
             />,
             opsCode: <SelectOpsCode
                 onBack={handleChangeScreen('serviceSelection')}
+                onNext={handleChangeScreen('consultantSelection')}
+            />,
+            vehicleData: <VehicleData
+                onBack={handleChangeScreen('describeMore')}
                 onNext={handleChangeScreen('consultantSelection')}
             />,
             consultantSelection: <ConsultantSelection

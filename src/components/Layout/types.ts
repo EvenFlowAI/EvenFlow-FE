@@ -6,6 +6,7 @@ export type TScreen =
     | "packageSelection"
     | "describeMore"
     | "opsCode"
+    | "vehicleData"
     | "consultantSelection"
     | "appointmentTiming"
     | "appointmentSelection"
