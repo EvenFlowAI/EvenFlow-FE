@@ -129,6 +129,7 @@ type TApiRoute = {
 
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
+    Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey", TApiRoute>,
     AppointmentAllocation: Record<"SetTimeWindows" | "GetTimeWindows"
         | "CreateDemandSegment" | "GetDemandSegments"
         | "GetTWEligibility" | "SetTWEligibility"
@@ -190,6 +191,13 @@ export class Api {
             Verification: {route: "/accounts/verification", method: "patch"},
             Profile: {route: "/accounts/profile", method: "get"},
             Dealership: {route: "/accounts/dealership", method: "get"},
+        },
+        Appointments: {
+            Create: {route: "/appointments", method: "post"},
+            Update: {route: "/appointments/{id}", method: "put"},
+            UpdateByKey: {route: "/appointments/{id}/by-key", method: "put"},
+            Cancel: {route: "/appointments/{id}/cancel", method: "put"},
+            CancelByKey: {route: "/appointments/{id}/cancel/by-key", method: "put"}
         },
         AppointmentAllocation: {
             SetTimeWindows: {route: "/appointment-allocations/time-windows", method: "put"},

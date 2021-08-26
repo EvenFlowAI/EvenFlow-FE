@@ -21,7 +21,7 @@ type TState = {
     selectedTiming: EAppointmentTimingType|null;
     selectedTime: moment.Moment|null;
     selectedVehicle: ILoadedVehicle|null;
-    customer: ICustomer|null;
+    customer: ICustomer;
     reminders: EReminderType[];
 }
 const initialState: TState = {
@@ -33,7 +33,11 @@ const initialState: TState = {
     selectedTime: null,
     selectedTiming: null,
     selectedVehicle: null,
-    customer: null,
+    customer: {
+        fullName: "",
+        phoneNumber: "",
+        email: ""
+    },
     reminders: []
 };
 

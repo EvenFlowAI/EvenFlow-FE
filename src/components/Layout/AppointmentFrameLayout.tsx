@@ -21,6 +21,11 @@ import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {clearCustomerCache, getCustomerCache, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {ICreateAppointment, ICreateAppointmentResp} from "../../api/types";
+import {Api} from "../../config/requests";
+import {EAppointmentTimingType} from "../../store/reducers/appointment/types";
+import moment from "moment";
+import {decodeSCID} from "../../utils/utils";
 
 const Container = styled('div')({
     display: "flex",
@@ -49,6 +54,10 @@ export const AppointmentFrameLayout = () => {
     const dispatch = useDispatch();
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const [appointment, appointmentFrame] = useSelector((state: RootState) => [
+        state.appointment,
+        state.appointmentFrame
+    ])
 
     const handleLogin = useCallback(() => {
         clearCustomerCache();
@@ -73,6 +82,49 @@ export const AppointmentFrameLayout = () => {
     const handleSetScreen = useCallback((screen: TScreen) => {
         setCurrentScreen(screen);
     }, []);
+
+    const handleCreateAppointment = () => {
+        const data: ICreateAppointment = {
+            appointmentTimingType: appointmentFrame.selectedTiming ?? EAppointmentTimingType.FirstAvailable,
+            customerId: appointment.customerLoadedData?.id,
+            comment: appointmentFrame.description,
+            driver: appointmentFrame.customer,
+            gmt: moment().utcOffset(),
+            isNeedCall: false,
+            offerId: appointment.appointment?.offer?.id ?? null,
+            reminderTypes: appointmentFrame.reminders,
+            serviceCenterId: decodeSCID(id),
+            vehicle: {
+                dmsId: null,
+                vin: "",
+                driveType: "",
+                engineType: "",
+                make: "",
+                model: "",
+                transmission: "",
+                ...(appointmentFrame.selectedVehicle ?? {}),
+                year: appointmentFrame?.selectedVehicle?.year
+                    ? String(appointmentFrame.selectedVehicle.year) : null,
+                mileage: appointmentFrame?.selectedVehicle?.mileage
+                    ? String(appointmentFrame.selectedVehicle.mileage) : null,
+            },
+            transportationNeeds: {
+                isNeed: false,
+                description: ""
+            },
+            slot: appointment.appointment?.id.split("|")[1] || "",
+            serviceRequestIds: [],
+            date: appointment.appointment?.id.split("|")[0] || ""
+        }
+        Api.call<ICreateAppointmentResp>(
+            Api.endpoints.Appointments.Create,
+            {
+                data
+            }
+        ).then(({data}) => {
+
+        })
+    }
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
@@ -119,7 +171,7 @@ export const AppointmentFrameLayout = () => {
             />,
             appointmentConfirmation: <AppointmentConfirmationFrame
                 onBack={handleChangeScreen('transportationNeeds')}
-                onNext={handleChangeScreen('appointmentConfirmation')}
+                onNext={handleCreateAppointment}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
             />
         }
