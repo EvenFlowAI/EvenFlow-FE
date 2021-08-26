@@ -26,6 +26,7 @@ import {Api} from "../../config/requests";
 import {EAppointmentTimingType} from "../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../utils/utils";
+import {collectServiceRequestIds} from "../AppointmentFlow/AppointmentFrame/utils";
 
 const Container = styled('div')({
     display: "flex",
@@ -113,8 +114,13 @@ export const AppointmentFrameLayout = () => {
                 description: ""
             },
             slot: appointment.appointment?.id.split("|")[1] || "",
-            serviceRequestIds: [],
-            date: appointment.appointment?.id.split("|")[0] || ""
+            serviceRequestIds: collectServiceRequestIds(
+                appointmentFrame.service,
+                appointmentFrame.subService
+            ),
+            date: appointment.appointment?.id.split("|")[0] || "",
+            serviceCategoryId: appointmentFrame.subService?.id ?? appointmentFrame.service?.id ?? null,
+            maintenancePackageOptionId: null
         }
         Api.call<ICreateAppointmentResp>(
             Api.endpoints.Appointments.Create,

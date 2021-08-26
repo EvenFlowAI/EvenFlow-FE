@@ -196,7 +196,9 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             },
             slot: forms.appointment?.id.split("|")[1] || "",
             serviceRequestIds: forms.selectedSR,
-            date: forms.appointment?.id.split("|")[0] || ""
+            date: forms.appointment?.id.split("|")[0] || "",
+            maintenancePackageOptionId: null,
+            serviceCategoryId: null
         };
         setLoading(true);
         try {

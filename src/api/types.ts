@@ -23,6 +23,8 @@ export enum EServiceCategoryPage {
 
 export interface ICreateAppointment {
     id?: number;
+    serviceCategoryId: number|null,
+    maintenancePackageOptionId: number|null;
     date: ParsableDate;
     slot: string;
     customerId?: string;
