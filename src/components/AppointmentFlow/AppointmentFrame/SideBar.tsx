@@ -54,7 +54,7 @@ type TProps = {
 }
 export const SideBar: React.FC<TProps> = ({screen}) => {
     const isActive = (idx: number): boolean => {
-        return stepsMap[screen] > idx;
+        return stepsMap[screen] === idx;
     }
     return (
         <Wrapper>
@@ -62,6 +62,7 @@ export const SideBar: React.FC<TProps> = ({screen}) => {
                 return <li key={item}>
                     <Button
                         fullWidth
+                        disabled={stepsMap[screen] < idx}
                         color="primary"
                         variant={isActive(idx) ? "contained" : "outlined"}>
                         <Index>{idx + 1}</Index> {item}
