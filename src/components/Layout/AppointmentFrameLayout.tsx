@@ -27,6 +27,7 @@ import {EAppointmentTimingType} from "../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../utils/utils";
 import {collectServiceRequestIds} from "../AppointmentFlow/AppointmentFrame/utils";
+import {setAppointmentId} from "../../store/reducers/appointmentFrameReducer/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -85,6 +86,7 @@ export const AppointmentFrameLayout = () => {
     }, []);
 
     const handleCreateAppointment = () => {
+        // TODO: UpdateFlow?
         const data: ICreateAppointment = {
             appointmentTimingType: appointmentFrame.selectedTiming ?? EAppointmentTimingType.FirstAvailable,
             customerId: appointment.customerLoadedData?.id,
@@ -128,7 +130,10 @@ export const AppointmentFrameLayout = () => {
                 data
             }
         ).then(({data}) => {
-
+            dispatch(setAppointmentId({
+                id: data.id,
+                hashKey: data.hashKey
+            }))
         })
     }
 

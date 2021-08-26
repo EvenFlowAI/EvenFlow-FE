@@ -2,7 +2,7 @@ import {createReducer} from "@reduxjs/toolkit";
 import {
     selectService,
     selectSubService,
-    setAdvisor, setCustomer,
+    setAdvisor, setAppointmentId, setCustomer,
     setFrameDescription,
     setPackage, setReminders,
     setTime,
@@ -14,6 +14,8 @@ import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 
 type TState = {
     service: IServiceCategory|null;
+    id?: number;
+    hashKey?: string;
     subService: IServiceCategory|null;
     description: string;
     selectedPackage: number|null;
@@ -75,5 +77,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setReminders, (state, {payload}) => {
         return {...state, reminders: payload};
+    })
+    .addCase(setAppointmentId, (state, {payload}) => {
+        return {...state, ...payload};
     })
 )

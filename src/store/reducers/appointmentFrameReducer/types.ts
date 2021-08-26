@@ -19,3 +19,7 @@ export type TServiceCard = {
     name: TCardName;
     type: ECardType
 }
+export interface IAppointmentId {
+    id?: number;
+    hashKey?: string;
+}
