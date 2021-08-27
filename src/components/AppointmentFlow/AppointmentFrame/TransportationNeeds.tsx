@@ -128,6 +128,12 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(setTransportation(o));
     }
 
+    const handleSelectGeneric = () => {
+        if (tOptions && (transportation === null || transportation.type === customOption?.type)) {
+            dispatch(setTransportation(tOptions[0]));
+        }
+    }
+
     return <StepWrapper>
         <TransportationWrapper>
             <TransportationCard
@@ -143,7 +149,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 options={tOptions}
                 selectedTransportation={transportation}
                 transportation={"No, I would like transportation options"}
-                onSelect={() => handleSelectOption(tOptions[0])}
+                onSelect={handleSelectGeneric}
                 onSelectOption={handleSelectOption}
             /> : null}
             {customOption ? <TransportationCard
