@@ -41,6 +41,18 @@ const Wrapper = styled('div')({
     }
 });
 
+const Divider = styled("div")(({theme}) => ({
+    width: "100%",
+    height: 2,
+    gridColumnStart: 1,
+    gridColumnEnd: 3,
+    marginTop: 16,
+    background: `repeating-linear-gradient(to right,
+        ${theme.palette.divider} 0,${theme.palette.divider} 10px,
+        transparent 10px,
+        transparent 20px)`
+}));
+
 type TItem = {
     label: string;
     content: string;
@@ -100,6 +112,7 @@ export const AppointmentConfirmed = () => {
             <Button color="primary" fullWidth variant="contained">
                 Add to Calendar
             </Button>
+            <Divider />
             <h3>We will see you soon !</h3>
         </Wrapper>
     </StepWrapper>
