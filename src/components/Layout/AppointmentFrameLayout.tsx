@@ -20,7 +20,12 @@ import {Routes} from "../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
-import {clearCustomerCache, getCustomerCache, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {
+    clearCustomerCache,
+    getCustomerCache,
+    loadSCProfile,
+    setCustomerLoadedData
+} from "../../store/reducers/appointment/actions";
 import {ICreateAppointment, ICreateAppointmentResp} from "../../api/types";
 import {Api} from "../../config/requests";
 import {EAppointmentTimingType} from "../../store/reducers/appointment/types";
@@ -75,6 +80,9 @@ export const AppointmentFrameLayout = () => {
             }
         }
     }, [customerLoadedData, dispatch, handleLogin]);
+    useEffect(() => {
+        dispatch(loadSCProfile(decodeSCID(id)));
+    }, [id, dispatch]);
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);

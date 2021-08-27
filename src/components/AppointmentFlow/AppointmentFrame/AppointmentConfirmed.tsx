@@ -4,6 +4,8 @@ import {Button, styled} from "@material-ui/core";
 import moment from "moment";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {concatAddress, getCalendarUrl} from "../../../utils/utils";
+import {G_CALENDAR_FORMAT} from "../../../config/constants";
 
 
 const Wrapper = styled('div')({
@@ -64,11 +66,13 @@ type TItem = {
 export const AppointmentConfirmed = () => {
     const [
         appointment,
+        scProfile,
         s, ss,
         customer,
         vehicle
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
+        state.appointment.scProfile,
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
         state.appointmentFrame.customer,
@@ -79,13 +83,13 @@ export const AppointmentConfirmed = () => {
         return [
             {
                 label: "Date and time",
-                content: appointment?.date.format('DDD, MMM d, h:mm a')
-                    ?? moment.utc().format('DDD, MMM d, h:mm a'),
+                content: appointment?.date.format('ddd, MMM D, h:mm A')
+                    ?? moment.utc().format('ddd, MMM D, h:mm A'),
             },
-            /*{
+            {
                 label: "Address",
-                content: "2200 US Highway 30 • Oswego, IL 60543"
-            },*/
+                content: scProfile?.address ? concatAddress(scProfile?.address) : ""
+            },
             {
                 label: "Service type",
                 content: ss?.name ?? s?.name ?? "-"
@@ -111,7 +115,25 @@ export const AppointmentConfirmed = () => {
                 content: customer.email
             }
         ]
-    }, [appointment, s, ss, customer, vehicle]);
+    }, [appointment, scProfile, s, ss, customer, vehicle]);
+
+    const handleAddToCalendar = () => {
+        const date = moment.utc(appointment?.date);
+        const url = getCalendarUrl({
+            dates: [
+                date.format(G_CALENDAR_FORMAT) + appointment?.time.split(":").join(""),
+                date.add(1, "hour").format(G_CALENDAR_FORMAT) + appointment?.time.split(":").join("")],
+            text: "Appointment",
+            location: scProfile?.address ? concatAddress(scProfile?.address) : "",
+            details: [
+                `Contact number: ${scProfile?.phoneNumber}\n`,
+                ...data.slice(0, 4).map(r =>
+                    `${r.label}: ${r.content}`
+                )].join("\n")
+        });
+        window.open(url);
+    }
+
     return <StepWrapper>
         <Wrapper>
             <h2>Appointment Confirmed!</h2>
@@ -125,7 +147,7 @@ export const AppointmentConfirmed = () => {
             <Button color="primary" fullWidth variant="outlined">
                 Modify Appointment
             </Button>
-            <Button color="primary" fullWidth variant="contained">
+            <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained">
                 Add to Calendar
             </Button>
             <Divider />

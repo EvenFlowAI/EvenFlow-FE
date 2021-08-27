@@ -16,7 +16,6 @@ export const UserData = () => {
     const dispatch = useDispatch();
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const customer = useSelector((state: RootState) => state.appointmentFrame.customer);
-    console.log(customer, customerLoadedData);
 
     useEffect(() => {
         if (customerLoadedData) {

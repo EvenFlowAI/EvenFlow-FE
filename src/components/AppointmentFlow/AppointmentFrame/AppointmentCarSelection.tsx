@@ -22,11 +22,13 @@ type TProps = {
 export const AppointmentCarSelection: React.FC<TProps> = ({onNext}) => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+
     useEffect(() => {
         if (customerLoadedData && !customerLoadedData?.id) {
             onNext();
         }
     }, [customerLoadedData]);
+
     return (
         <StepWrapper>
             <Title>Which vehicle are you coming in for?</Title>
