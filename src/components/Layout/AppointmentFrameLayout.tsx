@@ -26,13 +26,7 @@ import {
     loadSCProfile,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {ICreateAppointment, ICreateAppointmentResp} from "../../api/types";
-import {Api} from "../../config/requests";
-import {EAppointmentTimingType} from "../../store/reducers/appointment/types";
-import moment from "moment";
 import {decodeSCID} from "../../utils/utils";
-import {collectServiceRequestIds} from "../AppointmentFlow/AppointmentFrame/utils";
-import {setAppointmentId} from "../../store/reducers/appointmentFrameReducer/actions";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 

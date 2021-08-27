@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import { Actions } from './Actions';
@@ -6,9 +6,12 @@ import {styled, Theme} from "@material-ui/core";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {collectServiceRequestIds} from "./utils";
+import { ITransportation } from '../../../api/types';
+import {TArgCallback, TCallback} from "../../../types/types";
+import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const CardWrapper = styled('div')<Theme, {active?: boolean}>({
     minHeight: 264,
@@ -17,6 +20,7 @@ const CardWrapper = styled('div')<Theme, {active?: boolean}>({
     fontWeight: 700,
     textAlign: "center",
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     padding: 12,
@@ -24,31 +28,78 @@ const CardWrapper = styled('div')<Theme, {active?: boolean}>({
     transition: "all .2s"
 });
 
+const CardOptions = styled('ul')({
+    listStyle: "none",
+    margin: 0,
+    padding: 0,
+    fontSize: 14,
+    display: "flex",
+    alignItems: "stretch",
+    flexDirection: "column",
+    gap: "8px",
+    fontWeight: "normal",
+    width: "100%",
+    "&>li": {
+        border: '1px solid #DADADA',
+        cursor: "pointer",
+        textAlign: "left",
+        padding: 8,
+        "&.active": {
+            border: "1px solid #000000"
+        }
+    }
+})
+
 const TransportationWrapper = styled('div')({
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
     gap: "20px"
 });
 
-type TTransportation = string;
-const transportationNeeds: TTransportation[] = [
-    "Yes, I will be waiting",
-    "No, I would like transportation options",
-    "No, I would like vehicle pick up / drop off services"
-];
-
 type TTransportationProps = {
-    transportation: TTransportation;
+    transportation: string;
+    selectedTransportation: ITransportation|null;
     active?: boolean;
+    options: ITransportation[]|null;
+    onSelect: TCallback;
+    onSelectOption: TArgCallback<ITransportation>;
 }
-const TransportationCard: React.FC<TTransportationProps> = ({transportation, active}) => {
-    return <CardWrapper active={active}>
+const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportation, transportation, active, options, onSelectOption, onSelect}) => {
+    const handleClick = (t: ITransportation) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+        e.stopPropagation();
+        onSelectOption(t);
+    }
+    return <CardWrapper onClick={onSelect} active={active}>
         {transportation}
+        {(active && options)
+            ? <CardOptions>{options.map(option =>
+                <li
+                    onClick={handleClick(option)}
+                    className={option.type === selectedTransportation?.type ? "active" : undefined}
+                    key={option.type}>
+                    {option.description}
+                </li>
+            )}</CardOptions>
+            : null}
     </CardWrapper>
 }
 
 export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {id} = useParams();
+    const [transportations, setTransportations] = useState<ITransportation[]>([]);
+    const transportation = useSelector((state: RootState) => state.appointmentFrame.transportation);
+
+    const [tOptions, customOption]: [ITransportation[], ITransportation|null] = useMemo(() => {
+        if (transportations.length) {
+            const last = transportations[transportations.length - 1];
+            const rest = transportations.slice(0, transportations.length - 1);
+            return [rest, last];
+        }
+        return [[], null];
+    }, [transportations]);
+
+    const dispatch = useDispatch();
+
     const [
         s, ss
     ] = useSelector((state: RootState) => [
@@ -59,7 +110,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         return collectServiceRequestIds(s, ss);
     }, [s, ss]);
     useEffect(() => {
-        Api.call(
+        Api.call<ITransportation[]>(
             Api.endpoints.TransportationOptions.GetActive,
             {
                 data: {
@@ -69,14 +120,40 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 }
             }
         ).then(({data}) => {
-            console.log(data)
+            setTransportations(data);
         })
     }, [id, serviceRequestIds]);
+
+    const handleSelectOption = (o: ITransportation|null) => {
+        dispatch(setTransportation(o));
+    }
+
     return <StepWrapper>
         <TransportationWrapper>
-            {transportationNeeds.map((t, idx) => {
-                return <TransportationCard active={!idx} transportation={t} key={t} />
-            })}
+            <TransportationCard
+                active={transportation === null}
+                selectedTransportation={transportation}
+                transportation={"Yes, I will be waiting"}
+                options={null}
+                onSelect={() => handleSelectOption(null)}
+                onSelectOption={handleSelectOption}
+            />
+            {tOptions.length ? <TransportationCard
+                active={Boolean(transportation && transportation.type !== customOption?.type)}
+                options={tOptions}
+                selectedTransportation={transportation}
+                transportation={"No, I would like transportation options"}
+                onSelect={() => handleSelectOption(tOptions[0])}
+                onSelectOption={handleSelectOption}
+            /> : null}
+            {customOption ? <TransportationCard
+                active={transportation?.type === customOption.type}
+                transportation={customOption.description}
+                selectedTransportation={transportation}
+                options={null}
+                onSelect={() => handleSelectOption(customOption)}
+                onSelectOption={handleSelectOption}
+            /> : null}
         </TransportationWrapper>
         <Actions onBack={onBack} onNext={onNext} />
     </StepWrapper>

@@ -186,3 +186,8 @@ export interface ICustomer {
     phoneNumber: string;
     email: string;
 }
+export interface ITransportation {
+    type: number;
+    name: string;
+    description: string;
+}
