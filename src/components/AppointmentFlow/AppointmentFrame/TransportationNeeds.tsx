@@ -12,6 +12,7 @@ import {collectServiceRequestIds} from "./utils";
 import { ITransportation } from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 
 const CardWrapper = styled('div')<Theme, {active?: boolean}>({
     minHeight: 264,
@@ -44,6 +45,9 @@ const CardOptions = styled('ul')({
         cursor: "pointer",
         textAlign: "left",
         padding: 8,
+        display: "flex",
+        alignItems: "center",
+        gap: "6px",
         "&.active": {
             border: "1px solid #000000"
         }
@@ -72,13 +76,16 @@ const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportat
     return <CardWrapper onClick={onSelect} active={active}>
         {transportation}
         {(active && options)
-            ? <CardOptions>{options.map(option =>
-                <li
-                    onClick={handleClick(option)}
-                    className={option.type === selectedTransportation?.type ? "active" : undefined}
-                    key={option.type}>
-                    {option.description}
-                </li>
+            ? <CardOptions>{options.map(option => {
+                const isActive = option.type === selectedTransportation?.type
+                    return <li
+                        onClick={handleClick(option)}
+                        className={isActive ? "active" : undefined}
+                        key={option.type}>
+                        {isActive ? <RadioButtonChecked fontSize={'small'} /> : <RadioButtonUnchecked fontSize={'small'} />}
+                        {option.description}
+                    </li>;
+                }
             )}</CardOptions>
             : null}
     </CardWrapper>
