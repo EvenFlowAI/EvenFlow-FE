@@ -301,6 +301,8 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 isNeedCall: form.isNeedCall,
                 gmt: moment().utcOffset(),
                 offerId: selectedSlot?.offer?.id || null,
+                serviceCategoryId: null,
+                maintenancePackageOptionId: null,
                 driver: {
                     email: form.driverEmail,
                     phoneNumber: form.driverPhoneNumber,

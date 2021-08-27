@@ -7,7 +7,7 @@ import {
     IVehicleData
 } from "../store/reducers/appointment/types";
 import {IOffer} from "../store/reducers/offers/types";
-import {IServiceRequestShort} from "../store/reducers/serviceRequests/types";
+import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
 
@@ -16,9 +16,15 @@ export type TApiEndpoint<T=any, R=any> = (arg: T) => TApiResponse<R>;
 export type TApiView = Record<string, TApiEndpoint>;
 
 export type TApi = Record<string, TApiView>;
+export enum EServiceCategoryPage {
+    Page1="Page1",
+    Page2="Page2"
+}
 
 export interface ICreateAppointment {
     id?: number;
+    serviceCategoryId: number|null,
+    maintenancePackageOptionId: number|null;
     date: ParsableDate;
     slot: string;
     customerId?: string;
@@ -60,6 +66,7 @@ export interface ICustomerLoadedData {
     firstName: string;
     lastName: string;
     id: string;
+    sessionId?: string;
     phoneNumbers: string[];
     vehicles: ILoadedVehicle[];
 }
@@ -71,6 +78,7 @@ export interface ILoadedVehicle {
     year: number;
     mileage: number;
     warrantyExpiration?: ParsableDate;
+    appointmentHashKeys?: string[];
 }
 export interface IPasswordRecoveryData { email: string; }
 export interface IPasswordRecoveryResp { }
@@ -151,4 +159,35 @@ export interface IServiceCenterId {
 }
 export interface ISessionId {
     "session-id": string;
+}
+
+export interface IServiceCategory {
+    id: number;
+    name: string;
+    page: EServiceCategoryPage;
+    iconPath?: string;
+    loadedIcon?: JSX.Element | string;
+    serviceRequests: IServiceRequest[];
+}
+export interface IServiceConsultantShort {
+    id: string;
+    name: string
+}
+export interface IServiceConsultant {
+    id: string;
+    name: string;
+    dmsId: string;
+    dmsName: string;
+    position: string;
+    iconPath: string;
+}
+export interface ICustomer {
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+}
+export interface ITransportation {
+    type: number;
+    name: string;
+    description: string;
 }

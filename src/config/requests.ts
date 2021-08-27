@@ -129,6 +129,7 @@ type TApiRoute = {
 
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
+    Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey", TApiRoute>,
     AppointmentAllocation: Record<"SetTimeWindows" | "GetTimeWindows"
         | "CreateDemandSegment" | "GetDemandSegments"
         | "GetTWEligibility" | "SetTWEligibility"
@@ -142,6 +143,8 @@ type ApiRoutes = {
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
+    MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
+        | "GetByQuery" | "PackageOptions" | "ByVehicle", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -149,9 +152,13 @@ type ApiRoutes = {
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation", TApiRoute>,
+    ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
+        | "GetByQuery" | "GetByPage", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt", TApiRoute>,
+    ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
+        | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
@@ -159,6 +166,7 @@ type ApiRoutes = {
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues", TApiRoute>,
+    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
@@ -183,6 +191,13 @@ export class Api {
             Verification: {route: "/accounts/verification", method: "patch"},
             Profile: {route: "/accounts/profile", method: "get"},
             Dealership: {route: "/accounts/dealership", method: "get"},
+        },
+        Appointments: {
+            Create: {route: "/appointments", method: "post"},
+            Update: {route: "/appointments/{id}", method: "put"},
+            UpdateByKey: {route: "/appointments/{id}/by-key", method: "put"},
+            Cancel: {route: "/appointments/{id}/cancel", method: "put"},
+            CancelByKey: {route: "/appointments/{id}/cancel/by-key", method: "put"}
         },
         AppointmentAllocation: {
             SetTimeWindows: {route: "/appointment-allocations/time-windows", method: "put"},
@@ -233,6 +248,16 @@ export class Api {
             Remove: {route: "/employee-schedules/{id}", method: "delete"},
             GetAll: {route: "/employee-schedules/by-query", method: "post"}
         },
+        MaintenancePackages: {
+            Create: {route: "/maintenance-packages", method: "post"},
+            Update: {route: "/maintenance-packages/{id}", method: "put"},
+            Remove: {route: "/maintenance-packages/{id}", method: "delete"},
+            Retrieve: {route: "/maintenance-packages/{id}", method: "get"},
+            SetPricingOptimization: {route: "/maintenance-packages/{id}/pricing-optimization", method: "patch"},
+            GetByQuery: {route: "/maintenance-packages/by-query", method: "post"},
+            PackageOptions: {route: "/maintenance-packages/{id}/options", method: "put"},
+            ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "get"},
+        },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
             SetParams: {route: "/optimization-windows", method: "put"},
@@ -270,6 +295,15 @@ export class Api {
             SetLevels: {route: "/pricing-settings/levels", method: "put"},
             Calculation: {route: "/pricing-settings/calculation", method: "get"},
         },
+        ServiceCategories: {
+            Create: {route: "/service-categories", method: "post"},
+            UpdateIcon: {route: "/service-categories/{id}/icon", method: "patch"},
+            Update: {route: "/service-categories/{id}", method: "put"},
+            Remove: {route: "/service-categories/{id}", method: "delete"},
+            Retrieve: {route: "/service-categories/{id}", method: "get"},
+            GetByQuery: {route: "/service-categories/by-query", method: "post"},
+            GetByPage: {route: "/service-categories/by-page", method: "post"},
+        },
         ServiceCenters: {
             Create: {route: "/service-centers", method: "post"},
             GetShort: {route: "/service-centers", method: "get"},
@@ -289,6 +323,14 @@ export class Api {
             SetBreaks: {route: "/service-centers/{id}/breaks", method: "put"},
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
             Analytics: {route: "/service-centers/{id}/analytics", method: "get"}
+        },
+        ServiceConsultants: {
+            Create: {route: "/service-consultants", method: "post"},
+            Update: {route: "/service-consultants/{id}", method: "put"},
+            Remove: {route: "/service-consultants/{id}", method: "delete"},
+            Retrieve: {route: "/service-consultants/{id}", method: "get"},
+            GetByQuery: {route: "/service-consultants/by-query", method: "post"},
+            GetDmsAdvisors: {route: "/service-consultants/{id}/dms-service-advisors", method: "get"},
         },
         ServiceRequests: {
             Create: {route: "/service-requests", method: "post"},
@@ -316,6 +358,12 @@ export class Api {
             SetOptimization: {route: "/slot-scoring/optimization-settings", method: "put"},
             GetOptimization: {route: "/slot-scoring/optimization-settings", method: "get"},
             SetValues: {route: "/slot-scoring/optimization-settings/values", method: "put"}
+        },
+        TransportationOptions: {
+            Edit: {route: "/transportation-options", method: "put"},
+            Get: {route: "/transportation-options", method: "get"},
+            GetActive: {route: "/transportation-options/active/by-query", method: "post"},
+            Rules: {route: "/transportation-options/{id}/rules", method: "put"},
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},

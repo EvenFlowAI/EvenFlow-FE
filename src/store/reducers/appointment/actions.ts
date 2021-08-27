@@ -63,12 +63,13 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: mo
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
-        dispatch(getAppointmentSlots(items));
+        const res = dispatch(getAppointmentSlots(items));
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
-            cb(moment.utc(from));
+            return cb(moment.utc(from));
         }
+        return res;
     } catch {
-        dispatch(getAppointmentSlots([]));
+        return dispatch(getAppointmentSlots([]));
     }
 }
 export const setLoadedReducer = createAction<TAppointmentState>("Appointment/ReloadState");
@@ -183,4 +184,34 @@ export const loadEditAppointment = (appointment: IListAppointment): AppThunk => 
 
     dispatch(setEditAppointment(state));
     dispatch(saveAppointmentReducer());
+}
+
+const CUSTOMER_CACHE = 'fCC';
+export const saveCustomerCache = (data: ICustomerLoadedData): void => {
+    localStorage.setItem(CUSTOMER_CACHE, JSON.stringify(data));
+}
+export const getBlankCustomer = (sessionId?: string): ICustomerLoadedData => {
+    return  {
+        id: "",
+        vehicles: [],
+        lastName: "",
+        firstName: "",
+        emails: [],
+        sessionId,
+        phoneNumbers: []
+    };
+}
+export const clearCustomerCache = (): void => {
+    localStorage.removeItem(CUSTOMER_CACHE);
+}
+export const getCustomerCache = (): ICustomerLoadedData|null => {
+    try {
+        const item = localStorage.getItem(CUSTOMER_CACHE);
+        if (!item) {
+            return null;
+        }
+        return JSON.parse(item) as ICustomerLoadedData;
+    } catch {
+        return null;
+    }
 }

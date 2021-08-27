@@ -4,7 +4,8 @@ import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    saveAppointmentReducer,
+    getBlankCustomer,
+    saveAppointmentReducer, saveCustomerCache,
     setCustomerEnteredEmail, setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
         margin: "0 0 10px",
         fontWeight: "bold",
         textAlign: "center",
-        [mh600]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 22
         },
         [theme.breakpoints.down("xs")]: {
@@ -57,12 +58,16 @@ const useStyles = makeStyles((theme) => ({
         marginTop: "8%",
         display: "flex",
         justifyContent: "space-around",
+        gap: '12px',
         flexFlow: "row nowrap",
         [mh600]: {
             marginTop: "4%"
         },
         [theme.breakpoints.down("xs")]: {
-            flexWrap: "wrap"
+            flexWrap: "wrap",
+            "&> div": {
+                width: '100%'
+            }
         }
     }
 }));
@@ -118,9 +123,12 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                     {"session-id": sessionId},
                     {serviceCenterId: serviceCenter?.id || 0, searchTerm: ""}
                 );
-                dispatch(setCustomerLoadedData(data));
+                dispatch(setCustomerLoadedData({...data, sessionId}));
                 dispatch(saveAppointmentReducer());
             } catch {
+                const c = getBlankCustomer(sessionId);
+                dispatch(setCustomerLoadedData(c));
+                saveCustomerCache(c);
             } finally {
                 onComplete();
             }

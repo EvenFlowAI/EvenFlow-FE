@@ -10,6 +10,10 @@ import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
 import {clearStorage} from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
+import {useLayout} from "../../utils/hooks";
+import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
+import {MuiThemeProvider} from "@material-ui/core";
+import {frameTheme} from "../../theme/theme";
 
 
 export const Welcome = () => {
@@ -17,6 +21,7 @@ export const Welcome = () => {
     const history = useHistory();
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const {id} = useParams();
+    const isFrame = useLayout();
 
     useEffect(() => {
         clearStorage();
@@ -28,8 +33,9 @@ export const Welcome = () => {
     }, [id]);
 
     const onComplete = () => {
+        const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         history.push(
-            Routes.EndUser.Appointment.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
+            route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );
     }
 
@@ -52,9 +58,13 @@ export const Welcome = () => {
         }
     }
 
-    return (
-        <WelcomeLayout title="Welcome!" subtitle="Schedule Your Service:">
-            {getComponent()}
-        </WelcomeLayout>
+    return (isFrame ? <MuiThemeProvider theme={frameTheme}>
+                <FrameWelcomeLayout>
+                    {getComponent()}
+                </FrameWelcomeLayout>
+            </MuiThemeProvider> :
+            <WelcomeLayout title="Welcome!" subtitle="Schedule Your Service:">
+                {getComponent()}
+            </WelcomeLayout>
     );
 };

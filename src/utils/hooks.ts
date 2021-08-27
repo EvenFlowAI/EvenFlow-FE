@@ -1,4 +1,4 @@
-import React, {ReactNode, useCallback, useEffect, useState} from "react";
+import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
 import {useSnackbar} from "notistack";
 import {IPageRequest, ValidationKeyPairs} from "../types/types";
 import {getAPIException} from "./utils";
@@ -11,6 +11,7 @@ import {defaultRowsPerPage} from "../config/config";
 import {IDealershipProfile} from "../store/reducers/dealershipGroups/types";
 import {IServiceCenter} from "../store/reducers/serviceCenters/types";
 import {selectSC as selectSCAction} from "../store/reducers/serviceCenters/actions";
+import {useLocation} from "react-router-dom";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -26,7 +27,7 @@ export const useModal = () => {
     return {isOpen, onClose, onOpen, onToggleOpen};
 }
 
-export function useConfirm () {
+export function useConfirm() {
     const dispatch = useDispatch();
     return {
         closeConfirm: () => dispatch(closeConfirmModal()),
@@ -52,7 +53,7 @@ export const useSCs = () => {
     const dispatch = useDispatch();
     const selectSC = useCallback((sc: IServiceCenter) => {
         dispatch(selectSCAction(sc));
-    },[dispatch])
+    }, [dispatch])
 
     return {selectedSC, scList, selectSC};
 }
@@ -66,7 +67,7 @@ export function useException() {
     const {enqueueSnackbar} = useSnackbar();
     return useCallback((e: any) => {
         if (e && e.response?.data?.errors && e.response.data.errors.length) {
-            for (const error of e.response.data.errors.slice(0, 3) as {field: string; message: string}[]) {
+            for (const error of e.response.data.errors.slice(0, 3) as { field: string; message: string }[]) {
                 enqueueSnackbar(error.message, {variant: "error"});
             }
         } else if (typeof e === "string") {
@@ -78,6 +79,7 @@ export function useException() {
 }
 
 type TVariant = "default" | "warning" | "success" | "error" | "info";
+
 export function useMessage() {
     const {enqueueSnackbar} = useSnackbar();
     return (message: ReactNode, variant?: TVariant) => {
@@ -85,7 +87,7 @@ export function useMessage() {
     }
 }
 
-export function useValidation<U> (
+export function useValidation<U>(
     fields: ValidationKeyPairs<U>[],
     data: U
 ) {
@@ -105,6 +107,7 @@ export function useValidation<U> (
         return errors;
     };
 }
+
 type TPageCallback = (state: RootState) => IPageRequest
 type IPageRequestActionCreator = (payload: Partial<IPageRequest>) => void;
 export const usePagination = (cb: TPageCallback, changePageData: IPageRequestActionCreator) => {
@@ -113,7 +116,7 @@ export const usePagination = (cb: TPageCallback, changePageData: IPageRequestAct
     const changePage =
         (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
             dispatch(changePageData({pageIndex: pageNumber}));
-    }
+        }
     const changeRowsPerPage:
         React.ChangeEventHandler<HTMLInputElement> = e => {
         dispatch(changePageData({pageSize: +e.target.value, pageIndex: 0}));
@@ -134,7 +137,7 @@ export const useStatePagination = () => {
     return {pageData, onChangePage, onChangeRowsPerPage};
 }
 
-export const useDebounce = <S=string>(val: S, delay: number=1000): S => {
+export const useDebounce = <S = string>(val: S, delay: number = 1000): S => {
     const [state, setState] = useState<S>(val);
 
     useEffect(() => {
@@ -159,4 +162,15 @@ export const useSideBar = () => {
         setOpened(s => !s);
     }, []);
     return {isOpened, onClose, onOpen, onToggle};
+}
+
+type TLParams = {
+    frame?: string
+}
+export const useLayout = () => {
+    const {search} = useLocation<TLParams>();
+    return useMemo(() => {
+        const isFrame = new URLSearchParams(search).get('frame')?.toLowerCase();
+        return isFrame === 'true' || isFrame === '1';
+    }, [search]);
 }

@@ -87,6 +87,7 @@ export interface IPrivacy {
 export interface IPrice {
     value: number;
     category: EDemandCategory;
+    amountOfSavingMoney?: number
 }
 export interface IAppointmentSlot {
     date: ParsableDate;
@@ -108,6 +109,7 @@ export enum EAppointmentTimingType {
 }
 export interface IAppointmentSlotsRequest {
     serviceCenterId: number;
+    maintenancePackageOptionId?: number|null;
     fromDate?: ParsableDate;
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;

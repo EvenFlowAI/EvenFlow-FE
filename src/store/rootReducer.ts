@@ -16,9 +16,11 @@ import {schedulesReducer} from "./reducers/schedules/reducer";
 import {offersReducer} from "./reducers/offers/reducer";
 import {appointmentReducer} from "./reducers/appointment/reducer";
 import {pricingSettingsReducer} from "./reducers/pricingSettings/reducer";
+import {appointmentFrameReducer} from "./reducers/appointmentFrameReducer/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
+    appointmentFrame: appointmentFrameReducer,
     users: usersReducer,
     dealershipGroups: dealershipGroupsReducer,
     demandSegments: demandSegmentsReducer,
