@@ -2,6 +2,8 @@ import React, {useMemo} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {Button, styled} from "@material-ui/core";
 import moment from "moment";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 
 const Wrapper = styled('div')({
@@ -60,42 +62,56 @@ type TItem = {
 
 
 export const AppointmentConfirmed = () => {
+    const [
+        appointment,
+        s, ss,
+        customer,
+        vehicle
+    ] = useSelector((state: RootState) => [
+        state.appointment.appointment,
+        state.appointmentFrame.service,
+        state.appointmentFrame.subService,
+        state.appointmentFrame.customer,
+        state.appointmentFrame.selectedVehicle
+    ]);
+
     const data: TItem[] = useMemo(() => {
         return [
             {
                 label: "Date and time",
-                content: moment.utc().format('DDD, MMM d, h:mm a'),
+                content: appointment?.date.format('DDD, MMM d, h:mm a')
+                    ?? moment.utc().format('DDD, MMM d, h:mm a'),
             },
-            {
+            /*{
                 label: "Address",
                 content: "2200 US Highway 30 • Oswego, IL 60543"
-            },
+            },*/
             {
                 label: "Service type",
-                content: "The Works Preferred"
+                content: ss?.name ?? s?.name ?? "-"
             },
             {
                 label: "Selected Price",
-                content: "$148"
+                content: `$${appointment?.price?.value}`
             },
             {
                 label: "Name",
-                content: "Hugo Johns"
+                content: customer.fullName
             },
             {
                 label: "Vehicle",
-                content: "2019 Ford Focus"
+                content: `${vehicle?.year} ${vehicle?.make} ${vehicle?.model}`
             },
             {
                 label: "Phone number",
-                content: "(773) 889-3000"
+                content: customer.phoneNumber
             },
             {
                 label: "Email",
-                content: "hugo@gmail.com"
+                content: customer.email
             }
         ]
-    }, []);
+    }, [appointment, s, ss, customer, vehicle]);
     return <StepWrapper>
         <Wrapper>
             <h2>Appointment Confirmed!</h2>
