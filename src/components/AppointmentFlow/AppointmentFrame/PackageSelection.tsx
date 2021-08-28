@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -7,6 +7,7 @@ import {CheckBoxOutlined} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useParams} from "react-router-dom";
 
 const border = '1px solid #DADADA';
 
@@ -190,6 +191,12 @@ const Wrapper = styled('div')({
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const dispatch = useDispatch();
+    const {id} = useParams();
+
+    useEffect(() => {
+        // TODO: Load packages
+
+    }, [id]);
 
     const setClasses = (id: number, cls: string) => {
         if (id === selectedPackage) {
