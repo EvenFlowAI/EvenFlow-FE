@@ -25,6 +25,7 @@ export interface IAppointmentId {
 }
 export type TMaintenanceDetails = {
     year?: string;
+    make?: string;
     model?: string;
     trim?: string;
     powertrain?: string;

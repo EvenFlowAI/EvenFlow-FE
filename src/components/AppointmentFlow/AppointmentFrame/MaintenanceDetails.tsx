@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {styled} from "@material-ui/core";
@@ -9,6 +9,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {setMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
+import {Api} from "../../../config/requests";
+import {decodeSCID} from "../../../utils/utils";
+import {useParams} from "react-router-dom";
+import {EVehiclePropType} from "../../../api/types";
 
 const SelectWrapper = styled('div')({
     display: "grid",
@@ -20,7 +24,7 @@ const SelectWrapper = styled('div')({
 type TSelect = {
     label: string;
     name: keyof TMaintenanceDetails;
-    options: string[];
+    options: string[]|string;
 };
 
 
@@ -39,27 +43,75 @@ const mileageOptions: string[] = [
     "90000",
     "100000",
 ];
+
+type TTypeNameList = [EVehiclePropType, keyof TMaintenanceDetails];
+const typesToLoad: TTypeNameList[] = [
+    [EVehiclePropType.Model, "model"],
+    [EVehiclePropType.DriveType, "powertrain"]
+]
 const selects: TSelect[] = [
     {label: "Year", name: "year", options: []},
-    {label: "Model", name: "model", options: []},
-    {label: "Trim", name: "trim", options: []},
-    {label: "Powertrain", name: "powertrain", options: []},
+    {label: "Model", name: "model", options: "model"},
+    {label: "Trim", name: "trim", options: "trim"},
+    {label: "Powertrain", name: "powertrain", options: "powertrain"},
     {label: "Oil Type", name:"oilType", options: []},
     {label: "Service Interval", name:"serviceInterval", options: mileageOptions},
 ];
 
+type TOptionsState = {[s: string]: string[]};
+const blankOptions: TOptionsState = {};
+
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
+    const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
+    const {id} = useParams();
     const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
+    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+
+    useEffect(() => {
+        if (selectedVehicle) {
+            dispatch(setMaintenanceDetails({
+                make: selectedVehicle.make,
+                model: selectedVehicle.model,
+                year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
+            }))
+        }
+    }, [dispatch, selectedVehicle]);
+
+    useEffect(() => {
+        const filter = [];
+        if (maintenanceDetails.make) {
+            filter.push({type: EVehiclePropType.Make, value: maintenanceDetails.make});
+        }
+        if (maintenanceDetails.model) {
+            filter.push({type: EVehiclePropType.Model, value: maintenanceDetails.model});
+        }
+        for (let [propertyToReturn, name] of typesToLoad) {
+            Api.call<string[]>(
+                Api.endpoints.Vehicles.GetByQuery,
+                {data: {
+                    serviceCenterId: decodeSCID(id),
+                    filter,
+                    propertyToReturn
+                }}
+            ).then(({data}) => {
+                setLoadedOptions(d => ({...d, [name]: data}));
+            })
+        }
+    }, [id, maintenanceDetails]);
+
     const handleChange = (name: keyof TMaintenanceDetails) => (e: React.ChangeEvent<{}>, option: string|null) => {
         dispatch(setMaintenanceDetails({[name]: option ?? null}))
     }
+
     return (<StepWrapper>
         <SelectWrapper>
             {selects.map(select => {
                 return <Autocomplete
                     key={select.name}
-                    options={select.options}
+                    options={typeof select.options === 'string'
+                        ? loadedOptions[select.options] ?? []
+                        : select.options}
                     onChange={handleChange(select.name)}
                     fullWidth
                     autoComplete={true}

@@ -20,6 +20,9 @@ export enum EServiceCategoryPage {
     Page1="Page1",
     Page2="Page2"
 }
+export enum EVehiclePropType {
+    Make, Model, Transmission, DriveType, EngineType
+}
 
 export interface ICreateAppointment {
     id?: number;
