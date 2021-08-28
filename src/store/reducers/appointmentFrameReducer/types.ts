@@ -23,3 +23,11 @@ export interface IAppointmentId {
     id?: number;
     hashKey?: string;
 }
+export type TMaintenanceDetails = {
+    year?: string;
+    model?: string;
+    trim?: string;
+    powertrain?: string;
+    oilType?: string;
+    serviceInterval?: string;
+}
