@@ -122,6 +122,6 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 />
             })}
         </SelectWrapper>
-        <Actions onBack={onBack} onNext={onNext} />
+        <Actions onBack={onBack} nextDisabled={!maintenanceDetails.serviceInterval} onNext={onNext} />
     </StepWrapper>);
 };

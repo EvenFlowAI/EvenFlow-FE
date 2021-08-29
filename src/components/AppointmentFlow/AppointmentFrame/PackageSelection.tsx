@@ -10,6 +10,7 @@ import {setPackage} from "../../../store/reducers/appointmentFrameReducer/action
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
+import {NoItemsLoading} from "../../UI/NoItemsLoading";
 
 const border = '1px solid #DADADA';
 
@@ -191,8 +192,10 @@ const Wrapper = styled('div')({
 });
 
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
+    const [loading, setLoading] = useState<boolean>(false);
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+    const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
 
     const [packages, setPackages] = useState([]);
 
@@ -200,19 +203,28 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const {id} = useParams();
 
     useEffect(() => {
+        setLoading(true);
         Api.call(
             Api.endpoints.MaintenancePackages.ByVehicle,
             {
                 data: {
                     serviceCenterId: decodeSCID(id),
-                    vehicle: selectedVehicle
+                    vehicle: {
+                        ...selectedVehicle,
+                        mileage: maintenanceDetails.serviceInterval
+                    }
                 }
             }
-        ).then(({data}) => {
-            console.log(data);
-        })
+        )
+            .then(({data}) => {
+                setPackages(data);
+            })
+            .catch(() => {
+                setPackages([]);
+            })
+            .finally(() => {setLoading(false)})
 
-    }, [id, selectedVehicle]);
+    }, [id, selectedVehicle, maintenanceDetails]);
 
     const setClasses = (id: number, cls: string) => {
         if (id === selectedPackage) {
@@ -227,7 +239,12 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
 
     return (
         <StepWrapper>
-            <Wrapper>
+            <NoItemsLoading
+                wrapperStyles={{marginTop: 20}}
+                items={packages}
+                loading={loading}
+                label={"There are no packages available"} />
+            {packages.length ? <Wrapper>
                 <div className='top'/>
                 {mockPackages.map(p => <div
                     className={setClasses(p.id, "top title")}
@@ -243,14 +260,14 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                     return <React.Fragment key={s.name}>
                         <div className={cls}>{s.name}</div>
                         {mockPackages.map(p => {
-                            const clsx = p.lastIdx === idx ? 'service last' : cls;
-                            const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
-                            return <div
-                                key={p.id}
-                                onClick={handleClick(p.id)}
-                                className={setClasses(p.id, wMoreClsx)}>
-                                {s.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
-                            </div>;
+                                const clsx = p.lastIdx === idx ? 'service last' : cls;
+                                const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
+                                return <div
+                                    key={p.id}
+                                    onClick={handleClick(p.id)}
+                                    className={setClasses(p.id, wMoreClsx)}>
+                                    {s.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
+                                </div>;
                             }
                         )}
                     </React.Fragment>;
@@ -290,13 +307,16 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         key={p.id}>
                         <div className="before">$115</div>
                         <div className="currentWrp">
-                            <div className="triangle" />
+                            <div className="triangle"/>
                             <div className="current">$65</div>
                         </div>
                     </div>
                 )}
-            </Wrapper>
-            <Actions onBack={onBack} onNext={onNext}/>
+            </Wrapper> : null}
+            <Actions
+                onBack={onBack}
+                nextDisabled={!selectedPackage}
+                onNext={onNext} />
         </StepWrapper>
     );
 };
