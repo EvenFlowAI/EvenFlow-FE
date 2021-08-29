@@ -256,7 +256,7 @@ export class Api {
             SetPricingOptimization: {route: "/maintenance-packages/{id}/pricing-optimization", method: "patch"},
             GetByQuery: {route: "/maintenance-packages/by-query", method: "post"},
             PackageOptions: {route: "/maintenance-packages/{id}/options", method: "put"},
-            ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "get"},
+            ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "post"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
