@@ -253,7 +253,7 @@ export interface IPackageOptions {
     type: EMaintenanceOptionType;
     name: string;
     price: number;
-    services: IServiceRequest[];
+    serviceRequests: IServiceRequest[];
     complimentaryServices: IComplimentaryService[];
 }
 
