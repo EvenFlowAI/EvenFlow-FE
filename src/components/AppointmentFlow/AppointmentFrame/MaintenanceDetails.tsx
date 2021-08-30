@@ -13,6 +13,7 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {EVehiclePropType} from "../../../api/types";
+import moment from "moment";
 
 const SelectWrapper = styled('div')({
     display: "grid",
@@ -44,13 +45,17 @@ const mileageOptions: string[] = [
     "100000",
 ];
 
+const year = moment.utc().year();
+const YEARS = 20;
+const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
+
 type TTypeNameList = [EVehiclePropType, keyof TMaintenanceDetails];
 const typesToLoad: TTypeNameList[] = [
     [EVehiclePropType.Model, "model"],
     [EVehiclePropType.DriveType, "powertrain"]
 ]
 const selects: TSelect[] = [
-    {label: "Year", name: "year", options: []},
+    {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model"},
     {label: "Trim", name: "trim", options: "trim"},
     {label: "Powertrain", name: "powertrain", options: "powertrain"},
