@@ -52,7 +52,7 @@ const PriceWrapper = styled('div')({
         color: "#27AE60"
     }
 })
-
+// TODO: Advisor|consultant
 export const SelectedAppointment = () => {
     const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const appointment = useSelector((state: RootState) => state.appointment.appointment);
@@ -65,7 +65,7 @@ export const SelectedAppointment = () => {
                         appointmentData.subService?.name ?? appointmentData.service?.name ?? "-"
                     }
                     </li>
-                    <li>Consultant: {
+                    <li>Advisor: {
                         appointmentData.advisor?.name ?? "Any available"
                     }</li>
                     {/*<ul>*/}

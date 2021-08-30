@@ -43,9 +43,10 @@ const Index = styled('span')({
     minWidth: 28
 })
 
+// TODO: Advisor|consultant
 const menuItems: string[] = [
     "Service Needs",
-    "Consultant Selection",
+    "Advisor Selection",
     "Appointment Selection",
     "Transportation Needs",
     "Appointment Confirmation"
