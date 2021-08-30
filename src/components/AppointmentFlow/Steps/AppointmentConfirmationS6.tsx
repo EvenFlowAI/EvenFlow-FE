@@ -25,7 +25,6 @@ import {Routes} from "../../../config/routes";
 import {API} from "../../../api/api";
 import {
     EReminderType,
-    flatTransportations,
     IPersonalInformation,
     IPrivacy, IReminders
 } from "../../../store/reducers/appointment/types";
@@ -189,10 +188,6 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                         && forms.s1Data.vin === forms.customerLoadedData.vehicles[0].vin)
                         ? forms.customerLoadedData.vehicles[0].dmsId
                         : null
-            },
-            transportationNeeds: {
-                isNeed: Number(forms.transportation) > 2,
-                description: flatTransportations.find(t => t.id === forms.transportation)?.label || ""
             },
             slot: forms.appointment?.id.split("|")[1] || "",
             serviceRequestIds: forms.selectedSR,

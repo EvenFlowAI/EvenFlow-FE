@@ -89,7 +89,9 @@ export const AppointmentFrameLayout = () => {
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
-            carSelection: <AppointmentCarSelection onNext={() => setCurrentScreen('serviceNeeds')} />,
+            carSelection: <AppointmentCarSelection
+                onBack={handleLogin}
+                onNext={() => setCurrentScreen('serviceNeeds')} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
                 onBack={handleChangeScreen('carSelection')}
@@ -160,7 +162,7 @@ export const AppointmentFrameLayout = () => {
             case "packageSelection":
                 return "Please select the maintenance package for your vehicle"
             case "consultantSelection":
-                return "Do you have a preferred consultant?";
+                return "Do you have a preferred advisor?";
             case "appointmentTiming":
                 return "When would you like your vehicle serviced?";
             case "appointmentSelection":

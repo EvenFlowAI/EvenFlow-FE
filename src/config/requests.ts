@@ -170,7 +170,7 @@ type ApiRoutes = {
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
-    Vehicles: Record<"GetByVIN", TApiRoute>,
+    Vehicles: Record<"GetByVIN" | "GetByQuery", TApiRoute>,
 }
 
 type TOptions = {
@@ -256,7 +256,7 @@ export class Api {
             SetPricingOptimization: {route: "/maintenance-packages/{id}/pricing-optimization", method: "patch"},
             GetByQuery: {route: "/maintenance-packages/by-query", method: "post"},
             PackageOptions: {route: "/maintenance-packages/{id}/options", method: "put"},
-            ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "get"},
+            ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "post"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
@@ -392,7 +392,8 @@ export class Api {
             SetWS: {route: "/warranty-settings", method: "put"},
         },
         Vehicles: {
-            GetByVIN: {route: "/vehicles/by-vin", method: "get"}
+            GetByVIN: {route: "/vehicles/by-vin", method: "get"},
+            GetByQuery: {route: "/vehicles/by-query", method: "post"}
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {

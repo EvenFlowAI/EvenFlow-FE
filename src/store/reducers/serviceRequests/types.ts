@@ -14,6 +14,7 @@ export interface IServiceRequestShort {
     code: string;
     description: string;
     priority: IServiceRequestPriority
+    price: number;
 }
 export interface IServiceRequestNonAddedFilter {
     searchTerm: string;

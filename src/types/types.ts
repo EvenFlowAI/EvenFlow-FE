@@ -73,5 +73,9 @@ export interface IOrder<D={}> {
     orderBy?: keyof D | string,
     isAscending: boolean
 }
+export type TOption = {
+    name: string;
+    value: string;
+}
 export type TCallback = () => void;
 export type TArgCallback<T> = (arg: T) => void;

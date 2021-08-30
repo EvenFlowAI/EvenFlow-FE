@@ -12,6 +12,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {Loading} from "../../UI/Loading";
 
 
 const ConsultantsWrapper = styled('div')({
@@ -50,13 +51,14 @@ type TCardProps = {
     active?: boolean;
     onClick: TCallback;
 }
+// TODO: Advisor|consultant
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
     return <ConsultantWrapper active={active} onClick={onClick}>
         {blank
             ? <img width={50} height={50} src={anyConsultant} alt="Any available consultant"/>
             : <Avatar src={advisor?.iconPath}/>}
         <div>
-            {blank ? "Any available consultant" : advisor?.name ?? "-"}
+            {blank ? "Any available advisor" : advisor?.name ?? "-"}
         </div>
     </ConsultantWrapper>
 }
@@ -97,7 +99,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                 onClick={handleSelectConsultant(null)}
                 active={selectedConsultant === null}
             />
-            {consultants.map(c =>
+            {loading ? <Loading /> : consultants.map(c =>
                 <ConsultantCard
                     onClick={handleSelectConsultant(c)}
                     advisor={c}

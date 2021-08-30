@@ -6,8 +6,8 @@ import {TScreen} from "../../Layout/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectSubService} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
-import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
+import {ReactComponent as BatteryIcon} from "../../../assets/img/battery-icon.svg";
+import {ReactComponent as AlignmentIcon} from "../../../assets/img/alignment-icon.svg";
 import {ReactComponent as RecallIcon} from "../../../assets/img/recall.svg";
 import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
 import {CardsWrapper} from "./styled";
@@ -34,7 +34,7 @@ import {Loading} from "../../UI/Loading";
 ]*/
 
 const icons: JSX.Element[] = [
-    <TireIcon />, <WorksIcon />, <MoreIcon />
+    <BatteryIcon />, <AlignmentIcon />, <MoreIcon />
 ];
 
 const addServices: IServiceCategory[] = [

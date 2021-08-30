@@ -3,7 +3,7 @@ import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
 import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
 import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
-import {ReactComponent as RecallIcon} from "../../../assets/img/recall.svg";
+import {ReactComponent as BrakeIcon} from "../../../assets/img/breaks-icon.svg";
 import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -21,7 +21,7 @@ import { Loading } from '../../UI/Loading';
 
 const icons: JSX.Element[] = [
     <WorksIcon />,
-    <RecallIcon />,
+    <BrakeIcon />,
 ];
 
 

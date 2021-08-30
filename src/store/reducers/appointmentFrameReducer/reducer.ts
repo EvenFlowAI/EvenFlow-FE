@@ -3,14 +3,22 @@ import {
     selectService,
     selectSubService,
     setAdvisor, setAppointmentId, setCustomer,
-    setFrameDescription,
+    setFrameDescription, setMaintenanceDetails,
     setPackage, setReminders,
     setTime,
     setTiming, setTransportation, setVehicle
 } from "./actions";
-import {ICustomer, ILoadedVehicle, IServiceCategory, IServiceConsultant, ITransportation} from "../../../api/types";
+import {
+    ICustomer,
+    ILoadedVehicle,
+    IPackageOptions,
+    IServiceCategory,
+    IServiceConsultant,
+    ITransportation
+} from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
+import {TMaintenanceDetails} from "./types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -18,7 +26,7 @@ type TState = {
     hashKey?: string;
     subService: IServiceCategory|null;
     description: string;
-    selectedPackage: number|null;
+    selectedPackage: IPackageOptions|null;
     advisor: IServiceConsultant|null;
     selectedTiming: EAppointmentTimingType|null;
     selectedTime: moment.Moment|null;
@@ -26,6 +34,7 @@ type TState = {
     customer: ICustomer;
     reminders: EReminderType[];
     transportation: ITransportation|null;
+    maintenanceDetails: TMaintenanceDetails;
 }
 const initialState: TState = {
     service: null,
@@ -42,7 +51,8 @@ const initialState: TState = {
         email: ""
     },
     reminders: [],
-    transportation: null
+    transportation: null,
+    maintenanceDetails: {}
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -85,5 +95,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setTransportation, (state, {payload}) => {
         return {...state, transportation: payload};
+    })
+    .addCase(setMaintenanceDetails, (state, {payload}) => {
+        return {...state, maintenanceDetails: {...state.maintenanceDetails, ...payload}}
     })
 )

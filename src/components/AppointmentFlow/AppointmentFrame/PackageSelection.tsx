@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -7,72 +7,25 @@ import {CheckBoxOutlined} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useParams} from "react-router-dom";
+import {Api} from "../../../config/requests";
+import {decodeSCID} from "../../../utils/utils";
+import {NoItemsLoading} from "../../UI/NoItemsLoading";
+import {IComplimentaryService, IPackage, IPackageOptions} from "../../../api/types";
+import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 
 const border = '1px solid #DADADA';
 
-
-type TService = {
-    name: string;
-    description?: string;
+type TWithPackages = {
     packages: number[];
 }
+
+type TService = TWithPackages & IServiceRequest;
+type TComplimentary = TWithPackages & IComplimentaryService;
 type TPackage = {
-    id: number;
-    name: string;
     lastIdx?: number;
     moreIdx?: number[];
-};
-
-const packages: TPackage[] = [
-    {id: 1, name: "Factory", lastIdx: 2, moreIdx: []},
-    {id: 2, name: "Value", lastIdx: 4, moreIdx: [3,4]},
-    {id: 3, name: "Premium", moreIdx: [5,6]},
-];
-const complimentary: TService[] = [
-    {
-        name: "Top Off Fluids",
-        packages: [1, 2, 3]
-    },
-    {
-        name: "Courtesy Car Wash",
-        packages: [1, 2, 3]
-    },
-    {
-        name: "Courtesy Spray Wax",
-        packages: [2, 3]
-    }
-]
-const services: TService[] = [
-    {
-        name: "Replace Engine Oil & Filter",
-        description: "Mobil 1 Synthetic Oil (Up to 6 Quarts)",
-        packages: [1, 2, 3]
-    },
-    {
-        name: "Rotate & Balance Tires",
-        packages: [1, 2, 3]
-    },
-    {
-        name: "Perform Multi-Point Inspection",
-        packages: [1, 2, 3]
-    },
-    {
-        name: "Replace Front Wiper Blades",
-        packages: [2, 3]
-    },
-    {
-        name: "Replace Cabin Air Filter",
-        packages: [2, 3]
-    },
-    {
-        name: "Perform Wheel Alignment",
-        packages: [3]
-    },
-    {
-        name: "Replace Engine Air Filter",
-        packages: [3]
-    }
-];
+} & IPackageOptions;
 
 const Wrapper = styled('div')({
     display: "grid",
@@ -82,6 +35,7 @@ const Wrapper = styled('div')({
     width: "100%",
     alignItems: "stretch",
     "& .currentWrp": {
+        flexBasis: "50%",
         display: "flex",
         alignItems: "center",
         justifyContent: "stretch"
@@ -165,7 +119,8 @@ const Wrapper = styled('div')({
             padding: 8,
             "&.price": {
                 display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
+                // gridTemplateColumns: "repeat(2, 1fr)", TODO: Replace after strikethrough price
+                gridTemplateColumns: "repeat(1, 1fr)",
                 alignItems: "center",
                 justifyContent: "center",
                 "&>.before": {
@@ -188,27 +143,130 @@ const Wrapper = styled('div')({
 });
 
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
+    const [loading, setLoading] = useState<boolean>(false);
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
+    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+    const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
+
+    const [loadedPackages, setPackages] = useState<IPackage[]>([]);
+
+    const [packages, services, complimentary]: [TPackage[], TService[], TComplimentary[]]
+        = useMemo(() => {
+        if (loadedPackages.length) {
+            const loadedPackage = loadedPackages[0];
+            const services: TService[] = [];
+            const packages: TPackage[] = [];
+            const complimentary: TComplimentary[] = [];
+
+            for (let option of loadedPackage.options.sort((a, b) => a.type - b.type)) {
+                packages.push({
+                    ...option,
+                    moreIdx: []
+                })
+                for (let service of option.serviceRequests) {
+                    const pushedService = services.find(s => s.id === service.id);
+                    if (!pushedService) {
+                        services.push({
+                            ...service, packages: [option.id]
+                        })
+                    } else if (!pushedService.packages.includes(option.id)) {
+                        pushedService.packages = [...pushedService.packages, option.id];
+                    }
+                }
+                for (let comp of option.complimentaryServices) {
+                    const present = complimentary.find(c => c.id === comp.id);
+                    if (!present) {
+                        complimentary.push({
+                            ...comp,
+                            packages: [option.id]
+                        })
+                    } else if (!present.packages.includes(option.id)) {
+                        present.packages = [...present.packages, option.id];
+                    }
+                }
+                services.reduce((acc, s, idx) => {
+                    if (acc.pck.length > s.packages.length) {
+                        const lastPackageId = acc.pck[0];
+                        const p = packages.find(p => p.id === lastPackageId);
+                        if (p) {
+                            p.lastIdx = idx-1;
+                            if (acc.moreIdx) {
+                                const np = packages.find(el => el.id === acc.moreIdx);
+                                if (np) {
+                                    np.moreIdx = [...acc.more];
+                                }
+                            }
+                            acc.moreIdx = s.packages[0];
+                            acc.more = [idx];
+                        }
+                    } else if (acc.more.length) {
+                        acc.more.push(idx);
+                    }
+                    if (idx === (services.length - 1) && acc.moreIdx) {
+                        const np = packages.find(el => el.id === acc.moreIdx);
+                        if (np) {
+                            np.moreIdx = [...acc.more];
+                        }
+                    }
+                    return {...acc, pck: s.packages};
+                }, {pck: [], more: [], moreIdx: 0} as {pck: number[], more: number[], moreIdx: number});
+            }
+
+            return [packages, services, complimentary];
+        }
+        return [[], [], []];
+    }, [loadedPackages]);
+
     const dispatch = useDispatch();
+    const {id} = useParams();
+
+    useEffect(() => {
+        setLoading(true);
+        Api.call<IPackage[]>(
+            Api.endpoints.MaintenancePackages.ByVehicle,
+            {
+                data: {
+                    serviceCenterId: decodeSCID(id),
+                    vehicle: {
+                        ...selectedVehicle,
+                        mileage: maintenanceDetails.serviceInterval
+                    }
+                }
+            }
+        )
+            .then(({data}) => {
+                setPackages(data);
+            })
+            .catch(() => {
+                setPackages([]);
+            })
+            .finally(() => {setLoading(false)})
+
+    }, [id, selectedVehicle, maintenanceDetails]);
 
     const setClasses = (id: number, cls: string) => {
-        if (id === selectedPackage) {
+        if (id === selectedPackage?.id) {
             return `${cls} selected`;
         }
         return cls;
     }
 
-    const handleClick = (id: number) => () => {
-        dispatch(setPackage(id));
+    const handleClick = (p: IPackageOptions) => () => {
+        dispatch(setPackage(p));
     }
 
     return (
         <StepWrapper>
-            <Wrapper>
+            <NoItemsLoading
+                wrapperStyles={{marginTop: 20}}
+                items={packages}
+                loading={loading}
+                label={"There are no packages available"} />
+            {packages.length ? <Wrapper>
                 <div className='top'/>
                 {packages.map(p => <div
                     className={setClasses(p.id, "top title")}
-                    onClick={handleClick(p.id)}
+                    onClick={handleClick(p)}
                     key={p.id}>
                     {p.name}
                 </div>)}
@@ -217,17 +275,17 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 {services.map((s, idx) => {
                     const isLast = idx + 1 === services.length;
                     const cls = `service${isLast ? ' last' : ''}`;
-                    return <React.Fragment key={s.name}>
-                        <div className={cls}>{s.name}</div>
+                    return <React.Fragment key={s.id}>
+                        <div className={cls}>{s.description}</div>
                         {packages.map(p => {
-                            const clsx = p.lastIdx === idx ? 'service last' : cls;
-                            const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
-                            return <div
-                                key={p.id}
-                                onClick={handleClick(p.id)}
-                                className={setClasses(p.id, wMoreClsx)}>
-                                {s.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
-                            </div>;
+                                const clsx = p.lastIdx === idx ? 'service last' : cls;
+                                const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
+                                return <div
+                                    key={p.id}
+                                    onClick={handleClick(p)}
+                                    className={setClasses(p.id, wMoreClsx)}>
+                                    {s.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
+                                </div>;
                             }
                         )}
                     </React.Fragment>;
@@ -236,7 +294,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 {packages.map(p =>
                     <div
                         key={p.id}
-                        onClick={handleClick(p.id)}
+                        onClick={handleClick(p)}
                         className={setClasses(p.id, "green subtitle")}/>
                 )}
                 {complimentary.map(c => <React.Fragment key={c.name}>
@@ -244,7 +302,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                     {packages.map(p =>
                         <div
                             key={p.id}
-                            onClick={handleClick(p.id)}
+                            onClick={handleClick(p)}
                             className={setClasses(p.id, "service green")}>
                             {c.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
                         </div>
@@ -253,27 +311,32 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 <div className="totalComplimentary last">Total Complimentary Value</div>
                 {packages.map(p =>
                     <div
-                        onClick={handleClick(p.id)}
+                        onClick={handleClick(p)}
                         className={setClasses(p.id, "totalComplimentary last")}
-                        key={p.id}>$50</div>
+                        key={p.id}>${p.complimentaryServices.reduce(
+                            (acc, el) => acc + el.price, 0
+                    )}</div>
                 )}
                 <div className="total end">
                     Total <span className="info">(excluding taxes)</span>
                 </div>
                 {packages.map(p =>
                     <div
-                        onClick={handleClick(p.id)}
+                        onClick={handleClick(p)}
                         className={setClasses(p.id, "total price end")}
                         key={p.id}>
-                        <div className="before">$115</div>
+                        {/*<div className="before" />*/}
                         <div className="currentWrp">
-                            <div className="triangle" />
-                            <div className="current">$65</div>
+                            <div className="triangle"/>
+                            <div className="current">${p.price.toFixed(2)}</div>
                         </div>
                     </div>
                 )}
-            </Wrapper>
-            <Actions onBack={onBack} onNext={onNext}/>
+            </Wrapper> : null}
+            <Actions
+                onBack={onBack}
+                nextDisabled={!selectedPackage}
+                onNext={onNext} />
         </StepWrapper>
     );
 };

@@ -108,14 +108,17 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const dispatch = useDispatch();
 
     const [
-        s, ss
+        s, ss,
+        individualOps, packageOpt
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
-        state.appointmentFrame.subService
+        state.appointmentFrame.subService,
+        state.appointment.selectedSR,
+        state.appointmentFrame.selectedPackage
     ]);
     const serviceRequestIds = useMemo(() => {
-        return collectServiceRequestIds(s, ss);
-    }, [s, ss]);
+        return collectServiceRequestIds(s, ss, null, individualOps);
+    }, [s, ss, individualOps]);
     useEffect(() => {
         Api.call<ITransportation[]>(
             Api.endpoints.TransportationOptions.GetActive,
@@ -123,13 +126,13 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 data: {
                     serviceCenterId: decodeSCID(id),
                     serviceRequestIds,
-                    maintenancePackageOptionId: null
+                    maintenancePackageOptionId: packageOpt?.id ?? null
                 }
             }
         ).then(({data}) => {
             setTransportations(data);
         })
-    }, [id, serviceRequestIds]);
+    }, [id, serviceRequestIds, packageOpt]);
 
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
