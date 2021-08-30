@@ -8,7 +8,14 @@ import {
     setTime,
     setTiming, setTransportation, setVehicle
 } from "./actions";
-import {ICustomer, ILoadedVehicle, IServiceCategory, IServiceConsultant, ITransportation} from "../../../api/types";
+import {
+    ICustomer,
+    ILoadedVehicle,
+    IPackageOptions,
+    IServiceCategory,
+    IServiceConsultant,
+    ITransportation
+} from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {TMaintenanceDetails} from "./types";
@@ -19,7 +26,7 @@ type TState = {
     hashKey?: string;
     subService: IServiceCategory|null;
     description: string;
-    selectedPackage: number|null;
+    selectedPackage: IPackageOptions|null;
     advisor: IServiceConsultant|null;
     selectedTiming: EAppointmentTimingType|null;
     selectedTime: moment.Moment|null;

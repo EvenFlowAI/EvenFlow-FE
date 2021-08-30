@@ -48,7 +48,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         customerData,
         selectedVehicle,
         service,
-        subService
+        subService,
+        selectedPackage,
+        selectedOpsCodes
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -57,6 +59,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointment.customerSelectedVehicle,
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
+        state.appointmentFrame.selectedPackage,
+        state.appointment.selectedSR
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
@@ -93,8 +97,10 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                         // shorterWaitTime: filters.waitTimeOnly,
                         fromDate: sd.toISOString(),
                         // TODO: Connect after packages
-                        maintenancePackageOptionId: null,
-                        serviceRequestIds: collectServiceRequestIds(service, subService),
+                        maintenancePackageOptionId: selectedPackage?.id ?? null,
+                        serviceRequestIds: collectServiceRequestIds(
+                            service, subService, selectedPackage, selectedOpsCodes
+                        ),
                         countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration
@@ -108,7 +114,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, [
         dispatch, id, selectedTimingType, month,
         selectedVehicle, customerData, service,
-        subService, updateDate
+        subService, selectedPackage, updateDate, selectedOpsCodes
     ]);
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {

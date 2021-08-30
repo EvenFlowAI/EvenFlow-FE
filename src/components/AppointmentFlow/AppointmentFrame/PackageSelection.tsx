@@ -245,14 +245,14 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     }, [id, selectedVehicle, maintenanceDetails]);
 
     const setClasses = (id: number, cls: string) => {
-        if (id === selectedPackage) {
+        if (id === selectedPackage?.id) {
             return `${cls} selected`;
         }
         return cls;
     }
 
-    const handleClick = (id: number) => () => {
-        dispatch(setPackage(id));
+    const handleClick = (p: IPackageOptions) => () => {
+        dispatch(setPackage(p));
     }
 
     return (
@@ -266,7 +266,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 <div className='top'/>
                 {packages.map(p => <div
                     className={setClasses(p.id, "top title")}
-                    onClick={handleClick(p.id)}
+                    onClick={handleClick(p)}
                     key={p.id}>
                     {p.name}
                 </div>)}
@@ -282,7 +282,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                 const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
                                 return <div
                                     key={p.id}
-                                    onClick={handleClick(p.id)}
+                                    onClick={handleClick(p)}
                                     className={setClasses(p.id, wMoreClsx)}>
                                     {s.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
                                 </div>;
@@ -294,7 +294,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 {packages.map(p =>
                     <div
                         key={p.id}
-                        onClick={handleClick(p.id)}
+                        onClick={handleClick(p)}
                         className={setClasses(p.id, "green subtitle")}/>
                 )}
                 {complimentary.map(c => <React.Fragment key={c.name}>
@@ -302,7 +302,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                     {packages.map(p =>
                         <div
                             key={p.id}
-                            onClick={handleClick(p.id)}
+                            onClick={handleClick(p)}
                             className={setClasses(p.id, "service green")}>
                             {c.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
                         </div>
@@ -311,7 +311,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 <div className="totalComplimentary last">Total Complimentary Value</div>
                 {packages.map(p =>
                     <div
-                        onClick={handleClick(p.id)}
+                        onClick={handleClick(p)}
                         className={setClasses(p.id, "totalComplimentary last")}
                         key={p.id}>${p.complimentaryServices.reduce(
                             (acc, el) => acc + el.price, 0
@@ -322,7 +322,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 </div>
                 {packages.map(p =>
                     <div
-                        onClick={handleClick(p.id)}
+                        onClick={handleClick(p)}
                         className={setClasses(p.id, "total price end")}
                         key={p.id}>
                         {/*<div className="before" />*/}
