@@ -62,6 +62,7 @@ const Wrapper = styled('div')({
     width: "100%",
     alignItems: "stretch",
     "& .currentWrp": {
+        flexBasis: "50%",
         display: "flex",
         alignItems: "center",
         justifyContent: "stretch"
@@ -145,7 +146,8 @@ const Wrapper = styled('div')({
             padding: 8,
             "&.price": {
                 display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
+                // gridTemplateColumns: "repeat(2, 1fr)", TODO: Replace after strikethrough price
+                gridTemplateColumns: "repeat(1, 1fr)",
                 alignItems: "center",
                 justifyContent: "center",
                 "&>.before": {
@@ -181,7 +183,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
             const services: TService[] = [];
             const packages: TPackage[] = [];
 
-            for (let option of loadedPackage.options) {
+            for (let option of loadedPackage.options.sort((a, b) => a.type - b.type)) {
                 packages.push({
                     id: option.id,
                     price: option.price,
@@ -311,10 +313,10 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         onClick={handleClick(p.id)}
                         className={setClasses(p.id, "total price end")}
                         key={p.id}>
-                        <div className="before">$115</div>
+                        {/*<div className="before" />*/}
                         <div className="currentWrp">
                             <div className="triangle"/>
-                            <div className="current">$65</div>
+                            <div className="current">${p.price.toFixed(2)}</div>
                         </div>
                     </div>
                 )}
