@@ -11,6 +11,7 @@ import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
+import {IPackage} from "../../../api/types";
 
 const border = '1px solid #DADADA';
 
@@ -197,14 +198,14 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
 
-    const [packages, setPackages] = useState([]);
+    const [packages, setPackages] = useState<IPackage[]>([]);
 
     const dispatch = useDispatch();
     const {id} = useParams();
 
     useEffect(() => {
         setLoading(true);
-        Api.call(
+        Api.call<IPackage[]>(
             Api.endpoints.MaintenancePackages.ByVehicle,
             {
                 data: {

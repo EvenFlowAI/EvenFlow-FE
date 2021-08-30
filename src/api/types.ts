@@ -241,39 +241,22 @@ export interface IBusinessRule {
     customerCriteria: ECustomerCriteria;
 }
 
-export interface IServiceRequestAssigned {
-    type: EMaintenanceOptionType;
-    serviceRequestId: number;
-}
-
 export interface IComplimentaryService {
     id: number;
     name: string;
     price: number;
     durationInHours: number;
-    code: string;
 }
 
 export interface IPackageOptions {
     id: number;
     type: EMaintenanceOptionType;
-    serviceRequestPrice: number;
-    complimentaryServicePrice: number;
-    serviceRequestLaborHours: number;
-    complimentaryServiceLaborHours: number;
+    name: string;
     price: number;
-    maintenancePackageId: number;
-    serviceRequests: number[];
-    complimentaryServices: number[];
+    services: IServiceRequest[];
+    complimentaryServices: IComplimentaryService[];
 }
 
 export interface IPackage {
-    id: number;
-    name: string;
-    isApplyPricingOptimization: boolean;
-    businessRules: IBusinessRule;
-    serviceRequests: IServiceRequest[];
-    serviceRequestsAssigned: IServiceRequestAssigned[];
-    complimentaryServices: IComplimentaryService[];
     options: IPackageOptions[];
 }
