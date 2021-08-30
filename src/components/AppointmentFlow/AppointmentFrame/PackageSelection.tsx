@@ -11,7 +11,7 @@ import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
-import {IComplimentaryService, IPackage} from "../../../api/types";
+import {IComplimentaryService, IPackage, IPackageOptions} from "../../../api/types";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 
 const border = '1px solid #DADADA';
@@ -23,36 +23,9 @@ type TWithPackages = {
 type TService = TWithPackages & IServiceRequest;
 type TComplimentary = TWithPackages & IComplimentaryService;
 type TPackage = {
-    id: number;
-    name: string;
     lastIdx?: number;
     moreIdx?: number[];
-    price: number;
-};
-
-const complimentary: TComplimentary[] = [
-    {
-        id: 1,
-        price: 2,
-        durationInHours: 0,
-        name: "Top Off Fluids",
-        packages: [1, 2, 3],
-    },
-    {
-        id: 1,
-        price: 2,
-        durationInHours: 0,
-        name: "Courtesy Car Wash",
-        packages: [1, 2, 3]
-    },
-    {
-        id: 1,
-        price: 2,
-        durationInHours: 0,
-        name: "Courtesy Spray Wax",
-        packages: [2, 3]
-    }
-]
+} & IPackageOptions;
 
 const Wrapper = styled('div')({
     display: "grid",
@@ -177,17 +150,17 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
 
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
 
-    const [packages, services]: [TPackage[], TService[]] = useMemo(() => {
+    const [packages, services, complimentary]: [TPackage[], TService[], TComplimentary[]]
+        = useMemo(() => {
         if (loadedPackages.length) {
             const loadedPackage = loadedPackages[0];
             const services: TService[] = [];
             const packages: TPackage[] = [];
+            const complimentary: TComplimentary[] = [];
 
             for (let option of loadedPackage.options.sort((a, b) => a.type - b.type)) {
                 packages.push({
-                    id: option.id,
-                    price: option.price,
-                    name: option.name,
+                    ...option,
                     moreIdx: []
                 })
                 for (let service of option.serviceRequests) {
@@ -200,11 +173,48 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         pushedService.packages = [...pushedService.packages, option.id];
                     }
                 }
+                for (let comp of option.complimentaryServices) {
+                    const present = complimentary.find(c => c.id === comp.id);
+                    if (!present) {
+                        complimentary.push({
+                            ...comp,
+                            packages: [option.id]
+                        })
+                    } else if (!present.packages.includes(option.id)) {
+                        present.packages = [...present.packages, option.id];
+                    }
+                }
+                services.reduce((acc, s, idx) => {
+                    if (acc.pck.length > s.packages.length) {
+                        const lastPackageId = acc.pck[0];
+                        const p = packages.find(p => p.id === lastPackageId);
+                        if (p) {
+                            p.lastIdx = idx-1;
+                            if (acc.moreIdx) {
+                                const np = packages.find(el => el.id === acc.moreIdx);
+                                if (np) {
+                                    np.moreIdx = [...acc.more];
+                                }
+                            }
+                            acc.moreIdx = s.packages[0];
+                            acc.more = [idx];
+                        }
+                    } else if (acc.more.length) {
+                        acc.more.push(idx);
+                    }
+                    if (idx === (services.length - 1) && acc.moreIdx) {
+                        const np = packages.find(el => el.id === acc.moreIdx);
+                        if (np) {
+                            np.moreIdx = [...acc.more];
+                        }
+                    }
+                    return {...acc, pck: s.packages};
+                }, {pck: [], more: [], moreIdx: 0} as {pck: number[], more: number[], moreIdx: number});
             }
 
-            return [packages, services];
+            return [packages, services, complimentary];
         }
-        return [[], []];
+        return [[], [], []];
     }, [loadedPackages]);
 
     const dispatch = useDispatch();
@@ -303,7 +313,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                     <div
                         onClick={handleClick(p.id)}
                         className={setClasses(p.id, "totalComplimentary last")}
-                        key={p.id}>$50</div>
+                        key={p.id}>${p.complimentaryServices.reduce(
+                            (acc, el) => acc + el.price, 0
+                    )}</div>
                 )}
                 <div className="total end">
                     Total <span className="info">(excluding taxes)</span>
