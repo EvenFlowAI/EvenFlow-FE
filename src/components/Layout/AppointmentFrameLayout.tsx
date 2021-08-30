@@ -89,7 +89,9 @@ export const AppointmentFrameLayout = () => {
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
-            carSelection: <AppointmentCarSelection onNext={() => setCurrentScreen('serviceNeeds')} />,
+            carSelection: <AppointmentCarSelection
+                onBack={handleLogin}
+                onNext={() => setCurrentScreen('serviceNeeds')} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
                 onBack={handleChangeScreen('carSelection')}
