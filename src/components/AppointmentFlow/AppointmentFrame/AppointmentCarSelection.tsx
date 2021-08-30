@@ -42,6 +42,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack}) => {
         if (customerLoadedData && !customerLoadedData?.id) {
             onNext();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customerLoadedData]);
 
     const handleSkip = () => {

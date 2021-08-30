@@ -282,10 +282,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 serviceRequestIds: selectedSR.map(sr => sr.id),
                 slot: selectedSlot?.time || "",
                 date: selectedSlot?.date,
-                transportationNeeds: {
-                    description: form.transportationDescription,
-                    isNeed: form.transportationNeeded
-                },
                 vehicle: {
                     make: form.vehicleMake,
                     model: form.vehicleModel,

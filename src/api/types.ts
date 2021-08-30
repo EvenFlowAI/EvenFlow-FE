@@ -2,7 +2,7 @@ import {AxiosResponse} from "axios";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {
     EAppointmentTimingType,
-    EReminderType,
+    EReminderType, ETransportation,
     IPersonalInformation,
     IVehicleData
 } from "../store/reducers/appointment/types";
@@ -47,10 +47,8 @@ export interface ICreateAppointment {
     driver: IPersonalInformation;
     serviceCenterId: number;
     offerId: number | null;
-    transportationNeeds: {
-        isNeed: boolean;
-        description: string;
-    },
+    consultantId?: string;
+    transportationType?: ETransportation
     vehicle: {
         dmsId: string | null;
         vin: string;

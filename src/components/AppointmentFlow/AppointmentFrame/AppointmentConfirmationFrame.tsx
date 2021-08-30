@@ -66,6 +66,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             offerId: appointment.appointment?.offer?.id ?? null,
             reminderTypes: appointmentFrame.reminders,
             serviceCenterId: decodeSCID(id),
+            consultantId: appointmentFrame.advisor?.id,
             vehicle: {
                 dmsId: null,
                 vin: "",
@@ -77,21 +78,22 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 ...(appointmentFrame.selectedVehicle ?? {}),
                 year: appointmentFrame?.selectedVehicle?.year
                     ? String(appointmentFrame.selectedVehicle.year) : null,
-                mileage: appointmentFrame?.selectedVehicle?.mileage
-                    ? String(appointmentFrame.selectedVehicle.mileage) : null,
+                mileage: appointmentFrame.maintenanceDetails?.serviceInterval ?? null,
             },
-            transportationNeeds: {
-                isNeed: false,
-                description: ""
-            },
+            transportationType: appointmentFrame.transportation?.type,
             slot: appointment.appointment?.id.split("|")[1] || "",
             serviceRequestIds: collectServiceRequestIds(
                 appointmentFrame.service,
-                appointmentFrame.subService
+                appointmentFrame.subService,
+                appointmentFrame.selectedPackage,
+                appointment.selectedSR
             ),
             date: appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryId: appointmentFrame.subService?.id ?? appointmentFrame.service?.id ?? null,
-            maintenancePackageOptionId: null
+            maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
+        };
+        if (data.serviceCategoryId && data.serviceCategoryId < 1) {
+            data.serviceCategoryId = null;
         }
         setSaving(true);
         Api.call<ICreateAppointmentResp>(

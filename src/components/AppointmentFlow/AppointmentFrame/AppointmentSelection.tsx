@@ -14,8 +14,7 @@ import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
-import {IServiceCategory} from "../../../api/types";
-import {collectServiceRequestIds, getAppointmentDate} from "./utils";
+import {collectServiceRequestIds} from "./utils";
 
 
 const Wrapper = styled('div')({

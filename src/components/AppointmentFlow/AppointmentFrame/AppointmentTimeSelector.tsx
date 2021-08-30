@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import moment from "moment";
-import {IAppointmentSlot, IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
 import {styled} from "@material-ui/core";
 import {Loading} from "../../UI/Loading";

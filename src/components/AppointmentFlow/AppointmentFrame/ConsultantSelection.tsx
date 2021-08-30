@@ -12,6 +12,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {Loading} from "../../UI/Loading";
 
 
 const ConsultantsWrapper = styled('div')({
@@ -98,7 +99,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                 onClick={handleSelectConsultant(null)}
                 active={selectedConsultant === null}
             />
-            {consultants.map(c =>
+            {loading ? <Loading /> : consultants.map(c =>
                 <ConsultantCard
                     onClick={handleSelectConsultant(c)}
                     advisor={c}
