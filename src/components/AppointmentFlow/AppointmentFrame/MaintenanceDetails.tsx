@@ -15,12 +15,15 @@ import {useParams} from "react-router-dom";
 import {EVehiclePropType} from "../../../api/types";
 import moment from "moment";
 
-const SelectWrapper = styled('div')({
+const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "20px",
-    width: "100%"
-});
+    width: "100%",
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateColumns: "1fr"
+    }
+}));
 
 type TSelect = {
     label: string;

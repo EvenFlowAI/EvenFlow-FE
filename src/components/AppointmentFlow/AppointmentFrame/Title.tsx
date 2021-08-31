@@ -14,13 +14,20 @@ const Wrapper = styled('h1')(({theme}) => ({
         marginBottom: 12
     }
 }))
-const SubtitleWrapper = styled('h3')({
+const SubtitleWrapper = styled('h3')(({theme}) => ({
     fontSize: 18,
     fontWeight: 400,
     margin: "10px 0 0",
     alignSelf: "flex-start",
-    color: "#828282"
-})
+    color: "#828282",
+    [theme.breakpoints.down('sm')]: {
+        alignSelf: "center",
+        textAlign: "center",
+        fontSize: 14,
+        position: "relative",
+        top: -20,
+    }
+}))
 export const Title: React.FC = ({children}) => {
     return (
         <Wrapper>

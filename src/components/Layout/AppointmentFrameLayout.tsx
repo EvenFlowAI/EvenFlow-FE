@@ -53,7 +53,7 @@ const SidebarWrapper = styled('div')(({theme}) => ({
 }));
 
 export const AppointmentFrameLayout = () => {
-    const [currentScreen, setCurrentScreen] = useState<TScreen>("serviceNeeds");
+    const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -89,7 +89,6 @@ export const AppointmentFrameLayout = () => {
     const handleSetScreen = useCallback((screen: TScreen) => {
         setCurrentScreen(screen);
     }, []);
-
 
 
     const component = useMemo(() => {

@@ -20,6 +20,7 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
     alignItems: "center",
     justifyContent: "flex-start",
     gap: "20px",
+    width: "100%",
     [theme.breakpoints.down('sm')]: {
         flexDirection: "column",
         alignItems: "stretch"
