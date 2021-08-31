@@ -15,12 +15,16 @@ import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
 
 
-const ConsultantsWrapper = styled('div')({
+const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: "20px"
-});
+    gap: "20px",
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: "column",
+        alignItems: "stretch"
+    }
+}));
 
 const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>({
     display: "flex",
@@ -35,11 +39,11 @@ const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>({
     cursor: "pointer"
 });
 
-const Avatar = styled('div')<Theme, {src?: string}>({
+const Avatar = styled('div')<Theme, {src?: string, contain?: boolean}>({
     width: 50,
     height: 50,
     borderRadius: "50%",
-    backgroundSize: "cover",
+    backgroundSize: ({contain}) => contain ? "contain" : "cover",
     backgroundImage: ({src}) => src ? `url('${src}')` : undefined,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat"
@@ -55,7 +59,7 @@ type TCardProps = {
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
     return <ConsultantWrapper active={active} onClick={onClick}>
         {blank
-            ? <img width={50} height={50} src={anyConsultant} alt="Any available consultant"/>
+            ? <Avatar src={anyConsultant} contain />
             : <Avatar src={advisor?.iconPath}/>}
         <div>
             {blank ? "Any available advisor" : advisor?.name ?? "-"}

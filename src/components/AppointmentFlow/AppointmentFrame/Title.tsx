@@ -8,7 +8,10 @@ const Wrapper = styled('h1')(({theme}) => ({
     alignSelf: "flex-start",
     [theme.breakpoints.down('sm')]: {
         alignSelf: "center",
-        fontSize: 22
+        textAlign: "center",
+        fontSize: 22,
+        lineHeight: "26px",
+        marginBottom: 12
     }
 }))
 const SubtitleWrapper = styled('h3')({
