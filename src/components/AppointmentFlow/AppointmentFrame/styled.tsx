@@ -27,6 +27,10 @@ export const CardWrapper = styled("div")<Theme, {active?: boolean}>(({theme, act
     [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: "1fr 3fr",
         gridTemplateRows: "1fr",
-        fontSize: 18
+        fontSize: 18,
+        "& svg": {
+            width: 65,
+            height: 65
+        }
     }
 }));
