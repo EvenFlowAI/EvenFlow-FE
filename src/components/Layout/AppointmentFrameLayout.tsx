@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {MuiThemeProvider, styled} from "@material-ui/core";
+import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
 import {frameTheme} from "../../theme/theme";
 import {TScreen} from "./types";
@@ -40,17 +40,22 @@ const Container = styled('div')({
     maxWidth: 1280,
     margin: "auto"
 });
-const SidebarWrapper = styled('div')({
+const SidebarWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "1fr 3fr",
     gap: "20px",
     alignItems: "flex-start",
     width: "100%",
-    marginTop: 28
-});
+    marginTop: 28,
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: "1fr"
+    }
+}));
 
 export const AppointmentFrameLayout = () => {
-    const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
+    const [currentScreen, setCurrentScreen] = useState<TScreen>("serviceNeeds");
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {id} = useParams();
     const history = useHistory();
@@ -178,16 +183,18 @@ export const AppointmentFrameLayout = () => {
     return (
         <MuiThemeProvider theme={frameTheme}>
             <Container>
+                {isSm && !['carSelection', 'appointmentConfirmed'].includes(currentScreen)
+                    ? <SideBar screen={currentScreen} /> : null}
                 {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
                 {currentScreen === 'maintenanceDetails'
                     ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? component
-                    : <SidebarWrapper>
+                    : !isSm ? <SidebarWrapper>
                         <SideBar screen={currentScreen} />
                         {component}
-                    </SidebarWrapper>
+                    </SidebarWrapper> : component
                 }
             </Container>
         </MuiThemeProvider>

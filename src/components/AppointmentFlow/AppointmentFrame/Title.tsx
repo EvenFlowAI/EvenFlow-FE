@@ -1,12 +1,16 @@
 import React from 'react';
 import {styled} from "@material-ui/core";
 
-const Wrapper = styled('h1')({
+const Wrapper = styled('h1')(({theme}) => ({
     fontSize: 28,
     fontWeight: 700,
     margin: 0,
-    alignSelf: "flex-start"
-})
+    alignSelf: "flex-start",
+    [theme.breakpoints.down('sm')]: {
+        alignSelf: "center",
+        fontSize: 22
+    }
+}))
 const SubtitleWrapper = styled('h3')({
     fontSize: 18,
     fontWeight: 400,
