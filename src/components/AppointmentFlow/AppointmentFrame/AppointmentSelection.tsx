@@ -129,9 +129,11 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             <Wrapper>
                 <SelectedAppointment />
                 <AppointmentDateSelector
+                    dateChangeDisabled={selectedTimingType !== EAppointmentTimingType.SpecialOffers}
                     appointments={groupedAppointments}
                     date={date}
-                    loading={loading} onDateChange={updateDate} />
+                    loading={loading}
+                    onDateChange={updateDate} />
                 <AppointmentTimeSelector
                     appointments={
                         groupedAppointments[date.toISOString().replace('.000', '')]

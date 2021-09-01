@@ -36,6 +36,7 @@ type TMonthProps = {
 }
 type TProps = {
     appointments: TGroupedAppointments;
+    dateChangeDisabled: boolean;
 } & TMonthProps;
 
 const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange, loading}) => {
@@ -58,14 +59,14 @@ const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange, loading}) => 
     </MonthSelectorWrapper>
 }
 
-export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDateChange, appointments}) => {
+export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDateChange, appointments, dateChangeDisabled}) => {
     return (
         <div>
             <h4>Select Date</h4>
-            <MonthSelector
+            {!dateChangeDisabled ? <MonthSelector
                 date={date}
                 loading={loading}
-                onDateChange={onDateChange} />
+                onDateChange={onDateChange}/> : null}
             <DaySelector
                 date={date}
                 appointments={appointments}
