@@ -8,14 +8,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     clearStorage,
     loadEditAppointment,
-    loadSCProfile
+    loadSCProfile, saveCustomerCache, setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
-import {AppointmentStatus} from "../../api/types";
+import {AppointmentStatus, ICustomerLoadedData, ILoadedVehicle} from "../../api/types";
 import {Edit} from "@material-ui/icons";
 import {RootState} from "../../store/rootReducer";
 import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
+import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -39,12 +40,30 @@ export const EditAppointment = () => {
         API.appointment.getByKey(id)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
+                dispatch(setUpdateAppointment(data));
+                const vehicle: ILoadedVehicle = {
+                    ...data.vehicle,
+                    appointmentHashKeys: [data.hashKey]
+                }
+                const parts = data.driver.fullName.split(" ");
+                const fN = parts[0];
+                const lN = parts.slice(1).join(" ");
+                const customer: ICustomerLoadedData = {
+                    ...data.driver,
+                    id: data.customerId,
+                    vehicles: [vehicle],
+                    phoneNumbers: [data.driver.phoneNumber],
+                    emails: [data.driver.email],
+                    firstName: fN,
+                    lastName: lN,
+                }
+                dispatch(setCustomerLoadedData(customer));
+                dispatch(setVehicle({...vehicle}));
+                saveCustomerCache(customer);
                 if (data.appointmentStatus === AppointmentStatus.Cancelled) {
                     setState("canceled");
                     return;
                 }
-                // TODO: Load edit for frame window
-                await dispatch(loadEditAppointment({...data, hashKey: data.hashKey || id}));
                 history.replace(`${Routes.EndUser.AppointmentFrameBase}/${encodeSCID(data.serviceCenterId)}`);
             })
             .catch((e) => {
