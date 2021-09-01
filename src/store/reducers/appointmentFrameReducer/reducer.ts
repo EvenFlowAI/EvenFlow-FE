@@ -2,13 +2,21 @@ import {createReducer} from "@reduxjs/toolkit";
 import {
     selectService,
     selectSubService,
-    setAdvisor, setAppointmentId, setCustomer,
-    setFrameDescription, setMaintenanceDetails,
-    setPackage, setReminders,
+    setAdvisor,
+    setAppointmentId,
+    setCustomer,
+    setFrameDescription,
+    setMaintenanceDetails,
+    setPackage,
+    setReminders,
     setTime,
-    setTiming, setTransportation, setVehicle
+    setTiming,
+    setTransportation,
+    setUpdateAppointment,
+    setVehicle
 } from "./actions";
 import {
+    EServiceCategoryPage,
     ICustomer,
     ILoadedVehicle,
     IPackageOptions,
@@ -102,5 +110,23 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setMaintenanceDetails, (state, {payload}) => {
         return {...state, maintenanceDetails: {...state.maintenanceDetails, ...payload}}
+    })
+    .addCase(setUpdateAppointment, (state, {payload}) => {
+        const c: Partial<TState> = {};
+        if (payload.serviceCategory?.page === EServiceCategoryPage.Page1) {
+            c.service = payload.serviceCategory;
+        } else if (payload.serviceCategory?.page === EServiceCategoryPage.Page2) {
+            c.subService = payload.serviceCategory;
+            // TODO: select service if sub?
+        }
+        return {
+            ...state,
+            id: payload.id,
+            hashKey: payload.hashKey,
+            customer: {...payload.driver},
+            reminders: payload.reminderTypes,
+            ...c,
+            description: payload.comment
+        };
     })
 )

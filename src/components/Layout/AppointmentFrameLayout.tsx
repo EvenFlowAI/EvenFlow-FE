@@ -30,6 +30,7 @@ import {decodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
+import {useException} from "../../utils/hooks";
 
 const Container = styled('div')({
     display: "flex",
@@ -55,14 +56,17 @@ const SidebarWrapper = styled('div')(({theme}) => ({
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
+    const [loadingCar, setLoadingCar] = useState<boolean>(false);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {id} = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
+    const showError = useException();
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
 
     const handleLogin = useCallback(() => {
         clearCustomerCache();
@@ -91,12 +95,31 @@ export const AppointmentFrameLayout = () => {
         setCurrentScreen(screen);
     }, []);
 
+    const handleSelectCar = useCallback(async () => {
+        if (selectedVehicle?.appointmentHashKeys.length) {
+            const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
+            setLoadingCar(true);
+            try {
+                const {data} = await API.appointment.getByKey(key);
+                console.log(data);
+            } catch (e) {
+                showError(e);
+            } finally {
+                setLoadingCar(false);
+            }
+
+        } else {
+            handleChangeScreen('serviceNeeds');
+        }
+    }, [handleChangeScreen, selectedVehicle, showError]);
+
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
             carSelection: <AppointmentCarSelection
                 onBack={handleLogin}
-                onNext={() => setCurrentScreen('serviceNeeds')} />,
+                loading={loadingCar}
+                onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
                 onBack={handleChangeScreen('carSelection')}
@@ -151,7 +174,7 @@ export const AppointmentFrameLayout = () => {
             />
         }
         return carSelections[currentScreen];
-    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin]);
+    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, handleSelectCar, loadingCar]);
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":

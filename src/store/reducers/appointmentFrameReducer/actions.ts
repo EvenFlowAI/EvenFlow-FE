@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    ICustomer,
+    ICustomer, IListAppointment,
     ILoadedVehicle,
     IPackageOptions,
     IServiceCategory,
@@ -24,3 +24,4 @@ export const setReminders = createAction<EReminderType[]>("fAppointment/setRemin
 export const setAppointmentId = createAction<IAppointmentId>("fAppointment/setAppointmentId");
 export const setTransportation = createAction<ITransportation|null>("fAppointment/setTransportation");
 export const setMaintenanceDetails = createAction<Partial<TMaintenanceDetails>>("fAppointment/setMaintenanceDetails");
+export const setUpdateAppointment = createAction<IListAppointment>("fAppointment/setUpdateAppointment");

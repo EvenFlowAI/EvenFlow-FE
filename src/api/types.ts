@@ -154,6 +154,7 @@ export interface IListAppointment {
     vehicleId: number;
     vehicle: IVehicleData;
     customerId: string;
+    serviceCategory: IServiceCategory|null;
     driver: IDriverInfo;
     duration: number;
     transactionValue: number;

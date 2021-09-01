@@ -32,8 +32,9 @@ const Info = styled('div')({
 type TProps = {
     onNext: TCallback;
     onBack: TCallback;
+    loading: boolean;
 }
-export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack}) => {
+export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loading}) => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const dispatch = useDispatch();
@@ -66,7 +67,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack}) => {
             <Info>
                 Click here to <span onClick={handleSkip}>add new vehicle</span>
             </Info>
-            <Actions onBack={onBack} onNext={onNext} nextDisabled={!selectedVehicle} />
+            <Actions onBack={onBack} onNext={onNext} nextDisabled={!selectedVehicle} loading={loading} />
         </StepWrapper>
     );
 };
