@@ -46,7 +46,7 @@ export const EditAppointment = () => {
                 await dispatch(loadEditAppointment({...data, hashKey: data.hashKey || id}));
                 history.replace(`${Routes.EndUser.AppointmentBase}/${encodeSCID(data.serviceCenterId)}`);
             })
-            .catch(() => {
+            .catch((e) => {
                 setState("error");
             })
     }, [id, dispatch, history]);
