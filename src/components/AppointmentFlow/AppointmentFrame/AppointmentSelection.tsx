@@ -11,7 +11,7 @@ import {useParams} from "react-router-dom";
 import {decodeSCID, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
+import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
 import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
@@ -89,21 +89,25 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     ? moment(month)
                     : moment.utc().startOf("day");
                 try {
-                    await dispatch(loadAppointmentSlots({
+                    const dd: IAppointmentSlotsRequest = {
                         appointmentTimingType: selectedTimingType ?? EAppointmentTimingType.FirstAvailable,
                         serviceCenterId: decodeSCID(id),
                         // onlyOffers: filters.offersOnly,
                         // shorterWaitTime: filters.waitTimeOnly,
                         fromDate: sd.toISOString(),
-                        // TODO: Connect after packages
                         maintenancePackageOptionId: selectedPackage?.id ?? null,
                         serviceRequestIds: collectServiceRequestIds(
                             service, subService, selectedPackage, selectedOpsCodes
                         ),
+                        serviceCategoryId: subService?.id ?? service?.id,
                         countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration
-                    }, updateDate));
+                    }
+                    if (dd.serviceCategoryId && dd.serviceCategoryId < 1) {
+                        dd.serviceCategoryId = undefined;
+                    }
+                    await dispatch(loadAppointmentSlots(dd, updateDate));
                 } finally {
                     setLoading(false);
                 }

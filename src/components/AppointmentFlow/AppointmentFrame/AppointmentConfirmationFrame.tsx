@@ -9,7 +9,7 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {ICreateAppointment, ICreateAppointmentResp} from "../../../api/types";
+import {ICreateAppointment, ICreateAppointmentResp, IUpdateAppointment} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
@@ -57,7 +57,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
     const handleCreateAppointment = () => {
         // TODO: UpdateFlow?
-        const data: ICreateAppointment = {
+        const data: IUpdateAppointment = {
+            id: appointmentFrame.id,
+            hashKey: appointmentFrame.hashKey,
             appointmentTimingType: appointmentFrame.selectedTiming ?? EAppointmentTimingType.FirstAvailable,
             customerId: appointment.customerLoadedData?.id,
             comment: appointmentFrame.description,
@@ -96,12 +98,12 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         if (data.serviceCategoryId && data.serviceCategoryId < 1) {
             data.serviceCategoryId = null;
         }
+        const endpoint = data?.hashKey
+            ? Api.endpoints.Appointments.UpdateByKey
+            : Api.endpoints.Appointments.Create;
         setSaving(true);
         Api.call<ICreateAppointmentResp>(
-            Api.endpoints.Appointments.Create,
-            {
-                data
-            }
+            endpoint, { data, urlParams: {id: data.hashKey} }
         )
             .then(({data}) => {
                 dispatch(setAppointmentId({

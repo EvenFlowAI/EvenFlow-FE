@@ -65,8 +65,9 @@ export interface ICreateAppointment {
     serviceRequestIds: number[];
 }
 
-export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {
-    id: number;
+export interface IUpdateAppointment extends ICreateAppointment {
+    id?: number;
+    hashKey?: string;
 }
 
 export interface ICreateAppointmentResp {
@@ -155,6 +156,7 @@ export interface IListAppointment {
     vehicle: IVehicleData;
     customerId: string;
     serviceCategory: IServiceCategory|null;
+    maintenancePackageOptionId: number | null;
     driver: IDriverInfo;
     duration: number;
     transactionValue: number;
