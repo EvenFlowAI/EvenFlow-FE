@@ -32,6 +32,7 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {setUpdateAppointment} from "../../store/reducers/appointmentFrameReducer/actions";
+import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 
 const Container = styled('div')({
     display: "flex",
@@ -142,6 +143,7 @@ export const AppointmentFrameLayout = () => {
             describeMore: <AddInfo
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('consultantSelection')}
+                onFillCar={handleChangeScreen('carDetails')}
             />,
             opsCode: <SelectOpsCode
                 onBack={handleChangeScreen('serviceSelection')}
@@ -174,6 +176,10 @@ export const AppointmentFrameLayout = () => {
             />,
             appointmentConfirmed: <AppointmentConfirmed
                 onModify={handleChangeScreen("serviceNeeds")}
+            />,
+            carDetails: <CarDetails
+                onBack={handleChangeScreen('describeMore')}
+                onNext={handleChangeScreen('consultantSelection')}
             />
         }
         return carSelections[currentScreen];
@@ -202,6 +208,8 @@ export const AppointmentFrameLayout = () => {
                 return "Will you be waiting at the dealership?";
             case "appointmentConfirmation":
                 return "Appointment Confirmation";
+            case "carDetails":
+                return "Please tell us about your vehicle"
             default:
                 return null;
         }
