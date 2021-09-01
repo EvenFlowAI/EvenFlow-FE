@@ -14,10 +14,11 @@ type TProps = {
     onFillCar: TCallback;
 } & TActionProps;
 export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
-    const [service, subService, vehicle] = useSelector(({appointmentFrame}: RootState) => [
+    const [service, subService, vehicle, vehicles] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.service,
         appointmentFrame.subService,
-        appointmentFrame.selectedVehicle
+        appointmentFrame.selectedVehicle,
+        appointment.customerLoadedData?.vehicles
     ]);
     const description = useSelector(({appointmentFrame}: RootState) => appointmentFrame.description);
     const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
     }
 
     const handleNext = () => {
-        if (!vehicle?.vin || vehicle.vin.length !== VIN_LENGTH) {
+        if (!vehicles?.find(v => v.vin === vehicle?.vin)) {
             onFillCar();
         } else {
             onNext();
