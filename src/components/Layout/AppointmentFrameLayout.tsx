@@ -81,6 +81,7 @@ export const AppointmentFrameLayout = () => {
             const data = getCustomerCache();
             if (data) {
                 dispatch(setCustomerLoadedData(data));
+                console.log("Pre set vehicle");
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
                 handleLogin();

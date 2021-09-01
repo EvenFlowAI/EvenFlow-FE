@@ -119,7 +119,7 @@ export const loadEditAppointment = (appointment: IListAppointment): AppThunk => 
 
     state.selectedSR = appointment.serviceRequests.map(sr => sr.id);
     state.appointmentId = {
-        id: appointment.id, hashKey: appointment.hashKey
+        ...appointment
     };
     state.s1Data = {
         ...state.s1Data,

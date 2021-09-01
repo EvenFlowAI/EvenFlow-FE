@@ -112,17 +112,32 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 }));
                 if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
                     const d = {
-                        ...appointment.customerLoadedData,
-                        vehicles: appointment.customerLoadedData.vehicles.map(
-                            v => v.vin === appointmentFrame.selectedVehicle?.vin ? {...v, appointmentHashKeys: [...v.appointmentHashKeys, data.hashKey]} : v
-                        )
+                        ...appointment.customerLoadedData
                     };
+                    const vehicle = d.vehicles.find(
+                        c => c.vin === data.vehicle.vin
+                    );
+                    if (vehicle) {
+                        vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
+                    } else {
+                        d.vehicles = [...d.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
+                    }
+                    if (!d.emails.length) {
+                        d.emails = [appointmentFrame.customer.email];
+                        const fNameParts = appointmentFrame.customer.fullName.split(" ");
+                        const firstName = fNameParts[0];
+                        const lastName = fNameParts.slice(1).join(' ');
+                        d.firstName = firstName;
+                        d.lastName = lastName;
+                        d.id = data.customerId;
+                        d.phoneNumbers = [appointmentFrame.customer.phoneNumber];
+                    }
                     dispatch(setCustomerLoadedData(d));
                     saveCustomerCache(d);
                 }
                 onNext();
             })
-            .catch(e => {showError(e)})
+            .catch(e => {showError(e); console.error(e)})
             .finally(() => {setSaving(false)})
     }
     return <StepWrapper>

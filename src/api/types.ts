@@ -70,7 +70,7 @@ export interface IUpdateAppointment extends ICreateAppointment {
     hashKey?: string;
 }
 
-export interface ICreateAppointmentResp {
+export interface ICreateAppointmentResp extends IListAppointment {
     id: number;
     hashKey: string;
 }
