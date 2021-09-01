@@ -43,8 +43,9 @@ export const EditAppointment = () => {
                     setState("canceled");
                     return;
                 }
+                // TODO: Load edit for frame window
                 await dispatch(loadEditAppointment({...data, hashKey: data.hashKey || id}));
-                history.replace(`${Routes.EndUser.AppointmentBase}/${encodeSCID(data.serviceCenterId)}`);
+                history.replace(`${Routes.EndUser.AppointmentFrameBase}/${encodeSCID(data.serviceCenterId)}`);
             })
             .catch((e) => {
                 setState("error");
@@ -54,7 +55,7 @@ export const EditAppointment = () => {
     const handleCreateNew = () => {
         if (selectedSC) {
             clearStorage();
-            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(selectedSC)}`);
+            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(selectedSC)}?frame=1`);
         }
     }
 
