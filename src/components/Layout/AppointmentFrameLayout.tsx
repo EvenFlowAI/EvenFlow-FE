@@ -31,6 +31,7 @@ import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/Appointm
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
+import {setUpdateAppointment} from "../../store/reducers/appointmentFrameReducer/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -101,7 +102,8 @@ export const AppointmentFrameLayout = () => {
             setLoadingCar(true);
             try {
                 const {data} = await API.appointment.getByKey(key);
-                console.log(data);
+                dispatch(setUpdateAppointment(data));
+                handleSetScreen('serviceNeeds');
             } catch (e) {
                 showError(e);
             } finally {
@@ -109,9 +111,10 @@ export const AppointmentFrameLayout = () => {
             }
 
         } else {
-            handleChangeScreen('serviceNeeds');
+            //TODO: clear slots data clearSelected();
+            handleSetScreen('serviceNeeds');
         }
-    }, [handleChangeScreen, selectedVehicle, showError]);
+    }, [handleSetScreen, selectedVehicle, showError, dispatch]);
 
 
     const component = useMemo(() => {

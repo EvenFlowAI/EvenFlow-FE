@@ -27,6 +27,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {TMaintenanceDetails} from "./types";
+import {tellMoreCard} from "./initial";
 
 type TState = {
     service: IServiceCategory|null;
@@ -113,11 +114,17 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setUpdateAppointment, (state, {payload}) => {
         const c: Partial<TState> = {};
-        if (payload.serviceCategory?.page === EServiceCategoryPage.Page1) {
-            c.service = payload.serviceCategory;
-        } else if (payload.serviceCategory?.page === EServiceCategoryPage.Page2) {
-            c.subService = payload.serviceCategory;
-            // TODO: select service if sub?
+        let category = payload.serviceCategory;
+        if (category) {
+            category = {...category, serviceRequests: category.serviceRequests ? [...category.serviceRequests] : []}
+            if (category.page === EServiceCategoryPage.Page1) {
+                c.service = category;
+            } else if (category.page === EServiceCategoryPage.Page2) {
+                c.subService = category;
+                c.service = tellMoreCard;
+            } else {
+                // TODO: Package??
+            }
         }
         return {
             ...state,

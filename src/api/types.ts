@@ -18,8 +18,8 @@ export type TApiView = Record<string, TApiEndpoint>;
 export type TApi = Record<string, TApiView>;
 
 export enum EServiceCategoryPage {
-    Page1 = "Page1",
-    Page2 = "Page2"
+    Page1,
+    Page2
 }
 
 export enum EVehiclePropType {
