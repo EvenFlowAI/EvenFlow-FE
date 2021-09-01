@@ -110,7 +110,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     id: data.id,
                     hashKey: data.hashKey,
                 }));
-                if (appointment.customerLoadedData) {
+                if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
                     const d = {
                         ...appointment.customerLoadedData,
                         vehicles: appointment.customerLoadedData.vehicles.map(
