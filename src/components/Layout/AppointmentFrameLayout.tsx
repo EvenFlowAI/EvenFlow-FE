@@ -21,7 +21,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
-    clearCustomerCache,
+    clearCustomerCache, getBlankVehicle,
     getCustomerCache,
     loadSCProfile,
     setCustomerLoadedData
@@ -31,7 +31,7 @@ import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/Appointm
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
-import {setUpdateAppointment} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 
 const Container = styled('div')({
@@ -81,6 +81,7 @@ export const AppointmentFrameLayout = () => {
             const data = getCustomerCache();
             if (data) {
                 dispatch(setCustomerLoadedData(data));
+                dispatch(setVehicle(getBlankVehicle()));
             } else {
                 handleLogin();
             }

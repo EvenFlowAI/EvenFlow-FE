@@ -7,11 +7,11 @@ import {IVehicle} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
-import {setMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {updateVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TextField} from "../../UI/TextField";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {ILoadedVehicle} from "../../../api/types";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -51,13 +51,19 @@ type TProps = {} & TActionProps;
 export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
 
+    // TODO: Load options for a selector
+
+    const dispatch = useDispatch();
+
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
 
-    const handleChange = (name: keyof IVehicle) => (e: React.ChangeEvent<{}>, option: string|null) => {
-
+    const handleChange = (name: keyof IVehicle) => (e: React.ChangeEvent<{}>, option: string|number|object|null) => {
+        if (option) {
+            dispatch(updateVehicle({[name]: option}));
+        }
     }
     const handleTextChange = (name: keyof IVehicle) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-
+        dispatch(updateVehicle({[name]: value}));
     }
     return <StepWrapper>
         <SelectWrapper>
@@ -74,7 +80,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         renderInput={autocompleteRender({
                             label: select.label, placeholder: `Select ${select.label}`
                         })}
-                        value={null}
+                        value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : null}
                     />
                 }
                 return <div key={select.name}>
@@ -83,7 +89,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         label={select.label}
                         name={select.name}
                         fullWidth
-                        value={""}
+                        value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
                         placeholder={`Type ${select.label}`}
                     />
                 </div>

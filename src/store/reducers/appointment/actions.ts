@@ -190,6 +190,15 @@ const CUSTOMER_CACHE = 'fCC';
 export const saveCustomerCache = (data: ICustomerLoadedData): void => {
     localStorage.setItem(CUSTOMER_CACHE, JSON.stringify(data));
 }
+export const getBlankVehicle = (): ILoadedVehicle => ({
+    year: null,
+    mileage: null,
+    appointmentHashKeys: [],
+    vin: "",
+    model: "",
+    make: "",
+    warrantyExpiration: null
+})
 export const getBlankCustomer = (sessionId?: string): ICustomerLoadedData => {
     return  {
         id: "",

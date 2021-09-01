@@ -86,12 +86,12 @@ export interface ICustomerLoadedData {
 }
 
 export interface ILoadedVehicle {
-    dmsId: string;
+    dmsId?: string;
     vin: string;
     make: string;
     model: string;
-    year: number;
-    mileage: number;
+    year: number|null;
+    mileage: number|null;
     warrantyExpiration?: ParsableDate;
     appointmentHashKeys: string[];
 }

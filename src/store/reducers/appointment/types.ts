@@ -44,9 +44,9 @@ export interface IVehicleData {
 export interface IVehicle {
     vin: string;
     make: string;
-    year: string;
+    year: number;
     model: string;
-    mileage: string;
+    mileage: number;
     transmission: string;
     driveType: string;
     engineType: string;

@@ -8,7 +8,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType, IVehicle} from "../appointment/types";
 import {IAppointmentId, TMaintenanceDetails} from "./types";
 
 export const selectService = createAction<IServiceCategory>("fAppointment/selectService");
@@ -19,6 +19,7 @@ export const setAdvisor = createAction<IServiceConsultant|null>("fAppointment/se
 export const setTiming = createAction<EAppointmentTimingType|null>("fAppointment/setTiming");
 export const setTime = createAction<moment.Moment|null>("fAppointment/setTime");
 export const setVehicle = createAction<ILoadedVehicle|null>("fAppointment/setVehicle");
+export const updateVehicle = createAction<Partial<IVehicle>>("fAppointment/updateVehicle");
 export const setCustomer = createAction<ICustomer>("fAppointment/setCustomer");
 export const setReminders = createAction<EReminderType[]>("fAppointment/setReminders");
 export const setAppointmentId = createAction<IAppointmentId>("fAppointment/setAppointmentId");

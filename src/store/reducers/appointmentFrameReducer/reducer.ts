@@ -13,7 +13,7 @@ import {
     setTiming,
     setTransportation,
     setUpdateAppointment,
-    setVehicle
+    setVehicle, updateVehicle
 } from "./actions";
 import {
     EServiceCategoryPage,
@@ -92,6 +92,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setVehicle, (state, {payload}) => {
         return {...state, selectedVehicle: payload};
+    })
+    .addCase(updateVehicle, (state, {payload}) => {
+        if (state.selectedVehicle) {
+            return {...state, selectedVehicle: {...state.selectedVehicle, ...payload}}
+        }
+        return state;
     })
     .addCase(setCustomer, (state, {payload}) => {
         return {...state, customer: payload};

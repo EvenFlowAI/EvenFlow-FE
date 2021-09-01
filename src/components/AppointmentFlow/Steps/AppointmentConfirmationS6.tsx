@@ -182,11 +182,11 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             vehicle: {
                 ...forms.s1Data,
                 dmsId: forms.customerSelectedVehicle
-                    ? forms.customerSelectedVehicle.dmsId
+                    ? forms.customerSelectedVehicle?.dmsId ?? null
                     : (forms.customerLoadedData
                         && forms.customerLoadedData.vehicles.length === 1
                         && forms.s1Data.vin === forms.customerLoadedData.vehicles[0].vin)
-                        ? forms.customerLoadedData.vehicles[0].dmsId
+                        ? forms.customerLoadedData.vehicles[0].dmsId ?? null
                         : null
             },
             slot: forms.appointment?.id.split("|")[1] || "",
