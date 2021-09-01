@@ -134,7 +134,7 @@ export const loadEditAppointment = (appointment: IListAppointment): AppThunk => 
     const tr = transportations.reduce((acc,i) => {
         return [...acc, ...i];
     }, []);
-    const foundTransportation = tr.find(el => el.label === appointment.transportationNeeds.description);
+    const foundTransportation = tr.find(el => el.label === appointment.transportationNeeds?.description);
     state.transportation = foundTransportation?.id ?? ETransportation.Rental;
 
     const date = `${

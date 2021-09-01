@@ -10,7 +10,7 @@ import {RootState} from "../../../store/rootReducer";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 
-const TimeSlotsWrapper = styled('div')({
+const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(6, 1fr)",
     gap: "20px 12px",
@@ -18,8 +18,14 @@ const TimeSlotsWrapper = styled('div')({
     justifyContent: "center",
     "&>div": {
         flexGrow: 1
+    },
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateColumns: "repeat(4, 1fr)"
+    },
+    [theme.breakpoints.down("xs")]: {
+        gridTemplateColumns: "repeat(2, 1fr)"
     }
-});
+}));
 
 type TSlot = {
     date: moment.Moment;

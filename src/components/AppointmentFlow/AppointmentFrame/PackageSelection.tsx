@@ -27,13 +27,16 @@ type TPackage = {
     moreIdx?: number[];
 } & IPackageOptions;
 
-const Wrapper = styled('div')({
+const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
     marginTop: 12,
     gap: "0 20px",
     gridTemplateColumns: "2fr repeat(3, 1fr)",
     width: "100%",
     alignItems: "stretch",
+    [theme.breakpoints.down('sm')]: {
+        overflowX: "auto"
+    },
     "& .currentWrp": {
         flexBasis: "50%",
         display: "flex",
@@ -52,6 +55,9 @@ const Wrapper = styled('div')({
         borderRight: border,
         cursor: "pointer",
         transition: "all .2s",
+        [theme.breakpoints.down("xs")]: {
+            minWidth: "180px"
+        },
         "&.selected": {
             borderLeftColor: "#000000",
             borderRightColor: "#000000",
@@ -140,7 +146,7 @@ const Wrapper = styled('div')({
             }
         }
     }
-});
+}));
 
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [loading, setLoading] = useState<boolean>(false);

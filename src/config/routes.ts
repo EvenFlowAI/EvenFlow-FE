@@ -42,6 +42,7 @@ enum EndUser {
     EditAppointment = "/appointment-update/:id",
     Appointment = "/appointment/:id",
     AppointmentFrame = "/f/appointment/:id",
+    AppointmentFrameBase = "/f/appointment",
     AppointmentBase = "/appointment",
     Confirmation = "/confirmation/:id",
     ConfirmationBase = "/confirmation"

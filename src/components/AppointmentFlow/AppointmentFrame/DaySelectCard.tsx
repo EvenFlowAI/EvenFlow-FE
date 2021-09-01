@@ -9,46 +9,70 @@ type TDayCardProps = {
     available?: boolean;
     isCurrent?: boolean;
 }
-const DayCard = styled('div')<Theme, TDayCardProps>({
+const DayCard = styled('div')<Theme, TDayCardProps>(({theme, available, isCurrent}) => ({
     flexGrow: 1,
-    opacity: ({available, isCurrent}) => (!available && !isCurrent) ? .3 : 1,
+    opacity: (!available && !isCurrent) ? .3 : 1,
     display: "flex",
     textTransform: "uppercase",
     flexDirection: "column",
     gap: "8px",
     fontWeight: "bold",
+    alignItems: "center",
+    justifyContent: "center",
     "& .day": {
-        border: ({isCurrent}) => isCurrent ? "1px solid #000000" : "1px solid #DADADA",
+        border: isCurrent ? "1px solid #000000" : "1px solid #DADADA",
         padding: 12,
         display: "flex",
         alignItems: "center",
-        background: ({isCurrent}) => isCurrent ? "#000000" : "#FAFAFA",
-        color: ({isCurrent}) => isCurrent ? "#FFFFFF" : "#252733",
+        background: isCurrent ? "#000000" : "#FAFAFA",
+        color: isCurrent ? "#FFFFFF" : "#252733",
         justifyContent: "center",
         textAlign: "center",
         minHeight: 80,
         fontWeight: "bold",
         textTransform: "uppercase",
-        cursor: "pointer"
+        cursor: "pointer",
+        height: "auto",
+        [theme.breakpoints.down("xs")]: {
+            borderRadius: "50%",
+            minHeight: "auto",
+            width: 50,
+            height: 50
+        }
     }
-});
+}));
 
 type TProps = {
     day: string;
     onClick: TCallback;
     isCurrent: boolean;
     appointment?: TGroupedAppointment;
+    isXs: boolean;
 };
+
+const XsFormat = "ddd";
+const defaultFormat = 'D, ddd';
+const monthFormat = "MMM D";
+
 export const DaySelectCard: React.FC<TProps> = ({
-    day, onClick, appointment, isCurrent
+    day, onClick, appointment, isCurrent, isXs
 }) => {
+
+    const getLabel = () => {
+        if (isXs) {
+            return moment.utc(day).format("D");
+        }
+        return appointment ? "Available" : "Not Available"
+    }
+
     return <DayCard
             available={Boolean(appointment)}
             isCurrent={isCurrent}
         >
-        <div>{moment.utc(day).format('D, ddd')}</div>
+        <div>{moment.utc(day).format(isXs ? XsFormat : defaultFormat)}</div>
         <div className="day" onClick={onClick}>
-            {appointment ? "Available" : "Not Available"}
+            {getLabel()}
+            {isXs ? <div className="padding" /> : null}
         </div>
     </DayCard>
 };

@@ -3,7 +3,7 @@ import moment from "moment";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {DaySelectCard} from "./DaySelectCard";
 import {TArgCallback} from "../../../types/types";
-import {styled, Theme} from "@material-ui/core";
+import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {TGroupedAppointments} from "../../../utils/types";
 import {getAppointmentDate} from "./utils";
 
@@ -38,9 +38,12 @@ type TProps = {
 }
 export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments}) => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isXs = useMediaQuery(theme.breakpoints.down("xs"));
     const daysPerScreen: number = useMemo(() => {
-        return 6;
-    }, []);
+        return isXs ? 5 : isSm ? 4 : 6;
+    }, [isSm, isXs]);
 
     const initRef = useRef<boolean>(false);
 
@@ -101,6 +104,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
             .map(day =>
                 <DaySelectCard
                     key={day}
+                    isXs={isXs}
                     isCurrent={date.isSame(moment.utc(day), 'date')}
                     appointment={appointments[day]}
                     onClick={handleChangeDay(day)}
