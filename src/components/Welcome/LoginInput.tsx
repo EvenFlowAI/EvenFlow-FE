@@ -14,6 +14,7 @@ import {API} from "../../api/api";
 import {LoadingButton} from "../UI/Button";
 import {useException, useMessage} from "../../utils/hooks";
 import {TView} from "./types";
+import {decodeSCID} from "../../utils/utils";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -96,13 +97,16 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const handleComplete = async () => {
         setLoading(true);
         try {
-            const {data} = await API.appointment.sendConfirmation({
-                searchTerm: customerEnteredEmail
+            const {data} = await API.appointment.searchCustomer({
+                searchTerm: customerEnteredEmail,
+                serviceCenterId: serviceCenter?.id ?? 0
             });
-            dispatch(setSessionId(data));
+            dispatch(setCustomerLoadedData(data));
             dispatch(saveAppointmentReducer());
-            showMessage("We've send a code with an email for confirmation.");
-            onConfirm();
+            // dispatch(setSessionId(data));
+            // dispatch(saveAppointmentReducer());
+            // showMessage("We've send a code with an email for confirmation.");
+            onComplete();
         } catch {
             dispatch(setSessionId(""));
             showError("We can't find your vehicle data, you can proceed as a new customer");
