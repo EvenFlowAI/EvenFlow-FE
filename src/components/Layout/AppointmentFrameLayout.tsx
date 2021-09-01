@@ -29,6 +29,7 @@ import {
 import {decodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
+import {API} from "../../api/api";
 
 const Container = styled('div')({
     display: "flex",
@@ -146,7 +147,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed
-
+                onModify={handleChangeScreen("serviceNeeds")}
             />
         }
         return carSelections[currentScreen];

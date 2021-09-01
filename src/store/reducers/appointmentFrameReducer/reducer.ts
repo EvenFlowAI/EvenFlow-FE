@@ -91,7 +91,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, reminders: payload};
     })
     .addCase(setAppointmentId, (state, {payload}) => {
-        return {...state, ...payload};
+        let vehicle = state.selectedVehicle;
+        if (vehicle) {
+            vehicle = {...vehicle, appointmentHashKeys: [...vehicle.appointmentHashKeys, payload.hashKey]}
+        }
+        return {...state, ...payload, selectedVehicle: vehicle};
     })
     .addCase(setTransportation, (state, {payload}) => {
         return {...state, transportation: payload};

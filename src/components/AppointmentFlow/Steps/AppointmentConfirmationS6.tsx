@@ -16,7 +16,7 @@ import {RootState} from "../../../store/rootReducer";
 import {
     changeComment,
     changePersonalInformation,
-    setAppointmentId,
+    setOldAppointmentId,
     changePrivacy, changeReminders, saveAppointmentReducer
 } from "../../../store/reducers/appointment/actions";
 import moment from "moment";
@@ -206,7 +206,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                 resp = data;
             }
 
-            dispatch(setAppointmentId({...resp, updated: Boolean(appointmentId?.id)}));
+            dispatch(setOldAppointmentId({...resp, updated: Boolean(appointmentId?.id)}));
             dispatch(saveAppointmentReducer());
             setLoading(false);
             history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);

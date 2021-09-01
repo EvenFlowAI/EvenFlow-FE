@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useException} from "../../../utils/hooks";
+import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 
 const Wrapper = styled('div')({
     width: "100%",
@@ -105,8 +106,18 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             .then(({data}) => {
                 dispatch(setAppointmentId({
                     id: data.id,
-                    hashKey: data.hashKey
+                    hashKey: data.hashKey,
                 }));
+                if (appointment.customerLoadedData) {
+                    const d = {
+                        ...appointment.customerLoadedData,
+                        vehicles: appointment.customerLoadedData.vehicles.map(
+                            v => v.vin === appointmentFrame.selectedVehicle?.vin ? {...v, appointmentHashKeys: [...v.appointmentHashKeys, data.hashKey]} : v
+                        )
+                    };
+                    dispatch(setCustomerLoadedData(d));
+                    saveCustomerCache(d);
+                }
                 onNext();
             })
             .catch(e => {showError(e)})

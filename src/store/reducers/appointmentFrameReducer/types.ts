@@ -20,8 +20,8 @@ export type TServiceCard = {
     type: ECardType
 }
 export interface IAppointmentId {
-    id?: number;
-    hashKey?: string;
+    id: number;
+    hashKey: string;
 }
 export type TMaintenanceDetails = {
     year?: string;
