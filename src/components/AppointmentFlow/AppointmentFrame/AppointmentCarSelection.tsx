@@ -8,6 +8,7 @@ import { StepWrapper } from './StepWrapper';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {getBlankVehicle} from "../../../store/reducers/appointment/actions";
 
 
 const CarsWrapper = styled('div')({
@@ -47,7 +48,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
     }, [customerLoadedData]);
 
     const handleSkip = () => {
-        dispatch(setVehicle(null));
+        dispatch(setVehicle(getBlankVehicle()));
         onNext();
     }
 

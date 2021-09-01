@@ -88,6 +88,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         onChange={handleTextChange(select.name)}
                         label={select.label}
                         name={select.name}
+                        error
                         fullWidth
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
                         placeholder={`Type ${select.label}`}
