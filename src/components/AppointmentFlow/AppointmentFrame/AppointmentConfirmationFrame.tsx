@@ -22,7 +22,7 @@ import {useParams} from "react-router-dom";
 import {useException} from "../../../utils/hooks";
 import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 
-const Wrapper = styled('div')({
+const Wrapper = styled('div')(({theme}) => ({
     width: "100%",
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
@@ -33,8 +33,11 @@ const Wrapper = styled('div')({
         gap: "20px",
         justifyContent: "flex-start",
         alignItems: "stretch"
+    },
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateColumns: "1fr"
     }
-});
+}));
 
 const Info = styled('div')({
     fontSize: 12

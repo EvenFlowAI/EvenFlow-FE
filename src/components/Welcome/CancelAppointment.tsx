@@ -76,7 +76,7 @@ export const CancelAppointment = () => {
     const handleCreateNew = () => {
         if (appointment?.serviceCenterId) {
             clearStorage();
-            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(appointment.serviceCenterId)}`);
+            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(appointment.serviceCenterId)}?frame=1`);
         }
     }
 

@@ -12,9 +12,8 @@ import {
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
 import {LoadingButton} from "../UI/Button";
-import {useException, useMessage} from "../../utils/hooks";
+import {useException} from "../../utils/hooks";
 import {TView} from "./types";
-import {decodeSCID} from "../../utils/utils";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -86,7 +85,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const isXS = useMediaQuery(theme.breakpoints.down("sm"));
     const classes = useStyles();
     const showError = useException();
-    const showMessage = useMessage();
+    // const showMessage = useMessage();
     const dispatch = useDispatch();
     const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
     const sessionId = useSelector((state: RootState) => state.appointment.sessionId);

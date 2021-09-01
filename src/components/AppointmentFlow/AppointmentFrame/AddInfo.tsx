@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import { setFrameDescription } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TCallback} from "../../../types/types";
-import {VIN_LENGTH} from "../../../config/constants";
 
 
 type TProps = {

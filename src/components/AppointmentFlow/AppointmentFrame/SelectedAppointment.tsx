@@ -5,14 +5,17 @@ import {RootState} from "../../../store/rootReducer";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
 
-const Wrapper = styled('div')({
+const Wrapper = styled('div')(({theme}) => ({
     display: "flex",
     alignItems: "flex-end",
-    justifyContent: "space-between"
-})
+    justifyContent: "space-between",
+    [theme.breakpoints.down("xs")]: {
+        flexDirection: "column"
+    }
+}))
 
 
-const List = styled('ul')({
+const List = styled('ul')(({theme}) => ({
     listStyle: "none",
     margin: 0,
     padding: 0,
@@ -22,6 +25,9 @@ const List = styled('ul')({
     gap: "18px",
     fontSize: 16,
     fontWeight: "bold",
+    [theme.breakpoints.down("xs")]: {
+        alignSelf: "flex-start",
+    },
     "& ul": {
         listStyle: "none",
         marginTop: -10,
@@ -34,9 +40,9 @@ const List = styled('ul')({
             }
         }
     }
-});
+}));
 
-const PriceWrapper = styled('div')({
+const PriceWrapper = styled('div')(({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-end",
@@ -51,7 +57,7 @@ const PriceWrapper = styled('div')({
     "& .info": {
         color: "#27AE60"
     }
-})
+}))
 // TODO: Advisor|consultant
 export const SelectedAppointment = () => {
     const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
