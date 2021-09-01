@@ -7,9 +7,8 @@ import {Table} from "../../UI/Table";
 import {IServiceCenterExtended, IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadAll, removeSC, setSCOrder} from "../../../store/reducers/serviceCenters/actions";
+import {changePageData, loadAll, removeSC, setSCOrder} from "../../../store/reducers/serviceCenters/actions";
 import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
-import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
 import {CreateServiceCenter} from "../../Modals/CreateServiceCenter/CreateServiceCenter";
 import {concatAddress} from "../../../utils/utils";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
@@ -20,7 +19,7 @@ import {IOrder} from "../../../types/types";
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
     {val: (el: IServiceCenterExtended) => el.dealership.name, header: "Dealership group"},
     {val: (el: IServiceCenterExtended) => el.name, header: "Service center name", orderId: "name"},
-    {val: (el: IServiceCenterExtended) => el.mainAddress, header: "Service center address", orderId: "mainAddress"},
+    {val: (el: IServiceCenterExtended) => concatAddress(el.address), header: "Service center address"},
     {val: (el: IServiceCenterExtended) => el.countOfBays.toString(), header: "Bays", align: "center", orderId: "countOfBays"},
 ];
 
@@ -46,7 +45,7 @@ export const ServiceCenters = () => {
 
     const dispatch = useDispatch();
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
-        (s: RootState) => s.dealershipGroups.pageData,
+        (s: RootState) => s.serviceCenters.pageData,
         changePageData
     );
     const showError = useException();

@@ -23,6 +23,7 @@ import {useDispatch, useSelector} from "react-redux";
 import { useParams } from 'react-router-dom';
 import {RootState} from "../../../store/rootReducer";
 import {useDebounce} from "../../../utils/hooks";
+import {decodeSCID} from "../../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
     label: {
@@ -88,7 +89,7 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next, isCompleted}) 
         async function fetchData() {
             setLoading(true);
             try {
-                await dispatch(loadSRs(id));
+                await dispatch(loadSRs(decodeSCID(id)));
             } finally {
                 setLoading(false);
             }

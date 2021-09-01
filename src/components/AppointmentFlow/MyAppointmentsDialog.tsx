@@ -10,7 +10,7 @@ import {Table} from "../UI/Table";
 import {TableRowDataType} from "../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {useConfirm, useException, useMessage} from "../../utils/hooks";
-import {getAppointmentDate, getAppointmentVehicle} from "../../utils/utils";
+import {encodeSCID, getAppointmentDate, getAppointmentVehicle} from "../../utils/utils";
 import {loadEditAppointment, saveAppointmentReducer} from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {useHistory} from "react-router-dom";
@@ -82,7 +82,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         if (editedItem && serviceCenter) {
             await dispatch(loadEditAppointment(editedItem));
             await dispatch(saveAppointmentReducer());
-            history.replace(`${Routes.EndUser.AppointmentBase}/${serviceCenter.id}`);
+            history.replace(`${Routes.EndUser.AppointmentBase}/${encodeSCID(serviceCenter.id)}`);
             window.location.reload();
         }
     }
@@ -111,7 +111,12 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
             try {
                 await API.appointment.cancelByKey(editedItem.hashKey);
                 setEditedItem(null);
-                showMessage("Canceled");
+                showMessage(
+                    <div>
+                        Your appointment has been canceled. <br/>
+                        Please do not forget to update the appointment in your calendar.
+                    </div>
+                );
                 await loadAppointments(sessionId, serviceCenter?.id||0);
             } catch (e) {
                 showError(e);
@@ -120,7 +125,11 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     }
 
     const actions = (el: IListAppointment) => {
-        return <IconButton onClick={openMenu(el)}>
+        return <IconButton
+            disabled={
+                el.appointmentStatus === AppointmentStatus.Cancelled || !el.isEditable
+            }
+            onClick={openMenu(el)}>
             <MoreHoriz />
         </IconButton>;
     }
@@ -134,6 +143,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
                 noDataTitle="You have no appointments yet"
                 isLoading={loading}
                 rowData={cols}
+                hidePagination
                 compact
                 actions={actions}
                 index="id"
@@ -143,7 +153,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
             <Button variant="outlined" color="primary" onClick={props.onClose}>Close</Button>
         </DialogActions>
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-            <MenuItem disabled={editedItem?.appointmentStatus === AppointmentStatus.Cancelled} onClick={editAppointment}>Edit</MenuItem>
+            <MenuItem onClick={editAppointment}>Edit</MenuItem>
             <MenuItem onClick={cancelAppointment}>Cancel</MenuItem>
         </Menu>
     </BaseModal>

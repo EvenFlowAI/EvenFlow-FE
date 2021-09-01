@@ -12,6 +12,7 @@ import {Close} from "@material-ui/icons";
 import {EndUserLayout} from "./components/Layout/EndUserLayout";
 import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
+import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
@@ -37,6 +38,7 @@ const App = () => {
                     <Route path={Routes.Login.Base} component={Login} />
                     <Route path={Routes.Account.Base} component={Login} />
                     <Route path={Routes.EndUser.Appointment} component={AppointmentLayout} />
+                    <Route path={Routes.EndUser.AppointmentFrame} component={AppointmentFrameLayout} />
                     <Route path={Routes.EndUser.Confirmation} component={AppointmentConfirmation} />
                     <Route path={Routes.EndUser.CancelAppointment} component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} component={EndUserLayout} />

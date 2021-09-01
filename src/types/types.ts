@@ -32,7 +32,8 @@ export interface ICredentials {
 
 export enum LocalTokens {
     authToken = 'at',
-    refreshToken = 'rt'
+    refreshToken = 'rt',
+    suToken = 'st'
 }
 
 export interface ITimeSpan {
@@ -72,3 +73,9 @@ export interface IOrder<D={}> {
     orderBy?: keyof D | string,
     isAscending: boolean
 }
+export type TOption = {
+    name: string;
+    value: string;
+}
+export type TCallback = () => void;
+export type TArgCallback<T> = (arg: T) => void;

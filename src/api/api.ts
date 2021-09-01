@@ -8,10 +8,16 @@ import {
     ISetNewPasswordData,
     IConfig,
     IListAppointmentRequest,
-    IListAppointment, ISearchCustomerParams, ISearchTerm, ISecurityCode, ISessionId, IServiceCenterId
+    IListAppointment,
+    ISearchCustomerParams,
+    ISearchTerm,
+    ISecurityCode,
+    ISessionId,
+    IServiceCenterId,
+    ICustomerLoadedData
 } from "./types";
 import {Api, endUserRequest, request} from "../config/requests";
-import {PaginatedAPIResponse} from "../types/types";
+import {ITokens, PaginatedAPIResponse} from "../types/types";
 import {IAppointmentResponse, IAppointmentSlotsRequest, ISR} from "../store/reducers/appointment/types";
 
 const accounts = {
@@ -29,7 +35,7 @@ const appointment = {
         (headers: ISessionId, params: IServiceCenterId):
             TApiResponse<IListAppointment[]> =>
             endUserRequest.get("/appointments", {headers, params}),
-    searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params}),
+    searchCustomer: (params: ISearchCustomerParams): TApiResponse<ICustomerLoadedData> => request.get("/customers", {params}),
     searchCustomerByKey: (headers: ISessionId, params: ISearchCustomerParams): TApiResponse => endUserRequest.get("/customers/by-session", {params, headers}),
     sendConfirmation: (data: ISearchTerm): TApiResponse<string> => request.post("/sessions/open", data),
     confirm: (headers: ISessionId,  data: ISecurityCode): TApiResponse => endUserRequest.post(
@@ -38,6 +44,10 @@ const appointment = {
     cancel: (id: number): TApiResponse => request.put(`/appointments/${id}/cancel`),
     getByKey: (key: string): TApiResponse<IListAppointment> => request.get(`/appointments/${key}/by-key`)
 };
+const authentication = {
+    dealership: (dealershipId: number): TApiResponse<ITokens> =>
+        request.post("/authentications/dealership", { dealershipId })
+}
 const employeeSchedules = {
     remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),
 }
@@ -64,5 +74,11 @@ const serviceRequests = {
     )
 }
 export const API = {
-    accounts, appointment, employeeSchedules, configs, serviceRequests, timeSlots
+    accounts,
+    appointment,
+    authentication,
+    configs,
+    employeeSchedules,
+    serviceRequests,
+    timeSlots
 };

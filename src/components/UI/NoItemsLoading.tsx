@@ -6,15 +6,16 @@ type TProps = {
     loading?: boolean;
     label?: string;
     items: any[];
+    wrapperStyles?: React.CSSProperties;
 }
 const divStyles = {textAlign: "center" as const, width: "100%"};
-export const NoItemsLoading: React.FC<TProps> = ({loading, items, label}) => {
+export const NoItemsLoading: React.FC<TProps> = ({loading, items, label, wrapperStyles}) => {
     if (loading) {
-        return <div style={divStyles}>
+        return <div style={{...divStyles, ...(wrapperStyles ?? {})}}>
             <CircularProgress />
         </div>;
     } else if (!items.length) {
-        return <div style={divStyles}>
+        return <div style={{...divStyles, ...(wrapperStyles ?? {})}}>
             {label ? label : "No items."}
         </div>
     } else {

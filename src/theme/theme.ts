@@ -134,5 +134,32 @@ export const endUserTheme = createMuiTheme({
             main: "#3855F3",
         },
     },
-})
+});
+export const frameTheme = createMuiTheme({
+    ...theme,
+    palette: {
+        ...theme.palette,
+        primary: {
+            main: "#000000"
+        }
+    },
+});
+frameTheme.overrides = {
+    ...frameTheme.overrides,
+    MuiButton: {
+        ...frameTheme.overrides?.MuiButton,
+        root: {
+            ...frameTheme.overrides?.MuiButton?.root,
+            borderRadius: 0
+        }
+    },
+    MuiInput: {
+        ...frameTheme.overrides?.MuiInput,
+        error: {
+            ...frameTheme.overrides?.MuiInput?.error,
+            borderColor: "red",
+            color: "red"
+        }
+    }
+}
 export default theme;

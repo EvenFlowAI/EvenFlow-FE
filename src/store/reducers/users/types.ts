@@ -8,6 +8,7 @@ export interface ICurrentUser {
     userName: string;
     email: string;
     role: TRole;
+    adminDealership?: boolean;
     phoneNumber: string;
     emailConfirmed: boolean;
     avatarPath: string;

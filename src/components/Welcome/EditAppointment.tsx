@@ -15,6 +15,7 @@ import {AppointmentStatus} from "../../api/types";
 import {Edit} from "@material-ui/icons";
 import {RootState} from "../../store/rootReducer";
 import {NotFoundError} from "./NotFoundError";
+import {encodeSCID} from "../../utils/utils";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -43,7 +44,7 @@ export const EditAppointment = () => {
                     return;
                 }
                 await dispatch(loadEditAppointment({...data, hashKey: data.hashKey || id}));
-                history.replace(`${Routes.EndUser.AppointmentBase}/${data.serviceCenterId}`);
+                history.replace(`${Routes.EndUser.AppointmentBase}/${encodeSCID(data.serviceCenterId)}`);
             })
             .catch(() => {
                 setState("error");
@@ -53,7 +54,7 @@ export const EditAppointment = () => {
     const handleCreateNew = () => {
         if (selectedSC) {
             clearStorage();
-            history.replace(`${Routes.EndUser.Welcome}/${selectedSC}`);
+            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(selectedSC)}`);
         }
     }
 

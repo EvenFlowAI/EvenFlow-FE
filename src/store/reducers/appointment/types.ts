@@ -41,6 +41,16 @@ export interface IVehicleData {
     driveType: string;
     engineType: string;
 }
+export interface IVehicle {
+    vin: string;
+    make: string;
+    year: number;
+    model: string;
+    mileage: number;
+    transmission: string;
+    driveType: string;
+    engineType: string;
+}
 export type TS3Form = {
     date?: ParsableDate,
     appointmentType: EAppointmentTimingType;
@@ -87,6 +97,7 @@ export interface IPrivacy {
 export interface IPrice {
     value: number;
     category: EDemandCategory;
+    amountOfSavingMoney?: number
 }
 export interface IAppointmentSlot {
     date: ParsableDate;
@@ -108,13 +119,17 @@ export enum EAppointmentTimingType {
 }
 export interface IAppointmentSlotsRequest {
     serviceCenterId: number;
+    maintenancePackageOptionId?: number|null;
     fromDate?: ParsableDate;
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;
     offerType?: EOfferType;
+    serviceCategoryId?: number,
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
     serviceRequestIds: number[];
+    customerId?: string;
+    warrantyExpiration?: ParsableDate;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
@@ -128,6 +143,7 @@ export interface IAppointmentFilters {
 
 export type TAppointmentState = {
     sessionId: string;
+    updated: boolean;
     customerEnteredEmail: string;
     customerSelectedVehicle: ILoadedVehicle|null;
     scProfile?: IServiceCenterProfile;

@@ -1,6 +1,14 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
+import {
+    getBlankCustomer,
+    getBlankVehicle,
+    saveCustomerCache,
+    setCustomerLoadedData
+} from "../../store/reducers/appointment/actions";
+import {useDispatch} from "react-redux";
+import {setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 
 const mh400 = "@media (max-height: 400px)";
 const mh600 = "@media (max-height: 600px)";
@@ -52,6 +60,15 @@ type TProps = {
 
 export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+
+    const handleNew = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+        onComplete();
+    }
 
     return <Grid className={classes.buttonsContainer}
           alignItems="stretch"
@@ -63,7 +80,7 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
             </div>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
-            <div onClick={onComplete} className={classes.button}>
+            <div onClick={handleNew} className={classes.button}>
                 <span>I`m a new customer</span>
             </div>
         </Grid>

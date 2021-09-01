@@ -16,7 +16,7 @@ import {RootState} from "../../../store/rootReducer";
 import {
     changeComment,
     changePersonalInformation,
-    setAppointmentId,
+    setOldAppointmentId,
     changePrivacy, changeReminders, saveAppointmentReducer
 } from "../../../store/reducers/appointment/actions";
 import moment from "moment";
@@ -25,13 +25,12 @@ import {Routes} from "../../../config/routes";
 import {API} from "../../../api/api";
 import {
     EReminderType,
-    flatTransportations,
     IPersonalInformation,
     IPrivacy, IReminders
 } from "../../../store/reducers/appointment/types";
 import {useException} from "../../../utils/hooks";
 import {ICreateAppointment, ICreateAppointmentResp} from "../../../api/types";
-import {validatePhoneNumber} from "../../../utils/utils";
+import {decodeSCID, validatePhoneNumber} from "../../../utils/utils";
 
 const Section = styled("div")({
     padding: "16px 0"
@@ -179,24 +178,22 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             isNeedCall: forms.privacy.callback,
             offerId: forms?.appointment?.offer?.id ?? null,
             reminderTypes,
-            serviceCenterId: id,
+            serviceCenterId: decodeSCID(id),
             vehicle: {
                 ...forms.s1Data,
                 dmsId: forms.customerSelectedVehicle
-                    ? forms.customerSelectedVehicle.dmsId
+                    ? forms.customerSelectedVehicle?.dmsId ?? null
                     : (forms.customerLoadedData
                         && forms.customerLoadedData.vehicles.length === 1
                         && forms.s1Data.vin === forms.customerLoadedData.vehicles[0].vin)
-                        ? forms.customerLoadedData.vehicles[0].dmsId
+                        ? forms.customerLoadedData.vehicles[0].dmsId ?? null
                         : null
-            },
-            transportationNeeds: {
-                isNeed: Number(forms.transportation) > 2,
-                description: flatTransportations.find(t => t.id === forms.transportation)?.label || ""
             },
             slot: forms.appointment?.id.split("|")[1] || "",
             serviceRequestIds: forms.selectedSR,
-            date: forms.appointment?.id.split("|")[0] || ""
+            date: forms.appointment?.id.split("|")[0] || "",
+            maintenancePackageOptionId: null,
+            serviceCategoryId: null
         };
         setLoading(true);
         try {
@@ -209,7 +206,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                 resp = data;
             }
 
-            dispatch(setAppointmentId(resp));
+            dispatch(setOldAppointmentId({...resp, updated: Boolean(appointmentId?.id)}));
             dispatch(saveAppointmentReducer());
             setLoading(false);
             history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);
