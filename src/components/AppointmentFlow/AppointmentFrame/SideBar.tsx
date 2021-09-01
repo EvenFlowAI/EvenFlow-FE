@@ -1,8 +1,9 @@
 import React from 'react';
-import {Button, styled} from "@material-ui/core";
+import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TScreen} from "../../Layout/types";
+import {ProgressStepper} from "../ProgressStepper";
 
-const Wrapper = styled('ul')({
+const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
     margin: 0,
     padding: 0,
@@ -16,8 +17,11 @@ const Wrapper = styled('ul')({
         textAlign: "left",
         fontSize: 18,
         textTransform: "none"
+    },
+    [theme.breakpoints.down("sm")]: {
+        marginBottom: "auto"
     }
-});
+}));
 
 
 const stepsMap: {[K in TScreen]: number} = {
@@ -29,6 +33,7 @@ const stepsMap: {[K in TScreen]: number} = {
     describeMore: 1,
     opsCode: 1,
     vehicleData: 1,
+    carDetails: 1,
     consultantSelection: 2,
     appointmentTiming: 3,
     appointmentSelection: 3,
@@ -41,7 +46,11 @@ const Index = styled('span')({
     display: "inline-block",
     paddingRight: 8,
     minWidth: 28
-})
+});
+
+const MobileWrapper = styled('div')({
+
+});
 
 // TODO: Advisor|consultant
 const menuItems: string[] = [
@@ -50,17 +59,37 @@ const menuItems: string[] = [
     "Appointment Selection",
     "Transportation Needs",
     "Appointment Confirmation"
-]
+];
+
+type TStepProps = {
+    active: number;
+    steps: number;
+    currentLabel: string;
+    nextLabel?: string;
+}
+const MobileSteps: React.FC<TStepProps> = ({active, steps, currentLabel, nextLabel}) => {
+    return <MobileWrapper>
+        <ProgressStepper
+            steps={steps}
+            activeStep={active}
+            label={currentLabel}
+            nextLabel={nextLabel}
+        />
+    </MobileWrapper>;
+}
+
 type TProps = {
     screen: TScreen;
 }
 export const SideBar: React.FC<TProps> = ({screen}) => {
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isActive = (idx: number): boolean => {
         return stepsMap[screen] === idx;
     }
     return (
         <Wrapper>
-            {menuItems.map((item, idx) => {
+            {!isSm ? menuItems.map((item, idx) => {
                 return <li key={item}>
                     <Button
                         fullWidth
@@ -70,7 +99,12 @@ export const SideBar: React.FC<TProps> = ({screen}) => {
                         <Index>{idx + 1}</Index> {item}
                     </Button>
                 </li>
-            })}
+            }) : <MobileSteps
+                active={stepsMap[screen]}
+                steps={menuItems.length}
+                currentLabel={menuItems[stepsMap[screen]-1]}
+                nextLabel={menuItems[stepsMap[screen]]}
+            />}
         </Wrapper>
     );
 };

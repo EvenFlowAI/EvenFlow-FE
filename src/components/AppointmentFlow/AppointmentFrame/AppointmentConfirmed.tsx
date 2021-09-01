@@ -6,6 +6,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
+import {TCallback} from "../../../types/types";
 
 
 const Wrapper = styled('div')({
@@ -63,7 +64,10 @@ type TItem = {
 }
 
 
-export const AppointmentConfirmed = () => {
+type TProps = {
+    onModify: TCallback;
+}
+export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const [
         appointment,
         scProfile,
@@ -144,7 +148,7 @@ export const AppointmentConfirmed = () => {
                 </React.Fragment>
             )}
 
-            <Button color="primary" fullWidth variant="outlined">
+            <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
                 Modify Appointment
             </Button>
             <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained">

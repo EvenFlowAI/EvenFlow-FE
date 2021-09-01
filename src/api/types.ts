@@ -18,8 +18,8 @@ export type TApiView = Record<string, TApiEndpoint>;
 export type TApi = Record<string, TApiView>;
 
 export enum EServiceCategoryPage {
-    Page1 = "Page1",
-    Page2 = "Page2"
+    Page1,
+    Page2
 }
 
 export enum EVehiclePropType {
@@ -65,11 +65,12 @@ export interface ICreateAppointment {
     serviceRequestIds: number[];
 }
 
-export interface IUpdateAppointment extends ICreateAppointment, ICreateAppointmentResp {
-    id: number;
+export interface IUpdateAppointment extends ICreateAppointment {
+    id?: number;
+    hashKey?: string;
 }
 
-export interface ICreateAppointmentResp {
+export interface ICreateAppointmentResp extends IListAppointment {
     id: number;
     hashKey: string;
 }
@@ -85,14 +86,14 @@ export interface ICustomerLoadedData {
 }
 
 export interface ILoadedVehicle {
-    dmsId: string;
+    dmsId?: string;
     vin: string;
     make: string;
     model: string;
-    year: number;
-    mileage: number;
+    year: number|null;
+    mileage: number|null;
     warrantyExpiration?: ParsableDate;
-    appointmentHashKeys?: string[];
+    appointmentHashKeys: string[];
 }
 
 export interface IPasswordRecoveryData {
@@ -154,6 +155,8 @@ export interface IListAppointment {
     vehicleId: number;
     vehicle: IVehicleData;
     customerId: string;
+    serviceCategory: IServiceCategory|null;
+    maintenancePackageOptionId: number | null;
     driver: IDriverInfo;
     duration: number;
     transactionValue: number;

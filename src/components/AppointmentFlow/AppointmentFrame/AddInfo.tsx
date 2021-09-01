@@ -6,11 +6,18 @@ import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import { setFrameDescription } from '../../../store/reducers/appointmentFrameReducer/actions';
+import {TCallback} from "../../../types/types";
+import {VIN_LENGTH} from "../../../config/constants";
 
-export const AddInfo: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const [service, subService] = useSelector(({appointmentFrame}: RootState) => [
+
+type TProps = {
+    onFillCar: TCallback;
+} & TActionProps;
+export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
+    const [service, subService, vehicle] = useSelector(({appointmentFrame}: RootState) => [
         appointmentFrame.service,
-        appointmentFrame.subService
+        appointmentFrame.subService,
+        appointmentFrame.selectedVehicle
     ]);
     const description = useSelector(({appointmentFrame}: RootState) => appointmentFrame.description);
     const dispatch = useDispatch();
@@ -18,6 +25,15 @@ export const AddInfo: React.FC<TActionProps> = ({onNext, onBack}) => {
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setFrameDescription(value))
     }
+
+    const handleNext = () => {
+        if (!vehicle?.vin || vehicle.vin.length !== VIN_LENGTH) {
+            onFillCar();
+        } else {
+            onNext();
+        }
+    }
+
     return (
         <StepWrapper>
             <TextField
@@ -30,7 +46,7 @@ export const AddInfo: React.FC<TActionProps> = ({onNext, onBack}) => {
                     subService?.name ?? service?.name ?? "Type Here"
                 }
             />
-            <Actions onBack={onBack} onNext={onNext} />
+            <Actions onBack={onBack} onNext={handleNext} />
         </StepWrapper>
     );
 };

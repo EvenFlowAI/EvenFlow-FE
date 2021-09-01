@@ -2,13 +2,21 @@ import {createReducer} from "@reduxjs/toolkit";
 import {
     selectService,
     selectSubService,
-    setAdvisor, setAppointmentId, setCustomer,
-    setFrameDescription, setMaintenanceDetails,
-    setPackage, setReminders,
+    setAdvisor,
+    setAppointmentId,
+    setCustomer,
+    setFrameDescription,
+    setMaintenanceDetails,
+    setPackage,
+    setReminders,
     setTime,
-    setTiming, setTransportation, setVehicle
+    setTiming,
+    setTransportation,
+    setUpdateAppointment,
+    setVehicle, updateVehicle
 } from "./actions";
 import {
+    EServiceCategoryPage,
     ICustomer,
     ILoadedVehicle,
     IPackageOptions,
@@ -19,6 +27,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {TMaintenanceDetails} from "./types";
+import {tellMoreCard} from "./initial";
 
 type TState = {
     service: IServiceCategory|null;
@@ -84,6 +93,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     .addCase(setVehicle, (state, {payload}) => {
         return {...state, selectedVehicle: payload};
     })
+    .addCase(updateVehicle, (state, {payload}) => {
+        if (state.selectedVehicle) {
+            return {...state, selectedVehicle: {...state.selectedVehicle, ...payload}}
+        }
+        return state;
+    })
     .addCase(setCustomer, (state, {payload}) => {
         return {...state, customer: payload};
     })
@@ -91,12 +106,40 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, reminders: payload};
     })
     .addCase(setAppointmentId, (state, {payload}) => {
-        return {...state, ...payload};
+        let vehicle = state.selectedVehicle;
+        if (vehicle) {
+            vehicle = {...vehicle, appointmentHashKeys: [...vehicle.appointmentHashKeys, payload.hashKey]}
+        }
+        return {...state, ...payload, selectedVehicle: vehicle};
     })
     .addCase(setTransportation, (state, {payload}) => {
         return {...state, transportation: payload};
     })
     .addCase(setMaintenanceDetails, (state, {payload}) => {
         return {...state, maintenanceDetails: {...state.maintenanceDetails, ...payload}}
+    })
+    .addCase(setUpdateAppointment, (state, {payload}) => {
+        const c: Partial<TState> = {};
+        let category = payload.serviceCategory;
+        if (category) {
+            category = {...category, serviceRequests: category.serviceRequests ? [...category.serviceRequests] : []}
+            if (category.page === EServiceCategoryPage.Page1) {
+                c.service = category;
+            } else if (category.page === EServiceCategoryPage.Page2) {
+                c.subService = category;
+                c.service = tellMoreCard;
+            } else {
+                // TODO: Package??
+            }
+        }
+        return {
+            ...state,
+            id: payload.id,
+            hashKey: payload.hashKey,
+            customer: {...payload.driver},
+            reminders: payload.reminderTypes,
+            ...c,
+            description: payload.comment
+        };
     })
 )

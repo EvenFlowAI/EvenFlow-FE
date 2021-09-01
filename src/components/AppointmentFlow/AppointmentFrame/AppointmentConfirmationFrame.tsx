@@ -9,7 +9,7 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {ICreateAppointment, ICreateAppointmentResp} from "../../../api/types";
+import {ICreateAppointmentResp, IUpdateAppointment} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useException} from "../../../utils/hooks";
+import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 
 const Wrapper = styled('div')({
     width: "100%",
@@ -56,7 +57,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
     const handleCreateAppointment = () => {
         // TODO: UpdateFlow?
-        const data: ICreateAppointment = {
+        const data: IUpdateAppointment = {
+            id: appointmentFrame.id,
+            hashKey: appointmentFrame.hashKey,
             appointmentTimingType: appointmentFrame.selectedTiming ?? EAppointmentTimingType.FirstAvailable,
             customerId: appointment.customerLoadedData?.id,
             comment: appointmentFrame.description,
@@ -95,21 +98,46 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         if (data.serviceCategoryId && data.serviceCategoryId < 1) {
             data.serviceCategoryId = null;
         }
+        const endpoint = data?.hashKey
+            ? Api.endpoints.Appointments.UpdateByKey
+            : Api.endpoints.Appointments.Create;
         setSaving(true);
         Api.call<ICreateAppointmentResp>(
-            Api.endpoints.Appointments.Create,
-            {
-                data
-            }
+            endpoint, { data, urlParams: {id: data.hashKey} }
         )
             .then(({data}) => {
                 dispatch(setAppointmentId({
                     id: data.id,
-                    hashKey: data.hashKey
+                    hashKey: data.hashKey,
                 }));
+                if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
+                    const d = {
+                        ...appointment.customerLoadedData
+                    };
+                    const vehicle = d.vehicles.find(
+                        c => c.vin === data.vehicle.vin
+                    );
+                    if (vehicle) {
+                        vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
+                    } else {
+                        d.vehicles = [...d.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
+                    }
+                    if (!d.emails.length) {
+                        d.emails = [appointmentFrame.customer.email];
+                        const fNameParts = appointmentFrame.customer.fullName.split(" ");
+                        const firstName = fNameParts[0];
+                        const lastName = fNameParts.slice(1).join(' ');
+                        d.firstName = firstName;
+                        d.lastName = lastName;
+                        d.id = data.customerId;
+                        d.phoneNumbers = [appointmentFrame.customer.phoneNumber];
+                    }
+                    dispatch(setCustomerLoadedData(d));
+                    saveCustomerCache(d);
+                }
                 onNext();
             })
-            .catch(e => {showError(e)})
+            .catch(e => {showError(e); console.error(e)})
             .finally(() => {setSaving(false)})
     }
     return <StepWrapper>

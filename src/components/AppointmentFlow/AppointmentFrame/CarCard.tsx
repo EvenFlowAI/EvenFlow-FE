@@ -40,7 +40,7 @@ const ActionButton = styled(Button)({
 const Action: React.FC<{car: ILoadedVehicle, selected?: boolean}> = ({car}) => {
     const dispatch = useDispatch();
     const getLabel = (): string => {
-        return "Schedule Appointment"
+        return car.appointmentHashKeys.length ? "Manage Appointment" : "Schedule Appointment";
     }
     const handleClick = () => {
         dispatch(setVehicle(car));

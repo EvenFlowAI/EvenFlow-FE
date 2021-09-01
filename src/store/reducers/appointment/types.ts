@@ -41,6 +41,16 @@ export interface IVehicleData {
     driveType: string;
     engineType: string;
 }
+export interface IVehicle {
+    vin: string;
+    make: string;
+    year: number;
+    model: string;
+    mileage: number;
+    transmission: string;
+    driveType: string;
+    engineType: string;
+}
 export type TS3Form = {
     date?: ParsableDate,
     appointmentType: EAppointmentTimingType;
@@ -114,6 +124,7 @@ export interface IAppointmentSlotsRequest {
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;
     offerType?: EOfferType;
+    serviceCategoryId?: number,
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
     serviceRequestIds: number[];

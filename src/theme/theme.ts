@@ -153,5 +153,13 @@ frameTheme.overrides = {
             borderRadius: 0
         }
     },
+    MuiInput: {
+        ...frameTheme.overrides?.MuiInput,
+        error: {
+            ...frameTheme.overrides?.MuiInput?.error,
+            borderColor: "red",
+            color: "red"
+        }
+    }
 }
 export default theme;

@@ -1,8 +1,14 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
-import {getBlankCustomer, saveCustomerCache, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {
+    getBlankCustomer,
+    getBlankVehicle,
+    saveCustomerCache,
+    setCustomerLoadedData
+} from "../../store/reducers/appointment/actions";
 import {useDispatch} from "react-redux";
+import {setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 
 const mh400 = "@media (max-height: 400px)";
 const mh600 = "@media (max-height: 600px)";
@@ -59,6 +65,7 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
     const handleNew = () => {
         const c = getBlankCustomer();
         dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
         saveCustomerCache(c);
         onComplete();
     }

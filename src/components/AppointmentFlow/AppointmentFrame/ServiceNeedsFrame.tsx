@@ -4,7 +4,6 @@ import {StepWrapper} from './StepWrapper';
 import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
 import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
 import {ReactComponent as BrakeIcon} from "../../../assets/img/breaks-icon.svg";
-import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -17,6 +16,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import { Loading } from '../../UI/Loading';
+import {tellMoreCard} from "../../../store/reducers/appointmentFrameReducer/initial";
 
 
 const icons: JSX.Element[] = [
@@ -32,13 +32,7 @@ const packageCard: IServiceCategory = {
     page: EServiceCategoryPage.Page1,
     serviceRequests: []
 };
-const tellMoreCard: IServiceCategory = {
-    id: -2,
-    name: "Tell us more",
-    loadedIcon: <MoreIcon />,
-    page: EServiceCategoryPage.Page1,
-    serviceRequests: []
-};
+
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -61,7 +55,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         } else {
             onBack();
         }
-
     }
 
 

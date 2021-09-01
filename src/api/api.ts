@@ -8,7 +8,13 @@ import {
     ISetNewPasswordData,
     IConfig,
     IListAppointmentRequest,
-    IListAppointment, ISearchCustomerParams, ISearchTerm, ISecurityCode, ISessionId, IServiceCenterId
+    IListAppointment,
+    ISearchCustomerParams,
+    ISearchTerm,
+    ISecurityCode,
+    ISessionId,
+    IServiceCenterId,
+    ICustomerLoadedData
 } from "./types";
 import {Api, endUserRequest, request} from "../config/requests";
 import {ITokens, PaginatedAPIResponse} from "../types/types";
@@ -29,7 +35,7 @@ const appointment = {
         (headers: ISessionId, params: IServiceCenterId):
             TApiResponse<IListAppointment[]> =>
             endUserRequest.get("/appointments", {headers, params}),
-    searchCustomer: (params: ISearchCustomerParams): TApiResponse => request.get("/customers", {params}),
+    searchCustomer: (params: ISearchCustomerParams): TApiResponse<ICustomerLoadedData> => request.get("/customers", {params}),
     searchCustomerByKey: (headers: ISessionId, params: ISearchCustomerParams): TApiResponse => endUserRequest.get("/customers/by-session", {params, headers}),
     sendConfirmation: (data: ISearchTerm): TApiResponse<string> => request.post("/sessions/open", data),
     confirm: (headers: ISessionId,  data: ISecurityCode): TApiResponse => endUserRequest.post(

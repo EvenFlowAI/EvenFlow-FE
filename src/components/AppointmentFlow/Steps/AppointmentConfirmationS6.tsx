@@ -16,7 +16,7 @@ import {RootState} from "../../../store/rootReducer";
 import {
     changeComment,
     changePersonalInformation,
-    setAppointmentId,
+    setOldAppointmentId,
     changePrivacy, changeReminders, saveAppointmentReducer
 } from "../../../store/reducers/appointment/actions";
 import moment from "moment";
@@ -182,11 +182,11 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             vehicle: {
                 ...forms.s1Data,
                 dmsId: forms.customerSelectedVehicle
-                    ? forms.customerSelectedVehicle.dmsId
+                    ? forms.customerSelectedVehicle?.dmsId ?? null
                     : (forms.customerLoadedData
                         && forms.customerLoadedData.vehicles.length === 1
                         && forms.s1Data.vin === forms.customerLoadedData.vehicles[0].vin)
-                        ? forms.customerLoadedData.vehicles[0].dmsId
+                        ? forms.customerLoadedData.vehicles[0].dmsId ?? null
                         : null
             },
             slot: forms.appointment?.id.split("|")[1] || "",
@@ -206,7 +206,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
                 resp = data;
             }
 
-            dispatch(setAppointmentId({...resp, updated: Boolean(appointmentId?.id)}));
+            dispatch(setOldAppointmentId({...resp, updated: Boolean(appointmentId?.id)}));
             dispatch(saveAppointmentReducer());
             setLoading(false);
             history.push(`${Routes.EndUser.ConfirmationBase}/${id}`);

@@ -4,7 +4,7 @@ import { TActionProps } from './types';
 import {Loading} from "../../UI/Loading";
 
 
-const ButtonsRow = styled('div')({
+const ButtonsRow = styled('div')(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -12,8 +12,16 @@ const ButtonsRow = styled('div')({
     marginTop: 20,
     "& button": {
         minWidth: 144
+    },
+    [theme.breakpoints.down('xs')]: {
+        flexDirection: "column",
+        width: "100%",
+        gap: "12px",
+        "& button": {
+            width: "100%"
+        }
     }
-});
+}));
 export const Actions: React.FC<TActionProps> = ({onBack, onNext, nextDisabled, nextLabel, loading}) => {
     return (
         <ButtonsRow>

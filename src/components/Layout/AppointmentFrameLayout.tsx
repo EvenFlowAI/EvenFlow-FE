@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {MuiThemeProvider, styled} from "@material-ui/core";
+import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
 import {frameTheme} from "../../theme/theme";
 import {TScreen} from "./types";
@@ -21,7 +21,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
-    clearCustomerCache,
+    clearCustomerCache, getBlankVehicle,
     getCustomerCache,
     loadSCProfile,
     setCustomerLoadedData
@@ -29,6 +29,10 @@ import {
 import {decodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
+import {API} from "../../api/api";
+import {useException} from "../../utils/hooks";
+import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 
 const Container = styled('div')({
     display: "flex",
@@ -40,23 +44,31 @@ const Container = styled('div')({
     maxWidth: 1280,
     margin: "auto"
 });
-const SidebarWrapper = styled('div')({
+const SidebarWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "1fr 3fr",
     gap: "20px",
     alignItems: "flex-start",
     width: "100%",
-    marginTop: 28
-});
+    marginTop: 28,
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: "1fr"
+    }
+}));
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
+    const [loadingCar, setLoadingCar] = useState<boolean>(false);
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {id} = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
+    const showError = useException();
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
 
     const handleLogin = useCallback(() => {
         clearCustomerCache();
@@ -69,6 +81,8 @@ export const AppointmentFrameLayout = () => {
             const data = getCustomerCache();
             if (data) {
                 dispatch(setCustomerLoadedData(data));
+                console.log("Pre set vehicle");
+                dispatch(setVehicle(getBlankVehicle()));
             } else {
                 handleLogin();
             }
@@ -85,13 +99,33 @@ export const AppointmentFrameLayout = () => {
         setCurrentScreen(screen);
     }, []);
 
+    const handleSelectCar = useCallback(async () => {
+        if (selectedVehicle?.appointmentHashKeys.length) {
+            const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
+            setLoadingCar(true);
+            try {
+                const {data} = await API.appointment.getByKey(key);
+                dispatch(setUpdateAppointment(data));
+                handleSetScreen('serviceNeeds');
+            } catch (e) {
+                showError(e);
+            } finally {
+                setLoadingCar(false);
+            }
+
+        } else {
+            //TODO: clear slots data clearSelected();
+            handleSetScreen('serviceNeeds');
+        }
+    }, [handleSetScreen, selectedVehicle, showError, dispatch]);
 
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
             carSelection: <AppointmentCarSelection
                 onBack={handleLogin}
-                onNext={() => setCurrentScreen('serviceNeeds')} />,
+                loading={loadingCar}
+                onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
                 onBack={handleChangeScreen('carSelection')}
@@ -111,6 +145,7 @@ export const AppointmentFrameLayout = () => {
             describeMore: <AddInfo
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('consultantSelection')}
+                onFillCar={handleChangeScreen('carDetails')}
             />,
             opsCode: <SelectOpsCode
                 onBack={handleChangeScreen('serviceSelection')}
@@ -142,11 +177,15 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed
-
+                onModify={handleChangeScreen("serviceNeeds")}
+            />,
+            carDetails: <CarDetails
+                onBack={handleChangeScreen('describeMore')}
+                onNext={handleChangeScreen('consultantSelection')}
             />
         }
         return carSelections[currentScreen];
-    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin]);
+    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, handleSelectCar, loadingCar]);
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":
@@ -171,6 +210,8 @@ export const AppointmentFrameLayout = () => {
                 return "Will you be waiting at the dealership?";
             case "appointmentConfirmation":
                 return "Appointment Confirmation";
+            case "carDetails":
+                return "Please tell us about your vehicle"
             default:
                 return null;
         }
@@ -178,16 +219,18 @@ export const AppointmentFrameLayout = () => {
     return (
         <MuiThemeProvider theme={frameTheme}>
             <Container>
+                {isSm && !['carSelection', 'appointmentConfirmed'].includes(currentScreen)
+                    ? <SideBar screen={currentScreen} /> : null}
                 {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
                 {currentScreen === 'maintenanceDetails'
                     ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? component
-                    : <SidebarWrapper>
+                    : !isSm ? <SidebarWrapper>
                         <SideBar screen={currentScreen} />
                         {component}
-                    </SidebarWrapper>
+                    </SidebarWrapper> : component
                 }
             </Container>
         </MuiThemeProvider>

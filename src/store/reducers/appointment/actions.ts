@@ -105,7 +105,7 @@ export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
         }
     }
 }
-export const setAppointmentId = createAction<ICreateAppointmentResp&{updated: boolean}>("Appointments/SetAppointmentId");
+export const setOldAppointmentId = createAction<ICreateAppointmentResp&{updated: boolean}>("Appointments/SetAppointmentId");
 export const setAppointmentFilters = createAction<Partial<IAppointmentFilters>>("Appointment/SetFilters");
 export const setCustomerEnteredEmail = createAction<string>("Appointment/SetCustomerEnteredEmail");
 export const setCustomerLoadedData = createAction<ICustomerLoadedData|null>("Appointment/SetCustomerLoadedData");
@@ -119,7 +119,7 @@ export const loadEditAppointment = (appointment: IListAppointment): AppThunk => 
 
     state.selectedSR = appointment.serviceRequests.map(sr => sr.id);
     state.appointmentId = {
-        id: appointment.id, hashKey: appointment.hashKey
+        ...appointment
     };
     state.s1Data = {
         ...state.s1Data,
@@ -190,6 +190,15 @@ const CUSTOMER_CACHE = 'fCC';
 export const saveCustomerCache = (data: ICustomerLoadedData): void => {
     localStorage.setItem(CUSTOMER_CACHE, JSON.stringify(data));
 }
+export const getBlankVehicle = (): ILoadedVehicle => ({
+    year: null,
+    mileage: null,
+    appointmentHashKeys: [],
+    vin: "",
+    model: "",
+    make: "",
+    warrantyExpiration: null
+})
 export const getBlankCustomer = (sessionId?: string): ICustomerLoadedData => {
     return  {
         id: "",

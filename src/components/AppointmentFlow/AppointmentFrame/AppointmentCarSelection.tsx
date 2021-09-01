@@ -8,6 +8,7 @@ import { StepWrapper } from './StepWrapper';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {getBlankVehicle} from "../../../store/reducers/appointment/actions";
 
 
 const CarsWrapper = styled('div')({
@@ -32,8 +33,9 @@ const Info = styled('div')({
 type TProps = {
     onNext: TCallback;
     onBack: TCallback;
+    loading: boolean;
 }
-export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack}) => {
+export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loading}) => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const dispatch = useDispatch();
@@ -46,7 +48,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack}) => {
     }, [customerLoadedData]);
 
     const handleSkip = () => {
-        dispatch(setVehicle(null));
+        dispatch(setVehicle(getBlankVehicle()));
         onNext();
     }
 
@@ -66,7 +68,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack}) => {
             <Info>
                 Click here to <span onClick={handleSkip}>add new vehicle</span>
             </Info>
-            <Actions onBack={onBack} onNext={onNext} nextDisabled={!selectedVehicle} />
+            <Actions onBack={onBack} onNext={onNext} nextDisabled={!selectedVehicle} loading={loading} />
         </StepWrapper>
     );
 };

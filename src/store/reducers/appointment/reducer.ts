@@ -23,11 +23,10 @@ import {
     selectAppointment,
     selectSR,
     setAppointmentFilters,
-    setAppointmentId,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
     setCustomerVehicle, setEditAppointment,
-    setLoadedReducer, setSessionId
+    setLoadedReducer, setOldAppointmentId, setSessionId
 } from "./actions";
 import moment from "moment";
 
@@ -148,7 +147,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(setLoadedReducer, (state, {payload}) => {
         return {...state, ...payload};
     })
-    .addCase(setAppointmentId, (state, {payload: {updated, ...payload}}) => {
+    .addCase(setOldAppointmentId, (state, {payload: {updated, ...payload}}) => {
         return {...state, appointmentId: payload, updated};
     })
     .addCase(setAppointmentFilters, (state, {payload}) => {
