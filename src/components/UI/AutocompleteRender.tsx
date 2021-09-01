@@ -9,13 +9,15 @@ type TTextParams = {
     label: string;
     fullWidth?: boolean;
     disabled?: boolean;
-    placeholder?: string
+    placeholder?: string;
+    error?: boolean;
 };
 export const autocompleteRender = (props: TTextParams) => (params: AutocompleteRenderInputParams) => {
     return <TextField
         label={props.label}
         name={"undefined-name"}
         params={params}
+        error={props.error}
         placeholder={props.placeholder}
     />;
 }

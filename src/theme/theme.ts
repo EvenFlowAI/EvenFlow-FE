@@ -157,7 +157,8 @@ frameTheme.overrides = {
         ...frameTheme.overrides?.MuiInput,
         error: {
             ...frameTheme.overrides?.MuiInput?.error,
-            borderColor: "red"
+            borderColor: "red",
+            color: "red"
         }
     }
 }
