@@ -86,7 +86,7 @@ const MobileWrapper = styled("div")({
     textAlign: "center",
     flexGrow: 1,
     flexDirection: "column",
-    "&>div:last-child": {
+    "&>div+div": {
         marginTop: 8
     }
 })

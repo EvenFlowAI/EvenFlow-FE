@@ -14,7 +14,7 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 
-const CardWrapper = styled('div')<Theme, {active?: boolean}>({
+const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
     minHeight: 264,
     fontSize: 22,
     cursor: "pointer",
@@ -25,9 +25,12 @@ const CardWrapper = styled('div')<Theme, {active?: boolean}>({
     alignItems: "center",
     justifyContent: "center",
     padding: 12,
-    border: ({active}) => `1px solid ${active ? "#000000" : "#DADADA"}`,
-    transition: "all .2s"
-});
+    border: `1px solid ${active ? "#000000" : "#DADADA"}`,
+    transition: "all .2s",
+    [theme.breakpoints.down("sm")]: {
+        minHeight: 100
+    }
+}));
 
 const CardOptions = styled('ul')({
     listStyle: "none",
@@ -54,11 +57,14 @@ const CardOptions = styled('ul')({
     }
 })
 
-const TransportationWrapper = styled('div')({
+const TransportationWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
-    gap: "20px"
-});
+    gap: "20px",
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateColumns: "1fr"
+    }
+}));
 
 type TTransportationProps = {
     transportation: string;
