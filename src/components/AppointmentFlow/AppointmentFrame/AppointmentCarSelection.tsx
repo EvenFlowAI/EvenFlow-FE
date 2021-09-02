@@ -16,6 +16,7 @@ const CarsWrapper = styled('div')({
     display: "flex",
     alignItems: "center",
     gap: "20px",
+    width: "100%",
     justifyContent: "stretch"
 });
 
@@ -60,10 +61,14 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
     }, [isXs]);
 
     const next = () => {
-        setIdx(p => p + 1);
+        if (!nextDisabled()) {
+            setIdx(p => p + 1);
+        }
     }
     const prev = () => {
-        setIdx(p => p - 1)
+        if (!prevDisabled()) {
+            setIdx(p => p - 1);
+        }
     }
 
     useEffect(() => {
@@ -78,13 +83,16 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
         onNext();
     }
 
+    const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - 1
+    const prevDisabled = () => idx <= 0;
+
     return (
         <StepWrapper>
             <Title>Which vehicle are you coming in for?</Title>
             <CarsWrapper>
                 {customerLoadedData?.vehicles.length ?
                     <>
-                        <Arrow onClick={prev}>
+                        <Arrow onClick={prev} disabled={prevDisabled()}>
                             <ChevronLeft />
                         </Arrow>
                         {customerLoadedData.vehicles
@@ -95,7 +103,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
                                     car={vehicle}
                                     key={vehicle.vin}/>
                             )}
-                        <Arrow onClick={next}>
+                        <Arrow onClick={next} disabled={nextDisabled()}>
                             <ChevronRight />
                         </Arrow>
                     </> : <p>No vehicles present</p>
