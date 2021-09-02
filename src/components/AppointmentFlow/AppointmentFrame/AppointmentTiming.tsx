@@ -17,9 +17,9 @@ import moment from "moment";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 
 
-const TimingWrapper = styled('div')(({theme}) => ({
+const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
     display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
+    gridTemplateColumns: `repeat(${columns}, 1fr)`,
     width: "100%",
     alignItems: "stretch",
     gap: "20px",
@@ -157,10 +157,11 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
 
 export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
-    const [selectedType, selectedTime] = useSelector(
+    const [selectedType, selectedTime, sp] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
-            state.appointmentFrame.selectedTime
+            state.appointmentFrame.selectedTime,
+            state.appointmentFrame.selectedPackage
         ]
     );
 
@@ -178,8 +179,9 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
 
     return (
         <StepWrapper>
-            <TimingWrapper>
-                {cards.map((card) => {
+            <TimingWrapper columns={sp ? 2 : 3}>
+                {cards.map((card, idx) => {
+                    if (!idx && sp) {return null;}
                     return <TimingCard
                         onClick={handleSelectTiming(card.name)}
                         card={card}
