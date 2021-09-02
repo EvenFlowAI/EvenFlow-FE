@@ -35,6 +35,7 @@ type TSelect = {
     name: keyof TMaintenanceDetails | keyof ILoadedVehicle;
     options?: string[]|string;
     noVehicle?: boolean;
+    allOverride?: boolean;
 };
 
 
@@ -65,9 +66,9 @@ const selects: TSelect[] = [
     {label: "Make", name: "make", noVehicle: true},
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model",},
-    {label: "Trim", name: "trim", options: []},
-    {label: "Powertrain", name: "powertrain", options: []},
-    {label: "Oil Type", name:"oilType", options: []},
+    {label: "Trim", name: "trim", options: ["All"], allOverride: true},
+    {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
+    {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
     {label: "Estimated mileage", name:"serviceInterval", options: mileageOptions},
 ];
 
@@ -113,8 +114,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         })
     }, [id, maintenanceDetails]);
 
-    const handleChange = (name: TKey) => (e: React.ChangeEvent<{}>, option: string|null) => {
-        if (option) {
+    const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
+        if (option && !skip) {
             dispatch(setMaintenanceDetails({[name]: option ?? null}));
             if (isNewVehicleView && ["year", "model"].includes(name)) {
                 dispatch(updateVehicle({[name]: option}))
@@ -172,13 +173,17 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         options={typeof select.options === 'string'
                             ? loadedOptions[select.options] ?? []
                             : select.options}
-                        onChange={handleChange(select.name)}
+                        onChange={handleChange(select.name, select.allOverride)}
                         fullWidth
+                        disableClearable
                         autoComplete={true}
                         renderInput={autocompleteRender({
                             label: select.label, placeholder: hasError ? `${select.label} is required` : `Select ${select.label}`, error: hasError
                         })}
-                        value={maintenanceDetails[select.name as keyof TMaintenanceDetails] ?? null}
+                        value={!select.allOverride
+                            ? maintenanceDetails[select.name as keyof TMaintenanceDetails] ?? ""
+                            : "All"
+                        }
                     />
                 }
                 return <div key={select.name}>

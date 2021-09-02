@@ -12,14 +12,20 @@ type TProps = {
 const Wrapper = styled('div')<Theme, {active?: boolean}>({
     display: "flex",
     padding: 22,
-    alignItems: "center",
+    flex: "1 1 0px",
+    alignItems: "stretch",
     flexDirection: "column",
     gap: "12px",
     justifyContent: "center",
     transition: 'all .2s',
     border: ({active}) => `1px solid ${active ? '#000000' : '#DADADA'}`,
-    'img': {
-        maxWidth: '90%'
+    '& img': {
+        maxWidth: '90%',
+        maxHeight: "200px",
+        margin: "auto"
+    },
+    "& button": {
+        fontSize: 14
     }
 });
 const CarInfo = styled('ul')({

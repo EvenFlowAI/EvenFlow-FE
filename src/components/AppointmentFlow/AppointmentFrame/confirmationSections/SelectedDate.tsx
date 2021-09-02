@@ -26,7 +26,7 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     }
     return <div>
         <TitleWrapper>
-            <ConfirmationTitle>Selected Date</ConfirmationTitle>
+            <ConfirmationTitle>Selected Date & Time</ConfirmationTitle>
             <Edit fontSize="small" onClick={handleChangeSlot} />
         </TitleWrapper>
         {moment.utc(appointment?.date).format('MMMM D, h:mm A')}

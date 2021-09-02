@@ -44,7 +44,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
 
     const slots: TSlot[] = useMemo(() => {
         // TODO: Start end dates?
-        const start = moment.utc(date).hour(8).minute(0).second(0).millisecond(0);
+        const start = moment.utc(date).hour(7).minute(0).second(0).millisecond(0);
         const end = moment.utc(start).hour(18);
         const slots: TSlot[] = [];
         let cDate = moment.utc(start);

@@ -49,7 +49,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         service,
         subService,
         selectedPackage,
-        selectedOpsCodes
+        selectedOpsCodes,
+        appointment
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -59,7 +60,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
         state.appointmentFrame.selectedPackage,
-        state.appointment.selectedSR
+        state.appointment.selectedSR,
+        state.appointment.appointment
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
@@ -142,7 +144,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     loading={loading}
                 />
             </Wrapper>
-            <Actions onBack={onBack} onNext={onNext} />
+            <Actions onBack={onBack} onNext={onNext} nextDisabled={!appointment} />
         </StepWrapper>
     );
 };
