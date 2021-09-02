@@ -2,7 +2,6 @@ import React from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
-import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
 const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, offPeak?: boolean}>(({theme, available, offPeak, selected}) => ({
     display: "flex",
@@ -46,7 +45,7 @@ export const TimeSlotCard: React.FC<TProps> =
         }
         return "Available";
     }
-    const isOffPeak = slot?.price.category === EDemandCategory.High;
+    const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
     return (
         <Wrapper available={Boolean(slot)} selected={selected} offPeak={isOffPeak}>
             <div>{timeSlot}</div>

@@ -13,6 +13,7 @@ import { ITransportation } from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import theme from "../../../theme/theme";
 
 const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
     minHeight: 264,
@@ -25,6 +26,8 @@ const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) =
     alignItems: "center",
     justifyContent: "center",
     padding: 12,
+    background: active ? "#000000" : "transparent",
+    color: active ? "#FFFFFF" : theme.palette.text.primary,
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     transition: "all .2s",
     [theme.breakpoints.down("sm")]: {
@@ -51,8 +54,13 @@ const CardOptions = styled('ul')({
         display: "flex",
         alignItems: "center",
         gap: "6px",
+        transition: "all .2s",
+        color: theme.palette.text.primary,
+        background: "#FFFFFF",
         "&.active": {
-            border: "1px solid #000000"
+            border: "1px solid #FFFFFF",
+            color: "#FFFFFF",
+            background: "#000000"
         }
     }
 })
