@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Title} from "./Title";
 import {CarCard} from "./CarCard";
-import {styled} from "@material-ui/core";
+import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {Actions} from "./Actions";
 import {TCallback} from "../../../types/types";
 import { StepWrapper } from './StepWrapper';
@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {getBlankVehicle} from "../../../store/reducers/appointment/actions";
+import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 
 
 const CarsWrapper = styled('div')({
@@ -28,7 +29,18 @@ const Info = styled('div')({
             textDecoration: "none"
         }
     }
-})
+});
+
+const Arrow = styled("span")<Theme, {disabled?: boolean}>(({theme, disabled}) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 40,
+    height: 40,
+    cursor: "pointer",
+    border: "1px solid #DADADA",
+    opacity: disabled ? .4 : 1
+}));
 
 type TProps = {
     onNext: TCallback;
@@ -39,6 +51,20 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const dispatch = useDispatch();
+    const [idx, setIdx] = useState<number>(0);
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+
+    const vehiclesPerScreen = useMemo(() => {
+        return isXs ? 1 : 2;
+    }, [isXs]);
+
+    const next = () => {
+        setIdx(p => p + 1);
+    }
+    const prev = () => {
+        setIdx(p => p - 1)
+    }
 
     useEffect(() => {
         if (customerLoadedData && !customerLoadedData?.id) {
@@ -57,12 +83,22 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
             <Title>Which vehicle are you coming in for?</Title>
             <CarsWrapper>
                 {customerLoadedData?.vehicles.length ?
-                    customerLoadedData.vehicles.map(vehicle =>
-                        <CarCard
-                            selected={selectedVehicle?.vin === vehicle.vin}
-                            car={vehicle}
-                            key={vehicle.vin} />
-                    ) : <p>No vehicles present</p>
+                    <>
+                        <Arrow onClick={prev}>
+                            <ChevronLeft />
+                        </Arrow>
+                        {customerLoadedData.vehicles
+                            .slice(idx, idx + vehiclesPerScreen)
+                            .map(vehicle =>
+                                <CarCard
+                                    selected={selectedVehicle?.vin === vehicle.vin}
+                                    car={vehicle}
+                                    key={vehicle.vin}/>
+                            )}
+                        <Arrow onClick={next}>
+                            <ChevronRight />
+                        </Arrow>
+                    </> : <p>No vehicles present</p>
                 }
             </CarsWrapper>
             <Info>
