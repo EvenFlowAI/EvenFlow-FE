@@ -323,14 +323,15 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                     )}
                 </React.Fragment>)}
                 <div className="totalComplimentary last">Total Complimentary Value</div>
-                {packages.map(p =>
-                    <div
+                {packages.map(p => {
+                    const price = p.complimentaryServices.reduce(
+                        (acc, el) => acc + el.price, 0
+                    );
+                    return <div
                         onClick={handleClick(p)}
                         className={setClasses(p.id, "totalComplimentary last")}
-                        key={p.id}>${p.complimentaryServices.reduce(
-                            (acc, el) => acc + el.price, 0
-                    )}</div>
-                )}
+                        key={p.id}>{price ? `$${price}` : ''}</div>;
+                })}
                 <div className="total end">
                     Total <span className="info">(excluding taxes)</span>
                 </div>

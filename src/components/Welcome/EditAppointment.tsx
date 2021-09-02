@@ -7,7 +7,6 @@ import {Button, styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearStorage,
-    loadEditAppointment,
     loadSCProfile, saveCustomerCache, setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";

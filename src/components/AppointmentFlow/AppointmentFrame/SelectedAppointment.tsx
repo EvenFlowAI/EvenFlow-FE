@@ -2,7 +2,6 @@ import React from 'react';
 import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -62,14 +61,29 @@ const PriceWrapper = styled('div')(({
 export const SelectedAppointment = () => {
     const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
+    const [selectedSR, srList] = useSelector((state: RootState) => [
+        state.appointment.selectedSR,
+        state.appointment.serviceRequests
+    ]);
+    const getService = () => {
+        if (selectedPackage) {
+            return selectedPackage.name;
+        }
+        if (selectedSR.length) {
+            const filtered = srList.filter(el => selectedSR.includes(el.id)).map(el => el.description);
+            return filtered.length ? filtered.map(el => <><br /><span>{el}</span></>) : "-";
+        }
+        if (appointmentData.subService) {
+            return appointmentData.subService.name;
+        }
+        return appointmentData.service?.name ?? "-";
+    }
     return (
         <div>
             <h4>Your selections</h4>
             <Wrapper>
                 <List>
-                    <li>Service Needed: {
-                        appointmentData.subService?.name ?? appointmentData.service?.name ?? "-"
-                    }
+                    <li>Service Needed: {getService()}
                     </li>
                     <li>Advisor: {
                         appointmentData.advisor?.name ?? "Any available"
