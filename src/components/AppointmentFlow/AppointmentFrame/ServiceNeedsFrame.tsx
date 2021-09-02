@@ -20,15 +20,15 @@ import {tellMoreCard} from "../../../store/reducers/appointmentFrameReducer/init
 
 
 const icons: JSX.Element[] = [
-    <WorksIcon />,
+    <TireIcon />,
     <BrakeIcon />,
 ];
 
 
 const packageCard: IServiceCategory = {
     id: -1,
-    name: "Factory or Dealer Scheduled Maintenance",
-    loadedIcon: <TireIcon />,
+    name: "The Works Quick Lane Check Up",
+    loadedIcon: <WorksIcon />,
     page: EServiceCategoryPage.Page1,
     serviceRequests: []
 };

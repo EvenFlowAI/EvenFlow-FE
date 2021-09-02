@@ -61,7 +61,7 @@ const PriceWrapper = styled('div')(({
 // TODO: Advisor|consultant
 export const SelectedAppointment = () => {
     const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
-    const appointment = useSelector((state: RootState) => state.appointment.appointment);
+    const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     return (
         <div>
             <h4>Your selections</h4>
@@ -78,11 +78,15 @@ export const SelectedAppointment = () => {
                     {/*    <li>See available times for any Consultant</li>*/}
                     {/*</ul>*/}
                 </List>
-                {appointment
+                {selectedPackage
                     ? <PriceWrapper>
-                        <div className="price">${appointment.price.value}<span>.00</span></div>
-                        {appointment?.price?.category !== EDemandCategory.High
-                            ? <div className="info">Save by booking at off peak times!</div> : null}
+                        <div className="price">$
+                            {Math.floor(selectedPackage.price)}
+                            <span>
+                                .{(selectedPackage.price % 1).toFixed(2).slice(2)}
+                            </span>
+                        </div>
+                        <div className="info">Save by booking at off peak times!</div>
                     </PriceWrapper>
                     : null}
             </Wrapper>

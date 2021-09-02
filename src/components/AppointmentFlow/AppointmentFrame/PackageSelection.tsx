@@ -148,6 +148,14 @@ const Wrapper = styled('div')(({theme}) => ({
     }
 }));
 
+const Info = styled("p")({
+    color: "#808080",
+    fontSize: 14,
+    gridColumnStart: 1,
+    gridColumnEnd: 5,
+    marginTop: 18,
+})
+
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
@@ -338,6 +346,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         </div>
                     </div>
                 )}
+                <Info>
+                    Note: The maintenance packages may not be available for all vehicle types.  Please speak with your Service Advisor to understand where restrictions apply.
+                </Info>
             </Wrapper> : null}
             <Actions
                 onBack={onBack}
