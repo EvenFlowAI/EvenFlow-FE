@@ -25,11 +25,12 @@ const ButtonLink = styled('div')({
 })
 
 export const Review = () => {
-    const [vehicle, sc, ssc, consultant] = useSelector((state: RootState) => [
+    const [vehicle, sc, ssc, consultant, transportation] = useSelector((state: RootState) => [
         state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
-        state.appointmentFrame.advisor
+        state.appointmentFrame.advisor,
+        state.appointmentFrame.transportation
     ]);
     return (
         <div>
@@ -37,8 +38,9 @@ export const Review = () => {
             <Wrapper>
                 <li>{vehicle?.year} {vehicle?.make} {vehicle?.model}</li>
                 <li>{ssc?.name ?? sc?.name}</li>
-                <li>Transportation needs: Take the shuttle</li>
-                <li>Consultant: {consultant?.name ?? "Any Available"}</li>
+                <li>Transportation needs: {transportation?.description ?? "Yes, I will be waiting"}</li>
+                {/* TODO: Advisor | consultant*/}
+                <li>Advisor: {consultant?.name ?? "Any Available"}</li>
             </Wrapper>
             <ButtonLink>View Details</ButtonLink>
         </div>
