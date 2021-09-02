@@ -3,7 +3,7 @@ import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import { Actions } from './Actions';
 import {styled, Theme} from "@material-ui/core";
-import anyConsultant from '../../../assets/img/anyConsultantIcon.png';
+import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/any-consultant.svg';
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {PaginatedAPIResponse, TCallback} from "../../../types/types";
@@ -27,28 +27,40 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>({
+const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
     display: "flex",
     gap: "16px",
-    border: ({active}) => `1px solid ${active ? "#000000" : "#DADADA"}`,
+    border: `1px solid ${active ? "#000000" : "#DADADA"}`,
+    color: active ? "#FFFFFF" : theme.palette.text.primary,
+    background: active ? "#000000" : "transparent",
     alignItems: "center",
     fontSize: 18,
     fontWeight: 400,
     lineHeight: "18px",
     padding: 16,
     transition: "all .2s",
-    cursor: "pointer"
-});
+    cursor: "pointer",
+    "& .icon-wrapper": {
+        width: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: 'center',
+        height: 50,
+        borderRadius: "50%",
+        color: active ? "#FFFFFF" : theme.palette.text.primary,
+    }
+}));
 
 const Avatar = styled('div')<Theme, {src?: string, contain?: boolean}>({
     width: 50,
     height: 50,
     borderRadius: "50%",
+    backgroundColor: "#FFFFFF",
     backgroundSize: ({contain}) => contain ? "contain" : "cover",
     backgroundImage: ({src}) => src ? `url('${src}')` : undefined,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat"
-})
+});
 
 type TCardProps = {
     advisor?: IServiceConsultant;
@@ -60,7 +72,7 @@ type TCardProps = {
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
     return <ConsultantWrapper active={active} onClick={onClick}>
         {blank
-            ? <Avatar src={anyConsultant} contain />
+            ? <div className={"icon-wrapper"}><AnyConsultantIcon /></div>
             : <Avatar src={advisor?.iconPath}/>}
         <div>
             {blank ? "Any available advisor" : advisor?.name ?? "-"}
