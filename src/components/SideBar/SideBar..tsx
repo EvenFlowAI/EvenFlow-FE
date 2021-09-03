@@ -6,11 +6,11 @@ import {NavLink} from "react-router-dom";
 import {LinkType} from "../../types/types";
 import {sideBarWidth} from "../../theme/theme";
 import {Routes} from "../../config/routes";
-import {useCurrentUser, useSCs} from "../../utils/hooks";
+import {useCurrentUser, useModal, useSCs} from "../../utils/hooks";
 import {useLocation, useHistory, matchPath} from "react-router-dom";
 import clsx from "clsx";
 import {ArrowForwardIos, Close} from "@material-ui/icons";
-import {encodeSCID} from "../../utils/utils";
+import {BookingModal} from "../Modals/BookingModal/BookingModal";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -110,6 +110,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const theme = useTheme();
     const isTablet = useMediaQuery(theme.breakpoints.down("md"));
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const {onClose: onModalClose, isOpen, onOpen} = useModal();
 
     const currentUser = useCurrentUser();
     const {pathname} = useLocation();
@@ -122,11 +123,6 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     }, [currentUser, pathname]);
     const handleLogoClick = () => {
         history.push(Routes.Admin.Base);
-    }
-    const handleGoToBooking = () => {
-        const encoded = encodeSCID(selectedSC?.id??0);
-        // TODO: Handle Frame
-        history.push(Routes.EndUser.Welcome + "/" + encoded + "?frame=1");
     }
     const closeSidebar = () => {
         if (isXS) {
@@ -173,9 +169,10 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
             ? <Button
                 endIcon={<ArrowForwardIos/>}
                 className={classes.link}
-                onClick={handleGoToBooking}>
-                Go to Booking
+                onClick={onOpen}>
+                Booking Info
             </Button>
             : null}
+        <BookingModal open={isOpen} onClose={onModalClose} />
     </Drawer>
 };

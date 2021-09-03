@@ -130,11 +130,6 @@ export interface IDriverInfo {
     email: string;
 }
 
-export interface ITransportationNeeds {
-    isNeed: boolean;
-    description: string;
-}
-
 export enum AppointmentStatus {
     Active, Cancelled
 }
@@ -161,7 +156,7 @@ export interface IListAppointment {
     duration: number;
     transactionValue: number;
     serviceCenterId: number;
-    transportationNeeds: ITransportationNeeds;
+    transportationOption: ITransportation|null;
     isNeedCall: boolean;
     comment: string;
     offerId: number;
