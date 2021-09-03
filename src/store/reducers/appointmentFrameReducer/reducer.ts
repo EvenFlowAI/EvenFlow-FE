@@ -66,7 +66,12 @@ const initialState: TState = {
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
     .addCase(selectService, (state, {payload}) => {
-        return {...state, service: payload, subService: null};
+        return {
+            ...state,
+            service: payload,
+            subService: null,
+            selectedPackage: null,
+        };
     })
     .addCase(selectSubService, (state, {payload}) => {
         return {...state, subService: payload};
@@ -91,7 +96,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, selectedTime: payload};
     })
     .addCase(setVehicle, (state, {payload}) => {
-        return {...state, selectedVehicle: payload};
+        return {...state, selectedVehicle: payload, id: undefined, hashKey: undefined};
     })
     .addCase(updateVehicle, (state, {payload}) => {
         if (state.selectedVehicle) {

@@ -27,6 +27,9 @@ const List = styled('ul')(({theme}) => ({
     [theme.breakpoints.down("xs")]: {
         alignSelf: "flex-start",
     },
+    "& .service-item": {
+        textTransform: "capitalize"
+    },
     "& ul": {
         listStyle: "none",
         marginTop: -10,
@@ -60,11 +63,13 @@ const PriceWrapper = styled('div')(({
 // TODO: Advisor|consultant
 export const SelectedAppointment = () => {
     const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
+    const appointment = useSelector((state: RootState) => state.appointment.appointment);
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests
     ]);
+
     const getService = () => {
         if (selectedPackage) {
             return selectedPackage.name;
@@ -78,12 +83,17 @@ export const SelectedAppointment = () => {
         }
         return appointmentData.service?.name ?? "-";
     }
+
+    const price = appointment?.priceWithOffer?.value
+        ?? appointment?.price.value
+        ?? selectedPackage?.price ?? 0;
+
     return (
         <div>
             <h4>Your selections</h4>
             <Wrapper>
                 <List>
-                    <li>Service Needed: {getService()}
+                    <li className="service-item">Service Needed: {getService()}
                     </li>
                     <li>Advisor: {
                         appointmentData.advisor?.name ?? "Any available"
@@ -95,9 +105,9 @@ export const SelectedAppointment = () => {
                 {selectedPackage
                     ? <PriceWrapper>
                         <div className="price">$
-                            {Math.floor(selectedPackage.price)}
+                            {Math.floor(price)}
                             <span>
-                                .{(selectedPackage.price % 1).toFixed(2).slice(2)}
+                                .{(price % 1).toFixed(2).slice(2)}
                             </span>
                         </div>
                         <div className="info">Save by booking at off peak times!</div>

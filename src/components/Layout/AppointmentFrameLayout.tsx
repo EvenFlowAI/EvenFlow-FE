@@ -98,6 +98,11 @@ export const AppointmentFrameLayout = () => {
         setCurrentScreen(screen);
     }, []);
 
+    const handleAddNewVehicle = useCallback(() => {
+        dispatch(setVehicle(getBlankVehicle()));
+        handleSetScreen('serviceNeeds');
+    }, [dispatch, handleSetScreen]);
+
     const handleSelectCar = useCallback(async () => {
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
@@ -124,6 +129,7 @@ export const AppointmentFrameLayout = () => {
             carSelection: <AppointmentCarSelection
                 onBack={handleLogin}
                 loading={loadingCar}
+                onAddNew={handleAddNewVehicle}
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
@@ -184,7 +190,8 @@ export const AppointmentFrameLayout = () => {
             />
         }
         return carSelections[currentScreen];
-    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, handleSelectCar, loadingCar]);
+    }, [currentScreen, handleChangeScreen, handleSetScreen, handleAddNewVehicle,
+        handleLogin, handleSelectCar, loadingCar]);
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":

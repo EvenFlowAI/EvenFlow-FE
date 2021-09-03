@@ -151,7 +151,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
             <div>
                 <Review />
-                <SelectedPrice />
+                {appointmentFrame.selectedPackage ? <SelectedPrice/> : null}
                 <Reminders />
                 <Info>By using this service you accept the terms of our Visitor Agreement.</Info>
             </div>
