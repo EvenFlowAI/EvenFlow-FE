@@ -157,11 +157,11 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
 
 export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
-    const [selectedType, selectedTime, sp] = useSelector(
+    const [selectedType, selectedTime, /* sp */] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
             state.appointmentFrame.selectedTime,
-            state.appointmentFrame.selectedPackage
+            // state.appointmentFrame.selectedPackage
         ]
     );
 
