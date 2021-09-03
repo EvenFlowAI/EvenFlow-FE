@@ -181,7 +181,8 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         <StepWrapper>
             <TimingWrapper columns={sp ? 2 : 3}>
                 {cards.map((card, idx) => {
-                    if (!idx && sp) {return null;}
+                    /* TODO: Include again after Post MVP (Offers hidden) */
+                    if (!idx) {return null;}
                     return <TimingCard
                         onClick={handleSelectTiming(card.name)}
                         card={card}
