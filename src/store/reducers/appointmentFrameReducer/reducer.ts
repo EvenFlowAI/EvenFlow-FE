@@ -96,7 +96,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, selectedTime: payload};
     })
     .addCase(setVehicle, (state, {payload}) => {
-        return {...state, selectedVehicle: payload};
+        return {...state, selectedVehicle: payload, id: undefined, hashKey: undefined};
     })
     .addCase(updateVehicle, (state, {payload}) => {
         if (state.selectedVehicle) {

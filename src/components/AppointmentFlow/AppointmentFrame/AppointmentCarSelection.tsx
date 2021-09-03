@@ -5,10 +5,8 @@ import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {Actions} from "./Actions";
 import {TCallback} from "../../../types/types";
 import { StepWrapper } from './StepWrapper';
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {getBlankVehicle} from "../../../store/reducers/appointment/actions";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 
 
@@ -46,12 +44,12 @@ const Arrow = styled("span")<Theme, {disabled?: boolean}>(({theme, disabled}) =>
 type TProps = {
     onNext: TCallback;
     onBack: TCallback;
+    onAddNew: TCallback;
     loading: boolean;
 }
-export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loading}) => {
+export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loading, onAddNew}) => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
-    const dispatch = useDispatch();
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
@@ -77,11 +75,6 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customerLoadedData]);
-
-    const handleSkip = () => {
-        dispatch(setVehicle(getBlankVehicle()));
-        onNext();
-    }
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - 1
     const prevDisabled = () => idx <= 0;
@@ -110,7 +103,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
                 }
             </CarsWrapper>
             <Info>
-                Click here to <span onClick={handleSkip}>add new vehicle</span>
+                Click here to <span onClick={onAddNew}>add new vehicle</span>
             </Info>
             <Actions onBack={onBack} onNext={onNext} nextDisabled={!selectedVehicle} loading={loading} />
         </StepWrapper>
