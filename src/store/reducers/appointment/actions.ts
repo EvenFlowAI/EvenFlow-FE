@@ -21,7 +21,13 @@ import {
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import moment from "moment";
-import {ICreateAppointmentResp, ICustomerLoadedData, IListAppointment, ILoadedVehicle} from "../../../api/types";
+import {
+    ICreateAppointmentResp,
+    ICustomerLoadedData,
+    IListAppointment,
+    ILoadedVehicle,
+    ITransportation
+} from "../../../api/types";
 import {EDemandCategory} from "../pricingSettings/types";
 
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
@@ -49,7 +55,7 @@ export const selectSR = createAction<number|null>("Appointment/SelectSR");
 export const changeS1Form = createAction<Partial<TS1Form>>("Appointment/ChangeS1Form");
 export const handleSearch = createAction<string>("Appointment/Search");
 export const changeS3Form = createAction<Partial<TS3Form>>("Appointment/ChangeS3Form");
-export const changeTransportation = createAction<ETransportation>("Appointment/Transportation");
+export const changeTransportation = createAction<ITransportation|null>("Appointment/Transportation");
 export const changeReminders = createAction<Partial<IReminders>>("Appointment/ChangeReminders");
 export const changePrivacy = createAction<Partial<IPrivacy>>("Appointment/ChangePrivacy");
 export const changePersonalInformation = createAction<Partial<IPersonalInformation>>("Appointment/ChangePersonalInformation");
@@ -131,11 +137,7 @@ export const loadEditAppointment = (appointment: IListAppointment): AppThunk => 
         ...state.s3Data,
         appointmentType: EAppointmentTimingType.FirstAvailable,
     }
-    const tr = transportations.reduce((acc,i) => {
-        return [...acc, ...i];
-    }, []);
-    const foundTransportation = tr.find(el => el.label === appointment.transportationNeeds?.description);
-    state.transportation = foundTransportation?.id ?? ETransportation.Rental;
+    state.transportation = appointment.transportationOption
 
     const date = `${
         String(appointment.dateInUtc).split("T")[0]

@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {changeTransportation} from "../../../store/reducers/appointment/actions";
 import {RootState} from "../../../store/rootReducer";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {ITransportation} from "../../../api/types";
 
 const Paper = styled(SquarePaper)(({theme}) => ({
     padding: 16,
@@ -49,7 +50,7 @@ export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev, isCompl
 
     const dispatch = useDispatch();
 
-    const handleChange = (type: ETransportation) => () => {
+    const handleChange = (type: ITransportation) => () => {
         dispatch(changeTransportation(type));
     }
     return <StepContainer>
@@ -59,7 +60,7 @@ export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev, isCompl
                 <Grid container spacing={4}>
                     {transportations.map((te, idx) =>
                         <Grid key={idx} item xs={12} md={6}>
-                            <Paper
+                            {/*<Paper
                                 variant="outlined"
                                 className={selectedTransportation !== null
                                     ? selectedTransportation > 2 && idx
@@ -80,7 +81,7 @@ export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev, isCompl
                                         </Option>
                                     )}
                                 </Box>
-                            </Paper>
+                            </Paper>*/}
                         </Grid>
                     )}
                 </Grid>
