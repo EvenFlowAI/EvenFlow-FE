@@ -3,7 +3,6 @@ import {
     APPOINTMENT_STATE_KEY,
     APPOINTMENT_STATE_SAVED_KEY,
     EAppointmentTimingType, EReminderType,
-    ETransportation,
     IAppointmentFilters,
     IAppointmentResponse,
     IAppointmentSlot,
@@ -14,7 +13,7 @@ import {
     IReminders,
     IServiceCenterProfile,
     ISR,
-    TAppointmentState, transportations,
+    TAppointmentState,
     TS1Form,
     TS3Form
 } from "./types";

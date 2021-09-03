@@ -33,7 +33,7 @@ import {timeString, VIN_LENGTH} from "../../config/constants";
 import {CalendarToday} from "@material-ui/icons";
 import {Api} from "../../config/requests";
 import {InputLoading} from "../AppointmentFlow/UI";
-import {decodeSCID, validatePhoneNumber} from "../../utils/utils";
+import {validatePhoneNumber} from "../../utils/utils";
 import {EDemandCategory} from "../../store/reducers/pricingSettings/types";
 
 type TForm = {
