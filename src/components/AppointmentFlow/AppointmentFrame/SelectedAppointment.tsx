@@ -27,6 +27,9 @@ const List = styled('ul')(({theme}) => ({
     [theme.breakpoints.down("xs")]: {
         alignSelf: "flex-start",
     },
+    "& .service-item": {
+        textTransform: "capitalize"
+    },
     "& ul": {
         listStyle: "none",
         marginTop: -10,
@@ -90,7 +93,7 @@ export const SelectedAppointment = () => {
             <h4>Your selections</h4>
             <Wrapper>
                 <List>
-                    <li>Service Needed: {getService()}
+                    <li className="service-item">Service Needed: {getService()}
                     </li>
                     <li>Advisor: {
                         appointmentData.advisor?.name ?? "Any available"
