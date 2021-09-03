@@ -179,7 +179,8 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
 
     return (
         <StepWrapper>
-            <TimingWrapper columns={sp ? 2 : 3}>
+            {/*TODO: change to 3 after offers will be included */}
+            <TimingWrapper columns={2}>
                 {cards.map((card, idx) => {
                     /* TODO: Include again after Post MVP (Offers hidden) */
                     if (!idx) {return null;}
