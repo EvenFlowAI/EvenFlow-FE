@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from './StepWrapper';
 import {Actions} from './Actions';
@@ -65,7 +65,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
-        selectedTime ? moment.utc(selectedTime) : moment.utc()
+        selectedTime
+            ? moment.utc(selectedTime).startOf('day')
+            : moment.utc().startOf('day')
     );
     const [month, setMonth] = useState<moment.Moment>(
         selectedTime ? moment.utc(selectedTime) : moment.utc()
@@ -76,8 +78,17 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
 
     const {id} = useParams();
 
+    const isMount = useRef(true);
+
+    useEffect(() => {
+        if (slots.length && isMount.current && selectedTime) {
+            setDate(moment.utc(selectedTime).startOf('day'));
+            isMount.current = false;
+        }
+    }, [slots, selectedTime]);
+
     const updateDate = useCallback((d: moment.Moment) => {
-        setDate(d);
+        setDate(d.startOf('day'));
         if (!d.isSame(month, 'month')) {
             setMonth(d);
         }

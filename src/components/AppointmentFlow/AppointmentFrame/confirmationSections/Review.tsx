@@ -12,7 +12,10 @@ const Wrapper = styled('ul')({
     gap: "12px",
     margin: "12px 0 0",
     padding: 0,
-    listStyle: "none"
+    listStyle: "none",
+    "& .service-item": {
+        textTransform: "capitalize"
+    }
 });
 const ButtonLink = styled('div')({
     textDecoration: "underline",
@@ -38,7 +41,7 @@ export const Review = () => {
             <ConfirmationTitle>Review</ConfirmationTitle>
             <Wrapper>
                 <li>{vehicle?.year} {vehicle?.make} {vehicle?.model}</li>
-                <li>{sP?.name ?? ssc?.name ?? sc?.name}</li>
+                <li className="service-item">{sP?.name ?? ssc?.name ?? sc?.name}</li>
                 <li>Transportation needs: {transportation?.description ?? "Yes, I will be waiting"}</li>
                 {/* TODO: Advisor | consultant*/}
                 <li>Advisor: {consultant?.name ?? "Any Available"}</li>

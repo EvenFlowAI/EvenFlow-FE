@@ -10,7 +10,7 @@ type TDayCardProps = {
     isCurrent?: boolean;
 }
 const DayCard = styled('div')<Theme, TDayCardProps>(({theme, available, isCurrent}) => ({
-    flexGrow: 1,
+    flex: "1 0 0px",
     opacity: (!available && !isCurrent) ? .3 : 1,
     display: "flex",
     textTransform: "uppercase",
@@ -23,6 +23,7 @@ const DayCard = styled('div')<Theme, TDayCardProps>(({theme, available, isCurren
         border: isCurrent ? "1px solid #000000" : "1px solid #DADADA",
         padding: 12,
         display: "flex",
+        width: "100%",
         alignItems: "center",
         background: isCurrent ? "#000000" : "#FAFAFA",
         color: isCurrent ? "#FFFFFF" : "#252733",
@@ -52,7 +53,7 @@ type TProps = {
 
 const XsFormat = "ddd";
 const defaultFormat = 'D, ddd';
-const monthFormat = "MMM D";
+// const monthFormat = "MMM D";
 
 export const DaySelectCard: React.FC<TProps> = ({
     day, onClick, appointment, isCurrent, isXs
@@ -62,7 +63,11 @@ export const DaySelectCard: React.FC<TProps> = ({
         if (isXs) {
             return moment.utc(day).format("D");
         }
-        return appointment ? "Available" : "Not Available"
+        return appointment
+            ? isCurrent
+                ? "Available"
+                : `$${appointment.lowestPrice}`
+            : "Not Available"
     }
 
     return <DayCard
