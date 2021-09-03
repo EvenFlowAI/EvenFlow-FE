@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {DialogProps} from "../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
-import {ICreateAppointment, IListAppointment} from "../../api/types";
+import {ICreateAppointment, IListAppointment, ITransportation} from "../../api/types";
 import {
     Button,
     Checkbox,
@@ -17,7 +17,7 @@ import {LoadingButton} from "../UI/Button";
 import {useException, useMessage, useSCs} from "../../utils/hooks";
 import {
     EAppointmentTimingType,
-    EReminderType, flatTransportations,
+    EReminderType,
     IAppointmentSlot,
     ISR,
     IVehicleData
@@ -43,8 +43,7 @@ type TForm = {
     driverName: string;
     driverPhoneNumber: string;
     driverEmail: string;
-    transportationNeeded: boolean;
-    transportationDescription: string;
+    transportationOption: ITransportation|null;
     vehicleVin: string;
     vehicleMake: string;
     vehicleYear: string;
@@ -64,8 +63,7 @@ const initialForm: TForm = {
     driverName: "",
     driverPhoneNumber: "",
     driverEmail: "",
-    transportationDescription: "",
-    transportationNeeded: false,
+    transportationOption: null,
     vehicleVin: "",
     vehicleMake: "",
     vehicleYear: "",
@@ -83,6 +81,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const [form, setForm] = useState<TForm>(initialForm);
     const initialRef = useRef(false);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
+    const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [filterDate, setDate] = useState<ParsableDate>("");
     const [srList, setSrList] = useState<ISR[]>([]);
     const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
@@ -122,9 +121,8 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     isNeedCall: payload.isNeedCall,
                     reminderTypes: payload.reminderTypes,
                     comment: payload.comment,
-                    serviceRequestIds: payload.serviceRequests.map(sr => sr.id),
-                    transportationDescription: payload.transportationNeeds.description,
-                    transportationNeeded: payload.transportationNeeds.isNeed
+                    transportationOption: payload.transportationOption,
+                    serviceRequestIds: payload.serviceRequests.map(sr => sr.id)
                 });
                 setSelectedSR(payload.serviceRequests);
                 setDate(payload.dateInUtc);
@@ -156,8 +154,20 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 .finally(() => {
                     setSrLoading(false);
                 });
+            Api.call<ITransportation[]>(
+                Api.endpoints.TransportationOptions.GetActive,
+                {
+                    data: {
+                        serviceCenterId: selectedSC.id,
+                        serviceRequestIds: selectedSR,
+                        maintenancePackageOptionId: null
+                    }
+                }
+            ).then(({data}) => {
+                setTransportations(data);
+            })
         }
-    }, [selectedSC, props.open]);
+    }, [selectedSC, props.open, selectedSR]);
     useEffect(() => {
         let waiting = true;
         if (selectedSC && props.open && filterDate) {
@@ -265,10 +275,10 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     }
 
     const handleChangeTransportationNeeds = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
+        const option = transportations.find(el => el.name === value)
         setForm({
             ...form,
-            transportationDescription: value as string,
-            transportationNeeded: flatTransportations.findIndex(el => el.label === String(value)) > 2,
+            transportationOption: option ?? null
         });
     }
 
@@ -509,33 +519,20 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12}>
                     <Select
                         label="Transportation Description"
                         id="transportationDescription"
                         placeholder="Transportation needs"
                         name="transportationDescription"
-                        value={form.transportationDescription}
+                        value={form.transportationOption}
                         onChange={handleChangeTransportationNeeds}
                         fullWidth
                     >
-                        {flatTransportations.map(option =>
-                            <MenuItem key={option.label} value={option.label}>{option.label}</MenuItem>
+                        {transportations.map(option =>
+                            <MenuItem key={option.name} value={option.name}>{option.description}</MenuItem>
                         )}
                     </Select>
-                </Grid>
-                <Grid item xs={12} sm={4} style={{alignSelf: "flex-end"}}>
-                    <FormControlLabel
-                        aria-readonly="true"
-                        control={
-                            <Checkbox
-                                readOnly
-                                color="primary"
-                                checked={form.transportationNeeded}
-                            />
-                        }
-                        label="Transportation"
-                    />
                 </Grid>
                 <Grid item xs={12}>
                     <FormLabel

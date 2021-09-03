@@ -1,57 +1,58 @@
 import React from 'react';
 import {NextPrevBlock, ScrollableContainer, StepContainer, StepContentContainer, TStepProps} from "../UI";
-import {Box, Divider, Grid, styled} from "@material-ui/core";
-import {SquarePaper} from "../../UI/Paper";
+import {Box, Divider, Grid, /*styled*/} from "@material-ui/core";
+// import {SquarePaper} from "../../UI/Paper";
 import {Caption} from "../../UI/Caption";
-import {ETransportation, transportations} from "../../../store/reducers/appointment/types";
-import {useDispatch, useSelector} from "react-redux";
-import {changeTransportation} from "../../../store/reducers/appointment/actions";
-import {RootState} from "../../../store/rootReducer";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {/*ETransportation, */transportations} from "../../../store/reducers/appointment/types";
+// import {useDispatch, useSelector} from "react-redux";
+// import {changeTransportation} from "../../../store/reducers/appointment/actions";
+// import {RootState} from "../../../store/rootReducer";
+// import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+// import {ITransportation} from "../../../api/types";
 
-const Paper = styled(SquarePaper)(({theme}) => ({
-    padding: 16,
-    minHeight: 320,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    "&.selected": {
-        color: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main
-    }
-}));
-
-const Title = styled("h3")(({theme}) => ({
-    margin: 0,
-    color: theme.palette.text.primary,
-    fontSize: 48
-}));
-
-const Option = styled(SquarePaper)(({theme}) => ({
-    color: theme.palette.text.disabled,
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    cursor: "pointer",
-    alignItems: "center",
-    fontSize: 15,
-    marginTop: theme.spacing(1),
-    padding: theme.spacing(.6),
-    "&.selected": {
-        color: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main
-    }
-}));
+// const Paper = styled(SquarePaper)(({theme}) => ({
+//     padding: 16,
+//     minHeight: 320,
+//     display: "flex",
+//     flexDirection: "column",
+//     alignItems: "flex-start",
+//     justifyContent: "flex-start",
+//     "&.selected": {
+//         color: theme.palette.primary.main,
+//         borderColor: theme.palette.primary.main
+//     }
+// }));
+//
+// const Title = styled("h3")(({theme}) => ({
+//     margin: 0,
+//     color: theme.palette.text.primary,
+//     fontSize: 48
+// }));
+//
+// const Option = styled(SquarePaper)(({theme}) => ({
+//     color: theme.palette.text.disabled,
+//     width: "100%",
+//     display: "flex",
+//     flexDirection: "row",
+//     cursor: "pointer",
+//     alignItems: "center",
+//     fontSize: 15,
+//     marginTop: theme.spacing(1),
+//     padding: theme.spacing(.6),
+//     "&.selected": {
+//         color: theme.palette.primary.main,
+//         borderColor: theme.palette.primary.main
+//     }
+// }));
 
 export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev, isCompleted}) => {
-    const selectedTransportation = useSelector((state: RootState) => state.appointment.transportation);
+    // const selectedTransportation = useSelector((state: RootState) => state.appointment.transportation);
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
-    const handleChange = (type: ETransportation) => () => {
-        dispatch(changeTransportation(type));
-    }
+    // const handleChange = (type: ITransportation) => () => {
+    //     dispatch(changeTransportation(type));
+    // }
     return <StepContainer>
         <StepContentContainer>
             <h4 style={{textAlign: "center"}}>While we are servicing your vehicle, do you need transportation?</h4>
@@ -59,7 +60,7 @@ export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev, isCompl
                 <Grid container spacing={4}>
                     {transportations.map((te, idx) =>
                         <Grid key={idx} item xs={12} md={6}>
-                            <Paper
+                            {/*<Paper
                                 variant="outlined"
                                 className={selectedTransportation !== null
                                     ? selectedTransportation > 2 && idx
@@ -80,7 +81,7 @@ export const TransportationNeedsS4: React.FC<TStepProps> = ({next, prev, isCompl
                                         </Option>
                                     )}
                                 </Box>
-                            </Paper>
+                            </Paper>*/}
                         </Grid>
                     )}
                 </Grid>
