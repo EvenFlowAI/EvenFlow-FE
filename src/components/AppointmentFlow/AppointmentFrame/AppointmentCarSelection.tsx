@@ -119,7 +119,12 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
             <Info>
                 Click here to <span onClick={onAddNew}>add new vehicle</span>
             </Info>
-            <Actions onBack={onBack} onNext={onNext} nextDisabled={!selectedVehicle || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)} loading={loading} />
+            <Actions
+                onBack={onBack}
+                onNext={onNext}
+                nextDisabled={!selectedVehicle
+                    || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)}
+                loading={loading} />
         </StepWrapper>
     );
 };
