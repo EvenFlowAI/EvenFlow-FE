@@ -6,6 +6,8 @@ import {TArgCallback} from "../../../types/types";
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {TGroupedAppointments} from "../../../utils/types";
 import {getAppointmentDate} from "./utils";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 const DaySelectorWrapper = styled('div')({
     marginTop: 20,
@@ -44,6 +46,8 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const daysPerScreen: number = useMemo(() => {
         return isXs ? 5 : isSm ? 4 : 6;
     }, [isSm, isXs]);
+
+    const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
 
     const initRef = useRef<boolean>(false);
 
@@ -105,6 +109,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
                 <DaySelectCard
                     key={day}
                     isXs={isXs}
+                    isPackage={Boolean(selectedPackage)}
                     isCurrent={date.isSame(moment.utc(day), 'date')}
                     appointment={appointments[day]}
                     onClick={handleChangeDay(day)}

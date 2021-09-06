@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {TActionProps} from "./types";
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {useParams} from "react-router-dom";
@@ -11,6 +10,9 @@ import {decodeSCID} from "../../../utils/utils";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {InputLoading, TextField} from "../UI";
 import {Search} from "@material-ui/icons";
+import {TArgCallback, TCallback} from "../../../types/types";
+import {TScreen} from "../../Layout/types";
+import {checkSelectedCar} from "./utils";
 
 
 const Wrapper = styled('div')({
@@ -44,16 +46,23 @@ const Code = styled(FormControlLabel)({
     }
 });
 
-export const SelectOpsCode: React.FC<TActionProps> = ({onNext, onBack}) => {
+type TProps = {
+    onNext: TArgCallback<TScreen>;
+    onBack: TCallback;
+}
+
+export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [searchInput, setSearch] = useState<string>("");
 
     const {id} = useParams();
-    const [selectedCode, srList, search] = useSelector((state: RootState) => [
+    const [selectedCode, srList, search, vehicles, vehicle] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
-        state.appointment.search
+        state.appointment.search,
+        state.appointment.customerLoadedData?.vehicles,
+        state.appointment.customerSelectedVehicle
     ]);
     const dispatch = useDispatch();
     const isInit = useRef(true);
@@ -90,6 +99,14 @@ export const SelectOpsCode: React.FC<TActionProps> = ({onNext, onBack}) => {
     const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(selectSR(value ? Number(value) : null));
         dispatch(selectAppointment(null));
+    }
+
+    const handleNext = () => {
+        if (!checkSelectedCar(vehicle, vehicles)) {
+            onNext("carDetails");
+        } else {
+            onNext("consultantSelection");
+        }
     }
 
     return (
@@ -130,7 +147,7 @@ export const SelectOpsCode: React.FC<TActionProps> = ({onNext, onBack}) => {
                     })}
                 </CodesWrapper>
             </Wrapper>
-            <Actions onBack={onBack} nextDisabled={!selectedCode.length} onNext={onNext} />
+            <Actions onBack={onBack} nextDisabled={!selectedCode.length} onNext={handleNext} />
         </StepWrapper>
     );
 };
