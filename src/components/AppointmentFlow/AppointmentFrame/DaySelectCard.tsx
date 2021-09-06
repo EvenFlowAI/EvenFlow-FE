@@ -65,7 +65,11 @@ export const DaySelectCard: React.FC<TProps> = ({
             return moment.utc(day).format("D");
         }
         if (isCurrent) {
-            return "Available";
+            if (appointment) {
+                return "Available";
+            } else {
+                return "Not Available";
+            }
         }
         if (appointment && isPackage) {
             return `$${appointment.lowestPrice}`;
