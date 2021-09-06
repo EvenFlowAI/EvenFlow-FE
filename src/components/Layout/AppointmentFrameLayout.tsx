@@ -33,6 +33,7 @@ import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
+import {ILoadedVehicle} from "../../api/types";
 
 const Container = styled('div')({
     display: "flex",
@@ -103,6 +104,11 @@ export const AppointmentFrameLayout = () => {
         handleSetScreen('serviceNeeds');
     }, [dispatch, handleSetScreen]);
 
+    const handleAddNewCarAppointment = useCallback((vehicle: ILoadedVehicle) => {
+        dispatch(setVehicle(vehicle));
+        handleSetScreen('serviceNeeds');
+    }, [dispatch, handleSetScreen]);
+
     const handleSelectCar = useCallback(async () => {
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
@@ -130,6 +136,7 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleLogin}
                 loading={loadingCar}
                 onAddNew={handleAddNewVehicle}
+                onAddNewCarAppointment={handleAddNewCarAppointment}
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
@@ -190,8 +197,10 @@ export const AppointmentFrameLayout = () => {
             />
         }
         return carSelections[currentScreen];
-    }, [currentScreen, handleChangeScreen, handleSetScreen, handleAddNewVehicle,
-        handleLogin, handleSelectCar, loadingCar]);
+    }, [
+        currentScreen, handleChangeScreen, handleSetScreen, handleAddNewVehicle,
+        handleLogin, handleSelectCar, loadingCar, handleAddNewCarAppointment
+    ]);
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":
