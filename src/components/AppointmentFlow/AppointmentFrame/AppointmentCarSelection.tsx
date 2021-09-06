@@ -8,6 +8,7 @@ import { StepWrapper } from './StepWrapper';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
+import {ILoadedVehicle} from "../../../api/types";
 
 
 const CarsWrapper = styled('div')({
@@ -79,6 +80,18 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - 1
     const prevDisabled = () => idx <= 0;
 
+    const isSelected = (vehicle: ILoadedVehicle) => {
+        if (!selectedVehicle) {
+            return false;
+        }
+        if (!selectedVehicle.vin) {
+            return selectedVehicle.make === vehicle.make
+                && selectedVehicle.model === vehicle.model
+                && selectedVehicle.year === vehicle.year;
+        }
+        return selectedVehicle.vin === vehicle.vin;
+    }
+
     return (
         <StepWrapper>
             <Title>Which vehicle are you coming in for?</Title>
@@ -92,7 +105,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
                             .slice(idx, idx + vehiclesPerScreen)
                             .map(vehicle =>
                                 <CarCard
-                                    selected={selectedVehicle?.vin === vehicle.vin}
+                                    selected={isSelected(vehicle)}
                                     car={vehicle}
                                     key={vehicle.vin}/>
                             )}

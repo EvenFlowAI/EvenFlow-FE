@@ -49,6 +49,7 @@ type TProps = {
     isCurrent: boolean;
     appointment?: TGroupedAppointment;
     isXs: boolean;
+    isPackage: boolean;
 };
 
 const XsFormat = "ddd";
@@ -56,18 +57,23 @@ const defaultFormat = 'D, ddd';
 // const monthFormat = "MMM D";
 
 export const DaySelectCard: React.FC<TProps> = ({
-    day, onClick, appointment, isCurrent, isXs
+    day, onClick, appointment, isCurrent, isPackage, isXs
 }) => {
 
     const getLabel = () => {
         if (isXs) {
             return moment.utc(day).format("D");
         }
-        return appointment
-            ? isCurrent
-                ? "Available"
-                : `$${appointment.lowestPrice}`
-            : "Not Available"
+        if (isCurrent) {
+            return "Available";
+        }
+        if (appointment && isPackage) {
+            return `$${appointment.lowestPrice}`;
+        }
+        if (appointment) {
+            return "Available";
+        }
+        return "Not Available";
     }
 
     return <DayCard

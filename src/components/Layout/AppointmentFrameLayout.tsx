@@ -154,7 +154,7 @@ export const AppointmentFrameLayout = () => {
             />,
             opsCode: <SelectOpsCode
                 onBack={handleChangeScreen('serviceSelection')}
-                onNext={handleChangeScreen('consultantSelection')}
+                onNext={handleSetScreen}
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}

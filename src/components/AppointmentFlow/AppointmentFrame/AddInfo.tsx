@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import { setFrameDescription } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TCallback} from "../../../types/types";
+import {checkSelectedCar} from "./utils";
 
 
 type TProps = {
@@ -27,7 +28,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
     }
 
     const handleNext = () => {
-        if (!vehicles?.find(v => v.vin === vehicle?.vin)) {
+        if (!checkSelectedCar(vehicle, vehicles)) {
             onFillCar();
         } else {
             onNext();

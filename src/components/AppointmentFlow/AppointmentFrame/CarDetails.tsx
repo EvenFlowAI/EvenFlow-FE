@@ -13,7 +13,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ILoadedVehicle} from "../../../api/types";
 import {Api} from "../../../config/requests";
-import {VIN_LENGTH} from "../../../config/constants";
 import {useException} from "../../../utils/hooks";
 
 const SelectWrapper = styled('div')(({theme}) => ({
@@ -53,7 +52,7 @@ const blankOptions: TOptionsState = {};
 type TVehicleKey = keyof IVehicle;
 
 const requiredFields: TVehicleKey[] = [
-    "make", "year", "model",
+    "make", "year", "model", "mileage"
 ];
 
 type TProps = {} & TActionProps;
@@ -92,10 +91,6 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
 
     const isValid = (): boolean => {
         let error: string = "";
-        if (selectedVehicle?.vin.length !== VIN_LENGTH) {
-            setErrors(e => [...e, "vin"]);
-            error = "VIN";
-        }
         for (let f of requiredFields) {
             if (!selectedVehicle || !selectedVehicle[f as keyof ILoadedVehicle]) {
                 setErrors(e => [...e, f]);
@@ -103,7 +98,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             }
         }
         if (error) {
-            showError(`${error[0].toUpperCase() + error.slice(1)} is required`);
+            showError(`${error[0].toUpperCase() + error.slice(1)} required`);
         }
         return !error;
     }

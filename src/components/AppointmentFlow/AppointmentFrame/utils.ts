@@ -1,5 +1,5 @@
 import moment from "moment";
-import {IPackageOptions, IServiceCategory} from "../../../api/types";
+import {ILoadedVehicle, IPackageOptions, IServiceCategory} from "../../../api/types";
 
 export const getAppointmentDate = (date: moment.Moment, d: number) => {
     return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
@@ -29,4 +29,18 @@ export const collectServiceRequestIds = (
         }
     }
     return ids;
+}
+
+export const checkSelectedCar = (vehicle: ILoadedVehicle|null, vehicles?: ILoadedVehicle[]): boolean => {
+    if (!vehicles || !vehicle) {
+        return false;
+    }
+    return Boolean(vehicles.find(v => {
+        if (vehicle.vin && v.vin) {
+            return vehicle.vin === v.vin;
+        }
+        return vehicle.year === v.year
+            && vehicle.make === v.make
+            && vehicle.model === v.model;
+    }))
 }
