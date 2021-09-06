@@ -3,7 +3,7 @@ import {Title} from "./Title";
 import {CarCard} from "./CarCard";
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {Actions} from "./Actions";
-import {TCallback} from "../../../types/types";
+import {TArgCallback, TCallback} from "../../../types/types";
 import { StepWrapper } from './StepWrapper';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -47,9 +47,12 @@ type TProps = {
     onNext: TCallback;
     onBack: TCallback;
     onAddNew: TCallback;
+    onAddNewCarAppointment: TArgCallback<ILoadedVehicle>;
     loading: boolean;
 }
-export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loading, onAddNew}) => {
+export const AppointmentCarSelection: React.FC<TProps> = ({
+    onNext, onBack, loading, onAddNew, onAddNewCarAppointment}) => {
+
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const [idx, setIdx] = useState<number>(0);
@@ -106,6 +109,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
                             .slice(idx, idx + vehiclesPerScreen)
                             .map(vehicle =>
                                 <CarCard
+                                    onAddNewAppointment={onAddNewCarAppointment}
                                     selected={isSelected(vehicle)}
                                     car={vehicle}
                                     key={vehicle.vin}/>
