@@ -44,7 +44,8 @@ export const loadSRs = (serviceCenterId: number): AppThunk => async (dispatch, g
         {
             params: {
                 serviceCenterId, pageSize: 0,
-                searchTerm: getState().appointment.search
+                searchTerm: getState().appointment.search,
+                isOnlyIndividual: true,
             }
         }
     );
