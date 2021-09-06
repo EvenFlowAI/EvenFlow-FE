@@ -17,7 +17,6 @@ import {useParams} from "react-router-dom";
 import {EVehiclePropType, ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
-import {VIN_LENGTH} from "../../../config/constants";
 import {useException} from "../../../utils/hooks";
 
 const SelectWrapper = styled('div')(({theme}) => ({
@@ -134,10 +133,10 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     const isValid = () => {
         let error: string = "";
-        if (selectedVehicle?.vin.length !== VIN_LENGTH) {
-            setErrors(e => [...e, "vin"]);
-            error = "VIN";
-        }
+        // if (selectedVehicle?.vin.length !== VIN_LENGTH) {
+        //     setErrors(e => [...e, "vin"]);
+        //     error = "VIN";
+        // }
         for (let f of requiredFields) {
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
@@ -178,7 +177,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         disableClearable
                         autoComplete={true}
                         renderInput={autocompleteRender({
-                            label: select.label, placeholder: hasError ? `${select.label} is required` : `Select ${select.label}`, error: hasError
+                            label: select.label, placeholder: hasError ? `${select.label} required` : `Select ${select.label}`, error: hasError
                         })}
                         value={!select.allOverride
                             ? maintenanceDetails[select.name as keyof TMaintenanceDetails] ?? ""
