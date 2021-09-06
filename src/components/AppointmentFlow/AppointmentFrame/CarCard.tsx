@@ -1,9 +1,10 @@
-import React from 'react';
-import {Button, styled, Theme} from "@material-ui/core";
+import React, {useRef} from 'react';
+import {Button, ButtonGroup, styled, Theme} from "@material-ui/core";
 import carImage from '../../../assets/img/blank-car.svg';
 import {ILoadedVehicle} from "../../../api/types";
 import {useDispatch} from "react-redux";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {MoreVert} from "@material-ui/icons";
 
 type TProps = {
     car: ILoadedVehicle;
@@ -40,24 +41,38 @@ const CarInfo = styled('ul')({
         fontWeight: "normal"
     }
 });
-const ActionButton = styled(Button)({
-    fontSize: 20
+const ActionButtons = styled("div")({
+    fontSize: 20,
+    width: "100%",
+    "&>div": {
+        width: "100%"
+    },
+    "& button:first-child": {
+        flexGrow: 1
+    }
 });
 const Action: React.FC<{car: ILoadedVehicle, selected?: boolean}> = ({car}) => {
     const dispatch = useDispatch();
+
+    const anchorEl = useRef<HTMLDivElement|null>(null);
+
+    const hasAppointments = Boolean(car.appointmentHashKeys.length);
     const getLabel = (): string => {
-        return car.appointmentHashKeys.length ? "Manage Appointment" : "Schedule Appointment";
+        return hasAppointments ? "Manage Appointment" : "Schedule Appointment";
     }
     const handleClick = () => {
         dispatch(setVehicle(car));
     }
-    return <ActionButton
-        onClick={handleClick}
-        fullWidth
-        variant="contained"
-        color="primary">
-        {getLabel()}
-    </ActionButton>
+    return <ActionButtons>
+        <ButtonGroup variant="contained" color="primary" ref={anchorEl}>
+            <Button onClick={handleClick}>
+                {getLabel()}
+            </Button>
+            {hasAppointments ? <Button size="small" color="primary">
+                <MoreVert/>
+            </Button> : null}
+        </ButtonGroup>
+    </ActionButtons>
 };
 
 export const CarCard: React.FC<TProps> = ({car, selected}) => {
