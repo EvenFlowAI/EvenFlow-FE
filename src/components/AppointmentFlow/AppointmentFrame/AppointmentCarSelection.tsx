@@ -9,6 +9,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {ILoadedVehicle} from "../../../api/types";
+import {checkSelectedCar} from "./utils";
 
 
 const CarsWrapper = styled('div')({
@@ -118,7 +119,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({onNext, onBack, loadi
             <Info>
                 Click here to <span onClick={onAddNew}>add new vehicle</span>
             </Info>
-            <Actions onBack={onBack} onNext={onNext} nextDisabled={!selectedVehicle} loading={loading} />
+            <Actions onBack={onBack} onNext={onNext} nextDisabled={!selectedVehicle || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)} loading={loading} />
         </StepWrapper>
     );
 };
