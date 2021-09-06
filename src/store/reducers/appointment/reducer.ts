@@ -29,6 +29,7 @@ import {
     setLoadedReducer, setOldAppointmentId, setSessionId
 } from "./actions";
 import moment from "moment";
+import {selectService, selectSubService, setPackage} from "../appointmentFrameReducer/actions";
 
 const blankPersonalInfo: IPersonalInformation = {
     fullName: "",
@@ -214,5 +215,14 @@ export const appointmentReducer = createReducer(initialState, builder => builder
             };
         }
         return {...state, sessionId: payload};
+    })
+    .addCase(selectService, (state) => {
+        return {...state, appointment: null}
+    })
+    .addCase(selectSubService, (state) => {
+        return {...state, appointment: null}
+    })
+    .addCase(setPackage, (state) => {
+        return {...state, appointment: null}
     })
 );
