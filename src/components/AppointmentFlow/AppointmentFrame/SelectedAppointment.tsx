@@ -2,6 +2,7 @@ import React from 'react';
 import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {getMaintenanceDescription} from "./uiUtils";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -70,20 +71,6 @@ export const SelectedAppointment = () => {
         state.appointment.serviceRequests
     ]);
 
-    const getService = () => {
-        if (selectedPackage) {
-            return selectedPackage.name;
-        }
-        if (selectedSR.length) {
-            const filtered = srList.filter(el => selectedSR.includes(el.id)).map(el => el.description);
-            return filtered.length ? filtered.map(el => <><br /><span>{el}</span></>) : "-";
-        }
-        if (appointmentData.subService) {
-            return appointmentData.subService.name;
-        }
-        return appointmentData.service?.name ?? "-";
-    }
-
     const price = appointment?.priceWithOffer?.value
         ?? appointment?.price.value
         ?? selectedPackage?.price ?? 0;
@@ -93,7 +80,9 @@ export const SelectedAppointment = () => {
             <h4>Your selections</h4>
             <Wrapper>
                 <List>
-                    <li className="service-item">Service Needed: {getService()}
+                    <li className="service-item">Service Needed: {
+                        getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)
+                    }
                     </li>
                     <li>Advisor: {
                         appointmentData.advisor?.name ?? "Any available"
