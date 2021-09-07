@@ -20,7 +20,7 @@ export const UserData = () => {
     useEffect(() => {
         if (customerLoadedData) {
             dispatch(setCustomer({
-                fullName: `${customerLoadedData.firstName} ${customerLoadedData.lastName}`.trim(),
+                fullName: `${customerLoadedData.firstName ?? ""} ${customerLoadedData.lastName ?? ""}`.trim(),
                 email: customerLoadedData?.emails[0] ?? "",
                 phoneNumber: customerLoadedData?.phoneNumbers[0] ?? "",
             }));

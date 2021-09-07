@@ -7,6 +7,7 @@ import {RootState} from "../../../store/rootReducer";
 import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
 import {TCallback} from "../../../types/types";
+import {getMaintenanceDescription} from "./uiUtils";
 
 
 const Wrapper = styled('div')({
@@ -60,7 +61,7 @@ const Divider = styled("div")(({theme}) => ({
 
 type TItem = {
     label: string;
-    content: string;
+    content: string|JSX.Element[];
 }
 
 
@@ -70,15 +71,21 @@ type TProps = {
 export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const [
         appointment,
+        srList,
+        selectedSR,
         scProfile,
         s, ss,
+        selectedPackage,
         customer,
         vehicle
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
+        state.appointment.serviceRequests,
+        state.appointment.selectedSR,
         state.appointment.scProfile,
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
+        state.appointmentFrame.selectedPackage,
         state.appointmentFrame.customer,
         state.appointmentFrame.selectedVehicle
     ]);
@@ -96,7 +103,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             },
             {
                 label: "Service type",
-                content: ss?.name ?? s?.name ?? "-"
+                content: getMaintenanceDescription(srList, selectedSR, selectedPackage, s, ss)
             },
             {
                 label: "Selected Price",
@@ -119,7 +126,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 content: customer.email
             }
         ]
-    }, [appointment, scProfile, s, ss, customer, vehicle]);
+    }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR]);
 
     const handleAddToCalendar = () => {
         const date = moment.utc(appointment?.date);
@@ -141,12 +148,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     return <StepWrapper>
         <Wrapper>
             <h2>Appointment Confirmed!</h2>
-            {data.map(item =>
-                <React.Fragment key={item.label}>
+            {data.map(item => {
+                if (!selectedPackage && item.label === "Selected Price") {
+                    return null;
+                }
+                return <React.Fragment key={item.label}>
                     <div className="label">{item.label}</div>
                     <div>{item.content}</div>
-                </React.Fragment>
-            )}
+                </React.Fragment>;
+            })}
 
             <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
                 Modify Appointment
