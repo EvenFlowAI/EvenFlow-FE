@@ -100,7 +100,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     }
 
     const nextAvailable = (): boolean => {
-        return (sliceIdx + daysPerScreen) < daysInMonth;
+        return (sliceIdx + daysPerScreen - 1) < daysInMonth;
     }
     const prevAvailable = (): boolean => {
         return sliceIdx > 0;
@@ -109,7 +109,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         if (nextAvailable()) {
             setSliceIdx(s => {
                 const nS = s + (daysPerScreen * 2);
-                return nS <= daysInMonth ? s + daysPerScreen : daysInMonth - daysPerScreen;
+                return nS <= daysInMonth ? s + daysPerScreen : daysInMonth - daysPerScreen + 1;
             });
         }
     }
