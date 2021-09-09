@@ -89,10 +89,11 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
 
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
-        if (!d.isSame(month, 'month')) {
+        if (!d.isSame(month, 'month')
+            && selectedTimingType === EAppointmentTimingType.SpecialOffers) {
             setMonth(d);
         }
-    }, [month]);
+    }, [month, selectedTimingType]);
 
     useEffect(() => {
         async function loadData () {
