@@ -31,7 +31,7 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
     cursor: ({disabled}) => disabled ? "default" : "pointer",
 });
 
-
+const WHILE_LIMIT = 40;
 type TProps = {
     date: moment.Moment,
     onDateChange: TArgCallback<moment.Moment>;
@@ -54,12 +54,26 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
         let dim: number = date.daysInMonth();
+        let generatedDays: string[] = [];
         if (searchedDateRange) {
-            dim = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(searchedDateRange.to)));
+            dim = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(searchedDateRange.to), "days"));
+            let curDate = moment.utc(searchedDateRange.from);
+            let end = moment.utc(searchedDateRange.to);
+            let i = 0;
+            while (curDate.isSameOrBefore(end, "date") && i < WHILE_LIMIT) {
+                generatedDays.push(
+                    curDate.startOf('day').toISOString().replace('.000', '')
+                );
+                curDate = moment.utc(curDate).add(1, "day");
+                i++;
+            }
+        } else {
+            generatedDays = Array(dim).fill(0)
+                .map((e, idx) => getAppointmentDate(date, idx+1));
         }
         return [
             dim,
-            Array(dim).fill(0).map((e, idx) => getAppointmentDate(date, idx+1))
+            generatedDays
         ];
     }, [date, searchedDateRange]);
 

@@ -3,6 +3,9 @@ import {TCallback} from "../../../types/types";
 import {styled, Theme} from "@material-ui/core";
 import moment from "moment";
 import {TGroupedAppointment} from "../../../utils/types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 
 
 type TDayCardProps = {
@@ -54,11 +57,19 @@ type TProps = {
 
 const XsFormat = "ddd";
 const defaultFormat = 'D, ddd';
-// const monthFormat = "MMM D";
+const monthFormat = "MMM D";
+const XsMontFormat = "MMM";
 
 export const DaySelectCard: React.FC<TProps> = ({
     day, onClick, appointment, isCurrent, isPackage, isXs
 }) => {
+
+    const isCustomRange = useSelector((state: RootState) => {
+        return Boolean(
+            state.appointment.searchedDateRange
+            && state.appointmentFrame.selectedTiming !== EAppointmentTimingType.SpecialOffers
+        );
+    })
 
     const getLabel = () => {
         if (isXs) {
@@ -80,11 +91,23 @@ export const DaySelectCard: React.FC<TProps> = ({
         return "Not Available";
     }
 
+    const getFormat = () => {
+        if (isXs) {
+            if (isCustomRange) {
+                return XsMontFormat;
+            }
+            return XsFormat;
+        } else if (isCustomRange) {
+            return monthFormat;
+        }
+        return defaultFormat;
+    }
+
     return <DayCard
             available={Boolean(appointment)}
             isCurrent={isCurrent}
         >
-        <div>{moment.utc(day).format(isXs ? XsFormat : defaultFormat)}</div>
+        <div>{moment.utc(day).format(getFormat())}</div>
         <div className="day" onClick={onClick}>
             {getLabel()}
             {isXs ? <div className="padding" /> : null}
