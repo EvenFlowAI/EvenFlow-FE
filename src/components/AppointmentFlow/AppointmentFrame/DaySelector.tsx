@@ -48,16 +48,20 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     }, [isSm, isXs]);
 
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
+    const searchedDateRange = useSelector((state: RootState) => state.appointment.searchedDateRange);
 
     const initRef = useRef<boolean>(false);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
-        const dim = date.daysInMonth();
+        let dim: number = date.daysInMonth();
+        if (searchedDateRange) {
+            dim = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(searchedDateRange.to)));
+        }
         return [
             dim,
             Array(dim).fill(0).map((e, idx) => getAppointmentDate(date, idx+1))
         ];
-    }, [date]);
+    }, [date, searchedDateRange]);
 
     useEffect(() => {
         if (!initRef.current) {

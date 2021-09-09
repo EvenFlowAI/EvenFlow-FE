@@ -10,7 +10,7 @@ import {
     IPersonalInformation,
     IPrivacy,
     IRemappedAppointmentSlot,
-    IReminders,
+    IReminders, ISearchedDateRange,
     IServiceCenterProfile,
     ISR,
     TAppointmentState,
@@ -62,16 +62,18 @@ export const changePersonalInformation = createAction<Partial<IPersonalInformati
 export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
 
+export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
 export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void): AppThunk => async dispatch => {
     try {
-        const {data: {items, searchedDateRange: {from}}} = await Api.call<IAppointmentResponse>(
+        const {data: {items, searchedDateRange}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
         const res = dispatch(getAppointmentSlots(items));
+        dispatch(setLoadedDateRange(searchedDateRange))
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
-            return cb(moment.utc(from));
+            return cb(moment.utc(searchedDateRange.from));
         }
         return res;
     } catch {
