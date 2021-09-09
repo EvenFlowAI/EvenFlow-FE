@@ -25,7 +25,7 @@ import {
     setAppointmentFilters,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
-    setCustomerVehicle, setEditAppointment,
+    setCustomerVehicle, setEditAppointment, setLoadedDateRange,
     setLoadedReducer, setOldAppointmentId, setSessionId
 } from "./actions";
 import moment from "moment";
@@ -62,6 +62,7 @@ const initialS3Form: TS3Form = {
 const initialState: TAppointmentState = {
     sessionId: "",
     updated: false,
+    searchedDateRange: null,
     serviceRequests: [],
     customerLoadedData: null,
     customerSelectedVehicle: null,
@@ -128,6 +129,9 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(selectAppointment, (state, {payload}) => {
         return {...state, appointment: payload};
+    })
+    .addCase(setLoadedDateRange, (state, {payload}) => {
+        return {...state, searchedDateRange: payload};
     })
     .addCase(getAppointmentSlots, (state, {payload}) => {
         if (payload.length && state.appointment) {

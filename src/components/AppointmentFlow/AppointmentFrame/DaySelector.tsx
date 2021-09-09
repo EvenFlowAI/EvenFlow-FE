@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import moment from "moment";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {DaySelectCard} from "./DaySelectCard";
@@ -31,14 +31,16 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
     cursor: ({disabled}) => disabled ? "default" : "pointer",
 });
 
-
+const WHILE_LIMIT = 40;
 type TProps = {
     date: moment.Moment,
+    dateRangeUpdated: boolean;
+    onDateRangeSet: TArgCallback<boolean>;
     onDateChange: TArgCallback<moment.Moment>;
     loading: boolean;
     appointments: TGroupedAppointments;
 }
-export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments}) => {
+export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -48,20 +50,40 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     }, [isSm, isXs]);
 
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
-
-    const initRef = useRef<boolean>(false);
+    const searchedDateRange = useSelector((state: RootState) => state.appointment.searchedDateRange);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
-        const dim = date.daysInMonth();
+        let dim: number = date.daysInMonth();
+        let generatedDays: string[] = [];
+        if (searchedDateRange) {
+            dim = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(searchedDateRange.to), "days"));
+            let curDate = moment.utc(searchedDateRange.from);
+            let end = moment.utc(searchedDateRange.to);
+            let i = 0;
+            while (curDate.isSameOrBefore(end, "date") && i < WHILE_LIMIT) {
+                generatedDays.push(
+                    curDate.startOf('day').toISOString().replace('.000', '')
+                );
+                curDate = moment.utc(curDate).add(1, "day");
+                i++;
+            }
+        } else {
+            generatedDays = Array(dim).fill(0)
+                .map((e, idx) => getAppointmentDate(date, idx+1));
+        }
         return [
             dim,
-            Array(dim).fill(0).map((e, idx) => getAppointmentDate(date, idx+1))
+            generatedDays
         ];
-    }, [date]);
+    }, [date, searchedDateRange]);
 
     useEffect(() => {
-        if (!initRef.current) {
-            const nD = date.date() - Math.floor(daysPerScreen / 2);
+        if (!dateRangeUpdated) {
+            let dateIdx = days.findIndex(el => el === date.toISOString().replace('.000', ''));
+            if (dateIdx === -1) {
+                setSliceIdx(0);
+            }
+            const nD = dateIdx - Math.floor(daysPerScreen / 2);
             if (nD + daysPerScreen > daysInMonth) {
                 // Handle right date edge
                 setSliceIdx(daysInMonth - daysPerScreen);
@@ -69,16 +91,16 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
                 // Handle left date edge
                 setSliceIdx(nD >= 0 ? nD : 0);
             }
-            initRef.current = true;
+            onDateRangeSet(true);
         }
-    }, [date, daysPerScreen, daysInMonth]);
+    }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet]);
 
     const handleChangeDay = (date: string) => () => {
         onDateChange(moment.utc(date));
     }
 
     const nextAvailable = (): boolean => {
-        return (sliceIdx + daysPerScreen) < daysInMonth;
+        return (sliceIdx + daysPerScreen - 1) < daysInMonth;
     }
     const prevAvailable = (): boolean => {
         return sliceIdx > 0;
@@ -87,7 +109,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         if (nextAvailable()) {
             setSliceIdx(s => {
                 const nS = s + (daysPerScreen * 2);
-                return nS <= daysInMonth ? s + daysPerScreen : daysInMonth - daysPerScreen;
+                return nS <= daysInMonth ? s + daysPerScreen : daysInMonth - daysPerScreen + 1;
             });
         }
     }

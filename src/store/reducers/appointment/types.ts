@@ -107,12 +107,13 @@ export interface IAppointmentSlot {
     offer?: IOffer;
     isShorterWaitTime: boolean;
 }
+export interface ISearchedDateRange {
+    from: ParsableDate;
+    to: ParsableDate;
+}
 export interface IAppointmentResponse {
     items: IAppointmentSlot[];
-    searchedDateRange: {
-        from: ParsableDate;
-        to: ParsableDate;
-    }
+    searchedDateRange: ISearchedDateRange;
 }
 export enum EAppointmentTimingType {
     SpecialOffers, PreferredDate, FirstAvailable
@@ -160,6 +161,7 @@ export type TAppointmentState = {
     privacy: IPrivacy;
     comment: string;
     appointment: IRemappedAppointmentSlot|null;
+    searchedDateRange: ISearchedDateRange|null;
     appointmentSlots: IRemappedAppointmentSlot[];
     appointmentFilters: IAppointmentFilters;
 };
