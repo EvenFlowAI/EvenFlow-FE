@@ -35,7 +35,9 @@ type TMonthProps = {
     onDateChange: TArgCallback<moment.Moment>;
 }
 type TProps = {
+    onDateRangeSet: TArgCallback<boolean>;
     appointments: TGroupedAppointments;
+    dateRangeUpdated: boolean;
     dateChangeDisabled: boolean;
 } & TMonthProps;
 
@@ -59,7 +61,9 @@ const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange, loading}) => 
     </MonthSelectorWrapper>
 }
 
-export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDateChange, appointments, dateChangeDisabled}) => {
+export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDateChange,
+    appointments, dateChangeDisabled,
+    dateRangeUpdated, onDateRangeSet}) => {
     return (
         <div>
             <h4>Select Date</h4>
@@ -68,6 +72,8 @@ export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDate
                 loading={loading}
                 onDateChange={onDateChange}/> : null}
             <DaySelector
+                onDateRangeSet={onDateRangeSet}
+                dateRangeUpdated={dateRangeUpdated}
                 date={date}
                 appointments={appointments}
                 loading={loading}

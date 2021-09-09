@@ -75,6 +75,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     const [loading, setLoading] = useState<boolean>(false);
 
     const dispatch = useDispatch();
+    const initRef = useRef<boolean>(false);
 
     const {id} = useParams();
 
@@ -89,10 +90,19 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
 
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
-        if (!d.isSame(month, 'month')) {
+        if (!d.isSame(month, 'month')
+            && selectedTimingType === EAppointmentTimingType.SpecialOffers) {
             setMonth(d);
         }
-    }, [month]);
+    }, [month, selectedTimingType]);
+
+    const setDateCallback = useCallback((d: moment.Moment) => {
+        setDate(d.startOf('day'));
+    }, []);
+
+    const handleDateRangeSet = useCallback((v: boolean) => {
+        initRef.current = v;
+    }, []);
 
     useEffect(() => {
         async function loadData () {
@@ -120,7 +130,11 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     if (dd.serviceCategoryId && dd.serviceCategoryId < 1) {
                         dd.serviceCategoryId = undefined;
                     }
-                    await dispatch(loadAppointmentSlots(dd, updateDate));
+                    await dispatch(loadAppointmentSlots(
+                        dd,
+                        setDateCallback,
+                        () => handleDateRangeSet(false)
+                    ));
                 } finally {
                     setLoading(false);
                 }
@@ -129,8 +143,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType, month,
-        selectedVehicle, customerData, service,
-        subService, selectedPackage, updateDate, selectedOpsCodes
+        selectedVehicle, customerData, service, handleDateRangeSet,
+        subService, selectedPackage, setDateCallback, selectedOpsCodes
     ]);
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
@@ -145,6 +159,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     dateChangeDisabled={selectedTimingType !== EAppointmentTimingType.SpecialOffers}
                     appointments={groupedAppointments}
                     date={date}
+                    onDateRangeSet={handleDateRangeSet}
+                    dateRangeUpdated={initRef.current}
                     loading={loading}
                     onDateChange={updateDate} />
                 <AppointmentTimeSelector
