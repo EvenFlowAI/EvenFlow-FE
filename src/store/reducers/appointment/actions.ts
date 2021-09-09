@@ -17,7 +17,7 @@ import {
     TS1Form,
     TS3Form
 } from "./types";
-import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse, TCallback} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import moment from "moment";
 import {
@@ -64,14 +64,17 @@ export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Ap
 
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
-export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void): AppThunk => async dispatch => {
+export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => async dispatch => {
     try {
         const {data: {items, searchedDateRange}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
         const res = dispatch(getAppointmentSlots(items));
-        dispatch(setLoadedDateRange(searchedDateRange))
+        if (loadCB) {
+            loadCB();
+        }
+        await dispatch(setLoadedDateRange(searchedDateRange))
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
             return cb(moment.utc(searchedDateRange.from));
         }

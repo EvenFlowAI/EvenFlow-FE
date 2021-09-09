@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import moment from "moment";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {DaySelectCard} from "./DaySelectCard";
@@ -34,11 +34,13 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
 const WHILE_LIMIT = 40;
 type TProps = {
     date: moment.Moment,
+    dateRangeUpdated: boolean;
+    onDateRangeSet: TArgCallback<boolean>;
     onDateChange: TArgCallback<moment.Moment>;
     loading: boolean;
     appointments: TGroupedAppointments;
 }
-export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments}) => {
+export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -49,8 +51,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
 
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const searchedDateRange = useSelector((state: RootState) => state.appointment.searchedDateRange);
-
-    const initRef = useRef<boolean>(false);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
         let dim: number = date.daysInMonth();
@@ -78,8 +78,12 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     }, [date, searchedDateRange]);
 
     useEffect(() => {
-        if (!initRef.current) {
-            const nD = date.date() - Math.floor(daysPerScreen / 2);
+        if (!dateRangeUpdated) {
+            let dateIdx = days.findIndex(el => el === date.toISOString().replace('.000', ''));
+            if (dateIdx === -1) {
+                setSliceIdx(0);
+            }
+            const nD = dateIdx - Math.floor(daysPerScreen / 2);
             if (nD + daysPerScreen > daysInMonth) {
                 // Handle right date edge
                 setSliceIdx(daysInMonth - daysPerScreen);
@@ -87,9 +91,9 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
                 // Handle left date edge
                 setSliceIdx(nD >= 0 ? nD : 0);
             }
-            initRef.current = true;
+            onDateRangeSet(true);
         }
-    }, [date, daysPerScreen, daysInMonth]);
+    }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet]);
 
     const handleChangeDay = (date: string) => () => {
         onDateChange(moment.utc(date));
