@@ -18,6 +18,7 @@ import {EVehiclePropType, ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
+import {decodeSCID} from "../../../utils/utils";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -107,7 +108,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     useEffect(() => {
         Api.call<string[]>(
-            Api.endpoints.Vehicles.Models
+            Api.endpoints.Vehicles.Models,
+            {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             setLoadedOptions({model: data});
         })

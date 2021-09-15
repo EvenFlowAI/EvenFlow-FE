@@ -7,7 +7,7 @@ import {getMaintenanceDescription} from "./uiUtils";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "flex",
-    alignItems: "flex-end",
+    alignItems: "stretch",
     justifyContent: "space-between",
     [theme.breakpoints.down("xs")]: {
         flexDirection: "column"
@@ -60,6 +60,15 @@ const PriceWrapper = styled('div')(({
     "& .info": {
         color: "#27AE60"
     }
+}));
+const DateWrapper = styled('div')(({theme}) => ({
+    marginBottom: "auto",
+    textAlign: "right",
+    fontSize: 16,
+    fontWeight: "bold",
+    [theme.breakpoints.down("xs")]: {
+        marginTop: 16
+    }
 }))
 // TODO: Advisor|consultant
 export const SelectedAppointment = () => {
@@ -91,17 +100,21 @@ export const SelectedAppointment = () => {
                     {/*    <li>See available times for any Consultant</li>*/}
                     {/*</ul>*/}
                 </List>
-                {selectedPackage
-                    ? <PriceWrapper>
-                        <div className="price">$
-                            {Math.floor(price)}
-                            <span>
-                                .{(price % 1).toFixed(2).slice(2)}
-                            </span>
-                        </div>
-                        <div className="info">Save by booking at off peak times!</div>
+                <PriceWrapper>
+                    {appointment ? <DateWrapper>
+                        Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
+                    </DateWrapper> : null}
+                    {selectedPackage
+                        ? <>
+                            <div className="price">$
+                                {Math.floor(price)}
+                                <span>
+                                    .{(price % 1).toFixed(2).slice(2)}
+                                </span>
+                            </div>
+                            <div className="info">Save by booking at off peak times!</div>
+                        </> : null}
                     </PriceWrapper>
-                    : null}
             </Wrapper>
         </div>
     );
