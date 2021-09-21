@@ -74,7 +74,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             Api.endpoints.Vehicles.Models,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
+            if (!data?.length) {
+                setLoadedOptions({model: ['Other']});
+            }
             setLoadedOptions({model: data});
+        }).catch(() => {
+            setLoadedOptions({model: ['Other']});
         })
     }, [id]);
 
@@ -94,17 +99,19 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     }
 
     const isValid = (): boolean => {
-        let error: string = "";
+        const errors: string[] = [];
         for (let f of requiredFields) {
             if (!selectedVehicle || !selectedVehicle[f as keyof ILoadedVehicle]) {
                 setErrors(e => [...e, f]);
-                error = f;
+                errors.push(f);
             }
         }
-        if (error) {
-            showError(`${error[0].toUpperCase() + error.slice(1)} required`);
+        if (errors.length) {
+            const fields = errors.map((error) => error[0].toUpperCase() + error.slice(1));
+            const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
+            showError(message);
         }
-        return !error;
+        return !errors.length;
     }
 
     const handleNext = () => {

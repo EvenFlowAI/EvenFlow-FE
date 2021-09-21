@@ -66,9 +66,9 @@ const selects: TSelect[] = [
     {label: "Make", name: "make", noVehicle: true},
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model",},
-    {label: "Trim", name: "trim", options: ["All"], allOverride: true},
-    {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
-    {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
+    // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
+    // {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
+    // {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
     {label: "Estimated mileage", name:"serviceInterval", options: mileageOptions},
 ];
 
@@ -111,7 +111,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             Api.endpoints.Vehicles.Models,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
+            if (!data?.length) {
+                setLoadedOptions({model: ['Other']});
+            }
             setLoadedOptions({model: data});
+        }).catch(() => {
+            setLoadedOptions({model: ['Other']});
         })
     }, [id, maintenanceDetails]);
 
@@ -134,7 +139,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }
 
     const isValid = () => {
-        let error: string = "";
+        const errors: string [] = [];
         // if (selectedVehicle?.vin.length !== VIN_LENGTH) {
         //     setErrors(e => [...e, "vin"]);
         //     error = "VIN";
@@ -142,17 +147,19 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         for (let f of requiredFields) {
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
-                error = f;
+                errors.push(f);
             }
         }
         if (!maintenanceDetails.serviceInterval) {
             setErrors(e => [...e, "serviceInterval"]);
-            error = "estimated Mileage"
+            errors.push("estimated Mileage");
         }
-        if (error) {
-            showError(`${error[0].toUpperCase() + error.slice(1)} is required`);
+        if (errors.length) {
+            const fields = errors.map((error) => error[0].toUpperCase() + error.slice(1));
+            const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
+            showError(message);
         }
-        return !error;
+        return !errors.length;
     }
 
     const handleNext = () => {
@@ -195,7 +202,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         error={hasError}
                         fullWidth
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
-                        placeholder={hasError ? `${select.label} required` : `Type ${select.label}`}
+                        placeholder={hasError ? `${select.label} required` : `Type ${select.label} (Optional)`}
                     />
                 </div>
             })}
