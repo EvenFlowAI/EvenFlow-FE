@@ -14,6 +14,8 @@ import {RootState} from "../../../store/rootReducer";
 import {ILoadedVehicle} from "../../../api/types";
 import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
+import {decodeSCID} from "../../../utils/utils";
+import {useParams} from "react-router-dom";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -59,6 +61,7 @@ type TProps = {} & TActionProps;
 export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
+    const {id} = useParams();
 
     const showError = useException();
 
@@ -68,11 +71,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
 
     useEffect(() => {
         Api.call<string[]>(
-            Api.endpoints.Vehicles.Models
+            Api.endpoints.Vehicles.Models,
+            {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             setLoadedOptions({model: data});
         })
-    }, []);
+    }, [id]);
 
     const handleChange = (name: keyof IVehicle) =>
         (e: React.ChangeEvent<{}>, option: string|number|object|null) => {
