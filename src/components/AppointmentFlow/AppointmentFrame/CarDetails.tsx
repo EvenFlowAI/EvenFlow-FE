@@ -99,19 +99,19 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     }
 
     const isValid = (): boolean => {
-        const errors: string[] = [];
+        const errorsArray: string[] = [];
         for (let f of requiredFields) {
             if (!selectedVehicle || !selectedVehicle[f as keyof ILoadedVehicle]) {
                 setErrors(e => [...e, f]);
-                errors.push(f);
+                errorsArray.push(f);
             }
         }
-        if (errors.length) {
-            const fields = errors.map((error) => error[0].toUpperCase() + error.slice(1));
+        if (errorsArray.length) {
+            const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
             const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
             showError(message);
         }
-        return !errors.length;
+        return !errorsArray.length;
     }
 
     const handleNext = () => {

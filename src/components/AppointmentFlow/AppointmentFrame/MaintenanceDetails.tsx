@@ -139,7 +139,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }
 
     const isValid = () => {
-        const errors: string [] = [];
+        const errorsArray: string [] = [];
         // if (selectedVehicle?.vin.length !== VIN_LENGTH) {
         //     setErrors(e => [...e, "vin"]);
         //     error = "VIN";
@@ -147,19 +147,19 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         for (let f of requiredFields) {
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
-                errors.push(f);
+                errorsArray.push(f);
             }
         }
         if (!maintenanceDetails.serviceInterval) {
             setErrors(e => [...e, "serviceInterval"]);
-            errors.push("estimated Mileage");
+            errorsArray.push("estimated Mileage");
         }
-        if (errors.length) {
-            const fields = errors.map((error) => error[0].toUpperCase() + error.slice(1));
+        if (errorsArray.length) {
+            const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
             const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
             showError(message);
         }
-        return !errors.length;
+        return !errorsArray.length;
     }
 
     const handleNext = () => {
