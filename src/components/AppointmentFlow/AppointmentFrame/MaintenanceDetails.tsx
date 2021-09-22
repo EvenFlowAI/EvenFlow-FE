@@ -202,7 +202,9 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         error={hasError}
                         fullWidth
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
-                        placeholder={hasError ? `${select.label} required` : `Type ${select.label} (Optional)`}
+                        placeholder={hasError
+                            ? `${select.label} required`
+                            : `Type ${select.label} ${select.name === 'vin' ? '(Optional)' : ''}`}
                     />
                 </div>
             })}

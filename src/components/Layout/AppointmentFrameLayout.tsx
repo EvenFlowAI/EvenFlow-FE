@@ -155,7 +155,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('consultantSelection')}
             />,
             describeMore: <AddInfo
-                onBack={handleChangeScreen('serviceNeeds')}
+                onBack={handleChangeScreen('serviceSelection')}
                 onNext={handleChangeScreen('consultantSelection')}
                 onFillCar={handleChangeScreen('carDetails')}
             />,

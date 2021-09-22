@@ -147,7 +147,9 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         error={hasError}
                         fullWidth
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
-                        placeholder={hasError ? `${select.label} required` : `Type ${select.label}`}
+                        placeholder={hasError
+                            ? `${select.label} required`
+                            : `Type ${select.label} ${select.name === 'vin' ? '(Optional)' : ''}`}
                     />
                 </div>
             })}
