@@ -43,9 +43,9 @@ const selects: TSelect[] = [
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model"},
     {label: "Mileage", name:"mileage"},
-    {label: "Transmission", name: "transmission"},
-    {label: "Drive Type", name: "driveType"},
-    {label: "Engine Type", name: "engineType"},
+    // {label: "Transmission", name: "transmission"},
+    // {label: "Drive Type", name: "driveType"},
+    // {label: "Engine Type", name: "engineType"},
 ];
 
 type TOptionsState = {[s: string]: string[]};
@@ -74,7 +74,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             Api.endpoints.Vehicles.Models,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
+            if (!data?.length) {
+                setLoadedOptions({model: ['Other']});
+            }
             setLoadedOptions({model: data});
+        }).catch(() => {
+            setLoadedOptions({model: ['Other']});
         })
     }, [id]);
 
@@ -94,17 +99,19 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     }
 
     const isValid = (): boolean => {
-        let error: string = "";
+        const errorsArray: string[] = [];
         for (let f of requiredFields) {
             if (!selectedVehicle || !selectedVehicle[f as keyof ILoadedVehicle]) {
                 setErrors(e => [...e, f]);
-                error = f;
+                errorsArray.push(f);
             }
         }
-        if (error) {
-            showError(`${error[0].toUpperCase() + error.slice(1)} required`);
+        if (errorsArray.length) {
+            const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
+            const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
+            showError(message);
         }
-        return !error;
+        return !errorsArray.length;
     }
 
     const handleNext = () => {
@@ -140,7 +147,9 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         error={hasError}
                         fullWidth
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
-                        placeholder={hasError ? `${select.label} required` : `Type ${select.label}`}
+                        placeholder={hasError
+                            ? `${select.label} required`
+                            : `Type ${select.label} ${select.name === 'vin' ? '(Optional)' : ''}`}
                     />
                 </div>
             })}

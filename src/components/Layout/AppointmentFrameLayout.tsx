@@ -155,7 +155,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('consultantSelection')}
             />,
             describeMore: <AddInfo
-                onBack={handleChangeScreen('serviceNeeds')}
+                onBack={handleSetScreen}
                 onNext={handleChangeScreen('consultantSelection')}
                 onFillCar={handleChangeScreen('carDetails')}
             />,
@@ -214,7 +214,7 @@ export const AppointmentFrameLayout = () => {
             case "opsCode":
                 return "What does your car need?";
             case "packageSelection":
-                return "Please select the maintenance package for your vehicle"
+                return "Please click on the maintenance package for your vehicle"
             case "consultantSelection":
                 return "Do you have a preferred advisor?";
             case "appointmentTiming":

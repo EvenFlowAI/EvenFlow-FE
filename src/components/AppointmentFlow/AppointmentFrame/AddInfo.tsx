@@ -1,18 +1,23 @@
-import React from 'react';
-import {TActionProps} from "./types";
+import React, { useMemo } from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import { setFrameDescription } from '../../../store/reducers/appointmentFrameReducer/actions';
-import {TCallback} from "../../../types/types";
+import {TArgCallback, TCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
+import {TScreen} from "../../../components/Layout/types";
 
 
 type TProps = {
     onFillCar: TCallback;
-} & TActionProps;
+    onBack: TArgCallback<TScreen>;
+    onNext: () => void;
+    nextDisabled?: boolean;
+    nextLabel?: string;
+    loading?: boolean;
+};
 export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
     const [service, subService, vehicle, vehicles] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.service,
@@ -22,6 +27,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
     ]);
     const description = useSelector(({appointmentFrame}: RootState) => appointmentFrame.description);
     const dispatch = useDispatch();
+    const screenToReturn = useMemo(() => subService ? 'serviceSelection' : 'serviceNeeds', [subService])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setFrameDescription(value))
@@ -47,7 +53,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
                     subService?.name ?? service?.name ?? "Type Here"
                 }
             />
-            <Actions onBack={onBack} onNext={handleNext} />
+            <Actions onBack={() => onBack(screenToReturn)} onNext={handleNext} />
         </StepWrapper>
     );
 };
