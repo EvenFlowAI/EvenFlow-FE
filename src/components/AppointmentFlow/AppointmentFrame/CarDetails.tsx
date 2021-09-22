@@ -43,9 +43,9 @@ const selects: TSelect[] = [
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model"},
     {label: "Mileage", name:"mileage"},
-    {label: "Transmission", name: "transmission"},
-    {label: "Drive Type", name: "driveType"},
-    {label: "Engine Type", name: "engineType"},
+    // {label: "Transmission", name: "transmission"},
+    // {label: "Drive Type", name: "driveType"},
+    // {label: "Engine Type", name: "engineType"},
 ];
 
 type TOptionsState = {[s: string]: string[]};
