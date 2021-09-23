@@ -22,6 +22,12 @@ const useStyles = makeStyles(theme => ({
         fontWeight: theme.typography.fontWeightBold,
         color: theme.palette.text.primary,
         visibility: visible ? "visible" : "hidden",
+    }),
+    asterisk: ({visible}: TStyleProps) => ({
+        fontWeight: theme.typography.fontWeightBold,
+        color: theme.palette.text.primary,
+        visibility: visible ? "visible" : "hidden",
+        fontSize: 24,
     })
 }));
 
@@ -33,7 +39,7 @@ export const TextField = forwardRef<unknown, TextInputProps>(
     return <>
         {label &&
             <InputLabel className={classes.label} shrink htmlFor={props.id} {...InputLabelProps}>
-                {label}
+                {label}{props.required ? <span className={classes.asterisk}>&#42;</span> : ''}
             </InputLabel>
         }
         <DefaultTextField ref={ref} {...{...p, ...InputProps}} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0, ...props.style}} />

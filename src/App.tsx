@@ -14,6 +14,7 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 
+
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
     const handleClose = (key: React.ReactText) => () => {

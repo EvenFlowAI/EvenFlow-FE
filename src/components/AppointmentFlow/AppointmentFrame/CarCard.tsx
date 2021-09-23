@@ -25,8 +25,9 @@ type TProps = {
 }
 const Wrapper = styled('div')<Theme, {active?: boolean}>({
     display: "flex",
-    padding: 22,
     flex: "1 1 0px",
+    maxWidth: '50%',
+    padding: 22,
     alignItems: "stretch",
     flexDirection: "column",
     gap: "12px",

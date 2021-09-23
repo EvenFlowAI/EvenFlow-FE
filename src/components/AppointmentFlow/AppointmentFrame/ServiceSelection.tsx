@@ -10,6 +10,7 @@ import {ReactComponent as BatteryIcon} from "../../../assets/img/battery-icon.sv
 import {ReactComponent as AlignmentIcon} from "../../../assets/img/alignment-icon.svg";
 import {ReactComponent as RecallIcon} from "../../../assets/img/recall.svg";
 import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
+import {ReactComponent as CarIcon} from "../../../assets/img/car_wheel-icon.svg";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
@@ -37,6 +38,10 @@ const icons: JSX.Element[] = [
     <BatteryIcon />, <AlignmentIcon />, <MoreIcon />
 ];
 
+const bmwIcons: JSX.Element[] = [
+    <AlignmentIcon />, <RecallIcon />, <MoreIcon />
+];
+
 const addServices: IServiceCategory[] = [
     {
         id: -1,
@@ -54,12 +59,23 @@ const addServices: IServiceCategory[] = [
     },*/
 ]
 
+const addBMWServices: IServiceCategory[] = [
+    {
+        id: -1,
+        name: "Search Individual Services",
+        loadedIcon: <CarIcon />,
+        page: EServiceCategoryPage.Page2,
+        serviceRequests: []
+    },
+]
+
 type TProps = {
     onNext: TArgCallback<TScreen>;
     onBack: TCallback;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
-    const subService = useSelector((state: RootState) => state.appointmentFrame.subService);
+    const {subService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
     const [loading, setLoading] = useState<boolean>(false);
@@ -75,9 +91,12 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             }}
         )
             .then(({data}) => {
-                data = data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el);
+                const isBmWService = scProfile?.id === 25 || scProfile?.id === 123;
+                const iconsData = isBmWService ? bmwIcons : icons;
+                data = data.map((el, idx) => iconsData[idx] ? {...el, loadedIcon: iconsData[idx]} : el);
                 const more = data.pop();
-                const nServices = [...data, ...addServices];
+                const additional = isBmWService ? addBMWServices : addServices;
+                const nServices = [...data, ...additional];
                 if (more) {
                     nServices.push(more);
                 }
@@ -86,7 +105,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             .finally(() => {
                 setLoading(false);
             })
-    }, [id]);
+    }, [id, scProfile]);
 
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectSubService(card));

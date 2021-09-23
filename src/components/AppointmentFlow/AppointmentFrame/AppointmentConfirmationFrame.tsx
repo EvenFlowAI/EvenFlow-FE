@@ -43,11 +43,17 @@ const Info = styled('div')({
     fontSize: 12
 });
 
+interface TError {
+    field: string,
+    message: string
+}
+
 type TProps = {
     onChangeSlot: TCallback;
 } & TActionProps;
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [saving, setSaving] = useState<boolean>(false);
+    const [errors, setErrors] = useState<string[]>([]);
 
     const {id} = useParams();
     const dispatch = useDispatch();
@@ -140,13 +146,22 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 }
                 onNext();
             })
-            .catch(e => {showError(e); console.error(e)})
+            .catch(e => {
+                showError(e);
+                if (e.response?.data?.errors) {
+                    const data = [...e.response.data.errors]
+                    setErrors(() => {
+                        return data.map((err: TError): string => err.field.split('.')[1].toLowerCase());
+                    })
+                }
+            })
             .finally(() => {setSaving(false)})
     }
+
     return <StepWrapper>
         <Wrapper>
             <div>
-                <UserData />
+                <UserData errors={errors} setErrors={setErrors}/>
                 <SelectedDate onChangeSlot={onChangeSlot} />
             </div>
             <div>
