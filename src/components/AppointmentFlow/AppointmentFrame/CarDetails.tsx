@@ -39,10 +39,10 @@ const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year -
 
 const selects: TSelect[] = [
     {label: "VIN", name: "vin"},
-    {label: "Make", name: "make"},
+    {label: "Make", name: "make", options: 'make'},
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model"},
-    {label: "Mileage", name:"mileage"},
+    {label: "Estimated Mileage", name:"mileage"},
     // {label: "Transmission", name: "transmission"},
     // {label: "Drive Type", name: "driveType"},
     // {label: "Engine Type", name: "engineType"},
@@ -80,6 +80,17 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             setLoadedOptions({model: data});
         }).catch(() => {
             setLoadedOptions({model: ['Other']});
+        })
+        Api.call<string[]>(
+            Api.endpoints.Vehicles.Makes,
+            {params: {serviceCenterId: decodeSCID(id)}}
+        ).then(({data}) => {
+            if (!data?.length) {
+                setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
+            }
+            setLoadedOptions(prevOptions => ({...prevOptions, make: data}));
+        }).catch(() => {
+            setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
     }, [id]);
 
@@ -134,7 +145,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         fullWidth
                         autoComplete={true}
                         renderInput={autocompleteRender({
-                            label: select.label, placeholder: `Select ${select.label}`, error: hasError
+                            label: select.label, placeholder: `Select ${select.label}`, error: hasError, required: requiredFields.includes(select.name)
                         })}
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : null}
                     />
@@ -143,6 +154,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                     <TextField
                         onChange={handleTextChange(select.name)}
                         label={select.label}
+                        required={requiredFields.includes(select.name)}
                         name={select.name}
                         error={hasError}
                         fullWidth

@@ -63,7 +63,7 @@ type TTypeNameList = [EVehiclePropType, keyof TMaintenanceDetails];
 
 const selects: TSelect[] = [
     {label: "VIN", name: "vin", noVehicle: true},
-    {label: "Make", name: "make", noVehicle: true},
+    {label: "Make", name: "make", options: 'make'},
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model",},
     // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
@@ -112,18 +112,30 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
-                setLoadedOptions({model: ['Other']});
+                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
             }
-            setLoadedOptions({model: data});
+            setLoadedOptions(prevOptions => ({...prevOptions, model: data}));
         }).catch(() => {
-            setLoadedOptions({model: ['Other']});
+            setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+        })
+
+        Api.call<string[]>(
+            Api.endpoints.Vehicles.Makes,
+            {params: {serviceCenterId: decodeSCID(id)}}
+        ).then(({data}) => {
+            if (!data?.length) {
+                setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
+            }
+            setLoadedOptions(prevOptions => ({...prevOptions, make: data}));
+        }).catch(() => {
+            setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
     }, [id, maintenanceDetails]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
             dispatch(setMaintenanceDetails({[name]: option ?? null}));
-            if (isNewVehicleView && ["year", "model"].includes(name)) {
+            if (["year", "model", "make"].includes(name)) {
                 dispatch(updateVehicle({[name]: option}))
             }
             setErrors(e => e.filter(err => err !== name));
@@ -140,10 +152,6 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     const isValid = () => {
         const errorsArray: string [] = [];
-        // if (selectedVehicle?.vin.length !== VIN_LENGTH) {
-        //     setErrors(e => [...e, "vin"]);
-        //     error = "VIN";
-        // }
         for (let f of requiredFields) {
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
@@ -185,8 +193,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         fullWidth
                         disableClearable
                         autoComplete={true}
+                        disabled={select.name !== 'serviceInterval' && !isNewVehicleView}
                         renderInput={autocompleteRender({
-                            label: select.label, placeholder: hasError ? `${select.label} required` : `Select ${select.label}`, error: hasError
+                            label: select.label,
+                            placeholder: hasError ? `${select.label} required` : `Select ${select.label}`,
+                            error: hasError,
+                            required: requiredFields.includes(select.name)
                         })}
                         value={!select.allOverride
                             ? maintenanceDetails[select.name as keyof TMaintenanceDetails] ?? ""
@@ -200,7 +212,9 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         label={select.label}
                         name={select.name}
                         error={hasError}
+                        required={requiredFields.includes(select.name)}
                         fullWidth
+                        disabled={select.name !== 'serviceInterval' && !isNewVehicleView}
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
                         placeholder={hasError
                             ? `${select.label} required`

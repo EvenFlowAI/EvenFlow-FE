@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, Dispatch, SetStateAction} from 'react';
 import {styled} from "@material-ui/core";
 import {ConfirmationTitle} from "../Title";
 import {TextField} from "../../../UI/TextField";
@@ -12,7 +12,12 @@ const Wrapper = styled('div')({
     }
 })
 
-export const UserData = () => {
+type TUserDataProps = {
+    errors: string[],
+    setErrors: Dispatch<SetStateAction<string[]>>,
+};
+
+export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
     const dispatch = useDispatch();
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const customer = useSelector((state: RootState) => state.appointmentFrame.customer);
@@ -31,6 +36,7 @@ export const UserData = () => {
         if (customer) {
             dispatch(setCustomer({...customer, [name]: value}));
         }
+        setErrors(errors => errors.filter(err => err !== name.toLowerCase()));
     }
     return (
         <Wrapper>
@@ -38,6 +44,7 @@ export const UserData = () => {
             <TextField
                 onChange={handleChange}
                 value={customer?.fullName}
+                error={errors.includes('fullname')}
                 name="fullName"
                 fullWidth
                 placeholder="Type here"
@@ -47,11 +54,13 @@ export const UserData = () => {
                 value={customer?.phoneNumber}
                 name="phoneNumber"
                 fullWidth
+                error={errors.includes('phonenumber')}
                 placeholder="Type here"
                 label="Phone Number" />
             <TextField
                 onChange={handleChange}
                 value={customer?.email}
+                error={errors.includes('email')}
                 name="email"
                 fullWidth
                 placeholder="Type here"

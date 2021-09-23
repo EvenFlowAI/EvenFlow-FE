@@ -34,6 +34,7 @@ import {useException} from "../../utils/hooks";
 import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
+import './MaintenanceDetails.css';
 
 const Container = styled('div')({
     display: "flex",
@@ -201,6 +202,7 @@ export const AppointmentFrameLayout = () => {
         currentScreen, handleChangeScreen, handleSetScreen, handleAddNewVehicle,
         handleLogin, handleSelectCar, loadingCar, handleAddNewCarAppointment
     ]);
+
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":
