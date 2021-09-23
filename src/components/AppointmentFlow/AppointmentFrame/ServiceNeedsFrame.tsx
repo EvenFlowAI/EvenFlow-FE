@@ -24,7 +24,6 @@ const icons: JSX.Element[] = [
     <BrakeIcon />,
 ];
 
-
 const packageCard: IServiceCategory = {
     id: -1,
     name: "The Works Quick Lane Check Up",
@@ -32,6 +31,14 @@ const packageCard: IServiceCategory = {
     page: EServiceCategoryPage.Page1,
     serviceRequests: []
 };
+
+const BMWPackageCard: IServiceCategory = {
+    id: -1,
+    name: "Factory Or Dealer Scheduled Maintenance",
+    loadedIcon: <WorksIcon />,
+    page: EServiceCategoryPage.Page1,
+    serviceRequests: []
+}
 
 
 type TProps = {
@@ -45,6 +52,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         [packageCard, tellMoreCard]
     );
     const selectedService = useSelector((state: RootState) => state.appointmentFrame.service);
+    const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
     const dispatch = useDispatch();
@@ -68,24 +76,26 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             }}
         )
             .then(({data}) => {
+                const isBmWService = scProfile?.id === 25 || scProfile?.id === 123;
+                const card = isBmWService ? BMWPackageCard : packageCard;
                 setServiceCategories([
-                    packageCard, ...data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el), tellMoreCard
+                    card, ...data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el), tellMoreCard
                 ]);
-               /* data.forEach(el => {
+               data.forEach(el => {
                     if (el.iconPath) {
                         // TODO: Load icons after BE Fix <CORS>
-                        /!*fetch(el.iconPath)
+                        fetch(el.iconPath)
                             .then(r => r.text())
                             .then(loadedIcon =>
                                 setServiceCategories(c =>
                                     c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
                                 )
-                            )*!/
+                            )
                     }
-                });*/
+                });
             })
             .finally(() => {setLoading(false)});
-    }, [id]);
+    }, [id, scProfile]);
 
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectService(card));
