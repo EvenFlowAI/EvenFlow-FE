@@ -201,6 +201,7 @@ export const AppointmentFrameLayout = () => {
         currentScreen, handleChangeScreen, handleSetScreen, handleAddNewVehicle,
         handleLogin, handleSelectCar, loadingCar, handleAddNewCarAppointment
     ]);
+
     const getTitle = () => {
         switch (currentScreen) {
             case "carSelection":
