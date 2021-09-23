@@ -63,7 +63,7 @@ type TTypeNameList = [EVehiclePropType, keyof TMaintenanceDetails];
 
 const selects: TSelect[] = [
     {label: "VIN", name: "vin", noVehicle: true},
-    {label: "Make", name: "make"},
+    {label: "Make", name: "make", options: 'make'},
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model",},
     // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
@@ -112,18 +112,30 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
-                setLoadedOptions({model: ['Other']});
+                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
             }
-            setLoadedOptions({model: data});
+            setLoadedOptions(prevOptions => ({...prevOptions, model: data}));
         }).catch(() => {
-            setLoadedOptions({model: ['Other']});
+            setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+        })
+
+        Api.call<string[]>(
+            Api.endpoints.Vehicles.Makes,
+            {params: {serviceCenterId: decodeSCID(id)}}
+        ).then(({data}) => {
+            if (!data?.length) {
+                setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
+            }
+            setLoadedOptions(prevOptions => ({...prevOptions, make: data}));
+        }).catch(() => {
+            setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
     }, [id, maintenanceDetails]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
             dispatch(setMaintenanceDetails({[name]: option ?? null}));
-            if (["year", "model"].includes(name)) {
+            if (["year", "model", "make"].includes(name)) {
                 dispatch(updateVehicle({[name]: option}))
             }
             setErrors(e => e.filter(err => err !== name));

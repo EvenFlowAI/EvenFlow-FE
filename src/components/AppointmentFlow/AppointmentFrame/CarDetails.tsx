@@ -39,7 +39,7 @@ const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year -
 
 const selects: TSelect[] = [
     {label: "VIN", name: "vin"},
-    {label: "Make", name: "make"},
+    {label: "Make", name: "make", options: 'make'},
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model"},
     {label: "Estimated Mileage", name:"mileage"},
@@ -80,6 +80,17 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             setLoadedOptions({model: data});
         }).catch(() => {
             setLoadedOptions({model: ['Other']});
+        })
+        Api.call<string[]>(
+            Api.endpoints.Vehicles.Makes,
+            {params: {serviceCenterId: decodeSCID(id)}}
+        ).then(({data}) => {
+            if (!data?.length) {
+                setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
+            }
+            setLoadedOptions(prevOptions => ({...prevOptions, make: data}));
+        }).catch(() => {
+            setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
     }, [id]);
 
