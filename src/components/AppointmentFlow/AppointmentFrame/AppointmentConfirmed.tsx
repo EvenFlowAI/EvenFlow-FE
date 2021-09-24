@@ -134,7 +134,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             dates: [
                 date.format(G_CALENDAR_FORMAT) + appointment?.time.split(":").join(""),
                 date.add(1, "hour").format(G_CALENDAR_FORMAT) + appointment?.time.split(":").join("")],
-            text: "Appointment",
+            text: `${scProfile?.name} Car Service Appointment`,
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
             details: [
                 `Contact number: ${scProfile?.phoneNumber}\n`,

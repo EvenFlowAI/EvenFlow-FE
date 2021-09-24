@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -15,6 +15,7 @@ import {RootState} from "../../../store/rootReducer";
 import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
@@ -157,6 +158,7 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
 
 export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
+    const [prevType, setPrevType] = useState<number | null>(null); 
     const [selectedType, selectedTime, /* sp */] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
@@ -166,6 +168,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     );
 
     const handleSelectTiming = (t: EAppointmentTimingType) => () => {
+        setPrevType(selectedType);
         dispatch(setTiming(t));
     }
     const handleChangeTime = (t: moment.Moment|null) => {
@@ -176,6 +179,13 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         selectedType !== null
         && (selectedType !== EAppointmentTimingType.PreferredDate || selectedTime)
     );
+    
+    const onSubmit = useCallback((): void => {
+        onNext();
+        if (prevType === selectedType) {
+            dispatch(selectAppointment(null))   
+        }
+    }, [dispatch, onNext, prevType, selectedType])
 
     return (
         <StepWrapper>
@@ -193,7 +203,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                         key={card.name} />
                 })}
             </TimingWrapper>
-            <Actions onBack={onBack} onNext={onNext} nextDisabled={!isValid} />
+            <Actions onBack={onBack} onNext={onSubmit} nextDisabled={!isValid} />
         </StepWrapper>
     );
 };

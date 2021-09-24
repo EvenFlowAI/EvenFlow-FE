@@ -11,6 +11,7 @@ type TTextParams = {
     disabled?: boolean;
     placeholder?: string;
     error?: boolean;
+    required?: boolean;
 };
 export const autocompleteRender = (props: TTextParams) => (params: AutocompleteRenderInputParams) => {
     return <TextField
@@ -19,6 +20,7 @@ export const autocompleteRender = (props: TTextParams) => (params: AutocompleteR
         params={params}
         error={props.error}
         placeholder={props.placeholder}
+        required={props.required}
     />;
 }
 export const autocompleteOptionsRender = (label: (el: any) => string) => (option: any, params: AutocompleteRenderOptionState) => {

@@ -116,13 +116,13 @@ export const loginTheme = createMuiTheme({
     overrides: {
         ...theme.overrides,
         MuiInputBase: {
-        input: {
-            ...input,
-            padding: theme.spacing(2),
-            border: '1px solid #DADADA',
-            backgroundColor: "#F7F8FB",
-            fontWeight: "bold"
-        }
+            input: {
+                ...input,
+                padding: theme.spacing(2),
+                border: '1px solid #DADADA',
+                backgroundColor: "#F7F8FB",
+                fontWeight: "bold"
+            }
         }
     }
 });

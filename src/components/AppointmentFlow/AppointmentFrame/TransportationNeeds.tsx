@@ -14,6 +14,7 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
+import {Loading} from "../../UI/Loading";
 
 const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
     minHeight: 264,
@@ -108,6 +109,7 @@ const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportat
 export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {id} = useParams();
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const transportation = useSelector((state: RootState) => state.appointmentFrame.transportation);
 
     const [tOptions, customOption]: [ITransportation[], ITransportation|null] = useMemo(() => {
@@ -134,6 +136,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
     useEffect(() => {
+        setLoading(true);
         Api.call<ITransportation[]>(
             Api.endpoints.TransportationOptions.GetActive,
             {
@@ -145,7 +148,9 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             }
         ).then(({data}) => {
             setTransportations(data);
-        })
+        }).finally(() => {
+                setLoading(false)
+            })
     }, [id, serviceRequestIds, packageOpt]);
 
     const handleSelectOption = (o: ITransportation|null) => {
@@ -159,32 +164,34 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     return <StepWrapper>
-        <TransportationWrapper>
-            <TransportationCard
-                active={transportation === null}
-                selectedTransportation={transportation}
-                transportation={"Yes, I will be waiting"}
-                options={null}
-                onSelect={() => handleSelectOption(null)}
-                onSelectOption={handleSelectOption}
-            />
-            {tOptions.length ? <TransportationCard
-                active={Boolean(transportation && transportation.type !== customOption?.type)}
-                options={tOptions}
-                selectedTransportation={transportation}
-                transportation={"No, I would like transportation options"}
-                onSelect={handleSelectGeneric}
-                onSelectOption={handleSelectOption}
-            /> : null}
-            {customOption ? <TransportationCard
-                active={transportation?.type === customOption.type}
-                transportation={customOption.description}
-                selectedTransportation={transportation}
-                options={null}
-                onSelect={() => handleSelectOption(customOption)}
-                onSelectOption={handleSelectOption}
-            /> : null}
-        </TransportationWrapper>
+        {loading ? <Loading/>
+            : <TransportationWrapper>
+                <TransportationCard
+                    active={transportation === null}
+                    selectedTransportation={transportation}
+                    transportation={"Yes, I will be waiting"}
+                    options={null}
+                    onSelect={() => handleSelectOption(null)}
+                    onSelectOption={handleSelectOption}
+                />
+                {tOptions.length ? <TransportationCard
+                    active={Boolean(transportation && transportation.type !== customOption?.type)}
+                    options={tOptions}
+                    selectedTransportation={transportation}
+                    transportation={"No, I would like transportation options"}
+                    onSelect={handleSelectGeneric}
+                    onSelectOption={handleSelectOption}
+                /> : null}
+                {customOption ? <TransportationCard
+                    active={transportation?.type === customOption.type}
+                    transportation={customOption.description}
+                    selectedTransportation={transportation}
+                    options={null}
+                    onSelect={() => handleSelectOption(customOption)}
+                    onSelectOption={handleSelectOption}
+                /> : null}
+            </TransportationWrapper>
+        }
         <Actions onBack={onBack} onNext={onNext} />
     </StepWrapper>
 };

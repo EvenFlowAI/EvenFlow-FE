@@ -33,7 +33,7 @@ export const TextField = forwardRef<unknown, TextInputProps>(
     return <>
         {label &&
             <InputLabel className={classes.label} shrink htmlFor={props.id} {...InputLabelProps}>
-                {label}
+                {label}{props.required ? <span>&#42;</span> : ''}
             </InputLabel>
         }
         <DefaultTextField ref={ref} {...{...p, ...InputProps}} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0, ...props.style}} />

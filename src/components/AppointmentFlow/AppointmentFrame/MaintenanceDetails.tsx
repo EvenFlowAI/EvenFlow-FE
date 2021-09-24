@@ -63,12 +63,12 @@ type TTypeNameList = [EVehiclePropType, keyof TMaintenanceDetails];
 
 const selects: TSelect[] = [
     {label: "VIN", name: "vin", noVehicle: true},
-    {label: "Make", name: "make", noVehicle: true},
+    {label: "Make", name: "make", options: 'make'},
     {label: "Year", name: "year", options: yearOptions},
     {label: "Model", name: "model", options: "model",},
-    {label: "Trim", name: "trim", options: ["All"], allOverride: true},
-    {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
-    {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
+    // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
+    // {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
+    // {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
     {label: "Estimated mileage", name:"serviceInterval", options: mileageOptions},
 ];
 
@@ -111,14 +111,31 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             Api.endpoints.Vehicles.Models,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
-            setLoadedOptions({model: data});
+            if (!data?.length) {
+                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            }
+            setLoadedOptions(prevOptions => ({...prevOptions, model: data}));
+        }).catch(() => {
+            setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+        })
+
+        Api.call<string[]>(
+            Api.endpoints.Vehicles.Makes,
+            {params: {serviceCenterId: decodeSCID(id)}}
+        ).then(({data}) => {
+            if (!data?.length) {
+                setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
+            }
+            setLoadedOptions(prevOptions => ({...prevOptions, make: data}));
+        }).catch(() => {
+            setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
     }, [id, maintenanceDetails]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
             dispatch(setMaintenanceDetails({[name]: option ?? null}));
-            if (isNewVehicleView && ["year", "model"].includes(name)) {
+            if (["year", "model", "make"].includes(name)) {
                 dispatch(updateVehicle({[name]: option}))
             }
             setErrors(e => e.filter(err => err !== name));
@@ -134,25 +151,23 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }
 
     const isValid = () => {
-        let error: string = "";
-        // if (selectedVehicle?.vin.length !== VIN_LENGTH) {
-        //     setErrors(e => [...e, "vin"]);
-        //     error = "VIN";
-        // }
+        const errorsArray: string [] = [];
         for (let f of requiredFields) {
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
-                error = f;
+                errorsArray.push(f);
             }
         }
         if (!maintenanceDetails.serviceInterval) {
             setErrors(e => [...e, "serviceInterval"]);
-            error = "estimated Mileage"
+            errorsArray.push("estimated Mileage");
         }
-        if (error) {
-            showError(`${error[0].toUpperCase() + error.slice(1)} is required`);
+        if (errorsArray.length) {
+            const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
+            const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
+            showError(message);
         }
-        return !error;
+        return !errorsArray.length;
     }
 
     const handleNext = () => {
@@ -178,8 +193,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         fullWidth
                         disableClearable
                         autoComplete={true}
+                        disabled={select.name !== 'serviceInterval' && !isNewVehicleView}
                         renderInput={autocompleteRender({
-                            label: select.label, placeholder: hasError ? `${select.label} required` : `Select ${select.label}`, error: hasError
+                            label: select.label,
+                            placeholder: hasError ? `${select.label} required` : `Select ${select.label}`,
+                            error: hasError,
+                            required: requiredFields.includes(select.name)
                         })}
                         value={!select.allOverride
                             ? maintenanceDetails[select.name as keyof TMaintenanceDetails] ?? ""
@@ -193,9 +212,13 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         label={select.label}
                         name={select.name}
                         error={hasError}
+                        required={requiredFields.includes(select.name)}
                         fullWidth
+                        disabled={select.name !== 'serviceInterval' && !isNewVehicleView}
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
-                        placeholder={hasError ? `${select.label} required` : `Type ${select.label}`}
+                        placeholder={hasError
+                            ? `${select.label} required`
+                            : `Type ${select.label} ${select.name === 'vin' ? '(Optional)' : ''}`}
                     />
                 </div>
             })}
