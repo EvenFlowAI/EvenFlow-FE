@@ -125,11 +125,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         }
     }
 
-    console.log('daysPerScreen', daysPerScreen);
-    console.log('daysInMonth', daysInMonth);
-    console.log('sliceIdx', sliceIdx);
-    console.log('days', days);
-
     return <DaySelectorWrapper>
         <Arrow onClick={handlePrev} disabled={!prevAvailable()}>
             <ChevronLeft  />
