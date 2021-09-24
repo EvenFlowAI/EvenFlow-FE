@@ -130,7 +130,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }).catch(() => {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
-    }, [id, maintenanceDetails]);
+    }, [id]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
@@ -143,9 +143,9 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }
 
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(updateVehicle({[name]: value}));
+        dispatch(updateVehicle({[name]: value.trim()}));
         if (name === "model") {
-            dispatch(setMaintenanceDetails({[name]: value}));
+            dispatch(setMaintenanceDetails({[name]: value.trim()}));
         }
         setErrors(e => e.filter(err => err !== name));
     }

@@ -63,7 +63,6 @@ const XsMontFormat = "MMM";
 export const DaySelectCard: React.FC<TProps> = ({
     day, onClick, appointment, isCurrent, isPackage, isXs
 }) => {
-
     const isCustomRange = useSelector((state: RootState) => {
         return Boolean(
             state.appointment.searchedDateRange
