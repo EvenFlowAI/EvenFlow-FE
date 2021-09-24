@@ -121,6 +121,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
             })
         }
     }
+
     return <DaySelectorWrapper>
         <Arrow onClick={handlePrev} disabled={!prevAvailable()}>
             <ChevronLeft  />
