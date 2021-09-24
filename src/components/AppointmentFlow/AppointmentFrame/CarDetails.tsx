@@ -63,6 +63,8 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
     const {id} = useParams();
 
+    console.log(loadedOptions);
+
     const showError = useException();
 
     const dispatch = useDispatch();
@@ -75,11 +77,11 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
-                setLoadedOptions({model: ['Other']});
+                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
             }
-            setLoadedOptions({model: data});
+            setLoadedOptions(prevOptions => ({...prevOptions, model: data}));
         }).catch(() => {
-            setLoadedOptions({model: ['Other']});
+            setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
         })
         Api.call<string[]>(
             Api.endpoints.Vehicles.Makes,
@@ -103,7 +105,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     }
     const handleTextChange = (name: keyof IVehicle) =>
         ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(updateVehicle({[name]: value}));
+        dispatch(updateVehicle({[name]: value.trim()}));
         if (value) {
             setErrors(e => e.filter(err => err !== name));
         }

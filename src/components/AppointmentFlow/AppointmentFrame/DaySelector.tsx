@@ -80,18 +80,21 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     useEffect(() => {
         if (!dateRangeUpdated) {
             let dateIdx = days.findIndex(el => el === date.toISOString().replace('.000', ''));
-            if (dateIdx === -1) {
+            if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
                 setSliceIdx(0);
-            }
-            const nD = dateIdx - Math.floor(daysPerScreen / 2);
-            if (nD + daysPerScreen > daysInMonth) {
-                // Handle right date edge
-                setSliceIdx(daysInMonth - daysPerScreen);
             } else {
-                // Handle left date edge
-                setSliceIdx(nD >= 0 ? nD : 0);
+                // to get center of the displayed dates
+                const nD = dateIdx - Math.floor(daysPerScreen / 2);
+                if (nD + daysPerScreen > daysInMonth) {
+                    // Handle right date edge
+                    setSliceIdx(daysInMonth - daysPerScreen);
+                } else {
+                    // Handle left date edge
+                    setSliceIdx(nD >= 0 ? nD : 0);
+                }
+
+                onDateRangeSet(true);
             }
-            onDateRangeSet(true);
         }
     }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet]);
 
@@ -121,6 +124,12 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
             })
         }
     }
+
+    console.log('daysPerScreen', daysPerScreen);
+    console.log('daysInMonth', daysInMonth);
+    console.log('sliceIdx', sliceIdx);
+    console.log('days', days);
+
     return <DaySelectorWrapper>
         <Arrow onClick={handlePrev} disabled={!prevAvailable()}>
             <ChevronLeft  />
