@@ -76,23 +76,25 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             }}
         )
             .then(({data}) => {
-                const isBmWService = scProfile?.id === 25 || scProfile?.id === 123;
-                const card = isBmWService ? BMWPackageCard : packageCard;
-                setServiceCategories([
-                    card, ...data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el), tellMoreCard
-                ]);
-               data.forEach(el => {
-                    if (el.iconPath) {
-                        // TODO: Load icons after BE Fix <CORS>
-                        fetch(el.iconPath)
-                            .then(r => r.text())
-                            .then(loadedIcon =>
-                                setServiceCategories(c =>
-                                    c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
+                if (scProfile) {
+                    const isBmWService = scProfile?.id === 25 || scProfile?.id === 123;
+                    const card = isBmWService ? BMWPackageCard : packageCard;
+                    setServiceCategories([
+                        card, ...data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el), tellMoreCard
+                    ]);
+                    data.forEach(el => {
+                        if (el.iconPath) {
+                            // TODO: Load icons after BE Fix <CORS>
+                            fetch(el.iconPath)
+                                .then(r => r.text())
+                                .then(loadedIcon =>
+                                    setServiceCategories(c =>
+                                        c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
+                                    )
                                 )
-                            )
-                    }
-                });
+                        }
+                    });
+                }
             })
             .finally(() => {setLoading(false)});
     }, [id, scProfile]);

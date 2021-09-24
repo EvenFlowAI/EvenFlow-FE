@@ -114,6 +114,11 @@ const Wrapper = styled('div')(({theme}) => ({
         "&.green.subtitle": {
             background: "#89E5AB"
         },
+        "&.totalMaintenance": {
+            fontWeight: 'bold',
+            borderTop: border,
+            paddingBottom: 10,
+        },
         "&.last": {
             borderBottomColor: "#000000",
         },
@@ -125,13 +130,21 @@ const Wrapper = styled('div')(({theme}) => ({
             padding: 8,
             "&.price": {
                 display: "grid",
-                // gridTemplateColumns: "repeat(2, 1fr)", TODO: Replace after strikethrough price
                 gridTemplateColumns: "repeat(1, 1fr)",
+                alignItems: "center",
+                justifyContent: "center",
+                "& .current": {
+                    flexGrow: 1
+                }
+            },
+            '&.priceWithBefore': {
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
                 alignItems: "center",
                 justifyContent: "center",
                 "&>.before": {
                     textDecoration: "line-through",
-                    fontWeight: "normal",
+                    fontWeight: "bold",
                     color: "#142EA1"
                 },
                 "& .current": {
@@ -158,11 +171,12 @@ const Info = styled("p")({
 
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadedPackages, setPackages] = useState<IPackage[]>([]);
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
-
-    const [loadedPackages, setPackages] = useState<IPackage[]>([]);
+    const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+    const isBmWService = useMemo(() => scProfile?.id === 25 || scProfile?.id === 123, [scProfile]);
 
     const [packages, services, complimentary]: [TPackage[], TService[], TComplimentary[]]
         = useMemo(() => {
@@ -275,7 +289,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 wrapperStyles={{marginTop: 20}}
                 items={packages}
                 loading={loading}
-                label={"There are no packages available"} />
+                label={"There are no packages available"}
+            />
             {packages.length ? <Wrapper>
                 <div className='top'/>
                 {packages.map(p => <div
@@ -304,6 +319,11 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         )}
                     </React.Fragment>;
                 })}
+                {isBmWService && <React.Fragment key="maintenance">
+                  <div className="totalMaintenance">Total Maintenance Value:</div>
+                    {packages.map(p => <div>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}
+                </React.Fragment>
+                    }
                 <div className="green subtitle">Complimentary</div>
                 {packages.map(p =>
                     <div
@@ -338,9 +358,13 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 {packages.map(p =>
                     <div
                         onClick={handleClick(p)}
-                        className={setClasses(p.id, "total price end")}
+                        className={setClasses(p.id, `total ${isBmWService ? 'priceWithBefore' : 'price'} end`)}
                         key={p.id}>
-                        {/*<div className="before" />*/}
+                        {isBmWService &&
+                        <div className="before">
+                          ${p.complimentaryServices.reduce((acc, el) => acc + el.price, 0)
+                        + p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}
+                        </div>}
                         <div className="currentWrp">
                             <div className="triangle"/>
                             <div className="current">${p.price.toFixed(2)}</div>

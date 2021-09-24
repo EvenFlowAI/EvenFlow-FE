@@ -8,6 +8,7 @@ export interface IServiceRequest {
     invoiceAmount: number;
     warrantyInvoiceAmount: number;
     status: EServiceStatus;
+    price: number;
 }
 export interface IServiceRequestShort {
     id: 0;
