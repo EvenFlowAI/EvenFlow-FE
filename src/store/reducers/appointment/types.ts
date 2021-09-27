@@ -15,6 +15,7 @@ export interface IServiceCenterProfile {
     avatarPath: string;
     address: IAddress;
     dealershipId: number;
+    serviceCenterFlag: number,
 }
 export interface ISR {
     id: number;

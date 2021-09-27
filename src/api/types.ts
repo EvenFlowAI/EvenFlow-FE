@@ -22,6 +22,12 @@ export enum EServiceCategoryPage {
     Page2
 }
 
+export enum EServiceCenterName {
+    RiverviewFord,
+    BMWSchererville,
+    DealertrackTest
+}
+
 export enum EVehiclePropType {
     Make, Model, Transmission, DriveType, EngineType
 }

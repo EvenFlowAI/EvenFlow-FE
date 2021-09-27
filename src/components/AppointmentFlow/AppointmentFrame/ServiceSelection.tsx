@@ -13,7 +13,7 @@ import {ReactComponent as MoreIcon} from "../../../assets/img/tell-more.svg";
 import {ReactComponent as CarIcon} from "../../../assets/img/car_wheel-icon.svg";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
-import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
+import {EServiceCategoryPage, EServiceCenterName, IServiceCategory} from "../../../api/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
@@ -91,7 +91,8 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             }}
         )
             .then(({data}) => {
-                const isBmWService = scProfile?.id === 25 || scProfile?.id === 123;
+                const isBmWService = scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+                    || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest;
                 const iconsData = isBmWService ? bmwIcons : icons;
                 data = data.map((el, idx) => iconsData[idx] ? {...el, loadedIcon: iconsData[idx]} : el);
                 const more = data.pop();
