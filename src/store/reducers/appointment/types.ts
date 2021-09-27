@@ -135,6 +135,7 @@ export interface IAppointmentSlotsRequest {
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
     date: moment.Moment;
+    timingType?: number;
 }
 
 export interface IAppointmentFilters {
