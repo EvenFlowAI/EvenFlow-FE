@@ -143,10 +143,12 @@ type TListProps = {
 }
 export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({onPopoverOpen, date, isLoading, onDateChange, onPopoverClose}) => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
+    const appointments = useSelector((state: RootState) => state.appointment.appointmentSlots);
+    const selectedTiming = useSelector((state : RootState) => state.appointmentFrame.selectedTiming);
+
     const positionSet = useRef<boolean>(false);
     const listRef = useRef<FixedSizeList>(null);
     const [waitForRef, setWaitForRef] = useState<boolean>(false);
-    const appointments = useSelector((state: RootState) => state.appointment.appointmentSlots);
     const [order, setOrder] = useState<number|null>(null);
     const [appointmentType, appointmentDate] = useSelector(
         ({appointment: {s3Data}}: RootState) => [s3Data.appointmentType, s3Data.date]
@@ -201,7 +203,9 @@ export const ListAppointmentSelection: React.FC<TPopoverProps & TListProps> = ({
         if (selectedAppointment?.id === a.id) {
             dispatch(selectAppointment(null));
         } else {
-            dispatch(selectAppointment(a));
+            if (selectedTiming) {
+                dispatch(selectAppointment({...a, timingType: selectedTiming}));
+            }
         }
     }
 

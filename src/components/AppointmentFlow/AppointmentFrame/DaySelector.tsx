@@ -48,7 +48,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const daysPerScreen: number = useMemo(() => {
         return isXs ? 5 : isSm ? 4 : 6;
     }, [isSm, isXs]);
-
+    
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const searchedDateRange = useSelector((state: RootState) => state.appointment.searchedDateRange);
 
@@ -124,11 +124,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
             })
         }
     }
-
-    console.log('daysPerScreen', daysPerScreen);
-    console.log('daysInMonth', daysInMonth);
-    console.log('sliceIdx', sliceIdx);
-    console.log('days', days);
 
     return <DaySelectorWrapper>
         <Arrow onClick={handlePrev} disabled={!prevAvailable()}>

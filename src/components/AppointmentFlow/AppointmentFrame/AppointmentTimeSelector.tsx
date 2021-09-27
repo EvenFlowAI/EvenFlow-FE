@@ -40,6 +40,7 @@ type TProps = {
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
+    const selectedTiming = useSelector((state : RootState) => state.appointmentFrame.selectedTiming);
     const dispatch = useDispatch();
 
     const slots: TSlot[] = useMemo(() => {
@@ -56,7 +57,8 @@ export const AppointmentTimeSelector: React.FC<TProps> =
     }, [date]);
 
     const handleSelect = (a: IRemappedAppointmentSlot|null) => {
-        dispatch(selectAppointment(a));
+        const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+        dispatch(selectAppointment(data));
     }
 
     return (
