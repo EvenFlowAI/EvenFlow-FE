@@ -15,6 +15,7 @@ export interface IServiceCenterProfile {
     avatarPath: string;
     address: IAddress;
     dealershipId: number;
+    serviceCenterFlag: number,
 }
 export interface ISR {
     id: number;
@@ -135,6 +136,7 @@ export interface IAppointmentSlotsRequest {
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
     date: moment.Moment;
+    timingType?: number;
 }
 
 export interface IAppointmentFilters {

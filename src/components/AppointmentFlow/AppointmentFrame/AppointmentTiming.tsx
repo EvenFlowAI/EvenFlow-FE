@@ -15,6 +15,7 @@ import {RootState} from "../../../store/rootReducer";
 import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
@@ -157,21 +158,23 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
 
 export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
-    // const [prevType, setPrevType] = useState<number | null>(null);
-    const [selectedType, selectedTime, /* sp */] = useSelector(
+    const [selectedType, selectedTime, appointment] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
             state.appointmentFrame.selectedTime,
+            state.appointment.appointment,
             // state.appointmentFrame.selectedPackage
         ]
     );
 
     const handleSelectTiming = (t: EAppointmentTimingType) => () => {
-        // setPrevType(selectedType);
         dispatch(setTiming(t));
     }
     const handleChangeTime = (t: moment.Moment|null) => {
         dispatch(setTime(t));
+        if (!moment(selectedTime).isSame(t, 'date')) {
+            dispatch(selectAppointment(null));
+        }
     }
 
     const isValid = Boolean(
@@ -181,10 +184,8 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     
     const onSubmit = useCallback((): void => {
         onNext();
-        // if (prevType === selectedType) {
-        //     dispatch(selectAppointment(null))   
-        // }
-    }, [onNext])
+        if (appointment?.timingType !== selectedType) dispatch(selectAppointment(null))
+    }, [appointment, dispatch, onNext, selectedType])
 
     return (
         <StepWrapper>

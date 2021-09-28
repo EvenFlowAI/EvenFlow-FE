@@ -65,8 +65,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
-        selectedTime
-            ? moment.utc(selectedTime).startOf('day')
+        appointment?.date
+            ? moment.utc(appointment.date).startOf('day')
             : moment.utc().startOf('day')
     );
     const [month, setMonth] = useState<moment.Moment>(
@@ -82,11 +82,15 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     const isMount = useRef(true);
 
     useEffect(() => {
-        if (slots.length && isMount.current && selectedTime) {
-            setDate(moment.utc(selectedTime).startOf('day'));
+        if (slots.length && isMount.current) {
+            if (appointment?.date) {
+                setDate(moment.utc(appointment.date).startOf('day'))
+            } else {
+                if (selectedTime) setDate(moment.utc(selectedTime).startOf('day'));
+            }
             isMount.current = false;
         }
-    }, [slots, selectedTime]);
+    }, [slots, selectedTime, appointment]);
 
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
@@ -97,8 +101,10 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, [month, selectedTimingType]);
 
     const setDateCallback = useCallback((d: moment.Moment) => {
-        setDate(d.startOf('day'));
-    }, []);
+        if (selectedTimingType && selectedTimingType !== EAppointmentTimingType.FirstAvailable) {
+            setDate(d.startOf('day'));   
+        }
+    }, [selectedTimingType]);
 
     const handleDateRangeSet = useCallback((v: boolean) => {
         initRef.current = v;

@@ -42,6 +42,7 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const [selectedIdx, setSelectedIdx] = useState<string|null>(null);
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
+    const selectedTiming = useSelector((state : RootState) => state.appointmentFrame.selectedTiming);
     const [appointmentType, appointmentDate] = useSelector(
         ({appointment: {s3Data}}: RootState) => [s3Data.appointmentType, s3Data.date]
     );
@@ -102,7 +103,9 @@ export const CalendarAppointmentSelection: React.FC<TPopoverProps> = ({onPopover
     }
 
     const handleSelectAppointment = (a: IRemappedAppointmentSlot) => () => {
-        dispatch(selectAppointment(a));
+        if (selectedTiming) {
+            dispatch(selectAppointment({...a, timingType: selectedTiming}));
+        }
     }
 
     const appointmentsLength = groupedAppointmentsSortedList.length;
