@@ -14,7 +14,7 @@ import {ServiceCard} from "./ServiceCard";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
-import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
+import {EServiceCategoryPage, EServiceCenterName, IServiceCategory} from "../../../api/types";
 import { Loading } from '../../UI/Loading';
 import {tellMoreCard} from "../../../store/reducers/appointmentFrameReducer/initial";
 
@@ -77,7 +77,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         )
             .then(({data}) => {
                 if (scProfile) {
-                    const isBmWService = scProfile?.id === 25 || scProfile?.id === 123;
+                    const isBmWService = scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+                        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest;
                     const card = isBmWService ? BMWPackageCard : packageCard;
                     setServiceCategories([
                         card, ...data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el), tellMoreCard

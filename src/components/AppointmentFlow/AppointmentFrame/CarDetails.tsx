@@ -63,8 +63,6 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
     const {id} = useParams();
 
-    console.log(loadedOptions);
-
     const showError = useException();
 
     const dispatch = useDispatch();

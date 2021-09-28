@@ -81,7 +81,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customerLoadedData]);
 
-    const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - 1
+    const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
 
     const isSelected = (vehicle: ILoadedVehicle) => {

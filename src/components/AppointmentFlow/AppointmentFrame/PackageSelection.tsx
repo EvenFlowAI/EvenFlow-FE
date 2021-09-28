@@ -11,7 +11,7 @@ import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
-import {IComplimentaryService, IPackage, IPackageOptions} from "../../../api/types";
+import {EServiceCenterName, IComplimentaryService, IPackage, IPackageOptions} from "../../../api/types";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 
 const border = '1px solid #DADADA';
@@ -176,7 +176,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
-    const isBmWService = useMemo(() => scProfile?.id === 25 || scProfile?.id === 123, [scProfile]);
+    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const [packages, services, complimentary]: [TPackage[], TService[], TComplimentary[]]
         = useMemo(() => {
