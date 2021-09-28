@@ -111,18 +111,21 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     return (<StepWrapper>
         <ConsultantsWrapper>
-            <ConsultantCard
-                blank
-                onClick={handleSelectConsultant(null)}
-                active={selectedConsultant === null}
-            />
-            {loading ? <Loading /> : consultants.map(c =>
+            {loading ? <Loading /> : <React.Fragment>
+                <ConsultantCard
+                    blank
+                    onClick={handleSelectConsultant(null)}
+                    active={selectedConsultant === null}
+                />
+                {consultants.map(c =>
                 <ConsultantCard
                     onClick={handleSelectConsultant(c)}
                     advisor={c}
                     key={c.id}
                     active={selectedConsultant?.id === c.id} />
             )}
+            </React.Fragment>
+            }
         </ConsultantsWrapper>
         <Actions onNext={onNext} onBack={onBack} />
     </StepWrapper>);
