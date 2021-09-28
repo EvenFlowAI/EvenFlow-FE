@@ -172,6 +172,9 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     }
     const handleChangeTime = (t: moment.Moment|null) => {
         dispatch(setTime(t));
+        if (!moment(selectedTime).isSame(t, 'date')) {
+            dispatch(selectAppointment(null));
+        }
     }
 
     const isValid = Boolean(
