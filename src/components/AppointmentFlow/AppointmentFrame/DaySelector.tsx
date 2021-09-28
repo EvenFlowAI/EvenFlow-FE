@@ -51,6 +51,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const searchedDateRange = useSelector((state: RootState) => state.appointment.searchedDateRange);
+    const appointment = useSelector((state: RootState) => state.appointment.appointment);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
         let dim: number = date.daysInMonth();
@@ -79,24 +80,30 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
 
     useEffect(() => {
         if (!dateRangeUpdated) {
-            let dateIdx = days.findIndex(el => el === date.toISOString().replace('.000', ''));
+            const selectedDate = appointment?.date ? appointment.date : date;
+            const formattedDate = moment(selectedDate).startOf('day').toISOString().replace('.000', '');
+            let dateIdx = days.findIndex(el => el === formattedDate);
             if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
                 setSliceIdx(0);
             } else {
                 // to get center of the displayed dates
-                const nD = dateIdx - Math.floor(daysPerScreen / 2);
-                if (nD + daysPerScreen > daysInMonth) {
+                const idXOfCenterElement = dateIdx - Math.floor(daysPerScreen / 2);
+                if (idXOfCenterElement + daysPerScreen > daysInMonth) {
                     // Handle right date edge
-                    setSliceIdx(daysInMonth - daysPerScreen);
+                    if (dateIdx === days.length - 1) {
+                        setSliceIdx(daysInMonth - daysPerScreen + 1);
+                    } else {
+                        setSliceIdx(daysInMonth - daysPerScreen);
+                    }
                 } else {
                     // Handle left date edge
-                    setSliceIdx(nD >= 0 ? nD : 0);
+                    setSliceIdx(idXOfCenterElement >= 0 ? idXOfCenterElement : 0);
                 }
 
                 onDateRangeSet(true);
             }
         }
-    }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet]);
+    }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, appointment]);
 
     const handleChangeDay = (date: string) => () => {
         onDateChange(moment.utc(date));
