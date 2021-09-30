@@ -39,7 +39,7 @@ type TSelect = {
 };
 
 
-const mileageOptions: string[] = [
+export const mileageOptions: string[] = [
     "3000",
     "5000",
     "10000",
@@ -73,7 +73,7 @@ const selects: TSelect[] = [
 ];
 
 const requiredFields: TKey[] = [
-    "model", "year", "make"
+    "model", "year", "make", "serviceInterval"
 ];
 
 type TOptionsState = {[s: string]: string[]};
@@ -135,10 +135,13 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
             dispatch(setMaintenanceDetails({[name]: option ?? null}));
-            if (["year", "model", "make"].includes(name)) {
+            if (["year", "model", "make", "serviceInterval"].includes(name)) {
                 dispatch(updateVehicle({[name]: option}))
             }
             setErrors(e => e.filter(err => err !== name));
+            if (name === 'make' && option === 'Other') {
+                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            }
         }
     }
 
