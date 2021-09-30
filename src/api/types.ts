@@ -17,6 +17,11 @@ export type TApiView = Record<string, TApiEndpoint>;
 
 export type TApi = Record<string, TApiView>;
 
+export type serviceRequestAssigned = {
+    type: number;
+    serviceRequestId: number;
+}
+
 export enum EServiceCategoryPage {
     Page1,
     Page2
@@ -261,4 +266,28 @@ export interface IPackageOptions {
 
 export interface IPackage {
     options: IPackageOptions[];
+}
+
+export interface IPackageById {
+    isApplyPricingOptimization: boolean;
+    options: IPackageOptionDetailed[];
+    serviceRequestsAssigned: serviceRequestAssigned[];
+    name: string;
+    id: number;
+    serviceRequests: IServiceRequest[];
+    complimentaryServices: IComplimentaryService[];
+    businessRules: IBusinessRule;
+}
+
+export interface IPackageOptionDetailed {
+    id: number;
+    type: EMaintenanceOptionType;
+    price: number;
+    serviceRequests: number[];
+    complimentaryServices: number[];
+    complimentaryServiceLaborHours: number;
+    complimentaryServicePrice: number;
+    maintenancePackageId: number;
+    serviceRequestLaborHours: number;
+    serviceRequestPrice: number;
 }
