@@ -107,6 +107,9 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             dispatch(updateVehicle({[name]: option}));
             setErrors(e => e.filter(err => err !== name));
         }
+            if (name === 'make' && option === 'Other') {
+                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            }
     }
     const handleTextChange = (name: keyof IVehicle) =>
         ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
