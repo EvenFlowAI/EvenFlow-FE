@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -16,6 +16,7 @@ import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
+import {mileageOptions} from './MaintenanceDetails';
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -31,6 +32,7 @@ type TSelect = {
     label: string;
     name: keyof IVehicle;
     options?: string|string[];
+    noVehicle?: boolean;
 };
 
 const year = moment.utc().year();
@@ -38,11 +40,11 @@ const YEARS = 20;
 const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
 const selects: TSelect[] = [
-    {label: "VIN", name: "vin"},
-    {label: "Make", name: "make", options: 'make'},
-    {label: "Year", name: "year", options: yearOptions},
-    {label: "Model", name: "model", options: "model"},
-    {label: "Estimated Mileage", name:"mileage"},
+    {label: "VIN", name: "vin", noVehicle: true},
+    {label: "Make", name: "make", options: 'make', noVehicle: true},
+    {label: "Year", name: "year", options: yearOptions, noVehicle: true},
+    {label: "Model", name: "model", options: "model", noVehicle: true},
+    {label: "Estimated Mileage", name:"mileage", options: mileageOptions},
     // {label: "Transmission", name: "transmission"},
     // {label: "Drive Type", name: "driveType"},
     // {label: "Engine Type", name: "engineType"},
@@ -61,6 +63,7 @@ type TProps = {} & TActionProps;
 export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
+    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
 
     const showError = useException();
@@ -68,6 +71,10 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const dispatch = useDispatch();
 
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+
+    const isNewVehicleView = useMemo(() => {
+        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin === selectedVehicle?.vin));
+    }, [selectedVehicle, customerLoadedData]);
 
     useEffect(() => {
         Api.call<string[]>(
@@ -100,6 +107,9 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             dispatch(updateVehicle({[name]: option}));
             setErrors(e => e.filter(err => err !== name));
         }
+            if (name === 'make' && option === 'Other') {
+                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            }
     }
     const handleTextChange = (name: keyof IVehicle) =>
         ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,6 +153,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                             : select.options ?? []}
                         onChange={handleChange(select.name)}
                         fullWidth
+                        disabled={select.noVehicle && !isNewVehicleView}
                         autoComplete={true}
                         renderInput={autocompleteRender({
                             label: select.label, placeholder: `Select ${select.label}`, error: hasError, required: requiredFields.includes(select.name)
@@ -157,6 +168,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         required={requiredFields.includes(select.name)}
                         name={select.name}
                         error={hasError}
+                        disabled={select.noVehicle && !isNewVehicleView}
                         fullWidth
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
                         placeholder={hasError
