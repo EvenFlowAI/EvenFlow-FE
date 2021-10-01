@@ -63,6 +63,7 @@ type TProps = {} & TActionProps;
 export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
+    const [models, setModels] = useState<string[] | []>([]);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
 
@@ -77,16 +78,22 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     }, [selectedVehicle, customerLoadedData]);
 
     useEffect(() => {
+        if (models.length) {
+            setLoadedOptions(prevOptions => ({...prevOptions, model: models}));
+        }
+    }, [models])
+
+    useEffect(() => {
         Api.call<string[]>(
             Api.endpoints.Vehicles.Models,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
-                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                setModels(['Other']);
             }
-            setLoadedOptions(prevOptions => ({...prevOptions, model: data}));
+            setModels(data);
         }).catch(() => {
-            setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            setModels(['Other']);
         })
         Api.call<string[]>(
             Api.endpoints.Vehicles.Makes,
@@ -107,8 +114,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             dispatch(updateVehicle({[name]: option}));
             setErrors(e => e.filter(err => err !== name));
         }
-            if (name === 'make' && option === 'Other') {
-                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            if (name === 'make') {
+                if (option === 'Other') {
+                    setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                } else {
+                    setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
+                }
             }
     }
     const handleTextChange = (name: keyof IVehicle) =>

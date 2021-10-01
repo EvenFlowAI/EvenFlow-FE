@@ -23,10 +23,9 @@ type TProps = {
     selected?: boolean;
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
 }
-const Wrapper = styled('div')<Theme, {active?: boolean}>({
+const Wrapper = styled('div')<Theme, {active?: boolean}>(({theme}) => ({
     display: "flex",
     flex: "1 1 0px",
-    maxWidth: '50%',
     padding: 22,
     alignItems: "stretch",
     flexDirection: "column",
@@ -41,8 +40,11 @@ const Wrapper = styled('div')<Theme, {active?: boolean}>({
     },
     "& button": {
         fontSize: 14
+    },
+    [theme.breakpoints.up("sm")]: {
+        maxWidth: '50%',
     }
-});
+}));
 const CarInfo = styled('ul')({
     fontSize: 20,
     listStyle: "none",
