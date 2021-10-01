@@ -149,6 +149,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             if (name === 'make') {
                 if (option === 'Other') {
                     setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                    if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
                 } else {
                     setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
                 }
@@ -169,13 +170,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         for (let f of requiredFields) {
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
-                errorsArray.push(f);
+                if (f === "serviceInterval") {
+                    errorsArray.push("estimated Mileage");
+                } else {
+                    errorsArray.push(f);
+                }
             }
         }
-        if (!maintenanceDetails.serviceInterval) {
-            setErrors(e => [...e, "serviceInterval"]);
-            errorsArray.push("estimated Mileage");
-        }
+
         if (errorsArray.length) {
             const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
             const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
