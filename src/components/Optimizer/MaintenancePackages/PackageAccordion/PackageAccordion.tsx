@@ -101,8 +101,8 @@ const getData = (options: IPackageOptionDetailed[]) => {
     options.forEach(option => {
         data.suggestedRequestLaborHours.push({value: `${option.serviceRequestLaborHours}h`, isEditable: false, optionType: option.type});
         data.complimentaryLaborHours.push({value: `${option.complimentaryServiceLaborHours}h`, isEditable: false, optionType: option.type});
-        data.requestsPrice.push({value: `$${option.serviceRequestPrice}`, isEditable: true, optionType: option.type});
-        data.complimentaryPrice.push({value: `$${option.complimentaryServicePrice}`, isEditable: true, optionType: option.type})
+        data.requestsPrice.push({value: `$${option.serviceRequestPrice}`, isEditable: false, optionType: option.type});
+        data.complimentaryPrice.push({value: `$${option.complimentaryServicePrice}`, isEditable: false, optionType: option.type})
     })
     return data;
 };
@@ -200,6 +200,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         <SummaryRow
                             summaryText="Suggested Price:"
                             valuesArray={detailsData.requestsPrice}/>
+                        <SummaryRow summaryText="Invoiced Labor Hours:"/>
+                        <SummaryRow summaryText="Market Price:"/>
                         <Divider/>
                         <SummaryRow
                             summaryText="Suggested Labour Hours:"
@@ -207,6 +209,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         <SummaryRow
                             summaryText="Suggested Price:"
                             valuesArray={detailsData.complimentaryPrice}/>
+                        <SummaryRow summaryText="Invoiced Labor Hours:"/>
+                        <SummaryRow summaryText="Market Price:"/>
                     </React.Fragment>}
                 </div>
             }

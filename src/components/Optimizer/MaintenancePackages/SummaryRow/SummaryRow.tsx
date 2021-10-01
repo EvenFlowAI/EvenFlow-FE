@@ -5,7 +5,7 @@ import {TSummaryCell} from "../PackageAccordion/PackageAccordion";
 
 type TSummaryProps = {
     summaryText: string;
-    valuesArray: TSummaryCell[];
+    valuesArray?: TSummaryCell[];
 }
 
 const cellStyles = {
@@ -54,19 +54,17 @@ const useStyles = makeStyles(() => ({
 const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray }) => {
     const classes = useStyles();
 
-    const onEditClick = () => {};
     return (
         <div className={classes.rowWrapper}>
             <div className={classes.summaryText}>{summaryText}</div>
             <div className={classes.cellsWrapper}>
-                {valuesArray.map((item, index) => <div
+                {valuesArray && valuesArray.map((item, index) => <div
                     key={index}
                     className={item.isEditable ? classes.editableCell : classes.cell}>
                     {item.value}
                     {item.isEditable && <Edit
                         htmlColor="rgba(0, 0, 0, 0.54)"
                         fontSize="small"
-                        onClick={onEditClick}
                         className={classes.editIcon}/>}
                 </div>)}
             </div>
