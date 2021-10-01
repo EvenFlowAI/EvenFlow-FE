@@ -170,14 +170,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         for (let f of requiredFields) {
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
-                errorsArray.push(f);
+                if (f === "serviceInterval") {
+                    errorsArray.push("estimated Mileage");
+                } else {
+                    errorsArray.push(f);
+                }
             }
         }
-        if (!maintenanceDetails.serviceInterval) {
-            setErrors(e => [...e, "serviceInterval"]);
-            errorsArray.push("estimated Mileage");
-        }
-        // console.log(errorsArray);
+
         if (errorsArray.length) {
             const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
             const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
@@ -185,9 +185,6 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }
         return !errorsArray.length;
     }
-
-    // console.log(errors);
-
 
     const handleNext = () => {
         if (isValid()) {
