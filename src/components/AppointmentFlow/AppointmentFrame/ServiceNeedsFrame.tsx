@@ -86,13 +86,13 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                     data.forEach(el => {
                         if (el.iconPath) {
                             // TODO: Load icons after BE Fix <CORS>
-                            fetch(el.iconPath)
-                                .then(r => r.text())
-                                .then(loadedIcon =>
-                                    setServiceCategories(c =>
-                                        c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
-                                    )
-                                )
+                            // fetch(el.iconPath)
+                            //     .then(r => r.text())
+                            //     .then(loadedIcon =>
+                            //         setServiceCategories(c =>
+                            //             c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
+                            //         )
+                            //     )
                         }
                     });
                 }

@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
     Accordion as MuiAccordion,
     AccordionDetails,
-    AccordionSummary,
+    AccordionSummary, Divider,
     IconButton,
     makeStyles,
     Typography
@@ -10,9 +10,10 @@ import {
 import {ExpandMore, MoreHoriz}from '@material-ui/icons';
 import {Api} from "../../../../config/requests";
 import {Loading} from "../../../UI/Loading";
-import {IPackageById} from "../../../../api/types";
+import {IPackageById, IPackageOptionDetailed} from "../../../../api/types";
 import {ServiceRequests} from "../ServiceRequests/ServiceRequests";
 import {OptionsTable} from "../OptionsTable/OptionsTable";
+import SummaryRow from "../SummaryRow/SummaryRow";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -22,8 +23,30 @@ type TAccordionProps = {
     onExpandIconClick?: (event: any) => void;
     title: string;
     id?: number;
-
 };
+
+interface IDetailsData {
+    suggestedRequestLaborHours: TSummaryCell[];
+    complimentaryLaborHours: TSummaryCell[];
+    requestsPrice: TSummaryCell[];
+    complimentaryPrice: TSummaryCell[];
+}
+
+export type TSummaryCell = {
+    value: string | number;
+    isEditable: boolean;
+    optionType: number;
+}
+
+export type TCellData = {
+    isSelected: boolean;
+    optionType: number;
+}
+
+export type TRequestRow = {
+    requestId: number;
+    cellData: TCellData[];
+}
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -68,6 +91,22 @@ const useAccordionStyles = makeStyles(() => ({
     },
 }));
 
+const getData = (options: IPackageOptionDetailed[]) => {
+    const data: IDetailsData = {
+        suggestedRequestLaborHours: [],
+        complimentaryLaborHours: [],
+        requestsPrice: [],
+        complimentaryPrice: []
+    }
+    options.forEach(option => {
+        data.suggestedRequestLaborHours.push({value: `${option.serviceRequestLaborHours}h`, isEditable: false, optionType: option.type});
+        data.complimentaryLaborHours.push({value: `${option.complimentaryServiceLaborHours}h`, isEditable: false, optionType: option.type});
+        data.requestsPrice.push({value: `$${option.serviceRequestPrice}`, isEditable: true, optionType: option.type});
+        data.complimentaryPrice.push({value: `$${option.complimentaryServicePrice}`, isEditable: true, optionType: option.type})
+    })
+    return data;
+};
+
 export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const {                                                                id,
         title,
@@ -78,6 +117,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         onExpandIconClick} = props;
     const [loading, setLoading] = useState<boolean>(false);
     const [packageData, setPackageData] = useState<IPackageById | null>(null);
+    const [optionsData, setOptionsData] = useState<TRequestRow[]>([]);
+    const [detailsData, setDetailsData] = useState<IDetailsData | null>(null);
     const accordClasses = useAccordionStyles();
     const classes = useStyles();
     const iconStyles = useIconStyles();
@@ -92,7 +133,34 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             }).finally(() => setLoading(false))
     }, [id])
 
-    console.log(packageData);
+    useEffect(() => {
+        if (packageData?.serviceRequests && packageData.options) {
+            const rows = packageData.serviceRequests.map((request) => ({
+                requestId: request.id,
+                cellData: packageData.options.map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.serviceRequests.includes(request.id)}))
+            }))
+            setOptionsData(rows);
+            setDetailsData(() => getData(packageData.options))
+        }
+    }, [packageData])
+
+    const onCheckboxClick = (item: TCellData, requestId: number): void => {
+        const requestToChange = optionsData.find(item => item.requestId === requestId);
+        if (requestToChange) {
+            const dataToChange = requestToChange.cellData.find(el => el.optionType === item.optionType);
+            if (dataToChange) {
+                const cell = {...dataToChange, isSelected: !dataToChange.isSelected};
+                const updatedRequest = {...requestToChange,
+                    cellData: [...requestToChange.cellData.filter(el => el.optionType !== item.optionType), cell]
+                        .sort((a, b) => a.optionType - b.optionType)};
+
+                setOptionsData(prevData => {
+                    return [...prevData.filter(el => el.requestId !== requestId), updatedRequest]
+                        .sort((a, b) => a.requestId - b.requestId);
+                });
+            }
+        }
+    }
 
     return <MuiAccordion
         classes={accordClasses}
@@ -116,10 +184,31 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         <AccordionDetails className={classes.details}>
             {loading
                 ? <Loading/>
-                : <div className={classes.tablesWrapper}>
+                : <div>
+                    <div className={classes.tablesWrapper}>
                     {packageData && <ServiceRequests data={packageData.serviceRequests}/>}
-                    {packageData && <OptionsTable withHeader requests={packageData.serviceRequests} options={packageData.options}/>}
+                    {packageData && <OptionsTable
+                        withHeader
+                        data={optionsData}
+                        onCheckboxClick={onCheckboxClick}
+                        options={packageData.options}/>}
                  </div>
+                    {detailsData && <React.Fragment>
+                        <SummaryRow
+                            summaryText="Suggested Labour Hours:"
+                            valuesArray={detailsData.suggestedRequestLaborHours}/>
+                        <SummaryRow
+                            summaryText="Suggested Price:"
+                            valuesArray={detailsData.requestsPrice}/>
+                        <Divider/>
+                        <SummaryRow
+                            summaryText="Suggested Labour Hours:"
+                            valuesArray={detailsData.complimentaryLaborHours}/>
+                        <SummaryRow
+                            summaryText="Suggested Price:"
+                            valuesArray={detailsData.complimentaryPrice}/>
+                    </React.Fragment>}
+                </div>
             }
         </AccordionDetails>
     </MuiAccordion>

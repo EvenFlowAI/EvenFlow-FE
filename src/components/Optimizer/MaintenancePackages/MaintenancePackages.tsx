@@ -106,6 +106,7 @@ export const MaintenancePackages = () => {
     </div>
         {packages.map((item: TPackage, index) => {
             return <PackageAccordion
+                key={item.id}
                 title={item.name}
                 defaultExpanded={index === 0}
                 id={item.id}

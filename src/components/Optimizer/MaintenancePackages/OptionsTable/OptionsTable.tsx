@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+    IconButton,
     makeStyles,
     Table as BaseTable,
     TableBody,
@@ -8,24 +9,15 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
-import {TServiceRequestShort} from "../ServiceRequests/ServiceRequests";
 import {IPackageOptionDetailed} from "../../../../api/types";
-import { Checkbox } from '@material-ui/core';
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {TCellData, TRequestRow} from "../PackageAccordion/PackageAccordion";
 
 type TProps = {
     withHeader?: boolean;
+    data: TRequestRow[];
     options: IPackageOptionDetailed[];
-    requests: TServiceRequestShort[];
-}
-
-type TCellData = {
-    isSelected: boolean;
-    optionType: number;
-}
-
-type TRequestRow = {
-    id: number;
-    cellData: TCellData[];
+    onCheckboxClick: (item: TCellData, requestId: number) => void;
 }
 
 const borderRule = '1px solid #E0E2E8';
@@ -76,15 +68,14 @@ const useStyles = makeStyles(theme => ({
         },
     }
 }))
-
+// TODO change it to dynamic option names from back end
 const MaintenanceOptions = {
     0: 'Base',
     1: 'Value',
     2: 'Preferred'
 }
 
-export const OptionsTable: React.FC<TProps> = ({ options, requests, withHeader }) => {
-    const [data, setData] = useState<TRequestRow[]>([]);
+export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCheckboxClick }) => {
     const classes = useStyles();
 
     const getClassNameByIndex = (index: number) => {
@@ -98,20 +89,12 @@ export const OptionsTable: React.FC<TProps> = ({ options, requests, withHeader }
         }
     }
 
-    useEffect(() => {
-        const rows = requests.map((request) => ({
-                id: request.id,
-                cellData: options.map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.serviceRequests.includes(request.id)}))
-            }))
-        setData(rows);
-    }, [options, requests])
-
     return <TableContainer className={classes.container}>
         <BaseTable>
             {withHeader && <TableHead className={classes.tableHeader}>
               <TableRow>
                   {options.map((option: IPackageOptionDetailed) => (
-                      <TableCell align='center' className={classes.headerCell}>
+                      <TableCell align='center' className={classes.headerCell} key={option.type}>
                           {MaintenanceOptions[option.type]}
                       </TableCell>
                   ))}
@@ -120,10 +103,15 @@ export const OptionsTable: React.FC<TProps> = ({ options, requests, withHeader }
             <div style={{ width: '100%', height: 19}}/>
             <TableBody className={classes.tableBody}>
                 {data.map((request, index) => (
-                    <TableRow className={getClassNameByIndex(index)}>
+                    <TableRow className={getClassNameByIndex(index)} key={request.requestId}>
                         {request.cellData.map((item: TCellData) => {
-                            return <TableCell className={classes.tableCell} align='center'>
-                                <Checkbox checked={item.isSelected} className={classes.checkbox} />
+                            return <TableCell className={classes.tableCell} align='center' key={item.optionType}>
+                                <IconButton onClick={() => onCheckboxClick(item, request.requestId)}>
+                                    {item.isSelected
+                                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
+                                    }
+                                </IconButton>
                             </TableCell>
                         })}
                     </TableRow>
