@@ -44,7 +44,7 @@ const selects: TSelect[] = [
     {label: "Make", name: "make", options: 'make', noVehicle: true},
     {label: "Year", name: "year", options: yearOptions, noVehicle: true},
     {label: "Model", name: "model", options: "model", noVehicle: true},
-    {label: "Estimated Mileage", name:"mileage", options: mileageOptions},
+    {label: "Estimated Mileage", name: "mileage", options: mileageOptions},
     // {label: "Transmission", name: "transmission"},
     // {label: "Drive Type", name: "driveType"},
     // {label: "Engine Type", name: "engineType"},
@@ -117,6 +117,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             if (name === 'make') {
                 if (option === 'Other') {
                     setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                    if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
                 } else {
                     setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
                 }

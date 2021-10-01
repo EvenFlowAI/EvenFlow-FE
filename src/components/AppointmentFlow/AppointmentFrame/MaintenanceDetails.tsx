@@ -149,6 +149,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             if (name === 'make') {
                 if (option === 'Other') {
                     setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                    if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
                 } else {
                     setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
                 }
@@ -176,6 +177,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             setErrors(e => [...e, "serviceInterval"]);
             errorsArray.push("estimated Mileage");
         }
+        // console.log(errorsArray);
         if (errorsArray.length) {
             const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
             const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
@@ -183,6 +185,9 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }
         return !errorsArray.length;
     }
+
+    // console.log(errors);
+
 
     const handleNext = () => {
         if (isValid()) {
