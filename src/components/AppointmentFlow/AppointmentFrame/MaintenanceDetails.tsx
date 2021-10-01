@@ -85,6 +85,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const dispatch = useDispatch();
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
+    const [models, setModels] = useState<string[] | []>([]);
     const {id} = useParams();
     const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
@@ -107,16 +108,22 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }, [dispatch, selectedVehicle]);
 
     useEffect(() => {
+        if (models.length) {
+            setLoadedOptions(prevOptions => ({...prevOptions, model: models}));
+        }
+    }, [models])
+
+    useEffect(() => {
         Api.call<string[]>(
             Api.endpoints.Vehicles.Models,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
-                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                setModels(['Other']);
             }
-            setLoadedOptions(prevOptions => ({...prevOptions, model: data}));
+            setModels(data);
         }).catch(() => {
-            setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            setModels(['Other']);
         })
 
         Api.call<string[]>(
@@ -139,8 +146,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 dispatch(updateVehicle({[name]: option}))
             }
             setErrors(e => e.filter(err => err !== name));
-            if (name === 'make' && option === 'Other') {
-                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            if (name === 'make') {
+                if (option === 'Other') {
+                    setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                } else {
+                    setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
+                }
             }
         }
     }
