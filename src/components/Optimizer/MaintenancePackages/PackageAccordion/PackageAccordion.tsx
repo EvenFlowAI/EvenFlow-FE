@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Accordion as MuiAccordion,
     AccordionDetails,
@@ -10,10 +10,12 @@ import {
 import {ExpandMore, MoreHoriz}from '@material-ui/icons';
 import {Api} from "../../../../config/requests";
 import {Loading} from "../../../UI/Loading";
-import {IPackageById, IPackageOptionDetailed} from "../../../../api/types";
+import {IComplimentaryService, IPackageById, IPackageOptionDetailed} from "../../../../api/types";
 import {ServiceRequests} from "../ServiceRequests/ServiceRequests";
 import {OptionsTable} from "../OptionsTable/OptionsTable";
 import SummaryRow from "../SummaryRow/SummaryRow";
+import ComplimentaryRequests from "../../ComplimentaryRequests/ComplimentaryRequests";
+import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -26,16 +28,21 @@ type TAccordionProps = {
 };
 
 interface IDetailsData {
-    suggestedRequestLaborHours: TSummaryCell[];
+    invoicedRequestLaborHours: TSummaryCell[];
     complimentaryLaborHours: TSummaryCell[];
     requestsPrice: TSummaryCell[];
     complimentaryPrice: TSummaryCell[];
+    suggestedRequestHours: TSummaryCell[];
+    suggestedRequestPrice: TSummaryCell[];
+    suggestedComplimentaryHours: TSummaryCell[];
+    suggestedComplimentaryPrice: TSummaryCell[];
 }
 
 export type TSummaryCell = {
-    value: string | number;
     isEditable: boolean;
     optionType: number;
+    numberValue: number;
+    fieldName: string,
 }
 
 export type TCellData = {
@@ -73,6 +80,12 @@ const useStyles = makeStyles(() => ({
     },
     details: {
         display: "block",
+    },
+    complimentaryRow: {
+        background: 'rgba(37, 37, 37, 0.5)',
+        color: 'white',
+        fontWeight: 'bold',
+        padding: 10,
     }
 }));
 
@@ -91,18 +104,86 @@ const useAccordionStyles = makeStyles(() => ({
     },
 }));
 
-const getData = (options: IPackageOptionDetailed[]) => {
+const getTotal = (includedRequests: IServiceRequest[]): number => {
+    return includedRequests.reduce((a, b) => a + b.price, 0);
+}
+
+const getComplimentaryTotal = (includedRequests: IComplimentaryService[]): number => {
+    return includedRequests.reduce((a, b) => a + b.price, 0);
+}
+
+const getHours = (includedRequests: IServiceRequest[]): number => {
+   return includedRequests.reduce((a, b) => a + b.durationInHours, 0);
+}
+
+const getComplimentaryHours = (includedRequests: IComplimentaryService[]): number => {
+    return includedRequests.reduce((a, b) => a + b.durationInHours, 0);
+}
+
+
+const getData = (pack: IPackageById) => {
+    const { options, serviceRequests, complimentaryServices} = pack;
     const data: IDetailsData = {
-        suggestedRequestLaborHours: [],
+        invoicedRequestLaborHours: [],
         complimentaryLaborHours: [],
         requestsPrice: [],
-        complimentaryPrice: []
+        complimentaryPrice: [],
+        suggestedRequestHours: [],
+        suggestedRequestPrice: [],
+        suggestedComplimentaryHours: [],
+        suggestedComplimentaryPrice: [],
     }
     options.forEach(option => {
-        data.suggestedRequestLaborHours.push({value: `${option.serviceRequestLaborHours}h`, isEditable: false, optionType: option.type});
-        data.complimentaryLaborHours.push({value: `${option.complimentaryServiceLaborHours}h`, isEditable: false, optionType: option.type});
-        data.requestsPrice.push({value: `$${option.serviceRequestPrice}`, isEditable: false, optionType: option.type});
-        data.complimentaryPrice.push({value: `$${option.complimentaryServicePrice}`, isEditable: false, optionType: option.type})
+        const includedRequests = serviceRequests.filter(request => option.serviceRequests.includes(request.id));
+        const includedComplimentary = complimentaryServices.filter(request => option.complimentaryServices.includes(request.id));
+        data.invoicedRequestLaborHours.push({
+            numberValue: option.serviceRequestLaborHours,
+            isEditable: true,
+            optionType: option.type,
+            fieldName: 'serviceRequestLaborHours',
+        });
+        data.complimentaryLaborHours.push({
+            numberValue: option.complimentaryServiceLaborHours,
+            isEditable: true,
+            optionType: option.type,
+            fieldName: 'complimentaryServiceLaborHours',
+        });
+        data.requestsPrice.push({
+            numberValue: option.serviceRequestPrice,
+            isEditable: true,
+            optionType: option.type,
+            fieldName: 'serviceRequestPrice',
+        });
+        data.complimentaryPrice.push({
+            numberValue: option.complimentaryServicePrice,
+            isEditable: true,
+            optionType: option.type,
+            fieldName: 'complimentaryServicePrice',
+        });
+        data.suggestedRequestPrice.push({
+            numberValue: getTotal(includedRequests),
+            isEditable: false,
+            optionType: option.type,
+            fieldName: 'suggestedRequestPrice',
+        })
+        data.suggestedRequestHours.push({
+            numberValue: getHours(includedRequests),
+            isEditable: false,
+            optionType: option.type,
+            fieldName: 'suggestedRequestHours',
+        })
+        data.suggestedComplimentaryPrice.push({
+            numberValue: getComplimentaryTotal(includedComplimentary),
+            isEditable: false,
+            optionType: option.type,
+            fieldName: 'suggestedComplimentaryPrice',
+        })
+        data.suggestedComplimentaryHours.push({
+            numberValue: getComplimentaryHours(includedComplimentary),
+            isEditable: false,
+            optionType: option.type,
+            fieldName: 'suggestedComplimentaryHours',
+        })
     })
     return data;
 };
@@ -119,6 +200,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [packageData, setPackageData] = useState<IPackageById | null>(null);
     const [optionsData, setOptionsData] = useState<TRequestRow[]>([]);
     const [detailsData, setDetailsData] = useState<IDetailsData | null>(null);
+    const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const accordClasses = useAccordionStyles();
     const classes = useStyles();
     const iconStyles = useIconStyles();
@@ -140,9 +222,23 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 cellData: packageData.options.map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.serviceRequests.includes(request.id)}))
             }))
             setOptionsData(rows);
-            setDetailsData(() => getData(packageData.options))
+            setDetailsData(() => getData(packageData))
         }
     }, [packageData])
+
+    useEffect(() => {
+        if (packageData?.complimentaryServices && packageData.options) {
+            const rows = packageData.complimentaryServices.map((request) => ({
+                requestId: request.id,
+                cellData: packageData.options.map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.complimentaryServices.includes(request.id)}))
+            }))
+            setComplimentaryData(rows)
+        }
+    }, [packageData])
+
+    const onComplimentaryClick = (item: TCellData, requestId: number): void => {
+
+    }
 
     const onCheckboxClick = (item: TCellData, requestId: number): void => {
         const requestToChange = optionsData.find(item => item.requestId === requestId);
@@ -160,6 +256,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 });
             }
         }
+    }
+
+    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+        console.log(e.target.value);
+        console.log(fieldName);
     }
 
     return <MuiAccordion
@@ -194,23 +295,41 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         options={packageData.options}/>}
                  </div>
                     {detailsData && <React.Fragment>
-                        <SummaryRow
-                            summaryText="Suggested Labour Hours:"
-                            valuesArray={detailsData.suggestedRequestLaborHours}/>
-                        <SummaryRow
-                            summaryText="Suggested Price:"
-                            valuesArray={detailsData.requestsPrice}/>
-                        <SummaryRow summaryText="Invoiced Labor Hours:"/>
-                        <SummaryRow summaryText="Market Price:"/>
+                        <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedRequestHours}/>
+                        <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedRequestPrice}/>
+
                         <Divider/>
+
                         <SummaryRow
-                            summaryText="Suggested Labour Hours:"
-                            valuesArray={detailsData.complimentaryLaborHours}/>
+                            summaryText="Invoiced Labor Hours:"
+                            valuesArray={detailsData.invoicedRequestLaborHours}
+                            onInputChange={onInputChange}/>
                         <SummaryRow
-                            summaryText="Suggested Price:"
-                            valuesArray={detailsData.complimentaryPrice}/>
-                        <SummaryRow summaryText="Invoiced Labor Hours:"/>
-                        <SummaryRow summaryText="Market Price:"/>
+                            summaryText="Market Price:"
+                            valuesArray={detailsData.requestsPrice}
+                            onInputChange={onInputChange}/>
+
+                        <div className={classes.complimentaryRow}>Complimentary</div>
+                        <div className={classes.tablesWrapper}>
+                            {packageData && <ComplimentaryRequests data={packageData.complimentaryServices} />}
+                            {packageData && <OptionsTable
+                                data={complimentaryData}
+                                onCheckboxClick={onComplimentaryClick}
+                                options={packageData.options}/>}
+                        </div>
+                        <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>
+                        <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedComplimentaryPrice}/>
+
+                        <Divider/>
+
+                        <SummaryRow
+                            summaryText="Invoiced Labor Hours:"
+                            valuesArray={detailsData.complimentaryLaborHours}
+                            onInputChange={onInputChange}/>
+                        <SummaryRow
+                            summaryText="Market Price:"
+                            valuesArray={detailsData.complimentaryPrice}
+                            onInputChange={onInputChange}/>
                     </React.Fragment>}
                 </div>
             }

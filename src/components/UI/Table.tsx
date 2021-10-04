@@ -107,7 +107,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
     return <>
         <TableContainer className={classes.root}>
             <BaseTable>
-                <TableHead>
+                {!props.hideHeader && <TableHead>
                     <TableRow>
                         {props.startActions ? <TableCell className={classes.tableHead} /> : null}
                         {props.rowData.map((rE, idx) => (
@@ -130,7 +130,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                         ))}
                         {(props.actions && !props.viewMode) ? <TableCell className={classes.tableHead} /> : null}
                     </TableRow>
-                </TableHead>
+                </TableHead>}
                 <TableBody>
                     {props.data.map((row, idx) => {
                         const rIdx = props.index ? row[props.index] : idx;
@@ -144,6 +144,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                 {props.rowData.map((cellData, cIdx) => (
                                     isXS && cellData.xsHidden ? null :
                                     <TableCell
+                                        style={{ width: cellData.width}}
                                         align={cellData.align || "left"}
                                         className={classes.tableCell}
                                         key={`${rIdx}_${cIdx}`}>

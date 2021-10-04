@@ -15,7 +15,7 @@ type TServiceRequestsProps = {
 }
 
 const RowData: TableRowDataType<TServiceRequestShort>[] = [
-    {val: (el: TServiceRequestShort) => el.description, header: "Included in Package"},
+    {val: (el: TServiceRequestShort) => el.description, header: "Included in Package", width: 500},
     {val: (el: TServiceRequestShort) => `${el.durationInHours}`, header: "Labour Hours"},
     {val: (el: TServiceRequestShort) => `${el.price}`, header: "Total"},
 ];

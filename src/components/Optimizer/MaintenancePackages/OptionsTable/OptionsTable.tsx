@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
     IconButton,
     makeStyles,
@@ -100,7 +100,9 @@ export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCh
                   ))}
               </TableRow>
             </TableHead>}
-            <div style={{ width: '100%', height: 19}}/>
+
+            {withHeader && <div style={{width: '100%', height: 19}}/>}
+
             <TableBody className={classes.tableBody}>
                 {data.map((request, index) => (
                     <TableRow className={getClassNameByIndex(index)} key={request.requestId}>

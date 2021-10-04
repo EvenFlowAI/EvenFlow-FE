@@ -6,6 +6,7 @@ import {TSummaryCell} from "../PackageAccordion/PackageAccordion";
 type TSummaryProps = {
     summaryText: string;
     valuesArray?: TSummaryCell[];
+    onInputChange?: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => void;
 }
 
 const cellStyles = {
@@ -38,7 +39,9 @@ const useStyles = makeStyles(() => ({
     },
     cell: {
       ...cellStyles,
-        color: '#9FA2B4',
+        '& input': {
+            color: '#9FA2B4',
+        }
     },
     editableCell: {
         ...cellStyles,
@@ -48,11 +51,34 @@ const useStyles = makeStyles(() => ({
       position: 'absolute',
         top: '10%',
         right: '-42%',
+    },
+    input: {
+      width: 56,
+      textAlign: 'center',
+      background: 'transparent',
+      border: 'none',
+      outline: 'none',
     }
 }));
 
-const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray }) => {
+const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInputChange }) => {
+    const isEdit = false;
     const classes = useStyles();
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>, item: TSummaryCell): void => {
+        if (item.fieldName &&  onInputChange) onInputChange(e, item.fieldName);
+    }
+
+    const getValue = (item: TSummaryCell) => {
+        if (isEdit) return item.numberValue;
+        if (item.fieldName.toLowerCase().includes('price')) {
+            return `$${item.numberValue}`
+        }
+        if (item.fieldName.toLowerCase().includes('hours')) {
+            return `${item.numberValue}h`
+        }
+         return item.numberValue;
+    }
 
     return (
         <div className={classes.rowWrapper}>
@@ -61,7 +87,13 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray }) => {
                 {valuesArray && valuesArray.map((item, index) => <div
                     key={index}
                     className={item.isEditable ? classes.editableCell : classes.cell}>
-                    {item.value}
+                    <input
+                        type="text"
+                        className={classes.input}
+                        value={getValue(item)}
+                        disabled={!isEdit}
+                        onChange={e => onChange(e, item)}
+                    />
                     {item.isEditable && <Edit
                         htmlColor="rgba(0, 0, 0, 0.54)"
                         fontSize="small"
