@@ -87,7 +87,7 @@ const useStyles = makeStyles(() => ({
         background: 'rgba(37, 37, 37, 0.5)',
         color: 'white',
         fontWeight: 'bold',
-        padding: 16,
+        padding: '10px 16px',
     }
 }));
 
@@ -121,11 +121,13 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [detailsData, setDetailsData] = useState<IDetailsData | null>(null);
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const {askConfirm} = useConfirm();
+    const anchorRef = useRef(null);
+
     const accordClasses = useAccordionStyles();
     const classes = useStyles();
     const iconStyles = useIconStyles();
-    const {askConfirm} = useConfirm();
-    const anchorRef = useRef(null);
+
 
     useEffect(() => {
         setLoading(true);

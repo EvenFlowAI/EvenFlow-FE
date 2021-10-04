@@ -9,19 +9,21 @@ export const optimizerRoot: TTitle = {
     title: "Optimizer Settings"
 }
 const getTotal = (includedRequests: IServiceRequest[]): number => {
-    return includedRequests.reduce((a, b) => a + b.price, 0);
+    const price = includedRequests.reduce((a, b) => a + +b.price, 0);
+    return Number.isInteger(price) ? price : +price.toFixed(2);
 }
 
 const getComplimentaryTotal = (includedRequests: IComplimentaryService[]): number => {
-    return includedRequests.reduce((a, b) => a + b.price, 0);
+    const price = includedRequests.reduce((a, b) => a + +b.price, 0);
+    return Number.isInteger(price) ? price : +price.toFixed(2);
 }
 
 const getHours = (includedRequests: IServiceRequest[]): number => {
-    return includedRequests.reduce((a, b) => a + b.durationInHours, 0);
+    return includedRequests.reduce((a, b) => a + +b.durationInHours, 0);
 }
 
 const getComplimentaryHours = (includedRequests: IComplimentaryService[]): number => {
-    return includedRequests.reduce((a, b) => a + b.durationInHours, 0);
+    return includedRequests.reduce((a, b) => a + +b.durationInHours, 0);
 }
 
 
