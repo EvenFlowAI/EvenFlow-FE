@@ -1,5 +1,5 @@
 import React from 'react';
-import {styled} from "@material-ui/core";
+import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {getMaintenanceDescription} from "./uiUtils";
@@ -79,6 +79,8 @@ export const SelectedAppointment = () => {
         state.appointment.selectedSR,
         state.appointment.serviceRequests
     ]);
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down("xs"));
 
     const price = appointment?.priceWithOffer?.value
         ?? appointment?.price.value
@@ -89,13 +91,13 @@ export const SelectedAppointment = () => {
             <h4>Your selections</h4>
             <Wrapper>
                 <List>
-                    <li className="service-item">Service Needed: {
+                    <li className="service-item">Service Needed: {isXs ? <br/> : null} {
                         getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)
                     }
                     </li>
-                    <li>Advisor: {
-                        appointmentData.advisor?.name ?? "Any available"
-                    }</li>
+                        <li>Advisor: {isXs ? <br/> : null} {
+                            appointmentData.advisor?.name ?? "Any available"
+                        }</li>
                     {/*<ul>*/}
                     {/*    <li>See available times for any Consultant</li>*/}
                     {/*</ul>*/}
