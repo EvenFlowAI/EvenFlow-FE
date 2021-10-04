@@ -10,14 +10,16 @@ import {TCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
 
 
-const Wrapper = styled('div')({
+const Wrapper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
     padding: 20,
     display: "grid",
-    minWidth: 545,
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "15px",
     fontSize: 15,
+    [theme.breakpoints.up('sm')]: {
+        minWidth: 545,
+    },
     "& h2": {
         textTransform: "uppercase",
         gridColumnStart: 1,
@@ -45,7 +47,7 @@ const Wrapper = styled('div')({
         color: "#9FA2B4",
         fontWeight: "bold"
     }
-});
+}));
 
 const Divider = styled("div")(({theme}) => ({
     width: "100%",

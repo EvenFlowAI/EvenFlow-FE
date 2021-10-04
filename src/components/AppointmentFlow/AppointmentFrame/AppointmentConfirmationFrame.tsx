@@ -23,7 +23,7 @@ import {useException} from "../../../utils/hooks";
 import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 
 const Wrapper = styled('div')(({theme}) => ({
-    width: "100%",
+    // width: "100%",
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "20px",
