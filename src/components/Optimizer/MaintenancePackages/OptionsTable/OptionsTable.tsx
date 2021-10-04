@@ -18,6 +18,7 @@ type TProps = {
     data: TRequestRow[];
     options: IPackageOptionDetailed[];
     onCheckboxClick: (item: TCellData, requestId: number) => void;
+    isEdit: boolean;
 }
 
 const borderRule = '1px solid #E0E2E8';
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
         overflowX: 'unset',
     },
     tableCell: {
-        padding: 5.5,
+        padding: 5.8,
         border: 'none',
         width: 100,
     },
@@ -75,7 +76,7 @@ const MaintenanceOptions = {
     2: 'Preferred'
 }
 
-export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCheckboxClick }) => {
+export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCheckboxClick, isEdit }) => {
     const classes = useStyles();
 
     const getClassNameByIndex = (index: number) => {
@@ -108,9 +109,9 @@ export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCh
                     <TableRow className={getClassNameByIndex(index)} key={request.requestId}>
                         {request.cellData.map((item: TCellData) => {
                             return <TableCell className={classes.tableCell} align='center' key={item.optionType}>
-                                <IconButton onClick={() => onCheckboxClick(item, request.requestId)}>
+                                <IconButton onClick={() => onCheckboxClick(item, request.requestId)} disabled={!isEdit}>
                                     {item.isSelected
-                                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                                    ? <CheckBoxOutlined htmlColor={isEdit ? "#3855FE" : "rgba(0, 0, 0, 0.54)"}/>
                                     : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
                                     }
                                 </IconButton>
