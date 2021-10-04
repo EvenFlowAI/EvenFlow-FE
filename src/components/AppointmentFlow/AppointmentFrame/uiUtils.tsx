@@ -6,7 +6,7 @@ export const getMaintenanceDescription = (
     srList: ISR[], selectedSR: number[],
     selectedPackage?: IPackageOptions|null, service?: IServiceCategory|null, subService?: IServiceCategory|null) => {
     if (selectedPackage) {
-        return selectedPackage.name;
+        return `${selectedPackage.name} package`;
     }
     if (selectedSR.length) {
         const filtered = srList.filter(el => selectedSR.includes(el.id)).map(el => el.description);

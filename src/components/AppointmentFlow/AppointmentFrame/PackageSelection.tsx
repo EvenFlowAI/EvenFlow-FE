@@ -368,7 +368,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         </div>}
                         <div className="currentWrp">
                             <div className="triangle"/>
-                            <div className="current">${p.price.toFixed(2)}</div>
+                            <div className="current">${Number.isInteger(p.price) ? p.price : p.price.toFixed(2)}</div>
                         </div>
                     </div>
                 )}

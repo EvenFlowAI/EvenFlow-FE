@@ -44,7 +44,7 @@ const selects: TSelect[] = [
     {label: "Make", name: "make", options: 'make', noVehicle: true},
     {label: "Year", name: "year", options: yearOptions, noVehicle: true},
     {label: "Model", name: "model", options: "model", noVehicle: true},
-    {label: "Estimated Mileage", name:"mileage", options: mileageOptions},
+    {label: "Estimated Mileage", name: "mileage", options: mileageOptions},
     // {label: "Transmission", name: "transmission"},
     // {label: "Drive Type", name: "driveType"},
     // {label: "Engine Type", name: "engineType"},
@@ -63,6 +63,7 @@ type TProps = {} & TActionProps;
 export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
+    const [models, setModels] = useState<string[] | []>([]);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
 
@@ -77,16 +78,22 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     }, [selectedVehicle, customerLoadedData]);
 
     useEffect(() => {
+        if (models.length) {
+            setLoadedOptions(prevOptions => ({...prevOptions, model: models}));
+        }
+    }, [models])
+
+    useEffect(() => {
         Api.call<string[]>(
             Api.endpoints.Vehicles.Models,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
-                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                setModels(['Other']);
             }
-            setLoadedOptions(prevOptions => ({...prevOptions, model: data}));
+            setModels(data);
         }).catch(() => {
-            setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            setModels(['Other']);
         })
         Api.call<string[]>(
             Api.endpoints.Vehicles.Makes,
@@ -103,13 +110,17 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
 
     const handleChange = (name: keyof IVehicle) =>
         (e: React.ChangeEvent<{}>, option: string|number|object|null) => {
-        if (option) {
-            dispatch(updateVehicle({[name]: option}));
-            setErrors(e => e.filter(err => err !== name));
-        }
-            if (name === 'make' && option === 'Other') {
+        if (option) setErrors(e => e.filter(err => err !== name));
+        dispatch(updateVehicle({[name]: option}));
+
+        if (name === 'make') {
+            if (option === 'Other') {
                 setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
+            } else {
+                setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
             }
+        }
     }
     const handleTextChange = (name: keyof IVehicle) =>
         ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,6 +152,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         }
     }
 
+    const getSelectValue = (select: TSelect) => {
+       let value = null;
+       if (selectedVehicle) value = selectedVehicle[select.name as keyof ILoadedVehicle];
+       return value ? value.toString() : value;
+    }
+
     return <StepWrapper>
         <SelectWrapper>
             {selects.map(select => {
@@ -158,7 +175,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         renderInput={autocompleteRender({
                             label: select.label, placeholder: `Select ${select.label}`, error: hasError, required: requiredFields.includes(select.name)
                         })}
-                        value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : null}
+                        value={getSelectValue(select)}
                     />
                 }
                 return <div key={select.name}>

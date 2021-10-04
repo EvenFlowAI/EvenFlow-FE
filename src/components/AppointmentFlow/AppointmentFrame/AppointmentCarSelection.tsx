@@ -5,11 +5,12 @@ import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {Actions} from "./Actions";
 import {TArgCallback, TCallback} from "../../../types/types";
 import { StepWrapper } from './StepWrapper';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
+import {setMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 
 const CarsWrapper = styled('div')({
@@ -58,6 +59,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+    const dispatch = useDispatch();
 
     const vehiclesPerScreen = useMemo(() => {
         return isXs ? 1 : 2;
@@ -78,8 +80,9 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         if (customerLoadedData && !customerLoadedData?.id) {
             onNext();
         }
+        dispatch(setMaintenanceDetails({ serviceInterval: ''}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customerLoadedData]);
+    }, [customerLoadedData, selectedVehicle]);
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
