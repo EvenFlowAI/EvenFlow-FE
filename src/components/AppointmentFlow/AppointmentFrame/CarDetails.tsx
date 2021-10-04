@@ -110,18 +110,17 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
 
     const handleChange = (name: keyof IVehicle) =>
         (e: React.ChangeEvent<{}>, option: string|number|object|null) => {
-        if (option) {
-            dispatch(updateVehicle({[name]: option}));
-            setErrors(e => e.filter(err => err !== name));
-        }
-            if (name === 'make') {
-                if (option === 'Other') {
-                    setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
-                    if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
-                } else {
-                    setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
-                }
+        if (option) setErrors(e => e.filter(err => err !== name));
+        dispatch(updateVehicle({[name]: option}));
+
+        if (name === 'make') {
+            if (option === 'Other') {
+                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
+            } else {
+                setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
             }
+        }
     }
     const handleTextChange = (name: keyof IVehicle) =>
         ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,6 +152,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         }
     }
 
+    const getSelectValue = (select: TSelect) => {
+       let value = null;
+       if (selectedVehicle) value = selectedVehicle[select.name as keyof ILoadedVehicle];
+       return value ? value.toString() : value;
+    }
+
     return <StepWrapper>
         <SelectWrapper>
             {selects.map(select => {
@@ -170,7 +175,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         renderInput={autocompleteRender({
                             label: select.label, placeholder: `Select ${select.label}`, error: hasError, required: requiredFields.includes(select.name)
                         })}
-                        value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : null}
+                        value={getSelectValue(select)}
                     />
                 }
                 return <div key={select.name}>
