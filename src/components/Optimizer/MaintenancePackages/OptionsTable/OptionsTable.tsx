@@ -9,7 +9,7 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
-import {IPackageById, IPackageOptionDetailed} from "../../../../api/types";
+import {IPackageOptionDetailed} from "../../../../api/types";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {TCellData, TRequestRow} from "../PackageAccordion/PackageAccordion";
 
@@ -19,7 +19,6 @@ type TProps = {
     options: IPackageOptionDetailed[];
     onCheckboxClick: (item: TCellData, requestId: number) => void;
     isEdit: boolean;
-    packageData?: IPackageById | null,
 }
 
 const borderRule = '1px solid #E0E2E8';
@@ -77,10 +76,8 @@ const MaintenanceOptions = {
     2: 'Preferred'
 }
 
-export const OptionsTable: React.FC<TProps> = ({ packageData, data, withHeader, options, onCheckboxClick, isEdit }) => {
+export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCheckboxClick, isEdit }) => {
     const classes = useStyles();
-
-    packageData && console.log(packageData.name, data);
 
     const getClassNameByIndex = (index: number) => {
         switch (index) {

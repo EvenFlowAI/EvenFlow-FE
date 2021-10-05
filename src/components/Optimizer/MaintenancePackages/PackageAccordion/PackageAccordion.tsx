@@ -19,7 +19,8 @@ import {useConfirm} from "../../../../utils/hooks";
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {loadPackageById} from "../../../../store/reducers/packages/actions";
+import {loadPackageById, removePackageById, updatePackageOptions} from "../../../../store/reducers/packages/actions";
+import {IPackageOption} from "../../../../store/reducers/packages/types";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -222,6 +223,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleRemove = (): void => {
         setAnchorEl(null);
+        if (packageData) dispatch(removePackageById(packageData.id))
     }
 
     const askRemove = () => {
@@ -239,7 +241,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         setIsEdit(false);
     }
 
-    const handleSave = (): void => {}
+    const handleSave = (): void => {
+        const data: IPackageOption[] | [] = [];
+        if (packageData) dispatch(updatePackageOptions(packageData.id, data))
+    }
 
     const handleExpand = (e: any): void => {
         onExpandIconClick && onExpandIconClick(e);
@@ -277,7 +282,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         withHeader
                         isEdit={isEdit}
                         data={optionsData}
-                        packageData={packageData}
                         onCheckboxClick={onCheckboxClick}
                         options={packageData.options}/>}
                      </div>
