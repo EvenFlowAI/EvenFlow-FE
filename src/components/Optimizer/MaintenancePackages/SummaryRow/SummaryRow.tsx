@@ -7,6 +7,7 @@ type TSummaryProps = {
     summaryText: string;
     valuesArray?: TSummaryCell[];
     onInputChange?: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => void;
+    isEdit?: boolean;
 }
 
 const cellStyles = {
@@ -61,8 +62,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInputChange }) => {
-    const isEdit = false;
+const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInputChange, isEdit }) => {
     const classes = useStyles();
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>, item: TSummaryCell): void => {
@@ -94,7 +94,7 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
                         disabled={!isEdit}
                         onChange={e => onChange(e, item)}
                     />
-                    {item.isEditable && <Edit
+                    {item.isEditable && isEdit && <Edit
                         htmlColor="rgba(0, 0, 0, 0.54)"
                         fontSize="small"
                         className={classes.editIcon}/>}

@@ -230,7 +230,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleAddOpsCode = (): void => {}
 
-    const handleCancel = (): void => {}
+    const handleCancel = (): void => {
+        setIsEdit(false);
+    }
 
     const handleSave = (): void => {}
 
@@ -276,10 +278,12 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         <Divider/>
 
                         <SummaryRow
+                            isEdit={isEdit}
                             summaryText="Invoiced Labor Hours:"
                             valuesArray={detailsData.invoicedRequestLaborHours}
                             onInputChange={onInputChange}/>
                         <SummaryRow
+                            isEdit={isEdit}
                             summaryText="Market Price:"
                             valuesArray={detailsData.requestsPrice}
                             onInputChange={onInputChange}/>
@@ -300,17 +304,19 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         <Divider/>
 
                         <SummaryRow
+                            isEdit={isEdit}
                             summaryText="Invoiced Labor Hours:"
                             valuesArray={detailsData.complimentaryLaborHours}
                             onInputChange={onInputChange}/>
                         <SummaryRow
+                            isEdit={isEdit}
                             summaryText="Market Price:"
                             valuesArray={detailsData.complimentaryPrice}
                             onInputChange={onInputChange}/>
                     </React.Fragment>}
 
-                    <Divider/>
-                    <AccordionActions isEdit={isEdit} onAddOpsCode={handleAddOpsCode} onCancel={handleCancel} onSave={handleSave}/>
+                    {isEdit && <AccordionActions isEdit={isEdit} onAddOpsCode={handleAddOpsCode} onCancel={handleCancel}
+                                       onSave={handleSave}/>}
                 </div>
             }
         </AccordionDetails>
