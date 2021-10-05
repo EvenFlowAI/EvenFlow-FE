@@ -1,27 +1,22 @@
 import React from 'react';
 import {TableRowDataType} from "../../../UI/types";
 import {Table} from "../../../UI/Table";
-
-export type TServiceRequestShort = {
-    id: number;
-    code: string;
-    description: string;
-    durationInHours?: number;
-    price?: number;
-}
+import {TExtendedService} from "../../../../api/types";
 
 type TServiceRequestsProps = {
-    data: TServiceRequestShort[] | [];
+    data: TExtendedService[] | [];
 }
 
-const RowData: TableRowDataType<TServiceRequestShort>[] = [
-    {val: (el: TServiceRequestShort) => el.description, header: "Included in Package", width: 500},
-    {val: (el: TServiceRequestShort) => `${el.durationInHours}`, header: "Labour Hours"},
-    {val: (el: TServiceRequestShort) => `${el.price}`, header: "Total"},
+const RowData: TableRowDataType<TExtendedService>[] = [
+    {val: (el: TExtendedService) => el.description, header: "Included in Package"},
+    {val: (el: TExtendedService) => `${el.durationInHours}`, header: "Labour Hours", width: 100, align: 'center'},
+    {val: (el: TExtendedService) => `$${el.laborAmount}`, header: "Labour Amount", width: 100, align: 'center'},
+    {val: (el: TExtendedService) => `$${el.partsAmount}`, header: "Parts Amount", width: 100, align: 'center'},
+    {val: (el: TExtendedService) => `$${el.price}`, header: "Total",  width: 100, align: 'center'},
 ];
 
 export const ServiceRequests: React.FC<TServiceRequestsProps> = ({ data }) => {
-    return <Table<TServiceRequestShort>
+    return <Table<TExtendedService>
         data={data}
         index="id"
         rowData={RowData}

@@ -1,28 +1,27 @@
 import {TTitle} from "../Content/ContentTitle/ContentTitle";
 import {Routes} from "../../config/routes";
-import {IServiceRequest} from "../../store/reducers/serviceRequests/types";
-import {IComplimentaryService, IPackageById} from "../../api/types";
+import {IPackageById, TExtendedComplimentary, TExtendedService} from "../../api/types";
 import {IDetailsData} from "./MaintenancePackages/PackageAccordion/PackageAccordion";
 
 export const optimizerRoot: TTitle = {
     to: Routes.Optimizer.Base,
     title: "Optimizer Settings"
 }
-const getTotal = (includedRequests: IServiceRequest[]): number => {
+const getTotal = (includedRequests: TExtendedService[]): number => {
     const price = includedRequests.reduce((a, b) => a + +b.price, 0);
     return Number.isInteger(price) ? price : +price.toFixed(2);
 }
 
-const getComplimentaryTotal = (includedRequests: IComplimentaryService[]): number => {
+const getComplimentaryTotal = (includedRequests: TExtendedComplimentary[]): number => {
     const price = includedRequests.reduce((a, b) => a + +b.price, 0);
     return Number.isInteger(price) ? price : +price.toFixed(2);
 }
 
-const getHours = (includedRequests: IServiceRequest[]): number => {
+const getHours = (includedRequests: TExtendedService[]): number => {
     return includedRequests.reduce((a, b) => a + +b.durationInHours, 0);
 }
 
-const getComplimentaryHours = (includedRequests: IComplimentaryService[]): number => {
+const getComplimentaryHours = (includedRequests: TExtendedComplimentary[]): number => {
     return includedRequests.reduce((a, b) => a + +b.durationInHours, 0);
 }
 

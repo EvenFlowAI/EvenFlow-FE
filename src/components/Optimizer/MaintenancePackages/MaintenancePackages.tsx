@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Button, makeStyles} from "@material-ui/core";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../../Optimizer/utils";
 import {SearchInput} from "../../UI/SearchInput";
 import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
-import {Api} from "../../../config/requests";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {IBusinessRule, IComplimentaryService} from "../../../api/types";
+import {IBusinessRule, IComplimentaryService, IPackageByQuery} from "../../../api/types";
+import {loadPackages} from "../../../store/reducers/packages/actions";
 
 export type TPackage = {
   name: string;
@@ -35,33 +35,22 @@ const useStyles = makeStyles(theme => ({
 
 export const MaintenancePackages = () => {
     const selectedSc = useSelector((state: RootState) => state.serviceCenters.selectedSC);
-    const selectedPod = useSelector((state: RootState) => state.pods.selectedPod);
-    const [packages, setPackages] = useState<[]>([]);
+    const {packages: allPackages} = useSelector((state: RootState) => state.packages);
+    const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
     const classes = useStyles();
+    const dispatch = useDispatch();
     
     useEffect(() => {
         if (selectedSc) {
-            const data = {
-                podId: null,
-                serviceCenterId: selectedSc.id,
-                pageIndex: 0,
-                pageSize: 0,
-            }
-            Api.call(Api.endpoints.MaintenancePackages.GetByQuery, {data})
-                .then(result => {
-                    if (result?.data?.result) {
-                        setPackages(result.data.result)
-                        if (result.data.result.length) {
-                            setExpanded({id: result.data.result[0].id, isOpen: true});
-                        }
-                    }
-                }).catch(err => {
-                console.log(err);
-            })   
+            dispatch(loadPackages(selectedSc.id))
         }
-        
-    }, [selectedSc, selectedPod])
+    }, [selectedSc])
+
+    useEffect(() => {
+        if (allPackages) setPackages(allPackages);
+        if (allPackages.length) setExpanded({ id: allPackages[0].id, isOpen: true})
+    }, [allPackages])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.value);
@@ -78,7 +67,11 @@ export const MaintenancePackages = () => {
     };
 
     const onAccordionChange = (id: number) => {
-        setExpanded(() => ({id, isOpen: !expanded.isOpen}))
+        if (id === expanded.id) {
+            setExpanded(expanded => ({id, isOpen: !expanded.isOpen}))
+        } else {
+            setExpanded(() => ({id, isOpen: true}))
+        }
     };
 
     return <>
@@ -104,7 +97,7 @@ export const MaintenancePackages = () => {
     <div className={classes.titleWrapper}>
     <ContentTitle title="Maintenance Package Pricing"/>
     </div>
-        {packages.map((item: TPackage, index) => {
+        {packages.map((item: IPackageByQuery, index) => {
             return <PackageAccordion
                 key={item.id}
                 title={item.name}

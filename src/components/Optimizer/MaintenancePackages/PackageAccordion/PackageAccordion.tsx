@@ -8,7 +8,6 @@ import {
     Typography
 } from "@material-ui/core";
 import {ExpandMore, MoreHoriz}from '@material-ui/icons';
-import {Api} from "../../../../config/requests";
 import {Loading} from "../../../UI/Loading";
 import {IPackageById, IPackageOptionDetailed} from "../../../../api/types";
 import {ServiceRequests} from "../ServiceRequests/ServiceRequests";
@@ -18,6 +17,9 @@ import ComplimentaryRequests from "../../ComplimentaryRequests/ComplimentaryRequ
 import {getOptionsTableData} from "../../utils";
 import {useConfirm} from "../../../../utils/hooks";
 import AccordionActions from "../AccordionActions/AccordionActions";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
+import {loadPackageById} from "../../../../store/reducers/packages/actions";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -107,14 +109,15 @@ const useAccordionStyles = makeStyles(() => ({
 }));
 
 export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
-    const {                                                                id,
+    const {
+        id,
         title,
         defaultExpanded,
         expanded,
         disabled,
         onChange,
         onExpandIconClick} = props;
-    const [loading, setLoading] = useState<boolean>(false);
+    const { isPackageLoading, currentPackage } = useSelector((state: RootState) => state.packages);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [packageData, setPackageData] = useState<IPackageById | null>(null);
     const [optionsData, setOptionsData] = useState<TRequestRow[]>([]);
@@ -123,6 +126,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const {askConfirm} = useConfirm();
     const anchorRef = useRef(null);
+    const dispatch = useDispatch();
 
     const accordClasses = useAccordionStyles();
     const classes = useStyles();
@@ -130,33 +134,33 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
 
     useEffect(() => {
-        setLoading(true);
-        Api.call(Api.endpoints.MaintenancePackages.Retrieve, {urlParams: {id}})
-            .then(result => {
-                if (result?.data) setPackageData(result.data);
-            }).catch(err => {
-                console.log(err);
-            }).finally(() => setLoading(false))
-    }, [id])
+        if (id && expanded) dispatch(loadPackageById(id));
+    }, [id, expanded])
 
     useEffect(() => {
-        if (packageData?.serviceRequests && packageData.options) {
-            const rows = packageData.serviceRequests.map((request) => ({
-                requestId: request.id,
-                cellData: packageData.options.map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.serviceRequests.includes(request.id)}))
-            }))
-            setOptionsData(rows);
-            setDetailsData(() => getOptionsTableData(packageData))
-        }
-    }, [packageData])
+        if (currentPackage) setPackageData(currentPackage);
+    }, [currentPackage])
 
     useEffect(() => {
-        if (packageData?.complimentaryServices && packageData.options) {
-            const rows = packageData.complimentaryServices.map((request) => ({
-                requestId: request.id,
-                cellData: packageData.options.map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.complimentaryServices.includes(request.id)}))
-            }))
-            setComplimentaryData(rows)
+        if (packageData?.options) {
+            if (packageData?.serviceRequests) {
+                const rows = packageData.serviceRequests.map((request) => ({
+                    requestId: request.id,
+                    cellData: packageData.options
+                        .map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.serviceRequests.includes(request.id)}))
+                }))
+                setOptionsData(rows);
+                setDetailsData(() => getOptionsTableData(packageData))
+            }
+            if (packageData?.complimentaryServices) {
+                const rows = packageData.complimentaryServices.map((request) => ({
+                    requestId: request.id,
+                    cellData: packageData.options
+                        .map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.complimentaryServices.includes(request.id)}))
+
+                }))
+                setComplimentaryData(rows)
+            }
         }
     }, [packageData])
 
@@ -206,7 +210,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }
 
     const onMoreIconClick = () => {
-        if (anchorRef?.current && packageData) setAnchorEl(anchorRef.current);
+        if (expanded && anchorRef?.current && packageData) setAnchorEl(anchorRef.current);
     }
 
     const handleCloseMenu = (): void => setAnchorEl(null);
@@ -231,10 +235,16 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const handleAddOpsCode = (): void => {}
 
     const handleCancel = (): void => {
+        setPackageData(currentPackage);
         setIsEdit(false);
     }
 
     const handleSave = (): void => {}
+
+    const handleExpand = (e: any): void => {
+        onExpandIconClick && onExpandIconClick(e);
+        isEdit && handleCancel();
+    }
 
     return <MuiAccordion
         classes={accordClasses}
@@ -251,14 +261,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                     <IconButton className={classes.button} onClick={onMoreIconClick} ref={anchorRef}>
                         <MoreHoriz />
                     </IconButton>
-                    <IconButton className={classes.button} onClick={onExpandIconClick}>
+                    <IconButton className={classes.button} onClick={handleExpand}>
                         <ExpandMore classes={expanded ? iconStyles : {}}/>
                     </IconButton>
                 </div>
             </div>
         </AccordionSummary>
         <AccordionDetails className={classes.details}>
-            {loading
+            {isPackageLoading
                 ? <Loading/>
                 : <div>
                     <div className={classes.tablesWrapper}>
@@ -267,6 +277,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         withHeader
                         isEdit={isEdit}
                         data={optionsData}
+                        packageData={packageData}
                         onCheckboxClick={onCheckboxClick}
                         options={packageData.options}/>}
                      </div>

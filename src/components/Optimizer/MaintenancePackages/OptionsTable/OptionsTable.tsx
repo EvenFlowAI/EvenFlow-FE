@@ -9,7 +9,7 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
-import {IPackageOptionDetailed} from "../../../../api/types";
+import {IPackageById, IPackageOptionDetailed} from "../../../../api/types";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {TCellData, TRequestRow} from "../PackageAccordion/PackageAccordion";
 
@@ -19,6 +19,7 @@ type TProps = {
     options: IPackageOptionDetailed[];
     onCheckboxClick: (item: TCellData, requestId: number) => void;
     isEdit: boolean;
+    packageData?: IPackageById | null,
 }
 
 const borderRule = '1px solid #E0E2E8';
@@ -76,8 +77,10 @@ const MaintenanceOptions = {
     2: 'Preferred'
 }
 
-export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCheckboxClick, isEdit }) => {
+export const OptionsTable: React.FC<TProps> = ({ packageData, data, withHeader, options, onCheckboxClick, isEdit }) => {
     const classes = useStyles();
+
+    packageData && console.log(packageData.name, data);
 
     const getClassNameByIndex = (index: number) => {
         switch (index) {
@@ -107,7 +110,8 @@ export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCh
             <TableBody className={classes.tableBody}>
                 {data.map((request, index) => (
                     <TableRow className={getClassNameByIndex(index)} key={request.requestId}>
-                        {request.cellData.map((item: TCellData) => {
+                        {request.cellData
+                            .map((item: TCellData) => {
                             return <TableCell className={classes.tableCell} align='center' key={item.optionType}>
                                 <IconButton onClick={() => onCheckboxClick(item, request.requestId)} disabled={!isEdit}>
                                     {item.isSelected

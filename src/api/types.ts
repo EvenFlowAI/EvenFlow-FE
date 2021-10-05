@@ -255,17 +255,43 @@ export interface IComplimentaryService {
     durationInHours: number;
 }
 
+export type TServiceRequestShort = {
+    id: number;
+    code: string;
+    description: string;
+    durationInHours: number;
+    price: number;
+}
+
+export type TExtendedComplimentary = {
+    laborAmount: number;
+    partsAmount: number;
+} & IComplimentaryService;
+
+export type TExtendedService = {
+    laborAmount: number;
+    partsAmount: number;
+} & TServiceRequestShort;
+
 export interface IPackageOptions {
     id: number;
     type: EMaintenanceOptionType;
     name: string;
     price: number;
-    serviceRequests: IServiceRequest[];
-    complimentaryServices: IComplimentaryService[];
+    serviceRequests: TExtendedService[];
+    complimentaryServices: TExtendedComplimentary[];
 }
 
 export interface IPackage {
     options: IPackageOptions[];
+}
+
+export interface IPackageByQuery {
+    name: string;
+    id: number;
+    isApplyPricingOptimization: boolean;
+    serviceRequests: TExtendedService[];
+    complimentaryServices: TExtendedComplimentary[];
 }
 
 export interface IPackageById {
@@ -274,8 +300,8 @@ export interface IPackageById {
     serviceRequestsAssigned: serviceRequestAssigned[];
     name: string;
     id: number;
-    serviceRequests: IServiceRequest[];
-    complimentaryServices: IComplimentaryService[];
+    serviceRequests: TExtendedService[];
+    complimentaryServices: TExtendedComplimentary[];
     businessRules: IBusinessRule;
 }
 
