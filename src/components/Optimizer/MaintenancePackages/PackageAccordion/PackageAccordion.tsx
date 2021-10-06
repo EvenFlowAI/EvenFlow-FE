@@ -15,12 +15,11 @@ import {OptionsTable} from "../OptionsTable/OptionsTable";
 import SummaryRow from "../SummaryRow/SummaryRow";
 import ComplimentaryRequests from "../../ComplimentaryRequests/ComplimentaryRequests";
 import {getOptionsTableData} from "../../utils";
-import {useConfirm} from "../../../../utils/hooks";
+import {useConfirm, useException} from "../../../../utils/hooks";
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadPackageById, removePackageById, updatePackageOptions} from "../../../../store/reducers/packages/actions";
-import {IPackageOption} from "../../../../store/reducers/packages/types";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -125,14 +124,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [detailsData, setDetailsData] = useState<IDetailsData | null>(null);
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const {askConfirm} = useConfirm();
+    const { askConfirm } = useConfirm();
     const anchorRef = useRef(null);
     const dispatch = useDispatch();
+    const showError = useException();
 
     const accordClasses = useAccordionStyles();
     const classes = useStyles();
     const iconStyles = useIconStyles();
-
 
     useEffect(() => {
         if (id && expanded) dispatch(loadPackageById(id));
@@ -142,72 +141,77 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         if (currentPackage) setPackageData(currentPackage);
     }, [currentPackage])
 
+    const getOptionsData = (packageData: IPackageById) => {
+        if (packageData?.serviceRequests) {
+            const rows = packageData.serviceRequests.map((request) => ({
+                requestId: request.id,
+                cellData: packageData.options
+                    .map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.serviceRequests.includes(request.id)}))
+            }))
+            setOptionsData(rows);
+            setDetailsData(() => getOptionsTableData(packageData))
+        }
+        if (packageData?.complimentaryServices) {
+            const rows = packageData.complimentaryServices.map((request) => ({
+                requestId: request.id,
+                cellData: packageData.options
+                    .map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.complimentaryServices.includes(request.id)}))
+
+            }))
+            setComplimentaryData(rows)
+        }
+    }
+
     useEffect(() => {
         if (packageData?.options) {
-            if (packageData?.serviceRequests) {
-                const rows = packageData.serviceRequests.map((request) => ({
-                    requestId: request.id,
-                    cellData: packageData.options
-                        .map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.serviceRequests.includes(request.id)}))
-                }))
-                setOptionsData(rows);
-                setDetailsData(() => getOptionsTableData(packageData))
-            }
-            if (packageData?.complimentaryServices) {
-                const rows = packageData.complimentaryServices.map((request) => ({
-                    requestId: request.id,
-                    cellData: packageData.options
-                        .map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.complimentaryServices.includes(request.id)}))
-
-                }))
-                setComplimentaryData(rows)
-            }
+            getOptionsData(packageData);
         }
     }, [packageData])
 
     const onComplimentaryClick = (item: TCellData, requestId: number): void => {
-        if (isEdit) {
-            const requestToChange = complimentaryData.find(item => item.requestId === requestId);
-            if (requestToChange) {
-                const dataToChange = requestToChange.cellData.find(el => el.optionType === item.optionType);
-                if (dataToChange) {
-                    const cell = {...dataToChange, isSelected: !dataToChange.isSelected};
-                    const updatedRequest = {...requestToChange,
-                        cellData: [...requestToChange.cellData.filter(el => el.optionType !== item.optionType), cell]
-                            .sort((a, b) => a.optionType - b.optionType)};
-
-                    setComplimentaryData(prevData => {
-                        return [...prevData.filter(el => el.requestId !== requestId), updatedRequest]
-                            .sort((a, b) => a.requestId - b.requestId);
-                    });
+        if (isEdit && packageData) {
+            const option = packageData.options.find(el => el.type === item.optionType);
+            if (option) {
+                const updatedOption = {...option,
+                    complimentaryServices:
+                        option.complimentaryServices.includes(requestId)
+                            ? option.complimentaryServices.filter(request => request !== requestId)
+                            : [...option.complimentaryServices, requestId]
                 }
+                const updatedData = { ...packageData, options: packageData.options.filter(el => el.type !== updatedOption.type).concat(updatedOption)}
+                setPackageData(updatedData);
             }
         }
     }
 
     const onCheckboxClick = (item: TCellData, requestId: number): void => {
-        if (isEdit) {
-            const requestToChange = optionsData.find(item => item.requestId === requestId);
-            if (requestToChange) {
-                const dataToChange = requestToChange.cellData.find(el => el.optionType === item.optionType);
-                if (dataToChange) {
-                    const cell = {...dataToChange, isSelected: !dataToChange.isSelected};
-                    const updatedRequest = {...requestToChange,
-                        cellData: [...requestToChange.cellData.filter(el => el.optionType !== item.optionType), cell]
-                            .sort((a, b) => a.optionType - b.optionType)};
-
-                    setOptionsData(prevData => {
-                        return [...prevData.filter(el => el.requestId !== requestId), updatedRequest]
-                            .sort((a, b) => a.requestId - b.requestId);
-                    });
+        if (isEdit && packageData) {
+            const option = packageData.options.find(el => el.type === item.optionType);
+            if (option) {
+                const updatedOption = {...option,
+                    serviceRequests:
+                        option.serviceRequests.includes(requestId)
+                            ? option.serviceRequests.filter(request => request !== requestId)
+                            : [...option.serviceRequests, requestId]
                 }
+                const updatedData = { ...packageData, options: packageData.options.filter(el => el.type !== updatedOption.type).concat(updatedOption)}
+                setPackageData(updatedData);
             }
         }
     }
 
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
-        console.log(e.target.value);
-        console.log(fieldName);
+    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => {
+        if (packageData) {
+            let currentOption = packageData.options.find(option => option.type === optionType);
+            if (currentOption) {
+                currentOption = {...currentOption, [fieldName as keyof IPackageOptionDetailed]: e.target.value};
+                const updated = {...packageData,
+                    options: packageData.options
+                        .filter(item => item.type !== optionType)
+                        .concat(currentOption)};
+                setPackageData(updated);
+            }
+        }
     }
 
     const onMoreIconClick = () => {
@@ -229,21 +233,37 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const askRemove = () => {
         askConfirm({
             isRemove: true,
-            title: `Remove ${packageData?.name} from Packages List ?`,
+            title: `Remove ${packageData?.name} from Packages List?`,
             onConfirm: handleRemove
         });
     }
 
-    const handleAddOpsCode = (): void => {}
+    const handleAddOpsCode = (): void => {
+        // TODO logic
+    }
 
     const handleCancel = (): void => {
-        setPackageData(currentPackage);
+        if (currentPackage) {
+            setPackageData(currentPackage);
+            getOptionsData(currentPackage);
+        }
         setIsEdit(false);
     }
 
+    const checkIsValid = (): boolean => {
+        return !!packageData?.options.every(option => option.serviceRequests.length && option.complimentaryServices.length);
+    }
+
     const handleSave = (): void => {
-        const data: IPackageOption[] | [] = [];
-        if (packageData) dispatch(updatePackageOptions(packageData.id, data))
+        if (checkIsValid()) {
+            if (packageData) {
+                dispatch(updatePackageOptions(packageData.id, packageData.options))
+                setIsEdit(false);
+            }
+        } else {
+            showError('Pleas choose at least one Service Request and one Complimentary request for each Package Option')
+        }
+
     }
 
     const handleExpand = (e: any): void => {

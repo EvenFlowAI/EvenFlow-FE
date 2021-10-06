@@ -6,7 +6,7 @@ import {TSummaryCell} from "../PackageAccordion/PackageAccordion";
 type TSummaryProps = {
     summaryText: string;
     valuesArray?: TSummaryCell[];
-    onInputChange?: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => void;
+    onInputChange?: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => void;
     isEdit?: boolean;
 }
 
@@ -66,7 +66,7 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
     const classes = useStyles();
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>, item: TSummaryCell): void => {
-        if (item.fieldName &&  onInputChange) onInputChange(e, item.fieldName);
+        if (item.fieldName &&  onInputChange) onInputChange(e, item.fieldName, item.optionType);
     }
 
     const getValue = (item: TSummaryCell) => {
@@ -84,7 +84,9 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
         <div className={classes.rowWrapper}>
             <div className={classes.summaryText}>{summaryText}</div>
             <div className={classes.cellsWrapper}>
-                {valuesArray && valuesArray.map((item, index) => <div
+                {valuesArray && valuesArray
+                    .sort((a, b) => a.optionType - b.optionType)
+                    .map((item, index) => <div
                     key={index}
                     className={item.isEditable ? classes.editableCell : classes.cell}>
                     <input

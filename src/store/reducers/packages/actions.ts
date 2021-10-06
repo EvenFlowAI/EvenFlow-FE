@@ -8,9 +8,9 @@ export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoad
 export const getPackageById = createAction<IPackageById>('Optimizer/GetPackageById');
 export const getPackagesByQuery = createAction<IPackageByQuery[]>('Optimizer/GetPackages');
 
-export const loadPackageById = (packageId: number): AppThunk => async dispatch => {
+export const loadPackageById = (id: number): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
-    Api.call(Api.endpoints.MaintenancePackages.Retrieve, {urlParams: {id: packageId}})
+    Api.call(Api.endpoints.MaintenancePackages.Retrieve, {urlParams: {id}})
         .then(result => {
             if (result?.data) dispatch(getPackageById(result.data));
         }).catch(err => {
@@ -46,11 +46,11 @@ export const loadPackages = (serviceCenterId: number): AppThunk => async dispatc
     })
 }
 
-export const updatePackageOptions = (packageId: number, data: IPackageOption[]): AppThunk => async dispatch => {
+export const updatePackageOptions = (id: number, data: IPackageOption[]): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
-    Api.call(Api.endpoints.MaintenancePackages.PackageOptions, {data})
+    Api.call(Api.endpoints.MaintenancePackages.PackageOptions, {urlParams: {id}, data: {items: data}})
         .then(result => {
-            if (result) dispatch(loadPackageById(packageId))
+            if (result) dispatch(loadPackageById(id))
         })
         .catch(err => {
         console.log(err)
