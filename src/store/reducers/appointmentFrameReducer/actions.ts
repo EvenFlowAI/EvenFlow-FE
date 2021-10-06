@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     ICustomer, IListAppointment,
-    ILoadedVehicle,
+    ILoadedVehicle, IPackage,
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
@@ -10,6 +10,9 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IVehicle} from "../appointment/types";
 import {IAppointmentId, TMaintenanceDetails} from "./types";
+import {AppThunk} from "../../../types/types";
+import {Api} from "../../../config/requests";
+import {decodeSCID} from "../../../utils/utils";
 
 export const selectService = createAction<IServiceCategory>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory>("fAppointment/selectSubService");
@@ -26,3 +29,29 @@ export const setAppointmentId = createAction<IAppointmentId>("fAppointment/setAp
 export const setTransportation = createAction<ITransportation|null>("fAppointment/setTransportation");
 export const setMaintenanceDetails = createAction<Partial<TMaintenanceDetails>>("fAppointment/setMaintenanceDetails");
 export const setUpdateAppointment = createAction<IListAppointment>("fAppointment/setUpdateAppointment");
+export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPackages");
+export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
+
+export const loadPackages = (id: number): AppThunk => async (dispatch, getState) => {
+    const selectedVehicle = getState().appointmentFrame.selectedVehicle;
+    const maintenanceDetails = getState().appointmentFrame.maintenanceDetails;
+    dispatch(setLoadingPackages(true));
+    if (selectedVehicle && id && maintenanceDetails) {
+        Api.call<IPackage[]>(
+            Api.endpoints.MaintenancePackages.ByVehicle,
+            {
+                data: {
+                    serviceCenterId: decodeSCID(`${id}`),
+                    vehicle: {
+                        ...selectedVehicle,
+                        mileage: maintenanceDetails.serviceInterval
+                    }
+                }
+            }
+        ).then(({data}) => {
+            setPackages(data);
+        }).catch(err => {
+            console.log(err)
+        }).finally(() => dispatch(setLoadingPackages(false)))
+    }
+}

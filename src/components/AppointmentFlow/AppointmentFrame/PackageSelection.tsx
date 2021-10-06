@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
-import {styled} from "@material-ui/core";
+import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -17,6 +17,7 @@ import {
     IPackageOptions, TExtendedComplimentary,
     TExtendedService
 } from "../../../api/types";
+import PackageSelectionMobile from "./PackageSelectionMobile";
 
 const border = '1px solid #DADADA';
 
@@ -26,7 +27,7 @@ type TWithPackages = {
 
 type TService = TWithPackages & TExtendedService;
 type TComplimentary = TWithPackages & TExtendedComplimentary;
-type TPackage = {
+export type TPackage = {
     lastIdx?: number;
     moreIdx?: number[];
 } & IPackageOptions;
@@ -180,6 +181,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down('xs'));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
@@ -288,6 +291,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         dispatch(setPackage(p));
     }
 
+    console.log(packages);
+
     return (
         <StepWrapper>
             <NoItemsLoading
@@ -296,90 +301,97 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 loading={loading}
                 label={"There are no packages available"}
             />
-            {packages.length ? <Wrapper>
-                <div className='top'/>
-                {packages.map(p => <div
-                    className={setClasses(p.id, "top title")}
-                    onClick={handleClick(p)}
-                    key={p.id}>
-                    {p.name}
-                </div>)}
-                <div className="gray subtitle">Included in package</div>
-                {packages.map(p => <div className={setClasses(p.id, "gray subtitle")} key={p.id}/>)}
-                {services.map((s, idx) => {
-                    const isLast = idx + 1 === services.length;
-                    const cls = `service${isLast ? ' last' : ''}`;
-                    return <React.Fragment key={s.id}>
-                        <div className={cls}>{s.description}</div>
-                        {packages.map(p => {
-                                const clsx = p.lastIdx === idx ? 'service last' : cls;
-                                const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
-                                return <div
+            {packages.length ? <React.Fragment>
+                {isXs
+                    ? <PackageSelectionMobile data={packages}/>
+                    : <Wrapper>
+                        <div className='top'/>
+                        {packages.map(p => <div
+                            className={setClasses(p.id, "top title")}
+                            onClick={handleClick(p)}
+                            key={p.id}>
+                            {p.name}
+                        </div>)}
+                        <div className="gray subtitle">Included in package</div>
+                        {packages.map(p => <div className={setClasses(p.id, "gray subtitle")} key={p.id}/>)}
+                        {services.map((s, idx) => {
+                            const isLast = idx + 1 === services.length;
+                            const cls = `service${isLast ? ' last' : ''}`;
+                            return <React.Fragment key={s.id}>
+                                <div className={cls}>{s.description}</div>
+                                {packages.map(p => {
+                                        const clsx = p.lastIdx === idx ? 'service last' : cls;
+                                        const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
+                                        return <div
+                                            key={p.id}
+                                            onClick={handleClick(p)}
+                                            className={setClasses(p.id, wMoreClsx)}>
+                                            {s.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
+                                        </div>;
+                                    }
+                                )}
+                            </React.Fragment>;
+                        })}
+                        {isBmWService && <React.Fragment key="maintenance">
+                            <div className="totalMaintenance">Total Maintenance Value:</div>
+                            {packages.map(p => <div>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}
+                        </React.Fragment>
+                        }
+                        <div className="green subtitle">Complimentary</div>
+                        {packages.map(p =>
+                            <div
+                                key={p.id}
+                                onClick={handleClick(p)}
+                                className={setClasses(p.id, "green subtitle")}/>
+                        )}
+                        {complimentary.map(c => <React.Fragment key={c.name}>
+                            <div className="service">{c.name}</div>
+                            {packages.map(p =>
+                                <div
                                     key={p.id}
                                     onClick={handleClick(p)}
-                                    className={setClasses(p.id, wMoreClsx)}>
-                                    {s.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
-                                </div>;
-                            }
+                                    className={setClasses(p.id, "service green")}>
+                                    {c.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
+                                </div>
+                            )}
+                        </React.Fragment>)}
+                        <div className="totalComplimentary last">Total Complimentary Value</div>
+                        {packages.map(p => {
+                            const price = p.complimentaryServices.reduce(
+                                (acc, el) => acc + el.price, 0
+                            );
+                            return <div
+                                onClick={handleClick(p)}
+                                className={setClasses(p.id, "totalComplimentary last")}
+                                key={p.id}>{price ? `$${price}` : ''}</div>;
+                        })}
+                        <div className="total end">
+                            Total <span className="info">(excluding taxes)</span>
+                        </div>
+                        {packages.map(p =>
+                            <div
+                                onClick={handleClick(p)}
+                                className={setClasses(p.id, `total ${isBmWService ? 'priceWithBefore' : 'price'} end`)}
+                                key={p.id}>
+                                {isBmWService &&
+                                <div className="before">
+                                    ${p.complimentaryServices.reduce((acc, el) => acc + el.price, 0)
+                                + p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}
+                                </div>}
+                                <div className="currentWrp">
+                                    <div className="triangle"/>
+                                    <div
+                                        className="current">${Number.isInteger(p.price) ? p.price : p.price.toFixed(2)}</div>
+                                </div>
+                            </div>
                         )}
-                    </React.Fragment>;
-                })}
-                {isBmWService && <React.Fragment key="maintenance">
-                  <div className="totalMaintenance">Total Maintenance Value:</div>
-                    {packages.map(p => <div>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}
-                </React.Fragment>
-                    }
-                <div className="green subtitle">Complimentary</div>
-                {packages.map(p =>
-                    <div
-                        key={p.id}
-                        onClick={handleClick(p)}
-                        className={setClasses(p.id, "green subtitle")}/>
-                )}
-                {complimentary.map(c => <React.Fragment key={c.name}>
-                    <div className="service">{c.name}</div>
-                    {packages.map(p =>
-                        <div
-                            key={p.id}
-                            onClick={handleClick(p)}
-                            className={setClasses(p.id, "service green")}>
-                            {c.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
-                        </div>
-                    )}
-                </React.Fragment>)}
-                <div className="totalComplimentary last">Total Complimentary Value</div>
-                {packages.map(p => {
-                    const price = p.complimentaryServices.reduce(
-                        (acc, el) => acc + el.price, 0
-                    );
-                    return <div
-                        onClick={handleClick(p)}
-                        className={setClasses(p.id, "totalComplimentary last")}
-                        key={p.id}>{price ? `$${price}` : ''}</div>;
-                })}
-                <div className="total end">
-                    Total <span className="info">(excluding taxes)</span>
-                </div>
-                {packages.map(p =>
-                    <div
-                        onClick={handleClick(p)}
-                        className={setClasses(p.id, `total ${isBmWService ? 'priceWithBefore' : 'price'} end`)}
-                        key={p.id}>
-                        {isBmWService &&
-                        <div className="before">
-                          ${p.complimentaryServices.reduce((acc, el) => acc + el.price, 0)
-                        + p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}
-                        </div>}
-                        <div className="currentWrp">
-                            <div className="triangle"/>
-                            <div className="current">${Number.isInteger(p.price) ? p.price : p.price.toFixed(2)}</div>
-                        </div>
-                    </div>
-                )}
-                <Info>
-                    Note: The maintenance packages may not be available for all vehicle types.  Please speak with your Service Advisor to understand where restrictions apply.
-                </Info>
-            </Wrapper> : null}
+                        <Info>
+                            Note: The maintenance packages may not be available for all vehicle types. Please speak with
+                            your Service Advisor to understand where restrictions apply.
+                        </Info>
+                    </Wrapper>
+                }
+            </React.Fragment> : null}
             <Actions
                 onBack={onBack}
                 nextDisabled={!selectedPackage}

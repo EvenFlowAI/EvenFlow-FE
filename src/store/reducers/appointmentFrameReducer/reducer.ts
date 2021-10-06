@@ -5,9 +5,9 @@ import {
     setAdvisor,
     setAppointmentId,
     setCustomer,
-    setFrameDescription,
+    setFrameDescription, setLoadingPackages,
     setMaintenanceDetails,
-    setPackage,
+    setPackage, setPackages,
     setReminders,
     setTime,
     setTiming,
@@ -18,7 +18,7 @@ import {
 import {
     EServiceCategoryPage,
     ICustomer,
-    ILoadedVehicle,
+    ILoadedVehicle, IPackage,
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
@@ -44,6 +44,8 @@ type TState = {
     reminders: EReminderType[];
     transportation: ITransportation|null;
     maintenanceDetails: TMaintenanceDetails;
+    packages: IPackage[];
+    isPackagesLoading: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -61,7 +63,9 @@ const initialState: TState = {
     },
     reminders: [],
     transportation: null,
-    maintenanceDetails: {}
+    maintenanceDetails: {},
+    packages: [],
+    isPackagesLoading: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -146,5 +150,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             ...c,
             description: payload.comment
         };
+    })
+    .addCase(setLoadingPackages, (state, { payload}) => {
+        return {...state, isPackagesLoading: payload}
+    })
+    .addCase(setPackages, (state, { payload}) => {
+        return {...state, packages: payload}
     })
 )

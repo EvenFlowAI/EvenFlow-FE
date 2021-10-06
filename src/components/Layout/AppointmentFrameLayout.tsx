@@ -238,8 +238,10 @@ export const AppointmentFrameLayout = () => {
             <Container>
                 {isSm && !['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? <SideBar screen={currentScreen} /> : null}
-                {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
+                {!['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
+                {currentScreen === 'packageSelection'
+                    ? <p style={{ fontSize: 16, fontWeight: 'bold'}}>{getTitle()}</p> : null}
                 {currentScreen === 'maintenanceDetails'
                     ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
