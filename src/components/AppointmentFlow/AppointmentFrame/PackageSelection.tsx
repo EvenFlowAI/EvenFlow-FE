@@ -11,8 +11,12 @@ import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
-import {EServiceCenterName, IComplimentaryService, IPackage, IPackageOptions} from "../../../api/types";
-import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import {
+    EServiceCenterName,
+    IPackage,
+    IPackageOptions, TExtendedComplimentary,
+    TExtendedService
+} from "../../../api/types";
 
 const border = '1px solid #DADADA';
 
@@ -20,8 +24,8 @@ type TWithPackages = {
     packages: number[];
 }
 
-type TService = TWithPackages & IServiceRequest;
-type TComplimentary = TWithPackages & IComplimentaryService;
+type TService = TWithPackages & TExtendedService;
+type TComplimentary = TWithPackages & TExtendedComplimentary;
 type TPackage = {
     lastIdx?: number;
     moreIdx?: number[];
