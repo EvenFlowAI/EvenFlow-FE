@@ -25,8 +25,8 @@ type TWithPackages = {
     packages: number[];
 }
 
-type TService = TWithPackages & TExtendedService;
-type TComplimentary = TWithPackages & TExtendedComplimentary;
+export type TService = TWithPackages & TExtendedService;
+export type TComplimentary = TWithPackages & TExtendedComplimentary;
 export type TPackage = {
     lastIdx?: number;
     moreIdx?: number[];
@@ -291,8 +291,6 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         dispatch(setPackage(p));
     }
 
-    console.log(packages);
-
     return (
         <StepWrapper>
             <NoItemsLoading
@@ -303,7 +301,10 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
             />
             {packages.length ? <React.Fragment>
                 {isXs
-                    ? <PackageSelectionMobile data={packages}/>
+                    ? <PackageSelectionMobile
+                        data={packages}
+                        isBmWService={isBmWService}
+                        />
                     : <Wrapper>
                         <div className='top'/>
                         {packages.map(p => <div

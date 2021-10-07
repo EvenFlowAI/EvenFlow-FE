@@ -3,10 +3,9 @@ import {Tab, Tabs as Ts, withStyles} from "@material-ui/core";
 import {Done} from "@material-ui/icons";
 import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
-import {useParams} from "react-router-dom";
-import {loadPackages} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch} from "react-redux";
 import {TPackage} from "./PackageSelection";
+import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useDispatch} from "react-redux";
 
 const style = withStyles(theme => ({
     root: {
@@ -48,10 +47,12 @@ type TTabLabelProps = {
 
 type PackageSelectionMobileProps = {
     data: TPackage[];
+    isBmWService: boolean;
 }
 
 const useStyles = makeStyles(() => ({
     wrapper: {
+        width: '100%',
         padding: 0,
         marginTop: 17,
         border: '1px solid rgba(0, 0, 0, 0.15)',
@@ -101,30 +102,87 @@ const useStyles = makeStyles(() => ({
     serviceRequests: {
         display: 'flex',
         flexDirection: 'column',
-        padding: 10,
+        minHeight: '35vh',
+        padding: '10px 0',
+        fontSize: 14,
+        borderBottom: '1px solid black',
     },
     totalMaintenance: {
-
+        display: 'flex',
+        justifyContent: 'space-between',
+        fontWeight: 'bold',
+        fontSize: 12,
+        padding: '8px 12px 0 12px',
+        color: '#252733',
     },
     complimentaryTitle: {
-
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontWeight: 'bold',
+        fontSize: 14,
+        padding: 10,
+        color: "black",
+        backgroundColor: '#89E5AB',
+        marginTop: 16,
     },
     complimentaryServices: {
         display: 'flex',
         flexDirection: 'column',
         alignContent: 'center',
-        padding: 16,
+        padding: 10,
+        background: '#E6FCEC',
+        minHeight: '12vh'
     },
     complimentaryTotal: {
-
+        color: '#008331',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '8px 12px 16px 12px',
+        borderBottom: '1px solid black',
+        fontWeight: 'bold',
     },
     totalSums: {
-
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '8px 12px 22px 12px',
+    },
+    currentWrp: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "stretch"
+    },
+    triangle: {
+        width: 0,
+        height: 0,
+        borderTop: "10px solid transparent",
+        borderBottom: "10px solid transparent",
+        borderRight: "10px solid #000000",
+    },
+    current: {
+        background: "#000000",
+        color: "#FFFFFF",
+        fontSize: 16,
+        fontWeight: 'bold',
+        padding: '0 7px',
     },
     serviceRequest: {
         margin: 0,
         textAlign: 'center',
         padding: 5,
+    },
+    prevPrice: {
+        color: '#828282',
+        textDecoration: "line-through",
+        fontSize: 12,
+    },
+    total: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: '8px 12px 22px 12px',
     }
 }))
 
@@ -144,19 +202,21 @@ const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
     return <div className={classes.iconWrapper}>{isSelected && <Done  className={classes.icon} htmlColor={'white'}/>} {text}</div>
 }
 
-const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data }) => {
+const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, isBmWService }) => {
     const [value, setValue] = useState<string>('1');
-    const {id} = useParams();
     const dispatch = useDispatch();
     const classes = useStyles();
 
+    useEffect(() => {
+        const currentPackage = data[+value];
+        currentPackage && dispatch(setPackage(currentPackage));
+    }, [value])
+
     const handleChange = (e: ChangeEvent<{}>, newValue: any): void => {
         setValue(newValue);
+        const currentPackage = data[newValue];
+        currentPackage && dispatch(setPackage(currentPackage));
     }
-
-    useEffect(() => {
-        if (id) dispatch(loadPackages(id))
-    }, [id])
 
     return (
         <div className={classes.wrapper}>
@@ -181,13 +241,31 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data })
                             <div className={classes.serviceRequests}>
                                 {item.serviceRequests.map(item => <p className={classes.serviceRequest}>{item.description}</p>)}
                             </div>
-                            <div className={classes.totalMaintenance}>Total Maintenance Value:</div>
+                            { isBmWService && <div className={classes.totalMaintenance}>
+                                <span>Total Maintenance Value:</span>
+                                <span>${item.serviceRequests.reduce((a, b) => a + +b.price, 0)}</span>
+                                </div>
+                            }
                             <div className={classes.complimentaryTitle}>Complimentary</div>
                             <div className={classes.complimentaryServices}>
-                                {item.complimentaryServices.map(item => item.name)}
+                                {item.complimentaryServices.map(item => <p className={classes.serviceRequest}>{item.name}</p>)}
                             </div>
-                            <div className={classes.complimentaryTotal}>Total Complimentary Value:</div>
-                            <div className={classes.totalSums}/>
+                            <div className={classes.complimentaryTotal}>
+                                <span>Total Complimentary Value:</span>
+                                <span>${item.complimentaryServices.reduce((a, b) => a + +b.price, 0)}</span>
+                            </div>
+                            <div className={isBmWService ? classes.totalSums : classes.total}>
+                                {isBmWService &&
+                                <div className={classes.prevPrice}>
+                                    ${item.complimentaryServices.reduce((acc, el) => acc + +el.price, 0)
+                                + item.serviceRequests.reduce((acc, el) => acc + +el.price, 0)}
+                                </div>}
+                                <div className={classes.currentWrp}>
+                                    <div className={classes.triangle}/>
+                                    <div
+                                        className={classes.current}>${Number.isInteger(item.price) ? item.price : +item.price.toFixed(2)}</div>
+                                </div>
+                            </div>
                         </div>
                     </TabPanel>
                 ))}
