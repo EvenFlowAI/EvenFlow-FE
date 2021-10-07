@@ -18,6 +18,7 @@ const cellPadding = 16;
 const compactPadding = "5px 15px"
 type TStyleProps = {
     compact: boolean;
+    smallHeaderFont: boolean;
 }
 const useStyles = makeStyles(theme => ({
     root: {
@@ -33,8 +34,8 @@ const useStyles = makeStyles(theme => ({
             padding: theme.spacing(1)
         }
     }),
-    tableHead: ({compact}: TStyleProps) => ({
-        fontSize: compact ? 14 : 16,
+    tableHead: ({compact, smallHeaderFont}: TStyleProps) => ({
+        fontSize: smallHeaderFont ? 12 : compact ? 14 : 16,
         border: "none",
         // borderBottomColor: "#9DA8B5",
         padding: compact ? compactPadding : cellPadding,
@@ -65,7 +66,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITableProps<U>): JSX.Element {
-    const classes = useStyles({compact: Boolean(props.compact)});
+    const classes = useStyles({compact: Boolean(props.compact), smallHeaderFont: Boolean(props.smallHeaderFont)});
 
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
