@@ -92,3 +92,19 @@ export const getOptionsTableData = (pack: IPackageById) => {
     })
     return data;
 };
+
+export const checkIsValid = (packageData: IPackageById | null): [boolean, string[] | []] => {
+    let isValid = false;
+    let messages = [];
+    const allPricesAndHoursFilled = !packageData?.options.find(option => (
+        !Boolean(option.serviceRequestPrice)
+        || !Boolean(option.serviceRequestLaborHours)
+        || !Boolean(option.complimentaryServicePrice)
+        || !Boolean(option.complimentaryServiceLaborHours)
+    ));
+    const requestsIncluded = !!packageData?.options.every(option => option.serviceRequests.length && option.complimentaryServices.length);
+    if (allPricesAndHoursFilled && requestsIncluded) isValid = true;
+    if (!allPricesAndHoursFilled) messages.push('Market Prices and Invoiced Labor Hours must be more than 0');
+    if (!requestsIncluded) messages.push('Please choose at least one Service Request and one Complimentary request for each Package Option');
+    return [isValid, messages];
+}

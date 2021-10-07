@@ -59,6 +59,11 @@ const useStyles = makeStyles(() => ({
       background: 'transparent',
       border: 'none',
       outline: 'none',
+    },
+    value: {
+        width: 56,
+        textAlign: 'center',
+        color: '#9FA2B4',
     }
 }));
 
@@ -89,13 +94,19 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
                     .map((item, index) => <div
                     key={index}
                     className={item.isEditable ? classes.editableCell : classes.cell}>
-                    <input
-                        type="text"
-                        className={classes.input}
-                        value={getValue(item)}
-                        disabled={!isEdit}
-                        onChange={e => onChange(e, item)}
-                    />
+                        {
+                            item.isEditable && isEdit ? <input
+                                type="number"
+                                min="0.01"
+                                step="0.01"
+                                className={classes.input}
+                                value={getValue(item)}
+                                disabled={!isEdit}
+                                onChange={e => onChange(e, item)}
+                            /> : <div className={classes.value}>
+                                {getValue(item)}
+                            </div>
+                        }
                     {item.isEditable && isEdit && <Edit
                         htmlColor="rgba(0, 0, 0, 0.54)"
                         fontSize="small"

@@ -14,7 +14,7 @@ import {ServiceRequests} from "../ServiceRequests/ServiceRequests";
 import {OptionsTable} from "../OptionsTable/OptionsTable";
 import SummaryRow from "../SummaryRow/SummaryRow";
 import ComplimentaryRequests from "../../ComplimentaryRequests/ComplimentaryRequests";
-import {getOptionsTableData} from "../../utils";
+import {checkIsValid, getOptionsTableData} from "../../utils";
 import {useConfirm, useException} from "../../../../utils/hooks";
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
@@ -200,11 +200,22 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }
 
+    const getFixedValue = (value: number): number => {
+        if (Number.isInteger(+value)) return +value;
+        const [integer, decimal] = value.toString().split('.');
+        if (decimal.length <= 2) {
+            return +value
+        } else {
+            return Number(`${integer}.${decimal.slice(0, 2)}`);
+        }
+    }
+
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => {
         if (packageData) {
             let currentOption = packageData.options.find(option => option.type === optionType);
             if (currentOption) {
-                currentOption = {...currentOption, [fieldName as keyof IPackageOptionDetailed]: e.target.value};
+                const value = getFixedValue(+e.target.value);
+                currentOption = {...currentOption, [fieldName as keyof IPackageOptionDetailed]: value};
                 const updated = {...packageData,
                     options: packageData.options
                         .filter(item => item.type !== optionType)
@@ -250,18 +261,15 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         setIsEdit(false);
     }
 
-    const checkIsValid = (): boolean => {
-        return !!packageData?.options.every(option => option.serviceRequests.length && option.complimentaryServices.length);
-    }
-
     const handleSave = (): void => {
-        if (checkIsValid()) {
+        const [isValid, messages] = checkIsValid(packageData);
+        if (isValid) {
             if (packageData) {
                 dispatch(updatePackageOptions(packageData.id, packageData.options))
                 setIsEdit(false);
             }
         } else {
-            showError('Pleas choose at least one Service Request and one Complimentary request for each Package Option')
+            messages.forEach(message => showError(message))
         }
 
     }
@@ -283,7 +291,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             <div className={classes.titleWrapper}>
                 <Typography className={classes.title}>{title}</Typography>
                 <div className={classes.iconsWrapper}>
-                    <IconButton className={classes.button} onClick={onMoreIconClick} ref={anchorRef}>
+                    <IconButton
+                        className={classes.button}
+                        onClick={onMoreIconClick}
+                        ref={anchorRef}
+                        disabled={!expanded || !packageData}>
                         <MoreHoriz />
                     </IconButton>
                     <IconButton className={classes.button} onClick={handleExpand}>
