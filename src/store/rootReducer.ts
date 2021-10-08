@@ -17,6 +17,7 @@ import {offersReducer} from "./reducers/offers/reducer";
 import {appointmentReducer} from "./reducers/appointment/reducer";
 import {pricingSettingsReducer} from "./reducers/pricingSettings/reducer";
 import {appointmentFrameReducer} from "./reducers/appointmentFrameReducer/reducer";
+import {packagesReducer} from "./reducers/packages/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -38,5 +39,6 @@ export const rootReducer = combineReducers({
     bays: baysReducer,
     valueSettings: valueSettingsReducer,
     serviceRequests: serviceRequestsReducer,
+    packages: packagesReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

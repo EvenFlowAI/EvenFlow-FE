@@ -63,6 +63,7 @@ export const AppointmentFrameLayout = () => {
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isXs = useMediaQuery(theme.breakpoints.down('xs'));
 
     const {id} = useParams();
     const history = useHistory();
@@ -236,10 +237,12 @@ export const AppointmentFrameLayout = () => {
     return (
         <MuiThemeProvider theme={frameTheme}>
             <Container>
-                {isSm && !['carSelection', 'appointmentConfirmed'].includes(currentScreen)
+                {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
                     ? <SideBar screen={currentScreen} /> : null}
-                {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
+                {!['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
+                {isXs && currentScreen === 'packageSelection'
+                    ? <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 0}}>{getTitle()}</p> : null}
                 {currentScreen === 'maintenanceDetails'
                     ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)

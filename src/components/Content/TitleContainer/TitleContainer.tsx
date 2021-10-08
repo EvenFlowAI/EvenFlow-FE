@@ -26,11 +26,14 @@ const useStyles = makeStyles(theme => ({
                 marginTop: theme.spacing(1)
             }
         }
-    })
+    }),
+    emptyTitle: {
+        width: '50%',
+    }
 }));
 
 type TProps = {
-    title: string;
+    title?: string;
     subtitle?: string;
     pad?: boolean;
     parent?: TTitle;
@@ -39,7 +42,7 @@ type TProps = {
 export const TitleContainer: React.FC<TProps> = ({pad, parent, title, subtitle, actions}) => {
     const classes = useStyles({pad: Boolean(pad)});
     return <div className={classes.container}>
-        <ContentTitle parent={parent} title={title} subtitle={subtitle} />
+        {title ? <ContentTitle parent={parent} title={title} subtitle={subtitle} /> : <div className={classes.emptyTitle}/>}
         {actions ? typeof actions === 'boolean' ? <ContentActions /> : actions : null}
     </div>;
 }

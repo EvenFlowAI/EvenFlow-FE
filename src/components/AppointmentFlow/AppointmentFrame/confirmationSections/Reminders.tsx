@@ -11,9 +11,8 @@ const FlexGroup = styled(FormGroup)({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: "32px",
     "& label": {
-        marginRight: 0
+        marginRight: 32
     }
 })
 

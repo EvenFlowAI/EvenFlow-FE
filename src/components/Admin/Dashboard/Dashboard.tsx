@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo} from "react";
 import {Box, Button, Grid, Paper} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
+import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     Alarm, Build, ChevronRight,
@@ -22,9 +23,12 @@ import {Bays} from "../../Modals/Bays/Bays";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
 import {DashPodsModal} from "../../Modals/PODModal/DashPodsModal";
+import {TransportationOptions} from "../../Modals/TransportationOptions/TransportationOptions";
 import {SquarePaper} from "../../UI/Paper";
-import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {ReactComponent as ServiceCodes} from "../../../assets/img/serviceOpsCodes.svg";
+import {ReactComponent as Transportation} from "../../../assets/img/transportation_options.svg";
+import {ReactComponent as Consultant} from "../../../assets/img/consultant_configuration.svg";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -186,6 +190,22 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenPods,
         isOpen: isOpenPods,
     } = useModal();
+    const {
+        onClose: onCloseTransOptions,
+        onOpen: onOpenTransOptions,
+        isOpen: isOpenTransOptions,
+    } = useModal();
+    // todo change actions
+    const {
+        onClose: onCloseServicesOps,
+        onOpen: onOpenServicesOps,
+        isOpen: isOpenServicesOps,
+    } = useModal();
+    const {
+        onClose: onCloseConsultant,
+        onOpen: onOpenConsultant,
+        isOpen: isOpenConsultant,
+    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -195,14 +215,17 @@ export const AdminDashboard: React.FC = () => {
     }));
 
     const items: TItem[] = [
-        {label: "Address", icon: <PlaceOutlined />, action: onOpenAddress},
-        {label: "Hours of operation", icon: <Alarm />, action: onOpenHOO},
-        {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
-        {label: "Bays", icon: <Build />, action: onOpenBays},
-        {label: "Breaks", icon: <FreeBreakfastOutlined />, action: onOpenB},
-        {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
-        {label: "Technicians", icon: <PeopleAltOutlined />, action: onOpenTech},
-        {label: "Pods", icon: <FormatListNumbered />, action: onOpenPods},
+        {label: "Address", icon: <PlaceOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenAddress},
+        {label: "Hours of operation", icon: <Alarm htmlColor='rgb(94, 95, 102)'/>, action: onOpenHOO},
+        {label: "Weekly schedule", icon: <DateRange htmlColor='rgb(94, 95, 102)'/>, action: onOpenWS},
+        {label: "Bays", icon: <Build htmlColor='rgb(94, 95, 102)'/>, action: onOpenBays},
+        {label: "Breaks", icon: <FreeBreakfastOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenB},
+        {label: "Holidays", icon: <LockOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenH},
+        {label: "Technicians", icon: <PeopleAltOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenTech},
+        {label: "Pods", icon: <FormatListNumbered htmlColor='rgb(94, 95, 102)'/>, action: onOpenPods},
+        {label: "Transportation Options", icon: <Transportation />, action: onOpenTransOptions},
+        {label: "Service Ops Codes Mapping", icon: <ServiceCodes />, action: onOpenServicesOps},
+        {label: "Consultant Configuration", icon: <Consultant />, action: onOpenConsultant},
     ];
 
     const classes = useStyles();
@@ -246,5 +269,6 @@ export const AdminDashboard: React.FC = () => {
         <Technicians open={isTechOpen} onClose={onCloseTech} />
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
         <DashPodsModal viewMode={isCCRView} open={isOpenPods} onClose={onClosePods} />
+        <TransportationOptions viewMode={isCCRView} open={isOpenTransOptions} onClose={onCloseTransOptions}/>
     </div>
 }
