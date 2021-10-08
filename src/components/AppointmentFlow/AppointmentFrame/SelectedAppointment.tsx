@@ -138,17 +138,19 @@ export const SelectedAppointment = () => {
                         <li>
                             <div className={classes.selectWrapper}>
                                 Advisor: {isXs ? <br/> : null}
-                                {isBmWService
-                                    ? <Select
+                                    <Select
                                         value={advisor?.id || "Any"}
                                         className={classes.select}
                                         onChange={handleConsultantChange}>
-                                        {consultants
-                                            .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
-                                            .concat([<MenuItem value="Any">Any Available</MenuItem>])}
+                                        {isBmWService
+                                            ? consultants
+                                                .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
+                                                .concat([<MenuItem value="Any">Any Available</MenuItem>])
+                                            : <MenuItem value={advisor ? advisor.id : "Any"}>
+                                                {advisor ? advisor.name : 'Any Available'}
+                                              </MenuItem>
+                                        }
                                     </Select>
-                                    : <span>{advisor?.name ?? 'Any available'}</span>
-                                }
                             </div>
                         </li>
 

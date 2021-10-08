@@ -17,6 +17,8 @@ import {SearchInput} from "../../UI/SearchInput";
 import {LoadingButton} from "../../UI/Button";
 import {updatePackageOptions} from "../../../store/reducers/packages/actions";
 import {Autocomplete} from "@material-ui/lab";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {MaintenanceOptions} from "../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "OPs code", val: el => el.code, orderId: "code"},
@@ -27,9 +29,15 @@ type TModalProps = DialogProps & {
     packageName: string;
 }
 
+type TSelectedOption = {
+    type: string | number;
+    name: string;
+}
+
 const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     const [selectedCode, setSelectedCode] = useState<number | null>(null);
     const [saving, setSaving] = useState<boolean>(false);
+    const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [
@@ -82,13 +90,22 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
         }
     }
 
+    const onSelectOption = (e: React.ChangeEvent<{}>, value: string) => {
+        // setSelectedOption({name: MaintenanceOptions[value], type: value});
+        console.log(value);
+    }
+
     return (
         <BaseModal {...props}>
             <DialogTitle onClose={props.onClose}>Assign Ops Code</DialogTitle>
             <DialogContentTitle title={props.packageName}/>
             <DialogContent>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
-
+                    {/*{currentPackage && <Autocomplete*/}
+                    {/*    options={currentPackage.options.map(option => ({name: MaintenanceOptions[option.type], type: option.type}))}*/}
+                    {/*    onChange={onSelectOption}*/}
+                    {/*    renderInput={autocompleteRender({label: "Select A Package Option", fullWidth: true})}*/}
+                    {/*    value={selectedOption?.type ?? null}/>}*/}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>
                 <Table<IServiceRequest>
