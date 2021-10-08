@@ -15,11 +15,12 @@ import {OptionsTable} from "../OptionsTable/OptionsTable";
 import SummaryRow from "../SummaryRow/SummaryRow";
 import ComplimentaryRequests from "../../ComplimentaryRequests/ComplimentaryRequests";
 import {checkIsValid, getOptionsTableData} from "../../utils";
-import {useConfirm, useException} from "../../../../utils/hooks";
+import {useConfirm, useException, useModal} from "../../../../utils/hooks";
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadPackageById, removePackageById, updatePackageOptions} from "../../../../store/reducers/packages/actions";
+import AssignOpsCodeModal from "../../../Modals/AssignOpsCodeModal/AssignOpsCodeModal";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -124,6 +125,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [detailsData, setDetailsData] = useState<IDetailsData | null>(null);
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const { askConfirm } = useConfirm();
     const anchorRef = useRef(null);
     const dispatch = useDispatch();
@@ -250,7 +252,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }
 
     const handleAddOpsCode = (): void => {
-        // TODO logic
+        onAssignOpsCodeOpen();
     }
 
     const handleCancel = (): void => {
@@ -371,5 +373,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
+        <AssignOpsCodeModal packageName={title} open={isAssignOpsCodeOpen} onClose={onAssignOpsCodeClose}/>
     </MuiAccordion>
 }

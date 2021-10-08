@@ -12,17 +12,18 @@ import {
     setNonSelectedFilter,
     setNonSelectedPageData
 } from "../../../store/reducers/serviceRequests/actions";
-import {BaseModal, DialogActions, DialogContent, DialogContentTitle, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {SearchInput} from "../../UI/SearchInput";
 import {LoadingButton} from "../../UI/Button";
-import {updatePackageOptions} from "../../../store/reducers/packages/actions";
+import {updatePackage} from "../../../store/reducers/packages/actions";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {MaintenanceOptions} from "../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
+import {makeStyles} from "@material-ui/core/styles";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
-    {header: "OPs code", val: el => el.code, orderId: "code"},
-    {header: "Description", val: el => el.description, orderId: "description"},
+    {header: "OPS CODE", val: el => el.code},
+    {header: "DESCRIPTION", val: el => el.description},
 ]
 
 type TModalProps = DialogProps & {
@@ -34,12 +35,33 @@ type TSelectedOption = {
     name: string;
 }
 
+const useStyles = makeStyles(() => ({
+    wrapper: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center', width: '100%',
+        marginBottom: 10,
+        padding: 10,
+    },
+    optionLabel: {
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    subTitle: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: 20,
+        fontSize: 17,
+    }
+}))
+
 const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     const [selectedCode, setSelectedCode] = useState<number | null>(null);
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const classes = useStyles();
     const [
         serviceList,
         isLoading,
@@ -82,30 +104,32 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
     }
 
-    const handleAssign = () => {
-        setSaving(true);
-        if (currentPackage) {
-            // const data = []
-            // dispatch(updatePackageOptions(currentPackage.id, data))
+    const handleAssign = async () => {
+        if (currentPackage && selectedOption && selectedCode) {
+            const newRequest = {type: +selectedOption.type, serviceRequestId: selectedCode};
+            const data = {...currentPackage, serviceRequestsAssigned: [...currentPackage.serviceRequestsAssigned, newRequest]};
+            await dispatch(updatePackage(currentPackage.id, data))
+            await setSaving(false);
         }
     }
 
-    const onSelectOption = (e: React.ChangeEvent<{}>, value: string) => {
-        // setSelectedOption({name: MaintenanceOptions[value], type: value});
-        console.log(value);
+    const onSelectOption = (e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
+        setSelectedOption(value);
     }
 
     return (
         <BaseModal {...props}>
-            <DialogTitle onClose={props.onClose}>Assign Ops Code</DialogTitle>
-            <DialogContentTitle title={props.packageName}/>
+            <DialogTitle onClose={props.onClose}>ASSIGN OPS CODE</DialogTitle>
+            <div className={classes.subTitle}>{props.packageName}</div>
             <DialogContent>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
-                    {/*{currentPackage && <Autocomplete*/}
-                    {/*    options={currentPackage.options.map(option => ({name: MaintenanceOptions[option.type], type: option.type}))}*/}
-                    {/*    onChange={onSelectOption}*/}
-                    {/*    renderInput={autocompleteRender({label: "Select A Package Option", fullWidth: true})}*/}
-                    {/*    value={selectedOption?.type ?? null}/>}*/}
+                <div className={classes.wrapper}>
+                    {currentPackage && <Autocomplete
+                        options={currentPackage.options.map(option => ({name: MaintenanceOptions[option.type], type: option.type}))}
+                        getOptionSelected={(option, value) => option.type === value.type}
+                        getOptionLabel={option => option.name}
+                        onChange={onSelectOption}
+                        renderInput={autocompleteRender({label: "Select A Package Option", fullWidth: true})}
+                        value={selectedOption}/>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>
                 <Table<IServiceRequest>
@@ -128,7 +152,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
                 </Button>
                 <LoadingButton
                     loading={saving}
-                    disabled={!selectedCode}
+                    disabled={!selectedCode || !selectedOption}
                     onClick={handleAssign}
                     color="primary"
                     variant="contained"
