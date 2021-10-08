@@ -10,6 +10,7 @@ import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {IBusinessRule, IComplimentaryService, IPackageByQuery} from "../../../api/types";
 import {loadPackages} from "../../../store/reducers/packages/actions";
+import {useModal} from "../../../utils/hooks";
 
 export type TPackage = {
   name: string;
@@ -38,6 +39,7 @@ export const MaintenancePackages = () => {
     const {packages: allPackages} = useSelector((state: RootState) => state.packages);
     const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
+    const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const classes = useStyles();
     const dispatch = useDispatch();
     
