@@ -11,7 +11,7 @@ const TitleWrapper = styled('div')({
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    marginBottom: 8,
+    margin: '8px 0',
     "& svg": {
         color: "#757575"
     }

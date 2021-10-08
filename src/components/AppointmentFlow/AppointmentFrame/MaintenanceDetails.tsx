@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
-import {styled} from "@material-ui/core";
+import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {TActionProps} from "./types";
@@ -59,8 +59,6 @@ const year = moment.utc().year();
 const YEARS = 20;
 const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
-type TTypeNameList = [EVehiclePropType, keyof TMaintenanceDetails];
-
 const selects: TSelect[] = [
     {label: "VIN", name: "vin", noVehicle: true},
     {label: "Make", name: "make", options: 'make'},
@@ -90,6 +88,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     const showError = useException();
 
@@ -140,6 +140,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }, [id]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
+        if (isXS) e.preventDefault();
         if (option && !skip) {
             dispatch(setMaintenanceDetails({[name]: option ?? null}));
             if (["year", "model", "make", "serviceInterval"].includes(name)) {
