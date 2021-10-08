@@ -7,6 +7,7 @@ export type TableRowDataType<DataEl> = {
     orderId?: keyof DataEl | string;
     val: (el: DataEl, idx: number) => string | JSX.Element | undefined | null;
     align?: AlignTypes;
+    width?: number,
 }
 
 export type TableRowDataTypeResp<DataEl> = TableRowDataType<DataEl> & {
@@ -14,6 +15,7 @@ export type TableRowDataTypeResp<DataEl> = TableRowDataType<DataEl> & {
 }
 
 export interface ITableProps<Data> {
+    smallHeaderFont?: boolean;
     compact?: boolean;
     order?: keyof Data | string;
     onSort?: (order: IOrder<Data>) => () => void;
@@ -34,4 +36,5 @@ export interface ITableProps<Data> {
     noDataTitle?: string;
     isLoading?: boolean;
     viewMode?: boolean;
+    hideHeader?: boolean;
 }

@@ -183,7 +183,6 @@ export const OPsCodesPage = () => {
 
     return <>
         <TitleContainer
-            title="Service Requests"
             pad
             parent={optimizerRoot}
             actions={<div style={{display: "flex", alignItems: "center"}}>

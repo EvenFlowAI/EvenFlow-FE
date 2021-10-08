@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
-import {styled} from "@material-ui/core";
+import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {IVehicle} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {Autocomplete} from "@material-ui/lab";
@@ -33,6 +33,7 @@ type TSelect = {
     name: keyof IVehicle;
     options?: string|string[];
     noVehicle?: boolean;
+    isVin?: boolean;
 };
 
 const year = moment.utc().year();
@@ -40,7 +41,7 @@ const YEARS = 20;
 const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
 const selects: TSelect[] = [
-    {label: "VIN", name: "vin", noVehicle: true},
+    {label: "VIN", name: "vin", noVehicle: true, isVin: true},
     {label: "Make", name: "make", options: 'make', noVehicle: true},
     {label: "Year", name: "year", options: yearOptions, noVehicle: true},
     {label: "Model", name: "model", options: "model", noVehicle: true},
@@ -65,13 +66,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
     const [models, setModels] = useState<string[] | []>([]);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
-    const {id} = useParams();
-
-    const showError = useException();
-
-    const dispatch = useDispatch();
-
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+    const {id} = useParams();
+    const dispatch = useDispatch();
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const showError = useException();
 
     const isNewVehicleView = useMemo(() => {
         return !Boolean(customerLoadedData?.vehicles.find(v => v.vin === selectedVehicle?.vin));
@@ -110,6 +110,8 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
 
     const handleChange = (name: keyof IVehicle) =>
         (e: React.ChangeEvent<{}>, option: string|number|object|null) => {
+        if (isXS) e.preventDefault();
+
         if (option) setErrors(e => e.filter(err => err !== name));
         dispatch(updateVehicle({[name]: option}));
 
@@ -162,6 +164,9 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         <SelectWrapper>
             {selects.map(select => {
                 const hasError = errors.includes(select.name);
+                if (!isNewVehicleView && select.isVin) {
+                    return null;
+                }
                 if (select.options) {
                     return <Autocomplete
                         key={select.name}

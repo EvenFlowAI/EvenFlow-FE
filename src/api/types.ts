@@ -17,6 +17,11 @@ export type TApiView = Record<string, TApiEndpoint>;
 
 export type TApi = Record<string, TApiView>;
 
+export type serviceRequestAssigned = {
+    type: number;
+    serviceRequestId: number;
+}
+
 export enum EServiceCategoryPage {
     Page1,
     Page2
@@ -250,15 +255,65 @@ export interface IComplimentaryService {
     durationInHours: number;
 }
 
+export type TServiceRequestShort = {
+    id: number;
+    code: string;
+    description: string;
+    durationInHours: number;
+    price: number;
+}
+
+export type TExtendedComplimentary = {
+    laborAmount: number;
+    partsAmount: number;
+} & IComplimentaryService;
+
+export type TExtendedService = {
+    laborAmount: number;
+    partsAmount: number;
+} & TServiceRequestShort;
+
 export interface IPackageOptions {
     id: number;
     type: EMaintenanceOptionType;
     name: string;
     price: number;
-    serviceRequests: IServiceRequest[];
-    complimentaryServices: IComplimentaryService[];
+    serviceRequests: TExtendedService[];
+    complimentaryServices: TExtendedComplimentary[];
 }
 
 export interface IPackage {
     options: IPackageOptions[];
+}
+
+export interface IPackageByQuery {
+    name: string;
+    id: number;
+    isApplyPricingOptimization: boolean;
+    serviceRequests: TExtendedService[];
+    complimentaryServices: TExtendedComplimentary[];
+}
+
+export interface IPackageById {
+    isApplyPricingOptimization: boolean;
+    options: IPackageOptionDetailed[];
+    serviceRequestsAssigned: serviceRequestAssigned[];
+    name: string;
+    id: number;
+    serviceRequests: TExtendedService[];
+    complimentaryServices: TExtendedComplimentary[];
+    businessRules: IBusinessRule;
+}
+
+export interface IPackageOptionDetailed {
+    id: number;
+    type: EMaintenanceOptionType;
+    price: number;
+    serviceRequests: number[];
+    complimentaryServices: number[];
+    complimentaryServiceLaborHours: number;
+    complimentaryServicePrice: number;
+    maintenancePackageId: number;
+    serviceRequestLaborHours: number;
+    serviceRequestPrice: number;
 }
