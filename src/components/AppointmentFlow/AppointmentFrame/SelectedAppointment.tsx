@@ -1,8 +1,11 @@
-import React from 'react';
-import {styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {useSelector} from "react-redux";
+import React, {useMemo} from 'react';
+import {MenuItem, Select, styled, useMediaQuery, useTheme} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {getMaintenanceDescription} from "./uiUtils";
+import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {makeStyles} from "@material-ui/core/styles";
+import {EServiceCenterName} from "../../../api/types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -70,21 +73,58 @@ const DateWrapper = styled('div')(({theme}) => ({
         marginTop: 16
     }
 }))
+
+const useStyles = makeStyles(() => ({
+    selectWrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        '& > span': {
+            marginLeft: 5,
+        }
+    },
+    select: {
+        width: '100%',
+        marginLeft: 10,
+        borderRadius: 0,
+        '&:before': {
+            display: 'none',
+        },
+        '& > div': {
+            '&:focus': {
+                backgroundColor: 'transparent'
+            }
+        }
+    }
+}))
 // TODO: Advisor|consultant
 export const SelectedAppointment = () => {
     const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
+    const { selectedPackage, advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
+    const { scProfile } = useSelector((state: RootState) => state.appointment);
     const appointment = useSelector((state: RootState) => state.appointment.appointment);
-    const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests
     ]);
+    const dispatch = useDispatch();
+    const classes = useStyles();
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const price = appointment?.priceWithOffer?.value
         ?? appointment?.price.value
         ?? selectedPackage?.price ?? 0;
+
+    const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+            const consultant = consultants.find(item => item.id === e.target.value);
+            if (consultant) {
+                dispatch(setAdvisor(consultant))
+            } else {
+                dispatch(setAdvisor(null));
+            }
+    }
 
     return (
         <div>
@@ -95,12 +135,23 @@ export const SelectedAppointment = () => {
                         getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)
                     }
                     </li>
-                        <li>Advisor: {isXs ? <br/> : null} {
-                            appointmentData.advisor?.name ?? "Any available"
-                        }</li>
-                    {/*<ul>*/}
-                    {/*    <li>See available times for any Consultant</li>*/}
-                    {/*</ul>*/}
+                        <li>
+                            <div className={classes.selectWrapper}>
+                                Advisor: {isXs ? <br/> : null}
+                                {isBmWService
+                                    ? <Select
+                                        value={advisor?.id || "Any"}
+                                        className={classes.select}
+                                        onChange={handleConsultantChange}>
+                                        {consultants
+                                            .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
+                                            .concat([<MenuItem value="Any">Any Available</MenuItem>])}
+                                    </Select>
+                                    : <span>{advisor?.name ?? 'Any available'}</span>
+                                }
+                            </div>
+                        </li>
+
                 </List>
                 <PriceWrapper>
                     {appointment ? <DateWrapper>

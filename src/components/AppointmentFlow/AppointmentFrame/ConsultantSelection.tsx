@@ -5,11 +5,9 @@ import { Actions } from './Actions';
 import {styled, Theme} from "@material-ui/core";
 import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/any-consultant.svg';
 import {useParams} from "react-router-dom";
-import {Api} from "../../../config/requests";
-import {PaginatedAPIResponse, TCallback} from "../../../types/types";
+import {TCallback} from "../../../types/types";
 import { IServiceConsultant } from '../../../api/types';
-import {decodeSCID} from "../../../utils/utils";
-import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {loadConsultants, setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
@@ -82,27 +80,19 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
 
 export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const [consultants, setConsultants] = useState<IServiceConsultant[]>([]);
     const dispatch = useDispatch();
-    const selectedConsultant = useSelector((state: RootState) => state.appointmentFrame.advisor);
+    const {advisor: selectedConsultant, consultants}= useSelector((state: RootState) => state.appointmentFrame);
 
     const {id} = useParams();
 
-    useEffect(() => {
+    const getData = async (id: string) => {
         setLoading(true);
-        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-            Api.endpoints.ServiceConsultants.GetByQuery,
-            {
-                data: {
-                    serviceCenterId: decodeSCID(id)
-                }
-            })
-            .then(({data: {result}}) => {
-                setConsultants(result);
-            })
-            .finally(() => {
-                setLoading(false);
-            })
+        await dispatch(loadConsultants(id));
+        await setLoading(false);
+    }
+
+    useEffect(() => {
+        getData(id).then()
     }, [id]);
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
