@@ -102,10 +102,11 @@ const useStyles = makeStyles(() => ({
     serviceRequests: {
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '35vh',
+        height: '33vh',
         padding: '10px 0',
         fontSize: 14,
         borderBottom: '1px solid black',
+        overflow: 'auto',
     },
     totalMaintenance: {
         display: 'flex',
@@ -132,7 +133,8 @@ const useStyles = makeStyles(() => ({
         alignContent: 'center',
         padding: 10,
         background: '#E6FCEC',
-        minHeight: '12vh'
+        height: '15vh',
+        overflow: 'auto',
     },
     complimentaryTotal: {
         color: '#008331',
