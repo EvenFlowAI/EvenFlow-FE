@@ -20,6 +20,7 @@ import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {MaintenanceOptions} from "../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
 import {makeStyles} from "@material-ui/core/styles";
+import {IUpdatedPackage} from "../../../store/reducers/packages/types";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "OPS CODE", val: el => el.code},
@@ -40,7 +41,6 @@ const useStyles = makeStyles(() => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center', width: '100%',
-        marginBottom: 10,
         padding: 10,
     },
     optionLabel: {
@@ -55,6 +55,12 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const useInputStyles = makeStyles(() => ({
+    inputRoot: {
+        fontWeight: 'bold',
+    }
+}))
+
 const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     const [selectedCode, setSelectedCode] = useState<number | null>(null);
     const [saving, setSaving] = useState<boolean>(false);
@@ -62,6 +68,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
+    const inputClasses = useInputStyles();
     const [
         serviceList,
         isLoading,
@@ -86,13 +93,20 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex]);
 
-    const handleSelect = (el: IServiceRequest) => {
-        setSelectedCode(el.id);
-    }
+    const handleClose = useCallback((): void => {
+        setSelectedOption(null);
+        setSelectedCode(null);
+        dispatch(setNonSelectedFilter({searchTerm: ''}));
+        props.onClose();
+    }, [setSelectedCode, setSelectedOption, props.onClose, dispatch])
 
-    const preActions = (el: IServiceRequest) => {
+    const handleSelect = useCallback((el: IServiceRequest) => {
+        setSelectedCode(el.id);
+    }, [setSelectedCode])
+
+    const preActions = useCallback((el: IServiceRequest) => {
         return <Radio color="primary" checked={selectedCode === +el.id} onChange={() => handleSelect(el)} />
-    }
+    }, [selectedCode, handleSelect])
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {
@@ -100,35 +114,49 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
         }
     }, [dispatch, selectedSC]);
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
-    }
+    }, [dispatch])
 
     const handleAssign = async () => {
         if (currentPackage && selectedOption && selectedCode) {
             const newRequest = {type: +selectedOption.type, serviceRequestId: selectedCode};
-            const data = {...currentPackage, serviceRequestsAssigned: [...currentPackage.serviceRequestsAssigned, newRequest]};
+            const requests = currentPackage.serviceRequestsAssigned.filter(option => +option.type !== +selectedOption.type);
+            requests.push(newRequest);
+            const data: IUpdatedPackage = {
+                serviceRequestsAssigned: requests,
+                serviceRequests: currentPackage.serviceRequests.map(item => item.id),
+                complimentaryServices: currentPackage.complimentaryServices.map(item => item.id),
+                businessRules: currentPackage.businessRules,
+                name: currentPackage.name,
+            };
             await dispatch(updatePackage(currentPackage.id, data))
             await setSaving(false);
+            await handleClose();
         }
     }
 
-    const onSelectOption = (e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
+    const onSelectOption = useCallback((e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
         setSelectedOption(value);
-    }
+    }, [setSelectedOption])
 
     return (
         <BaseModal {...props}>
-            <DialogTitle onClose={props.onClose}>ASSIGN OPS CODE</DialogTitle>
+            <DialogTitle onClose={handleClose}>ASSIGN OPS CODE</DialogTitle>
             <div className={classes.subTitle}>{props.packageName}</div>
             <DialogContent>
                 <div className={classes.wrapper}>
                     {currentPackage && <Autocomplete
+                        classes={inputClasses}
                         options={currentPackage.options.map(option => ({name: MaintenanceOptions[option.type], type: option.type}))}
                         getOptionSelected={(option, value) => option.type === value.type}
                         getOptionLabel={option => option.name}
                         onChange={onSelectOption}
-                        renderInput={autocompleteRender({label: "Select A Package Option", fullWidth: true})}
+                        renderInput={autocompleteRender({
+                            label: "Select A Package Option",
+                            fullWidth: true,
+                            placeholder: 'Select An Option'
+                        })}
                         value={selectedOption}/>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>
@@ -147,7 +175,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.onClose}>
+                <Button onClick={handleClose}>
                     Close
                 </Button>
                 <LoadingButton

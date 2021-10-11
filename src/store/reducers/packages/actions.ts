@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {IPackageById, IPackageByQuery} from "../../../api/types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {IPackageOption} from "./types";
+import {IPackageOption, IUpdatedPackage} from "./types";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
 export const getPackageById = createAction<IPackageById>('Optimizer/GetPackageById');
@@ -58,7 +58,7 @@ export const updatePackageOptions = (id: number, data: IPackageOption[]): AppThu
         .finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updatePackage = (id: number, data: IPackageById): AppThunk => async dispatch => {
+export const updatePackage = (id: number, data: IUpdatedPackage): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.Update, {urlParams: {id}, data})
         .then(result => {
