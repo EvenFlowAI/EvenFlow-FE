@@ -3,21 +3,26 @@ import {DialogProps} from "../types";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
 import {TextField} from "../../UI/TextField";
-import {PlusOneRounded} from "@material-ui/icons";
+import {AddCircleOutline} from "@material-ui/icons";
 import {IconButton, Button} from "@material-ui/core";
 import OpsCode from "./parts/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {mileageOptions, yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {useModal} from "../../../utils/hooks";
+import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
+import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
+import {IAssignedServiceRequest, IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 
 type TModalProps = DialogProps;
 
 interface IVehiclesData {
     make: string[] | undefined;
     model: string[] | undefined;
-    mileageFrom: number | null;
-    mileageTo: number | null;
-    yearFrom: number |null;
-    yearTo: number | null;
+    mileageFrom: string | null;
+    mileageTo: string | null;
+    yearFrom: string |null;
+    yearTo: string | null;
     customerCriteria: string | null;
 }
 
@@ -30,6 +35,9 @@ const baseWrapper = {
 const useStyles = makeStyles(() => ({
     formWrapper: {
        ...baseWrapper,
+        '& .MuiAutocomplete-root': {
+            width: '47%',
+        }
     },
     addExisting: {
         display: "flex",
@@ -37,33 +45,69 @@ const useStyles = makeStyles(() => ({
         color: '#7898FF',
         fontSize: 12,
         marginBottom: 30,
-        '& > span:not(:first-child)': {
-            marginLeft: 12,
-        }
     },
     wideButton: {
-        width: '100%'
+        width: '100%',
+        color: '#7898FF',
+        border: '1px solid #7898FF',
+        borderRadius: 0,
+        marginBottom: 16,
+        fontSize: 12,
     },
     label: {
         fontWeight: 'bold',
         textTransform: 'uppercase',
         fontSize: 12,
+        marginBottom: 10,
     },
     btnsWrapper: {
         ...baseWrapper,
+        marginBottom: 24,
+
+        '& > button:first-child': {
+            marginRight: 24,
+        },
+        '& > button': {
+            fontSize: 12,
+        }
     },
     opsCodesWrapper: {
-        height: 52,
+        height: 124,
         display: 'flex',
+        alignItems: 'start',
+        alignContent: 'start',
         justifyContent: 'stretch',
-        overflow: 'scroll',
+        flexWrap: 'wrap',
+        overflowY: 'auto',
+        marginBottom: 16,
+        background: '#F7F8FB',
+        color: '#B8B9BF',
     },
     emptyOpsCodes: {
-        height: 52,
+        height: 124,
         display: 'flex',
         justifyContent: 'center',
         alignItems: "center",
-        overflow: 'scroll',
+        overflowY: 'auto',
+        marginBottom: 16,
+        background: '#F7F8FB',
+        color: '#B8B9BF',
+    },
+    fullWidth: {
+        '& .MuiInputBase-root': {
+            width: '100%',
+        }
+    },
+    contentWrapper: {
+        padding: 20
+    },
+    iconPlus: {
+        '& .MuiSvgIcon-root': {
+            fill: '#7898FF',
+        }
+    },
+    option: {
+
     }
 }))
 
@@ -80,10 +124,13 @@ const initialValues = {
 const AddPackage: React.FC<TModalProps> = (props) => {
     const [packageName, setPackageName] = useState<string | null>(null);
     const [addedExistingPackages, setAddedExistingPackages] = useState<number[] | []>([]);
-    const [opsCodes, setOpsCodes] = useState<number[]>([]);
+    const [opsCodes, setOpsCodes] = useState<IAssignedServiceRequest[]>([]);
+    const [assignedOpsCodes, setAssignedOpsCodes] = useState<number[]>([]);
     const [complimentary, setComplimentary] = useState<number[]>([]);
     const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
     const classes = useStyles();
+    const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
+    const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
 
     const handleClose = useCallback(() => {
         props.onClose();
@@ -97,62 +144,62 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     }, [])
 
-    const assignOpsCode = useCallback((): void => {
-
-    }, [])
-
-    const addOpsCode = useCallback((): void => {
-
-    }, [])
-
-    const openOpsCodesModal = useCallback((): void => {
-
-    }, [])
-
     const addComplimentary = useCallback((): void => {
 
     }, [])
 
     const onFormFieldChange = useCallback(
         (fieldName: keyof IVehiclesData) =>
-        (e: React.ChangeEvent<{}>, value: string[] | number | null): void => {
+        (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {
        setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
     }, [])
 
-    const onDelete = (code: number): void => {
-        setOpsCodes(prev => prev.filter(item => item !== code));
+    const onDelete = (serviceRequest: IServiceRequest): void => {
+        setOpsCodes(prev => prev.filter(item => serviceRequest.id !== item.serviceRequest.id));
     }
 
     return (
         <BaseModal {...props} width={460}>
             <DialogTitle onClose={handleClose}>Add Maintenance Package</DialogTitle>
             <DialogContent>
-                <TextField label='Maintenance Package Name' onChange={onNameChange} value={packageName}/>
+                <div className={classes.contentWrapper}>
+                <div className={classes.fullWidth}>
+                    <TextField
+                        label='Maintenance Package Name'
+                        placeholder='Type Package Name'
+                        onChange={onNameChange}
+                        value={packageName}/>
+                </div>
                 <div className={classes.addExisting}>
-                    <IconButton onClick={onAddExistingClick}><PlusOneRounded/></IconButton>
+                    <IconButton onClick={onAddExistingClick} className={classes.iconPlus}>
+                        <AddCircleOutline/>
+                    </IconButton>
                     <span> Add New Existing Maintenance Package</span>
                 </div>
                 <Button
                     className={classes.wideButton}
                     color="primary"
-                    onClick={assignOpsCode}>
+                    onClick={onAssignOpsCodeOpen}>
                     Assign Ops Code To Package
                 </Button>
+                    <div className={classes.label}>Ops Codes</div>
                 <div className={opsCodes?.length ? classes.opsCodesWrapper : classes.emptyOpsCodes}>
                     { opsCodes?.length
-                        ? opsCodes.map(item => <OpsCode code={item} onDelete={onDelete}/>)
+                        ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete}/>)
                         : <p>There are no ops codes in this list yet</p>
                     }
                 </div>
-                <span className={classes.label}>Add Ops Code To Package</span>
+                <div className={classes.label}>Add Ops Code To Package</div>
                 <div className={classes.btnsWrapper}>
                     <Button
                         color="primary"
-                        onClick={openOpsCodesModal}>
+                        className={classes.wideButton}
+                        onClick={onAddOpsCodeOpen}>
                         Add Ops Codes
                     </Button>
                     <Button
                         color="primary"
+                        className={classes.wideButton}
                         onClick={addComplimentary}>
                         Add Complimentary
                     </Button>
@@ -174,36 +221,51 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         onChange={onFormFieldChange('model')}
                         renderInput={autocompleteRender({label: "Model", fullWidth: true, placeholder: 'Select Model'})}
                     />
+                </div>
+                    <div className={classes.formWrapper}>
                     <Autocomplete
-                        options={[1000, 10000, 20000]}
+                        options={mileageOptions}
                         disableCloseOnSelect
                         value={vehiclesData?.mileageFrom}
                         onChange={onFormFieldChange('mileageFrom')}
                         renderInput={autocompleteRender({label: "Mileage", placeholder: 'From'})}
                     />
                     <Autocomplete
-                        options={[1000, 10000, 20000]}
+                        options={mileageOptions}
                         disableCloseOnSelect
                         value={vehiclesData?.mileageTo}
                         onChange={onFormFieldChange('mileageTo')}
                         renderInput={autocompleteRender({label: '', placeholder: 'To'})}
                     />
+                    </div>
+                    <div className={classes.formWrapper}>
                     <Autocomplete
-                        options={[1997, 1998, 2000]}
+                        options={yearOptions}
                         disableCloseOnSelect
                         value={vehiclesData?.yearFrom}
                         onChange={onFormFieldChange('yearFrom')}
-                        renderInput={autocompleteRender({label: '', placeholder: 'From'})}
+                        renderInput={autocompleteRender({label: 'Vehicle Year', placeholder: 'From'})}
                     />
                     <Autocomplete
-                        options={[1997, 1998, 2000]}
+                        options={yearOptions}
                         disableCloseOnSelect
                         value={vehiclesData?.yearTo}
                         onChange={onFormFieldChange('yearTo')}
                         renderInput={autocompleteRender({label: '', placeholder: 'To'})}
                     />
+                    </div>
                 </div>
             </DialogContent>
+            <AssignOpsCode
+                open={isAssignOpsCodeOpen}
+                onClose={onAssignOpsCodeClose}
+                selectedCodes={assignedOpsCodes}
+                setSelectedCodes={setAssignedOpsCodes}/>
+            <AddOpsCode
+                open={isAddOpsCodeOpen}
+                onClose={onAddOpsCodeClose}
+                selectedCodes={opsCodes}
+                setSelectedCodes={setOpsCodes}/>
         </BaseModal>
     );
 };
