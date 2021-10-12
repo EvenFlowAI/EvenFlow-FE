@@ -23,8 +23,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {IUpdatedPackage} from "../../../store/reducers/packages/types";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
-    {header: "OPS CODE", val: el => el.code, align: "left"},
-    {header: "DESCRIPTION", val: el => el.description, align: "left"},
+    {header: "OPS CODE", val: el => el.code},
+    {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
 
 type TModalProps = DialogProps & {

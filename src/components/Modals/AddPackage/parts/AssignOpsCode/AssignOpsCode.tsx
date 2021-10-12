@@ -17,24 +17,33 @@ import {
 } from "../../../../../store/reducers/serviceRequests/actions";
 
 import Checkbox from "../../../../UI/Checkbox";
+import {Autocomplete} from "@material-ui/lab";
+import {autocompleteRender} from "../../../../UI/AutocompleteRender";
+import {TFields} from "../AddOpsCode/AddOpsCode";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: number[];
     setSelectedCodes: Dispatch<SetStateAction<number[]>>;
+    isComplimentary?: boolean;
 }
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
-    {header: "OPS CODE", val: el => el.code, align: "left"},
-    {header: "DESCRIPTION", val: el => el.description, align: "left"},
+    {header: "OPS CODE", val: el => el.code},
+    {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
+
+type TStyleProps = {
+    isComplimentary: boolean;
+}
+
 const useStyles = makeStyles(() => ({
-    wrapper: {
+    wrapper: ({ isComplimentary }: TStyleProps) => ({
         display: 'flex',
-        justifyContent: 'end',
+        justifyContent: isComplimentary ? 'space-between' : 'end',
         alignItems: 'center',
         width: '100%',
         padding: 10,
-    },
+    }),
     optionLabel: {
         fontSize: 14,
         fontWeight: 'bold',
@@ -44,13 +53,23 @@ const useStyles = makeStyles(() => ({
         justifyContent: 'center',
         marginBottom: 20,
         fontSize: 17,
+    },
+    filtersWrapper: {
+        width: '50%',
+        display: 'flex',
+        justifyContent: 'start',
+        alignItems: 'center',
+    },
+    filter: {
+        marginRight: 20,
+        width: 150,
     }
 }))
 
 const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const classes = useStyles({isComplimentary: !!props.isComplimentary});
     const [
         serviceList,
         isLoading,
@@ -98,11 +117,31 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
     }, [dispatch])
 
+    const onFilterChange = useCallback(
+        (fieldName: keyof TFields) =>
+            (e: React.ChangeEvent<{}>, value: string | null): void => {
+                console.log(fieldName, value)
+            }, [])
+
     return (
         <BaseModal {...props}>
             <DialogTitle onClose={handleClose}>ASSIGN OPS CODE</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
+                    {props.isComplimentary && <div className={classes.filtersWrapper}>
+                        <Autocomplete
+                            className={classes.filter}
+                            options={['Show all']}
+                            defaultValue='Show all'
+                            onChange={onFilterChange("unitCost")}
+                            renderInput={autocompleteRender({label: "Parts Unit Cost", fullWidth: true})}/>
+                        <Autocomplete
+                            className={classes.filter}
+                            options={['Show all']}
+                            defaultValue='Show all'
+                            onChange={onFilterChange("numberOfParts")}
+                            renderInput={autocompleteRender({label: "# Of Parts", fullWidth: true})}/>
+                    </div>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>
                 <Table<IServiceRequest>

@@ -24,7 +24,7 @@ type TAssignOpsCodeModalProps = DialogProps & {
     setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
 }
 
-type TFields = {
+export type TFields = {
     unitCost: string,
     numberOfParts: string,
 }

@@ -13,6 +13,12 @@ import {useModal} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest, IServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import ExistingPackages, {existingPackagesTableData} from "./parts/ExistingPackages/ExistingPackages";
+import {IPackageByQuery} from "../../../api/types";
+import {Table} from "../../UI/Table";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import Checkbox from "../../UI/Checkbox";
 
 type TModalProps = DialogProps;
 
@@ -82,6 +88,7 @@ const useStyles = makeStyles(() => ({
         marginBottom: 16,
         background: '#F7F8FB',
         color: '#B8B9BF',
+        padding: '6px 12px',
     },
     emptyOpsCodes: {
         height: 124,
@@ -122,15 +129,20 @@ const initialValues = {
 }
 
 const AddPackage: React.FC<TModalProps> = (props) => {
+    const { packages } = useSelector((state: RootState) => state.packages);
+
     const [packageName, setPackageName] = useState<string | null>(null);
-    const [addedExistingPackages, setAddedExistingPackages] = useState<number[] | []>([]);
+    const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
     const [opsCodes, setOpsCodes] = useState<IAssignedServiceRequest[]>([]);
     const [assignedOpsCodes, setAssignedOpsCodes] = useState<number[]>([]);
     const [complimentary, setComplimentary] = useState<number[]>([]);
     const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
-    const classes = useStyles();
+
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
+    const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
+    const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
+    const classes = useStyles();
 
     const handleClose = useCallback(() => {
         props.onClose();
@@ -138,14 +150,6 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setPackageName(e.target.value);
-    }, [])
-
-    const onAddExistingClick = useCallback((): void => {
-
-    }, [])
-
-    const addComplimentary = useCallback((): void => {
-
     }, [])
 
     const onFormFieldChange = useCallback(
@@ -158,114 +162,153 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setOpsCodes(prev => prev.filter(item => serviceRequest.id !== item.serviceRequest.id));
     }
 
+    const handleSelectPackage = useCallback((el: IPackageByQuery) => {
+        setSelectedPackages(prev => {
+            return  prev.includes(+el.id) ? prev.filter(item => item !== el.id) : [...prev, el.id]
+        });
+    }, [setSelectedPackages])
+
+    const preActions = useCallback((el: IPackageByQuery) => {
+        return <Checkbox color="primary" checked={selectedPackages.includes(+el.id)} onChange={() => handleSelectPackage(el)} />
+    }, [selectedPackages, handleSelectPackage])
+
     return (
         <BaseModal {...props} width={460}>
             <DialogTitle onClose={handleClose}>Add Maintenance Package</DialogTitle>
             <DialogContent>
                 <div className={classes.contentWrapper}>
-                <div className={classes.fullWidth}>
-                    <TextField
-                        label='Maintenance Package Name'
-                        placeholder='Type Package Name'
-                        onChange={onNameChange}
-                        value={packageName}/>
-                </div>
-                <div className={classes.addExisting}>
-                    <IconButton onClick={onAddExistingClick} className={classes.iconPlus}>
-                        <AddCircleOutline/>
-                    </IconButton>
-                    <span> Add New Existing Maintenance Package</span>
-                </div>
-                <Button
-                    className={classes.wideButton}
-                    color="primary"
-                    onClick={onAssignOpsCodeOpen}>
-                    Assign Ops Code To Package
-                </Button>
-                    <div className={classes.label}>Ops Codes</div>
-                <div className={opsCodes?.length ? classes.opsCodesWrapper : classes.emptyOpsCodes}>
-                    { opsCodes?.length
-                        ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete}/>)
-                        : <p>There are no ops codes in this list yet</p>
-                    }
-                </div>
-                <div className={classes.label}>Add Ops Code To Package</div>
-                <div className={classes.btnsWrapper}>
-                    <Button
-                        color="primary"
-                        className={classes.wideButton}
-                        onClick={onAddOpsCodeOpen}>
-                        Add Ops Codes
-                    </Button>
-                    <Button
-                        color="primary"
-                        className={classes.wideButton}
-                        onClick={addComplimentary}>
-                        Add Complimentary
-                    </Button>
-                </div>
-                <div className={classes.formWrapper}>
-                    <Autocomplete
-                        multiple
-                        options={['BMW', 'Ford', 'Infinity']}
-                        disableCloseOnSelect
-                        value={vehiclesData?.make}
-                        onChange={onFormFieldChange('make')}
-                        renderInput={autocompleteRender({label: "Make", fullWidth: true, placeholder: 'Select Make'})}
-                    />
-                    <Autocomplete
-                        multiple
-                        options={['2Series', '3Series', '5Series']}
-                        disableCloseOnSelect
-                        value={vehiclesData?.model}
-                        onChange={onFormFieldChange('model')}
-                        renderInput={autocompleteRender({label: "Model", fullWidth: true, placeholder: 'Select Model'})}
-                    />
-                </div>
-                    <div className={classes.formWrapper}>
-                    <Autocomplete
-                        options={mileageOptions}
-                        disableCloseOnSelect
-                        value={vehiclesData?.mileageFrom}
-                        onChange={onFormFieldChange('mileageFrom')}
-                        renderInput={autocompleteRender({label: "Mileage", placeholder: 'From'})}
-                    />
-                    <Autocomplete
-                        options={mileageOptions}
-                        disableCloseOnSelect
-                        value={vehiclesData?.mileageTo}
-                        onChange={onFormFieldChange('mileageTo')}
-                        renderInput={autocompleteRender({label: '', placeholder: 'To'})}
-                    />
+                    <div className={classes.fullWidth}>
+                        <TextField
+                            label='Maintenance Package Name'
+                            placeholder='Type Package Name'
+                            onChange={onNameChange}
+                            value={packageName}/>
                     </div>
+                    {!!selectedPackages.length && <Table<IPackageByQuery>
+                        data={packages.filter(p => selectedPackages.includes(p.id))}
+                        index="id"
+                        hideHeader
+                        startActions={preActions}
+                        compact
+                        rowData={existingPackagesTableData}
+                        hidePagination
+                    />
+                    }
+
+                    <div className={classes.addExisting}>
+                        <IconButton onClick={onExistingOpen} className={classes.iconPlus}>
+                            <AddCircleOutline/>
+                        </IconButton>
+                        <span> Add New Existing Maintenance Package</span>
+                    </div>
+
+                    <Button
+                        className={classes.wideButton}
+                        color="primary"
+                        onClick={onAssignOpsCodeOpen}>
+                        Assign Ops Code To Package
+                    </Button>
+
+                    <div className={classes.label}>Ops Codes</div>
+                    <div className={opsCodes?.length ? classes.opsCodesWrapper : classes.emptyOpsCodes}>
+                        { opsCodes?.length
+                            ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete}/>)
+                            : <p>There are no ops codes in this list yet</p>
+                        }
+                    </div>
+
+                    <div className={classes.label}>Add Ops Code To Package</div>
+                    <div className={classes.btnsWrapper}>
+                        <Button
+                            color="primary"
+                            className={classes.wideButton}
+                            onClick={onAddOpsCodeOpen}>
+                            Add Ops Codes
+                        </Button>
+                        <Button
+                            color="primary"
+                            className={classes.wideButton}
+                            onClick={onComplimentaryOpen}>
+                            Add Complimentary
+                        </Button>
+                    </div>
+
                     <div className={classes.formWrapper}>
-                    <Autocomplete
-                        options={yearOptions}
-                        disableCloseOnSelect
-                        value={vehiclesData?.yearFrom}
-                        onChange={onFormFieldChange('yearFrom')}
-                        renderInput={autocompleteRender({label: 'Vehicle Year', placeholder: 'From'})}
-                    />
-                    <Autocomplete
-                        options={yearOptions}
-                        disableCloseOnSelect
-                        value={vehiclesData?.yearTo}
-                        onChange={onFormFieldChange('yearTo')}
-                        renderInput={autocompleteRender({label: '', placeholder: 'To'})}
-                    />
+                        <Autocomplete
+                            multiple
+                            options={['BMW', 'Ford', 'Infinity']}
+                            disableCloseOnSelect
+                            value={vehiclesData?.make}
+                            onChange={onFormFieldChange('make')}
+                            renderInput={autocompleteRender({label: "Make", fullWidth: true, placeholder: 'Select Make'})}
+                        />
+                        <Autocomplete
+                            multiple
+                            options={['2Series', '3Series', '5Series']}
+                            disableCloseOnSelect
+                            value={vehiclesData?.model}
+                            onChange={onFormFieldChange('model')}
+                            renderInput={autocompleteRender({label: "Model", fullWidth: true, placeholder: 'Select Model'})}
+                        />
+                    </div>
+
+                    <div className={classes.formWrapper}>
+                        <Autocomplete
+                            options={mileageOptions}
+                            disableCloseOnSelect
+                            value={vehiclesData?.mileageFrom}
+                            onChange={onFormFieldChange('mileageFrom')}
+                            renderInput={autocompleteRender({label: "Mileage", placeholder: 'From'})}
+                        />
+                        <Autocomplete
+                            options={mileageOptions}
+                            disableCloseOnSelect
+                            value={vehiclesData?.mileageTo}
+                            onChange={onFormFieldChange('mileageTo')}
+                            renderInput={autocompleteRender({label: '', placeholder: 'To'})}
+                        />
+                    </div>
+
+                    <div className={classes.formWrapper}>
+                        <Autocomplete
+                            options={yearOptions}
+                            disableCloseOnSelect
+                            value={vehiclesData?.yearFrom}
+                            onChange={onFormFieldChange('yearFrom')}
+                            renderInput={autocompleteRender({label: 'Vehicle Year', placeholder: 'From'})}
+                        />
+                        <Autocomplete
+                            options={yearOptions}
+                            disableCloseOnSelect
+                            value={vehiclesData?.yearTo}
+                            onChange={onFormFieldChange('yearTo')}
+                            renderInput={autocompleteRender({label: '', placeholder: 'To'})}
+                        />
                     </div>
                 </div>
             </DialogContent>
+
             <AssignOpsCode
                 open={isAssignOpsCodeOpen}
                 onClose={onAssignOpsCodeClose}
                 selectedCodes={assignedOpsCodes}
                 setSelectedCodes={setAssignedOpsCodes}/>
+            <AssignOpsCode
+                isComplimentary
+                open={isComplimentaryOpen}
+                onClose={onComplimentaryClose}
+                selectedCodes={complimentary}
+                setSelectedCodes={setComplimentary}/>
             <AddOpsCode
                 open={isAddOpsCodeOpen}
                 onClose={onAddOpsCodeClose}
                 selectedCodes={opsCodes}
                 setSelectedCodes={setOpsCodes}/>
+            <ExistingPackages
+                open={isExistingOpen}
+                onClose={onExistingClose}
+                selectedPackages={selectedPackages}
+                setSelectedPackages={setSelectedPackages}/>
         </BaseModal>
     );
 };
