@@ -16,6 +16,7 @@ export type TableRowDataTypeResp<DataEl> = TableRowDataType<DataEl> & {
 
 export interface ITableProps<Data> {
     smallHeaderFont?: boolean;
+    superCompact?: boolean;
     compact?: boolean;
     order?: keyof Data | string;
     onSort?: (order: IOrder<Data>) => () => void;

@@ -13,12 +13,11 @@ import {useModal} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest, IServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import ExistingPackages, {existingPackagesTableData} from "./parts/ExistingPackages/ExistingPackages";
+import ExistingPackages from "./parts/ExistingPackages/ExistingPackages";
 import {IPackageByQuery} from "../../../api/types";
-import {Table} from "../../UI/Table";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import Checkbox from "../../UI/Checkbox";
+import PackageLabel from "./parts/PackageLabel";
 
 type TModalProps = DialogProps;
 
@@ -50,6 +49,7 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
         color: '#7898FF',
         fontSize: 12,
+        paddingLeft: 5,
         marginBottom: 30,
     },
     wideButton: {
@@ -106,15 +106,17 @@ const useStyles = makeStyles(() => ({
         }
     },
     contentWrapper: {
-        padding: 20
+        padding: 20,
     },
     iconPlus: {
         '& .MuiSvgIcon-root': {
             fill: '#7898FF',
         }
     },
-    option: {
-
+    checkbox: {
+      '& > span > input': {
+          padding: 0,
+      }
     }
 }))
 
@@ -162,15 +164,9 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setOpsCodes(prev => prev.filter(item => serviceRequest.id !== item.serviceRequest.id));
     }
 
-    const handleSelectPackage = useCallback((el: IPackageByQuery) => {
-        setSelectedPackages(prev => {
-            return  prev.includes(+el.id) ? prev.filter(item => item !== el.id) : [...prev, el.id]
-        });
-    }, [setSelectedPackages])
-
-    const preActions = useCallback((el: IPackageByQuery) => {
-        return <Checkbox color="primary" checked={selectedPackages.includes(+el.id)} onChange={() => handleSelectPackage(el)} />
-    }, [selectedPackages, handleSelectPackage])
+    const onPackageDelete = (pack: IPackageByQuery) => {
+        setSelectedPackages(prev => prev.includes(pack.id) ? prev.filter(el => el !== pack.id) : [...prev, pack.id]);
+    }
 
     return (
         <BaseModal {...props} width={460}>
@@ -184,16 +180,10 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                             onChange={onNameChange}
                             value={packageName}/>
                     </div>
-                    {!!selectedPackages.length && <Table<IPackageByQuery>
-                        data={packages.filter(p => selectedPackages.includes(p.id))}
-                        index="id"
-                        hideHeader
-                        startActions={preActions}
-                        compact
-                        rowData={existingPackagesTableData}
-                        hidePagination
-                    />
-                    }
+                    {selectedPackages.map(item => {
+                        const pack = packages.find(el => el.id === item)
+                        return pack ? <PackageLabel pack={pack} onDelete={onPackageDelete}/> : null
+                    })}
 
                     <div className={classes.addExisting}>
                         <IconButton onClick={onExistingOpen} className={classes.iconPlus}>

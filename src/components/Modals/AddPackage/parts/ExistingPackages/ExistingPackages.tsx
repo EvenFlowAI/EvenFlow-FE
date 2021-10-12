@@ -36,11 +36,11 @@ const ExistingPackages: React.FC<TAssignOpsCodeModalProps> = (props) => {
             <DialogTitle onClose={props.onClose}>Add Existing Packages</DialogTitle>
             <DialogContent>
                 <Table<IPackageByQuery>
+                    superCompact
                     data={packages}
                     index="id"
                     smallHeaderFont
                     startActions={preActions}
-                    compact
                     hideHeader
                     rowData={existingPackagesTableData}
                     hidePagination
