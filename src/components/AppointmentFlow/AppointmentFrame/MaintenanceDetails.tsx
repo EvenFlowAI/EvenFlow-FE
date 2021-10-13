@@ -19,6 +19,7 @@ import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
+import {IMake} from "../../../store/reducers/appointment/types";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -126,14 +127,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             setModels(['Other']);
         })
 
-        Api.call<string[]>(
+        Api.call<IMake[]>(
             Api.endpoints.Vehicles.Makes,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
                 setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
             }
-            setLoadedOptions(prevOptions => ({...prevOptions, make: data}));
+            setLoadedOptions(prevOptions => ({...prevOptions, make: data.map(item => item.name)}));
         }).catch(() => {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
