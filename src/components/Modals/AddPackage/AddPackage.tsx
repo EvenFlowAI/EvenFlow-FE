@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../types";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
@@ -19,7 +19,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import PackageLabel from "./parts/PackageLabel";
 import {loadMakes} from "../../../store/reducers/packages/actions";
-import MakeAndModel, {TModelOption} from "./parts/MakeAndModel/MakeAndModel";
+import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 
 type TModalProps = DialogProps;
 export type TMake = IMake & {
@@ -140,7 +140,7 @@ const initialMakes = [{
 }]
 
 const AddPackage: React.FC<TModalProps> = (props) => {
-    const { packages } = useSelector((state: RootState) => state.packages);
+    const { packages, makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
 
     const [packageName, setPackageName] = useState<string | null>(null);
@@ -184,22 +184,11 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setSelectedPackages(prev => prev.includes(pack.id) ? prev.filter(el => el !== pack.id) : [...prev, pack.id]);
     }
 
-    const onMakeChange = (e: ChangeEvent<{}>, make: string | null, id: number): void => {
+    const addNewMake = () => {
         setMakes(prev => {
-            const data: TMake = {id, name: make, models: []};
-            const filtered = prev.filter(item => item.id !== id);
-            return [...filtered, data].sort((a, b) => a.id - b.id)
-        })
-    }
-
-    const onModelsChange = (e: ChangeEvent<{}>, models: TModelOption[], id: number): void => {
-        setMakes(prev => {
-            const data = prev.find(item => item.id === id);
-            if (data) {
-                data.models = models.map(model => model.title)
-                const filtered = prev.filter(item => item.id !== id);
-                return [...filtered, data].sort((a, b) => a.id - b.id)
-            } else return prev
+            const lastMake = makes[makes.length - 1];
+            const newMake = { name: null, models: [], id: lastMake.id + 1};
+            return [...prev, newMake];
         })
     }
 
@@ -258,7 +247,22 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         </Button>
                     </div>
 
-                    {makes.map(make => <MakeAndModel data={make} onMakeChange={onMakeChange} onModelsChange={onModelsChange}/>)}
+                    {makes
+                        .sort((a, b) => a.id - b.id)
+                        .map((make, index) => <MakeAndModel
+                            key={make.name || index}
+                            data={make}
+                            setMakes={setMakes}
+                            makes={makes}
+                    />)}
+
+                    {makesFromDB?.length > makes.length &&
+                    <div className={classes.addExisting}>
+                        <IconButton onClick={addNewMake} className={classes.iconPlus}>
+                            <AddCircleOutline/>
+                        </IconButton>
+                        <span> Add New Make</span>
+                    </div>}
 
                     <div className={classes.formWrapper}>
                         <Autocomplete
