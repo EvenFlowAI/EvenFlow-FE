@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../types";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
@@ -14,16 +14,20 @@ import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest, IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import ExistingPackages from "./parts/ExistingPackages/ExistingPackages";
-import {IPackageByQuery} from "../../../api/types";
-import {useSelector} from "react-redux";
+import {IMake, IPackageByQuery} from "../../../api/types";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import PackageLabel from "./parts/PackageLabel";
+import {loadMakes} from "../../../store/reducers/packages/actions";
+import MakeAndModel, {TModelOption} from "./parts/MakeAndModel/MakeAndModel";
 
 type TModalProps = DialogProps;
+export type TMake = IMake & {
+    id: number,
+}
 
 interface IVehiclesData {
-    make: string[] | undefined;
-    model: string[] | undefined;
+    makesWithModels: IMake[] | undefined;
     mileageFrom: string | null;
     mileageTo: string | null;
     yearFrom: string |null;
@@ -121,8 +125,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const initialValues = {
-    make: undefined,
-    model: undefined,
+    makesWithModels: undefined,
     mileageFrom: null,
     mileageTo: null,
     yearFrom: null,
@@ -130,8 +133,15 @@ const initialValues = {
     customerCriteria: null,
 }
 
+const initialMakes = [{
+    name: '',
+    models: [],
+    id: 0,
+}]
+
 const AddPackage: React.FC<TModalProps> = (props) => {
     const { packages } = useSelector((state: RootState) => state.packages);
+    const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
 
     const [packageName, setPackageName] = useState<string | null>(null);
     const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
@@ -139,12 +149,18 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const [assignedOpsCodes, setAssignedOpsCodes] = useState<number[]>([]);
     const [complimentary, setComplimentary] = useState<number[]>([]);
     const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
+    const [makes, setMakes] = useState<TMake[]>(initialMakes)
 
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
     const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
     const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
     const classes = useStyles();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        selectedSC && dispatch(loadMakes(selectedSC.id))
+    }, [dispatch, selectedSC])
 
     const handleClose = useCallback(() => {
         props.onClose();
@@ -166,6 +182,25 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     const onPackageDelete = (pack: IPackageByQuery) => {
         setSelectedPackages(prev => prev.includes(pack.id) ? prev.filter(el => el !== pack.id) : [...prev, pack.id]);
+    }
+
+    const onMakeChange = (e: ChangeEvent<{}>, make: string | null, id: number): void => {
+        setMakes(prev => {
+            const data: TMake = {id, name: make, models: []};
+            const filtered = prev.filter(item => item.id !== id);
+            return [...filtered, data].sort((a, b) => a.id - b.id)
+        })
+    }
+
+    const onModelsChange = (e: ChangeEvent<{}>, models: TModelOption[], id: number): void => {
+        setMakes(prev => {
+            const data = prev.find(item => item.id === id);
+            if (data) {
+                data.models = models.map(model => model.title)
+                const filtered = prev.filter(item => item.id !== id);
+                return [...filtered, data].sort((a, b) => a.id - b.id)
+            } else return prev
+        })
     }
 
     return (
@@ -223,24 +258,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         </Button>
                     </div>
 
-                    <div className={classes.formWrapper}>
-                        <Autocomplete
-                            multiple
-                            options={['BMW', 'Ford', 'Infinity']}
-                            disableCloseOnSelect
-                            value={vehiclesData?.make}
-                            onChange={onFormFieldChange('make')}
-                            renderInput={autocompleteRender({label: "Make", fullWidth: true, placeholder: 'Select Make'})}
-                        />
-                        <Autocomplete
-                            multiple
-                            options={['2Series', '3Series', '5Series']}
-                            disableCloseOnSelect
-                            value={vehiclesData?.model}
-                            onChange={onFormFieldChange('model')}
-                            renderInput={autocompleteRender({label: "Model", fullWidth: true, placeholder: 'Select Model'})}
-                        />
-                    </div>
+                    {makes.map(make => <MakeAndModel data={make} onMakeChange={onMakeChange} onModelsChange={onModelsChange}/>)}
 
                     <div className={classes.formWrapper}>
                         <Autocomplete

@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IPackageById, IPackageByQuery} from "../../../api/types";
+import {IPackageById, IPackageByQuery, IMake} from "../../../api/types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {IPackageOption, IUpdatedPackage} from "./types";
@@ -7,6 +7,7 @@ import {IPackageOption, IUpdatedPackage} from "./types";
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
 export const getPackageById = createAction<IPackageById>('Optimizer/GetPackageById');
 export const getPackagesByQuery = createAction<IPackageByQuery[]>('Optimizer/GetPackages');
+export const getMakes = createAction<IMake[]>('Optimizer/GetVehicles');
 
 export const loadPackageById = (id: number): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
@@ -68,4 +69,14 @@ export const updatePackage = (id: number, data: IUpdatedPackage): AppThunk => as
             console.log(err)
         })
         .finally(() => dispatch(setPackageLoading(false)))
+}
+
+export const loadMakes = (serviceCenterId: number): AppThunk  => async (dispatch, getState) => {
+    Api.call(Api.endpoints.Vehicles.Makes, {params: {serviceCenterId}})
+        .then(result => {
+            if (result) dispatch(getMakes(result.data))
+        })
+        .catch(err => {
+            console.log(err);
+        })
 }

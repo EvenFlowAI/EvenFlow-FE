@@ -294,6 +294,11 @@ export interface IPackageByQuery {
     complimentaryServices: TExtendedComplimentary[];
 }
 
+export interface IMake {
+    name: string | null;
+    models: string[];
+}
+
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
     options: IPackageOptionDetailed[];
