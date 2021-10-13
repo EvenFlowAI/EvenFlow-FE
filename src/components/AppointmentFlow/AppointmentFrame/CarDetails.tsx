@@ -3,7 +3,7 @@ import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {IVehicle} from "../../../store/reducers/appointment/types";
+import {IMake, IVehicle} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
@@ -95,14 +95,14 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         }).catch(() => {
             setModels(['Other']);
         })
-        Api.call<string[]>(
+        Api.call<IMake[]>(
             Api.endpoints.Vehicles.Makes,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
                 setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
             }
-            setLoadedOptions(prevOptions => ({...prevOptions, make: data}));
+            setLoadedOptions(prevOptions => ({...prevOptions, make: data.map(item => item.name)}));
         }).catch(() => {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
