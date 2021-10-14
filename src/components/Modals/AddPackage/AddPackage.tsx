@@ -104,6 +104,17 @@ const useStyles = makeStyles(() => ({
         background: '#F7F8FB',
         color: '#B8B9BF',
     },
+    errorOpsCodes: {
+        height: 124,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: "center",
+        overflowY: 'auto',
+        marginBottom: 16,
+        background: '#F7F8FB',
+        color: '#B8B9BF',
+        border: '1px solid red'
+    },
     fullWidth: {
         '& .MuiInputBase-root': {
             width: '100%',
@@ -154,7 +165,7 @@ const useStyles = makeStyles(() => ({
         '&:hover': {
             color: '#7898FF'
         }
-    }
+    },
 }))
 
 const useAutocompleteStyles = makeStyles(() => ({
@@ -190,7 +201,8 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const [assignedOpsCodes, setAssignedOpsCodes] = useState<number[]>([]);
     const [complimentary, setComplimentary] = useState<number[]>([]);
     const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
-    const [makes, setMakes] = useState<TMake[]>(initialMakes)
+    const [makes, setMakes] = useState<TMake[]>(initialMakes);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
@@ -204,29 +216,42 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         selectedSC && dispatch(loadMakes(selectedSC.id))
     }, [dispatch, selectedSC])
 
-    const handleClose = useCallback(() => {
+    const onCancel = () => {
+        setFormIsChecked(false);
+        setVehiclesData(initialValues);
+        setMakes(initialMakes);
+        setPackageName(null);
+        setSelectedPackages([]);
+        setAssignedOpsCodes([]);
+        setComplimentary([]);
+        setOpsCodes([]);
         props.onClose();
-    }, [])
+    }
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
+        setFormIsChecked(false);
         setPackageName(e.target.value);
     }, [])
 
     const onFormFieldChange = useCallback(
         (fieldName: keyof IVehiclesData) =>
         (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {
-       setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
+            setFormIsChecked(false);
+            setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
     }, [])
 
     const onDelete = (serviceRequest: IServiceRequest): void => {
+        setFormIsChecked(false);
         setOpsCodes(prev => prev.filter(item => serviceRequest.id !== item.serviceRequest.id));
     }
 
     const onPackageDelete = (pack: IPackageByQuery) => {
+        setFormIsChecked(false);
         setSelectedPackages(prev => prev.includes(pack.id) ? prev.filter(el => el !== pack.id) : [...prev, pack.id]);
     }
 
     const addNewMake = () => {
+        setFormIsChecked(false);
         setMakes(prev => {
             const lastMake = makes[makes.length - 1];
             const newMake = { name: null, models: [], id: lastMake.id + 1};
@@ -234,23 +259,70 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         })
     }
 
-    const onCancel = () => {
+    const getRequestsFromSelectedPackages = (): number[] => {
+        const serviceRequests = opsCodes.map(item => item.id);
+        if (selectedPackages) {
+            selectedPackages.forEach(id => {
+                const packData = packages.find(item => item.id === id);
+                if (packData?.serviceRequests) {
+                    serviceRequests.concat(packData.serviceRequests.map(request => request.id))
+                }
+            })
+        }
+        return serviceRequests;
+    }
 
+    const isValid = () => {
+        const { yearFrom, yearTo, mileageFrom, mileageTo } = vehiclesData;
+        return Boolean(packageName && opsCodes.length && yearFrom && yearTo && mileageFrom && mileageTo)
     }
 
     const onSave = () => {
-
+        if (isValid()) {
+            if (selectedSC) {
+                const serviceRequests = getRequestsFromSelectedPackages();
+                if (selectedPackages) {
+                    selectedPackages.forEach(id => {
+                        const packData = packages.find(item => item.id === id);
+                        if (packData?.serviceRequests) {
+                            serviceRequests.concat(packData.serviceRequests.map(request => request.id))
+                        }
+                    })
+                }
+                const data = {
+                    name: packageName,
+                    serviceRequests,
+                    complimentaryServices: complimentary,
+                    serviceRequestsAssigned: assignedOpsCodes,
+                    serviceCenterId: selectedSC.id,
+                    businessRules: {
+                        vehicleMakes: [],
+                        vehicleModels: [],
+                        vehicleYearRange: {
+                            from: vehiclesData.yearFrom,
+                            to: vehiclesData.yearTo
+                        },
+                        vehicleMileageRange: {
+                            from: vehiclesData.mileageFrom,
+                            to: vehiclesData.mileageTo
+                        }
+                    },
+                    customerCriteria: vehiclesData.customerCriteria
+                }
+            }
+        } else setFormIsChecked(true);
     }
 
     return (
         <BaseModal {...props} width={540}>
-            <DialogTitle onClose={handleClose}>Add Maintenance Package</DialogTitle>
+            <DialogTitle onClose={onCancel}>Add Maintenance Package</DialogTitle>
             <DialogContent>
                 <div className={classes.contentWrapper}>
                     <div className={classes.fullWidth}>
                         <TextField
                             label='Maintenance Package Name'
                             placeholder='Type Package Name'
+                            error={!packageName && formIsChecked}
                             onChange={onNameChange}
                             value={packageName}/>
                     </div>
@@ -274,7 +346,11 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     </Button>
 
                     <div className={classes.label}>Ops Codes</div>
-                    <div className={opsCodes?.length ? classes.opsCodesWrapper : classes.emptyOpsCodes}>
+                    <div className={opsCodes?.length
+                        ? classes.opsCodesWrapper
+                        : formIsChecked
+                            ? classes.errorOpsCodes
+                            : classes.emptyOpsCodes}>
                         { opsCodes?.length
                             ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete}/>)
                             : <p>There are no ops codes in this list yet</p>
@@ -304,6 +380,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                             data={make}
                             setMakes={setMakes}
                             makes={makes}
+                            formIsChecked={formIsChecked}
                     />)}
 
                     {makesFromDB?.length > makes.length &&
@@ -325,7 +402,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     disableClearable
                                     value={vehiclesData?.mileageFrom}
                                     onChange={onFormFieldChange('mileageFrom')}
-                                    renderInput={autocompleteRender({label: "", placeholder: 'From'})}
+                                    renderInput={autocompleteRender({label: "", placeholder: 'From', error: !vehiclesData.mileageFrom && formIsChecked})}
                                 />
                                 <Autocomplete
                                     classes={autoCompleteStyles}
@@ -334,7 +411,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     disableClearable
                                     value={vehiclesData?.mileageTo}
                                     onChange={onFormFieldChange('mileageTo')}
-                                    renderInput={autocompleteRender({label: '', placeholder: 'To'})}
+                                    renderInput={autocompleteRender({label: '', placeholder: 'To', error: !vehiclesData.mileageTo && formIsChecked})}
                                 />
                             </div>
                         </div>
@@ -348,7 +425,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     disableCloseOnSelect
                                     value={vehiclesData?.yearFrom}
                                     onChange={onFormFieldChange('yearFrom')}
-                                    renderInput={autocompleteRender({label: '', placeholder: 'From'})}
+                                    renderInput={autocompleteRender({label: '', placeholder: 'From', error: !vehiclesData.yearFrom && formIsChecked})}
                                 />
                                 <Autocomplete
                                     classes={autoCompleteStyles}
@@ -357,7 +434,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     disableCloseOnSelect
                                     value={vehiclesData?.yearTo}
                                     onChange={onFormFieldChange('yearTo')}
-                                    renderInput={autocompleteRender({label: '', placeholder: 'To'})}
+                                    renderInput={autocompleteRender({label: '', placeholder: 'To', error: !vehiclesData.yearTo && formIsChecked})}
                                 />
                             </div>
                         </div>

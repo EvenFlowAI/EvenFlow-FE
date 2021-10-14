@@ -80,3 +80,7 @@ export const loadMakes = (serviceCenterId: number): AppThunk  => async (dispatch
             console.log(err);
         })
 }
+
+// export const createPackage = (data): AppThunk => async dispatch => {
+//
+// }

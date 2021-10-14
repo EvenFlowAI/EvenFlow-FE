@@ -6,7 +6,8 @@ import {RootState} from "../../../../../store/rootReducer";
 import {TMake} from "../../AddPackage";
 import Checkbox from "../../../../UI/Checkbox";
 import {makeStyles} from "@material-ui/core/styles";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {Cancel, CheckBoxOutlineBlank, CheckBoxOutlined, Close} from "@material-ui/icons";
+import {IconButton} from "@material-ui/core";
 
 export type TModelOption = {
     title: string;
@@ -17,6 +18,7 @@ type MakeAndModelProps = {
     data: TMake;
     setMakes: Dispatch<SetStateAction<TMake[]>>;
     makes: TMake[];
+    formIsChecked: boolean;
 }
 
 const optionsState = {
@@ -49,10 +51,24 @@ const useAutoCompleteStyles = makeStyles(() => ({
     },
 }))
 
-const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes}) => {
+const useStyles = makeStyles(() => ({
+    makeWrapper: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 40px',
+        columnGap: 5,
+        alignItems: "center",
+    },
+    iconBtn: {
+        marginTop: 15,
+    }
+}))
+
+const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, formIsChecked}) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const make = useMemo(() => makesFromDB.find(make => make.name === data.name), [makesFromDB, data]);
+    const index = useMemo(() => makes.findIndex(item => item.id === data.id), [makes, data]);
     const classes = useAutoCompleteStyles();
+    const styles = useStyles();
 
     const onMakeChange = (e: ChangeEvent<{}>, make: string | null, id: number): void => {
         if (make) {
@@ -143,30 +159,46 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes}) => 
         </React.Fragment>
     }, [data, make])
 
+    const deleteMake = () => {
+        if (makes.length > 1) setMakes(prev => prev.filter(item => item.id !== data.id));
+    }
+
     return (
-        <div>
-            <Autocomplete
-                style={{ marginBottom: 10 }}
-                options={makesFromDB.map(make => make.name)}
-                value={data?.name || null}
-                onChange={(e, make) => onMakeChange(e, make, data.id)}
-                renderInput={autocompleteRender({label: "Make", fullWidth: true, placeholder: 'Select Make'})}
-            />
-            <Autocomplete
-                multiple
-                style={{ marginBottom: 10 }}
-                classes={classes}
-                options={getModelsOptions()}
-                disableCloseOnSelect
-                disableClearable
-                groupBy={option => option.selected}
-                getOptionLabel={(option) => option.title}
-                renderOption={renderOption}
-                value={data?.models.map(model => ({selected: optionsState.selected, title: model})) || undefined}
-                onChange={(e, models, reason) => onModelsChange(e, models, data.id, reason)}
-                renderInput={autocompleteRender({label: "Model", placeholder: data.models.length ? undefined : 'Select model'})}
-            />
-        </div>
+            <div>
+                <div className={index > 0 ? styles.makeWrapper : undefined}>
+                    <Autocomplete
+                        style={{ marginBottom: 10 }}
+                        options={makesFromDB.map(make => make.name)}
+                        value={data?.name || null}
+                        onChange={(e, make) => onMakeChange(e, make, data.id)}
+                        renderInput={autocompleteRender({
+                            label: "Make",
+                            fullWidth: true,
+                            placeholder: 'Select Make',
+                            error: !data?.name && formIsChecked
+                        })}
+                    />
+                    {index > 0 && <IconButton
+                        className={styles.iconBtn}
+                        onClick={deleteMake}>
+                        <Cancel htmlColor="#DADADA"/>
+                    </IconButton>}
+                </div>
+                <Autocomplete
+                    multiple
+                    style={{ marginBottom: 10 }}
+                    classes={classes}
+                    options={getModelsOptions()}
+                    disableCloseOnSelect
+                    disableClearable
+                    groupBy={option => option.selected}
+                    getOptionLabel={(option) => option.title}
+                    renderOption={renderOption}
+                    value={data?.models.map(model => ({selected: optionsState.selected, title: model})) || undefined}
+                    onChange={(e, models, reason) => onModelsChange(e, models, data.id, reason)}
+                    renderInput={autocompleteRender({label: "Model", placeholder: data.models.length ? undefined : 'Select model'})}
+                />
+            </div>
     );
 };
 
