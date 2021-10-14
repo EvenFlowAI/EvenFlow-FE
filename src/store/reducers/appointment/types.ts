@@ -174,3 +174,8 @@ export enum EReminderType {
 
 export const APPOINTMENT_STATE_KEY = "APPOINTMENT";
 export const APPOINTMENT_STATE_SAVED_KEY = "APPOINTMENT_SAVED";
+
+export interface IMake {
+    name: string;
+    models: string[];
+}
