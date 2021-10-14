@@ -71,7 +71,7 @@ export const updatePackage = (id: number, data: IUpdatedPackage): AppThunk => as
         .finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const loadMakes = (serviceCenterId: number): AppThunk  => async (dispatch, getState) => {
+export const loadMakes = (serviceCenterId: number): AppThunk  => async dispatch => {
     Api.call(Api.endpoints.Vehicles.Makes, {params: {serviceCenterId}})
         .then(result => {
             if (result) dispatch(getMakes(result.data))
@@ -81,6 +81,12 @@ export const loadMakes = (serviceCenterId: number): AppThunk  => async (dispatch
         })
 }
 
-// export const createPackage = (data): AppThunk => async dispatch => {
-//
-// }
+export const createPackage = (id: number, data: IUpdatedPackage): AppThunk => async dispatch => {
+    Api.call(Api.endpoints.MaintenancePackages.Create, {urlParams: {id}, data})
+        .then(result => {
+            if (result) dispatch(loadPackages(id))
+        })
+        .catch(err => {
+        console.log(err)
+    })
+}

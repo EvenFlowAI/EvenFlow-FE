@@ -123,8 +123,16 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                 console.log(fieldName, value)
             }, [])
 
+    const getModalProps = (props: TAssignOpsCodeModalProps) => {
+        const modalProps = {...props};
+        delete modalProps.selectedCodes;
+        delete modalProps.setSelectedCodes;
+        delete modalProps.isComplimentary;
+        return modalProps;
+    }
+
     return (
-        <BaseModal {...props}>
+        <BaseModal {...getModalProps(props)}>
             <DialogTitle onClose={handleClose}>ASSIGN OPS CODE</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>

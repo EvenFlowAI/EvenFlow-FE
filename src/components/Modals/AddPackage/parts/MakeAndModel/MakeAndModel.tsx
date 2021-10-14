@@ -6,7 +6,7 @@ import {RootState} from "../../../../../store/rootReducer";
 import {TMake} from "../../AddPackage";
 import Checkbox from "../../../../UI/Checkbox";
 import {makeStyles} from "@material-ui/core/styles";
-import {Cancel, CheckBoxOutlineBlank, CheckBoxOutlined, Close} from "@material-ui/icons";
+import {Cancel, CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {IconButton} from "@material-ui/core";
 
 export type TModelOption = {
@@ -19,6 +19,7 @@ type MakeAndModelProps = {
     setMakes: Dispatch<SetStateAction<TMake[]>>;
     makes: TMake[];
     formIsChecked: boolean;
+    setFormIsChecked: Dispatch<SetStateAction<boolean>>;
 }
 
 const optionsState = {
@@ -63,14 +64,15 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, formIsChecked}) => {
+const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, formIsChecked, setFormIsChecked}) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const make = useMemo(() => makesFromDB.find(make => make.name === data.name), [makesFromDB, data]);
     const index = useMemo(() => makes.findIndex(item => item.id === data.id), [makes, data]);
     const classes = useAutoCompleteStyles();
     const styles = useStyles();
 
-    const onMakeChange = (e: ChangeEvent<{}>, make: string | null, id: number): void => {
+    const onMakeChange = useCallback((e: ChangeEvent<{}>, make: string | null, id: number): void => {
+        setFormIsChecked(false);
         if (make) {
             setMakes(prev => {
                 const data: TMake = {id, name: make, models: []};
@@ -79,13 +81,14 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, form
             })
         } else {
             setMakes(prev => {
-                if (makes.length > 1) return prev.filter(item => item.id !== id);
+                if (prev.length > 1) return prev.filter(item => item.id !== id);
                 return prev;
             })
         }
-    }
+    }, [])
 
-    const onModelsChange = (e: ChangeEvent<{}>, models: TModelOption[], id: number, reason: string): void => {
+    const onModelsChange = useCallback((e: ChangeEvent<{}>, models: TModelOption[], id: number, reason: string): void => {
+        setFormIsChecked(false);
         const selectedMake: TMake | undefined = makes.find(item => item.id === id);
         const selectedModels = selectedMake?.models;
         const modelIsNew = Boolean(models.find(model => !selectedModels?.includes(model.title)));
@@ -105,7 +108,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, form
                 } else return prev
             })
         }
-    }
+    }, [makes, makesFromDB])
 
     const sortOptions = (a: TModelOption, b: TModelOption) => {
         return a.selected === optionsState.selected && b.selected === optionsState.selected
@@ -126,22 +129,21 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, form
         return models;
     }, [data, makesFromDB])
 
-    const onCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: TModelOption, id: number) => {
+    const onCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: TModelOption, id: number) => {
+        setFormIsChecked(false);
         if (!e.target.checked) {
             setMakes(prev => {
                 const data = prev.find(item => item.id === id);
                 if (data) {
-                    if (option.selected === optionsState.selectAll) {
-                        data.models = [];
-                    } else {
-                        data.models = data.models.filter(item => item !== option.title)
-                    }
+                    data.models = option.selected !== optionsState.selectAll
+                        ? data.models.filter(item => item !== option.title)
+                        : [];
                     const filtered = prev.filter(item => item.id !== id);
                     return [...filtered, data].sort((a, b) => a.id - b.id)
                 } else return prev
             })
         }
-    }
+    }, [])
 
     const renderOption = useCallback((option: TModelOption) => {
         const allModelsSelected = Boolean(make && !make.models.find(item => !data.models.includes(item)));
@@ -169,6 +171,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, form
                     <Autocomplete
                         style={{ marginBottom: 10 }}
                         options={makesFromDB.map(make => make.name)}
+                        getOptionSelected={(option, value) => option === value}
                         value={data?.name || null}
                         onChange={(e, make) => onMakeChange(e, make, data.id)}
                         renderInput={autocompleteRender({
@@ -188,6 +191,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, form
                     multiple
                     style={{ marginBottom: 10 }}
                     classes={classes}
+                    getOptionSelected={(option, value) => option.title === value.title}
                     options={getModelsOptions()}
                     disableCloseOnSelect
                     disableClearable
@@ -196,7 +200,11 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, form
                     renderOption={renderOption}
                     value={data?.models.map(model => ({selected: optionsState.selected, title: model})) || undefined}
                     onChange={(e, models, reason) => onModelsChange(e, models, data.id, reason)}
-                    renderInput={autocompleteRender({label: "Model", placeholder: data.models.length ? undefined : 'Select model'})}
+                    renderInput={autocompleteRender({
+                        label: "Model",
+                        placeholder: data.models.length ? undefined : 'Select model',
+                        error: !data?.models.length && formIsChecked
+                    })}
                 />
             </div>
     );

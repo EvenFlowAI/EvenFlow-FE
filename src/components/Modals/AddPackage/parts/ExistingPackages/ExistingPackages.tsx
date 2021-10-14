@@ -31,8 +31,15 @@ const ExistingPackages: React.FC<TAssignOpsCodeModalProps> = (props) => {
         return <Checkbox color="primary" checked={props.selectedPackages.includes(+el.id)} onChange={() => handleSelect(el)} />
     }, [props.selectedPackages, handleSelect])
 
+    const getModalProps = (props: TAssignOpsCodeModalProps) => {
+        const modalProps = {...props};
+        delete modalProps.selectedPackages;
+        delete modalProps.setSelectedPackages;
+        return modalProps;
+    }
+
     return (
-        <BaseModal {...props} width={400}>
+        <BaseModal {...getModalProps(props)} width={400}>
             <DialogTitle onClose={props.onClose}>Add Existing Packages</DialogTitle>
             <DialogContent>
                 <Table<IPackageByQuery>
