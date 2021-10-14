@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../types";
-import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
 import {TextField} from "../../UI/TextField";
 import {AddCircleOutline} from "@material-ui/icons";
-import {IconButton, Button} from "@material-ui/core";
+import {IconButton, Button, Divider} from "@material-ui/core";
 import OpsCode from "./parts/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
@@ -28,11 +28,11 @@ export type TMake = IMake & {
 
 interface IVehiclesData {
     makesWithModels: IMake[] | undefined;
-    mileageFrom: string | null;
-    mileageTo: string | null;
-    yearFrom: string |null;
-    yearTo: string | null;
-    customerCriteria: string | null;
+    mileageFrom: string | undefined;
+    mileageTo: string | undefined;
+    yearFrom: string | undefined;
+    yearTo: string | undefined;
+    customerCriteria: string | undefined;
 }
 
 const baseWrapper = {
@@ -121,16 +121,55 @@ const useStyles = makeStyles(() => ({
       '& > span > input': {
           padding: 0,
       }
+    },
+    twoFieldsWrapper: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        columnGap: 8,
+        '& .MuiAutocomplete-root': {
+            width: '100%',
+        }
+    },
+    wrapper: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        paddingTop: 14,
+    },
+    buttonsWrapper: {
+        display: 'flex',
+        justifyContent: "space-between",
+        alignItems: 'center',
+    },
+    cancelButton: {
+        color: '#9FA2B4',
+        marginRight: 20,
+        border: 'none',
+        outline: 'none',
+    },
+    saveButton: {
+        background: '#7898FF',
+        color: 'white',
+        border: '1px solid #7898FF',
+        outline: 'none',
+        '&:hover': {
+            color: '#7898FF'
+        }
+    }
+}))
+
+const useAutocompleteStyles = makeStyles(() => ({
+    clearIndicator: {
+        width: 0,
     }
 }))
 
 const initialValues = {
     makesWithModels: undefined,
-    mileageFrom: null,
-    mileageTo: null,
-    yearFrom: null,
-    yearTo: null,
-    customerCriteria: null,
+    mileageFrom: undefined,
+    mileageTo: undefined,
+    yearFrom: undefined,
+    yearTo: undefined,
+    customerCriteria: 'Any',
 }
 
 const initialMakes = [{
@@ -138,6 +177,8 @@ const initialMakes = [{
     models: [],
     id: 0,
 }]
+
+const criteriaOptions = ['Any', 'Own', 'Lease'];
 
 const AddPackage: React.FC<TModalProps> = (props) => {
     const { packages, makes: makesFromDB } = useSelector((state: RootState) => state.packages);
@@ -156,6 +197,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
     const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
     const classes = useStyles();
+    const autoCompleteStyles = useAutocompleteStyles();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -192,8 +234,16 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         })
     }
 
+    const onCancel = () => {
+
+    }
+
+    const onSave = () => {
+
+    }
+
     return (
-        <BaseModal {...props} width={460}>
+        <BaseModal {...props} width={540}>
             <DialogTitle onClose={handleClose}>Add Maintenance Package</DialogTitle>
             <DialogContent>
                 <div className={classes.contentWrapper}>
@@ -264,41 +314,83 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         <span> Add New Make</span>
                     </div>}
 
-                    <div className={classes.formWrapper}>
-                        <Autocomplete
-                            options={mileageOptions}
-                            disableCloseOnSelect
-                            value={vehiclesData?.mileageFrom}
-                            onChange={onFormFieldChange('mileageFrom')}
-                            renderInput={autocompleteRender({label: "Mileage", placeholder: 'From'})}
-                        />
-                        <Autocomplete
-                            options={mileageOptions}
-                            disableCloseOnSelect
-                            value={vehiclesData?.mileageTo}
-                            onChange={onFormFieldChange('mileageTo')}
-                            renderInput={autocompleteRender({label: '', placeholder: 'To'})}
-                        />
+                    <div className={classes.formWrapper} style={{ marginBottom: 16}}>
+                        <div style={{ width: '47%'}}>
+                            <div className={classes.label}>Mileage</div>
+                            <div className={classes.twoFieldsWrapper}>
+                                <Autocomplete
+                                    classes={autoCompleteStyles}
+                                    options={mileageOptions}
+                                    disableCloseOnSelect
+                                    disableClearable
+                                    value={vehiclesData?.mileageFrom}
+                                    onChange={onFormFieldChange('mileageFrom')}
+                                    renderInput={autocompleteRender({label: "", placeholder: 'From'})}
+                                />
+                                <Autocomplete
+                                    classes={autoCompleteStyles}
+                                    options={mileageOptions}
+                                    disableCloseOnSelect
+                                    disableClearable
+                                    value={vehiclesData?.mileageTo}
+                                    onChange={onFormFieldChange('mileageTo')}
+                                    renderInput={autocompleteRender({label: '', placeholder: 'To'})}
+                                />
+                            </div>
+                        </div>
+                        <div style={{ width: '47%'}}>
+                            <div className={classes.label}>Vehicle Year</div>
+                            <div className={classes.twoFieldsWrapper}>
+                                <Autocomplete
+                                    classes={autoCompleteStyles}
+                                    disableClearable
+                                    options={yearOptions}
+                                    disableCloseOnSelect
+                                    value={vehiclesData?.yearFrom}
+                                    onChange={onFormFieldChange('yearFrom')}
+                                    renderInput={autocompleteRender({label: '', placeholder: 'From'})}
+                                />
+                                <Autocomplete
+                                    classes={autoCompleteStyles}
+                                    options={yearOptions}
+                                    disableClearable
+                                    disableCloseOnSelect
+                                    value={vehiclesData?.yearTo}
+                                    onChange={onFormFieldChange('yearTo')}
+                                    renderInput={autocompleteRender({label: '', placeholder: 'To'})}
+                                />
+                            </div>
+                        </div>
                     </div>
-
-                    <div className={classes.formWrapper}>
-                        <Autocomplete
-                            options={yearOptions}
-                            disableCloseOnSelect
-                            value={vehiclesData?.yearFrom}
-                            onChange={onFormFieldChange('yearFrom')}
-                            renderInput={autocompleteRender({label: 'Vehicle Year', placeholder: 'From'})}
-                        />
-                        <Autocomplete
-                            options={yearOptions}
-                            disableCloseOnSelect
-                            value={vehiclesData?.yearTo}
-                            onChange={onFormFieldChange('yearTo')}
-                            renderInput={autocompleteRender({label: '', placeholder: 'To'})}
-                        />
-                    </div>
+                    <Autocomplete
+                        style={{ width: '50%'}}
+                        classes={autoCompleteStyles}
+                        disableClearable
+                        options={criteriaOptions}
+                        disableCloseOnSelect
+                        value={vehiclesData?.customerCriteria}
+                        onChange={onFormFieldChange('customerCriteria')}
+                        renderInput={autocompleteRender({label: 'Customer Criteria'})}
+                    />
                 </div>
             </DialogContent>
+            <Divider style={{ margin: 0 }}/>
+            <DialogActions>
+                <div className={classes.wrapper}>
+                    <div className={classes.buttonsWrapper}>
+                        <Button
+                            onClick={onCancel}
+                            className={classes.cancelButton}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={onSave}
+                            className={classes.saveButton}>
+                            Save
+                        </Button>
+                    </div>
+                </div>
+            </DialogActions>
 
             <AssignOpsCode
                 open={isAssignOpsCodeOpen}
