@@ -20,6 +20,7 @@ type MakeAndModelProps = {
     makes: TMake[];
     formIsChecked: boolean;
     setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+    disabled: boolean;
 }
 
 const optionsState = {
@@ -64,7 +65,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, formIsChecked, setFormIsChecked}) => {
+const MakeAndModel: React.FC<MakeAndModelProps> = ({ disabled, setMakes, data, makes, formIsChecked, setFormIsChecked}) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const make = useMemo(() => makesFromDB.find(make => make.name === data.name), [makesFromDB, data]);
     const index = useMemo(() => makes.findIndex(item => item.id === data.id), [makes, data]);
@@ -169,6 +170,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, form
             <div>
                 <div className={index > 0 ? styles.makeWrapper : undefined}>
                     <Autocomplete
+                        disabled={disabled}
                         style={{ marginBottom: 10 }}
                         options={makesFromDB.map(make => make.name)}
                         getOptionSelected={(option, value) => option === value}
@@ -189,6 +191,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ setMakes, data, makes, form
                 </div>
                 <Autocomplete
                     multiple
+                    disabled={disabled}
                     style={{ marginBottom: 10 }}
                     classes={classes}
                     getOptionSelected={(option, value) => option.title === value.title}

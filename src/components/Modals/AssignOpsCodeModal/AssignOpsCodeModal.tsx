@@ -31,7 +31,7 @@ type TModalProps = DialogProps & {
     packageName: string;
 }
 
-type TSelectedOption = {
+export type TSelectedOption = {
     type: string | number;
     name: string;
 }

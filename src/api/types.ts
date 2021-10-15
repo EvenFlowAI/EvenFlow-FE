@@ -295,7 +295,7 @@ export interface IPackageByQuery {
 }
 
 export interface IMake {
-    name: string | null;
+    name: string;
     models: string[];
 }
 

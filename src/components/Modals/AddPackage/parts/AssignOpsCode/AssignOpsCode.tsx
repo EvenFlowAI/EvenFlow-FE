@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
+import React, {useCallback, useEffect, SetStateAction, Dispatch, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button} from "@material-ui/core";
+import {Button, Radio} from "@material-ui/core";
 import {DialogProps} from "../../../types";
 import {TableRowDataType} from "../../../../UI/types";
 import {IServiceRequest} from "../../../../../store/reducers/serviceRequests/types";
@@ -16,15 +16,16 @@ import {
     setNonSelectedPageData
 } from "../../../../../store/reducers/serviceRequests/actions";
 
-import Checkbox from "../../../../UI/Checkbox";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../../UI/AutocompleteRender";
-import {TFields} from "../AddOpsCode/AddOpsCode";
+import {TSelectedOption} from "../../../AssignOpsCodeModal/AssignOpsCodeModal";
+import {MaintenanceOptions} from "../../../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
+import {TAssignedRequest} from "../../../../../store/reducers/packages/types";
 
 type TAssignOpsCodeModalProps = DialogProps & {
-    selectedCodes: number[];
-    setSelectedCodes: Dispatch<SetStateAction<number[]>>;
-    isComplimentary?: boolean;
+    selectedCodes: TAssignedRequest[];
+    setSelectedCodes: Dispatch<SetStateAction<TAssignedRequest[]>>;
+    title: string;
 }
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
@@ -32,18 +33,14 @@ const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
 
-type TStyleProps = {
-    isComplimentary: boolean;
-}
-
 const useStyles = makeStyles(() => ({
-    wrapper: ({ isComplimentary }: TStyleProps) => ({
+    wrapper: {
         display: 'flex',
-        justifyContent: isComplimentary ? 'space-between' : 'end',
+        justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
         padding: 10,
-    }),
+    },
     optionLabel: {
         fontSize: 14,
         fontWeight: 'bold',
@@ -66,10 +63,19 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const useInputStyles = makeStyles(() => ({
+    inputRoot: {
+        fontWeight: 'bold',
+    }
+}))
+
+
 const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles({isComplimentary: !!props.isComplimentary});
+    const classes = useStyles();
+    const inputClasses = useInputStyles();
+    const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
     const [
         serviceList,
         isLoading,
@@ -81,6 +87,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         state.serviceRequests.nonSelectedPaging.numberOfRecords,
         state.serviceRequests.nonSelectedFilter.searchTerm,
     ]);
+    const { currentPackage } = useSelector((state: RootState) => state.packages);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
         setNonSelectedPageData
@@ -98,13 +105,21 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     }, [props.onClose, dispatch])
 
     const handleSelect = useCallback((el: IServiceRequest) => {
-        props.setSelectedCodes(prev => {
-           return  prev.includes(+el.id) ? prev.filter(item => item !== el.id) : [...prev, el.id]
-        });
-    }, [props.setSelectedCodes])
+        if (selectedOption) {
+            props.setSelectedCodes(prev => {
+                const code = prev.find(code => code.type === selectedOption.type);
+                if (code) {
+                    return prev.filter(item => item.type !== selectedOption.type).concat([{...code, serviceRequestId: el.id}])
+                } else {
+                    return [...prev, { type: selectedOption.type, serviceRequestId: el.id}]
+                }
+            });
+        }
+    }, [props.setSelectedCodes, selectedOption])
 
     const preActions = useCallback((el: IServiceRequest) => {
-        return <Checkbox color="primary" checked={props.selectedCodes.includes(+el.id)} onChange={() => handleSelect(el)} />
+        const checked = !!props.selectedCodes.find(item => item.type === selectedOption?.type && item.serviceRequestId === +el.id)
+        return <Radio color="primary" checked={checked} onChange={() => handleSelect(el)} />
     }, [props.selectedCodes, handleSelect])
 
     const handleSearch = useCallback(() => {
@@ -117,39 +132,34 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
     }, [dispatch])
 
-    const onFilterChange = useCallback(
-        (fieldName: keyof TFields) =>
-            (e: React.ChangeEvent<{}>, value: string | null): void => {
-                console.log(fieldName, value)
-            }, [])
-
     const getModalProps = (props: TAssignOpsCodeModalProps) => {
         const modalProps = {...props};
         delete modalProps.selectedCodes;
         delete modalProps.setSelectedCodes;
-        delete modalProps.isComplimentary;
         return modalProps;
     }
 
+    const onSelectOption = useCallback((e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
+        setSelectedOption(value);
+    }, [setSelectedOption])
+
     return (
         <BaseModal {...getModalProps(props)}>
-            <DialogTitle onClose={handleClose}>ASSIGN OPS CODE</DialogTitle>
+            <DialogTitle onClose={handleClose}>{props.title}</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
-                    {props.isComplimentary && <div className={classes.filtersWrapper}>
-                        <Autocomplete
-                            className={classes.filter}
-                            options={['Show all']}
-                            defaultValue='Show all'
-                            onChange={onFilterChange("unitCost")}
-                            renderInput={autocompleteRender({label: "Parts Unit Cost", fullWidth: true})}/>
-                        <Autocomplete
-                            className={classes.filter}
-                            options={['Show all']}
-                            defaultValue='Show all'
-                            onChange={onFilterChange("numberOfParts")}
-                            renderInput={autocompleteRender({label: "# Of Parts", fullWidth: true})}/>
-                    </div>}
+                    {currentPackage && <Autocomplete
+                        classes={inputClasses}
+                        options={currentPackage.options.map(option => ({name: MaintenanceOptions[option.type], type: option.type}))}
+                        getOptionSelected={(option, value) => option.type === value.type}
+                        getOptionLabel={option => option.name}
+                        onChange={onSelectOption}
+                        renderInput={autocompleteRender({
+                            label: "Select A Package Option",
+                            fullWidth: true,
+                            placeholder: 'Select An Option'
+                        })}
+                        value={selectedOption}/>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>
                 <Table<IServiceRequest>

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
@@ -9,7 +9,7 @@ import OpsCode from "./parts/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {mileageOptions, yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest, IServiceRequest} from "../../../store/reducers/serviceRequests/types";
@@ -18,8 +18,11 @@ import {IMake, IPackageByQuery} from "../../../api/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import PackageLabel from "./parts/PackageLabel";
-import {loadMakes} from "../../../store/reducers/packages/actions";
+import {createPackage, loadMakes} from "../../../store/reducers/packages/actions";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
+import Checkbox from "../../UI/Checkbox";
+import {TAssignedRequest} from "../../../store/reducers/packages/types";
+import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 
 type TModalProps = DialogProps;
 export type TMake = IMake & {
@@ -27,12 +30,12 @@ export type TMake = IMake & {
 }
 
 interface IVehiclesData {
-    makesWithModels: IMake[] | undefined;
     mileageFrom: string | undefined;
     mileageTo: string | undefined;
     yearFrom: string | undefined;
     yearTo: string | undefined;
-    customerCriteria: string | undefined;
+    customerCriteria: string;
+    isApplyBusinessRules: boolean;
 }
 
 const baseWrapper = {
@@ -166,6 +169,14 @@ const useStyles = makeStyles(() => ({
             color: '#7898FF'
         }
     },
+    applyRulesWrapper: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    applyText: {
+        marginLeft: 5,
+        fontWeight: 'bold',
+    }
 }))
 
 const useAutocompleteStyles = makeStyles(() => ({
@@ -175,12 +186,12 @@ const useAutocompleteStyles = makeStyles(() => ({
 }))
 
 const initialValues = {
-    makesWithModels: undefined,
     mileageFrom: undefined,
     mileageTo: undefined,
     yearFrom: undefined,
     yearTo: undefined,
     customerCriteria: 'Any',
+    isApplyBusinessRules: false,
 }
 
 const initialMakes = [{
@@ -198,11 +209,12 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const [packageName, setPackageName] = useState<string>('');
     const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
     const [opsCodes, setOpsCodes] = useState<IAssignedServiceRequest[]>([]);
-    const [assignedOpsCodes, setAssignedOpsCodes] = useState<number[]>([]);
+    const [assignedOpsCodes, setAssignedOpsCodes] = useState<TAssignedRequest[]>([]);
     const [complimentary, setComplimentary] = useState<number[]>([]);
     const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
     const [makes, setMakes] = useState<TMake[]>(initialMakes);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+    const [isApplyBusinessRules, setApplyBusinessRules] = useState<boolean>(false);
 
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
@@ -211,6 +223,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const classes = useStyles();
     const autoCompleteStyles = useAutocompleteStyles();
     const dispatch = useDispatch();
+    const showError = useException();
 
     useEffect(() => {
         selectedSC && dispatch(loadMakes(selectedSC.id))
@@ -254,10 +267,12 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setFormIsChecked(false);
         setMakes(prev => {
             const lastMake = makes[makes.length - 1];
-            const newMake = { name: null, models: [], id: lastMake.id + 1};
+            const newMake = { name: '', models: [], id: lastMake.id + 1};
             return [...prev, newMake];
         })
     }, [makes])
+
+    const onApplyBusinessRulesChange = (e: ChangeEvent<HTMLInputElement>) => setApplyBusinessRules(e.target.checked);
 
     const getRequestsFromSelectedPackages = useCallback((selectedPackages: number[]): number[] => {
         let serviceRequests = opsCodes.map(item => item.id);
@@ -273,14 +288,23 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     }, [opsCodes, packages])
 
     const isValid = () => {
-        const { yearFrom, yearTo, mileageFrom, mileageTo } = vehiclesData;
-        return Boolean(packageName && opsCodes.length && yearFrom && yearTo && mileageFrom && mileageTo)
+        if (assignedOpsCodes.length < 3) {
+            showError('Assign Ops Code for each of the Package`s Options')
+            return false;
+        } else {
+            const { yearFrom, yearTo, mileageFrom, mileageTo } = vehiclesData;
+            const mainData = packageName && opsCodes.length && assignedOpsCodes.length;
+            const businessRules = isApplyBusinessRules ? yearFrom && yearTo && mileageFrom && mileageTo : true;
+            return Boolean(mainData && businessRules);
+        }
     }
 
     const onSave = () => {
         if (isValid()) {
             if (selectedSC) {
                 const serviceRequests = getRequestsFromSelectedPackages(selectedPackages);
+                const makesArray = Array.from(new Set(makes.map(item => item.name)));
+                const modelsArray = Array.from(new Set(makes.map(item => item.models).flat(1)));
                 const data = {
                     name: packageName,
                     serviceRequests,
@@ -288,20 +312,21 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     serviceRequestsAssigned: assignedOpsCodes,
                     serviceCenterId: selectedSC.id,
                     businessRules: {
-                        vehicleMakes: [],
-                        vehicleModels: [],
+                        vehicleMakes: makesArray,
+                        vehicleModels: modelsArray,
                         vehicleYearRange: {
-                            from: vehiclesData.yearFrom,
-                            to: vehiclesData.yearTo
+                            from: vehiclesData.yearFrom ? +vehiclesData.yearFrom : undefined,
+                            to: vehiclesData.yearTo ? +vehiclesData.yearTo : undefined
                         },
                         vehicleMileageRange: {
-                            from: vehiclesData.mileageFrom,
-                            to: vehiclesData.mileageTo
-                        }
+                            from: vehiclesData.mileageFrom ? +vehiclesData.mileageFrom : undefined,
+                            to: vehiclesData.mileageTo ? +vehiclesData.mileageTo : undefined,
+                        },
+                        customerCriteria: vehiclesData.customerCriteria,
                     },
-                    customerCriteria: vehiclesData.customerCriteria
+                    isApplyBusinessRules: vehiclesData.isApplyBusinessRules,
                 }
-                // dispatch(createPackage(selectedSC.id, data))
+                dispatch(createPackage(selectedSC.id, data))
             }
         } else setFormIsChecked(true);
     }
@@ -321,7 +346,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     </div>
                     {selectedPackages.map(item => {
                         const pack = packages.find(el => el.id === item)
-                        return pack ? <PackageLabel pack={pack} onDelete={onPackageDelete}/> : null
+                        return pack ? <PackageLabel pack={pack} onDelete={onPackageDelete} key={pack.name}/> : null
                     })}
 
                     <div className={classes.addExisting}>
@@ -345,7 +370,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                             ? classes.errorOpsCodes
                             : classes.emptyOpsCodes}>
                         { opsCodes?.length
-                            ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete}/>)
+                            ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete} key={item.serviceRequest.id}/>)
                             : <p>There are no ops codes in this list yet</p>
                         }
                     </div>
@@ -369,6 +394,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     {makes
                         .sort((a, b) => a.id - b.id)
                         .map((make, index) => <MakeAndModel
+                            disabled={!isApplyBusinessRules}
                             key={make.name || index}
                             data={make}
                             setMakes={setMakes}
@@ -390,6 +416,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                             <div className={classes.label}>Mileage</div>
                             <div className={classes.twoFieldsWrapper}>
                                 <Autocomplete
+                                    disabled={!isApplyBusinessRules}
                                     classes={autoCompleteStyles}
                                     options={mileageOptions}
                                     disableCloseOnSelect
@@ -400,6 +427,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     renderInput={autocompleteRender({label: "", placeholder: 'From', error: !vehiclesData.mileageFrom && formIsChecked})}
                                 />
                                 <Autocomplete
+                                    disabled={!isApplyBusinessRules}
                                     classes={autoCompleteStyles}
                                     options={mileageOptions}
                                     disableCloseOnSelect
@@ -415,6 +443,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                             <div className={classes.label}>Vehicle Year</div>
                             <div className={classes.twoFieldsWrapper}>
                                 <Autocomplete
+                                    disabled={!isApplyBusinessRules}
                                     classes={autoCompleteStyles}
                                     disableClearable
                                     options={yearOptions}
@@ -425,6 +454,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     renderInput={autocompleteRender({label: '', placeholder: 'From', error: !vehiclesData.yearFrom && formIsChecked})}
                                 />
                                 <Autocomplete
+                                    disabled={!isApplyBusinessRules}
                                     classes={autoCompleteStyles}
                                     options={yearOptions}
                                     disableClearable
@@ -449,6 +479,14 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         renderInput={autocompleteRender({label: 'Customer Criteria'})}
                     />
                 </div>
+                <div className={classes.applyRulesWrapper}>
+                    <Checkbox
+                        color="primary"
+                        checked={isApplyBusinessRules}
+                        onChange={onApplyBusinessRulesChange}
+                    />
+                    <span className={classes.applyText}>Apply Business Rules To Package</span>
+                </div>
             </DialogContent>
             <Divider style={{ margin: 0 }}/>
             <DialogActions>
@@ -469,12 +507,13 @@ const AddPackage: React.FC<TModalProps> = (props) => {
             </DialogActions>
 
             <AssignOpsCode
+                title="ASSIGN OPS CODE"
                 open={isAssignOpsCodeOpen}
                 onClose={onAssignOpsCodeClose}
                 selectedCodes={assignedOpsCodes}
                 setSelectedCodes={setAssignedOpsCodes}/>
-            <AssignOpsCode
-                isComplimentary
+            <AddComplimentary
+                title="Add Complimentary"
                 open={isComplimentaryOpen}
                 onClose={onComplimentaryClose}
                 selectedCodes={complimentary}
