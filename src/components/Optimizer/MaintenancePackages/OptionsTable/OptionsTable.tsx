@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 // TODO change it to dynamic option names from back end
-const MaintenanceOptions = {
+export const MaintenanceOptions = {
     0: 'Base',
     1: 'Value',
     2: 'Preferred'

@@ -132,6 +132,7 @@ export interface IAppointmentSlotsRequest {
     serviceRequestIds: number[];
     customerId?: string;
     warrantyExpiration?: ParsableDate;
+    consultantId?: string | null;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
@@ -173,3 +174,8 @@ export enum EReminderType {
 
 export const APPOINTMENT_STATE_KEY = "APPOINTMENT";
 export const APPOINTMENT_STATE_SAVED_KEY = "APPOINTMENT_SAVED";
+
+export interface IMake {
+    name: string;
+    models: string[];
+}
