@@ -6,6 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {TPackage} from "./PackageSelection";
 import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch} from "react-redux";
+import {TExtendedComplimentary} from "../../../api/types";
 
 const style = withStyles(theme => ({
     root: {
@@ -220,6 +221,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
         currentPackage && dispatch(setPackage(currentPackage));
     }
 
+    const getPrice = (requests: TExtendedComplimentary[]): number => {
+        return requests.reduce((a, b) => a + +b.price, 0)
+    }
+
     return (
         <div className={classes.wrapper}>
             {data?.length &&
@@ -254,7 +259,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                             </div>
                             <div className={classes.complimentaryTotal}>
                                 <span>Total Complimentary Value:</span>
-                                <span>${item.complimentaryServices.reduce((a, b) => a + +b.price, 0)}</span>
+                                <span>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>}
                             </div>
                             <div className={isBmWService ? classes.totalSums : classes.total}>
                                 {isBmWService &&

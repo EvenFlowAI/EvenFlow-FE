@@ -20,6 +20,7 @@ export type TGroupedAppointment = {
     idx: string;
     offers: boolean;
     appointments: IRemappedAppointmentSlot[];
+    amountOfSavingMoney?: number,
 }
 export type TGroupedAppointments = {
     [k: string]: TGroupedAppointment
