@@ -15,30 +15,33 @@ import { NoData } from "./NoData";
 import { Loading } from "./Loading";
 
 const cellPadding = 16;
-const compactPadding = "5px 15px"
+const compactPadding = "5px 15px";
+const superCompactPadding = "5px";
+
 type TStyleProps = {
     compact: boolean;
     smallHeaderFont: boolean;
+    superCompact: boolean;
 }
 const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: theme.breakpoints.values.lg,
     },
-    tableCell: ({compact}: TStyleProps) => ({
+    tableCell: ({compact, superCompact}: TStyleProps) => ({
         fontSize: compact ? 14 : 16,
         border: "none",
         // borderBottomColor: "#000000",
-        padding: compact ? compactPadding : cellPadding,
+        padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
         [theme.breakpoints.down("xs")]: {
             fontSize: 12,
             padding: theme.spacing(1)
         }
     }),
-    tableHead: ({compact, smallHeaderFont}: TStyleProps) => ({
+    tableHead: ({compact, smallHeaderFont, superCompact}: TStyleProps) => ({
         fontSize: smallHeaderFont ? 12 : compact ? 14 : 16,
         border: "none",
         // borderBottomColor: "#9DA8B5",
-        padding: compact ? compactPadding : cellPadding,
+        padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
         fontWeight: "bold",
         color: "#9DA8B5",
         [theme.breakpoints.down("xs")]: {
@@ -66,7 +69,11 @@ const useStyles = makeStyles(theme => ({
 
 
 export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITableProps<U>): JSX.Element {
-    const classes = useStyles({compact: Boolean(props.compact), smallHeaderFont: Boolean(props.smallHeaderFont)});
+    const classes = useStyles({
+        compact: Boolean(props.compact),
+        smallHeaderFont: Boolean(props.smallHeaderFont),
+        superCompact: Boolean(props.superCompact)
+    });
 
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));

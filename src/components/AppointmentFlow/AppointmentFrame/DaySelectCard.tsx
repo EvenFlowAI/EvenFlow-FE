@@ -11,8 +11,10 @@ import {EAppointmentTimingType} from "../../../store/reducers/appointment/types"
 type TDayCardProps = {
     available?: boolean;
     isCurrent?: boolean;
+    isOffPeak?: boolean;
 }
-const DayCard = styled('div')<Theme, TDayCardProps>(({theme, available, isCurrent}) => ({
+
+const DayCard = styled('div')<Theme, TDayCardProps>(({theme, available, isCurrent, isOffPeak}) => ({
     flex: "1 0 0px",
     opacity: (!available && !isCurrent) ? .3 : 1,
     display: "flex",
@@ -41,7 +43,9 @@ const DayCard = styled('div')<Theme, TDayCardProps>(({theme, available, isCurren
             borderRadius: "50%",
             minHeight: "auto",
             width: 50,
-            height: 50
+            height: 50,
+            border: isCurrent ? "1px solid #000000" : (isOffPeak ? "1px solid #237243" : "1px solid #DADADA"),
+            background: isCurrent ? "#000000" : isOffPeak ? "#89E5AB" : "#FAFAFA",
         }
     }
 }));
@@ -102,9 +106,12 @@ export const DaySelectCard: React.FC<TProps> = ({
         return defaultFormat;
     }
 
+    const isOffPeak = Boolean(appointment?.amountOfSavingMoney);
+
     return <DayCard
             available={Boolean(appointment)}
             isCurrent={isCurrent}
+            isOffPeak={isOffPeak}
         >
         <div>{moment.utc(day).format(getFormat())}</div>
         <div className="day" onClick={onClick}>

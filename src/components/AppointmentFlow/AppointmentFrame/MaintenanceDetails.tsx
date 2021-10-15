@@ -14,7 +14,7 @@ import {
 import {RootState} from "../../../store/rootReducer";
 import {Api} from "../../../config/requests";
 import {useParams} from "react-router-dom";
-import {EVehiclePropType, ILoadedVehicle} from "../../../api/types";
+import {ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
@@ -58,7 +58,7 @@ export const mileageOptions: string[] = [
 
 const year = moment.utc().year();
 const YEARS = 20;
-const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
+export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
 const selects: TSelect[] = [
     {label: "VIN", name: "vin", noVehicle: true},
