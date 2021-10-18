@@ -9,12 +9,12 @@ import OpsCode from "./parts/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {mileageOptions, yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import {useException, useModal} from "../../../utils/hooks";
+import {useException, useModal, useSCs} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest, IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import ExistingPackages from "./parts/ExistingPackages/ExistingPackages";
-import {IMake, IPackageByQuery} from "../../../api/types";
+import {ECustomerCriteria, IPackageByQuery} from "../../../api/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import PackageLabel from "./parts/PackageLabel";
@@ -23,19 +23,19 @@ import Checkbox from "../../UI/Checkbox";
 import {INewPackage, TAssignedRequest} from "../../../store/reducers/packages/types";
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
+import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 
-type TModalProps = DialogProps;
-export type TMake = IMake & {
-    id: number,
-}
+type TModalProps = DialogProps & {
+    isEditing?: boolean;
+};
 
 interface IVehiclesData {
     mileageFrom: string | undefined;
     mileageTo: string | undefined;
     yearFrom: string | undefined;
     yearTo: string | undefined;
-    customerCriteria: string;
-    isApplyBusinessRules: boolean;
+    customerCriteria: ECustomerCriteria;
+    isApplyBusinessRules?: boolean;
 }
 
 const baseWrapper = {
@@ -183,20 +183,21 @@ const useAutocompleteStyles = makeStyles(() => ({
     }
 }))
 
+const criteriaOptions = Object.keys(ECustomerCriteria).filter(key => Number.isNaN(+key));
+
 const initialValues = {
     mileageFrom: undefined,
     mileageTo: undefined,
     yearFrom: undefined,
     yearTo: undefined,
-    customerCriteria: 'Any',
+    customerCriteria: ECustomerCriteria.Any,
     isApplyBusinessRules: false,
 }
 
-const criteriaOptions = ['Any', 'Own', 'Lease'];
-
 const AddPackage: React.FC<TModalProps> = (props) => {
-    const { packages } = useSelector((state: RootState) => state.packages);
-    const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
+    const { packages, currentPackage } = useSelector((state: RootState) => state.packages);
+    const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
+    const { selectedSC } = useSCs();
 
     const [packageName, setPackageName] = useState<string>('');
     const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
@@ -219,8 +220,37 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const showError = useException();
 
     useEffect(() => {
-        selectedSC && dispatch(loadMakes(selectedSC.id))
-    }, [dispatch, selectedSC])
+        if (selectedSC) {
+            dispatch(loadMakes(selectedSC.id));
+            props.isEditing && dispatch(loadAssignedServiceRequests(selectedSC.id));
+        }
+    }, [dispatch, selectedSC, props.isEditing])
+
+    useEffect(() => {
+        if (props.isEditing && currentPackage) {
+            setPackageName(currentPackage.name);
+            setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
+            setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
+            setApplyBusinessRules(currentPackage.isApplyBusinessRules);
+            if (assignedList) {
+                setOpsCodes(() => {
+                    const selectedServices = currentPackage.serviceRequests.map(item => item.id);
+                    return assignedList.filter(item => selectedServices.includes(item.id));
+                })
+            }
+            if (currentPackage.businessRules) {
+                setSelectedMakes(currentPackage.businessRules.vehicleMakes);
+                setSelectedModels(currentPackage.businessRules.vehicleModels);
+                setVehiclesData({
+                    mileageFrom: currentPackage.businessRules.vehicleMileageRange?.from?.toString(),
+                    mileageTo: currentPackage.businessRules.vehicleMileageRange?.to?.toString(),
+                    yearFrom: currentPackage.businessRules.vehicleYearRange?.from?.toString(),
+                    yearTo: currentPackage.businessRules.vehicleYearRange?.to?.toString(),
+                    customerCriteria: currentPackage.businessRules.customerCriteria
+                })
+            }
+        }
+    }, [currentPackage, props.isEditing, assignedList])
 
     const onCancel = useCallback(() => {
         setFormIsChecked(false);
@@ -322,7 +352,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     return (
         <BaseModal {...props} width={540}>
-            <DialogTitle onClose={onCancel}>Add Maintenance Package</DialogTitle>
+            <DialogTitle onClose={onCancel}>{props.isEditing ? 'Edit': 'Add'} Maintenance Package</DialogTitle>
             <DialogContent>
                 <div className={classes.contentWrapper}>
                     <div className={classes.fullWidth}>
@@ -461,9 +491,9 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         classes={autoCompleteStyles}
                         disableClearable
                         options={criteriaOptions}
-                        getOptionSelected={(option, value) => option === value}
+                        getOptionSelected={(option, value) => option === ECustomerCriteria[+value]}
                         disableCloseOnSelect
-                        value={vehiclesData?.customerCriteria}
+                        value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[0]}
                         onChange={onFormFieldChange('customerCriteria')}
                         renderInput={autocompleteRender({label: 'Customer Criteria'})}
                     />
@@ -493,6 +523,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                 open={isAssignOpsCodeOpen}
                 onClose={onAssignOpsCodeClose}
                 selectedCodes={assignedOpsCodes}
+                isEditing={props.isEditing}
                 setSelectedCodes={setAssignedOpsCodes}/>
             <AddComplimentary
                 title="Add Complimentary"

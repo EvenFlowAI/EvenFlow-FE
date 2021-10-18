@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import {
     Accordion as MuiAccordion,
     AccordionDetails,
@@ -30,6 +30,7 @@ type TAccordionProps = {
     onExpandIconClick?: (event: any) => void;
     title: string;
     id?: number;
+    setIsEditing: Dispatch<SetStateAction<boolean>>
 };
 
 export interface IDetailsData {
@@ -126,6 +127,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
+    const {isOpen: isEditPackageOpen, onOpen: onEditPackageOpen, onClose: onEditPackageClose} = useModal();
     const { askConfirm } = useConfirm();
     const anchorRef = useRef(null);
     const dispatch = useDispatch();
@@ -233,8 +235,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleCloseMenu = (): void => setAnchorEl(null);
 
-    const handleEdit = (): void => {
-        // TODO open modal
+    const handleEdit = async (): Promise<any>  => {
+        await props.setIsEditing(true);
+        await onEditPackageOpen();
         setAnchorEl(null);
     }
 

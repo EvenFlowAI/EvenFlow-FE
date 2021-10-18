@@ -34,7 +34,7 @@ export interface IBusinessRuleWhileCreating {
         from: number | undefined;
         to: number | undefined;
     };
-    customerCriteria: string;
+    customerCriteria?: string | number;
 }
 
 export interface INewPackage {

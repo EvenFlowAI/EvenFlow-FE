@@ -301,6 +301,7 @@ export interface IMake {
 
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
+    isApplyBusinessRules: boolean;
     options: IPackageOptionDetailed[];
     serviceRequestsAssigned: serviceRequestAssigned[];
     name: string;

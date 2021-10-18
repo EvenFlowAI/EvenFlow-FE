@@ -26,6 +26,7 @@ type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: TAssignedRequest[];
     setSelectedCodes: Dispatch<SetStateAction<TAssignedRequest[]>>;
     title: string;
+    isEditing?: boolean;
 }
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
@@ -81,13 +82,14 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         isLoading,
         servicesCount,
         search,
+        currentPackage
     ] = useSelector((state: RootState) => [
         state.serviceRequests.nonSelectedList,
         state.serviceRequests.nonSelectedLoading,
         state.serviceRequests.nonSelectedPaging.numberOfRecords,
         state.serviceRequests.nonSelectedFilter.searchTerm,
+        state.packages.currentPackage,
     ]);
-    const { currentPackage } = useSelector((state: RootState) => state.packages);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
         setNonSelectedPageData
@@ -98,6 +100,13 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex]);
+
+    useEffect(() => {
+        if (props.isEditing && currentPackage) {
+            const firstOption = currentPackage.options[0]
+            setSelectedOption({ type: firstOption.type, name: MaintenanceOptions[firstOption.type]})
+        }
+    }, [props.isEditing, currentPackage])
 
     const handleClose = useCallback((): void => {
         dispatch(setNonSelectedFilter({searchTerm: ''}));
