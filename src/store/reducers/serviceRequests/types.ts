@@ -9,6 +9,8 @@ export interface IServiceRequest {
     warrantyInvoiceAmount: number;
     status: EServiceStatus;
     price: number;
+    partsUnitCost?: number;
+    numberOfParts?: number;
 }
 export interface IServiceRequestShort {
     id: 0;
@@ -28,6 +30,9 @@ export interface IServiceRequestOverride {
     skillLevelOfTechnicians: number;
     invoiceAmount: number;
     warrantyInvoiceAmount: number;
+    partsAmount?: number;
+    partsUnitCost?: number;
+    numberOfParts?: number;
 }
 export interface IServiceRequestOverrideEditRequest {
     serviceRequestInfo: Partial<IServiceRequestOverride>;

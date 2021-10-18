@@ -90,10 +90,13 @@ export const loadMakes = (serviceCenterId: number): AppThunk  => async dispatch 
         })
 }
 
-export const createPackage = (id: number, data: INewPackage): AppThunk => async dispatch => {
+export const createPackage = (id: number, data: INewPackage, callback: () => void): AppThunk => async dispatch => {
     Api.call(Api.endpoints.MaintenancePackages.Create, {urlParams: {id}, data})
         .then(result => {
-            if (result) dispatch(loadPackages(id))
+            if (result) {
+                callback();
+                dispatch(loadPackages(id));
+            }
         })
         .catch(err => {
         console.log(err)
