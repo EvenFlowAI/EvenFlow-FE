@@ -1,35 +1,24 @@
-import React, {ChangeEvent, useCallback, useMemo, Dispatch, SetStateAction} from 'react';
+import React, {ChangeEvent, useCallback, Dispatch, SetStateAction} from 'react';
 import {autocompleteRender} from "../../../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import {TMake} from "../../AddPackage";
 import Checkbox from "../../../../UI/Checkbox";
 import {makeStyles} from "@material-ui/core/styles";
-import {Cancel, CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
-import {IconButton} from "@material-ui/core";
-
-export type TModelOption = {
-    title: string;
-    selected: string;
-}
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {IMake} from "../../../../../api/types";
 
 type MakeAndModelProps = {
-    data: TMake;
-    setMakes: Dispatch<SetStateAction<TMake[]>>;
-    makes: TMake[];
+    setSelectedMakes: Dispatch<SetStateAction<string[]>>;
+    setSelectedModels: Dispatch<SetStateAction<string[]>>;
+    selectedModels: string[];
+    selectedMakes: string[];
     formIsChecked: boolean;
     setFormIsChecked: Dispatch<SetStateAction<boolean>>;
     disabled: boolean;
 }
 
-const optionsState = {
-    selectAll: 'Select All',
-    selected: 'Selected',
-    nonSelected: 'All Models'
-}
-
-const useAutoCompleteStyles = makeStyles(() => ({
+const useStyles = makeStyles(() => ({
     tag: {
         display: 'flex',
         alignItems: 'center',
@@ -53,102 +42,65 @@ const useAutoCompleteStyles = makeStyles(() => ({
     },
 }))
 
-const useStyles = makeStyles(() => ({
-    makeWrapper: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 40px',
-        columnGap: 5,
-        alignItems: "center",
-    },
-    iconBtn: {
-        marginTop: 15,
-    }
-}))
-
-const MakeAndModel: React.FC<MakeAndModelProps> = ({ disabled, setMakes, data, makes, formIsChecked, setFormIsChecked}) => {
+const MakeAndModel: React.FC<MakeAndModelProps> = ({ disabled, setSelectedMakes, selectedModels, selectedMakes, setSelectedModels, formIsChecked, setFormIsChecked}) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
-    const make = useMemo(() => makesFromDB.find(make => make.name === data.name), [makesFromDB, data]);
-    const index = useMemo(() => makes.findIndex(item => item.id === data.id), [makes, data]);
-    const classes = useAutoCompleteStyles();
-    const styles = useStyles();
+    const classes = useStyles();
 
-    const onMakeChange = useCallback((e: ChangeEvent<{}>, make: string | null, id: number): void => {
-        setFormIsChecked(false);
-        if (make) {
-            setMakes(prev => {
-                const data: TMake = {id, name: make, models: []};
-                const filtered = prev.filter(item => item.id !== id);
-                return [...filtered, data].sort((a, b) => a.id - b.id)
-            })
-        } else {
-            setMakes(prev => {
-                if (prev.length > 1) return prev.filter(item => item.id !== id);
-                return prev;
-            })
-        }
-    }, [])
-
-    const onModelsChange = useCallback((e: ChangeEvent<{}>, models: TModelOption[], id: number, reason: string): void => {
-        setFormIsChecked(false);
-        const selectedMake: TMake | undefined = makes.find(item => item.id === id);
-        const selectedModels = selectedMake?.models;
-        const modelIsNew = Boolean(models.find(model => !selectedModels?.includes(model.title)));
-
-        if (modelIsNew || reason === 'remove-option') {
-            setMakes(prev => {
-                const data = prev.find(item => item.id === id);
-                if (data) {
-                    if (models.find(model => model.selected === optionsState.selectAll)) {
-                        const models = makesFromDB.find(item => item.name === data.name)?.models;
-                        if (models) data.models = models;
-                    } else {
-                        data.models = models.map(model => model.title)
-                    }
-                    const filtered = prev.filter(item => item.id !== id);
-                    return [...filtered, data].sort((a, b) => a.id - b.id)
-                } else return prev
-            })
-        }
-    }, [makes, makesFromDB])
-
-    const sortOptions = (a: TModelOption, b: TModelOption) => {
-        return a.selected === optionsState.selected && b.selected === optionsState.selected
-            ? 0
-            : b.selected !== optionsState.selected
-                ? -1
-                : 1
+    const getSortedMakes = (makesFromDB: IMake[]): string[] => {
+        const data: string[] = makesFromDB
+            .map(make => make.name)
+            .sort((a, b) => selectedMakes.includes(a) ? selectedMakes.includes(b) ? 0 : -1 : 1);
+        data.unshift('Apply To All');
+        return data;
     }
 
-    const getModelsOptions = useCallback(() => {
-        let models: TModelOption[] = [];
-        if (makesFromDB.length && data?.name) {
-            models.push({selected: optionsState.selectAll, title: 'Apply To All'});
-            if (make?.models) models.push(...make.models
-                .map(model => ({selected: data.models.includes(model) ? optionsState.selected: optionsState.nonSelected, title: model}))
-                .sort(sortOptions));
-        }
-        return models;
-    }, [data, makesFromDB])
+    const getSortedModels = (makesFromDB: IMake[]): string[] => {
+        const data: string[] = makesFromDB
+            .map(make => make.models)
+            .flat(1)
+            .sort((a, b) => selectedModels.includes(a) ? selectedModels.includes(b) ? 0 : -1 : 1);
+        data.unshift('Apply To All');
+        return data;
+    }
 
-    const onCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: TModelOption, id: number) => {
+    const onMakeChange = (e: ChangeEvent<{}>, value: string[]) => {
+        if (value.includes('Apply To All')) {
+            setSelectedMakes(() => makesFromDB.map(item => item.name));
+        } else setSelectedMakes(value);
+    }
+
+    const onModelChange = (e: ChangeEvent<{}>, value: string[]) => {
+        if (value.includes('Apply To All')) {
+            setSelectedModels(() => makesFromDB.map(item => item.models).flat(1));
+        } else setSelectedModels(value);
+    }
+
+    const onMakeCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: string) => {
         setFormIsChecked(false);
         if (!e.target.checked) {
-            setMakes(prev => {
-                const data = prev.find(item => item.id === id);
-                if (data) {
-                    data.models = option.selected !== optionsState.selectAll
-                        ? data.models.filter(item => item !== option.title)
-                        : [];
-                    const filtered = prev.filter(item => item.id !== id);
-                    return [...filtered, data].sort((a, b) => a.id - b.id)
-                } else return prev
+            setSelectedMakes(prev => {
+                let data = option === 'Apply To All' ? [] : prev;
+                return data
+                    .filter(item => item !== option)
+                    .sort((a, b) => selectedMakes.includes(a) ? selectedMakes.includes(b) ? 0 : -1 : 1)
             })
         }
-    }, [])
+    }
 
-    const renderOption = useCallback((option: TModelOption) => {
-        const allModelsSelected = Boolean(make && !make.models.find(item => !data.models.includes(item)));
-        const checked = option.selected === optionsState.selected || (option.selected === optionsState.selectAll && allModelsSelected)
+    const onModelCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: string) => {
+        setFormIsChecked(false);
+        if (!e.target.checked) {
+            setSelectedModels(prev => {
+                let data = option === 'Apply To All' ? [] : prev;
+                return data
+                    .filter(item => item !== option)
+                    .sort((a, b) => selectedModels.includes(a) ? selectedModels.includes(b) ? 0 : -1 : 1)
+            })
+        }
+    }
+
+    const renderMakeOption = useCallback((option: string) => {
+        const checked = selectedMakes.includes(option) || Boolean(!makesFromDB.find(make => !selectedMakes.includes(make.name)));
         return <React.Fragment>
             <Checkbox
                 color="primary"
@@ -156,57 +108,63 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ disabled, setMakes, data, m
                     ? <CheckBoxOutlined htmlColor="#3855FE"/>
                     : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
                 checked={checked}
-                onChange={e => onCheckboxChange(e, option, data.id)}
+                onChange={e => onMakeCheckboxChange(e, option)}
             />
-            {option.title}
+            {option}
         </React.Fragment>
-    }, [data, make])
+    }, [makesFromDB, selectedMakes]);
 
-    const deleteMake = () => {
-        if (makes.length > 1) setMakes(prev => prev.filter(item => item.id !== data.id));
-    }
+    const renderModelOption = useCallback((option: string) => {
+        const allModelsSelected = Boolean(!makesFromDB
+            .map(item => item.models)
+            .flat(1)
+            .find(model => !selectedModels.includes(model)))
+        const checked = selectedModels.includes(option) || allModelsSelected;
+        return <React.Fragment>
+            <Checkbox
+                color="primary"
+                icon={checked
+                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
+                checked={checked}
+                onChange={e => onModelCheckboxChange(e, option)}
+            />
+            {option}
+        </React.Fragment>
+    }, [makesFromDB, selectedModels]);
 
     return (
             <div>
-                <div className={index > 0 ? styles.makeWrapper : undefined}>
-                    <Autocomplete
-                        disabled={disabled}
-                        style={{ marginBottom: 10 }}
-                        options={makesFromDB.map(make => make.name)}
-                        getOptionSelected={(option, value) => option === value}
-                        value={data?.name || null}
-                        onChange={(e, make) => onMakeChange(e, make, data.id)}
-                        renderInput={autocompleteRender({
-                            label: "Make",
-                            fullWidth: true,
-                            placeholder: 'Select Make',
-                            error: !data?.name && formIsChecked
-                        })}
-                    />
-                    {index > 0 && <IconButton
-                        className={styles.iconBtn}
-                        onClick={deleteMake}>
-                        <Cancel htmlColor="#DADADA"/>
-                    </IconButton>}
-                </div>
                 <Autocomplete
                     multiple
-                    disabled={disabled}
                     style={{ marginBottom: 10 }}
                     classes={classes}
-                    getOptionSelected={(option, value) => option.title === value.title}
-                    options={getModelsOptions()}
+                    disabled={disabled}
+                    options={getSortedMakes(makesFromDB)}
                     disableCloseOnSelect
-                    disableClearable
-                    groupBy={option => option.selected}
-                    getOptionLabel={(option) => option.title}
-                    renderOption={renderOption}
-                    value={data?.models.map(model => ({selected: optionsState.selected, title: model})) || undefined}
-                    onChange={(e, models, reason) => onModelsChange(e, models, data.id, reason)}
+                    renderOption={renderMakeOption}
+                    value={selectedMakes}
+                    onChange={onMakeChange}
+                    renderInput={autocompleteRender({
+                        label: "Make",
+                        error: !selectedMakes.length && formIsChecked,
+                        placeholder: 'Select Make'
+                    })}
+                />
+                <Autocomplete
+                    multiple
+                    style={{ marginBottom: 10 }}
+                    classes={classes}
+                    disabled={disabled}
+                    options={getSortedModels(makesFromDB)}
+                    disableCloseOnSelect
+                    renderOption={renderModelOption}
+                    value={selectedModels}
+                    onChange={onModelChange}
                     renderInput={autocompleteRender({
                         label: "Model",
-                        placeholder: data.models.length ? undefined : 'Select model',
-                        error: !data?.models.length && formIsChecked
+                        error: !selectedMakes.length && formIsChecked,
+                        placeholder: 'Select Model'
                     })}
                 />
             </div>

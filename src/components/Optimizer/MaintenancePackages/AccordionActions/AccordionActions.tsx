@@ -3,7 +3,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider} from "@material-ui/core";
 
 type TAccordionProps = {
-    isEdit: boolean;
     onCancel: () => void;
     onSave: () => void;
     onAddOpsCode: () => void;
@@ -48,7 +47,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const AccordionActions: React.FC<TAccordionProps> = ({ isEdit, onAddOpsCode, onCancel, onSave }) => {
+const AccordionActions: React.FC<TAccordionProps> = ({ onAddOpsCode, onCancel, onSave }) => {
     const classes = useStyles();
     return (
         <>
@@ -57,19 +56,16 @@ const AccordionActions: React.FC<TAccordionProps> = ({ isEdit, onAddOpsCode, onC
               <div className={classes.buttonsWrapper}>
                  <Button
                     onClick={onCancel}
-                    className={classes.cancelButton}
-                    disabled={!isEdit}>
+                    className={classes.cancelButton}>
                     Cancel
                  </Button>
                   <Button
                     onClick={onAddOpsCode}
-                    className={classes.addButton}
-                    disabled={!isEdit}>
+                    className={classes.addButton}>
                     Assign ops code to option
                   </Button>
                   <Button
                     onClick={onSave}
-                    disabled={!isEdit}
                     className={classes.saveButton}>
                     save changes
                   </Button>

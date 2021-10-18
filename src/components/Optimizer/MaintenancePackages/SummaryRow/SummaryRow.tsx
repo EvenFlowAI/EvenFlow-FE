@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Edit} from "@material-ui/icons";
 import {TSummaryCell} from "../PackageAccordion/PackageAccordion";
@@ -8,6 +8,7 @@ type TSummaryProps = {
     valuesArray?: TSummaryCell[];
     onInputChange?: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => void;
     isEdit?: boolean;
+    setIsEdit?: Dispatch<SetStateAction<boolean>>
 }
 
 const cellStyles = {
@@ -67,7 +68,8 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInputChange, isEdit }) => {
+const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInputChange, isEdit, setIsEdit
+}) => {
     const classes = useStyles();
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>, item: TSummaryCell): void => {
@@ -103,11 +105,13 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
                                 value={getValue(item)}
                                 disabled={!isEdit}
                                 onChange={e => onChange(e, item)}
-                            /> : <div className={classes.value}>
+                            /> : <div
+                                    className={classes.value}
+                                    onClick={() => item.isEditable && setIsEdit && setIsEdit(true)}>
                                 {getValue(item)}
                             </div>
                         }
-                    {item.isEditable && isEdit && <Edit
+                    {item.isEditable && <Edit
                         htmlColor="rgba(0, 0, 0, 0.54)"
                         fontSize="small"
                         className={classes.editIcon}/>}

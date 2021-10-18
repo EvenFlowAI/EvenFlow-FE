@@ -9,33 +9,33 @@ import OpsCode from "./parts/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {mileageOptions, yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import {useException, useModal} from "../../../utils/hooks";
+import {useException, useModal, useSCs} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest, IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import ExistingPackages from "./parts/ExistingPackages/ExistingPackages";
-import {IMake, IPackageByQuery} from "../../../api/types";
+import {ECustomerCriteria, IPackageByQuery} from "../../../api/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import PackageLabel from "./parts/PackageLabel";
-import {createPackage, loadMakes} from "../../../store/reducers/packages/actions";
-import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
+import {createPackage, loadMakes, updatePackage} from "../../../store/reducers/packages/actions";
 import Checkbox from "../../UI/Checkbox";
-import {TAssignedRequest} from "../../../store/reducers/packages/types";
+import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../store/reducers/packages/types";
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
+import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
+import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 
-type TModalProps = DialogProps;
-export type TMake = IMake & {
-    id: number,
-}
+type TModalProps = DialogProps & {
+    isEditing?: boolean;
+};
 
 interface IVehiclesData {
     mileageFrom: string | undefined;
     mileageTo: string | undefined;
     yearFrom: string | undefined;
     yearTo: string | undefined;
-    customerCriteria: string;
-    isApplyBusinessRules: boolean;
+    customerCriteria: ECustomerCriteria;
+    isApplyBusinessRules?: boolean;
 }
 
 const baseWrapper = {
@@ -75,7 +75,6 @@ const useStyles = makeStyles(() => ({
     },
     btnsWrapper: {
         ...baseWrapper,
-        marginBottom: 24,
 
         '& > button:first-child': {
             marginRight: 24,
@@ -132,9 +131,7 @@ const useStyles = makeStyles(() => ({
         }
     },
     checkbox: {
-      '& > span > input': {
-          padding: 0,
-      }
+        padding: '9px 0',
     },
     twoFieldsWrapper: {
         display: 'grid',
@@ -172,6 +169,7 @@ const useStyles = makeStyles(() => ({
     applyRulesWrapper: {
         display: 'flex',
         alignItems: 'center',
+        marginBottom: 10,
     },
     applyText: {
         marginLeft: 5,
@@ -185,26 +183,21 @@ const useAutocompleteStyles = makeStyles(() => ({
     }
 }))
 
+const criteriaOptions = Object.keys(ECustomerCriteria).filter(key => Number.isNaN(+key));
+
 const initialValues = {
     mileageFrom: undefined,
     mileageTo: undefined,
     yearFrom: undefined,
     yearTo: undefined,
-    customerCriteria: 'Any',
+    customerCriteria: ECustomerCriteria.Any,
     isApplyBusinessRules: false,
 }
 
-const initialMakes = [{
-    name: '',
-    models: [],
-    id: 0,
-}]
-
-const criteriaOptions = ['Any', 'Own', 'Lease'];
-
 const AddPackage: React.FC<TModalProps> = (props) => {
-    const { packages, makes: makesFromDB } = useSelector((state: RootState) => state.packages);
-    const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
+    const { packages, currentPackage } = useSelector((state: RootState) => state.packages);
+    const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
+    const { selectedSC } = useSCs();
 
     const [packageName, setPackageName] = useState<string>('');
     const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
@@ -212,9 +205,10 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const [assignedOpsCodes, setAssignedOpsCodes] = useState<TAssignedRequest[]>([]);
     const [complimentary, setComplimentary] = useState<number[]>([]);
     const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
-    const [makes, setMakes] = useState<TMake[]>(initialMakes);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [isApplyBusinessRules, setApplyBusinessRules] = useState<boolean>(false);
+    const [selectedMakes, setSelectedMakes] = useState<string[]>([]);
+    const [selectedModels, setSelectedModels] = useState<string[]>([]);
 
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
@@ -226,18 +220,49 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const showError = useException();
 
     useEffect(() => {
-        selectedSC && dispatch(loadMakes(selectedSC.id))
-    }, [dispatch, selectedSC])
+        if (selectedSC) {
+            dispatch(loadMakes(selectedSC.id));
+            props.isEditing && dispatch(loadAssignedServiceRequests(selectedSC.id));
+        }
+    }, [dispatch, selectedSC, props.isEditing])
+
+    useEffect(() => {
+        if (props.isEditing && currentPackage) {
+            setPackageName(currentPackage.name);
+            setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
+            setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
+            setApplyBusinessRules(currentPackage.isApplyBusinessRules);
+            if (assignedList) {
+                setOpsCodes(() => {
+                    const selectedServices = currentPackage.serviceRequests.map(item => item.id);
+                    return assignedList.filter(item => selectedServices.includes(item.id));
+                })
+            }
+            if (currentPackage.businessRules) {
+                setSelectedMakes(currentPackage.businessRules.vehicleMakes);
+                setSelectedModels(currentPackage.businessRules.vehicleModels);
+                setVehiclesData({
+                    mileageFrom: currentPackage.businessRules.vehicleMileageRange?.from?.toString(),
+                    mileageTo: currentPackage.businessRules.vehicleMileageRange?.to?.toString(),
+                    yearFrom: currentPackage.businessRules.vehicleYearRange?.from?.toString(),
+                    yearTo: currentPackage.businessRules.vehicleYearRange?.to?.toString(),
+                    customerCriteria: currentPackage.businessRules.customerCriteria,
+                    isApplyBusinessRules: currentPackage.isApplyBusinessRules,
+                })
+            }
+        }
+    }, [currentPackage, props.isEditing, assignedList])
 
     const onCancel = useCallback(() => {
         setFormIsChecked(false);
         setVehiclesData(initialValues);
-        setMakes(initialMakes);
         setPackageName('');
         setSelectedPackages([]);
         setAssignedOpsCodes([]);
         setComplimentary([]);
         setOpsCodes([]);
+        setSelectedModels([]);
+        setSelectedMakes([]);
         props.onClose();
     }, [])
 
@@ -250,7 +275,14 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         (fieldName: keyof IVehiclesData) =>
         (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {
             setFormIsChecked(false);
-            setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
+            if (fieldName === 'customerCriteria') {
+                // @ts-ignore
+                console.log(ECustomerCriteria[value]);
+                // @ts-ignore
+                setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: ECustomerCriteria[value]}))
+            } else {
+                setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
+            }
     }, [])
 
     const onDelete = useCallback((serviceRequest: IServiceRequest): void => {
@@ -262,15 +294,6 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setFormIsChecked(false);
         setSelectedPackages(prev => prev.includes(pack.id) ? prev.filter(el => el !== pack.id) : [...prev, pack.id]);
     }, [])
-
-    const addNewMake = useCallback(() => {
-        setFormIsChecked(false);
-        setMakes(prev => {
-            const lastMake = makes[makes.length - 1];
-            const newMake = { name: '', models: [], id: lastMake.id + 1};
-            return [...prev, newMake];
-        })
-    }, [makes])
 
     const onApplyBusinessRulesChange = (e: ChangeEvent<HTMLInputElement>) => setApplyBusinessRules(e.target.checked);
 
@@ -287,14 +310,18 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         return Array.from(new Set(serviceRequests));
     }, [opsCodes, packages])
 
+    const isBusinessRulesValid = () => {
+        const { yearFrom, yearTo, mileageFrom, mileageTo } = vehiclesData;
+        return selectedModels.length && selectedMakes.length && yearFrom && yearTo && mileageFrom && mileageTo;
+    }
+
     const isValid = () => {
         if (assignedOpsCodes.length < 3) {
             showError('Assign Ops Code for each of the Package`s Options')
             return false;
         } else {
-            const { yearFrom, yearTo, mileageFrom, mileageTo } = vehiclesData;
             const mainData = packageName && opsCodes.length && assignedOpsCodes.length;
-            const businessRules = isApplyBusinessRules ? yearFrom && yearTo && mileageFrom && mileageTo : true;
+            const businessRules = isApplyBusinessRules ? isBusinessRulesValid() : true;
             return Boolean(mainData && businessRules);
         }
     }
@@ -303,37 +330,41 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         if (isValid()) {
             if (selectedSC) {
                 const serviceRequests = getRequestsFromSelectedPackages(selectedPackages);
-                const makesArray = Array.from(new Set(makes.map(item => item.name)));
-                const modelsArray = Array.from(new Set(makes.map(item => item.models).flat(1)));
-                const data = {
+                const data: INewPackage | IUpdatedPackage = {
                     name: packageName,
                     serviceRequests,
                     complimentaryServices: complimentary,
                     serviceRequestsAssigned: assignedOpsCodes,
                     serviceCenterId: selectedSC.id,
-                    businessRules: {
-                        vehicleMakes: makesArray,
-                        vehicleModels: modelsArray,
-                        vehicleYearRange: {
-                            from: vehiclesData.yearFrom ? +vehiclesData.yearFrom : undefined,
-                            to: vehiclesData.yearTo ? +vehiclesData.yearTo : undefined
-                        },
-                        vehicleMileageRange: {
-                            from: vehiclesData.mileageFrom ? +vehiclesData.mileageFrom : undefined,
-                            to: vehiclesData.mileageTo ? +vehiclesData.mileageTo : undefined,
-                        },
-                        customerCriteria: vehiclesData.customerCriteria,
-                    },
                     isApplyBusinessRules: vehiclesData.isApplyBusinessRules,
                 }
-                dispatch(createPackage(selectedSC.id, data))
+                if (isApplyBusinessRules || isBusinessRulesValid()) {
+                    // @ts-ignore
+                    data.businessRules = {
+                        vehicleMakes: selectedMakes,
+                            vehicleModels: selectedModels,
+                            vehicleYearRange: {
+                            from: vehiclesData.yearFrom,
+                                to: vehiclesData.yearTo
+                        },
+                        vehicleMileageRange: {
+                            from: vehiclesData.mileageFrom,
+                                to: vehiclesData.mileageTo,
+                        },
+                        customerCriteria: vehiclesData.customerCriteria,
+                    }
+                }
+                props.isEditing && currentPackage
+                    // @ts-ignore
+                    ? dispatch(updatePackage(currentPackage.id, data))
+                    : dispatch(createPackage(selectedSC.id, data, onCancel))
             }
         } else setFormIsChecked(true);
     }
 
     return (
         <BaseModal {...props} width={540}>
-            <DialogTitle onClose={onCancel}>Add Maintenance Package</DialogTitle>
+            <DialogTitle onClose={onCancel}>{props.isEditing ? 'Edit': 'Add'} Maintenance Package</DialogTitle>
             <DialogContent>
                 <div className={classes.contentWrapper}>
                     <div className={classes.fullWidth}>
@@ -391,25 +422,25 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         </Button>
                     </div>
 
-                    {makes
-                        .sort((a, b) => a.id - b.id)
-                        .map((make, index) => <MakeAndModel
-                            disabled={!isApplyBusinessRules}
-                            key={make.name || index}
-                            data={make}
-                            setMakes={setMakes}
-                            makes={makes}
-                            formIsChecked={formIsChecked}
-                            setFormIsChecked={setFormIsChecked}
-                    />)}
+                    <div className={classes.applyRulesWrapper}>
+                        <Checkbox
+                            className={classes.checkbox}
+                            color="primary"
+                            checked={isApplyBusinessRules}
+                            onChange={onApplyBusinessRulesChange}
+                        />
+                        <span className={classes.applyText}>Apply Business Rules To Package</span>
+                    </div>
 
-                    {makesFromDB?.length > makes.length &&
-                    <div className={classes.addExisting}>
-                        <IconButton onClick={addNewMake} className={classes.iconPlus}>
-                            <AddCircleOutline/>
-                        </IconButton>
-                        <span> Add New Make</span>
-                    </div>}
+                    <MakeAndModel
+                        selectedMakes={selectedMakes}
+                        selectedModels={selectedModels}
+                        setSelectedMakes={setSelectedMakes}
+                        setSelectedModels={setSelectedModels}
+                        setFormIsChecked={setFormIsChecked}
+                        disabled={!isApplyBusinessRules}
+                        formIsChecked={formIsChecked}
+                    />
 
                     <div className={classes.formWrapper} style={{ marginBottom: 16}}>
                         <div style={{ width: '47%'}}>
@@ -472,21 +503,14 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         classes={autoCompleteStyles}
                         disableClearable
                         options={criteriaOptions}
-                        getOptionSelected={(option, value) => option === value}
+                        getOptionSelected={(option, value) => option === ECustomerCriteria[+value]}
                         disableCloseOnSelect
-                        value={vehiclesData?.customerCriteria}
+                        value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[0]}
                         onChange={onFormFieldChange('customerCriteria')}
                         renderInput={autocompleteRender({label: 'Customer Criteria'})}
                     />
                 </div>
-                <div className={classes.applyRulesWrapper}>
-                    <Checkbox
-                        color="primary"
-                        checked={isApplyBusinessRules}
-                        onChange={onApplyBusinessRulesChange}
-                    />
-                    <span className={classes.applyText}>Apply Business Rules To Package</span>
-                </div>
+
             </DialogContent>
             <Divider style={{ margin: 0 }}/>
             <DialogActions>
@@ -511,6 +535,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                 open={isAssignOpsCodeOpen}
                 onClose={onAssignOpsCodeClose}
                 selectedCodes={assignedOpsCodes}
+                isEditing={props.isEditing}
                 setSelectedCodes={setAssignedOpsCodes}/>
             <AddComplimentary
                 title="Add Complimentary"
