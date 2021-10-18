@@ -21,6 +21,7 @@ export interface IUpdatedPackage {
     complimentaryServices: number[];
     businessRules: IBusinessRule;
     name: string,
+    isApplyBusinessRules?: boolean;
 }
 
 export interface IBusinessRuleWhileCreating {
@@ -41,7 +42,7 @@ export interface INewPackage {
     serviceRequestsAssigned: TAssignedRequest[];
     serviceRequests: number[];
     complimentaryServices: number[];
-    businessRules?: IBusinessRuleWhileCreating;
+    businessRules?: IBusinessRule;
     name: string,
     isApplyBusinessRules?: boolean;
     serviceCenterId?: number;

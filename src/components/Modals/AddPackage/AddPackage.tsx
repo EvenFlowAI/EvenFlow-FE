@@ -18,9 +18,9 @@ import {ECustomerCriteria, IPackageByQuery} from "../../../api/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import PackageLabel from "./parts/PackageLabel";
-import {createPackage, loadMakes} from "../../../store/reducers/packages/actions";
+import {createPackage, loadMakes, updatePackage} from "../../../store/reducers/packages/actions";
 import Checkbox from "../../UI/Checkbox";
-import {INewPackage, TAssignedRequest} from "../../../store/reducers/packages/types";
+import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../store/reducers/packages/types";
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
@@ -246,7 +246,8 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     mileageTo: currentPackage.businessRules.vehicleMileageRange?.to?.toString(),
                     yearFrom: currentPackage.businessRules.vehicleYearRange?.from?.toString(),
                     yearTo: currentPackage.businessRules.vehicleYearRange?.to?.toString(),
-                    customerCriteria: currentPackage.businessRules.customerCriteria
+                    customerCriteria: currentPackage.businessRules.customerCriteria,
+                    isApplyBusinessRules: currentPackage.isApplyBusinessRules,
                 })
             }
         }
@@ -274,7 +275,14 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         (fieldName: keyof IVehiclesData) =>
         (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {
             setFormIsChecked(false);
-            setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
+            if (fieldName === 'customerCriteria') {
+                // @ts-ignore
+                console.log(ECustomerCriteria[value]);
+                // @ts-ignore
+                setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: ECustomerCriteria[value]}))
+            } else {
+                setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
+            }
     }, [])
 
     const onDelete = useCallback((serviceRequest: IServiceRequest): void => {
@@ -322,7 +330,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         if (isValid()) {
             if (selectedSC) {
                 const serviceRequests = getRequestsFromSelectedPackages(selectedPackages);
-                const data: INewPackage = {
+                const data: INewPackage | IUpdatedPackage = {
                     name: packageName,
                     serviceRequests,
                     complimentaryServices: complimentary,
@@ -331,21 +339,25 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     isApplyBusinessRules: vehiclesData.isApplyBusinessRules,
                 }
                 if (isApplyBusinessRules || isBusinessRulesValid()) {
+                    // @ts-ignore
                     data.businessRules = {
                         vehicleMakes: selectedMakes,
                             vehicleModels: selectedModels,
                             vehicleYearRange: {
-                            from: vehiclesData.yearFrom ? +vehiclesData.yearFrom : undefined,
-                                to: vehiclesData.yearTo ? +vehiclesData.yearTo : undefined
+                            from: vehiclesData.yearFrom,
+                                to: vehiclesData.yearTo
                         },
                         vehicleMileageRange: {
-                            from: vehiclesData.mileageFrom ? +vehiclesData.mileageFrom : undefined,
-                                to: vehiclesData.mileageTo ? +vehiclesData.mileageTo : undefined,
+                            from: vehiclesData.mileageFrom,
+                                to: vehiclesData.mileageTo,
                         },
                         customerCriteria: vehiclesData.customerCriteria,
                     }
                 }
-                dispatch(createPackage(selectedSC.id, data, onCancel))
+                props.isEditing && currentPackage
+                    // @ts-ignore
+                    ? dispatch(updatePackage(currentPackage.id, data))
+                    : dispatch(createPackage(selectedSC.id, data, onCancel))
             }
         } else setFormIsChecked(true);
     }
