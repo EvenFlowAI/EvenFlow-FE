@@ -15,7 +15,7 @@ import {OptionsTable} from "../OptionsTable/OptionsTable";
 import SummaryRow from "../SummaryRow/SummaryRow";
 import ComplimentaryRequests from "../../ComplimentaryRequests/ComplimentaryRequests";
 import {checkIsValid, getOptionsTableData} from "../../utils";
-import {useConfirm, useException, useModal} from "../../../../utils/hooks";
+import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -127,11 +127,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
-    const {isOpen: isEditPackageOpen, onOpen: onEditPackageOpen, onClose: onEditPackageClose} = useModal();
     const { askConfirm } = useConfirm();
     const anchorRef = useRef(null);
     const dispatch = useDispatch();
     const showError = useException();
+    const {selectedSC} = useSCs();
 
     const accordClasses = useAccordionStyles();
     const classes = useStyles();
@@ -198,7 +198,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             ? option.serviceRequests.filter(request => request !== requestId)
                             : [...option.serviceRequests, requestId]
                 }
-                const updatedData = { ...packageData, options: packageData.options.filter(el => el.type !== updatedOption.type).concat(updatedOption)}
+                const updatedData = { ...packageData, options: packageData.options
+                        .filter(el => el.type !== updatedOption.type)
+                        .concat(updatedOption)
+                        .sort((a, b) => a.type - b.type)
+                }
                 setPackageData(updatedData);
             }
         }
@@ -237,13 +241,12 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleEdit = async (): Promise<any>  => {
         await props.setIsEditing(true);
-        await onEditPackageOpen();
         setAnchorEl(null);
     }
 
     const handleRemove = (): void => {
         setAnchorEl(null);
-        if (packageData) dispatch(removePackageById(packageData.id))
+        if (packageData && selectedSC) dispatch(removePackageById(packageData.id, selectedSC.id))
     }
 
     const askRemove = () => {

@@ -28,12 +28,11 @@ export const loadPackageById = (id: number): AppThunk => async dispatch => {
     }).finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const removePackageById = (packageId: number): AppThunk => async (dispatch, getState) => {
+export const removePackageById = (packageId: number, serviceCenterId: number): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
-    const {scProfile} = getState().appointment;
     Api.call(Api.endpoints.MaintenancePackages.Remove, {urlParams: {id: packageId}})
         .then(result => {
-            if (result?.data && scProfile?.id) dispatch(loadPackages(scProfile.id));
+            if (result?.data) dispatch(loadPackages(serviceCenterId));
         }).catch(err => {
         console.log(err);
     }).finally(() => dispatch(setPackageLoading(false)))

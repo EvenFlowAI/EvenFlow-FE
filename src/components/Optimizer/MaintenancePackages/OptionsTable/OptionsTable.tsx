@@ -106,8 +106,7 @@ export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCh
             <TableBody className={classes.tableBody}>
                 {data.map((request, index) => (
                     <TableRow className={getClassNameByIndex(index)} key={request.requestId}>
-                        {request.cellData
-                            .sort((a, b) => a.optionType - b.optionType)
+                        {request.cellData.sort((a, b) => a.optionType - b.optionType)
                             .map((item: TCellData) => {
                             return <TableCell className={classes.tableCell} align='center' key={item.optionType}>
                                 <IconButton onClick={() => onCheckboxClick(item, request.requestId)}>
