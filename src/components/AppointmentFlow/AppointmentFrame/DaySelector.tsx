@@ -58,9 +58,9 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         let daysInMonth: number = date.daysInMonth();
         let generatedDays: string[] = [];
         if (searchedDateRange) {
-            daysInMonth = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(searchedDateRange.to), "days"));
+            daysInMonth = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(moment(searchedDateRange.to).add(1, 'day')), "days"));
             let currentDate = moment.utc(searchedDateRange.from);
-            let endDate = moment.utc(searchedDateRange.to);
+            let endDate = moment.utc(searchedDateRange.to).endOf('day');
             let i = 0;
             const maxAvailableDaysAmount = daysInMonth < WHILE_LIMIT ? WHILE_LIMIT : daysInMonth;
             while (currentDate.isSameOrBefore(endDate, "date") && i < maxAvailableDaysAmount) {
@@ -112,10 +112,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     }
 
     const nextAvailable = (): boolean => {
-        console.log('sliceIdx', sliceIdx);
-        console.log('daysInMonth', daysInMonth);
-        console.log('daysPerScreen', daysPerScreen);
-        console.log('days', days.length);
         return sliceIdx < (daysInMonth - daysPerScreen);
     }
     const prevAvailable = (): boolean => {
@@ -125,7 +121,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         if (nextAvailable()) {
             setSliceIdx(prevIndex => {
                 const nS = prevIndex + (daysPerScreen * 2);
-                return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen + 1;
+                return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
             });
         }
     }
@@ -133,7 +129,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         if (prevAvailable()) {
             setSliceIdx(s => {
                 const pS = s - daysPerScreen;
-                return pS >= 0 ? pS : 0;
+                return pS >= 0 ? pS : 0
             })
         }
     }
