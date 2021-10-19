@@ -259,7 +259,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                             </div>
                             <div className={classes.complimentaryTotal}>
                                 <span>Total Complimentary Value:</span>
-                                <span>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>}
+                                <span>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>
                             </div>
                             <div className={isBmWService ? classes.totalSums : classes.total}>
                                 {isBmWService &&
