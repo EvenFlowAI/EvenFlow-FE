@@ -50,7 +50,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         subService,
         selectedPackage,
         selectedOpsCodes,
-        appointment
+        appointment,
+        consultant,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -61,7 +62,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.subService,
         state.appointmentFrame.selectedPackage,
         state.appointment.selectedSR,
-        state.appointment.appointment
+        state.appointment.appointment,
+        state.appointmentFrame.advisor,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
@@ -121,8 +123,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     const dd: IAppointmentSlotsRequest = {
                         appointmentTimingType: selectedTimingType ?? EAppointmentTimingType.FirstAvailable,
                         serviceCenterId: decodeSCID(id),
-                        // onlyOffers: filters.offersOnly,
-                        // shorterWaitTime: filters.waitTimeOnly,
+                        consultantId: consultant?.id ?? null,
                         fromDate: sd.toISOString(),
                         maintenancePackageOptionId: selectedPackage?.id ?? null,
                         serviceRequestIds: collectServiceRequestIds(
@@ -150,9 +151,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, [
         dispatch, id, selectedTimingType, month,
         selectedVehicle, customerData, service, handleDateRangeSet,
-        subService, selectedPackage, setDateCallback, selectedOpsCodes
+        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant
     ]);
-
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
     }, [slots]);

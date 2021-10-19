@@ -294,8 +294,14 @@ export interface IPackageByQuery {
     complimentaryServices: TExtendedComplimentary[];
 }
 
+export interface IMake {
+    name: string;
+    models: string[];
+}
+
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
+    isApplyBusinessRules: boolean;
     options: IPackageOptionDetailed[];
     serviceRequestsAssigned: serviceRequestAssigned[];
     name: string;

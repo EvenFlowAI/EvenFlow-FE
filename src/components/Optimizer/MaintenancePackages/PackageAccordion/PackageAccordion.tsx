@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import {
     Accordion as MuiAccordion,
     AccordionDetails,
@@ -15,11 +15,12 @@ import {OptionsTable} from "../OptionsTable/OptionsTable";
 import SummaryRow from "../SummaryRow/SummaryRow";
 import ComplimentaryRequests from "../../ComplimentaryRequests/ComplimentaryRequests";
 import {checkIsValid, getOptionsTableData} from "../../utils";
-import {useConfirm, useException} from "../../../../utils/hooks";
+import {useConfirm, useException, useModal} from "../../../../utils/hooks";
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadPackageById, removePackageById, updatePackageOptions} from "../../../../store/reducers/packages/actions";
+import AssignOpsCodeModal from "../../../Modals/AssignOpsCodeModal/AssignOpsCodeModal";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -29,6 +30,7 @@ type TAccordionProps = {
     onExpandIconClick?: (event: any) => void;
     title: string;
     id?: number;
+    setIsEditing: Dispatch<SetStateAction<boolean>>
 };
 
 export interface IDetailsData {
@@ -124,6 +126,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [detailsData, setDetailsData] = useState<IDetailsData | null>(null);
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
+    const {isOpen: isEditPackageOpen, onOpen: onEditPackageOpen, onClose: onEditPackageClose} = useModal();
     const { askConfirm } = useConfirm();
     const anchorRef = useRef(null);
     const dispatch = useDispatch();
@@ -169,7 +173,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }, [packageData])
 
     const onComplimentaryClick = (item: TCellData, requestId: number): void => {
-        if (isEdit && packageData) {
+        if (packageData) {
             const option = packageData.options.find(el => el.type === item.optionType);
             if (option) {
                 const updatedOption = {...option,
@@ -185,7 +189,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }
 
     const onCheckboxClick = (item: TCellData, requestId: number): void => {
-        if (isEdit && packageData) {
+        if (packageData) {
             const option = packageData.options.find(el => el.type === item.optionType);
             if (option) {
                 const updatedOption = {...option,
@@ -231,8 +235,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleCloseMenu = (): void => setAnchorEl(null);
 
-    const handleEdit = (): void => {
-        setIsEdit(true);
+    const handleEdit = async (): Promise<any>  => {
+        await props.setIsEditing(true);
+        await onEditPackageOpen();
         setAnchorEl(null);
     }
 
@@ -250,15 +255,15 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }
 
     const handleAddOpsCode = (): void => {
-        // TODO logic
+        onAssignOpsCodeOpen();
     }
 
     const handleCancel = (): void => {
         if (currentPackage) {
             setPackageData(currentPackage);
             getOptionsData(currentPackage);
+            setIsEdit(false);
         }
-        setIsEdit(false);
     }
 
     const handleSave = (): void => {
@@ -266,7 +271,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         if (isValid) {
             if (packageData) {
                 dispatch(updatePackageOptions(packageData.id, packageData.options))
-                setIsEdit(false);
             }
         } else {
             messages.forEach(message => showError(message))
@@ -276,7 +280,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleExpand = (e: any): void => {
         onExpandIconClick && onExpandIconClick(e);
-        isEdit && handleCancel();
+        handleCancel();
     }
 
     return <MuiAccordion
@@ -312,7 +316,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                     {packageData && <ServiceRequests data={packageData.serviceRequests}/>}
                     {packageData && <OptionsTable
                         withHeader
-                        isEdit={isEdit}
                         data={optionsData}
                         onCheckboxClick={onCheckboxClick}
                         options={packageData.options}/>}
@@ -326,11 +329,13 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
                         <SummaryRow
                             isEdit={isEdit}
+                            setIsEdit={setIsEdit}
                             summaryText="Invoiced Labor Hours:"
                             valuesArray={detailsData.invoicedRequestLaborHours}
                             onInputChange={onInputChange}/>
                         <SummaryRow
                             isEdit={isEdit}
+                            setIsEdit={setIsEdit}
                             summaryText="Market Price:"
                             valuesArray={detailsData.requestsPrice}
                             onInputChange={onInputChange}/>
@@ -339,7 +344,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         <div className={classes.tablesWrapper}>
                             {packageData && <ComplimentaryRequests data={packageData.complimentaryServices} />}
                             {packageData && <OptionsTable
-                                isEdit={isEdit}
                                 data={complimentaryData}
                                 onCheckboxClick={onComplimentaryClick}
                                 options={packageData.options}/>}
@@ -352,17 +356,19 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
                         <SummaryRow
                             isEdit={isEdit}
+                            setIsEdit={setIsEdit}
                             summaryText="Invoiced Labor Hours:"
                             valuesArray={detailsData.complimentaryLaborHours}
                             onInputChange={onInputChange}/>
                         <SummaryRow
                             isEdit={isEdit}
+                            setIsEdit={setIsEdit}
                             summaryText="Market Price:"
                             valuesArray={detailsData.complimentaryPrice}
                             onInputChange={onInputChange}/>
                     </React.Fragment>}
 
-                    {isEdit && <AccordionActions isEdit={isEdit} onAddOpsCode={handleAddOpsCode} onCancel={handleCancel}
+                    {<AccordionActions onAddOpsCode={handleAddOpsCode} onCancel={handleCancel}
                                        onSave={handleSave}/>}
                 </div>
             }
@@ -371,5 +377,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
+        <AssignOpsCodeModal packageName={title} open={isAssignOpsCodeOpen} onClose={onAssignOpsCodeClose}/>
     </MuiAccordion>
 }

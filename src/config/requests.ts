@@ -138,6 +138,7 @@ type ApiRoutes = {
     AppointmentSlots: Record<"GetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
+    ComplimentaryServices: Record<"GetByQuery", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
@@ -225,6 +226,9 @@ export class Api {
             Retrieve: {route: "/bays/{id}", method: "get"},
             GetAll: {route: "/bays/by-query", method: "post"},
             GetShort: {route: "/bays/short-by-query", method: "post"},
+        },
+        ComplimentaryServices: {
+            GetByQuery: {route: "/complimentary-services/by-query", method: "post"}
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},

@@ -14,11 +14,12 @@ import {
 import {RootState} from "../../../store/rootReducer";
 import {Api} from "../../../config/requests";
 import {useParams} from "react-router-dom";
-import {EVehiclePropType, ILoadedVehicle} from "../../../api/types";
+import {ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
+import {IMake} from "../../../store/reducers/appointment/types";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -57,7 +58,7 @@ export const mileageOptions: string[] = [
 
 const year = moment.utc().year();
 const YEARS = 20;
-const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
+export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
 const selects: TSelect[] = [
     {label: "VIN", name: "vin", noVehicle: true},
@@ -126,14 +127,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             setModels(['Other']);
         })
 
-        Api.call<string[]>(
+        Api.call<IMake[]>(
             Api.endpoints.Vehicles.Makes,
             {params: {serviceCenterId: decodeSCID(id)}}
         ).then(({data}) => {
             if (!data?.length) {
                 setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
             }
-            setLoadedOptions(prevOptions => ({...prevOptions, make: data}));
+            setLoadedOptions(prevOptions => ({...prevOptions, make: data.map(item => item.name)}));
         }).catch(() => {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })

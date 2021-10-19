@@ -92,6 +92,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
     const [selectedView, setSelectedView] = useState<TView>("calendar");
     const [isLoading, setLoading] = useState<boolean>(false);
     const [popover, setPopover] = useState<TPopoverState>({anchor: null, selectedAppointment: null});
+    const advisor = useSelector((state: RootState) => state.appointmentFrame.advisor);
 
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -130,6 +131,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                     appointmentTimingType: selectedAppointmentType,
                     serviceCenterId: decodeSCID(id),
                     onlyOffers: filters.offersOnly,
+                    consultantId: advisor?.id ?? null,
                     shorterWaitTime: filters.waitTimeOnly,
                     fromDate: sd.toISOString(),
                     serviceRequestIds: selectedServiceRequests,

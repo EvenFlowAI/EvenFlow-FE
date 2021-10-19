@@ -10,6 +10,8 @@ import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {IBusinessRule, IComplimentaryService, IPackageByQuery} from "../../../api/types";
 import {loadPackages} from "../../../store/reducers/packages/actions";
+import AddPackage from "../../Modals/AddPackage/AddPackage";
+import {useModal} from "../../../utils/hooks";
 
 export type TPackage = {
   name: string;
@@ -38,8 +40,10 @@ export const MaintenancePackages = () => {
     const {packages: allPackages} = useSelector((state: RootState) => state.packages);
     const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
+    const [isEditing, setIsEditing] = useState<boolean>(false);
     const classes = useStyles();
     const dispatch = useDispatch();
+    const {onOpen, onClose, isOpen} = useModal();
     
     useEffect(() => {
         if (selectedSc) {
@@ -63,7 +67,7 @@ export const MaintenancePackages = () => {
     };
 
     const handleAddPackage = () => {
-
+        onOpen();
     };
 
     const onAccordionChange = (id: number) => {
@@ -74,7 +78,13 @@ export const MaintenancePackages = () => {
         }
     };
 
+    const onAddModalClose = () => {
+        setIsEditing(false);
+        onClose();
+    }
+
     return <>
+        <AddPackage onClose={onAddModalClose} open={isOpen || isEditing} isEditing={isEditing}/>
     <TitleContainer
         pad
         parent={optimizerRoot}
@@ -99,6 +109,7 @@ export const MaintenancePackages = () => {
     </div>
         {packages.map((item: IPackageByQuery, index) => {
             return <PackageAccordion
+                setIsEditing={setIsEditing}
                 key={item.id}
                 title={item.name}
                 defaultExpanded={index === 0}

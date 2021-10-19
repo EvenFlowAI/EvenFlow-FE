@@ -130,7 +130,8 @@ export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAp
                 idx,
                 lowestPrice: appointment.priceWithOffer?.value || appointment.price.value,
                 appointments: [appointment],
-                offers: Boolean(appointment.offer)
+                offers: Boolean(appointment.offer),
+                amountOfSavingMoney: appointment.price.amountOfSavingMoney,
             };
         }
     }

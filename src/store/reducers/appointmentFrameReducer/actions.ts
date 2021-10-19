@@ -10,7 +10,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IVehicle} from "../appointment/types";
 import {IAppointmentId, TMaintenanceDetails} from "./types";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 
@@ -31,6 +31,21 @@ export const setMaintenanceDetails = createAction<Partial<TMaintenanceDetails>>(
 export const setUpdateAppointment = createAction<IListAppointment>("fAppointment/setUpdateAppointment");
 export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPackages");
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
+export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
+
+export const loadConsultants = (id: string): AppThunk => async dispatch => {
+    Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+        Api.endpoints.ServiceConsultants.GetByQuery,
+        {
+            data: {
+                serviceCenterId: decodeSCID(id)
+            }
+        })
+        .then(({data: {result}}) => {
+            dispatch(setConsultants(result));
+        })
+        .catch(err => console.log(err))
+}
 
 export const loadPackages = (id: number): AppThunk => async (dispatch, getState) => {
     const selectedVehicle = getState().appointmentFrame.selectedVehicle;
