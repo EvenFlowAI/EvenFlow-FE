@@ -379,6 +379,17 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         } else setFormIsChecked(true);
     }
 
+    const checkIsErrorField = (fieldName: string, vehiclesData: IVehiclesData) => {
+        let isError = false;
+        if (fieldName.includes('mileage') && vehiclesData?.mileageFrom && vehiclesData?.mileageTo) {
+            isError = vehiclesData?.mileageFrom > vehiclesData?.mileageTo
+        }
+        if (fieldName.includes('year') && vehiclesData?.yearFrom && vehiclesData?.yearTo) {
+            isError = vehiclesData?.yearFrom > vehiclesData?.yearTo
+        }
+        return isApplyBusinessRules && formIsChecked && isError;
+    }
+
     return (
         <BaseModal {...props} width={540}>
             <DialogTitle onClose={onCancel}>{props.isEditing ? 'Edit': 'Add'} Maintenance Package</DialogTitle>
@@ -476,7 +487,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     renderInput={autocompleteRender({
                                         label: "",
                                         placeholder: 'From',
-                                        error: !vehiclesData.mileageFrom && isApplyBusinessRules && formIsChecked
+                                        error: !vehiclesData.mileageFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('mileage', vehiclesData)
                                     })}
                                 />
                                 <Autocomplete
@@ -491,7 +502,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     renderInput={autocompleteRender({
                                         label: '',
                                         placeholder: 'To',
-                                        error: !vehiclesData.mileageTo && isApplyBusinessRules && formIsChecked
+                                        error: !vehiclesData.mileageTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('mileage', vehiclesData)
                                     })}
                                 />
                             </div>
@@ -511,7 +522,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     renderInput={autocompleteRender({
                                         label: '',
                                         placeholder: 'From',
-                                        error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked
+                                        error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
                                     })}
                                 />
                                 <Autocomplete
@@ -526,7 +537,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     renderInput={autocompleteRender({
                                         label: '',
                                         placeholder: 'To',
-                                        error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked
+                                        error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
                                     })}
                                 />
                             </div>

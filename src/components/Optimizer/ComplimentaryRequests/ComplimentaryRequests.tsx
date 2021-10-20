@@ -21,6 +21,7 @@ const ComplimentaryRequests:  React.FC<TComplimentaryRequestsProps> = ({ data })
             data={data}
             hideHeader
             index="id"
+            noDataTitle="No Complimentary Chosen"
             rowData={RowData}
             hidePagination
         />
