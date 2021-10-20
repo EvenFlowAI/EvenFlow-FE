@@ -56,13 +56,20 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
         color: '#7898FF',
         fontSize: 12,
-        paddingLeft: 5,
         marginBottom: 30,
     },
     wideButton: {
         width: '100%',
         color: '#7898FF',
         border: '1px solid #7898FF',
+        borderRadius: 0,
+        marginBottom: 16,
+        fontSize: 12,
+    },
+    redButton: {
+        width: '100%',
+        color: '#7898FF',
+        border: '1px solid red',
         borderRadius: 0,
         marginBottom: 16,
         fontSize: 12,
@@ -126,6 +133,7 @@ const useStyles = makeStyles(() => ({
         padding: 20,
     },
     iconPlus: {
+        marginLeft: -9,
         '& .MuiSvgIcon-root': {
             fill: '#7898FF',
         }
@@ -263,6 +271,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setOpsCodes([]);
         setSelectedModels([]);
         setSelectedMakes([]);
+        setApplyBusinessRules(false);
         props.onClose();
     }, [])
 
@@ -312,6 +321,14 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     const isBusinessRulesValid = () => {
         const { yearFrom, yearTo, mileageFrom, mileageTo } = vehiclesData;
+        if (mileageFrom && mileageTo && mileageFrom > mileageTo) {
+            showError('Check the Mileage fields - "To" must be more than "From"')
+           return false
+        }
+        if (yearFrom && yearTo && yearFrom > yearTo) {
+            showError('Check the Vehicle Year fields - "To" must be more than "From"')
+            return false
+        }
         return selectedModels.length && selectedMakes.length && yearFrom && yearTo && mileageFrom && mileageTo;
     }
 
@@ -356,7 +373,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                 }
                 props.isEditing && currentPackage
                     // @ts-ignore
-                    ? dispatch(updatePackage(currentPackage.id, data))
+                    ? dispatch(updatePackage(currentPackage.id, data, onCancel))
                     : dispatch(createPackage(selectedSC.id, data, onCancel))
             }
         } else setFormIsChecked(true);
@@ -388,7 +405,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     </div>
 
                     <Button
-                        className={classes.wideButton}
+                        className={formIsChecked && assignedOpsCodes.length < 3 ? classes.redButton : classes.wideButton}
                         color="primary"
                         onClick={onAssignOpsCodeOpen}>
                         Assign Ops Code To Package
@@ -440,6 +457,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         setFormIsChecked={setFormIsChecked}
                         disabled={!isApplyBusinessRules}
                         formIsChecked={formIsChecked}
+                        isApplyBusinessRules={isApplyBusinessRules}
                     />
 
                     <div className={classes.formWrapper} style={{ marginBottom: 16}}>
@@ -455,7 +473,11 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     getOptionSelected={(option, value) => option === value}
                                     value={vehiclesData?.mileageFrom}
                                     onChange={onFormFieldChange('mileageFrom')}
-                                    renderInput={autocompleteRender({label: "", placeholder: 'From', error: !vehiclesData.mileageFrom && formIsChecked})}
+                                    renderInput={autocompleteRender({
+                                        label: "",
+                                        placeholder: 'From',
+                                        error: !vehiclesData.mileageFrom && isApplyBusinessRules && formIsChecked
+                                    })}
                                 />
                                 <Autocomplete
                                     disabled={!isApplyBusinessRules}
@@ -466,7 +488,11 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     getOptionSelected={(option, value) => option === value}
                                     value={vehiclesData?.mileageTo}
                                     onChange={onFormFieldChange('mileageTo')}
-                                    renderInput={autocompleteRender({label: '', placeholder: 'To', error: !vehiclesData.mileageTo && formIsChecked})}
+                                    renderInput={autocompleteRender({
+                                        label: '',
+                                        placeholder: 'To',
+                                        error: !vehiclesData.mileageTo && isApplyBusinessRules && formIsChecked
+                                    })}
                                 />
                             </div>
                         </div>
@@ -482,7 +508,11 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     getOptionSelected={(option, value) => option === value}
                                     value={vehiclesData?.yearFrom}
                                     onChange={onFormFieldChange('yearFrom')}
-                                    renderInput={autocompleteRender({label: '', placeholder: 'From', error: !vehiclesData.yearFrom && formIsChecked})}
+                                    renderInput={autocompleteRender({
+                                        label: '',
+                                        placeholder: 'From',
+                                        error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked
+                                    })}
                                 />
                                 <Autocomplete
                                     disabled={!isApplyBusinessRules}
@@ -493,7 +523,11 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                     getOptionSelected={(option, value) => option === value}
                                     value={vehiclesData?.yearTo}
                                     onChange={onFormFieldChange('yearTo')}
-                                    renderInput={autocompleteRender({label: '', placeholder: 'To', error: !vehiclesData.yearTo && formIsChecked})}
+                                    renderInput={autocompleteRender({
+                                        label: '',
+                                        placeholder: 'To',
+                                        error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked
+                                    })}
                                 />
                             </div>
                         </div>
@@ -507,7 +541,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         disableCloseOnSelect
                         value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[0]}
                         onChange={onFormFieldChange('customerCriteria')}
-                        renderInput={autocompleteRender({label: 'Customer Criteria'})}
+                        renderInput={autocompleteRender({label: 'Customer Criteria', placeholder: 'Select Customer Criteria'})}
                     />
                 </div>
 
