@@ -182,7 +182,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             ? option.complimentaryServices.filter(request => request !== requestId)
                             : [...option.complimentaryServices, requestId]
                 }
-                const updatedData = { ...packageData, options: packageData.options.filter(el => el.type !== updatedOption.type).concat(updatedOption)}
+                const updatedData = { ...packageData, options: packageData.options
+                        .filter(el => el.type !== updatedOption.type)
+                        .concat(updatedOption)
+                        .sort((a, b) => a.type - b.type)}
                 setPackageData(updatedData);
             }
         }
@@ -227,7 +230,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 const updated = {...packageData,
                     options: packageData.options
                         .filter(item => item.type !== optionType)
-                        .concat(currentOption)};
+                        .concat(currentOption)
+                        .sort((a, b) => a.type - b.type)
+                };
                 setPackageData(updated);
             }
         }

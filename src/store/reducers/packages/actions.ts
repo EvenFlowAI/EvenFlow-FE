@@ -67,11 +67,14 @@ export const updatePackageOptions = (id: number, data: IPackageOption[]): AppThu
         .finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updatePackage = (id: number, data: IUpdatedPackage): AppThunk => async dispatch => {
+export const updatePackage = (id: number, data: IUpdatedPackage, callback?: () => void): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.Update, {urlParams: {id}, data})
         .then(result => {
-            if (result) dispatch(loadPackageById(id))
+            if (result) {
+                callback && callback();
+                dispatch(loadPackageById(id))
+            }
         })
         .catch(err => {
             console.log(err)

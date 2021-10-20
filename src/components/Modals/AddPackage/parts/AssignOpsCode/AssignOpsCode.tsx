@@ -9,7 +9,7 @@ import {RootState} from "../../../../../store/rootReducer";
 import {Table} from "../../../../UI/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal";
 import {SearchInput} from "../../../../UI/SearchInput";
-import {usePagination, useSCs} from "../../../../../utils/hooks";
+import {useException, usePagination, useSCs} from "../../../../../utils/hooks";
 import {
     loadNonSelectedServiceRequests,
     setNonSelectedFilter,
@@ -73,9 +73,6 @@ const useInputStyles = makeStyles(() => ({
 
 const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
-    const classes = useStyles();
-    const inputClasses = useInputStyles();
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
     const [
         serviceList,
@@ -94,6 +91,10 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
         setNonSelectedPageData
     );
+    const dispatch = useDispatch();
+    const classes = useStyles();
+    const inputClasses = useInputStyles();
+    const showError = useException();
 
     useEffect(() => {
         if (props.open && selectedSC) {
@@ -123,6 +124,8 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                     return [...prev, { type: selectedOption.type, serviceRequestId: el.id}]
                 }
             });
+        } else {
+            showError('Please select option first');
         }
     }, [props.setSelectedCodes, selectedOption])
 
