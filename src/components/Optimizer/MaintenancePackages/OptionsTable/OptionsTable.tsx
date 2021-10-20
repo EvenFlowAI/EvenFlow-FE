@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    IconButton,
+    IconButton, Input,
     makeStyles,
     Table as BaseTable,
     TableBody,
@@ -18,6 +18,9 @@ type TProps = {
     data: TRequestRow[];
     options: IPackageOptionDetailed[];
     onCheckboxClick: (item: TCellData, requestId: number) => void;
+    onOptionNameChange?: (option: IPackageOptionDetailed, name: string) => void;
+    editingOption?: IPackageOptionDetailed | null;
+    setEditingOption?: React.Dispatch<React.SetStateAction<IPackageOptionDetailed | null>>;
 }
 
 const borderRule = '1px solid #E0E2E8';
@@ -66,6 +69,16 @@ const useStyles = makeStyles(theme => ({
         '&.Mui-checked': {
             color: '#3855FE',
         },
+    },
+    optionName: {
+        background: "black",
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 12,
+
+        '& > input': {
+            padding: 3,
+        }
     }
 }))
 // TODO change it to dynamic option names from back end
@@ -75,7 +88,7 @@ export const MaintenanceOptions = {
     2: 'Preferred'
 }
 
-export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCheckboxClick }) => {
+export const OptionsTable: React.FC<TProps> = ({ editingOption, setEditingOption, onOptionNameChange, data, withHeader, options, onCheckboxClick }) => {
     const classes = useStyles();
 
     const getClassNameByIndex = (index: number) => {
@@ -89,13 +102,27 @@ export const OptionsTable: React.FC<TProps> = ({ data, withHeader, options, onCh
         }
     }
 
+    const onOptionNameClick = (option: IPackageOptionDetailed): void => {
+        setEditingOption && setEditingOption(option);
+    }
+
+    const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (editingOption && onOptionNameChange) onOptionNameChange(editingOption, e.target?.value);
+    }
+
     return <TableContainer className={classes.container}>
         <BaseTable>
             {withHeader && <TableHead className={classes.tableHeader}>
               <TableRow>
                   {options.map((option: IPackageOptionDetailed) => (
                       <TableCell align='center' className={classes.headerCell} key={option.type}>
-                          {MaintenanceOptions[option.type]}
+                          {editingOption && editingOption.type === option.type ?
+                          <Input
+                              value={option.name}
+                              onChange={onNameChange}
+                              className={classes.optionName}/>
+                              : <div onClick={() => onOptionNameClick(option)}>{option.name}</div>
+                          }
                       </TableCell>
                   ))}
               </TableRow>
