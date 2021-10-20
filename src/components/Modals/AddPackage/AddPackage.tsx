@@ -271,6 +271,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setPackageName(e.target.value);
     }, [])
 
+
     const onFormFieldChange = useCallback(
         (fieldName: keyof IVehiclesData) =>
         (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {
