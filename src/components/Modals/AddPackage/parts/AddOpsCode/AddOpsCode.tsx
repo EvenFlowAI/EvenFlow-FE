@@ -16,17 +16,10 @@ import {
 } from "../../../../../store/reducers/serviceRequests/actions";
 
 import Checkbox from "../../../../UI/Checkbox";
-import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../UI/AutocompleteRender";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: IAssignedServiceRequest[];
     setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
-}
-
-export type TFields = {
-    unitCost: string,
-    numberOfParts: string,
 }
 
 const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
@@ -40,7 +33,7 @@ const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
 const useStyles = makeStyles(() => ({
     wrapper: {
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         alignItems: 'center',
         width: '100%',
         padding: 10,
@@ -121,12 +114,6 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         dispatch(setAssignedFilter({searchTerm: e.target.value}));
     }, [dispatch])
 
-    const onFilterChange = useCallback(
-        (fieldName: keyof TFields) =>
-            (e: React.ChangeEvent<{}>, value: string | null): void => {
-                console.log(fieldName, value)
-            }, [])
-
     const getModalProps = (props: TAssignOpsCodeModalProps) => {
         const modalProps = {...props};
         delete modalProps.selectedCodes;
@@ -139,20 +126,6 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
             <DialogTitle onClose={handleClose}>Add OPS Codes</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
-                    <div className={classes.filtersWrapper}>
-                        <Autocomplete
-                            className={classes.filter}
-                            options={['Show all']}
-                            defaultValue='Show all'
-                            onChange={onFilterChange("unitCost")}
-                            renderInput={autocompleteRender({label: "Parts Unit Cost", fullWidth: true})}/>
-                        <Autocomplete
-                            className={classes.filter}
-                            options={['Show all']}
-                            defaultValue='Show all'
-                            onChange={onFilterChange("numberOfParts")}
-                            renderInput={autocompleteRender({label: "# Of Parts", fullWidth: true})}/>
-                    </div>
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>
                 <Table<IAssignedServiceRequest>
