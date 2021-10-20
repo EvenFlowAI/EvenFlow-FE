@@ -322,4 +322,5 @@ export interface IPackageOptionDetailed {
     maintenancePackageId: number;
     serviceRequestLaborHours: number;
     serviceRequestPrice: number;
+    name?: string;
 }
