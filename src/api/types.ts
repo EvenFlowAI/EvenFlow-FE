@@ -323,4 +323,5 @@ export interface IPackageOptionDetailed {
     serviceRequestLaborHours: number;
     serviceRequestPrice: number;
     name?: string;
+    serviceRequestAssignedId?: number;
 }

@@ -6,7 +6,7 @@ import {Button, Radio} from "@material-ui/core";
 import {Table} from "../../UI/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {usePagination, useSCs} from "../../../utils/hooks";
+import {useException, usePagination, useSCs} from "../../../utils/hooks";
 import {
     loadNonSelectedServiceRequests,
     setNonSelectedFilter,
@@ -15,12 +15,11 @@ import {
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {SearchInput} from "../../UI/SearchInput";
 import {LoadingButton} from "../../UI/Button";
-import {updatePackage} from "../../../store/reducers/packages/actions";
+import {updatePackageOptions} from "../../../store/reducers/packages/actions";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {MaintenanceOptions} from "../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
 import {makeStyles} from "@material-ui/core/styles";
-import {IUpdatedPackage} from "../../../store/reducers/packages/types";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "OPS CODE", val: el => el.code},
@@ -67,6 +66,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showError = useException();
     const classes = useStyles();
     const inputClasses = useInputStyles();
     const [
@@ -101,8 +101,13 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     }, [setSelectedCode, setSelectedOption, props.onClose, dispatch])
 
     const handleSelect = useCallback((el: IServiceRequest) => {
-        setSelectedCode(el.id);
-    }, [setSelectedCode])
+        if (selectedOption) {
+            setSelectedCode(el.id);
+        } else {
+            showError('Please select An Option first')
+        }
+
+    }, [setSelectedCode, selectedOption])
 
     const preActions = useCallback((el: IServiceRequest) => {
         return <Radio color="primary" checked={selectedCode === +el.id} onChange={() => handleSelect(el)} />
@@ -120,17 +125,13 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
 
     const handleAssign = async () => {
         if (currentPackage && selectedOption && selectedCode) {
-            const newRequest = {type: +selectedOption.type, serviceRequestId: selectedCode};
-            const requests = currentPackage.serviceRequestsAssigned.filter(option => +option.type !== +selectedOption.type);
-            requests.push(newRequest);
-            const data: IUpdatedPackage = {
-                serviceRequestsAssigned: requests,
-                serviceRequests: currentPackage.serviceRequests.map(item => item.id),
-                complimentaryServices: currentPackage.complimentaryServices.map(item => item.id),
-                businessRules: currentPackage.businessRules,
-                name: currentPackage.name,
-            };
-            await dispatch(updatePackage(currentPackage.id, data))
+            let options = [...currentPackage.options];
+            let optionToChange = options.find(item => item.type === selectedOption.type);
+            if (optionToChange) {
+                optionToChange = {...optionToChange, serviceRequestAssignedId: selectedCode};
+                options = options.filter(item => item.type !== selectedOption.type).concat(optionToChange)
+                dispatch(updatePackageOptions(currentPackage.id, options))
+            }
             await setSaving(false);
             await handleClose();
         }
@@ -148,7 +149,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
                 <div className={classes.wrapper}>
                     {currentPackage && <Autocomplete
                         classes={inputClasses}
-                        options={currentPackage.options.map(option => ({name: MaintenanceOptions[option.type], type: option.type}))}
+                        options={currentPackage.options.map(option => ({name: option.name || MaintenanceOptions[option.type], type: option.type}))}
                         getOptionSelected={(option, value) => option.type === value.type}
                         getOptionLabel={option => option.name}
                         onChange={onSelectOption}
