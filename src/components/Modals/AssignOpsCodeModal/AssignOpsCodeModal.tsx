@@ -37,9 +37,10 @@ export type TSelectedOption = {
 
 const useStyles = makeStyles(() => ({
     wrapper: {
+        width: '100%',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center', width: '100%',
+        alignItems: 'flex-end',
         padding: 10,
     },
     optionLabel: {
@@ -51,6 +52,11 @@ const useStyles = makeStyles(() => ({
         justifyContent: 'center',
         marginBottom: 20,
         fontSize: 17,
+    },
+    selectedCode: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        maxWidth: '40%',
     }
 }))
 
@@ -139,7 +145,18 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
 
     const onSelectOption = useCallback((e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
         setSelectedOption(value);
-    }, [setSelectedOption])
+        if (currentPackage && value) {
+            const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === value.type)
+            if (assignedCode) setSelectedCode(assignedCode.serviceRequestId);
+        }
+    }, [setSelectedOption, currentPackage])
+
+    const getSelectedOpsCode = (selectedOption: TSelectedOption): string => {
+        let code = ''
+        const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === selectedOption.type)
+        if (assignedCode) code = `${assignedCode.code} ${assignedCode.description}`;
+        return code;
+    }
 
     return (
         <BaseModal {...props}>
@@ -159,6 +176,9 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
                             placeholder: 'Select An Option'
                         })}
                         value={selectedOption}/>}
+                    {currentPackage && selectedOption && <div className={classes.selectedCode}>
+                        Selected:  {getSelectedOpsCode(selectedOption)}
+                    </div>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>
                 <Table<IServiceRequest>

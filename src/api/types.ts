@@ -20,6 +20,8 @@ export type TApi = Record<string, TApiView>;
 export type serviceRequestAssigned = {
     type: number;
     serviceRequestId: number;
+    description?: string;
+    code?: string;
 }
 
 export enum EServiceCategoryPage {
