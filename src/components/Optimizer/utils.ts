@@ -106,7 +106,9 @@ export const checkIsValid = (packageData: IPackageById | null): [boolean, string
         return option.serviceRequests.length && packageData?.complimentaryServices?.length
             ? option.complimentaryServices.length
             : true});
-    if (allPricesAndHoursFilled && requestsIncluded) isValid = true;
+    const allOptionsHaveNames = !!packageData?.options.every(option => option?.name?.length);
+    if (!allOptionsHaveNames) messages.push('Please enter name for each Option of Package');
+    if (allPricesAndHoursFilled && requestsIncluded && allOptionsHaveNames) isValid = true;
     if (!allPricesAndHoursFilled) messages.push('Market Prices and Invoiced Labor Hours must be more than 0');
     if (!requestsIncluded) messages.push(
         `Please choose at least one Service Request ${!!packageData?.complimentaryServices?.length && 'and one Complimentary Request'} for each Package Option`
