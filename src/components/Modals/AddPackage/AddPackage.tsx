@@ -30,10 +30,10 @@ type TModalProps = DialogProps & {
 };
 
 interface IVehiclesData {
-    mileageFrom: string | undefined;
-    mileageTo: string | undefined;
-    yearFrom: string | undefined;
-    yearTo: string | undefined;
+    mileageFrom: string;
+    mileageTo: string;
+    yearFrom: string;
+    yearTo: string;
     customerCriteria: ECustomerCriteria;
     isApplyBusinessRules?: boolean;
 }
@@ -194,10 +194,10 @@ const useAutocompleteStyles = makeStyles(() => ({
 const criteriaOptions = Object.keys(ECustomerCriteria).filter(key => Number.isNaN(+key));
 
 const initialValues = {
-    mileageFrom: undefined,
-    mileageTo: undefined,
-    yearFrom: undefined,
-    yearTo: undefined,
+    mileageFrom: '',
+    mileageTo: '',
+    yearFrom: '',
+    yearTo: '',
     customerCriteria: ECustomerCriteria.Any,
     isApplyBusinessRules: false,
 }
@@ -273,7 +273,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setSelectedMakes([]);
         setApplyBusinessRules(false);
         props.onClose();
-    }, [])
+    }, [initialValues, props.onClose])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
@@ -286,8 +286,6 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {
             setFormIsChecked(false);
             if (fieldName === 'customerCriteria') {
-                // @ts-ignore
-                console.log(ECustomerCriteria[value]);
                 // @ts-ignore
                 setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: ECustomerCriteria[value]}))
             } else {
@@ -354,26 +352,26 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     complimentaryServices: complimentary,
                     serviceRequestsAssigned: assignedOpsCodes,
                     serviceCenterId: selectedSC.id,
-                    isApplyBusinessRules: vehiclesData.isApplyBusinessRules,
+                    isApplyBusinessRules: isApplyBusinessRules || vehiclesData.isApplyBusinessRules,
                 }
                 if (isApplyBusinessRules || isBusinessRulesValid()) {
-                    // @ts-ignore
                     data.businessRules = {
                         vehicleMakes: selectedMakes,
                             vehicleModels: selectedModels,
                             vehicleYearRange: {
-                            from: vehiclesData.yearFrom,
-                                to: vehiclesData.yearTo
+                                from: +vehiclesData.yearFrom,
+                                to: +vehiclesData.yearTo
                         },
                         vehicleMileageRange: {
-                            from: vehiclesData.mileageFrom,
-                                to: vehiclesData.mileageTo,
+                            from: +vehiclesData.mileageFrom,
+                                to: +vehiclesData.mileageTo,
                         },
                         customerCriteria: vehiclesData.customerCriteria,
                     }
+                } else {
+                    data.businessRules = currentPackage?.businessRules;
                 }
                 props.isEditing && currentPackage
-                    // @ts-ignore
                     ? dispatch(updatePackage(currentPackage.id, data, onCancel))
                     : dispatch(createPackage(selectedSC.id, data, onCancel))
             }
@@ -392,7 +390,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     }
 
     return (
-        <BaseModal {...props} width={540}>
+        <BaseModal {...props} width={540} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>{props.isEditing ? 'Edit': 'Add'} Maintenance Package</DialogTitle>
             <DialogContent>
                 <div className={classes.contentWrapper}>
