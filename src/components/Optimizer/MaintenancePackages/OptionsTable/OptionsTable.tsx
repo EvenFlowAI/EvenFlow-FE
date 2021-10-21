@@ -12,6 +12,7 @@ import {
 import {IPackageOptionDetailed} from "../../../../api/types";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {TCellData, TRequestRow} from "../PackageAccordion/PackageAccordion";
+import {useException} from "../../../../utils/hooks";
 
 type TProps = {
     withHeader?: boolean;
@@ -71,13 +72,17 @@ const useStyles = makeStyles(theme => ({
         },
     },
     optionName: {
+        width: 100,
         background: "black",
         color: 'white',
         fontWeight: 'bold',
         fontSize: 12,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
 
         '& > input': {
             padding: 3,
+            fontSize: 12,
         }
     }
 }))
@@ -90,6 +95,7 @@ export const MaintenanceOptions = {
 
 export const OptionsTable: React.FC<TProps> = ({ editingOption, setEditingOption, onOptionNameChange, data, withHeader, options, onCheckboxClick }) => {
     const classes = useStyles();
+    const showError = useException();
 
     const getClassNameByIndex = (index: number) => {
         switch (index) {
@@ -107,7 +113,13 @@ export const OptionsTable: React.FC<TProps> = ({ editingOption, setEditingOption
     }
 
     const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (editingOption && onOptionNameChange) onOptionNameChange(editingOption, e.target?.value);
+        if (editingOption && onOptionNameChange) {
+            if (!e.target?.value || !e.target.value.match(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/)) {
+                showError('Please use only letters, digits, and whitespaces')
+            } else {
+                onOptionNameChange(editingOption, e.target?.value);
+            }
+        }
     }
 
     return <TableContainer className={classes.container}>
@@ -121,7 +133,10 @@ export const OptionsTable: React.FC<TProps> = ({ editingOption, setEditingOption
                               value={option.name}
                               onChange={onNameChange}
                               className={classes.optionName}/>
-                              : <div onClick={() => onOptionNameClick(option)}>{option.name}</div>
+                              : <div className={classes.optionName}
+                                  onClick={() => onOptionNameClick(option)}>
+                                  {option.name}
+                          </div>
                           }
                       </TableCell>
                   ))}
