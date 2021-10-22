@@ -352,7 +352,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     complimentaryServices: complimentary,
                     serviceRequestsAssigned: assignedOpsCodes,
                     serviceCenterId: selectedSC.id,
-                    isApplyBusinessRules: isApplyBusinessRules || vehiclesData.isApplyBusinessRules,
+                    isApplyBusinessRules: isApplyBusinessRules,
                 }
                 if (isApplyBusinessRules && isBusinessRulesValid()) {
                     data.businessRules = {
@@ -548,7 +548,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         disableClearable
                         options={criteriaOptions}
                         getOptionSelected={(option, value) => option === ECustomerCriteria[+value]}
-                        disableCloseOnSelect
+                        disabled={!isApplyBusinessRules}
                         value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[0]}
                         onChange={onFormFieldChange('customerCriteria')}
                         renderInput={autocompleteRender({label: 'Customer Criteria', placeholder: 'Select Customer Criteria'})}
