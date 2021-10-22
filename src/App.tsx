@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
@@ -13,10 +13,25 @@ import {EndUserLayout} from "./components/Layout/EndUserLayout";
 import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
-
+import ReactGA from 'react-ga';
+import {useSelector} from "react-redux";
+import {RootState} from "./store/rootReducer";
 
 const App = () => {
+    const { customerLoadedData } = useSelector((state: RootState) => state.appointment)
     const notificationsRef = useRef<ProviderContext>();
+
+    useEffect(() => {
+        ReactGA.initialize('G-3PDXX5MTNF', {
+            debug: true,
+            titleCase: false,
+            gaOptions: {
+                userId: customerLoadedData?.id ? customerLoadedData.id : undefined,
+            }
+        });
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }, [customerLoadedData]);
+
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
     }

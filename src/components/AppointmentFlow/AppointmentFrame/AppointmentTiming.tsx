@@ -16,6 +16,7 @@ import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReduce
 import moment from "moment";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import ReactGA from "react-ga";
 
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
@@ -122,6 +123,9 @@ type TCardProps = {
     selectedTime: moment.Moment|null;
     onChangeTime: TArgCallback<moment.Moment|null>;
 }
+
+const timingTypes = ['Special Offers', 'Preferred Date', 'First Available Date'];
+
 const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
                                               onChangeTime, selectedTime}) => {
     const theme = useTheme();
@@ -183,8 +187,15 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     );
     
     const onSubmit = useCallback((): void => {
-        onNext();
+        if (selectedType) {
+            ReactGA.event({
+                category: 'User',
+                action: 'Selected Timing Type',
+                label: `Selected ${timingTypes[selectedType]}`
+            });
+        }
         if (appointment?.timingType !== selectedType) dispatch(selectAppointment(null))
+        onNext();
     }, [appointment, dispatch, onNext, selectedType])
 
     return (
