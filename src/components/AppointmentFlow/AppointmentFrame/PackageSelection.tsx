@@ -18,6 +18,7 @@ import {
     TExtendedService
 } from "../../../api/types";
 import PackageSelectionMobile from "./PackageSelectionMobile";
+import ReactGA from "react-ga";
 
 const border = '1px solid #DADADA';
 
@@ -291,6 +292,26 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         dispatch(setPackage(p));
     }
 
+    const handleBack = (): void => {
+        ReactGA.event({
+            category: 'User',
+            action: 'Went back from Selection Package Page'
+        })
+        onBack();
+    }
+
+    const handleNext = (): void => {
+        if (selectedPackage) {
+            const packageOptions = ['Good', 'Better', 'Best'];
+            ReactGA.event({
+                category: 'User',
+                action: `Selected Package`,
+                label: `With ${packageOptions[selectedPackage.type]} Option`
+            })
+        }
+        onNext();
+    }
+
     return (
         <StepWrapper>
             <NoItemsLoading
@@ -394,9 +415,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 }
             </React.Fragment> : null}
             <Actions
-                onBack={onBack}
+                onBack={handleBack}
                 nextDisabled={!selectedPackage}
-                onNext={onNext} />
+                onNext={handleNext} />
         </StepWrapper>
     );
 };

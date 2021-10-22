@@ -9,6 +9,7 @@ import {
 } from "../../store/reducers/appointment/actions";
 import {useDispatch} from "react-redux";
 import {setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import ReactGA from "react-ga";
 
 const mh400 = "@media (max-height: 400px)";
 const mh600 = "@media (max-height: 600px)";
@@ -62,11 +63,25 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
+    const handleExisting = (): void => {
+        ReactGA.event({
+            category: 'User',
+            action: 'Enters Page',
+            label: `As Returning Customer`
+        });
+        onLogin();
+    }
+
     const handleNew = () => {
         const c = getBlankCustomer();
         dispatch(setCustomerLoadedData(c));
         dispatch(setVehicle(getBlankVehicle()));
         saveCustomerCache(c);
+        ReactGA.event({
+            category: 'User',
+            action: 'Enters Page',
+            label: `As New User`
+        });
         onComplete();
     }
 
@@ -75,7 +90,7 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
           container
           spacing={4}>
         <Grid item xs={12} sm={12} md={6}>
-            <div onClick={onLogin} className={classes.button}>
+            <div onClick={handleExisting} className={classes.button}>
                 <span>I`m a returning customer</span>
             </div>
         </Grid>

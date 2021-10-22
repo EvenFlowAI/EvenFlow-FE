@@ -1,4 +1,5 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
+import ReactGA from 'react-ga';
 import {StepWrapper} from "./StepWrapper";
 import {Button, styled} from "@material-ui/core";
 import moment from "moment";
@@ -91,6 +92,13 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.customer,
         state.appointmentFrame.selectedVehicle
     ]);
+
+    useEffect(() => {
+        ReactGA.event({
+            category: 'User',
+            action: 'Created Appointment'
+        })
+    }, [])
 
     const data: TItem[] = useMemo(() => {
         return [
