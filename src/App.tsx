@@ -17,21 +17,29 @@ import ReactGA from 'react-ga';
 import {useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
 
+ReactGA.initialize('G-41GXSV5F1M', {
+    debug: true,
+    titleCase: false,
+    gaOptions: {
+        siteSpeedSampleRate: 100,
+    }
+});
+
 const App = () => {
     const { customerLoadedData } = useSelector((state: RootState) => state.appointment)
     const notificationsRef = useRef<ProviderContext>();
 
     useEffect(() => {
-        ReactGA.initialize('G-41GXSV5F1M', {
-            debug: true,
-            titleCase: false,
-            gaOptions: {
-                userId: customerLoadedData?.id ? customerLoadedData.id : undefined,
-                siteSpeedSampleRate: 100,
-            }
-        });
+        // ReactGA.initialize('G-41GXSV5F1M', {
+        //     debug: true,
+        //     titleCase: false,
+        //     gaOptions: {
+        //         userId: customerLoadedData?.id ? customerLoadedData.id : undefined,
+        //         siteSpeedSampleRate: 100,
+        //     }
+        // });
         ReactGA.pageview(window.location.pathname + window.location.search);
-    }, [customerLoadedData]);
+    }, []);
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
