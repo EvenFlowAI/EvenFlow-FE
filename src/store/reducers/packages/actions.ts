@@ -28,12 +28,11 @@ export const loadPackageById = (id: number): AppThunk => async dispatch => {
     }).finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const removePackageById = (packageId: number): AppThunk => async (dispatch, getState) => {
+export const removePackageById = (packageId: number, serviceCenterId: number): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
-    const {scProfile} = getState().appointment;
     Api.call(Api.endpoints.MaintenancePackages.Remove, {urlParams: {id: packageId}})
         .then(result => {
-            if (result?.data && scProfile?.id) dispatch(loadPackages(scProfile.id));
+            if (result?.data) dispatch(loadPackages(serviceCenterId));
         }).catch(err => {
         console.log(err);
     }).finally(() => dispatch(setPackageLoading(false)))
@@ -68,11 +67,14 @@ export const updatePackageOptions = (id: number, data: IPackageOption[]): AppThu
         .finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updatePackage = (id: number, data: IUpdatedPackage): AppThunk => async dispatch => {
+export const updatePackage = (id: number, data: IUpdatedPackage, callback?: () => void): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.Update, {urlParams: {id}, data})
         .then(result => {
-            if (result) dispatch(loadPackageById(id))
+            if (result) {
+                callback && callback();
+                dispatch(loadPackageById(id))
+            }
         })
         .catch(err => {
             console.log(err)

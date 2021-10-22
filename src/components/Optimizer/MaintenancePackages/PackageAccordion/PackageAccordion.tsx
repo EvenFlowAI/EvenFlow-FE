@@ -15,7 +15,7 @@ import {OptionsTable} from "../OptionsTable/OptionsTable";
 import SummaryRow from "../SummaryRow/SummaryRow";
 import ComplimentaryRequests from "../../ComplimentaryRequests/ComplimentaryRequests";
 import {checkIsValid, getOptionsTableData} from "../../utils";
-import {useConfirm, useException, useModal} from "../../../../utils/hooks";
+import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -30,7 +30,8 @@ type TAccordionProps = {
     onExpandIconClick?: (event: any) => void;
     title: string;
     id?: number;
-    setIsEditing: Dispatch<SetStateAction<boolean>>
+    setIsEditing: Dispatch<SetStateAction<boolean>>,
+    onOpenEdit: () => void;
 };
 
 export interface IDetailsData {
@@ -126,9 +127,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [detailsData, setDetailsData] = useState<IDetailsData | null>(null);
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [editingOption, setEditingOption] = useState<IPackageOptionDetailed | null>(null);
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
-    const {isOpen: isEditPackageOpen, onOpen: onEditPackageOpen, onClose: onEditPackageClose} = useModal();
     const { askConfirm } = useConfirm();
+    const {selectedSC} = useSCs();
     const anchorRef = useRef(null);
     const dispatch = useDispatch();
     const showError = useException();
@@ -182,7 +184,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             ? option.complimentaryServices.filter(request => request !== requestId)
                             : [...option.complimentaryServices, requestId]
                 }
-                const updatedData = { ...packageData, options: packageData.options.filter(el => el.type !== updatedOption.type).concat(updatedOption)}
+                const updatedData = { ...packageData, options: packageData.options
+                        .filter(el => el.type !== updatedOption.type)
+                        .concat(updatedOption)
+                        .sort((a, b) => a.type - b.type)}
                 setPackageData(updatedData);
             }
         }
@@ -198,7 +203,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             ? option.serviceRequests.filter(request => request !== requestId)
                             : [...option.serviceRequests, requestId]
                 }
-                const updatedData = { ...packageData, options: packageData.options.filter(el => el.type !== updatedOption.type).concat(updatedOption)}
+                const updatedData = { ...packageData, options: packageData.options
+                        .filter(el => el.type !== updatedOption.type)
+                        .concat(updatedOption)
+                        .sort((a, b) => a.type - b.type)
+                }
                 setPackageData(updatedData);
             }
         }
@@ -223,7 +232,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 const updated = {...packageData,
                     options: packageData.options
                         .filter(item => item.type !== optionType)
-                        .concat(currentOption)};
+                        .concat(currentOption)
+                        .sort((a, b) => a.type - b.type)
+                };
                 setPackageData(updated);
             }
         }
@@ -235,15 +246,15 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleCloseMenu = (): void => setAnchorEl(null);
 
-    const handleEdit = async (): Promise<any>  => {
-        await props.setIsEditing(true);
-        await onEditPackageOpen();
+    const handleEdit = () => {
+        props.setIsEditing(true);
+        props.onOpenEdit();
         setAnchorEl(null);
     }
 
     const handleRemove = (): void => {
         setAnchorEl(null);
-        if (packageData) dispatch(removePackageById(packageData.id))
+        if (packageData && selectedSC) dispatch(removePackageById(packageData.id, selectedSC.id))
     }
 
     const askRemove = () => {
@@ -255,7 +266,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }
 
     const handleAddOpsCode = (): void => {
-        onAssignOpsCodeOpen();
+        if (currentPackage?.options?.find(item => !item.serviceRequests?.length)) {
+            showError('Please save Service Requests for each Package Option first')
+        } else {
+            onAssignOpsCodeOpen();
+        }
     }
 
     const handleCancel = (): void => {
@@ -263,6 +278,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             setPackageData(currentPackage);
             getOptionsData(currentPackage);
             setIsEdit(false);
+            setEditingOption(null);
         }
     }
 
@@ -271,6 +287,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         if (isValid) {
             if (packageData) {
                 dispatch(updatePackageOptions(packageData.id, packageData.options))
+                setIsEdit(false);
+                setEditingOption(null);
             }
         } else {
             messages.forEach(message => showError(message))
@@ -281,6 +299,25 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const handleExpand = (e: any): void => {
         onExpandIconClick && onExpandIconClick(e);
         handleCancel();
+    }
+
+    const onOptionNameChange = (option: IPackageOptionDetailed, name: string): void => {
+        setPackageData(prev => {
+            if (prev) {
+                const optionToChange = prev.options.find(item => item.type === option.type);
+                if (optionToChange) {
+                    const newOption = {...optionToChange, name};
+                    return {
+                        ...prev,
+                        options: prev.options
+                            .filter(item => item.type !== option.type)
+                            .concat(newOption)
+                            .sort((a, b) => a.type - b.type)
+                    }
+                }
+            }
+            return prev;
+        })
     }
 
     return <MuiAccordion
@@ -317,6 +354,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                     {packageData && <OptionsTable
                         withHeader
                         data={optionsData}
+                        editingOption={editingOption}
+                        setEditingOption={setEditingOption}
+                        onOptionNameChange={onOptionNameChange}
                         onCheckboxClick={onCheckboxClick}
                         options={packageData.options}/>}
                      </div>

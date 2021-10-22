@@ -7,19 +7,10 @@ import {SearchInput} from "../../UI/SearchInput";
 import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
-import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {IBusinessRule, IComplimentaryService, IPackageByQuery} from "../../../api/types";
+import {IPackageByQuery} from "../../../api/types";
 import {loadPackages} from "../../../store/reducers/packages/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
 import {useModal} from "../../../utils/hooks";
-
-export type TPackage = {
-  name: string;
-  id: number;
-  serviceRequests: IServiceRequest[];
-  complimentaryServices: IComplimentaryService[];
-  businessRules: IBusinessRule;
-};
 
 type TExpandedState = {
     id?: number;
@@ -44,7 +35,8 @@ export const MaintenancePackages = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {onOpen, onClose, isOpen} = useModal();
-    
+    const {onOpen: onOpenEdit, onClose: onCloseEdit, isOpen: isOpenEdit} = useModal();
+
     useEffect(() => {
         if (selectedSc) {
             dispatch(loadPackages(selectedSc.id))
@@ -78,13 +70,13 @@ export const MaintenancePackages = () => {
         }
     };
 
-    const onAddModalClose = () => {
+    const onEditModalClose = () => {
         setIsEditing(false);
-        onClose();
+        onCloseEdit();
     }
 
     return <>
-        <AddPackage onClose={onAddModalClose} open={isOpen || isEditing} isEditing={isEditing}/>
+        <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
     <TitleContainer
         pad
         parent={optimizerRoot}
@@ -110,6 +102,7 @@ export const MaintenancePackages = () => {
         {packages.map((item: IPackageByQuery, index) => {
             return <PackageAccordion
                 setIsEditing={setIsEditing}
+                onOpenEdit={onOpenEdit}
                 key={item.id}
                 title={item.name}
                 defaultExpanded={index === 0}

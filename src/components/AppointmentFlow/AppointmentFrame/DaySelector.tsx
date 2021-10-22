@@ -40,6 +40,7 @@ type TProps = {
     loading: boolean;
     appointments: TGroupedAppointments;
 }
+
 export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const theme = useTheme();
@@ -54,26 +55,27 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const appointment = useSelector((state: RootState) => state.appointment.appointment);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
-        let dim: number = date.daysInMonth();
+        let daysInMonth: number = date.daysInMonth();
         let generatedDays: string[] = [];
         if (searchedDateRange) {
-            dim = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(searchedDateRange.to), "days"));
-            let curDate = moment.utc(searchedDateRange.from);
-            let end = moment.utc(searchedDateRange.to);
+            daysInMonth = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(moment(searchedDateRange.to).add(1, 'day')), "days"));
+            let currentDate = moment.utc(searchedDateRange.from);
+            let endDate = moment.utc(searchedDateRange.to).endOf('day');
             let i = 0;
-            while (curDate.isSameOrBefore(end, "date") && i < WHILE_LIMIT) {
+            const maxAvailableDaysAmount = daysInMonth < WHILE_LIMIT ? WHILE_LIMIT : daysInMonth;
+            while (currentDate.isSameOrBefore(endDate, "date") && i < maxAvailableDaysAmount) {
                 generatedDays.push(
-                    curDate.startOf('day').toISOString().replace('.000', '')
+                    currentDate.startOf('day').toISOString().replace('.000', '')
                 );
-                curDate = moment.utc(curDate).add(1, "day");
+                currentDate = moment.utc(currentDate).add(1, "day");
                 i++;
             }
         } else {
-            generatedDays = Array(dim).fill(0)
+            generatedDays = Array(daysInMonth).fill(0)
                 .map((e, idx) => getAppointmentDate(date, idx+1));
         }
         return [
-            dim,
+            daysInMonth,
             generatedDays
         ];
     }, [date, searchedDateRange]);
@@ -110,16 +112,16 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     }
 
     const nextAvailable = (): boolean => {
-        return (sliceIdx + daysPerScreen - 1) < daysInMonth;
+        return sliceIdx < (daysInMonth - daysPerScreen);
     }
     const prevAvailable = (): boolean => {
         return sliceIdx > 0;
     }
     const handleNext = () => {
         if (nextAvailable()) {
-            setSliceIdx(s => {
-                const nS = s + (daysPerScreen * 2);
-                return nS <= daysInMonth ? s + daysPerScreen : daysInMonth - daysPerScreen + 1;
+            setSliceIdx(prevIndex => {
+                const nS = prevIndex + (daysPerScreen * 2);
+                return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
             });
         }
     }
@@ -127,7 +129,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         if (prevAvailable()) {
             setSliceIdx(s => {
                 const pS = s - daysPerScreen;
-                return pS >= 0 ? pS : 0;
+                return pS >= 0 ? pS : 0
             })
         }
     }

@@ -16,6 +16,7 @@ type MakeAndModelProps = {
     formIsChecked: boolean;
     setFormIsChecked: Dispatch<SetStateAction<boolean>>;
     disabled: boolean;
+    isApplyBusinessRules?:boolean;
 }
 
 const useStyles = makeStyles(() => ({
@@ -42,7 +43,15 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const MakeAndModel: React.FC<MakeAndModelProps> = ({ disabled, setSelectedMakes, selectedModels, selectedMakes, setSelectedModels, formIsChecked, setFormIsChecked}) => {
+const MakeAndModel: React.FC<MakeAndModelProps> = ({
+                                                       disabled,
+                                                       setSelectedMakes,
+                                                       selectedModels,
+                                                       selectedMakes,
+                                                       setSelectedModels,
+                                                       formIsChecked,
+                                                       setFormIsChecked,
+                                                       isApplyBusinessRules}) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
 
@@ -147,7 +156,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ disabled, setSelectedMakes,
                     onChange={onMakeChange}
                     renderInput={autocompleteRender({
                         label: "Make",
-                        error: !selectedMakes.length && formIsChecked,
+                        error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,
                         placeholder: 'Select Make'
                     })}
                 />
@@ -163,7 +172,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({ disabled, setSelectedMakes,
                     onChange={onModelChange}
                     renderInput={autocompleteRender({
                         label: "Model",
-                        error: !selectedMakes.length && formIsChecked,
+                        error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,
                         placeholder: 'Select Model'
                     })}
                 />
