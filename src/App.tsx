@@ -22,7 +22,7 @@ const App = () => {
     const notificationsRef = useRef<ProviderContext>();
 
     useEffect(() => {
-        ReactGA.initialize('G-3PDXX5MTNF', {
+        ReactGA.initialize('G-41GXSV5F1M', {
             debug: true,
             titleCase: false,
             gaOptions: {

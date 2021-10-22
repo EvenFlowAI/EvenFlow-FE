@@ -95,6 +95,10 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         }
     }, [slots, selectedTime, appointment]);
 
+    useEffect(() => {
+
+    }, [])
+
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
         if (!d.isSame(month, 'month')
