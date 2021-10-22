@@ -27,6 +27,7 @@ const App = () => {
             titleCase: false,
             gaOptions: {
                 userId: customerLoadedData?.id ? customerLoadedData.id : undefined,
+                siteSpeedSampleRate: 100,
             }
         });
         ReactGA.pageview(window.location.pathname + window.location.search);
