@@ -79,6 +79,7 @@ const useStyles = makeStyles(theme => ({
         fontSize: 12,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+        minHeight: 14,
 
         '& > input': {
             padding: 3,
@@ -114,7 +115,7 @@ export const OptionsTable: React.FC<TProps> = ({ editingOption, setEditingOption
 
     const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (editingOption && onOptionNameChange) {
-            if (!e.target?.value || !e.target.value.match(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/)) {
+            if (e.target.value && !e.target.value.match(/^[A-Za-z0-9 \s\-_]*[A-Za-z0-9][A-Za-z0-9 \s\-_]*$/)) {
                 showError('Please use only letters, digits, and whitespaces')
             } else {
                 onOptionNameChange(editingOption, e.target?.value);

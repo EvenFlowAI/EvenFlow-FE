@@ -58,9 +58,10 @@ const useStyles = makeStyles(() => ({
         justifyContent: 'start',
         alignItems: 'center',
     },
-    filter: {
-        marginRight: 20,
-        width: 150,
+    selectedCode: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        maxWidth: '40%',
     }
 }))
 
@@ -105,7 +106,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     useEffect(() => {
         if (props.isEditing && currentPackage) {
             const firstOption = currentPackage.options[0]
-            setSelectedOption({ type: firstOption.type, name: MaintenanceOptions[firstOption.type]})
+            setSelectedOption({ type: firstOption.type, name: firstOption.name || MaintenanceOptions[firstOption.type]})
         }
     }, [props.isEditing, currentPackage])
 
@@ -153,7 +154,26 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
 
     const onSelectOption = useCallback((e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
         setSelectedOption(value);
-    }, [setSelectedOption])
+        if (props.isEditing && currentPackage && value) {
+            const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === value.type)
+            if (assignedCode) props.setSelectedCodes(prev => {
+                const request = {type: value.type, serviceRequestId: assignedCode.serviceRequestId};
+                if (prev.find(item => item.type === value.type)) {
+                    const data = prev.filter(item => item.type !== value.type);
+                    return [...data, request]
+                } else {
+                 return [...prev, request];
+                }
+            });
+        }
+    }, [setSelectedOption, currentPackage])
+
+    const getSelectedOpsCode = (selectedOption: TSelectedOption): string => {
+        let code = ''
+        const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === selectedOption.type)
+        if (assignedCode) code = `${assignedCode.code} ${assignedCode.description}`;
+        return code;
+    }
 
     return (
         <BaseModal {...getModalProps(props)}>
@@ -162,7 +182,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                 <div className={classes.wrapper}>
                     {currentPackage && <Autocomplete
                         classes={inputClasses}
-                        options={currentPackage.options.map(option => ({name: MaintenanceOptions[option.type], type: option.type}))}
+                        options={currentPackage.options.map(option => ({name: option.name || MaintenanceOptions[option.type], type: option.type}))}
                         getOptionSelected={(option, value) => option.type === value.type}
                         getOptionLabel={option => option.name}
                         onChange={onSelectOption}
@@ -172,6 +192,9 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                             placeholder: 'Select An Option'
                         })}
                         value={selectedOption}/>}
+                    {currentPackage && selectedOption && <div className={classes.selectedCode}>
+                        Selected:  {getSelectedOpsCode(selectedOption)}
+                    </div>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>
                 <Table<IServiceRequest>

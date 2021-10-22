@@ -320,11 +320,11 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     const isBusinessRulesValid = () => {
         const { yearFrom, yearTo, mileageFrom, mileageTo } = vehiclesData;
-        if (mileageFrom && mileageTo && mileageFrom > mileageTo) {
+        if (mileageFrom && mileageTo && (+mileageFrom > +mileageTo)) {
             showError('Check the Mileage fields - "To" must be more than "From"')
            return false
         }
-        if (yearFrom && yearTo && yearFrom > yearTo) {
+        if (yearFrom && yearTo && (+yearFrom > +yearTo)) {
             showError('Check the Vehicle Year fields - "To" must be more than "From"')
             return false
         }
@@ -352,9 +352,9 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     complimentaryServices: complimentary,
                     serviceRequestsAssigned: assignedOpsCodes,
                     serviceCenterId: selectedSC.id,
-                    isApplyBusinessRules: isApplyBusinessRules || vehiclesData.isApplyBusinessRules,
+                    isApplyBusinessRules: isApplyBusinessRules,
                 }
-                if (isApplyBusinessRules || isBusinessRulesValid()) {
+                if (isApplyBusinessRules && isBusinessRulesValid()) {
                     data.businessRules = {
                         vehicleMakes: selectedMakes,
                             vehicleModels: selectedModels,
@@ -369,7 +369,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         customerCriteria: vehiclesData.customerCriteria,
                     }
                 } else {
-                    data.businessRules = currentPackage?.businessRules;
+                    if (props.isEditing) data.businessRules = currentPackage?.businessRules;
                 }
                 props.isEditing && currentPackage
                     ? dispatch(updatePackage(currentPackage.id, data, onCancel))
@@ -548,7 +548,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         disableClearable
                         options={criteriaOptions}
                         getOptionSelected={(option, value) => option === ECustomerCriteria[+value]}
-                        disableCloseOnSelect
+                        disabled={!isApplyBusinessRules}
                         value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[0]}
                         onChange={onFormFieldChange('customerCriteria')}
                         renderInput={autocompleteRender({label: 'Customer Criteria', placeholder: 'Select Customer Criteria'})}

@@ -266,7 +266,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }
 
     const handleAddOpsCode = (): void => {
-        onAssignOpsCodeOpen();
+        if (currentPackage?.options?.find(item => !item.serviceRequests?.length)) {
+            showError('Please save Service Requests for each Package Option first')
+        } else {
+            onAssignOpsCodeOpen();
+        }
     }
 
     const handleCancel = (): void => {
