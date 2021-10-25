@@ -8,6 +8,7 @@ import {TGroupedAppointment} from "../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import ReactGA from "react-ga";
 
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
@@ -58,6 +59,11 @@ export const AppointmentTimeSelector: React.FC<TProps> =
 
     const handleSelect = (a: IRemappedAppointmentSlot|null) => {
         const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+        ReactGA.event({
+            category: 'User',
+            action: 'Clicked on Appointment Slot',
+            label: `With Price ${a?.price}`
+        });
         dispatch(selectAppointment(data));
     }
 

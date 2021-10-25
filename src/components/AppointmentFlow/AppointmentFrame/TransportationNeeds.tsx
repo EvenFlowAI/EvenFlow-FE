@@ -15,6 +15,7 @@ import {setTransportation} from "../../../store/reducers/appointmentFrameReducer
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
+import ReactGA from "react-ga";
 
 const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
     minHeight: 264,
@@ -163,6 +164,17 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         }
     }
 
+    const handleNext = (): void => {
+        if (transportation) {
+            ReactGA.event({
+                category: 'User',
+                action: 'Selected Transportation Need',
+                label: `With Name ${transportation.name}`
+            })
+        }
+        onNext();
+    }
+
     return <StepWrapper>
         {loading ? <Loading/>
             : <TransportationWrapper>
@@ -192,6 +204,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 /> : null}
             </TransportationWrapper>
         }
-        <Actions onBack={onBack} onNext={onNext} />
+        <Actions onBack={onBack} onNext={handleNext} />
     </StepWrapper>
 };
