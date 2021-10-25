@@ -20,6 +20,8 @@ export type TApi = Record<string, TApiView>;
 export type serviceRequestAssigned = {
     type: number;
     serviceRequestId: number;
+    description?: string;
+    code?: string;
 }
 
 export enum EServiceCategoryPage {
@@ -322,4 +324,6 @@ export interface IPackageOptionDetailed {
     maintenancePackageId: number;
     serviceRequestLaborHours: number;
     serviceRequestPrice: number;
+    name?: string;
+    serviceRequestAssignedId?: number;
 }

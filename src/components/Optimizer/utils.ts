@@ -102,9 +102,17 @@ export const checkIsValid = (packageData: IPackageById | null): [boolean, string
         || !Boolean(option.complimentaryServicePrice)
         || !Boolean(option.complimentaryServiceLaborHours)
     ));
-    const requestsIncluded = !!packageData?.options.every(option => option.serviceRequests.length && option.complimentaryServices.length);
-    if (allPricesAndHoursFilled && requestsIncluded) isValid = true;
+    const requestsIncluded = Boolean(packageData?.options.every(option => option.serviceRequests.length > 0));
+    const complimentaryIncluded = Boolean(packageData?.options.every(option => {
+        return packageData?.complimentaryServices?.length ? option.complimentaryServices.length > 0 : true}));
+
+    const allOptionsHaveNames = !!packageData?.options.every(option => option?.name?.length);
+    if (!allOptionsHaveNames) messages.push('Please enter name for each Option of Package');
+    if (allPricesAndHoursFilled && requestsIncluded && allOptionsHaveNames && complimentaryIncluded) isValid = true;
     if (!allPricesAndHoursFilled) messages.push('Market Prices and Invoiced Labor Hours must be more than 0');
-    if (!requestsIncluded) messages.push('Please choose at least one Service Request and one Complimentary request for each Package Option');
+    if (!complimentaryIncluded) messages.push(`Please choose at least one COMPLIMENTARY Request for each Package Option`)
+    if (!requestsIncluded) messages.push(
+        `Please choose at least one SERVICE Request for each Package Option`
+    );
     return [isValid, messages];
 }

@@ -6,6 +6,7 @@ import {getMaintenanceDescription} from "./uiUtils";
 import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -118,12 +119,13 @@ export const SelectedAppointment = () => {
         ?? selectedPackage?.price ?? 0;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-            const consultant = consultants.find(item => item.id === e.target.value);
-            if (consultant) {
-                dispatch(setAdvisor(consultant))
-            } else {
-                dispatch(setAdvisor(null));
-            }
+        const consultant = consultants.find(item => item.id === e.target.value);
+        if (isBmWService && e.target.value !== advisor?.id) dispatch(selectAppointment(null));
+        if (consultant) {
+            dispatch(setAdvisor(consultant))
+        } else {
+            dispatch(setAdvisor(null));
+        }
     }
 
     return (
