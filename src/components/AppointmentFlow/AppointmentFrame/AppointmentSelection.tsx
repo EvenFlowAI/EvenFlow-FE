@@ -182,7 +182,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             ReactGA.event({
                 category: 'User',
                 action: 'Selected Appointment Slot',
-                label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('HH:mm')}`
+                label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('hh:mm A')}`
             });
         }
         onNext();
