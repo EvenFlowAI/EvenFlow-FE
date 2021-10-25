@@ -15,6 +15,7 @@ import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/r
 import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
+import ReactGA from "react-ga";
 
 
 const Wrapper = styled('div')({
@@ -94,6 +95,10 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         }
     }, [slots, selectedTime, appointment]);
 
+    useEffect(() => {
+
+    }, [])
+
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
         if (!d.isSame(month, 'month')
@@ -157,6 +162,22 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         return groupAppointments(slots);
     }, [slots]);
 
+    const handleNext = (): void => {
+        ReactGA.event({
+            category: 'User',
+            action: 'Selected Appointment Slot'
+        });
+        onNext();
+    }
+
+    const handleBack = (): void => {
+        ReactGA.event({
+            category: 'User',
+            action: 'Went back from Selection Date & Time Page'
+        });
+        onBack();
+    }
+
     return (
         <StepWrapper>
             <Wrapper>
@@ -177,7 +198,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     loading={loading}
                 />
             </Wrapper>
-            <Actions onBack={onBack} onNext={onNext} nextDisabled={!appointment} />
+            <Actions onBack={handleBack} onNext={handleNext} nextDisabled={!appointment} />
         </StepWrapper>
     );
 };

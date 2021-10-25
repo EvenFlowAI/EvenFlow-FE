@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
@@ -13,10 +13,23 @@ import {EndUserLayout} from "./components/Layout/EndUserLayout";
 import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
+import ReactGA from 'react-ga';
 
+ReactGA.initialize('UA-210743216-2', {
+    debug: true,
+    titleCase: false,
+    gaOptions: {
+        siteSpeedSampleRate: 100,
+    }
+});
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
+
+    useEffect(() => {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }, []);
+
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
     }
