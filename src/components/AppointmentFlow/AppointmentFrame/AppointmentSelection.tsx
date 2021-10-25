@@ -96,8 +96,23 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, [slots, selectedTime, appointment]);
 
     useEffect(() => {
-
-    }, [])
+        ReactGA.event({
+            category: 'User',
+            action: 'Selected advisor',
+            label: consultant ? consultant.id : 'Any available',
+            nonInteraction: true,
+        });
+        if (selectedPackage) {
+            ReactGA.event({
+                category: 'User',
+                action: 'Selected Service Requests',
+                label: `Requests Codes: 
+                ${selectedPackage.serviceRequests.map(item => item.code).join(', ')} 
+                with Price $${selectedPackage.serviceRequests.reduce((acc, el) => acc + el.price, 0)}`,
+                nonInteraction: true,
+            });
+        }
+    }, [selectedPackage, consultant])
 
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));

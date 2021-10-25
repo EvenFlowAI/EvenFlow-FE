@@ -18,6 +18,7 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
+import ReactGA from "react-ga";
 
 /*const cards: TServiceCard[] = [
     {
@@ -74,7 +75,7 @@ type TProps = {
     onBack: TCallback;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
-    const {subService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {subService, service} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -113,7 +114,19 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
     }
 
     const handleSubmit = () => {
+        if (service) {
+            ReactGA.event({
+                category: 'User',
+                action: 'Selected Service',
+                label: `With Name ${service.name}`
+            })
+        }
         if (subService) {
+            ReactGA.event({
+                category: 'User',
+                action: 'Selected Sub Service',
+                label: `With Name ${subService.name}`
+            })
             switch (subService.id) {
                 case -1:
                     return onNext('opsCode');
