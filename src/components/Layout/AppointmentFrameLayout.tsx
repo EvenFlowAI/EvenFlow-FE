@@ -35,6 +35,7 @@ import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointment
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
 import './MaintenanceDetails.css';
+import ReactGA from "react-ga";
 
 const Container = styled('div')({
     display: "flex",
@@ -57,6 +58,24 @@ const SidebarWrapper = styled('div')(({theme}) => ({
         gridTemplateColumns: "1fr"
     }
 }));
+
+const FRAME_SCREENS = {
+    carSelection: "Car Selection",
+    serviceNeeds: "Service Needs",
+    packageSelection: "Package Selection",
+    maintenanceDetails: "Car Details",
+    consultantSelection: " Advisor Selection",
+    carDetails: "Car Details",
+    serviceSelection: "Service Selection",
+    describeMore: "Describe More",
+    appointmentTiming: "Timing Type Selection",
+    appointmentSelection: "Appointment Slot Selection",
+    transportationNeeds: "Transportation Needs",
+    appointmentConfirmation: "Appointment Confirmation",
+    appointmentConfirmed: "Appointment Confirmed",
+    opsCode: 'Ops Code',
+    vehicleData: 'Vehicle Data',
+}
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
@@ -89,7 +108,15 @@ export const AppointmentFrameLayout = () => {
                 handleLogin();
             }
         }
+        return () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page ${FRAME_SCREENS[currentScreen]}`
+            })
+        }
     }, [customerLoadedData, dispatch, handleLogin]);
+
     useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
     }, [id, dispatch]);

@@ -62,7 +62,8 @@ const PriceWrapper = styled('div')(({
         }
     },
     "& .info": {
-        color: "#27AE60"
+        color: "#27AE60",
+        fontSize: 28,
     }
 }));
 const DateWrapper = styled('div')(({theme}) => ({
