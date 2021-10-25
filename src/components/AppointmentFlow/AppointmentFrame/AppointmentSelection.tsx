@@ -99,7 +99,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         ReactGA.event({
             category: 'User',
             action: 'Selected advisor',
-            label: consultant ? consultant.id : 'Any available',
+            label: consultant ? consultant.name : 'Any available',
             nonInteraction: true,
         });
         if (selectedPackage) {
@@ -107,7 +107,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                 category: 'User',
                 action: 'Selected Service Requests',
                 label: `Requests Codes: 
-                ${selectedPackage.serviceRequests.map(item => item.code).join(', ')} 
+                ${selectedPackage.serviceRequests.map(item => (`${item.code} - ${item.description}`)).join(', ')} 
                 with Price $${selectedPackage.serviceRequests.reduce((acc, el) => acc + el.price, 0)}`,
                 nonInteraction: true,
             });
@@ -178,10 +178,13 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, [slots]);
 
     const handleNext = (): void => {
-        ReactGA.event({
-            category: 'User',
-            action: 'Selected Appointment Slot'
-        });
+        if (appointment) {
+            ReactGA.event({
+                category: 'User',
+                action: 'Selected Appointment Slot',
+                label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('HH:mm')}`
+            });
+        }
         onNext();
     }
 

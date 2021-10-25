@@ -118,14 +118,18 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             ReactGA.event({
                 category: 'User',
                 action: 'Selected Service',
-                label: `With Name ${service.name}`
+                label: `With Name ${service.name} 
+                And Service Requests 
+                ${service.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ')}`
             })
         }
         if (subService) {
             ReactGA.event({
                 category: 'User',
                 action: 'Selected Sub Service',
-                label: `With Name ${subService.name}`
+                label: `With Name ${subService.name}
+                And Service Requests 
+                ${subService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ')}`
             })
             switch (subService.id) {
                 case -1:

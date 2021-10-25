@@ -97,6 +97,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         ReactGA.event({
             category: 'User',
             action: 'Created Appointment',
+            nonInteraction: true,
         })
     }, [])
 
