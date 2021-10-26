@@ -114,6 +114,16 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         }
     }, [selectedPackage, consultant])
 
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Appointment Slot Selection`
+            })
+        })
+    }, [])
+
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
         if (!d.isSame(month, 'month')

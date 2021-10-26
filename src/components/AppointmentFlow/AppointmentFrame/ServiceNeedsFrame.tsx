@@ -17,6 +17,7 @@ import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, EServiceCenterName, IServiceCategory} from "../../../api/types";
 import { Loading } from '../../UI/Loading';
 import {tellMoreCard} from "../../../store/reducers/appointmentFrameReducer/initial";
+import ReactGA from "react-ga";
 
 
 const icons: JSX.Element[] = [
@@ -100,11 +101,28 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             .finally(() => {setLoading(false)});
     }, [id, scProfile]);
 
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Service Needs`
+            })
+        })
+    }, [])
+
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectService(card));
     }
     const handleSubmit = () => {
         if (selectedService) {
+            const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
+            ReactGA.event({
+                category: 'User',
+                action: 'Selected Service',
+                label: `With Name ${selectedService.name} And Service Requests ${requestsString}`
+            })
+
             switch (selectedService?.id) {
                 case -2:
                     return onSelect('serviceSelection');
