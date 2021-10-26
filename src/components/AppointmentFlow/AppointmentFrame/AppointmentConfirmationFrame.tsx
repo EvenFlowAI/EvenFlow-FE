@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -21,6 +21,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useException} from "../../../utils/hooks";
 import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
+import ReactGA from "react-ga";
 
 const Wrapper = styled('div')(({theme}) => ({
     // width: "100%",
@@ -61,6 +62,16 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         state.appointment,
         state.appointmentFrame
     ]);
+
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Appointment Confirmation`
+            })
+        })
+    }, [])
 
     const showError = useException();
 

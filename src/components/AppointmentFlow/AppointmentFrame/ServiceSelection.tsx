@@ -75,7 +75,7 @@ type TProps = {
     onBack: TCallback;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
-    const {subService, service} = useSelector((state: RootState) => state.appointmentFrame);
+    const {subService} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -109,27 +109,27 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             })
     }, [id, scProfile]);
 
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page SubService Selection`
+            })
+        })
+    }, [])
+
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectSubService(card));
     }
 
     const handleSubmit = () => {
-        if (service) {
-            ReactGA.event({
-                category: 'User',
-                action: 'Selected Service',
-                label: `With Name ${service.name} 
-                And Service Requests 
-                ${service.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ')}`
-            })
-        }
         if (subService) {
+            const requestsString = subService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
             ReactGA.event({
                 category: 'User',
                 action: 'Selected Sub Service',
-                label: `With Name ${subService.name}
-                And Service Requests 
-                ${subService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ')}`
+                label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`
             })
             switch (subService.id) {
                 case -1:
