@@ -39,7 +39,7 @@ export const getOptionsTableData = (pack: IPackageById) => {
         suggestedComplimentaryPrice: [],
     }
     options.forEach(option => {
-        const includedRequests = serviceRequests.filter(request => option.serviceRequests.includes(request.id));
+        const includedRequests = serviceRequests.filter(request => option.serviceRequests.find(item => item.serviceRequestId === request.id));
         const includedComplimentary = complimentaryServices.filter(request => option.complimentaryServices.includes(request.id));
         data.invoicedRequestLaborHours.push({
             numberValue: option.serviceRequestLaborHours,
