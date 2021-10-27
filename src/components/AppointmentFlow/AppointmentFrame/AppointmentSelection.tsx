@@ -32,7 +32,7 @@ const Wrapper = styled('div')(({ theme }) => ({
         border: "1px solid #DADADA",
         padding: "18px 44px",
         [theme.breakpoints.down('xs')]: {
-            padding: "10px 20px",
+            padding: "18px 20px",
         },
         "&>h4": {
             fontSize: 16,
