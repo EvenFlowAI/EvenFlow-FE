@@ -152,7 +152,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             const rows = packageData.serviceRequests.map((request) => ({
                 requestId: request.id,
                 cellData: packageData.options
-                    .map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.serviceRequests.includes(request.id)}))
+                    .map((option: IPackageOptionDetailed)  => ({
+                        optionType: option.type,
+                        isSelected: !!option.serviceRequests.find(item => item.serviceRequestId === request.id)
+                    }))
             }))
             setOptionsData(rows);
             setDetailsData(() => getOptionsTableData(packageData))
@@ -197,11 +200,13 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         if (packageData) {
             const option = packageData.options.find(el => el.type === item.optionType);
             if (option) {
+
+                // todo flag isSendToDMS change to real data
                 const updatedOption = {...option,
                     serviceRequests:
-                        option.serviceRequests.includes(requestId)
-                            ? option.serviceRequests.filter(request => request !== requestId)
-                            : [...option.serviceRequests, requestId]
+                        option.serviceRequests.find(request => request.serviceRequestId === requestId)
+                            ? option.serviceRequests.filter(request => request.serviceRequestId !== requestId)
+                            : [...option.serviceRequests, {serviceRequestId: requestId, isSendToDMS: true}]
                 }
                 const updatedData = { ...packageData, options: packageData.options
                         .filter(el => el.type !== updatedOption.type)

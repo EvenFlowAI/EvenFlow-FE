@@ -20,6 +20,7 @@ import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {IMake} from "../../../store/reducers/appointment/types";
+import ReactGA from "react-ga";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -139,6 +140,16 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
     }, [id]);
+
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Car Details`
+            })
+        })
+    }, [])
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (isXS) e.preventDefault();

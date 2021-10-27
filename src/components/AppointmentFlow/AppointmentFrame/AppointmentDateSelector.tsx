@@ -1,8 +1,8 @@
 import React from 'react';
+import moment from "moment";
 import {TArgCallback} from "../../../types/types";
 import {styled} from "@material-ui/core";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
-import moment from "moment";
 import {DaySelector} from "./DaySelector";
 import {TGroupedAppointments} from "../../../utils/types";
 

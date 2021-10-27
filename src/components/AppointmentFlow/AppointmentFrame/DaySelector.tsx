@@ -9,15 +9,18 @@ import {getAppointmentDate} from "./utils";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 
-const DaySelectorWrapper = styled('div')({
+const DaySelectorWrapper = styled('div')(({ theme }) => ({
     marginTop: 20,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
     gap: "12px",
-    width: "100%"
-});
+    width: "100%",
+    [theme.breakpoints.down('xs')]: {
+        gap: "9px",
+    }
+}));
 const Arrow = styled('div')<Theme, {disabled?: boolean}>({
     border: "1px solid #DADADA",
     width: 30,

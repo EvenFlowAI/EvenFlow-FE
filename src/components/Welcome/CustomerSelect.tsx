@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
 import {
@@ -62,6 +62,16 @@ type TProps = {
 export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Customer Type Selection`
+            })
+        })
+    }, [])
 
     const handleExisting = (): void => {
         ReactGA.event({

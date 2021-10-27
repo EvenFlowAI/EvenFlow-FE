@@ -15,6 +15,7 @@ import {setTransportation} from "../../../store/reducers/appointmentFrameReducer
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
+import ReactGA from "react-ga";
 
 const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
     minHeight: 264,
@@ -132,9 +133,11 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointment.selectedSR,
         state.appointmentFrame.selectedPackage
     ]);
+
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
+
     useEffect(() => {
         setLoading(true);
         Api.call<ITransportation[]>(
@@ -153,6 +156,16 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             })
     }, [id, serviceRequestIds, packageOpt]);
 
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Transportation Needs`
+            })
+        })
+    }, [])
+
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
     }
@@ -161,6 +174,15 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         if (tOptions && (transportation === null || transportation.type === customOption?.type)) {
             dispatch(setTransportation(tOptions[0]));
         }
+    }
+
+    const handleNext = (): void => {
+        ReactGA.event({
+            category: 'User',
+            action: 'Selected Transportation Need',
+            label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`
+        })
+        onNext();
     }
 
     return <StepWrapper>
@@ -192,6 +214,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 /> : null}
             </TransportationWrapper>
         }
-        <Actions onBack={onBack} onNext={onNext} />
+        <Actions onBack={onBack} onNext={handleNext} />
     </StepWrapper>
 };

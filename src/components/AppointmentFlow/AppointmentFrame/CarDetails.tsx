@@ -17,6 +17,7 @@ import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {mileageOptions} from './MaintenanceDetails';
+import ReactGA from "react-ga";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -107,6 +108,16 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
     }, [id]);
+
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Car Details`
+            })
+        })
+    }, [])
 
     const handleChange = (name: keyof IVehicle) =>
         (e: React.ChangeEvent<{}>, option: string|number|object|null) => {

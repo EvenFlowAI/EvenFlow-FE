@@ -281,6 +281,16 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
 
     }, [id, selectedVehicle, maintenanceDetails]);
 
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Package Selection`
+            })
+        })
+    }, [])
+
     const setClasses = (id: number, cls: string) => {
         if (id === selectedPackage?.id) {
             return `${cls} selected`;
@@ -356,7 +366,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         })}
                         {isBmWService && <React.Fragment key="maintenance">
                             <div className="totalMaintenance">Total Maintenance Value:</div>
-                            {packages.map(p => <div>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}
+                            {packages.map(p => <div className={setClasses(p.id, '')}>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}
                         </React.Fragment>
                         }
                         <div className="green subtitle">Complimentary</div>
