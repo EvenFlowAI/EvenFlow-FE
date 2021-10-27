@@ -11,6 +11,7 @@ import {loadConsultants, setAdvisor} from "../../../store/reducers/appointmentFr
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
+import ReactGA from "react-ga";
 
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
@@ -94,6 +95,16 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     useEffect(() => {
         getData(id).then()
     }, [id]);
+
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page Advisor Selection`
+            })
+        })
+    }, [])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(setAdvisor(c));

@@ -8,6 +8,8 @@ import {TGroupedAppointment} from "../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import ReactGA from "react-ga";
+import {makeStyles} from "@material-ui/core/styles";
 
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
@@ -19,6 +21,9 @@ const TimeSlotsWrapper = styled('div')(({theme}) => ({
     "&>div": {
         flexGrow: 1
     },
+    [theme.breakpoints.down("md")]: {
+        gridTemplateColumns: "repeat(5, 1fr)"
+    },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "repeat(4, 1fr)"
     },
@@ -26,6 +31,16 @@ const TimeSlotsWrapper = styled('div')(({theme}) => ({
         gridTemplateColumns: "repeat(2, 1fr)"
     }
 }));
+
+const useStyles = makeStyles(theme => ({
+    wrapper: {
+        maxHeight: '40vh',
+        overflowY: "auto",
+        [theme.breakpoints.down("xs")]: {
+            maxHeight: '20vh',
+        }
+    }
+}))
 
 type TSlot = {
     date: moment.Moment;
@@ -42,6 +57,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
     const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
     const selectedTiming = useSelector((state : RootState) => state.appointmentFrame.selectedTiming);
     const dispatch = useDispatch();
+    const classes = useStyles();
 
     const slots: TSlot[] = useMemo(() => {
         // TODO: Start end dates?
@@ -58,11 +74,16 @@ export const AppointmentTimeSelector: React.FC<TProps> =
 
     const handleSelect = (a: IRemappedAppointmentSlot|null) => {
         const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+        ReactGA.event({
+            category: 'User',
+            action: 'Clicked on Appointment Slot',
+            label: `With Price ${a?.price?.value}`
+        });
         dispatch(selectAppointment(data));
     }
 
     return (
-        <div>
+        <div className={classes.wrapper}>
             <h4>Select Time</h4>
             {!loading
                 ? <TimeSlotsWrapper>

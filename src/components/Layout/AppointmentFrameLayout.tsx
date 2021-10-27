@@ -90,6 +90,7 @@ export const AppointmentFrameLayout = () => {
             }
         }
     }, [customerLoadedData, dispatch, handleLogin]);
+
     useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
     }, [id, dispatch]);

@@ -18,6 +18,7 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
+import ReactGA from "react-ga";
 
 /*const cards: TServiceCard[] = [
     {
@@ -108,12 +109,28 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             })
     }, [id, scProfile]);
 
+    useEffect(() => {
+        window.addEventListener('unload', () => {
+            ReactGA.event({
+                category: 'User',
+                action: 'Abandoned Page',
+                label: `From Page SubService Selection`
+            })
+        })
+    }, [])
+
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectSubService(card));
     }
 
     const handleSubmit = () => {
         if (subService) {
+            const requestsString = subService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
+            ReactGA.event({
+                category: 'User',
+                action: 'Selected Sub Service',
+                label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`
+            })
             switch (subService.id) {
                 case -1:
                     return onNext('opsCode');

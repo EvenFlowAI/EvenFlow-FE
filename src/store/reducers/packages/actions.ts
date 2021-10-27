@@ -1,11 +1,10 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IPackageById, IPackageByQuery, IMake} from "../../../api/types";
+import {IPackageById, IPackageByQuery, IMake, IPackageOptionDetailed} from "../../../api/types";
 import {AppThunk, IPageRequest, IPagingResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {
     IComplimentaryServiceByQuery,
     INewPackage,
-    IPackageOption,
     IUpdatedPackage
 } from "./types";
 
@@ -55,7 +54,7 @@ export const loadPackages = (serviceCenterId: number): AppThunk => async dispatc
     })
 }
 
-export const updatePackageOptions = (id: number, data: IPackageOption[]): AppThunk => async dispatch => {
+export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[]): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.PackageOptions, {urlParams: {id}, data: {items: data}})
         .then(result => {

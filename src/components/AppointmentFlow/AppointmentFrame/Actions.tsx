@@ -14,7 +14,7 @@ const ButtonsRow = styled('div')(({theme}) => ({
         minWidth: 144
     },
     [theme.breakpoints.down('xs')]: {
-        flexDirection: "column",
+        flexDirection: "row",
         width: "100%",
         gap: "12px",
         "& button": {

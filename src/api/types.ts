@@ -313,11 +313,16 @@ export interface IPackageById {
     businessRules: IBusinessRule;
 }
 
+export type TOptionServiceRequest = {
+    isSendToDMS: boolean;
+    serviceRequestId: number;
+}
+
 export interface IPackageOptionDetailed {
     id: number;
     type: EMaintenanceOptionType;
     price: number;
-    serviceRequests: number[];
+    serviceRequests: TOptionServiceRequest[];
     complimentaryServices: number[];
     complimentaryServiceLaborHours: number;
     complimentaryServicePrice: number;

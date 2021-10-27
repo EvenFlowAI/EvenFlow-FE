@@ -62,7 +62,7 @@ const PriceWrapper = styled('div')(({
         }
     },
     "& .info": {
-        color: "#27AE60"
+        color: "#27AE60",
     }
 }));
 const DateWrapper = styled('div')(({theme}) => ({
@@ -169,7 +169,7 @@ export const SelectedAppointment = () => {
                                     .{(price % 1).toFixed(2).slice(2)}
                                 </span>
                             </div>
-                            <div className="info">Save by booking at off peak times!</div>
+                            <div className="info" style={{ fontSize: isXs ? 14: 28 }}>Save by booking at off peak times!</div>
                         </> : null}
                     </PriceWrapper>
             </Wrapper>

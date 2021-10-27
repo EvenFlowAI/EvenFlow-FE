@@ -8,6 +8,7 @@ export const StepWrapper = styled('div')(({theme}) => ({
     flexDirection: "column",
     width: "100%",
     [theme.breakpoints.down('sm')]: {
-        marginBottom: "auto"
+        marginBottom: "auto",
+        gap: "10px",
     }
 }))

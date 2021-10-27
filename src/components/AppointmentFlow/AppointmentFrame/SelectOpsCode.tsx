@@ -13,6 +13,7 @@ import {Search} from "@material-ui/icons";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {checkSelectedCar} from "./utils";
+import ReactGA from "react-ga";
 
 
 const Wrapper = styled('div')({
@@ -102,6 +103,11 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
     }
 
     const handleNext = () => {
+        ReactGA.event({
+            category: 'User',
+            action: 'Selected Individual Service Requests',
+            label: `With Codes ${srList.filter(item => selectedCode.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`
+        })
         if (!checkSelectedCar(vehicle, vehicles)) {
             onNext("carDetails");
         } else {
