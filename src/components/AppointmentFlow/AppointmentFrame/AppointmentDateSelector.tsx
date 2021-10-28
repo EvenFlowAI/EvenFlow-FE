@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from "moment";
 import {TArgCallback} from "../../../types/types";
-import {styled} from "@material-ui/core";
+import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {DaySelector} from "./DaySelector";
 import {TGroupedAppointments} from "../../../utils/types";
@@ -64,9 +64,12 @@ const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange, loading}) => 
 export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDateChange,
     appointments, dateChangeDisabled,
     dateRangeUpdated, onDateRangeSet}) => {
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down("sm"));
+
     return (
         <div>
-            <h4>Select Date</h4>
+            {!isXs && <h4>Select Date</h4>}
             {!dateChangeDisabled ? <MonthSelector
                 date={date}
                 loading={loading}
