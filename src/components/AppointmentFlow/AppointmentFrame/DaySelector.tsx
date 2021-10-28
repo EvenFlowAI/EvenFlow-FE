@@ -17,8 +17,9 @@ const DaySelectorWrapper = styled('div')(({ theme }) => ({
     textAlign: "center",
     gap: "12px",
     width: "100%",
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
         marginTop: 0,
+        gap: "10px",
     }
 }));
 const Arrow = styled('div')<Theme, {disabled?: boolean}>({

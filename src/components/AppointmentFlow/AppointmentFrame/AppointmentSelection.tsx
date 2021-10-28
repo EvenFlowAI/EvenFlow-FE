@@ -25,9 +25,6 @@ const Wrapper = styled('div')(({ theme }) => ({
     alignItems: "stretch",
     justifyContent: "flex-start",
     gap: "20px",
-    [theme.breakpoints.down("xs")]: {
-        gap: "10px",
-    },
     "&>div": {
         border: "1px solid #DADADA",
         padding: "18px 44px",
