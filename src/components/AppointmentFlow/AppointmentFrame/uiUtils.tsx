@@ -3,8 +3,11 @@ import {IPackageOptions, IServiceCategory} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 
 export const getMaintenanceDescription = (
-    srList: ISR[], selectedSR: number[],
-    selectedPackage?: IPackageOptions|null, service?: IServiceCategory|null, subService?: IServiceCategory|null) => {
+    srList: ISR[],
+    selectedSR: number[],
+    selectedPackage?: IPackageOptions|null,
+    service?: IServiceCategory|null,
+    subService?: IServiceCategory|null) => {
     if (selectedPackage) {
         return `${selectedPackage.name} package`;
     }
