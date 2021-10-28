@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
         maxHeight: '40vh',
         overflowY: "auto",
         [theme.breakpoints.down("xs")]: {
-            maxHeight: '20vh',
+            maxHeight: '30vh',
         }
     }
 }))
