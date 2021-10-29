@@ -21,7 +21,7 @@ const baseCellStyles = {
 
 const border = '1px solid #E0E2E8';
 
-const useStyles = makeStyles(() => ({
+export const useTableStyles = makeStyles(() => ({
     wrapper: {
         marginBottom: 20,
         padding: 10,
@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
         justifyContent: 'left',
     },
     headerCellBlack: {
-        width: 120,
+        width: 110,
         color: 'white',
         fontWeight: 'bold',
         backgroundColor: 'black',
@@ -50,6 +50,10 @@ const useStyles = makeStyles(() => ({
     emptyRow: {
         background: 'white',
         height: 16,
+    },
+    emptyCell: {
+        ...baseCellStyles,
+        padding: 0,
     },
     firstCellFirstRow: {
         ...baseCellStyles,
@@ -119,7 +123,7 @@ const useStyles = makeStyles(() => ({
 const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
     const [newRequests, setNewRequests] = useState<TExtendedService[]>([]);
     const [temporaryData, setTemporaryData] = useState<IPackageById | null>(null);
-    const classes = useStyles();
+    const classes = useTableStyles();
 
     useEffect(() => {
         setTemporaryData(props.packageData)
