@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
 import {
     Accordion as MuiAccordion,
     AccordionDetails,
@@ -205,21 +205,20 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }
 
-    const onCheckboxClick = (item: TCellData, requestId: number): void => {
+    const onCheckboxClick = useCallback((item: TCellData, requestId: number): void => {
+        setEditedRequests(prev => {
+            const request = prev.find(request => request.requestId === requestId && request.optionType === item.optionType);
+            if (request) {
+                return prev.filter(item => item.requestId !==requestId);
+            } else {
+                return [...prev, {
+                    requestId: requestId,
+                    optionType: item.optionType,
+                    isSelected: !item.isSelected,
+                }]
+            }
+        })
         if (packageData) {
-            setEditedRequests(prev => {
-                const request = prev.find(request => request.requestId === requestId && request.optionType === item.optionType);
-                if (request) {
-                    return prev.filter(item => item.requestId !==requestId);
-                } else {
-                    return [...prev, {
-                        requestId: requestId,
-                        optionType: item.optionType,
-                        isSelected: !item.isSelected,
-                    }]
-                }
-            })
-
             const option = packageData.options.find(el => el.type === item.optionType);
             if (option) {
                 const updatedOption = {...option,
@@ -236,7 +235,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 setPackageData(updatedData);
             }
         }
-    }
+    }, [packageData, setEditedRequests])
 
     const getFixedValue = (value: number): number => {
         if (Number.isInteger(+value)) return +value;
@@ -304,6 +303,16 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             getOptionsData(currentPackage);
             setIsEdit(false);
             setEditingOption(null);
+            setEditedRequests([]);
+        }
+    }
+
+    const sendRequest = () => {
+        if (packageData) {
+            dispatch(updatePackageOptions(packageData.id, packageData.options))
+            setIsEdit(false);
+            setEditingOption(null);
+            setEditedRequests([]);
         }
     }
 
@@ -314,9 +323,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 if (editedRequests.length && editedRequests.find(item => item.isSelected)) {
                     onRequestToDMSOpen();
                 } else {
-                    dispatch(updatePackageOptions(packageData.id, packageData.options))
-                    setIsEdit(false);
-                    setEditingOption(null);
+                    sendRequest();
                 }
             }
         } else {
@@ -349,10 +356,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         })
     }
 
-    const onRequestToDmsSave = async () => {
-        await setEditedRequests([]);
-        await handleSave();
-        await onRequestToDMSClose();
+    const onRequestToDmsSave = () => {
+        sendRequest();
+        setEditedRequests([]);
+        onRequestToDMSClose();
     }
 
     return <MuiAccordion
