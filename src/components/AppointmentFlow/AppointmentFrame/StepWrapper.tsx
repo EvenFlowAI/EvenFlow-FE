@@ -9,6 +9,5 @@ export const StepWrapper = styled('div')(({theme}) => ({
     width: "100%",
     [theme.breakpoints.down('sm')]: {
         marginBottom: "auto",
-        gap: "10px",
     }
 }))
