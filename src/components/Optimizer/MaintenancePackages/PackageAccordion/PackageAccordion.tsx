@@ -21,6 +21,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadPackageById, removePackageById, updatePackageOptions} from "../../../../store/reducers/packages/actions";
 import AssignOpsCodeModal from "../../../Modals/AssignOpsCodeModal/AssignOpsCodeModal";
+import SaveRequestToDms from "../../../Modals/SaveRequestToDMS/SaveRequestToDMS";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -60,6 +61,12 @@ export type TCellData = {
 export type TRequestRow = {
     requestId: number;
     cellData: TCellData[];
+}
+
+export type TEditedRequest = {
+    requestId: number;
+    isSelected: boolean;
+    optionType: number;
 }
 
 const useStyles = makeStyles(() => ({
@@ -128,7 +135,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [editingOption, setEditingOption] = useState<IPackageOptionDetailed | null>(null);
+    const [editedRequests, setEditedRequests] = useState<TEditedRequest[]>([]);
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
+    const {isOpen: isRequestToDMSOpen, onOpen: onRequestToDMSOpen, onClose: onRequestToDMSClose} = useModal();
     const { askConfirm } = useConfirm();
     const {selectedSC} = useSCs();
     const anchorRef = useRef(null);
@@ -198,10 +207,21 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const onCheckboxClick = (item: TCellData, requestId: number): void => {
         if (packageData) {
+            setEditedRequests(prev => {
+                const request = prev.find(request => request.requestId === requestId && request.optionType === item.optionType);
+                if (request) {
+                    return prev.filter(item => item.requestId !==requestId);
+                } else {
+                    return [...prev, {
+                        requestId: requestId,
+                        optionType: item.optionType,
+                        isSelected: !item.isSelected,
+                    }]
+                }
+            })
+
             const option = packageData.options.find(el => el.type === item.optionType);
             if (option) {
-
-                // todo flag isSendToDMS change to real data
                 const updatedOption = {...option,
                     serviceRequests:
                         option.serviceRequests.find(request => request.serviceRequestId === requestId)
@@ -291,9 +311,13 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         const [isValid, messages] = checkIsValid(packageData);
         if (isValid) {
             if (packageData) {
-                dispatch(updatePackageOptions(packageData.id, packageData.options))
-                setIsEdit(false);
-                setEditingOption(null);
+                if (editedRequests.length && editedRequests.find(item => item.isSelected)) {
+                    onRequestToDMSOpen();
+                } else {
+                    dispatch(updatePackageOptions(packageData.id, packageData.options))
+                    setIsEdit(false);
+                    setEditingOption(null);
+                }
             }
         } else {
             messages.forEach(message => showError(message))
@@ -323,6 +347,12 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             }
             return prev;
         })
+    }
+
+    const onRequestToDmsSave = async () => {
+        await setEditedRequests([]);
+        await handleSave();
+        await onRequestToDMSClose();
     }
 
     return <MuiAccordion
@@ -423,5 +453,13 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
         <AssignOpsCodeModal packageName={title} open={isAssignOpsCodeOpen} onClose={onAssignOpsCodeClose}/>
+        <SaveRequestToDms
+            open={isRequestToDMSOpen}
+            onClose={onRequestToDMSClose}
+            editedRequests={editedRequests}
+            packageData={packageData}
+            setPackageData={setPackageData}
+            onSave={onRequestToDmsSave}
+        />
     </MuiAccordion>
 }
