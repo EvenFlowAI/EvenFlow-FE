@@ -14,34 +14,89 @@ type TSaveRequestModalProps = DialogProps & {
     onSave: () => void;
 };
 
-const useStyles = makeStyles(() => ({
-    headerCell: {
+const baseCellStyles = {
+    backgroundColor: 'white',
+    border: "none",
+}
 
+const border = '1px solid #E0E2E8';
+
+export const useTableStyles = makeStyles(() => ({
+    wrapper: {
+        marginBottom: 20,
+        padding: 10,
+        background: 'white',
+        boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)'
+    },
+    headerCell: {
+        ...baseCellStyles,
+        color: "#9DA8B5",
+        fontWeight: 'bold',
+        justifyContent: 'left',
     },
     headerCellBlack: {
-
+        width: 110,
+        color: 'white',
+        fontWeight: 'bold',
+        backgroundColor: 'black',
+        border: '1px solid black',
     },
     rowGrey: {
-
+        background: '#F2F3F7',
     },
     row: {
-
+        background: 'white',
     },
-    firstCellFirstRow: {},
-    firstCellLastRow: {},
-    firstCell: {},
+    emptyRow: {
+        background: 'white',
+        height: 16,
+    },
+    emptyCell: {
+        ...baseCellStyles,
+        padding: 0,
+    },
+    firstCellFirstRow: {
+        ...baseCellStyles,
+        borderTop: border,
+        borderLeft: border,
+    },
+    firstCellLastRow: {
+        ...baseCellStyles,
+        borderBottom: border,
+        borderLeft: border,
+    },
+    firstCell: {
+        ...baseCellStyles,
+        borderLeft: border,
+    },
     lastCellFirstRow: {
+        ...baseCellStyles,
+        borderTop: border,
+        borderRight: border,
     },
-    lastCellLastRow: {},
-    lastCell: {},
+    lastCellLastRow: {
+        ...baseCellStyles,
+        borderRight: border,
+        borderBottom: border,
+    },
+    lastCell: {
+        ...baseCellStyles,
+        borderRight: border,
+    },
     cellFirstRow: {
-
+        ...baseCellStyles,
+        borderTop: border,
     },
     cellLastRow: {
-
+        ...baseCellStyles,
+        borderBottom: border,
     },
     cell: {
-
+        ...baseCellStyles,
+    },
+    requestCell: {
+        border:"none",
+        background: "transparent",
     },
     saveButton: {
         background: '#7898FF',
@@ -68,7 +123,7 @@ const useStyles = makeStyles(() => ({
 const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
     const [newRequests, setNewRequests] = useState<TExtendedService[]>([]);
     const [temporaryData, setTemporaryData] = useState<IPackageById | null>(null);
-    const classes = useStyles();
+    const classes = useTableStyles();
 
     useEffect(() => {
         setTemporaryData(props.packageData)
@@ -154,48 +209,54 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
     }
 
     return (
-        <BaseModal {...props} width={1000}>
+        <BaseModal {...props} style={{ minWidth: 1000 }}>
             <DialogTitle onClose={props.onClose}>Choose Service Requests To Send To DMS</DialogTitle>
             <DialogContent>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell className={classes.headerCell}>
-                                    Service Request
-                                </TableCell>
-                                {temporaryData?.options.map(option => (
-                                    <TableCell className={classes.headerCellBlack}>
-                                        {option.name}
+                <div className={classes.wrapper}>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.headerCell}>
+                                        Service Request
                                     </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {newRequests.map((request, rowIndex) => {
-                                return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey}>
-                                    <TableCell>{request.description}</TableCell>
-                                    {temporaryData?.options.map((option, cellIndex) => {
-                                        const requestInOption = option.serviceRequests.find(req => req.serviceRequestId === request.id);
-                                        const requestWasEdited = props.editedRequests
-                                            .find(item => item.requestId === request.id && option.type === item.optionType);
-
-                                        return <TableCell className={getCellClass(cellIndex, rowIndex)}>
-                                            <IconButton
-                                                onClick={() => onCheckboxClick(option, request.id)}
-                                                disabled={!requestWasEdited}>
-                                                {requestInOption?.isSendToDMS
-                                                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
-                                                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
-                                                }
-                                            </IconButton>
+                                    {temporaryData?.options.map(option => (
+                                        <TableCell className={classes.headerCellBlack} align="center">
+                                            {option.name}
                                         </TableCell>
-                                    })}
+                                    ))}
                                 </TableRow>
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow className={classes.emptyRow}/>
+                                {newRequests.map((request, rowIndex) => {
+                                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey}>
+                                        <TableCell className={classes.requestCell}>{request.description}</TableCell>
+                                        {temporaryData?.options.map((option, cellIndex) => {
+                                            const requestInOption = option.serviceRequests.find(req => req.serviceRequestId === request.id);
+                                            const requestWasEdited = props.editedRequests
+                                                .find(item => item.requestId === request.id && option.type === item.optionType);
+
+                                            return <TableCell
+                                                className={getCellClass(cellIndex, rowIndex)}
+                                                align="center"
+                                                style={{cursor: requestWasEdited ? 'pointer' : 'not-allowed'}}>
+                                                <IconButton
+                                                    onClick={() => onCheckboxClick(option, request.id)}
+                                                    disabled={!requestWasEdited}>
+                                                    {requestInOption?.isSendToDMS
+                                                        ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                                                        : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
+                                                    }
+                                                </IconButton>
+                                            </TableCell>
+                                        })}
+                                    </TableRow>
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </div>
                 <div className={classes.buttonsWrapper}>
                     <Button
                         onClick={onCancel}
