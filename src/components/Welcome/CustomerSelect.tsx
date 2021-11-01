@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
 import {
@@ -10,6 +10,8 @@ import {
 import {useDispatch} from "react-redux";
 import {setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
+import {LocalTokens} from "../../types/types";
+import { v4 as uuidv4 } from 'uuid';
 
 const mh400 = "@media (max-height: 400px)";
 const mh600 = "@media (max-height: 600px)";
@@ -64,7 +66,10 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        const uid = uuidv4();
+        localStorage.setItem(LocalTokens.sessionId, uid);
         window.addEventListener('unload', () => {
+            localStorage.setItem(LocalTokens.sessionId, '')
             ReactGA.event({
                 category: 'User',
                 action: 'Abandoned Page',

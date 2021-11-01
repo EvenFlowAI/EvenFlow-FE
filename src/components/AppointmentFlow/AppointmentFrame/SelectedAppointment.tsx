@@ -31,9 +31,24 @@ const List = styled('ul')(({theme}) => ({
     fontWeight: "bold",
     [theme.breakpoints.down("xs")]: {
         alignSelf: "flex-start",
+        gap: "10px",
+        width: "100%",
     },
     "& .service-item": {
-        textTransform: "capitalize"
+        textTransform: "capitalize",
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            "& .price": {
+                fontSize: 20,
+                fontWeight: "bold",
+                "&>span": {
+                    fontSize: 14
+                }
+            },
+        }
     },
     "& ul": {
         listStyle: "none",
@@ -49,11 +64,14 @@ const List = styled('ul')(({theme}) => ({
     }
 }));
 
-const PriceWrapper = styled('div')(({
+const PriceWrapper = styled('div')(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-end",
     textAlign: "right",
+    [theme.breakpoints.down("xs")]: {
+        alignItems: "flex-start",
+    },
     "& .price": {
         fontSize: 24,
         fontWeight: "bold",
@@ -63,25 +81,35 @@ const PriceWrapper = styled('div')(({
     },
     "& .info": {
         color: "#27AE60",
+        [theme.breakpoints.down("xs")]: {
+            marginTop: 5
+        }
     }
 }));
+
 const DateWrapper = styled('div')(({theme}) => ({
     marginBottom: "auto",
     textAlign: "right",
     fontSize: 16,
     fontWeight: "bold",
     [theme.breakpoints.down("xs")]: {
-        marginTop: 16
+        marginTop: 8,
+        textAlign: "left",
     }
 }))
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     selectWrapper: {
         display: 'flex',
         alignItems: 'center',
         '& > span': {
             marginLeft: 5,
-        }
+        },
+        [theme.breakpoints.down("xs")]: {
+            '& > div > div': {
+                padding: 5
+            }
+        },
     },
     select: {
         width: '100%',
@@ -94,9 +122,10 @@ const useStyles = makeStyles(() => ({
             '&:focus': {
                 backgroundColor: 'transparent'
             }
-        }
+        },
     }
 }))
+
 // TODO: Advisor|consultant
 export const SelectedAppointment = () => {
     const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
@@ -110,7 +139,7 @@ export const SelectedAppointment = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const theme = useTheme();
-    const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
@@ -130,16 +159,22 @@ export const SelectedAppointment = () => {
 
     return (
         <div>
-            <h4>Your selections</h4>
+            {!isSm && <h4>Your selections</h4>}
             <Wrapper>
                 <List>
-                    <li className="service-item">Service Needed: {isXs ? <br/> : null} {
+                    <li className="service-item">{!isSm && 'Service Needed:'} {
                         getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)
                     }
+                        {isSm && <div className="price">$
+                            {Math.floor(price)}
+                            <span>
+                                    .{(price % 1).toFixed(2).slice(2)}
+                                </span>
+                        </div>}
                     </li>
                         <li>
                             <div className={classes.selectWrapper}>
-                                Advisor: {isXs ? <br/> : null}
+                                Advisor: {isSm ? <br/> : null}
                                     <Select
                                         value={advisor?.id || "Any"}
                                         className={classes.select}
@@ -154,22 +189,25 @@ export const SelectedAppointment = () => {
                                         }
                                     </Select>
                             </div>
+                            {appointment && isSm ? <DateWrapper>
+                               {appointment.date.format('MMMM D, h:mm A')}
+                            </DateWrapper> : null}
                         </li>
 
                 </List>
                 <PriceWrapper>
-                    {appointment ? <DateWrapper>
+                    {appointment && !isSm ? <DateWrapper>
                         Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
                     </DateWrapper> : null}
                     {selectedPackage
                         ? <>
-                            <div className="price">$
+                            {!isSm && <div className="price">$
                                 {Math.floor(price)}
                                 <span>
                                     .{(price % 1).toFixed(2).slice(2)}
                                 </span>
-                            </div>
-                            <div className="info" style={{ fontSize: isXs ? 14: 28 }}>Save by booking at off peak times!</div>
+                            </div>}
+                            <div className="info" style={{ fontSize: isSm ? 14: 28 }}>Save by booking at off peak times!</div>
                         </> : null}
                     </PriceWrapper>
             </Wrapper>

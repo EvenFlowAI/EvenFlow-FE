@@ -17,8 +17,9 @@ const DaySelectorWrapper = styled('div')(({ theme }) => ({
     textAlign: "center",
     gap: "12px",
     width: "100%",
-    [theme.breakpoints.down('xs')]: {
-        gap: "9px",
+    [theme.breakpoints.down('sm')]: {
+        marginTop: 0,
+        gap: "10px",
     }
 }));
 const Arrow = styled('div')<Theme, {disabled?: boolean}>({
@@ -49,9 +50,10 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+    const isMds = useMediaQuery(theme.breakpoints.down("mds"));
     const daysPerScreen: number = useMemo(() => {
-        return isXs ? 5 : isSm ? 4 : 6;
-    }, [isSm, isXs]);
+        return isSm ? 4 : isMds ? 5 : 6;
+    }, [isSm, isMds]);
     
     const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
     const searchedDateRange = useSelector((state: RootState) => state.appointment.searchedDateRange);

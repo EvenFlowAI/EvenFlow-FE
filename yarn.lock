@@ -1836,6 +1836,11 @@
   resolved "https://registry.yarnpkg.com/@types/url-safe-base64/-/url-safe-base64-1.1.0.tgz#90d35b9432164896a9d5b3d43bb88fb2ef86f2e2"
   integrity sha512-cVZIEorjpbV8NgdodMXyLItd9q0wT4k075a2F5Ew5L/zwB80rLIGhb7Owo17le0hhnZcJXizxc7hHdTs1or51A==
 
+"@types/uuid@^8.3.1":
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.1.tgz#1a32969cf8f0364b3d8c8af9cc3555b7805df14f"
+  integrity sha512-Y2mHTRAbqfFkpjldbkHGY8JIzRN6XqYRliG8/24FcHm2D2PwW24fl5xMRTVGdrb7iMrwCaIEbLWerGIkXuFWVg==
+
 "@types/yargs-parser@*":
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-15.0.0.tgz#cb3f9f741869e20cce330ffbeb9271590483882d"

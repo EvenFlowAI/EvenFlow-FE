@@ -98,6 +98,12 @@ export const endUserRequest = axios.create({
     baseURL: APIUrl
 });
 
+request.interceptors.request.use(request => {
+    const sessionId = localStorage.getItem(LocalTokens.sessionId);
+    if (sessionId?.length) request.headers['SessionId'] = sessionId;
+    return request;
+})
+
 request.interceptors.response.use(
     resp => resp,
     async error => {
