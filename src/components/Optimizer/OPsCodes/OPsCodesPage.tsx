@@ -7,6 +7,7 @@ import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} f
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    assignServiceRequests,
     loadAssignedServiceRequests,
     setAssignedFilter, setAssignedOrdering,
     setAssignedPageData
@@ -181,6 +182,8 @@ export const OPsCodesPage = () => {
         }
     }
 
+    const onRequestAssign = (selectedCodes: number[], serviceCenterId: number) => dispatch(assignServiceRequests(selectedCodes, serviceCenterId));
+
     return <>
         <TitleContainer
             pad
@@ -220,7 +223,7 @@ export const OPsCodesPage = () => {
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
-        <OPsCodesListDialog open={isOpen} onClose={onClose} />
+        <OPsCodesListDialog open={isOpen} onClose={onClose} onSave={onRequestAssign}/>
         <OverrideOPsCodeDialog open={isOOpen} onClose={onOClose} payload={editedItem} />
     </>;
 }
