@@ -32,7 +32,7 @@ ReactGA.addTrackers(
                 name: 'tracker-dev',
                 siteSpeedSampleRate: 100,
             },
-            alwaysSendToDefaultTracker: true,
+            alwaysSendToDefaultTracker: false,
         },
         {
             trackingId: 'UA-210743216-3',
@@ -40,7 +40,7 @@ ReactGA.addTrackers(
                 name: 'tracker-prod',
                 siteSpeedSampleRate: 100,
             },
-            alwaysSendToDefaultTracker: true,
+            alwaysSendToDefaultTracker: false,
         },
         {
             trackingId: 'UA-210743216-4',
@@ -48,7 +48,7 @@ ReactGA.addTrackers(
                 name: 'tracker-stage',
                 siteSpeedSampleRate: 100,
             },
-            alwaysSendToDefaultTracker: true,
+            alwaysSendToDefaultTracker: false,
         },
     ],
 );
