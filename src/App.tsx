@@ -31,21 +31,24 @@ ReactGA.addTrackers(
             gaOptions: {
                 name: 'tracker-dev',
                 siteSpeedSampleRate: 100,
-            }
+            },
+            alwaysSendToDefaultTracker: true,
         },
         {
             trackingId: 'UA-210743216-3',
             gaOptions: {
                 name: 'tracker-prod',
                 siteSpeedSampleRate: 100,
-            }
+            },
+            alwaysSendToDefaultTracker: true,
         },
         {
             trackingId: 'UA-210743216-4',
             gaOptions: {
                 name: 'tracker-stage',
                 siteSpeedSampleRate: 100,
-            }
+            },
+            alwaysSendToDefaultTracker: true,
         },
     ],
 );
