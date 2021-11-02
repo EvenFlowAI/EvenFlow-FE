@@ -24,49 +24,31 @@ ReactGA.initialize('UA-210743216-5', {
     alwaysSendToDefaultTracker: false,
 });
 
-ReactGA.initialize('UA-210743216-3', {
-    debug: true,
-    titleCase: false,
-    gaOptions: {
-        siteSpeedSampleRate: 100,
-    },
-    alwaysSendToDefaultTracker: false,
-});
-
-ReactGA.initialize('UA-210743216-4', {
-    debug: true,
-    titleCase: false,
-    gaOptions: {
-        siteSpeedSampleRate: 100,
-    },
-    alwaysSendToDefaultTracker: false,
-});
-//
-// ReactGA.addTrackers(
-//     [
-//         {
-//             trackingId: 'UA-210743216-5',
-//             gaOptions: {
-//                 name: 'tracker-dev',
-//                 siteSpeedSampleRate: 100,
-//             }
-//         },
-//         {
-//             trackingId: 'UA-210743216-3',
-//             gaOptions: {
-//                 name: 'tracker-prod',
-//                 siteSpeedSampleRate: 100,
-//             }
-//         },
-//         {
-//             trackingId: 'UA-210743216-4',
-//             gaOptions: {
-//                 name: 'tracker-stage',
-//                 siteSpeedSampleRate: 100,
-//             }
-//         },
-//     ],
-// );
+ReactGA.addTrackers(
+    [
+        {
+            trackingId: 'UA-210743216-5',
+            gaOptions: {
+                name: 'tracker-dev',
+                siteSpeedSampleRate: 100,
+            }
+        },
+        {
+            trackingId: 'UA-210743216-3',
+            gaOptions: {
+                name: 'tracker-prod',
+                siteSpeedSampleRate: 100,
+            }
+        },
+        {
+            trackingId: 'UA-210743216-4',
+            gaOptions: {
+                name: 'tracker-stage',
+                siteSpeedSampleRate: 100,
+            }
+        },
+    ],
+);
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
