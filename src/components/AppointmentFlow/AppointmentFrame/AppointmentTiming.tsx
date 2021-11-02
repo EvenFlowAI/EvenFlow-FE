@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -170,16 +170,6 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             // state.appointmentFrame.selectedPackage
         ]
     );
-
-    useEffect(() => {
-        window.addEventListener('unload', () => {
-            ReactGA.event({
-                category: 'User',
-                action: 'Abandoned Page',
-                label: `From Page Timing Type Selection`
-            })
-        })
-    }, [])
 
     const handleSelectTiming = (t: EAppointmentTimingType) => () => {
         dispatch(setTiming(t));
