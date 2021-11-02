@@ -47,7 +47,7 @@ const App = () => {
     const notificationsRef = useRef<ProviderContext>();
 
     useEffect(() => {
-        ReactGA.pageview(window.location.pathname + window.location.search);
+        ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-dev', 'tracker-prod', 'tracker-stage']);
     }, []);
 
     const handleClose = (key: React.ReactText) => () => {
