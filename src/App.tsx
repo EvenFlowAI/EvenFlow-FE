@@ -15,15 +15,22 @@ import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentC
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA from 'react-ga';
 
-ReactGA.initialize('UA-210743216-5', {
-    debug: true,
-    titleCase: false,
-    // gaOptions: {
-    //     siteSpeedSampleRate: 100,
-    // }
-});
+// ReactGA.initialize('UA-210743216-5', {
+//     debug: true,
+//     titleCase: false,
+// });
+//
+// ReactGA.initialize('UA-210743216-5', {
+//     debug: true,
+//     titleCase: false,
+// });
+//
+// ReactGA.initialize('UA-210743216-5', {
+//     debug: true,
+//     titleCase: false,
+// });
 
-ReactGA.addTrackers(
+ReactGA.initialize(
     [
         {
             trackingId: 'UA-210743216-5',
@@ -47,6 +54,9 @@ ReactGA.addTrackers(
             }
         },
     ],
+    { debug: true,
+        titleCase: false,
+    }
 );
 
 const App = () => {
