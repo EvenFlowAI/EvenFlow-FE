@@ -15,30 +15,33 @@ import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentC
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA from 'react-ga';
 
-ReactGA.initialize([
-    {
-        trackingId: 'UA-210743216-3',
-        gaOptions: {
-            siteSpeedSampleRate: 100,
-            name: 'tracker-prod'
-        }
-    },
-    {
-        trackingId: 'UA-210743216-5',
-        gaOptions: {
-            siteSpeedSampleRate: 100,
-            name: 'tracker-dev'
-        }
-    },
-    {
-        trackingId: 'UA-210743216-4',
-        gaOptions: {
-            siteSpeedSampleRate: 100,
-            name: 'tracker-stage'
-        }
-    },
-],
-    { debug: true, alwaysSendToDefaultTracker: false });
+ReactGA.initialize('UA-210743216-5', {
+    debug: true,
+    titleCase: false,
+    gaOptions: {
+        siteSpeedSampleRate: 100,
+        name: 'tracker-dev',
+    }
+});
+
+ReactGA.addTrackers(
+    [
+        {
+            trackingId: 'UA-210743216-3',
+            gaOptions: {
+                siteSpeedSampleRate: 100,
+                name: 'tracker-prod'
+            }
+        },
+        {
+            trackingId: 'UA-210743216-4',
+            gaOptions: {
+                siteSpeedSampleRate: 100,
+                name: 'tracker-stage'
+            }
+        },
+    ],
+);
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
