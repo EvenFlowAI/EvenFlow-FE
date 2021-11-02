@@ -20,12 +20,18 @@ ReactGA.initialize('UA-210743216-5', {
     titleCase: false,
     gaOptions: {
         siteSpeedSampleRate: 100,
-        name: 'tracker-dev',
     }
 });
 
 ReactGA.addTrackers(
     [
+        {
+            trackingId: 'UA-210743216-5',
+            gaOptions: {
+                siteSpeedSampleRate: 100,
+                name: 'tracker-dev'
+            }
+        },
         {
             trackingId: 'UA-210743216-3',
             gaOptions: {
