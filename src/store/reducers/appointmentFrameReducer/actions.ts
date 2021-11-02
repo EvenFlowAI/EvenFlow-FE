@@ -32,6 +32,7 @@ export const setUpdateAppointment = createAction<IListAppointment>("fAppointment
 export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPackages");
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
 export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
+export const setCurrentFrameScreen = createAction<string>('fAppointment/setCurrentScreen');
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(

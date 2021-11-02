@@ -101,16 +101,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             .finally(() => {setLoading(false)});
     }, [id, scProfile]);
 
-    useEffect(() => {
-        window.addEventListener('unload', () => {
-            ReactGA.event({
-                category: 'User',
-                action: 'Abandoned Page',
-                label: `From Page Service Needs`
-            })
-        })
-    }, [])
-
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectService(card));
     }

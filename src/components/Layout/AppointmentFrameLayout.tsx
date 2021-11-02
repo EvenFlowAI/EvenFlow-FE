@@ -31,10 +31,15 @@ import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/Appointm
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
-import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setCurrentFrameScreen,
+    setUpdateAppointment,
+    setVehicle
+} from "../../store/reducers/appointmentFrameReducer/actions";
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
 import './MaintenanceDetails.css';
+import ReactGA from "react-ga";
 
 const Container = styled('div')({
     display: "flex",
@@ -72,6 +77,7 @@ export const AppointmentFrameLayout = () => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+    const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
 
     const handleLogin = useCallback(() => {
         clearCustomerCache();
@@ -92,14 +98,28 @@ export const AppointmentFrameLayout = () => {
     }, [customerLoadedData, dispatch, handleLogin]);
 
     useEffect(() => {
+        if (currentFrameScreen === currentScreen) {
+            document.onvisibilitychange = () => {
+                ReactGA.event({
+                    category: 'User',
+                    action: 'Abandoned Page',
+                    label: `From Page ${currentScreen}`
+                })
+            }
+        }
+    }, [currentScreen, currentFrameScreen])
+
+    useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
     }, [id, dispatch]);
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
+        dispatch(setCurrentFrameScreen(name));
     }, []);
     const handleSetScreen = useCallback((screen: TScreen) => {
         setCurrentScreen(screen);
+        dispatch(setCurrentFrameScreen(screen));
     }, []);
 
     const handleAddNewVehicle = useCallback(() => {
