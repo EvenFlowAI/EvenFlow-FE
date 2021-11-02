@@ -63,6 +63,24 @@ const SidebarWrapper = styled('div')(({theme}) => ({
     }
 }));
 
+const SCREENS = {
+    carSelection: 'Car Selection',
+    serviceNeeds: 'Service Needs',
+    packageSelection: 'Package Selection',
+    maintenanceDetails: 'Car Details',
+    carDetails: 'Car Details',
+    consultantSelection: 'Consultant Selection',
+    serviceSelection: 'Service Selection',
+    describeMore: 'Describe More',
+    appointmentConfirmation: 'Appointment Confirmation',
+    appointmentSelection: 'Appointment Selection',
+    appointmentConfirmed: 'Appointment Confirmed',
+    appointmentTiming: 'Appointment Timing',
+    transportationNeeds: 'Transportation Needs',
+    opsCode: "opsCode",
+    vehicleData: 'vehicleData',
+}
+
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
@@ -103,7 +121,7 @@ export const AppointmentFrameLayout = () => {
                 ReactGA.event({
                     category: 'User',
                     action: 'Abandoned Page',
-                    label: `From Page ${currentScreen}`
+                    label: `From Page ${SCREENS[currentScreen]}`
                 })
             }
         }
