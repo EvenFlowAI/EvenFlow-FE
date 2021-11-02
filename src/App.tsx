@@ -18,9 +18,9 @@ import ReactGA from 'react-ga';
 ReactGA.initialize('UA-210743216-5', {
     debug: true,
     titleCase: false,
-    // gaOptions: {
-    //     siteSpeedSampleRate: 100,
-    // }
+    gaOptions: {
+        siteSpeedSampleRate: 100,
+    }
 });
 
 ReactGA.addTrackers(
