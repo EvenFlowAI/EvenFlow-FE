@@ -10,6 +10,7 @@ import {RootState} from "../../../store/rootReducer";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
+import {trackerNames} from "../../../App";
 
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
@@ -78,7 +79,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             category: 'User',
             action: 'Clicked on Appointment Slot',
             label: a?.price?.value ? `With Price ${a?.price?.value}` : ''
-        });
+        }, trackerNames);
         dispatch(selectAppointment(data));
     }
 

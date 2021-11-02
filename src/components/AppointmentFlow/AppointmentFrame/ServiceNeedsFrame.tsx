@@ -18,6 +18,7 @@ import {EServiceCategoryPage, EServiceCenterName, IServiceCategory} from "../../
 import { Loading } from '../../UI/Loading';
 import {tellMoreCard} from "../../../store/reducers/appointmentFrameReducer/initial";
 import ReactGA from "react-ga";
+import {trackerNames} from "../../../App";
 
 
 const icons: JSX.Element[] = [
@@ -111,7 +112,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 category: 'User',
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`
-            })
+            }, trackerNames)
 
             switch (selectedService?.id) {
                 case -2:

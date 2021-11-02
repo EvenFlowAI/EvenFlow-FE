@@ -16,6 +16,7 @@ import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions"
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
+import {trackerNames} from "../../../App";
 
 
 const Wrapper = styled('div')(({ theme }) => ({
@@ -104,7 +105,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             category: 'User',
             action: 'Selected advisor',
             label: consultant ? consultant.name : 'Any available',
-        });
+        }, trackerNames);
         if (selectedPackage) {
             ReactGA.event({
                 category: 'User',
@@ -112,7 +113,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                 label: `Requests Codes: 
                 ${selectedPackage.serviceRequests.map(item => (`${item.code} - ${item.description}`)).join(', ')} 
                 with Price $${selectedPackage.serviceRequests.reduce((acc, el) => acc + el.price, 0)}`,
-            });
+            }, trackerNames);
         }
     }, [selectedPackage, consultant])
 
@@ -185,7 +186,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                 category: 'User',
                 action: 'Selected Appointment Slot',
                 label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('hh:mm A')}`
-            });
+            }, trackerNames);
         }
         onNext();
     }
@@ -195,7 +196,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             category: 'User',
             action: 'Went back',
             label: 'From Selection Date & Time Page'
-        });
+        }, trackerNames);
         onBack();
     }
 

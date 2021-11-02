@@ -9,6 +9,7 @@ import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
 import {TCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
+import {trackerNames} from "../../../App";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -98,7 +99,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             category: 'User',
             action: 'Created Appointment',
             nonInteraction: true,
-        })
+        }, trackerNames)
     }, [])
 
     const data: TItem[] = useMemo(() => {

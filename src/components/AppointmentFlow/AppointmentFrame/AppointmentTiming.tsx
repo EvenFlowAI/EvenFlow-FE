@@ -17,6 +17,7 @@ import moment from "moment";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
+import {trackerNames} from "../../../App";
 
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
@@ -192,7 +193,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                 category: 'User',
                 action: 'Selected Timing Type',
                 label: `Selected ${timingTypes[selectedType]}`
-            });
+            }, trackerNames);
         }
         if (appointment?.timingType !== selectedType) dispatch(selectAppointment(null))
         onNext();

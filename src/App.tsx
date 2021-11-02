@@ -24,26 +24,59 @@ ReactGA.initialize('UA-210743216-5', {
     alwaysSendToDefaultTracker: false,
 });
 
+// const trackers = [
+//     {
+//         trackingId: 'UA-210743216-5',
+//         gaOptions: {
+//             name: 'tracker-dev',
+//             siteSpeedSampleRate: 100,
+//         }
+//     },
+//     {
+//         trackingId: 'UA-210743216-3',
+//         gaOptions: {
+//             name: 'tracker-prod',
+//             siteSpeedSampleRate: 100,
+//         }
+//     },
+//     {
+//         trackingId: 'UA-210743216-4',
+//         gaOptions: {
+//             name: 'tracker-stage',
+//             siteSpeedSampleRate: 100,
+//         }
+//     },
+// ]
+//
+// ReactGA.initialize(trackers, {
+//     debug: true,
+//     titleCase: false,
+//     gaOptions: {
+//         siteSpeedSampleRate: 100,
+//     },
+//     alwaysSendToDefaultTracker: false,
+// })
+export const trackerNames = ['tracker-dev', 'tracker-stage', 'tracker-prod'];
 ReactGA.addTrackers(
     [
         {
             trackingId: 'UA-210743216-5',
             gaOptions: {
-                name: 'tracker-dev',
+                name: trackerNames[0],
                 siteSpeedSampleRate: 100,
             }
         },
         {
             trackingId: 'UA-210743216-3',
             gaOptions: {
-                name: 'tracker-prod',
+                name: trackerNames[2],
                 siteSpeedSampleRate: 100,
             }
         },
         {
             trackingId: 'UA-210743216-4',
             gaOptions: {
-                name: 'tracker-stage',
+                name: trackerNames[1],
                 siteSpeedSampleRate: 100,
             }
         },
@@ -54,9 +87,7 @@ const App = () => {
     const notificationsRef = useRef<ProviderContext>();
 
     useEffect(() => {
-        ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-dev']);
-        ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-stage']);
-        ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-prod']);
+        ReactGA.pageview(window.location.pathname + window.location.search, trackerNames);
     }, []);
 
     const handleClose = (key: React.ReactText) => () => {

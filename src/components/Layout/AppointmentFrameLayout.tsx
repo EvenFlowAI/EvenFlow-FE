@@ -40,6 +40,7 @@ import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga";
+import {trackerNames} from "../../App";
 
 const Container = styled('div')({
     display: "flex",
@@ -122,7 +123,7 @@ export const AppointmentFrameLayout = () => {
                     category: 'User',
                     action: 'Abandoned Page',
                     label: `From Page ${SCREENS[currentScreen]}`
-                })
+                }, trackerNames)
             }
         }
     }, [currentScreen, currentFrameScreen])

@@ -19,6 +19,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
+import {trackerNames} from "../../../App";
 
 /*const cards: TServiceCard[] = [
     {
@@ -120,7 +121,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 category: 'User',
                 action: 'Selected Sub Service',
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`
-            })
+            }, trackerNames)
             switch (subService.id) {
                 case -1:
                     return onNext('opsCode');

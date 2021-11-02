@@ -16,6 +16,7 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
+import {trackerNames} from "../../../App";
 
 const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
     minHeight: 264,
@@ -171,7 +172,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             category: 'User',
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`
-        })
+        }, trackerNames)
         onNext();
     }
 

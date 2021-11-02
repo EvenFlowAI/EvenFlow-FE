@@ -19,6 +19,7 @@ import {
 } from "../../../api/types";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
+import {trackerNames} from "../../../App";
 
 const border = '1px solid #DADADA';
 
@@ -297,7 +298,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
             category: 'User',
             action: 'Went back',
             label: 'From Selection Package Page'
-        })
+        }, trackerNames)
         onBack();
     }
 
@@ -308,7 +309,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 category: 'User',
                 action: `Selected Package`,
                 label: `With ${packageOptions[selectedPackage.type]} Option`
-            })
+            }, trackerNames)
         }
         onNext();
     }

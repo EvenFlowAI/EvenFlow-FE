@@ -15,6 +15,7 @@ import {LoadingButton} from "../UI/Button";
 import {useException} from "../../utils/hooks";
 import {TView} from "./types";
 import ReactGA from "react-ga";
+import {trackerNames} from "../../App";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -111,7 +112,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 category: 'User',
                 action: 'Enters Page',
                 label: `As Returning Customer`
-            });
+            }, trackerNames);
         } catch {
             dispatch(setSessionId(""));
             showError("We can't find your vehicle data, you can proceed as a new customer");

@@ -14,6 +14,7 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {checkSelectedCar} from "./utils";
 import ReactGA from "react-ga";
+import {trackerNames} from "../../../App";
 
 
 const Wrapper = styled('div')({
@@ -107,7 +108,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
             category: 'User',
             action: 'Selected Individual Service Requests',
             label: `With Codes ${srList.filter(item => selectedCode.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`
-        })
+        }, trackerNames)
         if (!checkSelectedCar(vehicle, vehicles)) {
             onNext("carDetails");
         } else {
