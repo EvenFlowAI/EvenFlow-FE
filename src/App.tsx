@@ -20,7 +20,8 @@ ReactGA.initialize('UA-210743216-5', {
     titleCase: false,
     gaOptions: {
         siteSpeedSampleRate: 100,
-    }
+    },
+    alwaysSendToDefaultTracker: false,
 });
 
 ReactGA.addTrackers(
