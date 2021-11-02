@@ -17,7 +17,6 @@ import ReactGA from 'react-ga';
 
 ReactGA.initialize([
     {
-        titleCase: false,
         trackingId: 'UA-210743216-3',
         gaOptions: {
             siteSpeedSampleRate: 100,
@@ -25,8 +24,6 @@ ReactGA.initialize([
         }
     },
     {
-        debug: true,
-        titleCase: false,
         trackingId: 'UA-210743216-5',
         gaOptions: {
             siteSpeedSampleRate: 100,
@@ -34,15 +31,14 @@ ReactGA.initialize([
         }
     },
     {
-        debug: true,
-        titleCase: false,
         trackingId: 'UA-210743216-4',
         gaOptions: {
             siteSpeedSampleRate: 100,
             name: 'tracker-stage'
         }
     },
-]);
+],
+    { debug: true, alwaysSendToDefaultTracker: false });
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
