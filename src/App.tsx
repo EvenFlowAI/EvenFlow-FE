@@ -28,22 +28,22 @@ ReactGA.addTrackers(
         {
             trackingId: 'UA-210743216-5',
             gaOptions: {
+                name: 'tracker-dev',
                 siteSpeedSampleRate: 100,
-                name: 'tracker-dev'
             }
         },
         {
             trackingId: 'UA-210743216-3',
             gaOptions: {
+                name: 'tracker-prod',
                 siteSpeedSampleRate: 100,
-                name: 'tracker-prod'
             }
         },
         {
             trackingId: 'UA-210743216-4',
             gaOptions: {
+                name: 'tracker-stage',
                 siteSpeedSampleRate: 100,
-                name: 'tracker-stage'
             }
         },
     ],
@@ -53,7 +53,9 @@ const App = () => {
     const notificationsRef = useRef<ProviderContext>();
 
     useEffect(() => {
-        ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-dev', 'tracker-prod', 'tracker-stage']);
+        ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-dev']);
+        ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-stage']);
+        ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-prod']);
     }, []);
 
     const handleClose = (key: React.ReactText) => () => {
