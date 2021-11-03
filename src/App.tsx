@@ -13,25 +13,53 @@ import {EndUserLayout} from "./components/Layout/EndUserLayout";
 import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
-import ReactGA from 'react-ga';
+import ReactGA, {GaOptions} from 'react-ga';
 
-ReactGA.initialize("UA-210743216-3", {
-    debug: true,
-    titleCase: false,
-    gaOptions: {
-        siteSpeedSampleRate: 100,
-        cookieDomain: 'auto',
-        allowLinker: true,
-    },
-    alwaysSendToDefaultTracker: false,
-});
+// ReactGA.initialize("UA-210743216-3", {
+//     debug: true,
+//     titleCase: false,
+//     gaOptions: {
+//         siteSpeedSampleRate: 100,
+//         cookieDomain: 'auto',
+//         allowLinker: true,
+//     },
+//     alwaysSendToDefaultTracker: false,
+// });
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
+    let trackerCreated = false;
+
+    function createTracker(opt_clientId: string | undefined) {
+        if (!trackerCreated) {
+            const options: GaOptions = {
+                siteSpeedSampleRate: 100,
+                cookieDomain: 'auto',
+                allowLinker: true,
+            }
+            if (opt_clientId) options.clientId = opt_clientId
+
+            ReactGA.initialize("UA-210743216-3", {
+                debug: true,
+                titleCase: false,
+                gaOptions: options,
+            });
+            trackerCreated = true;
+        }
+    }
 
     useEffect(() => {
         ReactGA.pageview(window.location.pathname + window.location.search);
-    }, []);
+        window.addEventListener('message', function(event) {
+            // Ignores messages from untrusted domains.
+            if (event.origin != 'https://www.riverviewford.com/') return;
+
+            // Creates the tracker with the data from the parent page.
+            createTracker(event.data);
+        });
+
+        setTimeout(createTracker);
+    }, [createTracker]);
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
