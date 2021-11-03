@@ -14,14 +14,14 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA from 'react-ga';
-import {TRACKER} from "./config/config";
 
-ReactGA.initialize(TRACKER, {
+ReactGA.initialize("UA-210743216-3", {
     debug: true,
     titleCase: false,
     gaOptions: {
         siteSpeedSampleRate: 100,
         cookieDomain: 'auto',
+        allowLinker: true,
     },
     alwaysSendToDefaultTracker: false,
 });
@@ -31,9 +31,6 @@ const App = () => {
 
     useEffect(() => {
         ReactGA.pageview(window.location.pathname + window.location.search);
-        // ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-dev']);
-        // ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-stage']);
-        // ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-prod']);
     }, []);
 
     const handleClose = (key: React.ReactText) => () => {
