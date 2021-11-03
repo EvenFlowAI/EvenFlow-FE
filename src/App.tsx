@@ -49,7 +49,10 @@ const App = () => {
     }
 
     useEffect(() => {
-        ReactGA.pageview(window.location.pathname + window.location.search);
+        trackerCreated && ReactGA.pageview(window.location.pathname + window.location.search);
+    }, [trackerCreated])
+
+    useEffect(() => {
         window.addEventListener('message', function(event) {
             // Ignores messages from untrusted domains.
             if (event.origin != 'https://www.riverviewford.com/') return;
