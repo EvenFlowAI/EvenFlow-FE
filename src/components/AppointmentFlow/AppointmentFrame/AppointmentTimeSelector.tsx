@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
         maxHeight: '40vh',
         overflowY: "auto",
         [theme.breakpoints.down("xs")]: {
-            maxHeight: '20vh',
+            maxHeight: '30vh',
         }
     }
 }))
@@ -77,7 +77,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         ReactGA.event({
             category: 'User',
             action: 'Clicked on Appointment Slot',
-            label: `With Price ${a?.price?.value}`
+            label: a?.price?.value ? `With Price ${a?.price?.value}` : ''
         });
         dispatch(selectAppointment(data));
     }

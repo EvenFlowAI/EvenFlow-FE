@@ -31,7 +31,7 @@ const defaultBorder = {
     borderRight: borderRule,
 }
 
-const useStyles = makeStyles(theme => ({
+export const useOptionsTableStyles = makeStyles(() => ({
     container: {
         overflowX: 'unset',
     },
@@ -95,7 +95,7 @@ export const MaintenanceOptions = {
 }
 
 export const OptionsTable: React.FC<TProps> = ({ editingOption, setEditingOption, onOptionNameChange, data, withHeader, options, onCheckboxClick }) => {
-    const classes = useStyles();
+    const classes = useOptionsTableStyles();
     const showError = useException();
 
     const getClassNameByIndex = (index: number) => {

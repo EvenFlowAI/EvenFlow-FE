@@ -15,19 +15,52 @@ import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentC
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA from 'react-ga';
 
-ReactGA.initialize('UA-210743216-2', {
+ReactGA.initialize('UA-210743216-3', {
     debug: true,
     titleCase: false,
     gaOptions: {
         siteSpeedSampleRate: 100,
-    }
+    },
+    alwaysSendToDefaultTracker: false,
 });
+
+// ReactGA.addTrackers(
+//     [
+//         {
+//             trackingId: 'UA-210743216-5',
+//             gaOptions: {
+//                 name: 'tracker-dev',
+//                 siteSpeedSampleRate: 100,
+//             },
+//             alwaysSendToDefaultTracker: false,
+//         },
+//         {
+//             trackingId: 'UA-210743216-3',
+//             gaOptions: {
+//                 name: 'tracker-prod',
+//                 siteSpeedSampleRate: 100,
+//             },
+//             alwaysSendToDefaultTracker: false,
+//         },
+//         {
+//             trackingId: 'UA-210743216-4',
+//             gaOptions: {
+//                 name: 'tracker-stage',
+//                 siteSpeedSampleRate: 100,
+//             },
+//             alwaysSendToDefaultTracker: false,
+//         },
+//     ],
+// );
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
 
     useEffect(() => {
         ReactGA.pageview(window.location.pathname + window.location.search);
+        // ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-dev']);
+        // ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-stage']);
+        // ReactGA.pageview(window.location.pathname + window.location.search, ['tracker-prod']);
     }, []);
 
     const handleClose = (key: React.ReactText) => () => {
