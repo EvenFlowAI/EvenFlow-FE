@@ -20,7 +20,6 @@ ReactGA.initialize('UA-210743216-3', {
     titleCase: false,
     gaOptions: {
         siteSpeedSampleRate: 100,
-        cookieDomain: 'none',
     },
     alwaysSendToDefaultTracker: false,
 });
