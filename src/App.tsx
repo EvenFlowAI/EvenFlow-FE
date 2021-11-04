@@ -53,35 +53,14 @@ const App = () => {
     }, [trackerCreated])
 
     useEffect(() => {
-        // window.addEventListener('message', function(event) {
-        //     // Ignores messages from untrusted domains.
-        //     if (event.origin != 'https://www.riverviewford.com/' || 'https://testifraime.herokuapp.com/') return;
-        //
-        //     // Creates the tracker with the data from the parent page.
-        //     createTracker(event.data);
-        // });
-        window.addEventListener('message', function(event) {
-            // Ignores messages from untrusted domains.
-
-            console.log(event);
-
-            if (event.origin !=  'https://dev.evenflow.ai') return;
-            // 'https://www.riverviewford.com/'
-
-            ReactGA.initialize("UA-210743216-5", {
-                debug: true,
-                titleCase: false,
-                gaOptions: {
-                    siteSpeedSampleRate: 100,
-                    cookieDomain: 'auto',
-                    // allowLinker: true,
-                    clientId: event.data
-                },
+        if (!trackerCreated) {
+            window.addEventListener('message', function(event) {
+                if (event.origin !=  'https://dev.evenflow.ai') return;
+                createTracker(event.data);
             });
-        });
-
-        // setTimeout(createTracker);
-    }, []);
+            setTimeout(createTracker);
+        }
+    }, [trackerCreated]);
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
