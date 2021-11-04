@@ -55,7 +55,7 @@ const App = () => {
     useEffect(() => {
         window.addEventListener('message', function(event) {
             // Ignores messages from untrusted domains.
-            if (event.origin != 'https://www.riverviewford.com/ || https://testifraime.herokuapp.com/') return;
+            if (event.origin != 'https://www.riverviewford.com/' || 'https://testifraime.herokuapp.com/') return;
 
             // Creates the tracker with the data from the parent page.
             createTracker(event.data);
