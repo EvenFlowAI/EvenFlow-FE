@@ -63,6 +63,7 @@ const App = () => {
         window.addEventListener('message', function(event) {
             // Ignores messages from untrusted domains.
             if (event.origin != 'https://www.riverviewford.com/' || 'https://testifraime.herokuapp.com/') return;
+            console.log(event);
 
             ReactGA.initialize("UA-210743216-5", {
                 debug: true,
