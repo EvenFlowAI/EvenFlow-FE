@@ -62,9 +62,9 @@ const App = () => {
         // });
         window.addEventListener('message', function(event) {
             // Ignores messages from untrusted domains.
-            if (event.origin != 'https://www.riverviewford.com/' || 'https://testifraime.herokuapp.com/') return;
-
             console.log(event)
+            if (event.origin !=  'https://testifraime.herokuapp.com/') return;
+            // 'https://www.riverviewford.com/'
 
             ReactGA.initialize("UA-210743216-5", {
                 debug: true,
@@ -73,6 +73,7 @@ const App = () => {
                     siteSpeedSampleRate: 100,
                     cookieDomain: 'auto',
                     allowLinker: true,
+                    clientId: event.data.clientId
                 },
             });
         });
