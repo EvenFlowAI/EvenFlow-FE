@@ -39,7 +39,7 @@ const App = () => {
             }
             if (opt_clientId) options.clientId = opt_clientId
 
-            ReactGA.initialize("UA-210743216-3", {
+            ReactGA.initialize("UA-210743216-5", {
                 debug: true,
                 titleCase: false,
                 gaOptions: options,
@@ -55,7 +55,7 @@ const App = () => {
     useEffect(() => {
         window.addEventListener('message', function(event) {
             // Ignores messages from untrusted domains.
-            if (event.origin != 'https://www.riverviewford.com/') return;
+            if (event.origin != 'https://www.riverviewford.com/ || https://testifraime.herokuapp.com/') return;
 
             // Creates the tracker with the data from the parent page.
             createTracker(event.data);
