@@ -62,8 +62,8 @@ const App = () => {
         // });
         window.addEventListener('message', function(event) {
             // Ignores messages from untrusted domains.
-            console.log(event)
-            if (event.origin !=  'https://testifraime.herokuapp.com/') return;
+
+            if (event.origin !=  'https://dev.evenflow.ai') return;
             // 'https://www.riverviewford.com/'
 
             ReactGA.initialize("UA-210743216-5", {
