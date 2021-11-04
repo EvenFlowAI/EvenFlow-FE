@@ -296,7 +296,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         ReactGA.event({
             category: 'User',
             action: 'Went back',
-            label: 'From Selection Package Page'
+            label: 'From Selection Package Page',
+            nonInteraction: true
         })
         onBack();
     }
@@ -307,7 +308,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
             ReactGA.event({
                 category: 'User',
                 action: `Selected Package`,
-                label: `With ${packageOptions[selectedPackage.type]} Option`
+                label: `With ${packageOptions[selectedPackage.type]} Option`,
+                nonInteraction: true
             })
         }
         onNext();

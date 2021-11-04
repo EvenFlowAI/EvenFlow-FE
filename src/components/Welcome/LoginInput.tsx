@@ -110,7 +110,8 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
             ReactGA.event({
                 category: 'User',
                 action: 'Enters Page',
-                label: `As Returning Customer`
+                label: `As Returning Customer`,
+                nonInteraction: true
             });
         } catch {
             dispatch(setSessionId(""));
