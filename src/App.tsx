@@ -63,6 +63,8 @@ const App = () => {
         window.addEventListener('message', function(event) {
             // Ignores messages from untrusted domains.
 
+            console.log(event);
+
             if (event.origin !=  'https://dev.evenflow.ai') return;
             // 'https://www.riverviewford.com/'
 
@@ -72,8 +74,8 @@ const App = () => {
                 gaOptions: {
                     siteSpeedSampleRate: 100,
                     cookieDomain: 'auto',
-                    allowLinker: true,
-                    clientId: event.data.clientId
+                    // allowLinker: true,
+                    clientId: event.data
                 },
             });
         });
