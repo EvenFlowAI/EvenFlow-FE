@@ -47,10 +47,10 @@ const App = () => {
             setTrackerCreated(true);
         }
     }
-
-    useEffect(() => {
-        trackerCreated && ReactGA.pageview(window.location.pathname + window.location.search);
-    }, [trackerCreated])
+    //
+    // useEffect(() => {
+    //     trackerCreated && ReactGA.pageview(window.location.pathname + window.location.search);
+    // }, [trackerCreated])
 
     useEffect(() => {
         if (!trackerCreated) {
