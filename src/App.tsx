@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
@@ -28,7 +28,7 @@ import ReactGA, {GaOptions} from 'react-ga';
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
-    let trackerCreated = false;
+    const [trackerCreated, setTrackerCreated] = useState(false);
 
     function createTracker(opt_clientId: string | undefined) {
         if (!trackerCreated) {
@@ -44,7 +44,7 @@ const App = () => {
                 titleCase: false,
                 gaOptions: options,
             });
-            trackerCreated = true;
+            setTrackerCreated(true);
         }
     }
 
@@ -56,7 +56,7 @@ const App = () => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
                 if (event.origin !=  'https://dev.evenflow.ai') return;
-                createTracker(event.data);
+                createTracker(event.data?.instanceId);
             });
             setTimeout(createTracker);
         }
