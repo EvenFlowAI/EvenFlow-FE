@@ -156,16 +156,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             })
     }, [id, serviceRequestIds, packageOpt]);
 
-    useEffect(() => {
-        window.addEventListener('unload', () => {
-            ReactGA.event({
-                category: 'User',
-                action: 'Abandoned Page',
-                label: `From Page Transportation Needs`
-            })
-        })
-    }, [])
-
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
     }
@@ -180,7 +170,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         ReactGA.event({
             category: 'User',
             action: 'Selected Transportation Need',
-            label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`
+            label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
+            nonInteraction: true
         })
         onNext();
     }

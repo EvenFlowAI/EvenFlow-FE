@@ -14,6 +14,7 @@ import {API} from "../../api/api";
 import {LoadingButton} from "../UI/Button";
 import {useException} from "../../utils/hooks";
 import {TView} from "./types";
+import ReactGA from "react-ga";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -106,6 +107,12 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
             // dispatch(saveAppointmentReducer());
             // showMessage("We've send a code with an email for confirmation.");
             onComplete();
+            ReactGA.event({
+                category: 'User',
+                action: 'Enters Page',
+                label: `As Returning Customer`,
+                nonInteraction: true
+            });
         } catch {
             dispatch(setSessionId(""));
             showError("We can't find your vehicle data, you can proceed as a new customer");

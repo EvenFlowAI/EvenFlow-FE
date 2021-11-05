@@ -109,16 +109,6 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             })
     }, [id, scProfile]);
 
-    useEffect(() => {
-        window.addEventListener('unload', () => {
-            ReactGA.event({
-                category: 'User',
-                action: 'Abandoned Page',
-                label: `From Page SubService Selection`
-            })
-        })
-    }, [])
-
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectSubService(card));
     }
@@ -129,7 +119,8 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             ReactGA.event({
                 category: 'User',
                 action: 'Selected Sub Service',
-                label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`
+                label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
+                nonInteraction: true
             })
             switch (subService.id) {
                 case -1:

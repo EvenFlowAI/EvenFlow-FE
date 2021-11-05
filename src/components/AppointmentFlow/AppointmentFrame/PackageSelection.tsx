@@ -281,16 +281,6 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
 
     }, [id, selectedVehicle, maintenanceDetails]);
 
-    useEffect(() => {
-        window.addEventListener('unload', () => {
-            ReactGA.event({
-                category: 'User',
-                action: 'Abandoned Page',
-                label: `From Page Package Selection`
-            })
-        })
-    }, [])
-
     const setClasses = (id: number, cls: string) => {
         if (id === selectedPackage?.id) {
             return `${cls} selected`;
@@ -305,7 +295,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const handleBack = (): void => {
         ReactGA.event({
             category: 'User',
-            action: 'Went back from Selection Package Page'
+            action: 'Went back',
+            label: 'From Selection Package Page',
+            nonInteraction: true
         })
         onBack();
     }
@@ -316,7 +308,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
             ReactGA.event({
                 category: 'User',
                 action: `Selected Package`,
-                label: `With ${packageOptions[selectedPackage.type]} Option`
+                label: `With ${packageOptions[selectedPackage.type]} Option`,
+                nonInteraction: true
             })
         }
         onNext();

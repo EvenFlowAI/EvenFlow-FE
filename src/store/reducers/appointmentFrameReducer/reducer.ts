@@ -3,7 +3,7 @@ import {
     selectService,
     selectSubService,
     setAdvisor,
-    setAppointmentId, setConsultants,
+    setAppointmentId, setConsultants, setCurrentFrameScreen,
     setCustomer,
     setFrameDescription, setLoadingPackages,
     setMaintenanceDetails,
@@ -47,6 +47,7 @@ type TState = {
     packages: IPackage[];
     isPackagesLoading: boolean;
     consultants: IServiceConsultant[];
+    currentScreen: string;
 }
 const initialState: TState = {
     service: null,
@@ -68,6 +69,7 @@ const initialState: TState = {
     packages: [],
     isPackagesLoading: false,
     consultants: [],
+    currentScreen: '',
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -161,5 +163,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setConsultants, (state, { payload}) => {
         return {...state, consultants: payload};
+    })
+    .addCase(setCurrentFrameScreen, (state, { payload }) => {
+        return {...state, currentScreen: payload};
     })
 )
