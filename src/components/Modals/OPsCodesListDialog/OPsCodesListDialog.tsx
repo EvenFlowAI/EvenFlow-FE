@@ -5,7 +5,6 @@ import {Button, Checkbox, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    assignServiceRequests,
     loadNonSelectedServiceRequests, setNonSelectedFilter, setNonSelectedOrder,
     setNonSelectedPageData
 } from "../../../store/reducers/serviceRequests/actions";
@@ -25,7 +24,11 @@ const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "Regular Invoice", val: el => `$${el.invoiceAmount}`, orderId: "invoiceAmount"}
 ]
 
-export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+type TOPsCodesListDialogProps = {
+    onSave: (selectedCodes: number[], serviceCenterID: number) => void;
+} & DialogProps;
+
+export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction, payload, ...props}) => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();
@@ -95,9 +98,9 @@ export const OPsCodesListDialog: React.FC<DialogProps> = ({onAction, payload, ..
         } else {
             try {
                 setSaving(true);
-                await dispatch(assignServiceRequests(selectedCodes, selectedSC.id));
+                await props.onSave(selectedCodes, selectedSC.id);
                 setSaving(false);
-                showMessage(`Successfully assigned ${selectedCodes.length} codes`);
+                showMessage(`Successfully added ${selectedCodes.length} codes`);
                 setSelectedCodes([]);
             } catch (e) {
                 setSaving(false);
