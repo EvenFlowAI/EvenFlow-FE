@@ -8,7 +8,7 @@ import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {IPackageByQuery} from "../../../api/types";
-import {loadPackages} from "../../../store/reducers/packages/actions";
+import {getPackageById, loadPackages} from "../../../store/reducers/packages/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
 import {useModal} from "../../../utils/hooks";
 
@@ -40,6 +40,9 @@ export const MaintenancePackages = () => {
     useEffect(() => {
         if (selectedSc) {
             dispatch(loadPackages(selectedSc.id))
+        }
+        return () => {
+            dispatch(getPackageById(null));
         }
     }, [selectedSc])
 

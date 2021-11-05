@@ -5,7 +5,8 @@ enum AdminRoutes {
     Employees = "/admin/employees",
     Profile = "/admin/profile",
     ServiceCenters = "/admin/service-centers",
-    ServiceRequests = "/admin/service-requests"
+    ServiceRequests = "/admin/service-requests",
+    VehicleDetails = "/admin/vehicle-details"
 }
 
 enum AdminLogin {

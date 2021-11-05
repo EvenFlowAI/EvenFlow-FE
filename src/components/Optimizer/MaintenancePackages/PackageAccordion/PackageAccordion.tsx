@@ -306,13 +306,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }
 
-    const sendRequest = () => {
-        if (packageData) {
-            dispatch(updatePackageOptions(packageData.id, packageData.options))
-            setIsEdit(false);
-            setEditingOption(null);
-            setEditedRequests([]);
-        }
+    const sendRequest = (data: IPackageById) => {
+        dispatch(updatePackageOptions(data.id, data.options));
+        setIsEdit(false);
+        setEditingOption(null);
+        setEditedRequests([]);
     }
 
     const handleSave = (): void => {
@@ -322,7 +320,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 if (editedRequests.length && editedRequests.find(item => item.isSelected)) {
                     onRequestToDMSOpen();
                 } else {
-                    sendRequest();
+                    sendRequest(packageData);
                 }
             }
         } else {
@@ -355,8 +353,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         })
     }
 
-    const onRequestToDmsSave = () => {
-        sendRequest();
+    const onRequestToDmsSave = (data: IPackageById) => {
+        sendRequest(data);
         setEditedRequests([]);
         onRequestToDMSClose();
     }
@@ -399,15 +397,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             onOptionNameChange={onOptionNameChange}
                             onCheckboxClick={onCheckboxClick}/>
                         }
-                    {/*{packageData && <ServiceRequests data={packageData.serviceRequests}/>}*/}
-                    {/*{packageData && <OptionsTable*/}
-                    {/*    withHeader*/}
-                    {/*    data={optionsData}*/}
-                    {/*    editingOption={editingOption}*/}
-                    {/*    setEditingOption={setEditingOption}*/}
-                    {/*    onOptionNameChange={onOptionNameChange}*/}
-                    {/*    onCheckboxClick={onCheckboxClick}*/}
-                    {/*    options={packageData.options}/>}*/}
                      </div>
 
                     {detailsData && <React.Fragment>
@@ -435,11 +424,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                                 packageData={packageData}
                                 data={complimentaryData}
                                 onCheckboxClick={onComplimentaryClick}/>}
-                            {/*{packageData && <ComplimentaryRequests data={packageData.complimentaryServices} />}*/}
-                            {/*{packageData && <OptionsTable*/}
-                            {/*    data={complimentaryData}*/}
-                            {/*    onCheckboxClick={onComplimentaryClick}*/}
-                            {/*    options={packageData.options}/>}*/}
                         </div>
 
                         <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>

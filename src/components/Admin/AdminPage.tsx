@@ -12,6 +12,7 @@ import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDe
 import {Roles} from "../../config/constants";
 import {Profile} from "./Profile/Profile";
 import {ServiceRequests} from "./ServiceRequets/ServiceRequets";
+import {VehicleDetails} from "./VehicleDetails/VehicleDetails";
 import {Appointments} from "../Appointments/Appointments";
 
 export const AdminPage = () => {
@@ -35,6 +36,9 @@ export const AdminPage = () => {
                 : null}
             {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
+                : null}
+            {!currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.VehicleDetails} exact component={VehicleDetails}/>
                 : null}
             {currentUser.role === Roles.Owner
                 ? <PrivateRoute path={Routes.Admin.Profile} component={Profile} />

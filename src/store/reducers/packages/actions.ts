@@ -9,7 +9,7 @@ import {
 } from "./types";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
-export const getPackageById = createAction<IPackageById>('Optimizer/GetPackageById');
+export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPackageById');
 export const getPackagesByQuery = createAction<IPackageByQuery[]>('Optimizer/GetPackages');
 export const getMakes = createAction<IMake[]>('Optimizer/GetVehicles');
 export const getComplimentary = createAction<IComplimentaryServiceByQuery[]>('Optimizer/GetComplimentary');
@@ -59,7 +59,7 @@ export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[])
     Api.call(Api.endpoints.MaintenancePackages.PackageOptions, {urlParams: {id}, data: {items: data}})
         .then(result => {
             console.log(result);
-            if (result) dispatch(loadPackageById(id))
+            if (result) dispatch(loadPackageById(id));
         })
         .catch(err => {
         console.log(err)
@@ -67,13 +67,14 @@ export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[])
         .finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updatePackage = (id: number, data: IUpdatedPackage, callback?: () => void): AppThunk => async dispatch => {
+export const updatePackage = (id: number, data: IUpdatedPackage, serviceCenterId: number, callback?: () => void): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.Update, {urlParams: {id}, data})
         .then(result => {
             if (result) {
                 callback && callback();
-                dispatch(loadPackageById(id))
+                dispatch(loadPackages(serviceCenterId))
+                // dispatch(loadPackageById(id))
             }
         })
         .catch(err => {
