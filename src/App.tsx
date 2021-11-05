@@ -14,17 +14,7 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA, {GaOptions} from 'react-ga';
-
-// ReactGA.initialize("UA-210743216-3", {
-//     debug: true,
-//     titleCase: false,
-//     gaOptions: {
-//         siteSpeedSampleRate: 100,
-//         cookieDomain: 'auto',
-//         allowLinker: true,
-//     },
-//     alwaysSendToDefaultTracker: false,
-// });
+import {TRACKER} from "./config/config";
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
@@ -39,7 +29,7 @@ const App = () => {
             }
             if (opt_clientId) options.clientId = opt_clientId
 
-            ReactGA.initialize("UA-210743216-5", {
+            ReactGA.initialize(TRACKER, {
                 debug: true,
                 titleCase: false,
                 gaOptions: options,
@@ -49,8 +39,6 @@ const App = () => {
     }
 
     useEffect(() => {
-        console.log(window.location.pathname);
-        console.log(window.location.search)
         trackerCreated && ReactGA.pageview(window.location.pathname + window.location.search);
     }, [trackerCreated])
 
