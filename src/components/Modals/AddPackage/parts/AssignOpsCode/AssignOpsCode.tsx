@@ -21,6 +21,7 @@ import {autocompleteRender} from "../../../../UI/AutocompleteRender";
 import {TSelectedOption} from "../../../AssignOpsCodeModal/AssignOpsCodeModal";
 import {MaintenanceOptions} from "../../../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
 import {TAssignedRequest} from "../../../../../store/reducers/packages/types";
+import {IPackageById} from "../../../../../api/types";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: TAssignedRequest[];
@@ -33,6 +34,11 @@ const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "OPS CODE", val: el => el.code},
     {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
+
+type TSelectOption = {
+    name: string;
+    type: string | number;
+}
 
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -175,14 +181,27 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         return code;
     }
 
+    const getOptions = (currentPackage: IPackageById | null): TSelectOption[] => {
+        const defaultOptions = Object.values(MaintenanceOptions);
+        if (currentPackage) {
+            return currentPackage.options.map(option => ({name: option.name || MaintenanceOptions[option.type], type: option.type}))
+        } else {
+            const options = [];
+            for (let i = 0; i < 3; i++) {
+                options.push({name:defaultOptions[i], type: i})
+            }
+            return options;
+        }
+    }
+
     return (
         <BaseModal {...getModalProps(props)}>
             <DialogTitle onClose={handleClose}>{props.title}</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
-                    {currentPackage && <Autocomplete
+                   <Autocomplete
                         classes={inputClasses}
-                        options={currentPackage.options.map(option => ({name: option.name || MaintenanceOptions[option.type], type: option.type}))}
+                        options={getOptions(currentPackage)}
                         getOptionSelected={(option, value) => option.type === value.type}
                         getOptionLabel={option => option.name}
                         onChange={onSelectOption}
@@ -191,7 +210,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                             fullWidth: true,
                             placeholder: 'Select An Option'
                         })}
-                        value={selectedOption}/>}
+                        value={selectedOption}/>
                     {currentPackage && selectedOption && <div className={classes.selectedCode}>
                         Selected:  {getSelectedOpsCode(selectedOption)}
                     </div>}

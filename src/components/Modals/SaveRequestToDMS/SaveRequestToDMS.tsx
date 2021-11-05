@@ -11,7 +11,7 @@ type TSaveRequestModalProps = DialogProps & {
     editedRequests: TEditedRequest[];
     packageData: IPackageById | null;
     setPackageData: Dispatch<SetStateAction<IPackageById | null>>;
-    onSave: () => void;
+    onSave: (packageData: IPackageById) => void;
 };
 
 const baseCellStyles = {
@@ -204,8 +204,10 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
     }
 
     const onSave = async () => {
-        await props.setPackageData(temporaryData);
-        await props.onSave();
+        if (temporaryData) {
+            await props.setPackageData(temporaryData);
+            await props.onSave(temporaryData);
+        }
     }
 
     return (
