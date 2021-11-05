@@ -106,7 +106,8 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
         ReactGA.event({
             category: 'User',
             action: 'Selected Individual Service Requests',
-            label: `With Codes ${srList.filter(item => selectedCode.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`
+            label: `With Codes ${srList.filter(item => selectedCode.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
+            nonInteraction: true
         })
         if (!checkSelectedCar(vehicle, vehicles)) {
             onNext("carDetails");

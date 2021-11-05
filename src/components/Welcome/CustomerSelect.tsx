@@ -70,20 +70,10 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
         localStorage.setItem(LocalTokens.sessionId, uid);
         window.addEventListener('unload', () => {
             localStorage.setItem(LocalTokens.sessionId, '')
-            ReactGA.event({
-                category: 'User',
-                action: 'Abandoned Page',
-                label: `From Page Customer Type Selection`
-            })
         })
     }, [])
 
     const handleExisting = (): void => {
-        ReactGA.event({
-            category: 'User',
-            action: 'Enters Page',
-            label: `As Returning Customer`
-        });
         onLogin();
     }
 
@@ -95,7 +85,8 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
         ReactGA.event({
             category: 'User',
             action: 'Enters Page',
-            label: `As New User`
+            label: `As New User`,
+            nonInteraction: true
         });
         onComplete();
     }
