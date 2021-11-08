@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {SearchInput} from "../../UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {loadComplimentary, setComplimentaryPageData} from "../../../store/reducers/packages/actions";
+import {
+    loadComplimentary,
+    setComplimentaryPageData, setComplimentarySearchTerm,
+    setComplimentarySort
+} from "../../../store/reducers/packages/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {TableRowDataType} from "../../UI/types";
@@ -16,6 +20,7 @@ import {SC_UNDEFINED} from "../../../config/constants";
 import AddServiceManually from "../../Modals/AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
 import {addOpsCodeFromList} from "../../../store/reducers/complimentary/actions";
+import {IOrder} from "../../../types/types";
 
 const ComplimentaryServices = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -25,10 +30,14 @@ const ComplimentaryServices = () => {
         complimentary,
         isLoading,
         servicesCount,
+        sortOrder,
+        searchTerm,
     ] = useSelector((state: RootState) => [
         state.packages.complimentary,
         state.packages.isComplimentaryLoading,
         state.packages.complimentaryPaging.numberOfRecords,
+        state.packages.complimentarySortOrder,
+        state.packages.complimentarySearchTerm,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
@@ -43,10 +52,10 @@ const ComplimentaryServices = () => {
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
 
     const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
-        {header: "Service Ops Code", val: el => el.code, align: "center"},
-        {header: "Service Description", val: el => el.name, width: '57%'},
-        {header: "Duration (hours)", val: el => `${el.durationInHours}`, align: "center", width: 85},
-        {header: "Regular invoice", val: el => `$${el.price}`, align: "center", width: 85},
+        {header: "Service Ops Code", val: el => el.code, align: "center", orderId: "code"},
+        {header: "Service Description", val: el => el.name, width: '57%', orderId: "name"},
+        {header: "Duration (hours)", val: el => `${el.durationInHours}`, align: "center", width: 85, orderId: "durationInHours"},
+        {header: "Regular invoice", val: el => `$${el.price}`, align: "center", width: 85, orderId: "price" },
     ]
 
     useEffect(() => {
@@ -54,14 +63,12 @@ const ComplimentaryServices = () => {
     }, [selectedSC])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
+        dispatch(setComplimentarySearchTerm(e.target.value))
     }
 
-    let search = '';
-
-    const handleSearch = () => {
-        // TODO search
-    };
+    const handleSearch = useCallback(() => {
+        if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
+    }, [selectedSC]);
 
     const handleCloseMenu = () => {
         setAnchorEl(null);
@@ -113,6 +120,11 @@ const ComplimentaryServices = () => {
         await onAddOpsCodeClose();
     }
 
+    const handleSort = (d: IOrder<IComplimentaryServiceByQuery>) => async () => {
+        await dispatch(setComplimentarySort(d));
+        if (selectedSC) await dispatch(loadComplimentary(selectedSC.id));
+    }
+
     return (
         <div>
             <TitleContainer
@@ -121,7 +133,7 @@ const ComplimentaryServices = () => {
                 actions={<div style={{display: "flex", alignItems: "center"}}>
                     <SearchInput
                         onChange={handleSearchChange}
-                        value={search}
+                        value={searchTerm}
                         onSearch={handleSearch}
                     />
                     <Button
@@ -146,9 +158,12 @@ const ComplimentaryServices = () => {
                 <Table<IComplimentaryServiceByQuery>
                     data={complimentary}
                     index="id"
+                    order={sortOrder?.orderBy}
+                    isAscending={sortOrder?.isAscending}
                     rowData={tableData}
                     isLoading={isLoading}
                     page={pageIndex}
+                    onSort={handleSort}
                     hidePagination={servicesCount < 11}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}

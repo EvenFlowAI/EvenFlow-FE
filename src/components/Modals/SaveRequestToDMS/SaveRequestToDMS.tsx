@@ -1,14 +1,12 @@
 import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {TEditedRequest} from "../../Optimizer/MaintenancePackages/PackageAccordion/PackageAccordion";
 import {IPackageById, IPackageOptionDetailed, TExtendedService} from "../../../api/types";
 import {TableContainer, TableRow, Table, TableHead, TableCell, TableBody, IconButton, Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 
 type TSaveRequestModalProps = DialogProps & {
-    editedRequests: TEditedRequest[];
     packageData: IPackageById | null;
     setPackageData: Dispatch<SetStateAction<IPackageById | null>>;
     onSave: (packageData: IPackageById) => void;
@@ -132,11 +130,11 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
     useEffect(() => {
         setNewRequests(prev => {
             if (temporaryData) {
-                return temporaryData.serviceRequests.filter(item => !!props.editedRequests.find(el => el.requestId === item.id));
+                return temporaryData.serviceRequests;
             }
             return prev;
         })
-    }, [temporaryData, props.editedRequests])
+    }, [temporaryData])
 
     const getCellClass = (cellIndex: number, rowIndex: number) => {
         if (cellIndex === 0) {
@@ -236,16 +234,11 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
                                         <TableCell className={classes.requestCell}>{request.description}</TableCell>
                                         {temporaryData?.options.map((option, cellIndex) => {
                                             const requestInOption = option.serviceRequests.find(req => req.serviceRequestId === request.id);
-                                            const requestWasEdited = props.editedRequests
-                                                .find(item => item.requestId === request.id && option.type === item.optionType);
 
                                             return <TableCell
                                                 className={getCellClass(cellIndex, rowIndex)}
-                                                align="center"
-                                                style={{cursor: requestWasEdited ? 'pointer' : 'not-allowed'}}>
-                                                <IconButton
-                                                    onClick={() => onCheckboxClick(option, request.id)}
-                                                    disabled={!requestWasEdited}>
+                                                align="center">
+                                                <IconButton onClick={() => onCheckboxClick(option, request.id)}>
                                                     {requestInOption?.isSendToDMS
                                                         ? <CheckBoxOutlined htmlColor="#3855FE"/>
                                                         : <CheckBoxOutlineBlank htmlColor="#DADADA"/>

@@ -7,11 +7,12 @@ import {
     getPackagesByQuery,
     setComplimentaryLoading,
     setComplimentaryPageData,
-    setComplimentaryPagingResponse,
+    setComplimentaryPagingResponse, setComplimentarySearchTerm, setComplimentarySort,
     setPackageLoading
 } from "./actions";
 import {IComplimentaryServiceByQuery} from "./types";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
+import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
+import {defaultOrder} from "../../../config/config";
 
 type TState = {
     currentPackage: IPackageById | null;
@@ -22,6 +23,8 @@ type TState = {
     isComplimentaryLoading: boolean;
     complimentaryPaging: IPagingResponse;
     complimentaryPageData: IPageRequest;
+    complimentarySortOrder: IOrder<IComplimentaryServiceByQuery>;
+    complimentarySearchTerm: string;
 }
 
 const initialState: TState = {
@@ -38,7 +41,9 @@ const initialState: TState = {
     complimentaryPageData: {
         pageIndex: 0,
         pageSize: 0,
-    }
+    },
+    complimentarySortOrder: {...defaultOrder},
+    complimentarySearchTerm: '',
 }
 
 export const packagesReducer = createReducer(initialState, builder => builder
@@ -65,5 +70,11 @@ export const packagesReducer = createReducer(initialState, builder => builder
     })
     .addCase(setComplimentaryPageData, (state, { payload}) => {
         return {...state, complimentaryPageData: {...state.complimentaryPageData, payload}}
+    })
+    .addCase(setComplimentarySort, (state, { payload }) => {
+        return {...state, complimentarySortOrder: payload}
+    })
+    .addCase(setComplimentarySearchTerm, (state, { payload }) => {
+        return {...state, complimentarySearchTerm: payload}
     })
 );
