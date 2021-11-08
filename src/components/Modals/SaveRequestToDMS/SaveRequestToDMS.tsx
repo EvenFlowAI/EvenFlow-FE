@@ -4,7 +4,7 @@ import {DialogProps} from "../types";
 import {IPackageById, IPackageOptionDetailed, TExtendedService} from "../../../api/types";
 import {TableContainer, TableRow, Table, TableHead, TableCell, TableBody, IconButton, Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined, Close} from "@material-ui/icons";
 
 type TSaveRequestModalProps = DialogProps & {
     packageData: IPackageById | null;
@@ -239,9 +239,11 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
                                                 className={getCellClass(cellIndex, rowIndex)}
                                                 align="center">
                                                 <IconButton onClick={() => onCheckboxClick(option, request.id)}>
-                                                    {requestInOption?.isSendToDMS
-                                                        ? <CheckBoxOutlined htmlColor="#3855FE"/>
-                                                        : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
+                                                    {requestInOption ?
+                                                        requestInOption?.isSendToDMS
+                                                            ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                                                            : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
+                                                        : <Close htmlColor="#DADADA"/>
                                                     }
                                                 </IconButton>
                                             </TableCell>
