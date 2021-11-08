@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IPackageById, IPackageByQuery, IMake, IPackageOptionDetailed} from "../../../api/types";
-import {AppThunk, IPageRequest, IPagingResponse} from "../../../types/types";
+import {AppThunk, IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {
     IComplimentaryServiceByQuery,
@@ -16,6 +16,8 @@ export const getComplimentary = createAction<IComplimentaryServiceByQuery[]>('Op
 export const setComplimentaryLoading = createAction<boolean>('Optimizer/SetComplimentaryLoading');
 export const setComplimentaryPagingResponse  = createAction<IPagingResponse>('Optimizer/setComplimentaryRecordsNumber');
 export const setComplimentaryPageData  = createAction<Partial<IPageRequest>>('Optimizer/setComplimentaryPagesNumber');
+export const setComplimentarySort = createAction<IOrder<IComplimentaryServiceByQuery>>('Optimizer/SetComplimentarySort');
+export const setComplimentarySearchTerm = createAction<string>('Optimizer/SetComplimentarySearchTerm');
 
 export const loadPackageById = (id: number): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
@@ -108,11 +110,14 @@ export const createPackage = (id: number, data: INewPackage, callback: () => voi
 
 export const loadComplimentary = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     dispatch(setComplimentaryLoading(true))
-    const { complimentaryPageData } = getState().packages;
+    const { complimentaryPageData, complimentarySortOrder, complimentarySearchTerm } = getState().packages;
     const data = {
         serviceCenterId,
+        searchTerm: complimentarySearchTerm,
         pageIndex: complimentaryPageData.pageIndex,
         pageSize: complimentaryPageData.pageSize,
+        orderBy: complimentarySortOrder.orderBy,
+        isAscending: complimentarySortOrder.isAscending,
     }
 
     Api.call(Api.endpoints.ComplimentaryServices.GetByQuery, {data})
