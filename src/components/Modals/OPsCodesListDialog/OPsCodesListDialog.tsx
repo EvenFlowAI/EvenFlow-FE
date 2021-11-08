@@ -26,6 +26,7 @@ const tableData: TableRowDataType<IServiceRequest>[] = [
 
 type TOPsCodesListDialogProps = {
     onSave: (selectedCodes: number[], serviceCenterID: number) => void;
+    selectedPreviously?: number[];
 } & DialogProps;
 
 export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction, payload, ...props}) => {
@@ -53,19 +54,27 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<number[]>([]);
 
+    console.log(selectedCodes);
+
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     useEffect(() => {
-        if (props.open) {
+        if (props.open && !props.selectedPreviously) {
             setSelectedCodes([]);
         }
-    }, [props.open]);
+    }, [props.open, !props.selectedPreviously]);
     useEffect(() => {
         if (props.open && selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex, order]);
+
+    useEffect(() => {
+      if (props.selectedPreviously) {
+          setSelectedCodes(props.selectedPreviously);
+      }
+    }, [props.selectedPreviously])
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {

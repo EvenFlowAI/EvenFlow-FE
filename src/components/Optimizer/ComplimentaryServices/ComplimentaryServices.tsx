@@ -25,6 +25,7 @@ import {IOrder} from "../../../types/types";
 const ComplimentaryServices = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IComplimentaryServiceByQuery|undefined>(undefined);
+    const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
 
     const [
         complimentary,
@@ -61,6 +62,11 @@ const ComplimentaryServices = () => {
     useEffect(() => {
         if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
     }, [selectedSC])
+
+    useEffect(() => {
+        // todo uncomment and change field of item
+        // setSelectedOpsCodes(complimentary.map(item => item.id));
+    }, [complimentary])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setComplimentarySearchTerm(e.target.value))
@@ -176,7 +182,11 @@ const ComplimentaryServices = () => {
                 <MenuItem onClick={handleEdit}>Edit</MenuItem>
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
-            <OPsCodesListDialog open={isAddOpsCodeOpen} onClose={onAddOpsCodeClose} onSave={onAddOpsCode}/>
+            <OPsCodesListDialog
+                open={isAddOpsCodeOpen}
+                onClose={onAddOpsCodeClose}
+                onSave={onAddOpsCode}
+                selectedPreviously={selectedOpsCodes}/>
             <AddServiceManually open={isAddManuallyOpen} onClose={onAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
         </div>
     );
