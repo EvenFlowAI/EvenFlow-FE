@@ -132,7 +132,7 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
     useEffect(() => {
         setNewRequests(prev => {
             if (temporaryData) {
-                return temporaryData.serviceRequests.filter(item => !!props.editedRequests.find(el => el.requestId === item.id));
+                return temporaryData.serviceRequests;
             }
             return prev;
         })
@@ -236,16 +236,11 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
                                         <TableCell className={classes.requestCell}>{request.description}</TableCell>
                                         {temporaryData?.options.map((option, cellIndex) => {
                                             const requestInOption = option.serviceRequests.find(req => req.serviceRequestId === request.id);
-                                            const requestWasEdited = props.editedRequests
-                                                .find(item => item.requestId === request.id && option.type === item.optionType);
 
                                             return <TableCell
                                                 className={getCellClass(cellIndex, rowIndex)}
-                                                align="center"
-                                                style={{cursor: requestWasEdited ? 'pointer' : 'not-allowed'}}>
-                                                <IconButton
-                                                    onClick={() => onCheckboxClick(option, request.id)}
-                                                    disabled={!requestWasEdited}>
+                                                align="center">
+                                                <IconButton onClick={() => onCheckboxClick(option, request.id)}>
                                                     {requestInOption?.isSendToDMS
                                                         ? <CheckBoxOutlined htmlColor="#3855FE"/>
                                                         : <CheckBoxOutlineBlank htmlColor="#DADADA"/>

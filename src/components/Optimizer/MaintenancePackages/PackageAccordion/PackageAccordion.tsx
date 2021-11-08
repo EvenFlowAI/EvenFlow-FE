@@ -317,11 +317,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         const [isValid, messages] = checkIsValid(packageData);
         if (isValid) {
             if (packageData) {
-                if (editedRequests.length && editedRequests.find(item => item.isSelected)) {
-                    onRequestToDMSOpen();
-                } else {
-                    sendRequest(packageData);
-                }
+                onRequestToDMSOpen();
             }
         } else {
             messages.forEach(message => showError(message))
