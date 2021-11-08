@@ -4,7 +4,7 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {TabList} from "../../UI/Tabs";
 import {Tab} from "@material-ui/core";
 import MakesModelsTable from "./parts/MakesModelsTable/MakesModelsTable";
-import MilleageTable from "./parts/MilleageTable/MilleageTable";
+import MileageTable from "./parts/MileageTable/MileageTable";
 
 export const VehicleDetails = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -28,7 +28,7 @@ export const VehicleDetails = () => {
             <MakesModelsTable/>
         </TabPanel>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="1">
-            <MilleageTable/>
+            <MileageTable/>
         </TabPanel>
     </TabContext>;
 }

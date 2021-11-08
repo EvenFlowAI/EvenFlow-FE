@@ -15,7 +15,7 @@ type TAddMakeModalProps = DialogProps & {
     isEditing?: boolean;
 };
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles(() => ({
     wrapper: {
         display: 'flex',
         justifyContent: 'flex-end',
