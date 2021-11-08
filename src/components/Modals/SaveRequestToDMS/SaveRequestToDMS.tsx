@@ -1,14 +1,12 @@
 import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {TEditedRequest} from "../../Optimizer/MaintenancePackages/PackageAccordion/PackageAccordion";
 import {IPackageById, IPackageOptionDetailed, TExtendedService} from "../../../api/types";
 import {TableContainer, TableRow, Table, TableHead, TableCell, TableBody, IconButton, Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 
 type TSaveRequestModalProps = DialogProps & {
-    editedRequests: TEditedRequest[];
     packageData: IPackageById | null;
     setPackageData: Dispatch<SetStateAction<IPackageById | null>>;
     onSave: (packageData: IPackageById) => void;
@@ -136,7 +134,7 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
             }
             return prev;
         })
-    }, [temporaryData, props.editedRequests])
+    }, [temporaryData])
 
     const getCellClass = (cellIndex: number, rowIndex: number) => {
         if (cellIndex === 0) {
