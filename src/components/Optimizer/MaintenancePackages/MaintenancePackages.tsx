@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, makeStyles} from "@material-ui/core";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../../Optimizer/utils";
 import {SearchInput} from "../../UI/SearchInput";
 import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
@@ -11,6 +9,7 @@ import {IPackageByQuery} from "../../../api/types";
 import {getPackageById, loadPackages} from "../../../store/reducers/packages/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
 import {useModal} from "../../../utils/hooks";
+import LaborRate from "./LaborRate/LaborRate";
 
 type TExpandedState = {
     id?: number;
@@ -23,6 +22,12 @@ const useStyles = makeStyles(theme => ({
     },
     nonExpanded: {
         backgroundColor: '#E5E5E5',
+    },
+    topLineWrapper: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: 'space-between',
+        marginBottom: 20,
     }
 }));
 
@@ -80,25 +85,24 @@ export const MaintenancePackages = () => {
 
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
-    <TitleContainer
-        pad
-        parent={optimizerRoot}
-        actions={<div style={{display: "flex", alignItems: "center"}}>
-            <SearchInput
-                onChange={handleSearchChange}
-                value={search}
-                onSearch={handleSearch}
-            />
-            <Button
-                style={{marginLeft: 16}}
-                color="primary"
-                variant="contained"
-                onClick={handleAddPackage}
-            >
-                Add Package
-            </Button>
-        </div>}
-    />
+        <div className={classes.topLineWrapper}>
+            <LaborRate/>
+            <div style={{display: "flex", alignItems: "center"}}>
+                <SearchInput
+                    onChange={handleSearchChange}
+                    value={search}
+                    onSearch={handleSearch}
+                />
+                <Button
+                    style={{marginLeft: 16}}
+                    color="primary"
+                    variant="contained"
+                    onClick={handleAddPackage}
+                >
+                    Add Package
+                </Button>
+            </div>
+        </div>
     <div className={classes.titleWrapper}>
     <ContentTitle title="Maintenance Package Pricing"/>
     </div>

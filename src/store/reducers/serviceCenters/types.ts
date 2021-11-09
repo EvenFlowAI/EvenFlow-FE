@@ -10,6 +10,7 @@ export interface IServiceCenter {
     mainAddress: string;
     avatarPath?: string;
     timeZoneId: string;
+    laborRatePerHour: number;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
