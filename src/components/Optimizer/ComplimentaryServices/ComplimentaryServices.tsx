@@ -4,8 +4,9 @@ import {optimizerRoot} from "../utils";
 import {SearchInput} from "../../UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
+    changeComplimentaryPageData,
     loadComplimentary,
-    setComplimentaryPageData, setComplimentarySearchTerm,
+    setComplimentarySearchTerm,
     setComplimentarySort
 } from "../../../store/reducers/packages/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -42,7 +43,7 @@ const ComplimentaryServices = () => {
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
-        setComplimentaryPageData
+        changeComplimentaryPageData
     );
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -64,8 +65,11 @@ const ComplimentaryServices = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        // todo uncomment and change field of item
-        // setSelectedOpsCodes(complimentary.map(item => item.id));
+            setSelectedOpsCodes(() => {
+                const data: number[] = [];
+                complimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
+                return data;
+            });
     }, [complimentary])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

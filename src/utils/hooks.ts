@@ -115,7 +115,6 @@ export const usePagination = (cb: TPageCallback, changePageData: IPageRequestAct
     const dispatch = useDispatch();
     const changePage =
         (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
-            console.log(pageNumber);
             dispatch(changePageData({pageIndex: pageNumber}));
         }
     const changeRowsPerPage:

@@ -54,8 +54,6 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<number[]>([]);
 
-    console.log(selectedCodes);
-
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
