@@ -126,7 +126,8 @@ const ComplimentaryServices = () => {
     }
 
     const onAddOpsCode = async (selectedCodes: number[], serviceCenterId: number) => {
-        await dispatch(addOpsCodeFromList(selectedCodes, serviceCenterId));
+        const newCodes = selectedCodes.filter(item => !selectedOpsCodes.includes(item));
+        await dispatch(addOpsCodeFromList(newCodes, serviceCenterId));
         await onAddOpsCodeClose();
     }
 

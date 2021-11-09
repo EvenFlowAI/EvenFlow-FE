@@ -62,17 +62,18 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
             setSelectedCodes([]);
         }
     }, [props.open, !props.selectedPreviously]);
+
     useEffect(() => {
         if (props.open && selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id));
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex, order]);
 
-    useEffect(() => {
-      if (props.selectedPreviously) {
-          setSelectedCodes(props.selectedPreviously);
-      }
-    }, [props.selectedPreviously])
+    // useEffect(() => {
+    //   if (props.selectedPreviously) {
+    //       setSelectedCodes(props.selectedPreviously);
+    //   }
+    // }, [props.selectedPreviously])
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {
@@ -96,7 +97,12 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     }
 
     const preActions = (el: IServiceRequest) => {
-        return <Checkbox color="primary" checked={selectedCodes.includes(el.id)} onChange={handleCheck(el)} />
+        return <Checkbox
+            color="primary"
+            checked={selectedCodes.includes(el.id) || props.selectedPreviously?.includes(el.id)}
+            onChange={handleCheck(el)}
+            disabled={props?.selectedPreviously?.includes(el.id)}
+        />
     }
 
     const handleAdd = async () => {
