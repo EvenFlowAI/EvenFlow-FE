@@ -4,8 +4,9 @@ import {optimizerRoot} from "../utils";
 import {SearchInput} from "../../UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
+    changeComplimentaryPageData,
     loadComplimentary,
-    setComplimentaryPageData, setComplimentarySearchTerm,
+    setComplimentarySearchTerm,
     setComplimentarySort
 } from "../../../store/reducers/packages/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -25,6 +26,7 @@ import {IOrder} from "../../../types/types";
 const ComplimentaryServices = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IComplimentaryServiceByQuery|undefined>(undefined);
+    const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
 
     const [
         complimentary,
@@ -41,7 +43,7 @@ const ComplimentaryServices = () => {
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
-        setComplimentaryPageData
+        changeComplimentaryPageData
     );
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -61,6 +63,14 @@ const ComplimentaryServices = () => {
     useEffect(() => {
         if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
     }, [selectedSC])
+
+    useEffect(() => {
+            setSelectedOpsCodes(() => {
+                const data: number[] = [];
+                complimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
+                return data;
+            });
+    }, [complimentary])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setComplimentarySearchTerm(e.target.value))
@@ -176,7 +186,11 @@ const ComplimentaryServices = () => {
                 <MenuItem onClick={handleEdit}>Edit</MenuItem>
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
-            <OPsCodesListDialog open={isAddOpsCodeOpen} onClose={onAddOpsCodeClose} onSave={onAddOpsCode}/>
+            <OPsCodesListDialog
+                open={isAddOpsCodeOpen}
+                onClose={onAddOpsCodeClose}
+                onSave={onAddOpsCode}
+                selectedPreviously={selectedOpsCodes}/>
             <AddServiceManually open={isAddManuallyOpen} onClose={onAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
         </div>
     );
