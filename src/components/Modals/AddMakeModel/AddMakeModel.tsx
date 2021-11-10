@@ -9,7 +9,9 @@ import Model from "./Model";
 import {useException} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setCurrentMake} from "../../../store/reducers/vehicleDetails/actions";
+import {createMake, setCurrentMake, updateMake} from "../../../store/reducers/vehicleDetails/actions";
+import {ICreateMake} from "../../../store/reducers/vehicleDetails/types";
+import {IMake} from "../../../api/types";
 
 type TAddMakeModalProps = DialogProps & {
     isEditing?: boolean;
@@ -69,6 +71,7 @@ export const useStyles = makeStyles(() => ({
 const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
     const {onClose, isEditing} = props;
     const { currentMake } = useSelector((state: RootState) => state.vehicleDetails);
+    const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [make, setMake] = useState<string>('');
     const [models, setModels] = useState<string[]>([]);
@@ -96,9 +99,24 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
     const onSave = () => {
         setFormIsChecked(true);
         if (models.length && make) {
-            // TODO requests
-            onCancel();
+            if (isEditing && currentMake?.id) {
+                const data: IMake = {
+                    name: make,
+                    models
+                }
+                dispatch(updateMake(currentMake.id, data));
+            } else {
+                if (selectedSC) {
+                    const data: ICreateMake = {
+                        name: make,
+                        models,
+                        serviceCenterId: selectedSC.id
+                    }
+                    dispatch(createMake(data))
+                }
+            }
         }
+        onCancel();
     }
 
     const addModel = () => {

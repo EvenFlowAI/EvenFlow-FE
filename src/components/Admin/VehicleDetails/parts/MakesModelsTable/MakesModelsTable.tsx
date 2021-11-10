@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../../../utils/hooks";
-import {loadMakes, setCurrentMake} from "../../../../../store/reducers/vehicleDetails/actions";
+import {deleteMake, loadMakes, setCurrentMake} from "../../../../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../../../../store/rootReducer";
 import {SearchInput} from "../../../../UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
@@ -28,9 +28,9 @@ const MakesModelsTable = () => {
     let searchTerm = '';
 
     useEffect(() => {
-            if (selectedSC) {
-                dispatch(loadMakes(selectedSC.id))
-            }
+        if (selectedSC) {
+            dispatch(loadMakes(selectedSC.id))
+        }
     }, [selectedSC])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +56,7 @@ const MakesModelsTable = () => {
             showError("Make is not chosen");
         } else {
             try {
-                // TODO remove request
+                if (currentMake.id) dispatch(deleteMake(currentMake.id))
                 showMessage("Removed");
                 dispatch(setCurrentMake(null));
             } catch (e) {
