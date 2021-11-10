@@ -177,7 +177,7 @@ type ApiRoutes = {
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
-    Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes", TApiRoute>,
+    Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "Remove" | "Update" | "Create", TApiRoute>,
 }
 
 type TOptions = {
@@ -409,7 +409,10 @@ export class Api {
             GetByVIN: {route: "/vehicles/by-vin", method: "get"},
             GetByQuery: {route: "/vehicles/by-query", method: "post"},
             Models: {route: "/vehicles/models", method: "get"},
-            Makes: {route: "/vehicles/makes", method: "get"}
+            Makes: {route: "/vehicles/makes", method: "get"},
+            Remove: {route: "/vehicles/makes/{id}", method: "delete"},
+            Update: {route: "/vehicles/makes/{id}", method: "put"},
+            Create: {route: "/vehicles/makes", method: "post"},
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {
