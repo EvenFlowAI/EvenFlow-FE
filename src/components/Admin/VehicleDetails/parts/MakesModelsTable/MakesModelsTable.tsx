@@ -17,8 +17,9 @@ const RowData: TableRowDataType<IMake>[] = [
 ];
 
 const MakesModelsTable = () => {
-    const { makes, currentMake } = useSelector((state: RootState) => state.vehicleDetails);
+    const { makes, currentMake, isLoading } = useSelector((state: RootState) => state.vehicleDetails);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+    const [tableData, setTableData] = useState<IMake[]>([]);
     const { selectedSC } = useSCs();
     const showMessage = useMessage();
     const showError = useException();
@@ -32,6 +33,31 @@ const MakesModelsTable = () => {
             dispatch(loadMakes(selectedSC.id))
         }
     }, [selectedSC])
+
+    useEffect(() => {
+        if (makes) {
+            setTableData(() => {
+                const formattedData: IMake[] = [];
+                makes.forEach(make => {
+                    const formattedMake = {...make};
+                    if (formattedMake.name.length > 30) {
+                        formattedMake.name = formattedMake.name.slice(0, 26).concat('...');
+                    }
+                    const formattedModels: string[] = [];
+                    formattedMake.models.forEach(model => {
+                        if (model.length > 30) {
+                            formattedModels.push(model.slice(0, 26).concat('...'));
+                        } else {
+                            formattedModels.push(model);
+                        }
+                    })
+                    formattedMake.models = formattedModels;
+                    formattedData.push(formattedMake);
+                })
+                return formattedData;
+            })
+        }
+    }, [makes])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.value);
@@ -95,7 +121,7 @@ const MakesModelsTable = () => {
                     Add Make And Model
                 </Button>
             </div>
-            <Table data={makes} index="name" rowData={RowData} actions={tableActions} hidePagination/>
+            <Table data={tableData} index="name" rowData={RowData} actions={tableActions} hidePagination isLoading={isLoading}/>
             <Menu
                 open={Boolean(anchorEl)}
                 onClose={() => {setAnchorEl(null);}}

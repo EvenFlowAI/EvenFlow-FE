@@ -6,8 +6,10 @@ import {ICreateMake} from "./types";
 
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');
+export const setLoading = createAction<boolean>('VehicleDetails/SetLoading');
 
 export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch => {
+    dispatch(setLoading(true));
     Api.call(Api.endpoints.Vehicles.Makes, {params: {serviceCenterId}})
         .then(result => {
             if (result?.data) {
@@ -17,6 +19,7 @@ export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch =
         .catch(err => {
             console.log('load makes error', err)
         })
+        .finally(() => dispatch(setLoading(false)))
 }
 
 export const deleteMake = (makeId: number): AppThunk => async (dispatch, getState) => {
