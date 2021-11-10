@@ -17,6 +17,7 @@ import {
     IPackageOptions, TExtendedComplimentary,
     TExtendedService
 } from "../../../api/types";
+import { ReactComponent as CheckboxCircle } from "../../../assets/img/done_icon_black.svg";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
 
@@ -187,6 +188,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
+    const isRiverviewFord = useMemo(() => scProfile?.id === 2 ||  scProfile?.id === 19 ||  scProfile?.id === 29, [scProfile])
+
     const [packages, services, complimentary]: [TPackage[], TService[], TComplimentary[]]
         = useMemo(() => {
         if (loadedPackages.length) {
@@ -296,7 +299,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         ReactGA.event({
             category: 'User',
             action: 'Went back',
-            label: 'From Selection Package Page'
+            label: 'From Selection Package Page',
+            nonInteraction: true
         })
         onBack();
     }
@@ -307,7 +311,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
             ReactGA.event({
                 category: 'User',
                 action: `Selected Package`,
-                label: `With ${packageOptions[selectedPackage.type]} Option`
+                label: `With ${packageOptions[selectedPackage.type]} Option`,
+                nonInteraction: true
             })
         }
         onNext();
@@ -349,7 +354,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                             key={p.id}
                                             onClick={handleClick(p)}
                                             className={setClasses(p.id, wMoreClsx)}>
-                                            {s.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
+                                            {s.packages.includes(p.id) ?  isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
                                         </div>;
                                     }
                                 )}
@@ -374,7 +379,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                     key={p.id}
                                     onClick={handleClick(p)}
                                     className={setClasses(p.id, "service green")}>
-                                    {c.packages.includes(p.id) ? <CheckBoxOutlined/> : ""}
+                                    {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
                                 </div>
                             )}
                         </React.Fragment>)}

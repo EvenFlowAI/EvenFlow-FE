@@ -85,7 +85,8 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
         ReactGA.event({
             category: 'User',
             action: 'Enters Page',
-            label: `As New User`
+            label: `As New User`,
+            nonInteraction: true
         });
         onComplete();
     }

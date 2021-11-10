@@ -121,7 +121,8 @@ export const AppointmentFrameLayout = () => {
                 ReactGA.event({
                     category: 'User',
                     action: 'Abandoned Page',
-                    label: `From Page ${SCREENS[currentScreen]}`
+                    label: `From Page ${SCREENS[currentScreen]}`,
+                    nonInteraction: true
                 })
             }
         }

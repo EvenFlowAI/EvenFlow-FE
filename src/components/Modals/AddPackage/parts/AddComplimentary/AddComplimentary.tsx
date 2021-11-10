@@ -8,7 +8,10 @@ import {Table} from "../../../../UI/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal";
 import {usePagination, useSCs} from "../../../../../utils/hooks";
 import Checkbox from "../../../../UI/Checkbox";
-import {loadComplimentary, setComplimentaryPageData} from "../../../../../store/reducers/packages/actions";
+import {
+    changeComplimentaryPageData,
+    loadComplimentary,
+} from "../../../../../store/reducers/packages/actions";
 import {IComplimentaryServiceByQuery} from "../../../../../store/reducers/packages/types";
 
 type TAssignOpsCodeModalProps = DialogProps & {
@@ -37,7 +40,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
-        setComplimentaryPageData
+        changeComplimentaryPageData
     );
 
     useEffect(() => {

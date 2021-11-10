@@ -42,4 +42,5 @@ export interface IComplimentaryServiceByQuery {
     durationInHours: number;
     laborAmount: number;
     partsAmount: number;
+    serviceRequestId: number;
 }

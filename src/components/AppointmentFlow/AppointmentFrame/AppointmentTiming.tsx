@@ -191,7 +191,8 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             ReactGA.event({
                 category: 'User',
                 action: 'Selected Timing Type',
-                label: `Selected ${timingTypes[selectedType]}`
+                label: `Selected ${timingTypes[selectedType]}`,
+                nonInteraction: true
             });
         }
         if (appointment?.timingType !== selectedType) dispatch(selectAppointment(null))
