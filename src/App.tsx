@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
@@ -14,21 +14,11 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA, {GaOptions} from 'react-ga';
-
-// ReactGA.initialize("UA-210743216-3", {
-//     debug: true,
-//     titleCase: false,
-//     gaOptions: {
-//         siteSpeedSampleRate: 100,
-//         cookieDomain: 'auto',
-//         allowLinker: true,
-//     },
-//     alwaysSendToDefaultTracker: false,
-// });
+import {TRACKER} from "./config/config";
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
-    let trackerCreated = false;
+    const [trackerCreated, setTrackerCreated] = useState(false);
 
     function createTracker(opt_clientId: string | undefined) {
         if (!trackerCreated) {
@@ -39,12 +29,12 @@ const App = () => {
             }
             if (opt_clientId) options.clientId = opt_clientId
 
-            ReactGA.initialize("UA-210743216-3", {
+            ReactGA.initialize(TRACKER, {
                 debug: true,
                 titleCase: false,
                 gaOptions: options,
             });
-            trackerCreated = true;
+            setTrackerCreated(true);
         }
     }
 
@@ -53,16 +43,14 @@ const App = () => {
     }, [trackerCreated])
 
     useEffect(() => {
-        window.addEventListener('message', function(event) {
-            // Ignores messages from untrusted domains.
-            if (event.origin != 'https://www.riverviewford.com/') return;
-
-            // Creates the tracker with the data from the parent page.
-            createTracker(event.data);
-        });
-
-        setTimeout(createTracker);
-    }, [createTracker]);
+        if (!trackerCreated) {
+            window.addEventListener('message', function(event) {
+                if (event.origin !=  'https://dev.evenflow.ai') return;
+                createTracker(event.data?.instanceId);
+            });
+            setTimeout(createTracker);
+        }
+    }, [trackerCreated]);
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);

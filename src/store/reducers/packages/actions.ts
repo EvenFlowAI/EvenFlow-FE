@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IPackageById, IPackageByQuery, IMake, IPackageOptionDetailed} from "../../../api/types";
-import {AppThunk, IPageRequest, IPagingResponse} from "../../../types/types";
+import {AppThunk, IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {
     IComplimentaryServiceByQuery,
@@ -9,13 +9,21 @@ import {
 } from "./types";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
-export const getPackageById = createAction<IPackageById>('Optimizer/GetPackageById');
+export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPackageById');
 export const getPackagesByQuery = createAction<IPackageByQuery[]>('Optimizer/GetPackages');
 export const getMakes = createAction<IMake[]>('Optimizer/GetVehicles');
 export const getComplimentary = createAction<IComplimentaryServiceByQuery[]>('Optimizer/GetComplimentary');
 export const setComplimentaryLoading = createAction<boolean>('Optimizer/SetComplimentaryLoading');
-export const setComplimentaryPagingResponse  = createAction<IPagingResponse>('Optimizer/setComplimentaryRecordsNumber');
-export const setComplimentaryPageData  = createAction<Partial<IPageRequest>>('Optimizer/setComplimentaryPagesNumber');
+export const setComplimentaryPagingResponse  = createAction<IPagingResponse>('Optimizer/SetComplimentaryRecordsNumber');
+export const setComplimentaryPageData  = createAction<Partial<IPageRequest>>('Optimizer/SetComplimentaryPageData');
+export const setComplimentarySort = createAction<IOrder<IComplimentaryServiceByQuery>>('Optimizer/SetComplimentarySort');
+export const setComplimentarySearchTerm = createAction<string>('Optimizer/SetComplimentarySearchTerm');
+
+export const changeComplimentaryPageData = (data: Partial<IPageRequest>): AppThunk => async (dispatch, getState) => {
+    await dispatch(setComplimentaryPageData(data));
+    const {selectedSC} = getState().serviceCenters;
+    if (selectedSC) await dispatch(loadComplimentary(selectedSC.id));
+}
 
 export const loadPackageById = (id: number): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
@@ -59,7 +67,7 @@ export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[])
     Api.call(Api.endpoints.MaintenancePackages.PackageOptions, {urlParams: {id}, data: {items: data}})
         .then(result => {
             console.log(result);
-            if (result) dispatch(loadPackageById(id))
+            if (result) dispatch(loadPackageById(id));
         })
         .catch(err => {
         console.log(err)
@@ -67,13 +75,14 @@ export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[])
         .finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updatePackage = (id: number, data: IUpdatedPackage, callback?: () => void): AppThunk => async dispatch => {
+export const updatePackage = (id: number, data: IUpdatedPackage, serviceCenterId: number, callback?: () => void): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.Update, {urlParams: {id}, data})
         .then(result => {
             if (result) {
                 callback && callback();
-                dispatch(loadPackageById(id))
+                dispatch(loadPackages(serviceCenterId))
+                // dispatch(loadPackageById(id))
             }
         })
         .catch(err => {
@@ -107,11 +116,14 @@ export const createPackage = (id: number, data: INewPackage, callback: () => voi
 
 export const loadComplimentary = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     dispatch(setComplimentaryLoading(true))
-    const { complimentaryPageData } = getState().packages;
+    const { complimentaryPageData, complimentarySortOrder, complimentarySearchTerm } = getState().packages;
     const data = {
         serviceCenterId,
+        searchTerm: complimentarySearchTerm,
         pageIndex: complimentaryPageData.pageIndex,
         pageSize: complimentaryPageData.pageSize,
+        orderBy: complimentarySortOrder.orderBy,
+        isAscending: complimentarySortOrder.isAscending,
     }
 
     Api.call(Api.endpoints.ComplimentaryServices.GetByQuery, {data})

@@ -170,7 +170,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         ReactGA.event({
             category: 'User',
             action: 'Selected Transportation Need',
-            label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`
+            label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
+            nonInteraction: true
         })
         onNext();
     }
