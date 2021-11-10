@@ -299,6 +299,7 @@ export interface IPackageByQuery {
 export interface IMake {
     name: string;
     models: string[];
+    id?:number;
 }
 
 export interface IPackageById {
