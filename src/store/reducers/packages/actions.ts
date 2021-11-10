@@ -14,10 +14,16 @@ export const getPackagesByQuery = createAction<IPackageByQuery[]>('Optimizer/Get
 export const getMakes = createAction<IMake[]>('Optimizer/GetVehicles');
 export const getComplimentary = createAction<IComplimentaryServiceByQuery[]>('Optimizer/GetComplimentary');
 export const setComplimentaryLoading = createAction<boolean>('Optimizer/SetComplimentaryLoading');
-export const setComplimentaryPagingResponse  = createAction<IPagingResponse>('Optimizer/setComplimentaryRecordsNumber');
-export const setComplimentaryPageData  = createAction<Partial<IPageRequest>>('Optimizer/setComplimentaryPagesNumber');
+export const setComplimentaryPagingResponse  = createAction<IPagingResponse>('Optimizer/SetComplimentaryRecordsNumber');
+export const setComplimentaryPageData  = createAction<Partial<IPageRequest>>('Optimizer/SetComplimentaryPageData');
 export const setComplimentarySort = createAction<IOrder<IComplimentaryServiceByQuery>>('Optimizer/SetComplimentarySort');
 export const setComplimentarySearchTerm = createAction<string>('Optimizer/SetComplimentarySearchTerm');
+
+export const changeComplimentaryPageData = (data: Partial<IPageRequest>): AppThunk => async (dispatch, getState) => {
+    await dispatch(setComplimentaryPageData(data));
+    const {selectedSC} = getState().serviceCenters;
+    if (selectedSC) await dispatch(loadComplimentary(selectedSC.id));
+}
 
 export const loadPackageById = (id: number): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {TextField} from "../../UI/TextField";
-import {Button, Input, InputAdornment, InputLabel} from "@material-ui/core";
+import {Button, InputAdornment} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {TComplimentary} from "../../../store/reducers/complimentary/types";
@@ -62,8 +62,8 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
 
     const [description, setDescription] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-    const [duration, setDuration] = useState<number>(0);
-    const [total, setTotal] = useState<number>(0);
+    const [duration, setDuration] = useState<number | string>('');
+    const [total, setTotal] = useState<number | string>('');
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const classes = useStyles();
@@ -82,20 +82,28 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
     }
 
     const onTotalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormIsChecked(false);
+        // const rgx = /^[0-9]*\.?[0-9]*$/;
+        // const rgx = /^(?:(?:[1-9]+?|[1-9]\d+?)|0)(\.(\d+)|)$/;
         setTotal(+e.target.value);
+        setFormIsChecked(false);
     }
 
     const onDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormIsChecked(false);
+       // const rgx = /^[0-9]*\.[0-9]*$/;
         setDuration(+e.target.value);
+        setFormIsChecked(false);
+        //const rgx = /^(?:(?:[1-9]+?|[1-9]\d+?)|0)(\.(\d+)|)$/;
+        // if (e.target.value.match(rgx)) {
+        //     setDuration(+e.target.value);
+        //     setFormIsChecked(false);
+        // }
     }
 
     const onCancel = (): void => {
         setFormIsChecked(false);
         setDescription('');
-        setTotal(0);
-        setDuration(0);
+        setTotal('');
+        setDuration('');
         onClose();
     }
 
@@ -105,8 +113,8 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
             const data: TComplimentary = {
                 serviceCenterId: selectedSC.id,
                 name: description,
-                price: total,
-                durationInHours: duration,
+                price: +total,
+                durationInHours: +duration,
             }
             editedItem
                 ? dispatch(editComplimentary(editedItem.id, data, () => onCancel()))
@@ -126,29 +134,38 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
                     fullWidth
                     style={{ marginBottom: 10 }}
                     value={description}/>
-                <InputLabel className={classes.label}>Duration</InputLabel>
-                <Input
-                    id="duration"
+                <TextField
+                    type="number"
+                    label='Duration'
+                    placeholder='Duration'
                     value={duration}
-                    type="number"
+                    inputProps={{min: 0}}
                     className={classes.halfWidth}
-                    onChange={onDurationChange}
-                    inputProps={{
-                        min: 0
-                    }}
-                />
-                <InputLabel className={classes.label}>Total</InputLabel>
-                <Input
-                    id="outlined-adornment-amount"
-                    value={total}
+                    onChange={onDurationChange}/>
+                <TextField
                     type="number"
+                    label='Total'
+                    placeholder='Total'
+                    inputProps={{min: 0}}
+                    value={total}
                     className={classes.halfWidth}
                     onChange={onTotalChange}
-                    inputProps={{
-                        min: 0
-                    }}
-                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                />
+                    startAdornment={<InputAdornment position="start">$</InputAdornment>}/>
+                {/*<InputLabel className={classes.label}>Duration</InputLabel>*/}
+                {/*<Input*/}
+                {/*    id="duration"*/}
+                {/*    value={duration}*/}
+                {/*    className={classes.halfWidth}*/}
+                {/*    onChange={onDurationChange}*/}
+                {/*/>*/}
+                {/*<InputLabel className={classes.label}>Total</InputLabel>*/}
+                {/*<Input*/}
+                {/*    id="outlined-adornment-amount"*/}
+                {/*    value={total}*/}
+                {/*    className={classes.halfWidth}*/}
+                {/*    onChange={onTotalChange}*/}
+                {/*    startAdornment={<InputAdornment position="start">$</InputAdornment>}*/}
+                {/*/>*/}
             </DialogContent>
             <DialogActions>
                 <div className={classes.wrapper}>
