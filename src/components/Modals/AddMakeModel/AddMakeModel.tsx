@@ -98,25 +98,28 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
 
     const onSave = () => {
         setFormIsChecked(true);
-        if (models.length && make) {
+        const modelsList: string[] = models.length ? models : model ? [model] : [];
+        if (make && modelsList.length) {
             if (isEditing && currentMake?.id) {
                 const data: IMake = {
                     name: make,
-                    models
+                    models: modelsList,
                 }
                 dispatch(updateMake(currentMake.id, data));
             } else {
                 if (selectedSC) {
                     const data: ICreateMake = {
                         name: make,
-                        models,
+                        models: modelsList,
                         serviceCenterId: selectedSC.id
                     }
                     dispatch(createMake(data))
                 }
             }
+            onCancel();
+        } else {
+            showError('Please enter make and models names')
         }
-        onCancel();
     }
 
     const addModel = () => {

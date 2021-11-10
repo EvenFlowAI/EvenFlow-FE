@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, Dispatch, SetStateAction} from 'react';
+import React, {ChangeEvent, useCallback, Dispatch, SetStateAction, useState} from 'react';
 import {autocompleteRender} from "../../../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
@@ -53,6 +53,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                                                        setFormIsChecked,
                                                        isApplyBusinessRules}) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
+    const [models, setModels] = useState<string[]>([]);
     const classes = useStyles();
 
     const getSortedMakes = (makesFromDB: IMake[]): string[] => {
@@ -75,7 +76,11 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
     const onMakeChange = (e: ChangeEvent<{}>, value: string[]) => {
         if (value.includes('Apply To All')) {
             setSelectedMakes(() => makesFromDB.map(item => item.name));
-        } else setSelectedMakes(value);
+            setModels(getSortedModels(makesFromDB));
+        } else {
+            setSelectedMakes(value);
+            setModels(getSortedModels(makesFromDB.filter(item => value.includes(item.name))));
+        }
     }
 
     const onModelChange = (e: ChangeEvent<{}>, value: string[]) => {
@@ -165,7 +170,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     style={{ marginBottom: 10 }}
                     classes={classes}
                     disabled={disabled}
-                    options={getSortedModels(makesFromDB)}
+                    options={models}
                     disableCloseOnSelect
                     renderOption={renderModelOption}
                     value={selectedModels}
