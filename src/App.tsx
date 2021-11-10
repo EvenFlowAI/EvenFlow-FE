@@ -46,7 +46,7 @@ const App = () => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
                 if (event.origin !=  'https://dev.evenflow.ai') return;
-                console.log(event.origin)
+                console.log(event.data)
                 createTracker(event.data?.instanceId);
             });
             setTimeout(createTracker, 3000);
