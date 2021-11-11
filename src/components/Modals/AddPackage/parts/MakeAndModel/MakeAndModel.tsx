@@ -60,7 +60,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
         const data: string[] = makesFromDB
             .map(make => make.name)
             .sort((a, b) => selectedMakes.includes(a) ? selectedMakes.includes(b) ? 0 : -1 : 1);
-        data.unshift('Apply To All');
+        if (data.length) data.unshift('Apply To All');
         return data;
     }
 
@@ -69,7 +69,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             .map(make => make.models)
             .flat(1)
             .sort((a, b) => selectedModels.includes(a) ? selectedModels.includes(b) ? 0 : -1 : 1);
-        data.unshift('Apply To All');
+        if (data.length) data.unshift('Apply To All');
         return data;
     }
 
@@ -132,10 +132,12 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
     }, [makesFromDB, selectedMakes]);
 
     const renderModelOption = useCallback((option: string) => {
-        const allModelsSelected = Boolean(!makesFromDB
+        const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+        const allModelsSelected = filteredMakes.length ? Boolean(!filteredMakes
             .map(item => item.models)
             .flat(1)
             .find(model => !selectedModels.includes(model)))
+            : false;
         const checked = selectedModels.includes(option) || allModelsSelected;
         return <React.Fragment>
             <Checkbox
