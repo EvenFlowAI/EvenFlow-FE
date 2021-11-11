@@ -29,7 +29,7 @@ const App = () => {
             }
             if (opt_clientId) options.clientId = opt_clientId
 
-            ReactGA.ga('create', 'TRACKER', 'auto', options)
+            ReactGA.ga('create', TRACKER, 'auto', options)
 
             // ReactGA.initialize(TRACKER, {
             //     debug: true,
