@@ -49,9 +49,9 @@ const App = () => {
             window.addEventListener('message', function(event) {
                 // if (event.origin !=  'https://dev.evenflow.ai') return;
                 console.log(event)
-                createTracker(event.data);
+                // createTracker(event.data);
             });
-            setTimeout(createTracker, 3000);
+            // setTimeout(createTracker, 3000);
         }
     }, [trackerCreated]);
 
