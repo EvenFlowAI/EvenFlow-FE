@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {TextField} from "../../UI/TextField";
 import Model from "../AddMakeModel/Model";
 import {DialogProps} from "../types";
-import {Button, IconButton} from "@material-ui/core";
+import {Button, Divider, IconButton} from "@material-ui/core";
 import {AddCircleOutline} from "@material-ui/icons";
 import {useStyles} from "../AddMakeModel/AddMakeModel";
 import {useDispatch, useSelector} from "react-redux";
@@ -90,6 +90,7 @@ const AddMileage: React.FC<TAddMakeModalProps> = (props) => {
                     </IconButton>
                 </div>
             </DialogContent>
+            <Divider style={{ margin: 0 }}/>
             <DialogActions>
                 <div className={classes.wrapper}>
                     <div className={classes.buttonsWrapper}>
