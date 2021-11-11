@@ -1,34 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../../../utils/hooks";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
 import {Table} from "../../../../UI/Table";
 import AddMileage from "../../../../Modals/AddMileage/AddMileage";
 import {IOrder} from "../../../../../types/types";
-
-type TMileage = {
-    value: string;
-    id: number;
-}
+import {IMileage} from "../../../../../store/reducers/vehicleDetails/types";
+import {loadMileage, removeMileage} from "../../../../../store/reducers/vehicleDetails/actions";
+import {RootState} from "../../../../../store/rootReducer";
 
 const RowData = [
-    {val: (el: TMileage) => el.value, header: "Estimated Mileage", orderId: "value"},
+    {val: (el: IMileage) => `${el.value}`, header: "Estimated Mileage", orderId: "value"},
 ]
 
-const mockMileage: TMileage[] = [
-    {value: '3000', id: 1},
-    {value: '5000', id: 2},
-    {value: '7000', id: 3},
-    {value: '10000', id: 4},
-    {value: '13000', id: 5},
-    {value: '16000', id: 6},
-];
-
 const MileageTable = () => {
+    const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [currentMileage, setCurrentMileage] = useState<TMileage | null>(null);
-    const [mileages, setMileages] = useState<TMileage[]>(mockMileage);
+    const [currentMileage, setCurrentMileage] = useState<IMileage | null>(null);
+    const [mileages, setMileages] = useState<IMileage[]>([]);
     const [isAscending, setIsAscending] = useState<boolean>(true)
     const { selectedSC } = useSCs();
     const showMessage = useMessage();
@@ -37,12 +27,22 @@ const MileageTable = () => {
     const {askConfirm} = useConfirm();
     const {onOpen, onClose, isOpen} = useModal();
 
-    const openMenu = (el: TMileage) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadMileage(selectedSC.id));
+        }
+    }, [selectedSC])
+
+    useEffect(() => {
+        setMileages(mileage);
+    }, [mileage])
+
+    const openMenu = (el: IMileage) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setCurrentMileage(el)
         setAnchorEl(e.currentTarget);
     }
 
-    const tableActions = (el: TMileage) => {
+    const tableActions = (el: IMileage) => {
         return <IconButton onClick={openMenu(el)}>
             <MoreHoriz />
         </IconButton>;
@@ -50,9 +50,11 @@ const MileageTable = () => {
 
     const handleRemove = async () => {
         try {
-            // TODO remove request
-            setCurrentMileage(null);
-            showMessage("Removed");
+            if (currentMileage && selectedSC) {
+                dispatch(removeMileage(currentMileage.id, selectedSC.id));
+                setCurrentMileage(null);
+                showMessage("Removed");
+            }
         } catch (e) {
             showError(e);
         }
@@ -69,11 +71,11 @@ const MileageTable = () => {
         }
     }
 
-    const handleSort = (d: IOrder<TMileage>) => async () => {
+    const handleSort = (d: IOrder<IMileage>) => async () => {
         setIsAscending(d.isAscending);
         setMileages(prev => d.isAscending
-            ? prev.sort((a, b) => +a.value - +b.value)
-            : prev.sort((a, b) => +b.value - +a.value))
+            ? [...prev].sort((a, b) => a.value - b.value)
+            : [...prev].sort((a, b) => b.value - a.value))
     }
 
     return (

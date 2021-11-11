@@ -177,7 +177,8 @@ type ApiRoutes = {
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
-    Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "Remove" | "Update" | "Create", TApiRoute>,
+    Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "RemoveMake" | "UpdateMake" | "CreateMake"
+        | "GetMileage" | "RemoveMileage" | "CreateMileage", TApiRoute>,
 }
 
 type TOptions = {
@@ -410,9 +411,12 @@ export class Api {
             GetByQuery: {route: "/vehicles/by-query", method: "post"},
             Models: {route: "/vehicles/models", method: "get"},
             Makes: {route: "/vehicles/makes", method: "get"},
-            Remove: {route: "/vehicles/makes/{id}", method: "delete"},
-            Update: {route: "/vehicles/makes/{id}", method: "put"},
-            Create: {route: "/vehicles/makes", method: "post"},
+            RemoveMake: {route: "/vehicles/makes/{id}", method: "delete"},
+            UpdateMake: {route: "/vehicles/makes/{id}", method: "put"},
+            CreateMake: {route: "/vehicles/makes", method: "post"},
+            GetMileage: {route: "/vehicles/mileage", method: "get"},
+            RemoveMileage: {route: "/vehicles/mileage/{id}", method: "delete"},
+            CreateMileage: {route: "/vehicles/mileage", method: "post"},
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {
