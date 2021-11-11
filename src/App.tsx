@@ -49,7 +49,7 @@ const App = () => {
             window.addEventListener('message', function(event) {
                 // if (event.origin !=  'https://dev.evenflow.ai') return;
                 console.log(event)
-                createTracker();
+                createTracker(event.data);
             });
             setTimeout(createTracker, 3000);
         }
