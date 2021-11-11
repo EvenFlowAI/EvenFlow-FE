@@ -48,6 +48,7 @@ const App = () => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
                 console.log(event.origin, event.data);
+                console.log(event);
                 if (event.origin !=  'https://testifraime.herokuapp.com') return;
                 if (typeof event.data === 'string') createTracker(event.data);
             });
