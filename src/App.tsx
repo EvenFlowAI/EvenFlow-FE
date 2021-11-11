@@ -47,7 +47,7 @@ const App = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                if (event.origin !=  'https://dev.evenflow.ai') return;
+                // if (event.origin !=  'https://dev.evenflow.ai') return;
                 console.log(event)
                 createTracker();
             });

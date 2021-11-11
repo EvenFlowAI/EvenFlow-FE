@@ -82,12 +82,19 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
         dispatch(setCustomerLoadedData(c));
         dispatch(setVehicle(getBlankVehicle()));
         saveCustomerCache(c);
-        ReactGA.event({
-            category: 'User',
-            action: 'Enters Page',
-            label: `As New User`,
-            nonInteraction: true
+        // todo uncomment
+        ReactGA.ga('send', {
+            hitType: 'event',
+            eventCategory: 'User',
+            eventAction: 'Enters Page',
+            eventLabel: 'As New User'
         });
+        // ReactGA.event({
+        //     category: 'User',
+        //     action: 'Enters Page',
+        //     label: `As New User`,
+        //     nonInteraction: true
+        // });
         onComplete();
     }
 
