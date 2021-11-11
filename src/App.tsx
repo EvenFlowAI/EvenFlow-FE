@@ -14,7 +14,8 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA, {GaOptions} from 'react-ga';
-import {TRACKER} from "./config/config";
+
+const prodParentLinks = ['https://www.riverviewford.com/'];
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
@@ -30,7 +31,7 @@ const App = () => {
             }
             if (opt_clientId) options.clientId = opt_clientId
 
-            ReactGA.initialize(TRACKER, {
+            ReactGA.initialize("UA-210743216-3", {
                 debug: true,
                 titleCase: false,
                 gaOptions: options,
@@ -46,7 +47,7 @@ const App = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                if (event.origin !=  'https://testifraime.herokuapp.com') return;
+                if (!prodParentLinks.includes(event.origin)) return;
                 if (typeof event.data === 'string') createTracker(event.data);
             });
             setTimeout(createTracker, 3000);
