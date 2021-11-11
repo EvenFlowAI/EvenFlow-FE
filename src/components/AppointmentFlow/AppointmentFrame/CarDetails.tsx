@@ -16,7 +16,7 @@ import {Api} from "../../../config/requests";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
-import {mileageOptions} from './MaintenanceDetails';
+import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -40,17 +40,6 @@ const year = moment.utc().year();
 const YEARS = 20;
 const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
-const selects: TSelect[] = [
-    {label: "VIN", name: "vin", noVehicle: true, isVin: true},
-    {label: "Make", name: "make", options: 'make', noVehicle: true},
-    {label: "Year", name: "year", options: yearOptions, noVehicle: true},
-    {label: "Model", name: "model", options: "model", noVehicle: true},
-    {label: "Estimated Mileage", name: "mileage", options: mileageOptions},
-    // {label: "Transmission", name: "transmission"},
-    // {label: "Drive Type", name: "driveType"},
-    // {label: "Engine Type", name: "engineType"},
-];
-
 type TOptionsState = {[s: string]: string[]};
 const blankOptions: TOptionsState = {};
 
@@ -67,6 +56,8 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [models, setModels] = useState<string[] | []>([]);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
     const theme = useTheme();
@@ -76,6 +67,18 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const isNewVehicleView = useMemo(() => {
         return !Boolean(customerLoadedData?.vehicles.find(v => v.vin === selectedVehicle?.vin));
     }, [selectedVehicle, customerLoadedData]);
+
+    const selects: TSelect[] = [
+        {label: "VIN", name: "vin", noVehicle: true, isVin: true},
+        {label: "Make", name: "make", options: 'make', noVehicle: true},
+        {label: "Year", name: "year", options: yearOptions, noVehicle: true},
+        {label: "Model", name: "model", options: "model", noVehicle: true},
+        {label: "Estimated Mileage", name: "mileage", options: mileage.map(item => item.value.toString())},
+        // {label: "Transmission", name: "transmission"},
+        // {label: "Drive Type", name: "driveType"},
+        // {label: "Engine Type", name: "engineType"},
+    ];
+
 
     useEffect(() => {
         if (models.length) {
@@ -106,6 +109,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         }).catch(() => {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
+        scProfile && dispatch(loadMileage(scProfile.id));
     }, [id]);
 
     const handleChange = (name: keyof IVehicle) =>
