@@ -79,7 +79,9 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             setModels(getSortedModels(makesFromDB));
         } else {
             setSelectedMakes(value);
-            setModels(getSortedModels(makesFromDB.filter(item => value.includes(item.name))));
+            const filteredMakes = makesFromDB.filter(item => value.includes(item.name))
+            setModels(getSortedModels(filteredMakes));
+            setSelectedModels(prev => prev.filter(item => filteredMakes.find(make => make.models.includes(item))))
         }
     }
 
