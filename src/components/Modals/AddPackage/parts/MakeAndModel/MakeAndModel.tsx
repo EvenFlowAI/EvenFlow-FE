@@ -87,7 +87,8 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
 
     const onModelChange = (e: ChangeEvent<{}>, value: string[]) => {
         if (value.includes('Apply To All')) {
-            setSelectedModels(() => makesFromDB.map(item => item.models).flat(1));
+            const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+            setSelectedModels(() => filteredMakes.map(item => item.models).flat(1));
         } else setSelectedModels(value);
     }
 

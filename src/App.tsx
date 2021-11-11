@@ -30,8 +30,6 @@ const App = () => {
             }
             if (opt_clientId) options.clientId = opt_clientId
 
-            // ReactGA.ga('create', TRACKER, 'auto', options)
-
             ReactGA.initialize(TRACKER, {
                 debug: true,
                 titleCase: false,
@@ -48,12 +46,10 @@ const App = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                console.log(event.origin, event.data);
-                console.log(event);
                 if (event.origin !=  'https://testifraime.herokuapp.com') return;
                 if (typeof event.data === 'string') createTracker(event.data);
             });
-            // setTimeout(createTracker, 3000);
+            setTimeout(createTracker, 3000);
         }
     }, [trackerCreated]);
 
