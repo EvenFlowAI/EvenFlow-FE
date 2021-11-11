@@ -20,6 +20,7 @@ import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {IMake} from "../../../store/reducers/appointment/types";
+import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -39,37 +40,9 @@ type TSelect = {
     allOverride?: boolean;
 };
 
-
-export const mileageOptions: string[] = [
-    "3000",
-    "5000",
-    "10000",
-    "15000",
-    "25000",
-    "30000",
-    "40000",
-    "50000",
-    "60000",
-    "70000",
-    "80000",
-    "90000",
-    "100000",
-];
-
 const year = moment.utc().year();
 const YEARS = 20;
 export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
-
-const selects: TSelect[] = [
-    {label: "VIN", name: "vin", noVehicle: true},
-    {label: "Make", name: "make", options: 'make'},
-    {label: "Year", name: "year", options: yearOptions},
-    {label: "Model", name: "model", options: "model",},
-    // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
-    // {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
-    // {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
-    {label: "Estimated mileage", name:"serviceInterval", options: mileageOptions},
-];
 
 const requiredFields: TKey[] = [
     "model", "year", "make", "serviceInterval"
@@ -89,8 +62,21 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
+    const selects: TSelect[] = [
+        {label: "VIN", name: "vin", noVehicle: true},
+        {label: "Make", name: "make", options: 'make'},
+        {label: "Year", name: "year", options: yearOptions},
+        {label: "Model", name: "model", options: "model",},
+        // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
+        // {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
+        // {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
+        {label: "Estimated mileage", name:"serviceInterval", options: mileage.map(item => item.value.toString())},
+    ];
 
     const showError = useException();
 
@@ -138,7 +124,9 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }).catch(() => {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         })
-    }, [id]);
+
+        scProfile && dispatch(loadMileage(scProfile.id));
+    }, [id, scProfile]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (isXS) e.preventDefault();

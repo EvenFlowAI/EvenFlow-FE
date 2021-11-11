@@ -72,22 +72,22 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell className={classes.headerCell}>
+                    <TableCell className={classes.headerCell} key="1">
                         Included in Package
                     </TableCell>
-                    <TableCell className={classes.headerCell} align="center" width={110}>
+                    <TableCell className={classes.headerCell} align="center" width={110} key="2">
                         Labor Hours
                     </TableCell>
-                    <TableCell className={classes.headerCell} align="center" width={110}>
+                    <TableCell className={classes.headerCell} align="center" width={110} key="3">
                         Labor Amount
                     </TableCell>
-                    <TableCell className={classes.headerCell} align="center" width={110}>
+                    <TableCell className={classes.headerCell} align="center" width={110} key="4">
                         Parts Amount
                     </TableCell>
-                    <TableCell className={classes.headerCell} align="center" width={110}>
+                    <TableCell className={classes.headerCell} align="center" width={110} key="5">
                        Total
                     </TableCell>
-                    <TableCell className={classes.emptyCell} width={16}/>
+                    <TableCell className={classes.emptyCell} width={16} key="6"/>
 
                     {props.packageData?.options.map((option: IPackageOptionDetailed) => (
                         <TableCell align='center' className={optionsClasses.headerCell} key={option.type}>
@@ -106,15 +106,15 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                 </TableRow>
             </TableHead>
             <TableBody>
-                <TableRow className={classes.emptyRow}/>
+                <TableRow className={classes.emptyRow} key="empty"/>
                 {props.packageData?.serviceRequests.map((request, rowIndex) => {
-                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey}>
-                        <TableCell className={classes.requestCell}>{request.description}</TableCell>
-                        <TableCell className={classes.requestCell} align="center">{request.durationInHours}</TableCell>
-                        <TableCell className={classes.requestCell} align="center">${request.laborAmount}</TableCell>
-                        <TableCell className={classes.requestCell} align="center">${request.partsAmount}</TableCell>
-                        <TableCell className={classes.requestCell} align="center">${request.price}</TableCell>
-                        <TableCell className={classes.emptyCell} width={16}/>
+                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.code}>
+                        <TableCell className={classes.requestCell} key="1">{request.description}</TableCell>
+                        <TableCell className={classes.requestCell} key="2" align="center">{request.durationInHours}</TableCell>
+                        <TableCell className={classes.requestCell} key="3" align="center">${request.laborAmount}</TableCell>
+                        <TableCell className={classes.requestCell} key="4" align="center">${request.partsAmount}</TableCell>
+                        <TableCell className={classes.requestCell} key="5" align="center">${request.price}</TableCell>
+                        <TableCell className={classes.emptyCell} width={16} key="6"/>
 
                         {props.data.find(item => item.requestId === request.id)?.cellData
                             .sort((a, b) => a.optionType - b.optionType)
