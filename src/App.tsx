@@ -24,18 +24,18 @@ const App = () => {
         if (!trackerCreated) {
             const options: GaOptions = {
                 siteSpeedSampleRate: 100,
-                // cookieDomain: 'auto',
+                cookieDomain: 'auto',
                 allowLinker: true,
             }
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.ga('create', 'TRACKER', 'auto', options)
 
-            ReactGA.initialize(TRACKER, {
-                debug: true,
-                titleCase: false,
-                gaOptions: options,
-            });
+            // ReactGA.initialize(TRACKER, {
+            //     debug: true,
+            //     titleCase: false,
+            //     gaOptions: options,
+            // });
             setTrackerCreated(true);
         }
     }
