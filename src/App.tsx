@@ -15,7 +15,9 @@ import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentC
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA, {GaOptions} from 'react-ga';
 
-const prodParentLinks = ['https://www.riverviewford.com/'];
+// todo add new parent links while go live with new dealerships
+const testingDomain = 'https://testifraime.herokuapp.com/';
+const prodParentLinks = ['https://www.riverviewford.com/', testingDomain];
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
