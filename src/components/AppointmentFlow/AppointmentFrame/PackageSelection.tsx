@@ -300,7 +300,6 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
             category: 'User',
             action: 'Went back',
             label: 'From Selection Package Page',
-            nonInteraction: true
         })
         onBack();
     }
