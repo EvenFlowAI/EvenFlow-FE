@@ -29,13 +29,13 @@ const App = () => {
             }
             if (opt_clientId) options.clientId = opt_clientId
 
-            ReactGA.ga('create', TRACKER, 'auto', options)
+            // ReactGA.ga('create', TRACKER, 'auto', options)
 
-            // ReactGA.initialize(TRACKER, {
-            //     debug: true,
-            //     titleCase: false,
-            //     gaOptions: options,
-            // });
+            ReactGA.initialize(TRACKER, {
+                debug: true,
+                titleCase: false,
+                gaOptions: options,
+            });
             setTrackerCreated(true);
         }
     }
@@ -49,6 +49,7 @@ const App = () => {
             window.addEventListener('message', function(event) {
                 if (event.origin !=  'https://dev.evenflow.ai') return;
                 if (typeof event.data === 'string') createTracker(event.data);
+                console.log(event.data);
             });
             // setTimeout(createTracker, 3000);
         }
