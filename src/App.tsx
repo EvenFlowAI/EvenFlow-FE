@@ -17,13 +17,18 @@ import ReactGA, {GaOptions} from 'react-ga';
 
 // todo add new parent links while go live with new dealerships
 const testingDomain = 'https://testifraime.herokuapp.com/';
-const prodParentLinks = ['https://www.riverviewford.com/', testingDomain];
+const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', testingDomain];
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
     const [trackerCreated, setTrackerCreated] = useState(false);
 
     function createTracker(opt_clientId = '') {
+        const TRACKER = process.env.REACT_APP_ENV === "stage"
+            ? "UA-210743216-4"
+            : process.env.REACT_APP_ENV === "production"
+                ? "UA-210743216-3"
+                : "UA-210743216-5";
         if (!trackerCreated) {
             const options: GaOptions = {
                 siteSpeedSampleRate: 100,
@@ -33,7 +38,7 @@ const App = () => {
             }
             if (opt_clientId) options.clientId = opt_clientId
 
-            ReactGA.initialize("UA-210743216-3", {
+            ReactGA.initialize(TRACKER, {
                 debug: true,
                 titleCase: false,
                 gaOptions: options,
