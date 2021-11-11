@@ -26,6 +26,7 @@ const App = () => {
                 siteSpeedSampleRate: 100,
                 cookieDomain: 'auto',
                 allowLinker: true,
+                storage: 'none',
             }
             if (opt_clientId) options.clientId = opt_clientId
 
