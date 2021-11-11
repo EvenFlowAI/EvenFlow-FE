@@ -15,7 +15,7 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
     const [link, frame] = useMemo(() => {
         const encoded = encodeSCID(selectedSC?.id??0);
         const url = window.location.origin + Routes.EndUser.Welcome + "/" + encoded + "?frame=1";
-        const f: string = `<iframe class="booking-frame" src="${url}" width="100%" height="100%" style="border: none;" frameborder="0"></iframe>`;
+        const f: string = `<iframe id="evenflow-frame" class="booking-frame" src="${url}" width="100%" height="100%" style="border: none;" frameborder="0"></iframe>`;
         return [
             url,
             f
