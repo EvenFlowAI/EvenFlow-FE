@@ -20,14 +20,16 @@ const App = () => {
     const notificationsRef = useRef<ProviderContext>();
     const [trackerCreated, setTrackerCreated] = useState(false);
 
-    function createTracker(opt_clientId: string | undefined) {
+    function createTracker(opt_clientId = '') {
         if (!trackerCreated) {
             const options: GaOptions = {
                 siteSpeedSampleRate: 100,
-                cookieDomain: 'auto',
+                // cookieDomain: 'auto',
                 allowLinker: true,
             }
             if (opt_clientId) options.clientId = opt_clientId
+
+            ReactGA.ga('create', 'TRACKER', 'auto', options)
 
             ReactGA.initialize(TRACKER, {
                 debug: true,
@@ -39,7 +41,7 @@ const App = () => {
     }
 
     useEffect(() => {
-        trackerCreated && ReactGA.pageview(window.location.pathname + window.location.search);
+        trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
     }, [trackerCreated])
 
     useEffect(() => {
@@ -47,7 +49,7 @@ const App = () => {
             window.addEventListener('message', function(event) {
                 if (event.origin !=  'https://dev.evenflow.ai') return;
                 console.log(event)
-                createTracker(event.data?.instanceId);
+                createTracker();
             });
             setTimeout(createTracker, 3000);
         }
