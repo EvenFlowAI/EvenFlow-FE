@@ -70,12 +70,12 @@ export const useStyles = makeStyles(() => ({
 
 const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
     const {onClose, isEditing} = props;
-    const { currentMake } = useSelector((state: RootState) => state.vehicleDetails);
+    const { currentMake, makes } = useSelector((state: RootState) => state.vehicleDetails);
     const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [make, setMake] = useState<string>('');
     const [models, setModels] = useState<string[]>([]);
-    const [model, setModel] = useState<string>('');
+    const [newModel, setNewModel] = useState<string>('');
     const classes = useStyles();
     const showError = useException();
     const dispatch = useDispatch();
@@ -91,14 +91,14 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
         currentMake && dispatch(setCurrentMake(null));
         setModels([]);
         setMake('');
-        setModel('');
+        setNewModel('');
         setFormIsChecked(false);
         onClose();
     }
 
     const onSave = () => {
         setFormIsChecked(true);
-        const modelsList: string[] = models.length ? models : model ? [model] : [];
+        const modelsList: string[] = newModel ? [...models, newModel] : models;
         if (make && modelsList.length) {
             if (isEditing && currentMake?.id) {
                 const data: IMake = {
@@ -108,6 +108,9 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
                 dispatch(updateMake(currentMake.id, data));
             } else {
                 if (selectedSC) {
+                    if (makes.find(item => item.name.toUpperCase() === make.toUpperCase())) {
+                        return showError('This make already exists')
+                    }
                     const data: ICreateMake = {
                         name: make,
                         models: modelsList,
@@ -123,9 +126,9 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
     }
 
     const addModel = () => {
-        if (!models.includes(model)) {
-            setModels(prev => [...prev, model]);
-            setModel('');
+        if (!models.map(item => item.toUpperCase()).includes(newModel.toUpperCase())) {
+            setModels(prev => [...prev, newModel]);
+            setNewModel('');
         } else {
             showError('This Model has been added already')
         }
@@ -137,7 +140,7 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
     }
     const onModelChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setFormIsChecked(false);
-        setModel(e.target.value);
+        setNewModel(e.target.value);
     }
 
     const onModelDelete = (model: string) => {
@@ -156,7 +159,7 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
                         fullWidth
                         label='Make'
                         placeholder='Type Make'
-                        error={!make && formIsChecked}
+                        error={formIsChecked && (!make || !!makes.find(item => item.name.toUpperCase() === make.toUpperCase()))}
                         onChange={onMakeChange}
                         value={make}/>
                 {!!models.length && <div className={classes.modelsWrapper}>
@@ -168,9 +171,9 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
                         fullWidth
                         label='Model'
                         placeholder='Type Model'
-                        error={!models.length && formIsChecked}
+                        error={formIsChecked && (!models.length || !newModel)}
                         onChange={onModelChange}
-                        value={model}/>
+                        value={newModel}/>
                     </div>
                     <IconButton onClick={addModel} className={classes.iconPlus}>
                         <AddCircleOutline/>
