@@ -21,6 +21,8 @@ type TForm = {
     skillLevelOfTechnicians: number;
     invoiceAmount: string;
     warrantyInvoiceAmount: string;
+    partsUnitCost: string;
+    numberOfParts: string;
 }
 const initialForm: TForm = {
     description: "",
@@ -29,6 +31,8 @@ const initialForm: TForm = {
     skillLevelOfTechnicians: 0,
     invoiceAmount: "",
     warrantyInvoiceAmount: "",
+    partsUnitCost: "",
+    numberOfParts: "",
 };
 export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
@@ -45,7 +49,8 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
 
     useEffect(() => {
         if (props.open && payload?.serviceRequestOverride) {
-            const override = payload.serviceRequestOverride
+            const override = payload.serviceRequestOverride;
+            const request = payload.serviceRequest;
             setForm({
                 ...initialForm,
                 description: override?.description || "",
@@ -53,7 +58,9 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                 durationInHours: override?.durationInHours?.toString() || "",
                 invoiceAmount: override?.invoiceAmount?.toString() || "",
                 warrantyInvoiceAmount: override?.warrantyInvoiceAmount?.toString() || "",
-                skillLevelOfTechnicians: override?.skillLevelOfTechnicians || 0
+                skillLevelOfTechnicians: override?.skillLevelOfTechnicians || 0,
+                partsUnitCost: override?.partsUnitCost?.toString() ?? request?.partsUnitCost?.toString() ?? "",
+                numberOfParts: override?.numberOfParts?.toString() ?? request?.numberOfParts?.toString() ?? "",
             })
         }
     }, [payload, props.open])
@@ -184,6 +191,35 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         autoComplete="invoice-amount"
                         value={form.invoiceAmount}
                         placeholder={payload ? String(payload.serviceRequest.invoiceAmount) : ""}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{min: 1}}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Parts Unit Cost"
+                        startAdornment="$"
+                        name="partsUnitCost"
+                        id="partsUnitCost"
+                        autoComplete="parts-unit-cost"
+                        value={form.partsUnitCost}
+                        placeholder={payload?.serviceRequestOverride?.partsUnitCost?.toString() ||  payload?.serviceRequest?.partsUnitCost?.toString() || ""}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{min: 1}}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Number Of Parts"
+                        name="numberOfParts"
+                        id="numberOfParts"
+                        autoComplete="number-of-parts"
+                        value={form.numberOfParts}
+                        placeholder={payload?.serviceRequestOverride?.numberOfParts?.toString() ||  payload?.serviceRequest?.numberOfParts?.toString() || ""}
                         onChange={handleChange}
                         type="number"
                         inputProps={{min: 1}}

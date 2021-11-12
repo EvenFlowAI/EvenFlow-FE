@@ -22,6 +22,8 @@ type TForm = {
     skillLevelOfTechnicians: number;
     invoiceAmount: string;
     warrantyInvoiceAmount: string;
+    partsUnitCost: string;
+    numberOfParts: string;
 }
 const initialForm: TForm = {
     code: "",
@@ -31,6 +33,8 @@ const initialForm: TForm = {
     skillLevelOfTechnicians: 0,
     invoiceAmount: "",
     warrantyInvoiceAmount: "",
+    partsUnitCost: "",
+    numberOfParts: "",
 };
 export const CreateOPsCode: React.FC<DialogProps<ISRAdmin>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
@@ -49,7 +53,9 @@ export const CreateOPsCode: React.FC<DialogProps<ISRAdmin>> = ({onAction, payloa
                     durationInHours: String(payload.durationInHours),
                     countOfTechnicians: String(payload.countOfTechnicians),
                     warrantyInvoiceAmount: String(payload.warrantyInvoiceAmount),
-                    invoiceAmount: String(payload.invoiceAmount)
+                    invoiceAmount: String(payload.invoiceAmount),
+                    partsUnitCost: String(payload.partsUnitCost),
+                    numberOfParts: String(payload.numberOfParts),
                 });
             } else {
                 setForm(initialForm);
@@ -72,7 +78,9 @@ export const CreateOPsCode: React.FC<DialogProps<ISRAdmin>> = ({onAction, payloa
                 countOfTechnicians: Number(f.countOfTechnicians),
                 durationInHours: Number(f.durationInHours),
                 invoiceAmount: Number(f.invoiceAmount),
-                warrantyInvoiceAmount: Number(f.warrantyInvoiceAmount)
+                warrantyInvoiceAmount: Number(f.warrantyInvoiceAmount),
+                partsUnitCost: Number(f.partsUnitCost),
+                numberOfParts: Number(f.numberOfParts),
             };
             if (!payload) {
                 await dispatch(createAdminServiceRequest(data));
@@ -179,6 +187,33 @@ export const CreateOPsCode: React.FC<DialogProps<ISRAdmin>> = ({onAction, payloa
                         id="invoiceAmount"
                         autoComplete="invoice-amount"
                         value={form.invoiceAmount}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{min: 1}}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Parts Unit Cost"
+                        startAdornment="$"
+                        name="partsUnitCost"
+                        id="partsUnitCost"
+                        autoComplete="parts-unit-cost"
+                        value={form.partsUnitCost}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{min: 1}}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Number Of Parts"
+                        name="numberOfParts"
+                        id="numberOfParts"
+                        autoComplete="number-of-parts"
+                        value={form.numberOfParts}
                         onChange={handleChange}
                         type="number"
                         inputProps={{min: 1}}
