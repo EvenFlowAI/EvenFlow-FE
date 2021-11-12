@@ -26,6 +26,7 @@ import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 
+
 type TModalProps = DialogProps & {
     isEditing?: boolean;
 };
