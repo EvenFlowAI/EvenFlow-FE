@@ -6,6 +6,7 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../../Optimizer/utils";
 import {OPsCodesPage} from "../../Optimizer/OPsCodes/OPsCodesPage";
 import {MaintenancePackages} from "../../Optimizer/MaintenancePackages/MaintenancePackages";
+import ComplimentaryServices from "../ComplimentaryServices/ComplimentaryServices";
 
 export const ServiceRequests = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -31,6 +32,9 @@ export const ServiceRequests = () => {
         </TabPanel>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="1">
             <MaintenancePackages/>
+        </TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="2" >
+            <ComplimentaryServices/>
         </TabPanel>
     </TabContext>;
 }

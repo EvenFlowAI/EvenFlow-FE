@@ -29,6 +29,7 @@ import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as ServiceCodes} from "../../../assets/img/serviceOpsCodes.svg";
 import {ReactComponent as Transportation} from "../../../assets/img/transportation_options.svg";
 import {ReactComponent as Consultant} from "../../../assets/img/consultant_configuration.svg";
+import {ReactComponent as Vehicle} from "../../../assets/img/vehicleDetails.svg";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -39,7 +40,8 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "space-between",
         alignItems: "center",
         position: "relative",
-        borderRadius: 0
+        borderRadius: 0,
+        gap: '8px',
     },
     container: {
         width: "100%",
@@ -146,6 +148,7 @@ const overallData: TDataMap[] = [
 export const AdminDashboard: React.FC = () => {
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
+    const history = useHistory();
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
     }, [currentUser]);
@@ -214,6 +217,10 @@ export const AdminDashboard: React.FC = () => {
         pods: analytics.countOfPods
     }));
 
+    const onOpenVehicle = (): void => {
+        history.push(Routes.Admin.VehicleDetails);
+    }
+
     const items: TItem[] = [
         {label: "Address", icon: <PlaceOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenAddress},
         {label: "Hours of operation", icon: <Alarm htmlColor='rgb(94, 95, 102)'/>, action: onOpenHOO},
@@ -226,6 +233,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Transportation Options", icon: <Transportation />, action: onOpenTransOptions},
         {label: "Service Ops Codes Mapping", icon: <ServiceCodes />, action: onOpenServicesOps},
         {label: "Consultant Configuration", icon: <Consultant />, action: onOpenConsultant},
+        {label: "Vehicle Detail Options", icon: <Vehicle />, action: onOpenVehicle},
     ];
 
     const classes = useStyles();

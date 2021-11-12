@@ -8,7 +8,7 @@ import {IconButton, Button, Divider} from "@material-ui/core";
 import OpsCode from "./parts/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {mileageOptions, yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 import {useException, useModal, useSCs} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
@@ -24,6 +24,7 @@ import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../store/red
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
+import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 
 type TModalProps = DialogProps & {
     isEditing?: boolean;
@@ -205,6 +206,7 @@ const initialValues = {
 const AddPackage: React.FC<TModalProps> = (props) => {
     const { packages, currentPackage } = useSelector((state: RootState) => state.packages);
     const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
+    const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
     const { selectedSC } = useSCs();
 
     const [packageName, setPackageName] = useState<string>('');
@@ -230,6 +232,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id));
+            dispatch(loadMileage(selectedSC.id))
             props.isEditing && dispatch(loadAssignedServiceRequests(selectedSC.id));
         }
     }, [dispatch, selectedSC, props.isEditing])
@@ -372,7 +375,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                     if (props.isEditing) data.businessRules = currentPackage?.businessRules;
                 }
                 props.isEditing && currentPackage
-                    ? dispatch(updatePackage(currentPackage.id, data, onCancel))
+                    ? dispatch(updatePackage(currentPackage.id, data, selectedSC.id, onCancel))
                     : dispatch(createPackage(selectedSC.id, data, onCancel))
             }
         } else setFormIsChecked(true);
@@ -477,7 +480,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                 <Autocomplete
                                     disabled={!isApplyBusinessRules}
                                     classes={autoCompleteStyles}
-                                    options={mileageOptions}
+                                    options={mileage.map(item => item.value.toString())}
                                     disableCloseOnSelect
                                     disableClearable
                                     getOptionSelected={(option, value) => option === value}
@@ -492,7 +495,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                 <Autocomplete
                                     disabled={!isApplyBusinessRules}
                                     classes={autoCompleteStyles}
-                                    options={mileageOptions}
+                                    options={mileage.map(item => item.value.toString())}
                                     disableCloseOnSelect
                                     disableClearable
                                     getOptionSelected={(option, value) => option === value}

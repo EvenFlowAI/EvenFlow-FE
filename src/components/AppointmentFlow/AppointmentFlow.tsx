@@ -14,7 +14,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadAppointmentReducer, saveAppointmentReducer} from "../../store/reducers/appointment/actions";
 import {RootState} from "../../store/rootReducer";
 
-
 const useStyles = makeStyles(theme => ({
     container: {
         padding: "40px 0",

@@ -1,17 +1,15 @@
 import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {TEditedRequest} from "../../Optimizer/MaintenancePackages/PackageAccordion/PackageAccordion";
 import {IPackageById, IPackageOptionDetailed, TExtendedService} from "../../../api/types";
 import {TableContainer, TableRow, Table, TableHead, TableCell, TableBody, IconButton, Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined, Close} from "@material-ui/icons";
 
 type TSaveRequestModalProps = DialogProps & {
-    editedRequests: TEditedRequest[];
     packageData: IPackageById | null;
     setPackageData: Dispatch<SetStateAction<IPackageById | null>>;
-    onSave: () => void;
+    onSave: (packageData: IPackageById) => void;
 };
 
 const baseCellStyles = {
@@ -132,11 +130,11 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
     useEffect(() => {
         setNewRequests(prev => {
             if (temporaryData) {
-                return temporaryData.serviceRequests.filter(item => !!props.editedRequests.find(el => el.requestId === item.id));
+                return temporaryData.serviceRequests;
             }
             return prev;
         })
-    }, [temporaryData, props.editedRequests])
+    }, [temporaryData])
 
     const getCellClass = (cellIndex: number, rowIndex: number) => {
         if (cellIndex === 0) {
@@ -204,8 +202,10 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
     }
 
     const onSave = async () => {
-        await props.setPackageData(temporaryData);
-        await props.onSave();
+        if (temporaryData) {
+            await props.setPackageData(temporaryData);
+            await props.onSave(temporaryData);
+        }
     }
 
     return (
@@ -217,36 +217,34 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.headerCell}>
+                                    <TableCell className={classes.headerCell} key="first">
                                         Service Request
                                     </TableCell>
                                     {temporaryData?.options.map(option => (
-                                        <TableCell className={classes.headerCellBlack} align="center">
+                                        <TableCell className={classes.headerCellBlack} align="center" key={option.name}>
                                             {option.name}
                                         </TableCell>
                                     ))}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <TableRow className={classes.emptyRow}/>
+                                <TableRow className={classes.emptyRow} key="empty"/>
                                 {newRequests.map((request, rowIndex) => {
-                                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey}>
-                                        <TableCell className={classes.requestCell}>{request.description}</TableCell>
+                                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.code}>
+                                        <TableCell className={classes.requestCell} key={request.description}>{request.description}</TableCell>
                                         {temporaryData?.options.map((option, cellIndex) => {
                                             const requestInOption = option.serviceRequests.find(req => req.serviceRequestId === request.id);
-                                            const requestWasEdited = props.editedRequests
-                                                .find(item => item.requestId === request.id && option.type === item.optionType);
 
                                             return <TableCell
                                                 className={getCellClass(cellIndex, rowIndex)}
-                                                align="center"
-                                                style={{cursor: requestWasEdited ? 'pointer' : 'not-allowed'}}>
-                                                <IconButton
-                                                    onClick={() => onCheckboxClick(option, request.id)}
-                                                    disabled={!requestWasEdited}>
-                                                    {requestInOption?.isSendToDMS
-                                                        ? <CheckBoxOutlined htmlColor="#3855FE"/>
-                                                        : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
+                                                key={option.type}
+                                                align="center">
+                                                <IconButton onClick={() => onCheckboxClick(option, request.id)}>
+                                                    {requestInOption ?
+                                                        requestInOption?.isSendToDMS
+                                                            ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                                                            : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
+                                                        : <Close htmlColor="#DADADA"/>
                                                     }
                                                 </IconButton>
                                             </TableCell>

@@ -1,9 +1,11 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
+    getMakes,
+    getModels,
     selectService,
     selectSubService,
     setAdvisor,
-    setAppointmentId, setConsultants,
+    setAppointmentId, setConsultants, setCurrentFrameScreen,
     setCustomer,
     setFrameDescription, setLoadingPackages,
     setMaintenanceDetails,
@@ -18,7 +20,7 @@ import {
 import {
     EServiceCategoryPage,
     ICustomer,
-    ILoadedVehicle, IPackage,
+    ILoadedVehicle, IMake, IPackage,
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
@@ -47,6 +49,9 @@ type TState = {
     packages: IPackage[];
     isPackagesLoading: boolean;
     consultants: IServiceConsultant[];
+    currentScreen: string;
+    makes: IMake[];
+    models: string[];
 }
 const initialState: TState = {
     service: null,
@@ -68,6 +73,9 @@ const initialState: TState = {
     packages: [],
     isPackagesLoading: false,
     consultants: [],
+    currentScreen: '',
+    makes: [],
+    models: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -161,5 +169,14 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setConsultants, (state, { payload}) => {
         return {...state, consultants: payload};
+    })
+    .addCase(setCurrentFrameScreen, (state, { payload }) => {
+        return {...state, currentScreen: payload};
+    })
+    .addCase(getMakes, (state, { payload }) => {
+        return {...state, makes: payload }
+    })
+    .addCase(getModels, (state, { payload }) => {
+        return {...state, models: payload }
     })
 )

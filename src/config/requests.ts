@@ -144,7 +144,7 @@ type ApiRoutes = {
     AppointmentSlots: Record<"GetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
-    ComplimentaryServices: Record<"GetByQuery", TApiRoute>,
+    ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
@@ -177,7 +177,8 @@ type ApiRoutes = {
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
-    Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes", TApiRoute>,
+    Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "RemoveMake" | "UpdateMake" | "CreateMake"
+        | "GetMileage" | "RemoveMileage" | "CreateMileage", TApiRoute>,
 }
 
 type TOptions = {
@@ -234,7 +235,11 @@ export class Api {
             GetShort: {route: "/bays/short-by-query", method: "post"},
         },
         ComplimentaryServices: {
-            GetByQuery: {route: "/complimentary-services/by-query", method: "post"}
+            GetByQuery: {route: "/complimentary-services/by-query", method: "post"},
+            Create: {route: "/complimentary-services", method: "post"},
+            AddFromList: {route: "/complimentary-services/add-service-request", method: "post"},
+            Update: {route: "/complimentary-services/{id}", method: "put"},
+            Remove: {route: "/complimentary-services/{id}", method: "delete"},
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},
@@ -405,7 +410,13 @@ export class Api {
             GetByVIN: {route: "/vehicles/by-vin", method: "get"},
             GetByQuery: {route: "/vehicles/by-query", method: "post"},
             Models: {route: "/vehicles/models", method: "get"},
-            Makes: {route: "/vehicles/makes", method: "get"}
+            Makes: {route: "/vehicles/makes", method: "get"},
+            RemoveMake: {route: "/vehicles/makes/{id}", method: "delete"},
+            UpdateMake: {route: "/vehicles/makes/{id}", method: "put"},
+            CreateMake: {route: "/vehicles/makes", method: "post"},
+            GetMileage: {route: "/vehicles/mileage", method: "get"},
+            RemoveMileage: {route: "/vehicles/mileage/{id}", method: "delete"},
+            CreateMileage: {route: "/vehicles/mileage", method: "post"},
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {
