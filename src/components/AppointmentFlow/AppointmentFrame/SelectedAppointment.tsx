@@ -165,7 +165,7 @@ export const SelectedAppointment = () => {
                     <li className="service-item">{!isSm && 'Service Needed:'} {
                         getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)
                     }
-                        {isSm && <div className="price">$
+                        {selectedPackage && isSm && price && <div className="price">$
                             {Math.floor(price)}
                             <span>
                                     .{(price % 1).toFixed(2).slice(2)}
