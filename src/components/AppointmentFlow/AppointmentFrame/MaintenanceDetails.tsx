@@ -104,7 +104,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         }
         if (models.length) {
-            setCurrentModels(models);
+            if (selectedVehicle?.make) {
+                const currentMake = makes.find(item => item.name === selectedVehicle.make);
+                if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
+            } else {
+                setCurrentModels(models);
+            }
         } else {
             setCurrentModels(['Other']);
         }
