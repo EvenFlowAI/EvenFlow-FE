@@ -217,26 +217,27 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.headerCell}>
+                                    <TableCell className={classes.headerCell} key="first">
                                         Service Request
                                     </TableCell>
                                     {temporaryData?.options.map(option => (
-                                        <TableCell className={classes.headerCellBlack} align="center">
+                                        <TableCell className={classes.headerCellBlack} align="center" key={option.name}>
                                             {option.name}
                                         </TableCell>
                                     ))}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <TableRow className={classes.emptyRow}/>
+                                <TableRow className={classes.emptyRow} key="empty"/>
                                 {newRequests.map((request, rowIndex) => {
-                                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey}>
-                                        <TableCell className={classes.requestCell}>{request.description}</TableCell>
+                                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.code}>
+                                        <TableCell className={classes.requestCell} key={request.description}>{request.description}</TableCell>
                                         {temporaryData?.options.map((option, cellIndex) => {
                                             const requestInOption = option.serviceRequests.find(req => req.serviceRequestId === request.id);
 
                                             return <TableCell
                                                 className={getCellClass(cellIndex, rowIndex)}
+                                                key={option.type}
                                                 align="center">
                                                 <IconButton onClick={() => onCheckboxClick(option, request.id)}>
                                                     {requestInOption ?

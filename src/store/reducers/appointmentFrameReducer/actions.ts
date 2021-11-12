@@ -8,7 +8,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType, IVehicle} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
 import {IAppointmentId, TMaintenanceDetails} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -33,6 +33,8 @@ export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPac
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
 export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
 export const setCurrentFrameScreen = createAction<string>('fAppointment/setCurrentScreen');
+export const getMakes = createAction<IMake[]>('fAppointment/GetMakes');
+export const getModels = createAction<string[]>('fAppointment/GetModels');
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(
@@ -70,4 +72,32 @@ export const loadPackages = (id: number): AppThunk => async (dispatch, getState)
             console.log(err)
         }).finally(() => dispatch(setLoadingPackages(false)))
     }
+}
+
+export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch => {
+    Api.call<IMake[]>(
+        Api.endpoints.Vehicles.Makes,
+        {params: {serviceCenterId}}
+    ).then(({data}) => {
+        if (data) {
+            dispatch(getMakes(data));
+        }
+    })
+        .catch(err => {
+        console.log('get Makes error', err)
+    })
+}
+
+export const loadModels = (serviceCenterId: number): AppThunk => async dispatch => {
+    Api.call<string[]>(
+        Api.endpoints.Vehicles.Models,
+        {params: {serviceCenterId}}
+    ).then(({data}) => {
+        if (data) {
+            dispatch(getModels(data));
+        }
+    })
+        .catch(err => {
+            console.log('get Makes error', err)
+        })
 }

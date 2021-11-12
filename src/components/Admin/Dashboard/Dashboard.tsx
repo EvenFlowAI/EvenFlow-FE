@@ -148,6 +148,7 @@ const overallData: TDataMap[] = [
 export const AdminDashboard: React.FC = () => {
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
+    const history = useHistory();
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
     }, [currentUser]);
@@ -216,8 +217,8 @@ export const AdminDashboard: React.FC = () => {
         pods: analytics.countOfPods
     }));
 
-    const onOpenVehicle = () => {
-
+    const onOpenVehicle = (): void => {
+        history.push(Routes.Admin.VehicleDetails);
     }
 
     const items: TItem[] = [

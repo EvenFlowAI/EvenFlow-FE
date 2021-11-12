@@ -8,18 +8,18 @@ import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
+    loadMakes, loadModels,
     setMaintenanceDetails,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
-import {Api} from "../../../config/requests";
 import {useParams} from "react-router-dom";
 import {ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
-import {IMake} from "../../../store/reducers/appointment/types";
+import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -39,37 +39,9 @@ type TSelect = {
     allOverride?: boolean;
 };
 
-
-export const mileageOptions: string[] = [
-    "3000",
-    "5000",
-    "10000",
-    "15000",
-    "25000",
-    "30000",
-    "40000",
-    "50000",
-    "60000",
-    "70000",
-    "80000",
-    "90000",
-    "100000",
-];
-
 const year = moment.utc().year();
 const YEARS = 20;
 export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
-
-const selects: TSelect[] = [
-    {label: "VIN", name: "vin", noVehicle: true},
-    {label: "Make", name: "make", options: 'make'},
-    {label: "Year", name: "year", options: yearOptions},
-    {label: "Model", name: "model", options: "model",},
-    // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
-    // {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
-    // {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
-    {label: "Estimated mileage", name:"serviceInterval", options: mileageOptions},
-];
 
 const requiredFields: TKey[] = [
     "model", "year", "make", "serviceInterval"
@@ -81,16 +53,27 @@ const blankOptions: TOptionsState = {};
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const dispatch = useDispatch();
+    const {maintenanceDetails, selectedVehicle, makes, models}= useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
-    const [models, setModels] = useState<string[] | []>([]);
+    const [currentModels, setCurrentModels] = useState<string[] | []>([]);
+    const dispatch = useDispatch();
     const {id} = useParams();
-    const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
-    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
+    const selects: TSelect[] = [
+        {label: "VIN", name: "vin", noVehicle: true},
+        {label: "Make", name: "make", options: 'make'},
+        {label: "Year", name: "year", options: yearOptions},
+        {label: "Model", name: "model", options: "model",},
+        // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
+        // {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
+        // {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
+        {label: "Estimated mileage", name:"serviceInterval", options: mileage.map(item => item.value.toString())},
+    ];
 
     const showError = useException();
 
@@ -109,35 +92,33 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }, [dispatch, selectedVehicle]);
 
     useEffect(() => {
-        if (models.length) {
-            setLoadedOptions(prevOptions => ({...prevOptions, model: models}));
+        if (currentModels.length) {
+            setLoadedOptions(prevOptions => ({...prevOptions, model: currentModels}));
         }
-    }, [models])
+    }, [currentModels])
 
     useEffect(() => {
-        Api.call<string[]>(
-            Api.endpoints.Vehicles.Models,
-            {params: {serviceCenterId: decodeSCID(id)}}
-        ).then(({data}) => {
-            if (!data?.length) {
-                setModels(['Other']);
-            }
-            setModels(data);
-        }).catch(() => {
-            setModels(['Other']);
-        })
-
-        Api.call<IMake[]>(
-            Api.endpoints.Vehicles.Makes,
-            {params: {serviceCenterId: decodeSCID(id)}}
-        ).then(({data}) => {
-            if (!data?.length) {
-                setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
-            }
-            setLoadedOptions(prevOptions => ({...prevOptions, make: data.map(item => item.name)}));
-        }).catch(() => {
+        if (makes.length) {
+            setLoadedOptions(prevOptions => ({...prevOptions, make: makes.map(item => item.name)}));
+        } else {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
-        })
+        }
+        if (models.length) {
+            if (selectedVehicle?.make) {
+                const currentMake = makes.find(item => item.name === selectedVehicle.make);
+                if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
+            } else {
+                setCurrentModels(models);
+            }
+        } else {
+            setCurrentModels(['Other']);
+        }
+    }, [makes, models])
+
+    useEffect(() => {
+        dispatch(loadMakes(decodeSCID(id)));
+        dispatch(loadModels(decodeSCID(id)));
+        dispatch(loadMileage(decodeSCID(id)));
     }, [id]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
@@ -150,10 +131,13 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             setErrors(e => e.filter(err => err !== name));
             if (name === 'make') {
                 if (option === 'Other') {
+
                     setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
                     if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
                 } else {
-                    setLoadedOptions(prevOptions => ({...prevOptions, model: models }));
+                    const currentMake = makes.find(item => item.name === option);
+                    if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
+                    if (option !== selectedVehicle?.make) dispatch(updateVehicle({model: ''}));
                 }
             }
         }
