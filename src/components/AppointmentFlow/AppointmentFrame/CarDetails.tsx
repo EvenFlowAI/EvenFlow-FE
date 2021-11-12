@@ -103,7 +103,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         }
         if (models.length) {
-            setCurrentModels(models);
+            if (selectedVehicle?.make) {
+                const currentMake = makes.find(item => item.name === selectedVehicle.make);
+                if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
+            } else {
+                setCurrentModels(models);
+            }
         } else {
             setCurrentModels(['Other']);
         }
