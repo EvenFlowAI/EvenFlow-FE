@@ -4,14 +4,15 @@ import {PaperTitle} from "../UI";
 import {
     Box,
     Button,
-    Table,
     TableCell,
     TableHead,
     TableRow,
-    TableBody, withStyles,
+    TableBody, withStyles, Divider, useMediaQuery, useTheme,
 } from "@material-ui/core";
 import {useModal} from "../../../../utils/hooks";
 import {ValueSlider} from "../../AppointmentValue/UI";
+import {makeStyles} from "@material-ui/core/styles";
+import {DenseTable} from "../../AppointmentAllocation/UI";
 
 enum SliderRange {
     Min = -10,
@@ -67,14 +68,25 @@ const mockTableData = [
     }
 ]
 
+const useStyles = makeStyles(() => ({
+    headerCell: {
+        fontWeight: 'bold',
+        fontSize: 15,
+        textTransform: 'uppercase',
+    }
+}));
+
 const DayOfWeekOpsCode = () => {
     const { onOpen, onClose, isOpen } = useModal();
     // TODO change data
     const [opsCodes, setOpsCodes] = useState<TOpsCode[]>(mockTableData);
+    const classes = useStyles();
 
     const deleteOpsCode = (item: TOpsCode) => {
         // ToDo show modal and request
     }
+
+    // Todo add modal to add ops code
 
     const handleChange = (id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
         setOpsCodes(prev => {
@@ -96,20 +108,21 @@ const DayOfWeekOpsCode = () => {
                 Add Ops Code
             </Button>
         </Box>
-        <Box display="flex" mr={2} ml={2} alignItems="center">
-            <Table>
+        <Divider />
+        <Box display="flex" m={2} alignItems="center">
+            <DenseTable>
                 <TableHead>
                     <TableRow>
-                        <TableCell>
+                        <TableCell className={classes.headerCell} width="22%">
                             Ops Code
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={classes.headerCell} width="30%">
                             Low
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={classes.headerCell} width="30%">
                             High
                         </TableCell>
-                        <TableCell/>
+                        <TableCell width="8%"/>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -144,13 +157,19 @@ const DayOfWeekOpsCode = () => {
                                     valueLabelDisplay="on"
                                 />
                             </TableCell>
-                            <TableCell key="remove">
-                                <Button variant="text" onClick={() => deleteOpsCode(item)} color="primary">Remove</Button>
+                            <TableCell key="remove" align='center'>
+                                <Button
+                                    variant="text"
+                                    style={{ textTransform: 'none'}}
+                                    onClick={() => deleteOpsCode(item)}
+                                    color="primary">
+                                    Remove
+                                </Button>
                             </TableCell>
                         </TableRow>
                     })}
                 </TableBody>
-            </Table>
+            </DenseTable>
         </Box>
     </SquarePaper>;
 };
