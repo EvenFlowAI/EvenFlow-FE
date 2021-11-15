@@ -1,16 +1,16 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {DenseTable} from "../AppointmentAllocation/UI";
-import {EditButton} from "../../UI/Button";
-import {PriceLevelsDialog} from "./PriceLevelsDialog";
-import {useModal, useSCs} from "../../../utils/hooks";
-import {EDemandCategory, IPricingLevel} from "../../../store/reducers/pricingSettings/types";
+import {DenseTable} from "../../AppointmentAllocation/UI";
+import {EditButton} from "../../../UI/Button";
+import {PriceLevelsDialog} from "../PriceLevelsDialog";
+import {useModal, useSCs} from "../../../../utils/hooks";
+import {EDemandCategory, IPricingLevel} from "../../../../store/reducers/pricingSettings/types";
 import {useDispatch, useSelector} from "react-redux";
-import {loadPricingLevels} from "../../../store/reducers/pricingSettings/actions";
-import {RootState} from "../../../store/rootReducer";
-import {PaperTitle, TableContainer} from "./UI";
-import {SquarePaper} from "../../UI/Paper";
+import {loadPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
+import {RootState} from "../../../../store/rootReducer";
+import {PaperTitle, TableContainer} from "../UI";
+import {SquarePaper} from "../../../UI/Paper";
 
 const useStyles = makeStyles(theme => ({
     inputCell: {
@@ -31,7 +31,7 @@ type TPricingLevels = {
     [k in EDemandCategory]: IPricingLevel;
 }
 
-export const PricingLevels = () => {
+export const DemandWindows = () => {
     const [editedItem, setEditedItem] = useState<IPricingLevel|undefined>(undefined);
     const {onClose, onOpen, isOpen} = useModal();
     const {selectedSC} = useSCs();
@@ -83,8 +83,8 @@ export const PricingLevels = () => {
                             <div className={classes.editCell}>
                                 <span>
                                     {mappedPricingLevels[EDemandCategory.Low]?.percentage
-                                    ? `${mappedPricingLevels[EDemandCategory.Low].percentage}%`
-                                    : "-"}
+                                        ? `${mappedPricingLevels[EDemandCategory.Low].percentage}%`
+                                        : "-"}
                                 </span>
                                 <EditButton onClick={handleOpen(EDemandCategory.Low)} color="primary">
                                     Edit
@@ -104,8 +104,8 @@ export const PricingLevels = () => {
                             <div className={classes.editCell}>
                                 <span>
                                     {mappedPricingLevels[EDemandCategory.High]?.percentage
-                                    ? `${mappedPricingLevels[EDemandCategory.High].percentage}%`
-                                    : "-"}
+                                        ? `${mappedPricingLevels[EDemandCategory.High].percentage}%`
+                                        : "-"}
                                 </span>
                                 <EditButton onClick={handleOpen(EDemandCategory.High)} color="primary">
                                     Edit
