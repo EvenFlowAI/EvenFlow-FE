@@ -78,6 +78,25 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
             override={el.serviceRequestOverride?.invoiceAmount?.toString()}
         />,
         orderId: "invoiceAmount"
+    },
+    {
+        header: "Parts Unit Cost",
+        align: "center",
+        val: el => <CellData
+            prefix="$"
+            data={el.serviceRequest.partsUnitCost?.toString()}
+            override={el.serviceRequestOverride?.partsUnitCost?.toString()}
+        />,
+        orderId: "partsUnitCost"
+    },
+    {
+        header: "Number Of Parts",
+        align: "center",
+        val: el => <CellData
+            data={el.serviceRequest.numberOfParts?.toString()}
+            override={el.serviceRequestOverride?.numberOfParts?.toString()}
+        />,
+        orderId: "numberOfParts"
     }
 ]
 
