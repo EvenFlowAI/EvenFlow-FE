@@ -153,7 +153,7 @@ const DayOfWeekOpsCode = () => {
                                         {value: SliderRange.Min, label: SliderRange.Min},
                                         {value: SliderRange.Max, label: SliderRange.Max}
                                     ]}
-                                    value={item.low}
+                                    value={item.high}
                                     valueLabelDisplay="on"
                                 />
                             </TableCell>
