@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {SquarePaper} from "../../../UI/Paper";
 import {PaperTitle} from "../UI";
 import {
@@ -7,12 +7,15 @@ import {
     TableCell,
     TableHead,
     TableRow,
-    TableBody, withStyles, Divider, useMediaQuery, useTheme,
+    TableBody,
+    withStyles,
+    Divider,
 } from "@material-ui/core";
-import {useModal} from "../../../../utils/hooks";
+import {useConfirm, useModal} from "../../../../utils/hooks";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
 import {DenseTable} from "../../AppointmentAllocation/UI";
+import {OPsCodesListDialog} from "../../../Modals/OPsCodesListDialog/OPsCodesListDialog";
 
 enum SliderRange {
     Min = -10,
@@ -80,15 +83,30 @@ const DayOfWeekOpsCode = () => {
     const { onOpen, onClose, isOpen } = useModal();
     // TODO change data
     const [opsCodes, setOpsCodes] = useState<TOpsCode[]>(mockTableData);
+    const [deletingItem, setDeletingItem] = useState<TOpsCode | null>(null);
+    const {askConfirm} = useConfirm();
     const classes = useStyles();
 
-    const deleteOpsCode = (item: TOpsCode) => {
-        // ToDo show modal and request
-    }
+    const handleRemove = useCallback(() => {
+        // ToDo request
+    }, [])
 
-    // Todo add modal to add ops code
+    const deleteOpsCode =  useCallback((item: TOpsCode) => {
+        setDeletingItem(item);
+        askConfirm({
+            title: `Are you sure want to remove ops code ${item?.opsCode}?`,
+            isRemove: true,
+            onConfirm: async () => {
+                await handleRemove();
+            }
+        });
+    }, [])
 
-    const handleChange = (id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+    const onOpsCodeSave = useCallback((selectedCodes: number[], serviceCenterId: number) => {
+        // ToDo request
+    }, [])
+
+    const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
         setOpsCodes(prev => {
             const item = prev.find(item => item.id === id);
             const filtered = prev.filter(item => item.id !== id);
@@ -98,7 +116,7 @@ const DayOfWeekOpsCode = () => {
             }
             return prev;
         })
-    }
+    }, [])
 
     return <SquarePaper variant="outlined">
         <Box display="flex" mr={2} alignItems="center">
@@ -171,6 +189,7 @@ const DayOfWeekOpsCode = () => {
                 </TableBody>
             </DenseTable>
         </Box>
+        <OPsCodesListDialog onClose={onClose} open={isOpen} onSave={onOpsCodeSave} />
     </SquarePaper>;
 };
 

@@ -4,7 +4,7 @@ import {optimizerRoot} from "../utils";
 import {SearchInput} from "../../UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
-    changeComplimentaryPageData,
+    changeComplimentaryPageData, loadAllComplimentary,
     loadComplimentary,
     setComplimentarySearchTerm,
     setComplimentarySort
@@ -34,12 +34,14 @@ const ComplimentaryServices = () => {
         servicesCount,
         sortOrder,
         searchTerm,
+        allComplimentary,
     ] = useSelector((state: RootState) => [
         state.packages.complimentary,
         state.packages.isComplimentaryLoading,
         state.packages.complimentaryPaging.numberOfRecords,
         state.packages.complimentarySortOrder,
         state.packages.complimentarySearchTerm,
+        state.packages.allComplimentary,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
@@ -62,43 +64,45 @@ const ComplimentaryServices = () => {
 
     useEffect(() => {
         if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
+        if (selectedSC) dispatch(loadAllComplimentary(selectedSC.id))
     }, [selectedSC])
 
     useEffect(() => {
             setSelectedOpsCodes(() => {
                 const data: number[] = [];
-                complimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
+                allComplimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
                 return data;
             });
-    }, [complimentary])
+    }, [allComplimentary])
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setComplimentarySearchTerm(e.target.value))
-    }
+    }, [])
 
     const handleSearch = useCallback(() => {
         if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
     }, [selectedSC]);
 
-    const handleCloseMenu = () => {
+    const handleCloseMenu = useCallback(() => {
         setAnchorEl(null);
         setEditedItem(undefined);
-    }
+    }, [])
 
-    const handleEdit = () => {
+    const handleEdit = useCallback(() => {
         setAnchorEl(null);
         onAddManuallyOpen();
-    }
+    }, [])
 
-    const askRemove = () => {
+    const askRemove = useCallback(() => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
             title: `Remove ${editedItem?.code} from Complimentary Services List?`,
             onConfirm: handleRemove
         });
-    }
-    const handleRemove = async () => {
+    }, [editedItem])
+
+    const handleRemove = useCallback ( async () => {
         if (selectedSC && editedItem) {
             try {
                 await Api.call(
@@ -114,27 +118,27 @@ const ComplimentaryServices = () => {
         } else {
             showError(SC_UNDEFINED);
         }
-    }
+    }, [selectedSC, editedItem, SC_UNDEFINED])
 
-    const handleOpenMenu = (el: IComplimentaryServiceByQuery) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleOpenMenu = useCallback((el: IComplimentaryServiceByQuery) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setEditedItem(el);
         setAnchorEl(e.currentTarget);
-    }
+    }, [])
 
-    const actions = (el:IComplimentaryServiceByQuery) => {
+    const actions = useCallback((el:IComplimentaryServiceByQuery) => {
         return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
-    }
+    }, [handleOpenMenu])
 
-    const onAddOpsCode = async (selectedCodes: number[], serviceCenterId: number) => {
+    const onAddOpsCode = useCallback(async (selectedCodes: number[], serviceCenterId: number) => {
         const newCodes = selectedCodes.filter(item => !selectedOpsCodes.includes(item));
-        await dispatch(addOpsCodeFromList(newCodes, serviceCenterId));
+        await dispatch(addOpsCodeFromList(newCodes, serviceCenterId, showError));
         await onAddOpsCodeClose();
-    }
+    }, [selectedOpsCodes])
 
-    const handleSort = (d: IOrder<IComplimentaryServiceByQuery>) => async () => {
+    const handleSort = useCallback((d: IOrder<IComplimentaryServiceByQuery>) => async () => {
         await dispatch(setComplimentarySort(d));
         if (selectedSC) await dispatch(loadComplimentary(selectedSC.id));
-    }
+    }, [selectedSC])
 
     return (
         <div>

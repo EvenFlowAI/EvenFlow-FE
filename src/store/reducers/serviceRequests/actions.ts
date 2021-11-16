@@ -52,12 +52,25 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThun
     }
 }
 
-export const assignServiceRequests = (serviceRequestIds: number[], serviceCenterId: number): AppThunk => async dispatch => {
-    await Api.call(
+export const assignServiceRequests = (
+    serviceRequestIds: number[],
+    serviceCenterId: number,
+    onError = (err: string) => {},
+    onSuccess = (codes: number[]) => {},
+): AppThunk => dispatch => {
+    Api.call(
         Api.endpoints.ServiceRequests.AssignMultiple, {data: {serviceRequestIds, serviceCenterId}}
-    );
-    dispatch(loadNonSelectedServiceRequests(serviceCenterId));
-    dispatch(loadAssignedServiceRequests(serviceCenterId));
+    )
+        .then(result => {
+            if (result) {
+                dispatch(loadNonSelectedServiceRequests(serviceCenterId));
+                dispatch(loadAssignedServiceRequests(serviceCenterId));
+                onSuccess(serviceRequestIds);
+            }
+        })
+        .catch(err => {
+            onError(err)
+        })
 }
 
 // Assigned Service Requests
