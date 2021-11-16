@@ -9,6 +9,7 @@ export const getDaysOfWeek = (date: moment.Moment, isXS: boolean): moment.Moment
     }
     const days = [];
     const weekStart = moment.utc(date).startOf("week");
+    console.log(weekStart)
     for (let i=1; i<7; i++) {
         days.push(moment(weekStart).add(i, "days"));
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {IPackageById} from "../../../../api/types";
 import {IconButton, TableBody, TableCell, TableContainer, TableRow, Table} from "@material-ui/core";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
@@ -14,7 +14,7 @@ type TServiceRequestsProps = {
 export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) => {
     const classes = useTableStyles();
 
-    const getCellClass = (cellIndex: number, rowIndex: number) => {
+    const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (props.packageData){
             if (cellIndex === 0) {
                 switch (rowIndex) {
@@ -45,7 +45,7 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
                     return classes.cell
             }
         }
-    }
+    }, [props.packageData])
 
     return <TableContainer style={{ overflowX: 'unset' }}>
         <Table>

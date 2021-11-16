@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {IPackageById, IPackageOptionDetailed} from "../../../../api/types";
 import {IconButton, TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Input} from "@material-ui/core";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
@@ -21,7 +21,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
     const optionsClasses = useOptionsTableStyles();
     const showError = useException();
 
-    const getCellClass = (cellIndex: number, rowIndex: number) => {
+    const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (props.packageData){
             if (cellIndex === 0) {
                 switch (rowIndex) {
@@ -52,7 +52,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                     return classes.cell
             }
         }
-    }
+    }, [props.packageData])
 
     const onOptionNameClick = (option: IPackageOptionDetailed): void => {
         props.setEditingOption(option);
