@@ -115,6 +115,7 @@ export const ScheduleCalendar = () => {
     useEffect(() => {
         if (selectedSC) {
             const [start, end] = getStartEndDates(selectedDate, isXS);
+            console.log('start, end', start, end);
             dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
             dispatch(loadWorkingDays(selectedSC.id));
         }
@@ -216,7 +217,7 @@ export const ScheduleCalendar = () => {
                                 <TableCell>
                                     <NameCell employee={employee} />
                                 </TableCell>
-                                {daysOfWeek.map((date, idx) => {
+                                {daysOfWeek.map((date) => {
                                     return <TableCell
                                         key={date.toISOString()}
                                         onClick={workingDays.includes(date.day() as EDay) ? handleEdit(employee, date, schedules) : noop}

@@ -17,7 +17,7 @@ export const ScheduleFilters: React.FC<TProps> = () => {
     }
     const handleEmployeeFilter = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
         if (value === 0) {
-            dispatch(setScheduleFilters({role: "Advisor"}));
+            dispatch(setScheduleFilters({role: "Advisor", skillLevel: undefined}));
         } else if (Boolean(value)) {
             dispatch(setScheduleFilters({role: undefined, skillLevel: Number(value)}));
         } else {
