@@ -31,6 +31,10 @@ const _changePageData = (payload: Partial<IPageRequest>): DealershipActions => (
     type: "Dealership/ChangePageData", payload
 });
 
+export const setSearchTerm = (payload: string): DealershipActions => ({
+    type: "Dealership/SetSearchTerm", payload
+})
+
 export const changePageData: ActionCreator<ThunkAction<
     void,
     RootState,
@@ -46,28 +50,53 @@ export const changePageData: ActionCreator<ThunkAction<
 // const add = (payload: IDealershipGroup): DealershipActions => ({
 //     type: "Dealership/Add", payload
 // });
+//
+// export const loadAll: ActionCreator<ThunkAction<
+//     void,
+//     RootState,
+//     void,
+//     DealershipActions>> = () => {
+//     return async (dispatch: Dispatch, getState) => {
+//         dispatch(loading(true));
+//         const state = getState();
+//         try {
+//             const {data: {result: dealerships, paging}} = await Api.call<
+//                 PaginatedAPIResponse<IDealershipGroupExtended>
+//             >(Api.endpoints.Dealerships.GetAll, {data:
+//                     {
+//                         ...state.dealershipGroups.pageData,
+//                         searchTerm: state.dealershipGroups.searchTerm
+//                     }}
+//             );
+//             dispatch(loading(false));
+//             dispatch(changePaging(paging));
+//             dispatch(getAll(dealerships));
+//         } catch (e) {
+//             dispatch(loading(false));
+//             throw e;
+//         }
+//     };
+// };
 
-export const loadAll: ActionCreator<ThunkAction<
-    void,
-    RootState,
-    void,
-    DealershipActions>> = () => {
-    return async (dispatch: Dispatch, getState) => {
-        dispatch(loading(true));
-        const state = getState();
-        try {
-            const {data: {result: dealerships, paging}} = await Api.call<
-                PaginatedAPIResponse<IDealershipGroupExtended>
-            >(Api.endpoints.Dealerships.GetAll, {data: state.dealershipGroups.pageData});
+export const loadAll = (): AppThunk => (dispatch, getState) => {
+    dispatch(loading(true));
+    const state = getState();
+    const {pageData, searchTerm} = state.dealershipGroups;
+    const data = {...pageData, searchTerm};
+    Api.call<
+        PaginatedAPIResponse<IDealershipGroupExtended>
+        >(Api.endpoints.Dealerships.GetAll, {data})
+        .then(result => {
+            const { result: dealerships, paging } = result?.data
+            paging && dispatch(changePaging(paging));
+            dealerships && dispatch(getAll(dealerships));
             dispatch(loading(false));
-            dispatch(changePaging(paging));
-            dispatch(getAll(dealerships));
-        } catch (e) {
+        })
+        .catch(err => {
             dispatch(loading(false));
-            throw e;
-        }
-    };
-};
+            throw err;
+        })
+}
 
 export const create: ActionCreator<ThunkAction<
     void,

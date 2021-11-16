@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Table} from "../../UI/Table";
 import {IconButton, Menu, MenuItem, Typography} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
@@ -45,6 +45,10 @@ export const DealershipGroups = () => {
     const showError = useException();
     const showMessage = useMessage();
     const history = useHistory();
+
+    useEffect(() => {
+        dispatch(dealershipActions.loadAll());
+    }, [dispatch]);
 
     const handleView = ()  => {
         if (!editedItem) return;
@@ -98,10 +102,6 @@ export const DealershipGroups = () => {
             <MoreHoriz />
         </IconButton>
     ;
-
-    React.useEffect(() => {
-        dispatch(dealershipActions.loadAll());
-    }, [dispatch]);
 
     return <>
         <TitleContainer title={Titles.DealershipGroups} actions pad />
