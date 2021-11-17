@@ -6,7 +6,7 @@ import {
     IDealershipProfileForm
 } from "./types";
 import {ThunkAction} from "redux-thunk";
-import {ActionCreator, Dispatch} from "redux";
+import {ActionCreator} from "redux";
 import {Api} from "../../../config/requests";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {RootState} from "../../rootReducer";
@@ -46,37 +46,6 @@ export const changePageData: ActionCreator<ThunkAction<
         dispatch(loadAll());
     }
 }
-
-// const add = (payload: IDealershipGroup): DealershipActions => ({
-//     type: "Dealership/Add", payload
-// });
-//
-// export const loadAll: ActionCreator<ThunkAction<
-//     void,
-//     RootState,
-//     void,
-//     DealershipActions>> = () => {
-//     return async (dispatch: Dispatch, getState) => {
-//         dispatch(loading(true));
-//         const state = getState();
-//         try {
-//             const {data: {result: dealerships, paging}} = await Api.call<
-//                 PaginatedAPIResponse<IDealershipGroupExtended>
-//             >(Api.endpoints.Dealerships.GetAll, {data:
-//                     {
-//                         ...state.dealershipGroups.pageData,
-//                         searchTerm: state.dealershipGroups.searchTerm
-//                     }}
-//             );
-//             dispatch(loading(false));
-//             dispatch(changePaging(paging));
-//             dispatch(getAll(dealerships));
-//         } catch (e) {
-//             dispatch(loading(false));
-//             throw e;
-//         }
-//     };
-// };
 
 export const loadAll = (): AppThunk => (dispatch, getState) => {
     dispatch(loading(true));

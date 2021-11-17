@@ -39,7 +39,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
             {data: {
                 ...state.serviceCenters.pageData,
                 ...state.serviceCenters.order,
-                searchTerm: state.serviceCenters.searchTerm
+                searchTerm: state.serviceCenters.searchTerm,
             }}
         );
         dispatch(changePaging(paging));
