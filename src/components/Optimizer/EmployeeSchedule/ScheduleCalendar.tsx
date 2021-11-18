@@ -115,7 +115,6 @@ export const ScheduleCalendar = () => {
     useEffect(() => {
         if (selectedSC) {
             const [start, end] = getStartEndDates(selectedDate, isXS);
-            console.log('start, end', start, end);
             dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
             dispatch(loadWorkingDays(selectedSC.id));
         }
