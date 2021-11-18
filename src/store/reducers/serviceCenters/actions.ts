@@ -20,6 +20,11 @@ export const loading = (payload: boolean): TServiceCenterActions => ({
 export const saving = (payload: boolean): TServiceCenterActions => ({
     type: "ServiceCenters/Saving", payload
 });
+
+export const setSelectedDealershipGroupId = (payload: number | undefined): TServiceCenterActions => ({
+    type: "ServiceCenters/SetDealershipId", payload
+});
+
 export const changePaging = changePagingGeneric("ServiceCenters/ChangePaging");
 const _changePageData = changePageDataGeneric("ServiceCenters/ChangePageData");
 export const changePageData: ActionCreator<ThunkAction<void, RootState, void, Action>> =
@@ -33,14 +38,16 @@ export const changePageData: ActionCreator<ThunkAction<void, RootState, void, Ac
 export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState) => {
     dispatch(loading(true));
     const state = getState();
+    const requestPayload = {
+        ...state.serviceCenters.pageData,
+        ...state.serviceCenters.order,
+        searchTerm: state.serviceCenters.searchTerm,
+        dealershipId: state.serviceCenters.dealershipId
+    };
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IServiceCenterExtended>>(
             Api.endpoints.ServiceCenters.GetAll,
-            {data: {
-                ...state.serviceCenters.pageData,
-                ...state.serviceCenters.order,
-                searchTerm: state.serviceCenters.searchTerm,
-            }}
+            {data: requestPayload}
         );
         dispatch(changePaging(paging));
         dispatch(getAll(result));
