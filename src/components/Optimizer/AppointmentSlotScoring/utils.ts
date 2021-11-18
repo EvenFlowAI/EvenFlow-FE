@@ -2,8 +2,7 @@ import moment from "moment";
 import {EDesirabilityState, ETimeSlotType, IDesirability} from "../../../store/reducers/slotScoring/types";
 
 const inpFormat: string = "HH:mm:ss";
-const start = moment("8:00:00", inpFormat);
-const end = moment("18:00:00", inpFormat);
+
 const gapToMin = (gap: ETimeSlotType): number => {
     switch (gap) {
         case ETimeSlotType.TenMinutes:
@@ -25,10 +24,15 @@ export type TSlot = {
 }
 export const generateSlots = (gap: ETimeSlotType,
                               items: IDesirability[],
-                              org?: ETimeSlotType): TSlot[] => {
+                              org?: ETimeSlotType,
+                              startTime?: string,
+                              endTime?: string,
+                              ): TSlot[] => {
     if (org === undefined) {
         org = gap;
     }
+    const start = moment(startTime ?? "8:00:00", inpFormat);
+    const end = moment(endTime ?? "18:00:00", inpFormat);
     const gapMinutes: number = gapToMin(gap);
     const gapOrg: number = gapToMin(org);
     const mappedItems = items.reduce((acc, i) => {

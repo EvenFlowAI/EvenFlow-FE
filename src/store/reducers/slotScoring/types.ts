@@ -10,6 +10,17 @@ export interface IProximity {
     podId?: number;
 }
 
+export type TRange = {
+    start: string;
+    end: string;
+}
+
+export interface ISlotRange {
+    serviceCenterId: number;
+    start: string;
+    end: string;
+}
+
 export enum ETimeSlotType {
     TenMinutes,
     FifteenMinutes,
