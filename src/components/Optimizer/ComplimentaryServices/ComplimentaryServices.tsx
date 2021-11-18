@@ -64,6 +64,11 @@ const ComplimentaryServices = () => {
         if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
     }, [selectedSC])
 
+    const handleAddManuallyClose = () => {
+        setEditedItem(undefined);
+        onAddManuallyClose();
+    }
+
     useEffect(() => {
             setSelectedOpsCodes(() => {
                 const data: number[] = [];
@@ -192,7 +197,7 @@ const ComplimentaryServices = () => {
                 onClose={onAddOpsCodeClose}
                 onSave={onAddOpsCode}
                 selectedPreviously={selectedOpsCodes}/>
-            <AddServiceManually open={isAddManuallyOpen} onClose={onAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
+            <AddServiceManually open={isAddManuallyOpen} onClose={handleAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
         </div>
     );
 };

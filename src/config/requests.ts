@@ -172,7 +172,7 @@ type ApiRoutes = {
         | "Eligibility"
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
-        | "SetOptimization" | "GetOptimization" | "SetValues", TApiRoute>,
+        | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange", TApiRoute>,
     TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
@@ -372,7 +372,9 @@ export class Api {
             GetDesirability: {route: "/slot-scoring/desirability", method: "get"},
             SetOptimization: {route: "/slot-scoring/optimization-settings", method: "put"},
             GetOptimization: {route: "/slot-scoring/optimization-settings", method: "get"},
-            SetValues: {route: "/slot-scoring/optimization-settings/values", method: "put"}
+            SetValues: {route: "/slot-scoring/optimization-settings/values", method: "put"},
+            GetRange: {route: "/slot-scoring/range", method: "get"},
+            UpdateRange: {route: "/slot-scoring/range", method: "put"},
         },
         TransportationOptions: {
             Edit: {route: "/transportation-options", method: "put"},
