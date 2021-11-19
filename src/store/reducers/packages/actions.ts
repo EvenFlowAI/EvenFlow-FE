@@ -13,6 +13,7 @@ export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPa
 export const getPackagesByQuery = createAction<IPackageByQuery[]>('Optimizer/GetPackages');
 export const getMakes = createAction<IMake[]>('Optimizer/GetVehicles');
 export const getComplimentary = createAction<IComplimentaryServiceByQuery[]>('Optimizer/GetComplimentary');
+export const getAllComplimentary = createAction<IComplimentaryServiceByQuery[]>('Optimizer/GetAllComplimentary');
 export const setComplimentaryLoading = createAction<boolean>('Optimizer/SetComplimentaryLoading');
 export const setComplimentaryPagingResponse  = createAction<IPagingResponse>('Optimizer/SetComplimentaryRecordsNumber');
 export const setComplimentaryPageData  = createAction<Partial<IPageRequest>>('Optimizer/SetComplimentaryPageData');
