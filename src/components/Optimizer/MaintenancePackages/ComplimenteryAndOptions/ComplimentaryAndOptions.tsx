@@ -20,7 +20,7 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
                 switch (rowIndex) {
                     case 0:
                         return classes.firstCellFirstRow;
-                    case props.packageData?.serviceRequests?.length - 1:
+                    case props.packageData?.complimentaryServices?.length - 1:
                         return classes.firstCellLastRow;
                     default:
                         return classes.firstCell;
@@ -30,7 +30,7 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
                 switch (rowIndex) {
                     case 0:
                         return classes.lastCellFirstRow;
-                    case props.packageData?.serviceRequests?.length - 1:
+                    case props.packageData?.complimentaryServices?.length - 1:
                         return classes.lastCellLastRow;
                     default:
                         return classes.lastCell;
@@ -39,7 +39,7 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
             switch (rowIndex) {
                 case 0:
                     return classes.cellFirstRow;
-                case props.packageData?.serviceRequests?.length - 1:
+                case props.packageData?.complimentaryServices?.length - 1:
                     return classes.cellLastRow;
                 default:
                     return classes.cell
