@@ -24,8 +24,9 @@ export const setNonSelectedOrder = createAction<IOrder<IServiceRequest>>("Servic
 export const setNonSelectedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/NonSelectedPageData");
 export const setNonSelectedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/NonSelectedFilter");
 
-export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThunk =>
+export const loadNonSelectedServiceRequests = (serviceCenterId: number, isAssigned?: boolean): AppThunk =>
     async (dispatch, getState) => {
+        console.log(isAssigned);
     const {nonSelectedFilter, nonSelectedPageData, nonSelectedOrder} = getState().serviceRequests;
     dispatch(setLoadingNonSelected(true));
     try {
@@ -37,7 +38,7 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThun
                     ...nonSelectedOrder,
                     status: EServiceStatus.None,
                     serviceCenterFilter: {
-                        isAssigned: false,
+                        isAssigned: Boolean(isAssigned),
                         id: serviceCenterId
                     }
                 }

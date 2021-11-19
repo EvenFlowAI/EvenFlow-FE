@@ -16,7 +16,7 @@ import {generateSlots, TSlot} from "./utils";
 import {DesirabilityButton} from "../../UI/ConfigButton";
 import {useDispatch, useSelector} from "react-redux";
 import {SC_UNDEFINED, timeString} from "../../../config/constants";
-import {loadDesirability, saveDesirability} from "../../../store/reducers/slotScoring/actions";
+import {loadDesirability, loadRange, saveDesirability} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {Caption} from "../../UI/Caption";
@@ -185,6 +185,7 @@ export const AppointmentSlotsDesirability = () => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const [isEdit, setEdit] = useState<boolean>(false);
+    const {slotRange} = useSelector((state: RootState) => state.slotScoring);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
@@ -201,6 +202,7 @@ export const AppointmentSlotsDesirability = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadDesirability(selectedSC.id, selectedPod?.id));
+            dispatch(loadRange(selectedSC.id, selectedPod?.id));
         }
     }, [dispatch, selectedSC, selectedPod]);
 
@@ -208,9 +210,12 @@ export const AppointmentSlotsDesirability = () => {
         const t = desirabilityItems[0]
             ? desirabilityItems[0].timeSlotType
             : ETimeSlotType.ThirtyMinutes;
+        if (slotRange) {
+
+        }
         setForm({
             timeSlotType: t,
-            items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType)
+            items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end)
         });
     }, [desirabilityItems]);
 
@@ -238,7 +243,10 @@ export const AppointmentSlotsDesirability = () => {
             timeSlotType: t,
             items: generateSlots(t,
                 desirabilityItems,
-                desirabilityItems[0]?.timeSlotType)
+                desirabilityItems[0]?.timeSlotType,
+                slotRange?.start,
+                slotRange?.end
+            )
         });
         setEdit(false);
     }
@@ -247,7 +255,7 @@ export const AppointmentSlotsDesirability = () => {
         if (isEdit) {
             setForm({
                 timeSlotType: g,
-                items: generateSlots(g, desirabilityItems, desirabilityItems[0]?.timeSlotType)
+                items: generateSlots(g, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end)
             });
         }
     }

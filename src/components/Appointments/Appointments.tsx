@@ -36,6 +36,8 @@ export const Appointments = () => {
     const showError = useException();
     const {askConfirm} = useConfirm();
 
+    console.log(appointments);
+
     const refresh = useCallback(() => {
          if (selectedSC) {
             setLoading(true);

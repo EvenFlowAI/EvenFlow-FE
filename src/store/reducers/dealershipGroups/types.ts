@@ -53,6 +53,7 @@ type ChangePageData = {type: "Dealership/ChangePageData", payload: Partial<IPage
 type ChangePaging = {type: "Dealership/ChangePaging", payload: IPagingResponse};
 type Remove = {type: "Dealership/Remove", payload: number};
 type Profile = {type: "Dealership/Profile", payload: IDealershipProfile};
+type SetSearchTerm = {type: "Dealership/SetSearchTerm", payload: string};
 
 export type DealershipActions =
     | AddDealership
@@ -62,7 +63,9 @@ export type DealershipActions =
     | Remove
     | GetAllDealerships
     | ChangePaging
-    | ChangePageData;
+    | ChangePageData
+    | SetSearchTerm
+    ;
 
 export type DealershipState = {
     dealershipList: IDealershipGroupExtended[];
@@ -70,5 +73,6 @@ export type DealershipState = {
     loading: boolean;
     saving: boolean;
     paging: IPagingResponse;
-    pageData: IPageRequest
+    pageData: IPageRequest,
+    searchTerm: string;
 }

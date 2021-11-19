@@ -1,7 +1,10 @@
 import {TComplimentary} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {loadComplimentary} from "../packages/actions";
+import {
+    loadComplimentary,
+    getAllComplimentary,
+} from "../packages/actions";
 
 export const addComplimentaryManually = (data: TComplimentary, callback: () => void): AppThunk => dispatch => {
     Api.call(Api.endpoints.ComplimentaryServices.Create, {data})
@@ -38,4 +41,19 @@ export const addOpsCodeFromList = (serviceRequests: number[], serviceCenterId: n
         }).catch(err => {
         console.log('add ops code to complimentary error', err)
     })
+}
+
+export const loadAllComplimentary = (serviceCenterId: number): AppThunk => async (dispatch) => {
+    const data = {
+        serviceCenterId,
+        pageIndex: 0,
+        pageSize: 0,
+    }
+    Api.call(Api.endpoints.ComplimentaryServices.GetByQuery, {data})
+        .then(result => {
+            dispatch(getAllComplimentary(result.data.result))
+        })
+        .catch(err => {
+            console.log(err)
+        })
 }

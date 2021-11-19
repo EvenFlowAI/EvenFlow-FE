@@ -83,6 +83,7 @@ export type TFullSCList = {type: "ServiceCenters/FullSCList", payload: IServiceC
 export type TChangePageData = TChangePageDataGeneric<"ServiceCenters/ChangePageData">;
 export type TChangePaging = TChangePagingGeneric<"ServiceCenters/ChangePaging">;
 export type TChangeDealershipPaging = TChangePagingGeneric<"ServiceCenters/ChangeDealershipPaging">;
+export type TSetDealerShipId = {type: "ServiceCenters/SetDealershipId", payload: number | undefined};
 
 export type TServiceCenterActions =
     | TCreate
@@ -97,4 +98,5 @@ export type TServiceCenterActions =
     | TChangePaging
     | TGetShort
     | TShortLoading
+    | TSetDealerShipId
     | TGetAll;

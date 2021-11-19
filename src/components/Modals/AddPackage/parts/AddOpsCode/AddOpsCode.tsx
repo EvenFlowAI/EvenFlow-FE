@@ -24,7 +24,7 @@ type TAssignOpsCodeModalProps = DialogProps & {
 
 const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "OPS CODE", val: el => el.serviceRequest.code, align: "left"},
-    {header: "DESCRIPTION", val: el => el.serviceRequest.description, align: "left"},
+    {header: "DESCRIPTION", val: el => el.serviceRequest.description ?? el.serviceRequestOverride?.description, align: "left"},
     {header: "PARTS UNIT COST", val: el => `$${el.serviceRequestOverride?.partsUnitCost || el.serviceRequest.partsUnitCost}`, align: "left"},
     {header: "# OF PARTS", val: el => `${el.serviceRequestOverride?.numberOfParts || el.serviceRequest.numberOfParts}`, align: "left"},
     {header: "PARTS AMOUNT", val: el => `$${el.serviceRequestOverride?.partsAmount || 0}`, align: "left"},

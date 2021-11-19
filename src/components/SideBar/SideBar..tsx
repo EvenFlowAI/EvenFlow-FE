@@ -89,10 +89,10 @@ const AdminLinks: LinkType[] = [
 const MainLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: true},
     {to: Routes.Optimizer.Base, name: "Optimizer Settings", exact: true, roles: true},
-    {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager", "Advisor"]},
+    {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.EmployeeSchedule, name: "Employee Schedule", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.EmployeeSchedule, name: "Employee Schedule", sub: true, roles: ["Owner", "Manager", "Advisor"]},
     {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true, roles: ["Owner", "Manager"]},
@@ -116,14 +116,18 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const {pathname} = useLocation();
     const {selectedSC} = useSCs();
     const history = useHistory();
+
     const links: LinkType[] = useMemo(() => {
-        if (matchPath(pathname, Routes.Admin.Base))
+        if (matchPath(pathname, Routes.Admin.Base)) {
             return currentUser?.isSuperUser ? SULinks : AdminLinks;
+        }
         return MainLinks;
     }, [currentUser, pathname]);
+
     const handleLogoClick = () => {
         history.push(Routes.Admin.Base);
     }
+
     const closeSidebar = () => {
         if (isXS) {
             onClose();
@@ -151,8 +155,10 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
                     if (!link.roles) {
                         return null;
                     }
-                } else if (currentUser?.role && !link.roles.includes(currentUser.role)) {
-                    return null;
+                } else {
+                    if (currentUser?.role && !link.roles.includes(currentUser.role)) {
+                        return null;
+                    }
                 }
                 return <ListItem
                     disableGutters

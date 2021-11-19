@@ -19,10 +19,11 @@ export const PERMISSIONS: TRouteRoleMap[] = [
     {route: Routes.Optimizer.AppointmentSlotScoring, roles: ["Owner", "Manager"]},
     {route: Routes.Optimizer.AppointmentValue, roles: ["Owner", "Manager"]},
     {route: Routes.Optimizer.CapacitySettings, roles: ["Owner", "Manager"]},
-    {route: Routes.Optimizer.EmployeeSchedule, roles: ["Owner", "Manager"]},
+    {route: Routes.Optimizer.EmployeeSchedule, roles: ["Owner", "Manager", "Advisor"]},
     {route: Routes.Optimizer.OptimizationWindows, roles: ["Owner", "Manager"]},
     {route: Routes.Optimizer.PricingSettings, roles: ["Owner", "Manager"]},
-    {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager", "Advisor"]},
+    {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager"]},
+    // {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager", "Advisor"]},
 
     {route: Routes.OfferManagement.Base, roles: ["Owner", "Advisor", "Manager"]},
 
