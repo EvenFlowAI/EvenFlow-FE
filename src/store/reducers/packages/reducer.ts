@@ -1,6 +1,7 @@
 import {IMake, IPackageById, IPackageByQuery} from "../../../api/types";
 import {createReducer} from "@reduxjs/toolkit";
 import {
+    getAllComplimentary,
     getComplimentary,
     getMakes,
     getPackageById,
@@ -26,6 +27,7 @@ type TState = {
     complimentaryPageData: IPageRequest;
     complimentarySortOrder: IOrder<IComplimentaryServiceByQuery>;
     complimentarySearchTerm: string;
+    allComplimentary: IComplimentaryServiceByQuery[];
 }
 
 const initialState: TState = {
@@ -42,6 +44,7 @@ const initialState: TState = {
     complimentaryPageData: {...defaultPageData},
     complimentarySortOrder: {...defaultOrder},
     complimentarySearchTerm: '',
+    allComplimentary: [],
 }
 
 export const packagesReducer = createReducer(initialState, builder => builder
@@ -74,5 +77,8 @@ export const packagesReducer = createReducer(initialState, builder => builder
     })
     .addCase(setComplimentarySearchTerm, (state, { payload }) => {
         return {...state, complimentarySearchTerm: payload}
+    })
+    .addCase(getAllComplimentary, (state, { payload }) => {
+        return {...state, allComplimentary: payload}
     })
 );
