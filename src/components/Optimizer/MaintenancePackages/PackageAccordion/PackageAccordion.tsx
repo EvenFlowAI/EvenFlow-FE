@@ -49,7 +49,8 @@ export type TSummaryCell = {
     isEditable: boolean;
     optionType: number;
     numberValue: number;
-    fieldName: string,
+    fieldName: string;
+    error?: boolean;
 }
 
 export type TCellData = {

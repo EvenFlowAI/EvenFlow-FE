@@ -219,6 +219,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const [isApplyBusinessRules, setApplyBusinessRules] = useState<boolean>(false);
     const [selectedMakes, setSelectedMakes] = useState<string[]>([]);
     const [selectedModels, setSelectedModels] = useState<string[]>([]);
+    const [optionError, setOptionError] = useState<boolean>(false);
 
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
@@ -336,6 +337,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     const isValid = () => {
         if (assignedOpsCodes.length < 3) {
+            setOptionError(true);
             showError('Assign Ops Code for each of the Package`s Options')
             return false;
         } else {
@@ -578,8 +580,10 @@ const AddPackage: React.FC<TModalProps> = (props) => {
             </DialogActions>
 
             <AssignOpsCode
-                title="ASSIGN OPS CODE"
+                title="ASSIGN MAINTENANCE PACKAGE OPTIONS OPS CODES"
                 open={isAssignOpsCodeOpen}
+                optionError={optionError}
+                setOptionError={setOptionError}
                 onClose={onAssignOpsCodeClose}
                 selectedCodes={assignedOpsCodes}
                 isEditing={props.isEditing}

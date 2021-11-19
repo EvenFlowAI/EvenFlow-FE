@@ -100,6 +100,9 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
             if (item.fieldName.toLowerCase().includes('hours') && item.numberValue > 100) {
                 return classes.errorCell;
             }
+            if (item.numberValue <= 0) {
+                return classes.errorCell;
+            }
             return classes.editableCell
         }
         return classes.cell;
@@ -117,8 +120,8 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
                         {
                             item.isEditable && isEdit ? <input
                                 type="number"
-                                min="0.01"
-                                step="0.01"
+                                min={item.fieldName.toLowerCase().includes('hours') ? "0.1" : "0.01"}
+                                step={item.fieldName.toLowerCase().includes('hours') ? "0.1" : "0.01"}
                                 max={item.fieldName.toLowerCase().includes('hours') ? '100' : undefined}
                                 maxLength={3}
                                 className={classes.input}
