@@ -27,6 +27,7 @@ type TProps = DialogProps<ISchedule> & {
     customId?: number;
     onClear: (t: keyof TIds) => void;
 }
+
 type TForm = {
     timeStart: moment.Moment|null;
     timeEnd: moment.Moment|null;
