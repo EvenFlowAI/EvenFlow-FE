@@ -49,7 +49,7 @@ export const getOptionsTableData = (pack: IPackageById) => {
         });
         data.complimentaryLaborHours.push({
             numberValue: option.complimentaryServiceLaborHours,
-            isEditable: true,
+            isEditable: Boolean(pack.complimentaryServices.length),
             optionType: option.type,
             fieldName: 'complimentaryServiceLaborHours',
         });
@@ -61,7 +61,7 @@ export const getOptionsTableData = (pack: IPackageById) => {
         });
         data.complimentaryPrice.push({
             numberValue: option.complimentaryServicePrice,
-            isEditable: true,
+            isEditable: Boolean(pack.complimentaryServices.length),
             optionType: option.type,
             fieldName: 'complimentaryServicePrice',
         });
@@ -111,15 +111,22 @@ export const checkIsValid = (packageData: IPackageById | null): [boolean, string
         return packageData?.complimentaryServices?.length ? option.complimentaryServices.length > 0 : true}));
 
     const allOptionsHaveNames = !!packageData?.options.every(option => option?.name?.length);
-    if (allRequestsHavePriceAndHours && requestsIncluded && allOptionsHaveNames && complimentaryIncluded) isValid = true;
-    if (complimentaryIncluded && !allComplimentaryHavePriceAndHours) {
-        isValid = false;
-        messages.push('Complimentary Requests Market Prices and Invoiced Labor Hours must be more than 0');
+
+    if (allRequestsHavePriceAndHours && requestsIncluded && allOptionsHaveNames) isValid = true;
+
+    if (packageData?.complimentaryServices?.length) {
+        if (!allComplimentaryHavePriceAndHours) {
+            isValid = false;
+            messages.push('Complimentary Requests Market Prices and Invoiced Labor Hours must be more than 0');
+        }
+        if (!complimentaryIncluded) {
+            isValid = false;
+            messages.push(`Please choose at least one COMPLIMENTARY Request for each Package Option`)
+        }
     }
 
     if (!allOptionsHaveNames) messages.push('Please enter name for each Option of Package');
     if (!allRequestsHavePriceAndHours) messages.push('Service Requests Market Prices and Invoiced Labor Hours must be more than 0');
-    if (!complimentaryIncluded) messages.push(`Please choose at least one COMPLIMENTARY Request for each Package Option`)
     if (!requestsIncluded) messages.push(`Please choose at least one SERVICE Request for each Package Option`);
 
     return [isValid, messages];
