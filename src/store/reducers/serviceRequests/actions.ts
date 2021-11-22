@@ -26,7 +26,6 @@ export const setNonSelectedFilter = createAction<Partial<IServiceRequestNonAdded
 
 export const loadNonSelectedServiceRequests = (serviceCenterId: number, isAssigned?: boolean): AppThunk =>
     async (dispatch, getState) => {
-        console.log(isAssigned);
     const {nonSelectedFilter, nonSelectedPageData, nonSelectedOrder} = getState().serviceRequests;
     dispatch(setLoadingNonSelected(true));
     try {
