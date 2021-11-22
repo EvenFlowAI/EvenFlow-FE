@@ -96,23 +96,31 @@ export const getOptionsTableData = (pack: IPackageById) => {
 export const checkIsValid = (packageData: IPackageById | null): [boolean, string[] | []] => {
     let isValid = false;
     let messages = [];
-    const allPricesAndHoursFilled = !packageData?.options.find(option => (
+    const allRequestsHavePriceAndHours = !packageData?.options.find(option => (
         !Boolean(option.serviceRequestPrice)
         || !Boolean(option.serviceRequestLaborHours)
-        || !Boolean(option.complimentaryServicePrice)
-        || !Boolean(option.complimentaryServiceLaborHours)
     ));
+
+    const allComplimentaryHavePriceAndHours = !packageData?.options.find(option => (
+        !Boolean(option.complimentaryServicePrice) || !Boolean(option.complimentaryServiceLaborHours)
+    ))
+
     const requestsIncluded = Boolean(packageData?.options.every(option => option.serviceRequests.length > 0));
+
     const complimentaryIncluded = Boolean(packageData?.options.every(option => {
         return packageData?.complimentaryServices?.length ? option.complimentaryServices.length > 0 : true}));
 
     const allOptionsHaveNames = !!packageData?.options.every(option => option?.name?.length);
+    if (allRequestsHavePriceAndHours && requestsIncluded && allOptionsHaveNames && complimentaryIncluded) isValid = true;
+    if (complimentaryIncluded && !allComplimentaryHavePriceAndHours) {
+        isValid = false;
+        messages.push('Complimentary Requests Market Prices and Invoiced Labor Hours must be more than 0');
+    }
+
     if (!allOptionsHaveNames) messages.push('Please enter name for each Option of Package');
-    if (allPricesAndHoursFilled && requestsIncluded && allOptionsHaveNames && complimentaryIncluded) isValid = true;
-    if (!allPricesAndHoursFilled) messages.push('Market Prices and Invoiced Labor Hours must be more than 0');
+    if (!allRequestsHavePriceAndHours) messages.push('Service Requests Market Prices and Invoiced Labor Hours must be more than 0');
     if (!complimentaryIncluded) messages.push(`Please choose at least one COMPLIMENTARY Request for each Package Option`)
-    if (!requestsIncluded) messages.push(
-        `Please choose at least one SERVICE Request for each Package Option`
-    );
+    if (!requestsIncluded) messages.push(`Please choose at least one SERVICE Request for each Package Option`);
+
     return [isValid, messages];
 }
