@@ -19,7 +19,7 @@ type MakeAndModelProps = {
     isApplyBusinessRules?:boolean;
 }
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles(() => ({
     tag: {
         display: 'flex',
         alignItems: 'center',
