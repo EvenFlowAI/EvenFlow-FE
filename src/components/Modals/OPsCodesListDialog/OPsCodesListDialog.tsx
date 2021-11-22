@@ -71,9 +71,9 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id));
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id, Boolean(props.selectedPreviously)));
         }
-    }, [dispatch, selectedSC]);
+    }, [dispatch, selectedSC, props.selectedPreviously]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
