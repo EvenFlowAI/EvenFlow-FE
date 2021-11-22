@@ -23,7 +23,9 @@ import Checkbox from "../../UI/Checkbox";
 import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../store/reducers/packages/types";
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
-import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
+import {
+    loadAllAssignedServiceRequests,
+} from "../../../store/reducers/serviceRequests/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 
 type TModalProps = DialogProps & {
@@ -205,7 +207,7 @@ const initialValues = {
 
 const AddPackage: React.FC<TModalProps> = (props) => {
     const { packages, currentPackage } = useSelector((state: RootState) => state.packages);
-    const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
+    const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
     const { selectedSC } = useSCs();
 
@@ -225,6 +227,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
     const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
     const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
+
     const classes = useStyles();
     const autoCompleteStyles = useAutocompleteStyles();
     const dispatch = useDispatch();
@@ -234,7 +237,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id))
-            props.isEditing && dispatch(loadAssignedServiceRequests(selectedSC.id));
+            props.isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
         }
     }, [dispatch, selectedSC, props.isEditing])
 
@@ -244,10 +247,10 @@ const AddPackage: React.FC<TModalProps> = (props) => {
             setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
             setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
             setApplyBusinessRules(currentPackage.isApplyBusinessRules);
-            if (assignedList) {
+            if (allAssignedList) {
                 setOpsCodes(() => {
                     const selectedServices = currentPackage.serviceRequests.map(item => item.id);
-                    return assignedList.filter(item => selectedServices.includes(item.id));
+                    return allAssignedList.filter(item => selectedServices.includes(item.id));
                 })
             }
             if (currentPackage.businessRules) {
@@ -263,7 +266,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                 })
             }
         }
-    }, [currentPackage, props.isEditing, assignedList])
+    }, [currentPackage, props.isEditing, allAssignedList])
 
     const onCancel = useCallback(() => {
         setFormIsChecked(false);

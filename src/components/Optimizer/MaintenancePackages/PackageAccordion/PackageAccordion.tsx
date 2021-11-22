@@ -412,12 +412,16 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         <SummaryRow
                             isEdit={isEdit}
                             setIsEdit={setIsEdit}
+                            isComplimentary
+                            packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
                             summaryText="Invoiced Labor Hours:"
                             valuesArray={detailsData.complimentaryLaborHours}
                             onInputChange={onInputChange}/>
                         <SummaryRow
                             isEdit={isEdit}
                             setIsEdit={setIsEdit}
+                            packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
+                            isComplimentary
                             summaryText="Market Price:"
                             valuesArray={detailsData.complimentaryPrice}
                             onInputChange={onInputChange}/>

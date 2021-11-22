@@ -16,6 +16,7 @@ import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import {yearOptions} from "./MaintenanceDetails";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -34,10 +35,6 @@ type TSelect = {
     noVehicle?: boolean;
     isVin?: boolean;
 };
-
-const year = moment.utc().year();
-const YEARS = 20;
-const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
 type TOptionsState = {[s: string]: string[]};
 const blankOptions: TOptionsState = {};

@@ -33,7 +33,7 @@ import {
     setLoadingAdmin,
     setAdminPaging,
     setAdminPageData,
-    setAdminFilter, setAssignedOrdering, setNonSelectedOrder,
+    setAdminFilter, setAssignedOrdering, setNonSelectedOrder, getAllAssignedServiceRequests,
 } from "./actions";
 import {defaultOrder} from "../../../config/config";
 
@@ -50,6 +50,7 @@ type TState = {
     nonSelectedOrder: IOrder<IServiceRequest>;
     nonSelectedFilter: IServiceRequestNonAddedFilter;
     assignedList: IAssignedServiceRequest[];
+    allAssignedList: IAssignedServiceRequest[];
     assignedOrdering: IOrder<IAssignedServiceRequest>;
     assignedLoading: boolean;
     assignedPaging: IPagingResponse;
@@ -78,6 +79,7 @@ const initialState: TState = {
     nonSelectedPageData: {...defaultPageData},
     nonSelectedFilter: {searchTerm: ""},
     assignedList: [],
+    allAssignedList: [],
     assignedLoading: false,
     assignedPaging: {...defaultPaging},
     assignedOrdering: {...defaultOrder},
@@ -116,6 +118,9 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(getAssignedServiceRequests, (state, {payload}) => {
             return {...state, assignedList: payload};
+        })
+        .addCase(getAllAssignedServiceRequests, (state, {payload}) => {
+            return {...state, allAssignedList: payload};
         })
         .addCase(setAssignedLoading, (state, {payload}) => {
             return {...state, assignedLoading: payload};
