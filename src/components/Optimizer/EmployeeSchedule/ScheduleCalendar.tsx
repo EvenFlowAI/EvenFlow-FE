@@ -108,14 +108,14 @@ export const ScheduleCalendar = () => {
     const {isOpen, onOpen, onClose} = useModal();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const [start, end] = useMemo(() => getStartEndDates(selectedDate, isXS), [selectedDate, isXS])
 
     // const now = moment();
     const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS]);
 
     useEffect(() => {
         if (selectedSC) {
-            const [start, end] = getStartEndDates(selectedDate, isXS);
-            dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
+            if (start && end) dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
             dispatch(loadWorkingDays(selectedSC.id));
         }
     }, [dispatch, selectedSC, selectedDate, filters, isXS]);

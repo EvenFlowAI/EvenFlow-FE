@@ -9,6 +9,8 @@ type TSummaryProps = {
     onInputChange?: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => void;
     isEdit?: boolean;
     setIsEdit?: Dispatch<SetStateAction<boolean>>
+    isComplimentary?: boolean;
+    packageHasComplimentary?: boolean;
 }
 
 const cellStyles = {
@@ -74,7 +76,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInputChange, isEdit, setIsEdit
+const SummaryRow: React.FC<TSummaryProps> = ({ isComplimentary, packageHasComplimentary, summaryText, valuesArray, onInputChange, isEdit, setIsEdit
 }) => {
     const classes = useStyles();
 
@@ -96,6 +98,9 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
     }
 
     const getClassName = (item: TSummaryCell) => {
+        if (isComplimentary && !packageHasComplimentary) {
+            return classes.cell;
+        }
         if (item.isEditable) {
             if (item.fieldName.toLowerCase().includes('hours') && item.numberValue > 100) {
                 return classes.errorCell;

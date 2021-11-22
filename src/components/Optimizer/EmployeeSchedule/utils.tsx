@@ -51,8 +51,11 @@ export const getStartEndDates = (date: moment.Moment, isXS: boolean): [string, s
             moment(date).endOf("day").toISOString()
         ]
     }
+    let correctedDate = date;
+    const dayOfWeek = moment(date).day();
+    if (dayOfWeek === 0) correctedDate = moment(date).subtract('1', 'days');
     return [
-        moment(date).startOf("week").add(1, 'days').toISOString(),
-        moment(date).endOf("week").add(1, 'days').toISOString(),
+        moment(correctedDate).startOf("week").add(1, 'days').toISOString(),
+        moment(correctedDate).endOf("week").add(1, 'days').toISOString(),
     ]
 }

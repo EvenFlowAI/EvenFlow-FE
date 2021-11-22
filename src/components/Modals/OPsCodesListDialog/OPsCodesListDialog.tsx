@@ -69,17 +69,12 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex, order]);
 
-    // useEffect(() => {
-    //   if (props.selectedPreviously) {
-    //       setSelectedCodes(props.selectedPreviously);
-    //   }
-    // }, [props.selectedPreviously])
-
     const handleSearch = useCallback(() => {
         if (selectedSC) {
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id));
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id, Boolean(props.selectedPreviously)));
         }
-    }, [dispatch, selectedSC]);
+    }, [dispatch, selectedSC, props.selectedPreviously]);
+
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
     }
