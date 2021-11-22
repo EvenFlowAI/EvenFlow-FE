@@ -277,6 +277,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setSelectedModels([]);
         setSelectedMakes([]);
         setApplyBusinessRules(false);
+        setSelectedMileages([]);
         props.onClose();
     }, [initialValues, props.onClose])
 
