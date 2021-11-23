@@ -41,6 +41,7 @@ const ComplimentaryServices = () => {
         state.packages.complimentaryPaging.numberOfRecords,
         state.packages.complimentarySortOrder,
         state.packages.complimentarySearchTerm,
+        state.packages.allComplimentary,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
