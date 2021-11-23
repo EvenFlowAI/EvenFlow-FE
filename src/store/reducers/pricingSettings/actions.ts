@@ -4,7 +4,7 @@ import {
     IDayOfWeekSetting,
     IPricingDemand,
     IPricingLevel,
-    IPricingSetting,
+    IPricingSetting, IRequestPricingLevel,
     ITimeOfYearSetting,
     ITimeWindowEl
 } from "./types";
@@ -121,4 +121,15 @@ export const setTimeOfYearPricing = (data: ITimeOfYearSetting): AppThunk => asyn
         );
     }
     await dispatch(loadTimeOfYearPricing(data.serviceCenterId));
+}
+
+export const getRequestsPricingLevels = createAction<IRequestPricingLevel[]>("PrisingSettings/GetSRPricingLevels");
+export const loadRequestsPricingLevels = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.GetServiceRequestsPricingLevels, {params: {serviceCenterId}})
+        .then(result => {
+            console.log(result)
+        })
+        .catch(err => {
+            console.log('get service requests pricing levels error', err)
+        })
 }
