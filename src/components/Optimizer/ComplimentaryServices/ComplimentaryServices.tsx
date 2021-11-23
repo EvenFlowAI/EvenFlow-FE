@@ -65,7 +65,6 @@ const ComplimentaryServices = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadComplimentary(selectedSC.id))
-            dispatch(loadAllComplimentary(selectedSC.id))
         }
     }, [selectedSC])
 
@@ -75,12 +74,12 @@ const ComplimentaryServices = () => {
     }
 
     useEffect(() => {
-            setSelectedOpsCodes(() => {
-                const data: number[] = [];
-                allComplimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
-                return data;
-            });
-    }, [complimentary])
+        setSelectedOpsCodes(() => {
+            const data: number[] = [];
+            allComplimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
+            return data;
+        });
+    }, [allComplimentary])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setComplimentarySearchTerm(e.target.value))
@@ -146,6 +145,11 @@ const ComplimentaryServices = () => {
         if (selectedSC) await dispatch(loadComplimentary(selectedSC.id));
     }
 
+    const handleAddOpsCodeOpen = () => {
+        if (selectedSC) dispatch(loadAllComplimentary(selectedSC.id))
+        onAddOpsCodeOpen()
+    }
+
     return (
         <div>
             <TitleContainer
@@ -161,7 +165,7 @@ const ComplimentaryServices = () => {
                         style={{marginLeft: 16}}
                         color="primary"
                         variant="contained"
-                        onClick={onAddOpsCodeOpen}
+                        onClick={handleAddOpsCodeOpen}
                     >
                         Add Ops Code
                     </Button>
