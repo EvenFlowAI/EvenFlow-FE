@@ -5,7 +5,7 @@ import {
     IDesirabilityForm,
     IDesirabilityItem, IOptimizationSetting,
     IOptimizationSettingsCreateForm, IOptimizationSettingValueForm,
-    IProximity
+    IProximity, ISlotRange, TRange
 } from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -59,4 +59,30 @@ export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): 
 export const setSettingValues = (data: IOptimizationSettingValueForm, serviceCenterId:number, podId?: number): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
     dispatch(loadOptimizationSettings(serviceCenterId, podId));
+}
+
+export const getRange = createAction<ISlotRange>("SlotScoring/GetRange");
+export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => dispatch => {
+    const data = {serviceCenterId, podId}
+    Api.call(Api.endpoints.SlotScoring.GetRange, {params: data})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getRange(result.data));
+            }
+        })
+        .catch(err => {
+            console.log('load slot range error', err)
+        })
+}
+
+export const updateRange = (serviceCenterId: number, data: TRange, podId?: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.SlotScoring.UpdateRange, {data})
+        .then(result => {
+            if (result?.data) {
+                dispatch(loadRange(serviceCenterId, podId));
+            }
+        })
+        .catch(err => {
+            console.log('update range error', err)
+        })
 }

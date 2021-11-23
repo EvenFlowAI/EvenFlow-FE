@@ -9,7 +9,7 @@ export const getDaysOfWeek = (date: moment.Moment, isXS: boolean): moment.Moment
     }
     const days = [];
     const weekStart = moment.utc(date).startOf("week");
-    for (let i=1; i<7; i++) {
+    for (let i=1; i<=7; i++) {
         days.push(moment(weekStart).add(i, "days"));
     }
     return days;
@@ -18,8 +18,8 @@ export const getFirstLastDaysOfWeek = (date: moment.Moment, isSingle: boolean): 
     if (isSingle) {
         return date.format("ddd, MMM D YYYY");
     }
-    const weekStart = moment(date).startOf("week");
-    const weekEnd = moment(date).endOf("week");
+    const weekStart = moment(date).startOf("week").add(1, 'days');
+    const weekEnd = moment(date).endOf("week").add(1, 'days');
     return `${weekStart.format("MMM D")} - ${weekEnd.format("MMM D")}`;
 }
 
@@ -51,8 +51,11 @@ export const getStartEndDates = (date: moment.Moment, isXS: boolean): [string, s
             moment(date).endOf("day").toISOString()
         ]
     }
+    let correctedDate = date;
+    const dayOfWeek = moment(date).day();
+    if (dayOfWeek === 0) correctedDate = moment(date).subtract('1', 'days');
     return [
-        moment(date).startOf("week").toISOString(),
-        moment(date).endOf("week").toISOString(),
+        moment(correctedDate).startOf("week").add(1, 'days').toISOString(),
+        moment(correctedDate).endOf("week").add(1, 'days').toISOString(),
     ]
 }

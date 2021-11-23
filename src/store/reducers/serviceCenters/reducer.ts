@@ -26,7 +26,8 @@ type TServiceCenterState = {
     order: IOrder<IServiceCenterExtended>,
     searchTerm: string,
     workingDays: EDay[],
-    analytics: ISCAnalytics
+    analytics: ISCAnalytics,
+    dealershipId: number | undefined,
 };
 
 const initialState: TServiceCenterState = {
@@ -44,7 +45,8 @@ const initialState: TServiceCenterState = {
     dealershipPaging: {...defaultPaging},
     pageData: {...defaultPageData},
     workingDays: [],
-    analytics: blankAnalytics
+    analytics: blankAnalytics,
+    dealershipId: undefined,
 };
 
 export const serviceCenterReducer = (state=initialState, action: TServiceCenterActions): TServiceCenterState => {
@@ -75,6 +77,8 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, fullSCList: action.payload};
         case "ServiceCenters/SelectSC":
             return {...state, selectedSC: action.payload};
+        case "ServiceCenters/SetDealershipId":
+            return {...state, dealershipId: action.payload};
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
                 return {...state, workingDays: action.payload};
@@ -110,6 +114,7 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
                 return {...state, searchTerm: action.payload, pageData: {...state.pageData, pageIndex: 0}};
             }
             return state;
+
         default:
             return state;
     }

@@ -11,8 +11,11 @@ import {AppointmentAllocationPage} from "./AppointmentAllocation/AppointmentAllo
 import {EmployeeSchedule} from "./EmployeeSchedule/EmployeeSchedule";
 import {PricingSettingsPage} from "./PricingSettings/PricingSettingsPage";
 import {ServiceRequests} from "./ServiceRequests/ServiceRequests";
+import {useCurrentUser} from "../../utils/hooks";
+import {Roles} from "../../config/constants";
 
 export const OptimizerPage = () => {
+    const currentUer = useCurrentUser();
     return <ContentContainer>
         <Switch>
             <PrivateRoute path={Routes.Optimizer.ServiceRequests} component={ServiceRequests} />
@@ -23,7 +26,7 @@ export const OptimizerPage = () => {
             <PrivateRoute path={Routes.Optimizer.AppointmentAllocation} component={AppointmentAllocationPage} />
             <PrivateRoute path={Routes.Optimizer.OptimizationWindows} component={OptimizationWindowsPage} />
             <PrivateRoute path={Routes.Optimizer.PricingSettings} component={PricingSettingsPage} />
-            <Redirect to={Routes.Optimizer.ServiceRequests} />
+            <Redirect to={currentUer?.role === Roles.Advisor ? Routes.Optimizer.EmployeeSchedule : Routes.Optimizer.ServiceRequests} />
         </Switch>
     </ContentContainer>
 }

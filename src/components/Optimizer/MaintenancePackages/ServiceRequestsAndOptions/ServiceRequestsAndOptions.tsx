@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {IPackageById, IPackageOptionDetailed} from "../../../../api/types";
 import {IconButton, TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Input} from "@material-ui/core";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
@@ -21,7 +21,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
     const optionsClasses = useOptionsTableStyles();
     const showError = useException();
 
-    const getCellClass = (cellIndex: number, rowIndex: number) => {
+    const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (props.packageData){
             if (cellIndex === 0) {
                 switch (rowIndex) {
@@ -52,7 +52,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                     return classes.cell
             }
         }
-    }
+    }, [props.packageData])
 
     const onOptionNameClick = (option: IPackageOptionDetailed): void => {
         props.setEditingOption(option);
@@ -85,7 +85,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                         Parts Amount
                     </TableCell>
                     <TableCell className={classes.headerCell} align="center" width={110} key="5">
-                       Total
+                        Total
                     </TableCell>
                     <TableCell className={classes.emptyCell} width={16} key="6"/>
 
@@ -110,10 +110,10 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                 {props.packageData?.serviceRequests.map((request, rowIndex) => {
                     return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.code}>
                         <TableCell className={classes.requestCell} key="1">{request.description}</TableCell>
-                        <TableCell className={classes.requestCell} key="2" align="center">{request.durationInHours}</TableCell>
-                        <TableCell className={classes.requestCell} key="3" align="center">${request.laborAmount}</TableCell>
-                        <TableCell className={classes.requestCell} key="4" align="center">${request.partsAmount}</TableCell>
-                        <TableCell className={classes.requestCell} key="5" align="center">${request.price}</TableCell>
+                        <TableCell className={classes.requestCell} key="2" align="center" width={100}>{request.durationInHours}</TableCell>
+                        <TableCell className={classes.requestCell} key="3" align="center" width={100}>${request.laborAmount}</TableCell>
+                        <TableCell className={classes.requestCell} key="4" align="center" width={100}>${request.partsAmount}</TableCell>
+                        <TableCell className={classes.requestCell} key="5" align="center" width={100}>${request.laborAmount + request.partsAmount}</TableCell>
                         <TableCell className={classes.emptyCell} width={16} key="6"/>
 
                         {props.data.find(item => item.requestId === request.id)?.cellData

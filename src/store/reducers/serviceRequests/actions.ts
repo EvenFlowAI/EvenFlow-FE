@@ -24,7 +24,7 @@ export const setNonSelectedOrder = createAction<IOrder<IServiceRequest>>("Servic
 export const setNonSelectedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/NonSelectedPageData");
 export const setNonSelectedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/NonSelectedFilter");
 
-export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThunk =>
+export const loadNonSelectedServiceRequests = (serviceCenterId: number, isAssigned?: boolean): AppThunk =>
     async (dispatch, getState) => {
     const {nonSelectedFilter, nonSelectedPageData, nonSelectedOrder} = getState().serviceRequests;
     dispatch(setLoadingNonSelected(true));
@@ -37,7 +37,7 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number): AppThun
                     ...nonSelectedOrder,
                     status: EServiceStatus.None,
                     serviceCenterFilter: {
-                        isAssigned: false,
+                        isAssigned: Boolean(isAssigned),
                         id: serviceCenterId
                     }
                 }
@@ -75,6 +75,7 @@ export const assignServiceRequests = (
 
 // Assigned Service Requests
 export const getAssignedServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequests/GetAssigned");
+export const getAllAssignedServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequests/GetAllAssigned");
 export const setAssignedLoading = createAction<boolean>("ServiceRequests/SetAssignedLoading");
 export const setAssignedPaging = createAction<IPagingResponse>("ServiceRequests/SetAssignedPaging");
 export const setAssignedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetAssignedPageData");
@@ -96,6 +97,19 @@ export const loadAssignedServiceRequests = (serviceCenterId: number): AppThunk =
         dispatch(setAssignedLoading(false));
         throw e;
     }
+}
+
+export const loadAllAssignedServiceRequests = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(
+        Api.endpoints.ServiceRequests.GetAssignedOverrides,
+        {params: {pageIndex: 0, pageSize: 0, serviceCenterId}}
+    )
+        .then(result => {
+            if (result?.data?.result) dispatch(getAllAssignedServiceRequests(result.data.result));
+        })
+        .catch(err => {
+            console.log('get all assigned requests error', err)
+        })
 }
 export const updateAssignedServiceRequest = (
     data: IServiceRequestOverrideEditRequest, id: number, serviceCenterId?: number,

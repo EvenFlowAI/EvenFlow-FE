@@ -23,16 +23,17 @@ import Checkbox from "../../UI/Checkbox";
 import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../store/reducers/packages/types";
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
-import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
+import {
+    loadAllAssignedServiceRequests,
+} from "../../../store/reducers/serviceRequests/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import Mileage from "./parts/Mileage/Mileage";
 
 type TModalProps = DialogProps & {
     isEditing?: boolean;
 };
 
 interface IVehiclesData {
-    mileageFrom: string;
-    mileageTo: string;
     yearFrom: string;
     yearTo: string;
     customerCriteria: ECustomerCriteria;
@@ -205,8 +206,7 @@ const initialValues = {
 
 const AddPackage: React.FC<TModalProps> = (props) => {
     const { packages, currentPackage } = useSelector((state: RootState) => state.packages);
-    const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
-    const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
+    const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const { selectedSC } = useSCs();
 
     const [packageName, setPackageName] = useState<string>('');
@@ -219,11 +219,14 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     const [isApplyBusinessRules, setApplyBusinessRules] = useState<boolean>(false);
     const [selectedMakes, setSelectedMakes] = useState<string[]>([]);
     const [selectedModels, setSelectedModels] = useState<string[]>([]);
+    const [selectedMileages, setSelectedMileages] = useState<string[]>([]);
+    const [optionError, setOptionError] = useState<boolean>(false);
 
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
     const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
     const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
+
     const classes = useStyles();
     const autoCompleteStyles = useAutocompleteStyles();
     const dispatch = useDispatch();
@@ -233,7 +236,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id))
-            props.isEditing && dispatch(loadAssignedServiceRequests(selectedSC.id));
+            props.isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
         }
     }, [dispatch, selectedSC, props.isEditing])
 
@@ -243,18 +246,17 @@ const AddPackage: React.FC<TModalProps> = (props) => {
             setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
             setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
             setApplyBusinessRules(currentPackage.isApplyBusinessRules);
-            if (assignedList) {
+            if (allAssignedList) {
                 setOpsCodes(() => {
                     const selectedServices = currentPackage.serviceRequests.map(item => item.id);
-                    return assignedList.filter(item => selectedServices.includes(item.id));
+                    return allAssignedList.filter(item => selectedServices.includes(item.id));
                 })
             }
             if (currentPackage.businessRules) {
                 setSelectedMakes(currentPackage.businessRules.vehicleMakes);
                 setSelectedModels(currentPackage.businessRules.vehicleModels);
+                setSelectedMileages(currentPackage.businessRules.vehicleMileageValues);
                 setVehiclesData({
-                    mileageFrom: currentPackage.businessRules.vehicleMileageRange?.from?.toString(),
-                    mileageTo: currentPackage.businessRules.vehicleMileageRange?.to?.toString(),
                     yearFrom: currentPackage.businessRules.vehicleYearRange?.from?.toString(),
                     yearTo: currentPackage.businessRules.vehicleYearRange?.to?.toString(),
                     customerCriteria: currentPackage.businessRules.customerCriteria,
@@ -262,7 +264,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                 })
             }
         }
-    }, [currentPackage, props.isEditing, assignedList])
+    }, [currentPackage, props.isEditing, allAssignedList])
 
     const onCancel = useCallback(() => {
         setFormIsChecked(false);
@@ -275,6 +277,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         setSelectedModels([]);
         setSelectedMakes([]);
         setApplyBusinessRules(false);
+        setSelectedMileages([]);
         props.onClose();
     }, [initialValues, props.onClose])
 
@@ -322,20 +325,17 @@ const AddPackage: React.FC<TModalProps> = (props) => {
     }, [opsCodes, packages])
 
     const isBusinessRulesValid = () => {
-        const { yearFrom, yearTo, mileageFrom, mileageTo } = vehiclesData;
-        if (mileageFrom && mileageTo && (+mileageFrom > +mileageTo)) {
-            showError('Check the Mileage fields - "To" must be more than "From"')
-           return false
-        }
+        const { yearFrom, yearTo } = vehiclesData;
         if (yearFrom && yearTo && (+yearFrom > +yearTo)) {
             showError('Check the Vehicle Year fields - "To" must be more than "From"')
             return false
         }
-        return selectedModels.length && selectedMakes.length && yearFrom && yearTo && mileageFrom && mileageTo;
+        return selectedModels.length && selectedMakes.length && yearFrom && yearTo && selectedMileages.length;
     }
 
     const isValid = () => {
         if (assignedOpsCodes.length < 3) {
+            setOptionError(true);
             showError('Assign Ops Code for each of the Package`s Options')
             return false;
         } else {
@@ -365,10 +365,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                                 from: +vehiclesData.yearFrom,
                                 to: +vehiclesData.yearTo
                         },
-                        vehicleMileageRange: {
-                            from: +vehiclesData.mileageFrom,
-                                to: +vehiclesData.mileageTo,
-                        },
+                        vehicleMileageValues: selectedMileages,
                         customerCriteria: vehiclesData.customerCriteria,
                     }
                 } else {
@@ -383,9 +380,6 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     const checkIsErrorField = (fieldName: string, vehiclesData: IVehiclesData) => {
         let isError = false;
-        if (fieldName.includes('mileage') && vehiclesData?.mileageFrom && vehiclesData?.mileageTo) {
-            isError = vehiclesData?.mileageFrom > vehiclesData?.mileageTo
-        }
         if (fieldName.includes('year') && vehiclesData?.yearFrom && vehiclesData?.yearTo) {
             isError = vehiclesData?.yearFrom > vehiclesData?.yearTo
         }
@@ -472,77 +466,47 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         formIsChecked={formIsChecked}
                         isApplyBusinessRules={isApplyBusinessRules}
                     />
-
-                    <div className={classes.formWrapper} style={{ marginBottom: 16}}>
-                        <div style={{ width: '47%'}}>
-                            <div className={classes.label}>Mileage</div>
-                            <div className={classes.twoFieldsWrapper}>
-                                <Autocomplete
-                                    disabled={!isApplyBusinessRules}
-                                    classes={autoCompleteStyles}
-                                    options={mileage.map(item => item.value.toString())}
-                                    disableCloseOnSelect
-                                    disableClearable
-                                    getOptionSelected={(option, value) => option === value}
-                                    value={vehiclesData?.mileageFrom}
-                                    onChange={onFormFieldChange('mileageFrom')}
-                                    renderInput={autocompleteRender({
-                                        label: "",
-                                        placeholder: 'From',
-                                        error: !vehiclesData.mileageFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('mileage', vehiclesData)
-                                    })}
-                                />
-                                <Autocomplete
-                                    disabled={!isApplyBusinessRules}
-                                    classes={autoCompleteStyles}
-                                    options={mileage.map(item => item.value.toString())}
-                                    disableCloseOnSelect
-                                    disableClearable
-                                    getOptionSelected={(option, value) => option === value}
-                                    value={vehiclesData?.mileageTo}
-                                    onChange={onFormFieldChange('mileageTo')}
-                                    renderInput={autocompleteRender({
-                                        label: '',
-                                        placeholder: 'To',
-                                        error: !vehiclesData.mileageTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('mileage', vehiclesData)
-                                    })}
-                                />
-                            </div>
-                        </div>
-                        <div style={{ width: '47%'}}>
-                            <div className={classes.label}>Vehicle Year</div>
-                            <div className={classes.twoFieldsWrapper}>
-                                <Autocomplete
-                                    disabled={!isApplyBusinessRules}
-                                    classes={autoCompleteStyles}
-                                    disableClearable
-                                    options={yearOptions}
-                                    disableCloseOnSelect
-                                    getOptionSelected={(option, value) => option === value}
-                                    value={vehiclesData?.yearFrom}
-                                    onChange={onFormFieldChange('yearFrom')}
-                                    renderInput={autocompleteRender({
-                                        label: '',
-                                        placeholder: 'From',
-                                        error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
-                                    })}
-                                />
-                                <Autocomplete
-                                    disabled={!isApplyBusinessRules}
-                                    classes={autoCompleteStyles}
-                                    options={yearOptions}
-                                    disableClearable
-                                    disableCloseOnSelect
-                                    getOptionSelected={(option, value) => option === value}
-                                    value={vehiclesData?.yearTo}
-                                    onChange={onFormFieldChange('yearTo')}
-                                    renderInput={autocompleteRender({
-                                        label: '',
-                                        placeholder: 'To',
-                                        error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
-                                    })}
-                                />
-                            </div>
+                    <Mileage
+                        disabled={!isApplyBusinessRules}
+                        selectedMileages={selectedMileages}
+                        isApplyBusinessRules={isApplyBusinessRules}
+                        formIsChecked={formIsChecked}
+                        setFormIsChecked={setFormIsChecked}
+                        setSelectedMileages={setSelectedMileages}
+                    />
+                    <div style={{ marginBottom: 16}}>
+                        <div className={classes.label}>Vehicle Year</div>
+                        <div className={classes.twoFieldsWrapper}>
+                            <Autocomplete
+                                disabled={!isApplyBusinessRules}
+                                classes={autoCompleteStyles}
+                                disableClearable
+                                options={yearOptions}
+                                disableCloseOnSelect
+                                getOptionSelected={(option, value) => option === value}
+                                value={vehiclesData?.yearFrom}
+                                onChange={onFormFieldChange('yearFrom')}
+                                renderInput={autocompleteRender({
+                                    label: '',
+                                    placeholder: 'From',
+                                    error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
+                                })}
+                            />
+                            <Autocomplete
+                                disabled={!isApplyBusinessRules}
+                                classes={autoCompleteStyles}
+                                options={yearOptions}
+                                disableClearable
+                                disableCloseOnSelect
+                                getOptionSelected={(option, value) => option === value}
+                                value={vehiclesData?.yearTo}
+                                onChange={onFormFieldChange('yearTo')}
+                                renderInput={autocompleteRender({
+                                    label: '',
+                                    placeholder: 'To',
+                                    error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
+                                })}
+                            />
                         </div>
                     </div>
                     <Autocomplete
@@ -578,8 +542,10 @@ const AddPackage: React.FC<TModalProps> = (props) => {
             </DialogActions>
 
             <AssignOpsCode
-                title="ASSIGN OPS CODE"
+                title="ASSIGN MAINTENANCE PACKAGE OPTIONS OPS CODES"
                 open={isAssignOpsCodeOpen}
+                optionError={optionError}
+                setOptionError={setOptionError}
                 onClose={onAssignOpsCodeClose}
                 selectedCodes={assignedOpsCodes}
                 isEditing={props.isEditing}

@@ -4,7 +4,7 @@ import {optimizerRoot} from "../utils";
 import {SearchInput} from "../../UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
-    changeComplimentaryPageData, loadAllComplimentary,
+    changeComplimentaryPageData,
     loadComplimentary,
     setComplimentarySearchTerm,
     setComplimentarySort
@@ -20,7 +20,7 @@ import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../config/constants";
 import AddServiceManually from "../../Modals/AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
-import {addOpsCodeFromList} from "../../../store/reducers/complimentary/actions";
+import {addOpsCodeFromList, loadAllComplimentary} from "../../../store/reducers/complimentary/actions";
 import {IOrder} from "../../../types/types";
 
 const ComplimentaryServices = () => {
@@ -41,7 +41,6 @@ const ComplimentaryServices = () => {
         state.packages.complimentaryPaging.numberOfRecords,
         state.packages.complimentarySortOrder,
         state.packages.complimentarySearchTerm,
-        state.packages.allComplimentary,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
@@ -63,46 +62,51 @@ const ComplimentaryServices = () => {
     ]
 
     useEffect(() => {
-        if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
-        if (selectedSC) dispatch(loadAllComplimentary(selectedSC.id))
+        if (selectedSC) {
+            dispatch(loadComplimentary(selectedSC.id))
+        }
     }, [selectedSC])
 
+    const handleAddManuallyClose = () => {
+        setEditedItem(undefined);
+        onAddManuallyClose();
+    }
+
     useEffect(() => {
-            setSelectedOpsCodes(() => {
-                const data: number[] = [];
-                allComplimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
-                return data;
-            });
+        setSelectedOpsCodes(() => {
+            const data: number[] = [];
+            allComplimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
+            return data;
+        });
     }, [allComplimentary])
 
-    const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setComplimentarySearchTerm(e.target.value))
-    }, [])
+    }
 
     const handleSearch = useCallback(() => {
         if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
     }, [selectedSC]);
 
-    const handleCloseMenu = useCallback(() => {
+    const handleCloseMenu = () => {
         setAnchorEl(null);
         setEditedItem(undefined);
-    }, [])
+    }
 
-    const handleEdit = useCallback(() => {
+    const handleEdit = () => {
         setAnchorEl(null);
         onAddManuallyOpen();
-    }, [])
+    }
 
-    const askRemove = useCallback(() => {
+    const askRemove = () => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
             title: `Remove ${editedItem?.code} from Complimentary Services List?`,
             onConfirm: handleRemove
         });
-    }, [editedItem])
-
-    const handleRemove = useCallback ( async () => {
+    }
+    const handleRemove = async () => {
         if (selectedSC && editedItem) {
             try {
                 await Api.call(
@@ -118,27 +122,32 @@ const ComplimentaryServices = () => {
         } else {
             showError(SC_UNDEFINED);
         }
-    }, [selectedSC, editedItem, SC_UNDEFINED])
+    }
 
-    const handleOpenMenu = useCallback((el: IComplimentaryServiceByQuery) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleOpenMenu = (el: IComplimentaryServiceByQuery) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setEditedItem(el);
         setAnchorEl(e.currentTarget);
-    }, [])
+    }
 
-    const actions = useCallback((el:IComplimentaryServiceByQuery) => {
+    const actions = (el:IComplimentaryServiceByQuery) => {
         return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
-    }, [handleOpenMenu])
+    }
 
-    const onAddOpsCode = useCallback(async (selectedCodes: number[], serviceCenterId: number) => {
+    const onAddOpsCode = async (selectedCodes: number[], serviceCenterId: number) => {
         const newCodes = selectedCodes.filter(item => !selectedOpsCodes.includes(item));
-        await dispatch(addOpsCodeFromList(newCodes, serviceCenterId, showError));
+        await dispatch(addOpsCodeFromList(newCodes, serviceCenterId));
         await onAddOpsCodeClose();
-    }, [selectedOpsCodes])
+    }
 
-    const handleSort = useCallback((d: IOrder<IComplimentaryServiceByQuery>) => async () => {
+    const handleSort = (d: IOrder<IComplimentaryServiceByQuery>) => async () => {
         await dispatch(setComplimentarySort(d));
         if (selectedSC) await dispatch(loadComplimentary(selectedSC.id));
-    }, [selectedSC])
+    }
+
+    const handleAddOpsCodeOpen = () => {
+        if (selectedSC) dispatch(loadAllComplimentary(selectedSC.id))
+        onAddOpsCodeOpen()
+    }
 
     return (
         <div>
@@ -155,7 +164,7 @@ const ComplimentaryServices = () => {
                         style={{marginLeft: 16}}
                         color="primary"
                         variant="contained"
-                        onClick={onAddOpsCodeOpen}
+                        onClick={handleAddOpsCodeOpen}
                     >
                         Add Ops Code
                     </Button>
@@ -196,7 +205,7 @@ const ComplimentaryServices = () => {
                 onClose={onAddOpsCodeClose}
                 onSave={onAddOpsCode}
                 selectedPreviously={selectedOpsCodes}/>
-            <AddServiceManually open={isAddManuallyOpen} onClose={onAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
+            <AddServiceManually open={isAddManuallyOpen} onClose={handleAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
         </div>
     );
 };

@@ -246,7 +246,7 @@ export interface IBusinessRule {
     vehicleMakes: string[];
     vehicleModels: string[];
     vehicleYearRange: IYearRange;
-    vehicleMileageRange: IYearRange;
+    vehicleMileageValues: string[];
     customerCriteria: ECustomerCriteria;
 }
 

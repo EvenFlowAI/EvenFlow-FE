@@ -118,8 +118,8 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
     }, [description, selectedSC, duration, total, editedItem])
 
     return (
-        <BaseModal {...props} width={460}>
-            <DialogTitle onClose={onClose}>{title}</DialogTitle>
+        <BaseModal {...props} width={460} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>{title}</DialogTitle>
             <DialogContent>
                 <TextField
                     label='Service Description'
