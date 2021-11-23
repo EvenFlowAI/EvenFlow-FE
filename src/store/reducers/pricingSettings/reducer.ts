@@ -12,7 +12,7 @@ import {
     getPricingCalculations,
     getPricingDemand,
     getPricingLevels, getRequestsPricingLevels,
-    getSrList, getTimeOfYearPricing,
+    getSrList, getSRPricingSettings, getTimeOfYearPricing,
     getTimeWindows
 } from "./actions";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
@@ -26,6 +26,7 @@ type TState = {
     dWeekPricing: IDayOfWeekSetting[];
     tYearPricing: ITimeOfYearSetting[];
     srPricingLevels: IRequestPricingLevel[];
+    srPricingSettings: IRequestPricingLevel[];
 }
 const initialState: TState = {
     pricingLevels: [],
@@ -36,6 +37,7 @@ const initialState: TState = {
     dWeekPricing: [],
     tYearPricing: [],
     srPricingLevels: [],
+    srPricingSettings: [],
 };
 export const pricingSettingsReducer = createReducer<TState>(initialState, builder => builder
     .addCase(getPricingLevels, (state, {payload}) => {
@@ -61,5 +63,8 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
     })
     .addCase(getRequestsPricingLevels, (state, {payload}) => {
         return {...state, srPricingLevels: payload};
+    })
+    .addCase(getSRPricingSettings, (state, {payload}) => {
+        return {...state, srPricingSettings: payload};
     })
 );

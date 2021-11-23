@@ -1,21 +1,15 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {SquarePaper} from "../../../UI/Paper";
 import {PaperTitle} from "../UI";
-import {
-    Box,
-    Button,
-    TableCell,
-    TableHead,
-    TableRow,
-    TableBody,
-    withStyles,
-    Divider,
-} from "@material-ui/core";
-import {useConfirm, useModal} from "../../../../utils/hooks";
+import {Box, Button, Divider, TableBody, TableCell, TableHead, TableRow, withStyles,} from "@material-ui/core";
+import {useConfirm, useModal, useSCs} from "../../../../utils/hooks";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
 import {DenseTable} from "../../AppointmentAllocation/UI";
-import {OPsCodesListDialog} from "../../../Modals/OPsCodesListDialog/OPsCodesListDialog";
+import {useDispatch, useSelector} from "react-redux";
+import {loadSRPricingSettings, updateSRPricingSettings} from "../../../../store/reducers/pricingSettings/actions";
+import {RootState} from "../../../../store/rootReducer";
+import {EDemandCategory, IRequestPricingLevel} from "../../../../store/reducers/pricingSettings/types";
 
 enum SliderRange {
     Min = -10,
@@ -44,33 +38,6 @@ type TOpsCode = {
     id: number;
 }
 
-const mockTableData = [
-    {
-        opsCode: '1212434',
-        low: -5,
-        high: 5,
-        id: 1,
-    },
-    {
-        opsCode: '1212435',
-        low: 0,
-        high: 0,
-        id: 2,
-    },
-    {
-        opsCode: '1212436',
-        low: -4,
-        high: 7,
-        id: 3,
-    },
-    {
-        opsCode: '1212438',
-        low: -8,
-        high: 8,
-        id: 4,
-    }
-]
-
 const useStyles = makeStyles(() => ({
     headerCell: {
         fontWeight: 'bold',
@@ -81,11 +48,41 @@ const useStyles = makeStyles(() => ({
 
 const DayOfWeekOpsCode = () => {
     const { onOpen, onClose, isOpen } = useModal();
-    // TODO change data
-    const [opsCodes, setOpsCodes] = useState<TOpsCode[]>(mockTableData);
+    const { srPricingSettings } = useSelector((state: RootState) => state.pricingSettings);
+    const [opsCodes, setOpsCodes] = useState<TOpsCode[]>([]);
+    const [selectedCodes, setSelectedCodes] = useState<number[]>([]);
     const [deletingItem, setDeletingItem] = useState<TOpsCode | null>(null);
     const {askConfirm} = useConfirm();
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
     const classes = useStyles();
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadSRPricingSettings(selectedSC.id))
+        }
+    }, [selectedSC])
+
+    useEffect(() => {
+        if (srPricingSettings) {
+            // TODO change to ops code description or name
+            setOpsCodes(() => srPricingSettings.map(item => {
+                    let low = 0;
+                    let high = 0;
+                    const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
+                    const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
+                    if (lowValue) low = lowValue.value;
+                    if (highValue) high = highValue.value;
+                    return  {
+                        opsCode: item.serviceRequestId.toString(),
+                        id: item.serviceRequestId,
+                        low,
+                        high,
+                    }
+                })
+            )
+        }
+    }, [srPricingSettings])
 
     const handleRemove = useCallback(() => {
         // ToDo request
@@ -107,15 +104,18 @@ const DayOfWeekOpsCode = () => {
     }, [])
 
     const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
-        setOpsCodes(prev => {
-            const item = prev.find(item => item.id === id);
-            const filtered = prev.filter(item => item.id !== id);
-            if (item) {
-                const updated = {...item, [type]: val};
-                return [...filtered, updated].sort((a, b) => a.id - b.id);
+        if (selectedSC && !Array.isArray(val)) {
+            const data: Partial<IRequestPricingLevel> = {
+                serviceCenterId: selectedSC.id,
+                values: [
+                    {
+                        demandCategory: type === "low" ? EDemandCategory.Low : EDemandCategory.High,
+                        value: val,
+                    }
+                ]
             }
-            return prev;
-        })
+            dispatch(updateSRPricingSettings(id, data))
+        }
     }, [])
 
     return <SquarePaper variant="outlined">
@@ -128,7 +128,7 @@ const DayOfWeekOpsCode = () => {
         </Box>
         <Divider />
         <Box display="flex" m={2} alignItems="center">
-            <DenseTable>
+            {srPricingSettings.length ? <DenseTable>
                 <TableHead>
                     <TableRow>
                         <TableCell className={classes.headerCell} width="22%">
@@ -188,8 +188,8 @@ const DayOfWeekOpsCode = () => {
                     })}
                 </TableBody>
             </DenseTable>
+            : <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>No data</div>}
         </Box>
-        <OPsCodesListDialog onClose={onClose} open={isOpen} onSave={onOpsCodeSave} />
     </SquarePaper>;
 };
 

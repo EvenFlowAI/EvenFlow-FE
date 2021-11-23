@@ -6,7 +6,7 @@ import {
     IPricingLevel,
     IPricingSetting, IRequestPricingLevel,
     ITimeOfYearSetting,
-    ITimeWindowEl
+    ITimeWindowEl, TNewRequestsToPricing
 } from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
@@ -143,5 +143,51 @@ export const updateSRPricingLevels = (serviceRequestId: number, data: Partial<IR
         })
         .catch(err => {
             console.log('update service request pricing level error', err)
+        })
+}
+
+export const getSRPricingSettings = createAction<IRequestPricingLevel[]>("PricingSettings/GetSRPricingSettings");
+export const loadSRPricingSettings = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.GetServiceRequestsPricingSettings, {params: {serviceCenterId}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getSRPricingSettings(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('load service requests pricing settings error', err)
+        })
+}
+
+export const updateSRPricingSettings = (serviceRequestId: number, data: Partial<IRequestPricingLevel>): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.UpdateServiceRequestPricingSettings, {urlParams: {id: serviceRequestId}, data})
+        .then(result => {
+            if (result && data.serviceCenterId) dispatch(loadSRPricingSettings(data.serviceCenterId))
+        })
+        .catch(err => {
+            console.log('update service request pricing settings error', err)
+        })
+}
+
+export const daleteSRPricingSettings = (id: number, serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.DeleteServiceRequestPricingSettings, {urlParams: {id}})
+        .then(result => {
+            if (result) dispatch(loadSRPricingSettings(serviceCenterId))
+        })
+        .catch(err => {
+            console.log('delete service request pricing settings error', err)
+        })
+}
+
+
+export const addServiceRequestsToPricing = (data: TNewRequestsToPricing): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.AddServiceRequests, {data})
+        .then(result => {
+            if (result) {
+                dispatch(loadSRPricingSettings(data.serviceCenterId))
+            }
+        })
+        .catch(err => {
+            console.log('add service requests to pricing settings error', err)
         })
 }

@@ -76,3 +76,8 @@ export interface ITimeOfYearSetting {
     date: ParsableDate;
     comment?: string;
 }
+
+export type TNewRequestsToPricing = {
+    serviceCenterId: number;
+    serviceRequestIds: number[];
+}

@@ -159,7 +159,8 @@ type ApiRoutes = {
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
-        | "ChangeServiceRequestPricingLevels", TApiRoute>,
+        | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
+        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -311,7 +312,11 @@ export class Api {
             SetLevels: {route: "/pricing-settings/levels", method: "put"},
             Calculation: {route: "/pricing-settings/calculation", method: "get"},
             GetServiceRequestsPricingLevels: {route: "/pricing-settings/service-requests/pricing-levels", method: "get"},
-            ChangeServiceRequestPricingLevels: {route: "/pricing-settings/service-requests/pricing-levels/{id}", method: "put"}
+            ChangeServiceRequestPricingLevels: {route: "/pricing-settings/service-requests/pricing-levels/{id}", method: "put"},
+            GetServiceRequestsPricingSettings: {route: "/pricing-settings/service-requests", method: "get"},
+            UpdateServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "put"},
+            DeleteServiceRequestPricingSettings: {route: "/pricing-settings/service-requests?{id}", method: "delete"},
+            AddServiceRequests: {route: "/pricing-settings/service-requests", method: "post"},
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},
