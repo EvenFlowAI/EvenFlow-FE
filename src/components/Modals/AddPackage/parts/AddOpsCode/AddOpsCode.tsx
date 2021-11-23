@@ -69,11 +69,13 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         isLoading,
         servicesCount,
         search,
+        assignedPageData,
     ] = useSelector((state: RootState) => [
         state.serviceRequests.assignedList,
         state.serviceRequests.assignedLoading,
         state.serviceRequests.assignedPaging.numberOfRecords,
         state.serviceRequests.assignedFilter.searchTerm,
+        state.serviceRequests.assignedPageData,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.assignedPageData,
@@ -133,6 +135,7 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                     index="id"
                     smallHeaderFont
                     startActions={preActions}
+                    hidePagination={serviceList.length < assignedPageData.pageSize}
                     compact
                     rowData={tableData}
                     isLoading={isLoading}

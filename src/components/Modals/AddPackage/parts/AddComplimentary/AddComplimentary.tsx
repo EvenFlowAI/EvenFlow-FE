@@ -33,10 +33,12 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         complimentary,
         isLoading,
         servicesCount,
+        complimentaryPageData,
     ] = useSelector((state: RootState) => [
         state.packages.complimentary,
         state.packages.isComplimentaryLoading,
         state.packages.complimentaryPaging.numberOfRecords,
+        state.packages.complimentaryPageData,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
@@ -80,6 +82,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                     index="id"
                     startActions={preActions}
                     compact
+                    hidePagination={complimentary.length < complimentaryPageData.pageSize}
                     rowData={tableData}
                     isLoading={isLoading}
                     page={pageIndex}
