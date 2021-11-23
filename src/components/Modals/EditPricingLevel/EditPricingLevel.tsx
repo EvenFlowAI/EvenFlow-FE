@@ -7,6 +7,10 @@ import {Box, Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
+import {useDispatch} from "react-redux";
+import {updateSRPricingLevels} from "../../../store/reducers/pricingSettings/actions";
+import {useSCs} from "../../../utils/hooks";
+import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
 type TEditPricingLevelsProps = DialogProps & {
   prisingLevel: TPricingLevel | null;
@@ -40,12 +44,16 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
+const DEFAULT_OPTION = 'Default';
+
 const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const [service, setService] = useState<string>('');
     const [opsCode, setOpsCode] = useState<string>('');
-    const [discount, setDiscount] = useState<string | null>(null);
-    const [premium, setPremium] = useState<string | null>(null);
+    const [discount, setDiscount] = useState<string | null>(DEFAULT_OPTION);
+    const [premium, setPremium] = useState<string | null>(DEFAULT_OPTION);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
     const classes = useStyles();
 
     useEffect(() => {
@@ -58,7 +66,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     }, [props.prisingLevel])
 
     const getOptions = (from = 0, to = 100) => {
-        let options = ['Default'];
+        let options = [DEFAULT_OPTION];
         for (let i = from; i <= to; i++) {
             options.push(i.toString())
         }
@@ -67,7 +75,23 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
 
     const onSave = () => {
         setFormIsChecked(true);
-        // TODO request
+        if (props.prisingLevel && selectedSC) {
+            // todo change logic for default option
+            const data = {
+                serviceCenterId: selectedSC.id,
+                values: [
+                    {
+                        demandCategory: EDemandCategory.Low,
+                        value: discount !== DEFAULT_OPTION ? Number(discount) : 0
+                    },
+                    {
+                        demandCategory: EDemandCategory.High,
+                        value: premium !== DEFAULT_OPTION ? Number(premium) : 0
+                    },
+                ],
+            }
+            dispatch(updateSRPricingLevels(201, data))
+        }
     }
 
     const onCancel = () => {
@@ -94,6 +118,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
             <TextField
                 fullWidth
                 label='Individual Service'
+                disabled
                 placeholder='Type Individual Service'
                 error={!service && formIsChecked}
                 onChange={e => onTextFieldChange(e, 'service')}
@@ -102,6 +127,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
             <TextField
                 fullWidth
                 label='Ops Code'
+                disabled
                 placeholder='Type Ops Code'
                 error={!opsCode && formIsChecked}
                 onChange={e => onTextFieldChange(e, 'opsCode')}
@@ -110,7 +136,6 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
             <Autocomplete
                 style={{ marginBottom: 10 }}
                 options={getOptions()}
-                disableCloseOnSelect
                 value={discount}
                 onChange={onDiscountChange}
                 renderInput={autocompleteRender({
@@ -123,7 +148,6 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
             <Autocomplete
                 style={{ marginBottom: 10 }}
                 options={getOptions(101, 200)}
-                disableCloseOnSelect
                 value={premium}
                 onChange={onPremiumChange}
                 renderInput={autocompleteRender({

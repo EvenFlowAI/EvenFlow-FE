@@ -135,3 +135,13 @@ export const loadRequestsPricingLevels = (serviceCenterId: number): AppThunk => 
             console.log('get service requests pricing levels error', err)
         })
 }
+
+export const updateSRPricingLevels = (serviceRequestId: number, data: Partial<IRequestPricingLevel>): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.ChangeServiceRequestPricingLevels, {urlParams: {id: serviceRequestId}, data })
+        .then(result => {
+            if (data.serviceCenterId && result) dispatch(loadRequestsPricingLevels(data.serviceCenterId));
+        })
+        .catch(err => {
+            console.log('update service request pricing level error', err)
+        })
+}

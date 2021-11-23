@@ -83,7 +83,7 @@ const PricingLevelsByOpsCode = () => {
         if (assignedList && srPricingLevels) {
             setData(() => {
                 return assignedList.map(item => {
-                    const levelsItem = srPricingLevels.find(el => el.serviceRequestId === item.serviceRequestId);
+                    const levelsItem = srPricingLevels.find(el => el.serviceRequestId === item.id);
                     let discount = null;
                     let premium = null;
                     if (levelsItem?.values) {
@@ -93,7 +93,7 @@ const PricingLevelsByOpsCode = () => {
                         if (high) premium = high.value.toString();
                     }
                     return {
-                        id: item.serviceRequestId,
+                        id: item.id,
                         serviceRequest: item.serviceRequest.description ?? item.serviceRequestOverride?.description,
                         opsCode: item.serviceRequest.code,
                         discount,
