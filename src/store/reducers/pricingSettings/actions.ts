@@ -143,7 +143,6 @@ export const loadRequestsPricingLevels = (serviceCenterId: number): AppThunk => 
 }
 
 export const updateSRPricingLevels = (serviceRequestId: number, data: Partial<IRequestPricingSettings>, callback = () => {}): AppThunk => dispatch => {
-    dispatch(setLoading(true));
     Api.call(Api.endpoints.PricingSettings.ChangeServiceRequestPricingLevels, {urlParams: {id: serviceRequestId}, data })
         .then(result => {
             if (data.serviceCenterId && result) {
@@ -153,9 +152,6 @@ export const updateSRPricingLevels = (serviceRequestId: number, data: Partial<IR
         })
         .catch(err => {
             console.log('update service request pricing level error', err)
-        })
-        .finally(() => {
-            dispatch(setLoading(false));
         })
 }
 
@@ -177,7 +173,6 @@ export const loadSRPricingSettings = (serviceCenterId: number): AppThunk => disp
 }
 
 export const updateSRPricingSettings = (serviceRequestId: number, data: Partial<IRequestPricingSettings>): AppThunk => dispatch => {
-    dispatch(setLoading(true));
     Api.call(Api.endpoints.PricingSettings.UpdateServiceRequestPricingSettings, {urlParams: {id: serviceRequestId}, data})
         .then(result => {
             if (result && data.serviceCenterId) dispatch(loadSRPricingSettings(data.serviceCenterId))
@@ -185,13 +180,9 @@ export const updateSRPricingSettings = (serviceRequestId: number, data: Partial<
         .catch(err => {
             console.log('update service request pricing settings error', err)
         })
-        .finally(() => {
-            dispatch(setLoading(false));
-        })
 }
 
 export const deleteSRPricingSettings = (id: number, serviceCenterId: number): AppThunk => dispatch => {
-    dispatch(setLoading(true));
     Api.call(Api.endpoints.PricingSettings.DeleteServiceRequestPricingSettings, {urlParams: {id}})
         .then(result => {
             if (result) dispatch(loadSRPricingSettings(serviceCenterId))
@@ -199,14 +190,10 @@ export const deleteSRPricingSettings = (id: number, serviceCenterId: number): Ap
         .catch(err => {
             console.log('delete service request pricing settings error', err)
         })
-        .finally(() => {
-            dispatch(setLoading(false));
-        })
 }
 
 
 export const addServiceRequestsToPricing = (data: TNewRequestsToPricing): AppThunk => dispatch => {
-    dispatch(setLoading(true));
     Api.call(Api.endpoints.PricingSettings.AddServiceRequests, {data})
         .then(result => {
             if (result) {
@@ -215,8 +202,5 @@ export const addServiceRequestsToPricing = (data: TNewRequestsToPricing): AppThu
         })
         .catch(err => {
             console.log('add service requests to pricing settings error', err)
-        })
-        .finally(() => {
-            dispatch(setLoading(false));
         })
 }
