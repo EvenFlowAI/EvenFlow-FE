@@ -20,6 +20,7 @@ import {
 } from "../../../../store/reducers/pricingSettings/types";
 import AddOpsCodeModal from "../../../Modals/AddPackage/parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
+import {Loading} from "../../../UI/Loading";
 
 enum SliderRange {
     Min = -10,
@@ -64,7 +65,7 @@ type SliderObject = {
 
 const DayOfWeekOpsCode = () => {
     const { onOpen, onClose, isOpen } = useModal();
-    const { srPricingSettings } = useSelector((state: RootState) => state.pricingSettings);
+    const { srPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);
     const [opsCodes, setOpsCodes] = useState<TOpsCode[]>([]);
     const [slidersState, setSlidersState] = useState<SliderObject>({});
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
@@ -163,69 +164,73 @@ const DayOfWeekOpsCode = () => {
         </Box>
         <Divider />
         <Box display="flex" m={2} alignItems="center">
-            {srPricingSettings.length ? <DenseTable>
-                <TableHead>
-                    <TableRow>
-                        <TableCell className={classes.headerCell} width="22%">
-                            Ops Code
-                        </TableCell>
-                        <TableCell className={classes.headerCell} width="30%">
-                            Low
-                        </TableCell>
-                        <TableCell className={classes.headerCell} width="30%">
-                            High
-                        </TableCell>
-                        <TableCell width="8%"/>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {opsCodes.map(item => {
-                        return <TableRow key={item.opsCode}>
-                            <TableCell key={item.opsCode}>
-                                {item.opsCode}
-                            </TableCell>
-                            <TableCell key="low">
-                                <Slider
-                                    min={SliderRange.Min}
-                                    max={SliderRange.Max}
-                                    onChangeCommitted={handleChangeCommitted(item.id, "low")}
-                                    onChange={handleChange(item.id, "low")}
-                                    marks={[
-                                        {value: SliderRange.Min, label: SliderRange.Min},
-                                        {value: SliderRange.Max, label: SliderRange.Max}
-                                    ]}
-                                    value={slidersState[item.id].low}
-                                    valueLabelDisplay="on"
-                                />
-                            </TableCell>
-                            <TableCell key="high">
-                                <Slider
-                                    min={SliderRange.Min}
-                                    max={SliderRange.Max}
-                                    onChangeCommitted={handleChangeCommitted(item.id, "high")}
-                                    onChange={handleChange(item.id, "high")}
-                                    marks={[
-                                        {value: SliderRange.Min, label: SliderRange.Min},
-                                        {value: SliderRange.Max, label: SliderRange.Max}
-                                    ]}
-                                    value={slidersState[item.id].high}
-                                    valueLabelDisplay="on"
-                                />
-                            </TableCell>
-                            <TableCell key="remove" align='center'>
-                                <Button
-                                    variant="text"
-                                    style={{ textTransform: 'none'}}
-                                    onClick={() => deleteOpsCode(item)}
-                                    color="primary">
-                                    Remove
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    })}
-                </TableBody>
-            </DenseTable>
-            : <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>No data</div>}
+            {isLoading
+                ? <Loading/>
+                : srPricingSettings.length
+                    ? <DenseTable>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.headerCell} width="22%">
+                                        Ops Code
+                                    </TableCell>
+                                    <TableCell className={classes.headerCell} width="30%">
+                                        Low
+                                    </TableCell>
+                                    <TableCell className={classes.headerCell} width="30%">
+                                        High
+                                    </TableCell>
+                                    <TableCell width="8%"/>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {opsCodes.map(item => {
+                                    return <TableRow key={item.opsCode}>
+                                        <TableCell key={item.opsCode}>
+                                            {item.opsCode}
+                                        </TableCell>
+                                        <TableCell key="low">
+                                            <Slider
+                                                min={SliderRange.Min}
+                                                max={SliderRange.Max}
+                                                onChangeCommitted={handleChangeCommitted(item.id, "low")}
+                                                onChange={handleChange(item.id, "low")}
+                                                marks={[
+                                                    {value: SliderRange.Min, label: SliderRange.Min},
+                                                    {value: SliderRange.Max, label: SliderRange.Max}
+                                                ]}
+                                                value={slidersState[item.id].low}
+                                                valueLabelDisplay="on"
+                                            />
+                                        </TableCell>
+                                        <TableCell key="high">
+                                            <Slider
+                                                min={SliderRange.Min}
+                                                max={SliderRange.Max}
+                                                onChangeCommitted={handleChangeCommitted(item.id, "high")}
+                                                onChange={handleChange(item.id, "high")}
+                                                marks={[
+                                                    {value: SliderRange.Min, label: SliderRange.Min},
+                                                    {value: SliderRange.Max, label: SliderRange.Max}
+                                                ]}
+                                                value={slidersState[item.id].high}
+                                                valueLabelDisplay="on"
+                                            />
+                                        </TableCell>
+                                        <TableCell key="remove" align='center'>
+                                            <Button
+                                                variant="text"
+                                                style={{textTransform: 'none'}}
+                                                onClick={() => deleteOpsCode(item)}
+                                                color="primary">
+                                                Remove
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                })}
+                            </TableBody>
+                        </DenseTable>
+                        : <div style={{ display: 'flex', width: '100%', alignItems: 'center'}}>No data</div>
+            }
         </Box>
         <AddOpsCodeModal
             setSelectedCodes={setSelectedCodes}

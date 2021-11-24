@@ -29,21 +29,6 @@ const RowData: TableRowDataType<TPricingLevel>[] = [
     {val: (el: TPricingLevel) => el.premium ? `${el.premium}%` : 'Default', header: "PREMIUM"},
 ];
 
-const mockData: TPricingLevel[] = [
-    {   id: 1,
-        serviceRequest: 'Request 1',
-        opsCode: 'DFFHJ567',
-        discount: '56',
-        premium: 'Default',
-    },
-    {   id: 2,
-        serviceRequest: 'Request 1',
-        opsCode: 'DFFHJ567',
-        discount: '56',
-        premium: 'Default',
-    },
-]
-
 const useStyles = makeStyles(() => ({
     button: {
         textTransform: 'none',
@@ -58,9 +43,10 @@ const useStyles = makeStyles(() => ({
 
 const PricingLevelsByOpsCode = () => {
     const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
-    const { srPricingLevels } = useSelector((state: RootState) => state.pricingSettings);
+    const { srPricingLevels, isLoading } = useSelector((state: RootState) => state.pricingSettings);
     const [editElement, setEditElement] = useState<TPricingLevel | null>(null);
-    const [data, setData] = useState<TPricingLevel[]>(mockData);
+    const [data, setData] = useState<TPricingLevel[]>([]);
+
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -123,6 +109,7 @@ const PricingLevelsByOpsCode = () => {
                 index="id"
                 rowData={RowData}
                 actions={tableActions}
+                isLoading={isLoading}
                 smallHeaderFont
                 hidePagination
                 borderHeader
