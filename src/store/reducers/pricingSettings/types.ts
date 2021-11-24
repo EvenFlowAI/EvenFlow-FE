@@ -1,5 +1,9 @@
 import {TEnumMap} from "../utils";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+export type TValuePricingLevel = {
+    demandCategory: EDemandCategory;
+    value: number;
+}
 
 export enum EDemandCategory {
     Low, Average, High
@@ -14,6 +18,13 @@ export interface IPricingLevel {
     percentage: number;
     serviceCenterId: number;
 }
+export interface IRequestPricingSettings {
+    serviceCenterId: number;
+    serviceRequestId: number;
+    serviceRequestCode: string;
+    values: TValuePricingLevel[];
+}
+
 export enum EWindowType {
     Window1, Window2, Window3
 }
@@ -65,4 +76,9 @@ export interface ITimeOfYearSetting {
     id?: number;
     date: ParsableDate;
     comment?: string;
+}
+
+export type TNewRequestsToPricing = {
+    serviceCenterId: number;
+    serviceRequestIds: number[];
 }

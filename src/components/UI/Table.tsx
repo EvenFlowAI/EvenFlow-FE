@@ -22,6 +22,7 @@ type TStyleProps = {
     compact: boolean;
     smallHeaderFont: boolean;
     superCompact: boolean;
+    borderHeader: boolean;
 }
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,10 +38,10 @@ const useStyles = makeStyles(theme => ({
             padding: theme.spacing(1)
         }
     }),
-    tableHead: ({compact, smallHeaderFont, superCompact}: TStyleProps) => ({
+    tableHead: ({compact, smallHeaderFont, superCompact, borderHeader}: TStyleProps) => ({
         fontSize: smallHeaderFont ? 12 : compact ? 14 : 16,
         border: "none",
-        // borderBottomColor: "#9DA8B5",
+        borderBottom: borderHeader ? '1px solid #DADADA' : "none",
         padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
         fontWeight: "bold",
         color: "#9DA8B5",
@@ -72,7 +73,8 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
     const classes = useStyles({
         compact: Boolean(props.compact),
         smallHeaderFont: Boolean(props.smallHeaderFont),
-        superCompact: Boolean(props.superCompact)
+        superCompact: Boolean(props.superCompact),
+        borderHeader: Boolean(props.borderHeader),
     });
 
     const theme = useTheme();

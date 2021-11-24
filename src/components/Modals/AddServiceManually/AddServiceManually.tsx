@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {TextField} from "../../UI/TextField";
@@ -6,7 +6,7 @@ import {Button, InputAdornment} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {TComplimentary} from "../../../store/reducers/complimentary/types";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {addComplimentaryManually, editComplimentary} from "../../../store/reducers/complimentary/actions";
 import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/types";
 
@@ -65,6 +65,7 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
     const [duration, setDuration] = useState<number | string>('');
     const [total, setTotal] = useState<number | string>('');
     const dispatch = useDispatch();
+    const showError = useException();
     const {selectedSC} = useSCs();
     const classes = useStyles();
 
@@ -76,38 +77,32 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
         }
     }, [editedItem])
 
-    const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onDescriptionChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setFormIsChecked(false);
         setDescription(e.target.value);
-    }
+    }, [])
 
     const onTotalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // const rgx = /^[0-9]*\.?[0-9]*$/;
         // const rgx = /^(?:(?:[1-9]+?|[1-9]\d+?)|0)(\.(\d+)|)$/;
         setTotal(+e.target.value);
         setFormIsChecked(false);
     }
 
-    const onDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-       // const rgx = /^[0-9]*\.[0-9]*$/;
+    const onDurationChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setDuration(+e.target.value);
         setFormIsChecked(false);
         //const rgx = /^(?:(?:[1-9]+?|[1-9]\d+?)|0)(\.(\d+)|)$/;
-        // if (e.target.value.match(rgx)) {
-        //     setDuration(+e.target.value);
-        //     setFormIsChecked(false);
-        // }
-    }
+    }, [])
 
-    const onCancel = (): void => {
+    const onCancel = useCallback((): void => {
         setFormIsChecked(false);
         setDescription('');
         setTotal('');
         setDuration('');
         onClose();
-    }
+    }, [])
 
-    const onSave = (): void => {
+    const onSave = useCallback((): void => {
         setFormIsChecked(true);
         if (description.length && selectedSC) {
             const data: TComplimentary = {
@@ -117,10 +112,10 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
                 durationInHours: +duration,
             }
             editedItem
-                ? dispatch(editComplimentary(editedItem.id, data, () => onCancel()))
-                : dispatch(addComplimentaryManually(data, () => onCancel()));
+                ? dispatch(editComplimentary(editedItem.id, data, () => onCancel(), showError))
+                : dispatch(addComplimentaryManually(data, () => onCancel(), showError));
         }
-    }
+    }, [description, selectedSC, duration, total, editedItem])
 
     return (
         <BaseModal {...props} width={460} onClose={onCancel}>
@@ -151,21 +146,6 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
                     className={classes.halfWidth}
                     onChange={onTotalChange}
                     startAdornment={<InputAdornment position="start">$</InputAdornment>}/>
-                {/*<InputLabel className={classes.label}>Duration</InputLabel>*/}
-                {/*<Input*/}
-                {/*    id="duration"*/}
-                {/*    value={duration}*/}
-                {/*    className={classes.halfWidth}*/}
-                {/*    onChange={onDurationChange}*/}
-                {/*/>*/}
-                {/*<InputLabel className={classes.label}>Total</InputLabel>*/}
-                {/*<Input*/}
-                {/*    id="outlined-adornment-amount"*/}
-                {/*    value={total}*/}
-                {/*    className={classes.halfWidth}*/}
-                {/*    onChange={onTotalChange}*/}
-                {/*    startAdornment={<InputAdornment position="start">$</InputAdornment>}*/}
-                {/*/>*/}
             </DialogContent>
             <DialogActions>
                 <div className={classes.wrapper}>

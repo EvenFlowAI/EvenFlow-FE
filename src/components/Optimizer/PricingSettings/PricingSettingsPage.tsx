@@ -4,7 +4,7 @@ import {optimizerRoot} from "../utils";
 import {TabList} from "../../UI/Tabs";
 import {FormControlLabel, styled, Switch, Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import { PricingLevels } from './PricingLevels';
+import { PricingLevels } from './PricingLevels/PricingLevels';
 import {Eligibility} from "./Eligibility/Eligibility";
 import {PricingOptimization} from "./PricingOptimization";
 import {VariableDemand} from "./VariableDemand";

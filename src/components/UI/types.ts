@@ -38,4 +38,5 @@ export interface ITableProps<Data> {
     isLoading?: boolean;
     viewMode?: boolean;
     hideHeader?: boolean;
+    borderHeader?: boolean;
 }

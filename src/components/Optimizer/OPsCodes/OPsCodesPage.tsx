@@ -200,8 +200,11 @@ export const OPsCodesPage = () => {
             showError(SC_UNDEFINED);
         }
     }
+    const onSuccessAssign = (selectedCodes: number[]) => showMessage(`Successfully added ${selectedCodes.length} codes`);
 
-    const onRequestAssign = (selectedCodes: number[], serviceCenterId: number) => dispatch(assignServiceRequests(selectedCodes, serviceCenterId));
+    const onRequestAssign = (selectedCodes: number[], serviceCenterId: number) => {
+        dispatch(assignServiceRequests(selectedCodes, serviceCenterId, showError, onSuccessAssign));
+    }
 
     return <>
         <TitleContainer
