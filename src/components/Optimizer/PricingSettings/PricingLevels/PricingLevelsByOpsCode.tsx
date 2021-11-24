@@ -73,8 +73,7 @@ const PricingLevelsByOpsCode = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            // todo isEligible filter
-            dispatch(loadAssignedServiceRequests(selectedSC.id));
+            dispatch(loadAssignedServiceRequests(selectedSC.id, true));
             dispatch(loadRequestsPricingLevels(selectedSC.id));
         }
     }, [selectedSC])

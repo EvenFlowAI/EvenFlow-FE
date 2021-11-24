@@ -15,7 +15,7 @@ import {
 import {RootState} from "../../../../store/rootReducer";
 import {
     EDemandCategory,
-    IRequestPricingLevel,
+    IRequestPricingSettings,
     TNewRequestsToPricing
 } from "../../../../store/reducers/pricingSettings/types";
 import AddOpsCodeModal from "../../../Modals/AddPackage/parts/AddOpsCode/AddOpsCode";
@@ -140,7 +140,7 @@ const DayOfWeekOpsCode = () => {
 
     const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
         if (selectedSC) {
-            const data: Partial<IRequestPricingLevel> = {
+            const data: Partial<IRequestPricingSettings> = {
                 serviceCenterId: selectedSC.id,
                 values: [
                     {

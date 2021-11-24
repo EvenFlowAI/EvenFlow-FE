@@ -4,7 +4,7 @@ import {
     IDayOfWeekSetting,
     IPricingDemand,
     IPricingLevel,
-    IPricingSetting, IRequestPricingLevel,
+    IPricingSetting, IRequestPricingSettings,
     ITimeOfYearSetting,
     ITimeWindowEl, TNewRequestsToPricing
 } from "./types";
@@ -123,7 +123,7 @@ export const setTimeOfYearPricing = (data: ITimeOfYearSetting): AppThunk => asyn
     await dispatch(loadTimeOfYearPricing(data.serviceCenterId));
 }
 
-export const getRequestsPricingLevels = createAction<IRequestPricingLevel[]>("PrisingSettings/GetSRPricingLevels");
+export const getRequestsPricingLevels = createAction<IRequestPricingSettings[]>("PrisingSettings/GetSRPricingLevels");
 export const loadRequestsPricingLevels = (serviceCenterId: number): AppThunk => dispatch => {
     Api.call(Api.endpoints.PricingSettings.GetServiceRequestsPricingLevels, {params: {serviceCenterId}})
         .then(result => {
@@ -136,17 +136,20 @@ export const loadRequestsPricingLevels = (serviceCenterId: number): AppThunk => 
         })
 }
 
-export const updateSRPricingLevels = (serviceRequestId: number, data: Partial<IRequestPricingLevel>): AppThunk => dispatch => {
+export const updateSRPricingLevels = (serviceRequestId: number, data: Partial<IRequestPricingSettings>, callback = () => {}): AppThunk => dispatch => {
     Api.call(Api.endpoints.PricingSettings.ChangeServiceRequestPricingLevels, {urlParams: {id: serviceRequestId}, data })
         .then(result => {
-            if (data.serviceCenterId && result) dispatch(loadRequestsPricingLevels(data.serviceCenterId));
+            if (data.serviceCenterId && result) {
+                dispatch(loadRequestsPricingLevels(data.serviceCenterId));
+                callback();
+            }
         })
         .catch(err => {
             console.log('update service request pricing level error', err)
         })
 }
 
-export const getSRPricingSettings = createAction<IRequestPricingLevel[]>("PricingSettings/GetSRPricingSettings");
+export const getSRPricingSettings = createAction<IRequestPricingSettings[]>("PricingSettings/GetSRPricingSettings");
 export const loadSRPricingSettings = (serviceCenterId: number): AppThunk => dispatch => {
     Api.call(Api.endpoints.PricingSettings.GetServiceRequestsPricingSettings, {params: {serviceCenterId}})
         .then(result => {
@@ -159,7 +162,7 @@ export const loadSRPricingSettings = (serviceCenterId: number): AppThunk => disp
         })
 }
 
-export const updateSRPricingSettings = (serviceRequestId: number, data: Partial<IRequestPricingLevel>): AppThunk => dispatch => {
+export const updateSRPricingSettings = (serviceRequestId: number, data: Partial<IRequestPricingSettings>): AppThunk => dispatch => {
     Api.call(Api.endpoints.PricingSettings.UpdateServiceRequestPricingSettings, {urlParams: {id: serviceRequestId}, data})
         .then(result => {
             if (result && data.serviceCenterId) dispatch(loadSRPricingSettings(data.serviceCenterId))

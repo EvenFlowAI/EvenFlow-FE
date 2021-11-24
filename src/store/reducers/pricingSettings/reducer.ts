@@ -3,7 +3,7 @@ import {
     IDayOfWeekSetting,
     IPricingDemand,
     IPricingLevel,
-    IPricingSetting, IRequestPricingLevel,
+    IPricingSetting, IRequestPricingSettings,
     ITimeOfYearSetting,
     ITimeWindowEl
 } from "./types";
@@ -25,8 +25,8 @@ type TState = {
     pricingDemands: IPricingDemand[];
     dWeekPricing: IDayOfWeekSetting[];
     tYearPricing: ITimeOfYearSetting[];
-    srPricingLevels: IRequestPricingLevel[];
-    srPricingSettings: IRequestPricingLevel[];
+    srPricingLevels: IRequestPricingSettings[];
+    srPricingSettings: IRequestPricingSettings[];
 }
 const initialState: TState = {
     pricingLevels: [],

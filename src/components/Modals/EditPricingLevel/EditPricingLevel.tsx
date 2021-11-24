@@ -10,11 +10,21 @@ import {Autocomplete} from "@material-ui/lab";
 import {useDispatch} from "react-redux";
 import {updateSRPricingLevels} from "../../../store/reducers/pricingSettings/actions";
 import {useSCs} from "../../../utils/hooks";
-import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
+import {EDemandCategory, TNewRequestsToPricing} from "../../../store/reducers/pricingSettings/types";
 
 type TEditPricingLevelsProps = DialogProps & {
   prisingLevel: TPricingLevel | null;
 };
+
+type TValue = {
+    demandCategory: EDemandCategory.Low | EDemandCategory.High;
+    value: number;
+}
+
+type TUpdatedSettings = {
+    serviceCenterId: number;
+    values: TValue[];
+}
 
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -73,30 +83,32 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
         return options;
     }
 
-    const onSave = () => {
-        setFormIsChecked(true);
-        if (props.prisingLevel && selectedSC) {
-            // todo change logic for default option
-            const data = {
-                serviceCenterId: selectedSC.id,
-                values: [
-                    {
-                        demandCategory: EDemandCategory.Low,
-                        value: discount !== DEFAULT_OPTION ? Number(discount) : 0
-                    },
-                    {
-                        demandCategory: EDemandCategory.High,
-                        value: premium !== DEFAULT_OPTION ? Number(premium) : 0
-                    },
-                ],
-            }
-            dispatch(updateSRPricingLevels(201, data))
-        }
-    }
-
     const onCancel = () => {
         setFormIsChecked(false);
         props.onClose();
+    }
+
+    const onSave = () => {
+        setFormIsChecked(true);
+        if (props.prisingLevel && selectedSC) {
+            const data: TUpdatedSettings = {
+                serviceCenterId: selectedSC.id,
+                values: [],
+            }
+            if (discount !== DEFAULT_OPTION) {
+                data.values.push({
+                    demandCategory: EDemandCategory.Low,
+                    value: Number(discount)
+                })
+            }
+            if (premium !== DEFAULT_OPTION) {
+                data.values.push({
+                    demandCategory: EDemandCategory.High,
+                    value: Number(premium)
+                })
+            }
+            dispatch(updateSRPricingLevels(props.prisingLevel.id, data, onCancel))
+        }
     }
 
     const onTextFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {

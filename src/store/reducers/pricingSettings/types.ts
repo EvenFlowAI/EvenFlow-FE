@@ -18,7 +18,7 @@ export interface IPricingLevel {
     percentage: number;
     serviceCenterId: number;
 }
-export interface IRequestPricingLevel {
+export interface IRequestPricingSettings {
     serviceCenterId: number;
     serviceRequestId: number;
     serviceRequestCode: string;
