@@ -21,6 +21,7 @@ export interface IPricingLevel {
 export interface IRequestPricingLevel {
     serviceCenterId: number;
     serviceRequestId: number;
+    serviceRequestCode: string;
     values: TValuePricingLevel[];
 }
 

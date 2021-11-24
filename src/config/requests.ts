@@ -315,7 +315,7 @@ export class Api {
             ChangeServiceRequestPricingLevels: {route: "/pricing-settings/service-requests/pricing-levels/{id}", method: "put"},
             GetServiceRequestsPricingSettings: {route: "/pricing-settings/service-requests", method: "get"},
             UpdateServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "put"},
-            DeleteServiceRequestPricingSettings: {route: "/pricing-settings/service-requests?{id}", method: "delete"},
+            DeleteServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "delete"},
             AddServiceRequests: {route: "/pricing-settings/service-requests", method: "post"},
         },
         ServiceCategories: {

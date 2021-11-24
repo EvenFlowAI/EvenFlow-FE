@@ -169,7 +169,7 @@ export const updateSRPricingSettings = (serviceRequestId: number, data: Partial<
         })
 }
 
-export const daleteSRPricingSettings = (id: number, serviceCenterId: number): AppThunk => dispatch => {
+export const deleteSRPricingSettings = (id: number, serviceCenterId: number): AppThunk => dispatch => {
     Api.call(Api.endpoints.PricingSettings.DeleteServiceRequestPricingSettings, {urlParams: {id}})
         .then(result => {
             if (result) dispatch(loadSRPricingSettings(serviceCenterId))
