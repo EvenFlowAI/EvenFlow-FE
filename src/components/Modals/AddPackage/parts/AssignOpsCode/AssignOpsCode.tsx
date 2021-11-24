@@ -229,7 +229,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                     index="id"
                     startActions={preActions}
                     compact
-                    hidePagination={serviceList.length < nonSelectedPageData.pageSize}
+                    hidePagination={servicesCount <= nonSelectedPageData.pageSize}
                     rowData={tableData}
                     isLoading={isLoading}
                     page={pageIndex}
