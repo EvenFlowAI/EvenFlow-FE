@@ -78,13 +78,13 @@ const MaintenancePackages = () => {
                             return <TableRow key={el.id}>
                                 <TableCell style={leftAlign}>{el.name}</TableCell>
                                 <TableCell>
-                                    ${el.baseMarketPrice}
+                                    $ {el.baseMarketPrice}
                                 </TableCell>
                                 <TableCell>
-                                    ${el.valueMarketPrice}
+                                    $ {el.valueMarketPrice}
                                 </TableCell>
                                 <TableCell>
-                                    ${el.preferredMarketPrice}
+                                    $ {el.preferredMarketPrice}
                                 </TableCell>
 
                                 <TableCell>
