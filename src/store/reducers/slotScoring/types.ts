@@ -16,7 +16,6 @@ export type TRange = {
 }
 
 export interface ISlotRange {
-    serviceCenterId: number;
     start: string;
     end: string;
 }

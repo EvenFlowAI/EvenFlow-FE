@@ -5,10 +5,12 @@ import {
     IDesirabilityForm,
     IDesirabilityItem, IOptimizationSetting,
     IOptimizationSettingsCreateForm, IOptimizationSettingValueForm,
-    IProximity, ISlotRange, TRange
+    IProximity, ISlotRange
 } from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
+import {IHOODataForm} from "../serviceCenters/types";
+import moment from "moment";
 
 export const getProximity = createAction<IProximity[]>("SlotScoring/GetProximity");
 export const loadProximity = (serviceCenterId?: number, podId?: number): AppThunk => async dispatch => {
@@ -75,14 +77,22 @@ export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => 
         })
 }
 
-export const updateRange = (serviceCenterId: number, data: TRange, podId?: number): AppThunk => dispatch => {
-    Api.call(Api.endpoints.SlotScoring.UpdateRange, {data})
+export const loadHorsOfOperations = (id: number): AppThunk => dispatch => {
+    Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id}})
         .then(result => {
             if (result?.data) {
-                dispatch(loadRange(serviceCenterId, podId));
+                const startTimes = result.data.map(item => moment(item.from, 'HH:mm:SS'));
+                const endTimes = result.data.map(item => moment(item.to, 'HH:mm:SS'));
+                const maxTime = moment.max(endTimes).format('HH:mm:SS');
+                const minTime = moment.min(startTimes).format('HH:mm:SS');
+                const data: ISlotRange = {
+                    start: minTime,
+                    end: maxTime,
+                }
+                dispatch(getRange(data));
             }
         })
         .catch(err => {
-            console.log('update range error', err)
+            console.log('get hours of operations error', err)
         })
 }
