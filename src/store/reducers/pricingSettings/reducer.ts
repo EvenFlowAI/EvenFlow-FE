@@ -8,7 +8,7 @@ import {
     ITimeWindowEl
 } from "./types";
 import {
-    getDayOfWeekPricing,
+    getDayOfWeekPricing, getMPList,
     getPricingCalculations,
     getPricingDemand,
     getPricingLevels, getRequestsPricingLevels,
@@ -16,6 +16,7 @@ import {
     getTimeWindows, setLoading
 } from "./actions";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
+import {IPackageShort} from "../packages/types";
 
 type TState = {
     pricingLevels: IPricingLevel[];
@@ -27,6 +28,7 @@ type TState = {
     tYearPricing: ITimeOfYearSetting[];
     srPricingLevels: IRequestPricingSettings[];
     srPricingSettings: IRequestPricingSettings[];
+    mpList: IPackageShort[];
     isLoading: boolean;
 }
 const initialState: TState = {
@@ -39,6 +41,7 @@ const initialState: TState = {
     tYearPricing: [],
     srPricingLevels: [],
     srPricingSettings: [],
+    mpList: [],
     isLoading: false,
 };
 export const pricingSettingsReducer = createReducer<TState>(initialState, builder => builder
@@ -71,5 +74,8 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
     })
     .addCase(setLoading, (state, {payload}) => {
         return {...state, isLoading: payload};
+    })
+    .addCase(getMPList, (state, {payload}) => {
+        return {...state, mpList: payload};
     })
 );

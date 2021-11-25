@@ -229,7 +229,7 @@ const DayOfWeekOpsCode = () => {
                                 })}
                             </TableBody>
                         </DenseTable>
-                        : <div style={{ display: 'flex', width: '100%', alignItems: 'center'}}>No data</div>
+                        : <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>No data</div>
             }
         </Box>
         <AddOpsCodeModal
