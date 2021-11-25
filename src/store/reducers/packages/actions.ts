@@ -83,7 +83,7 @@ export const updatePackage = (id: number, data: IUpdatedPackage, serviceCenterId
             if (result) {
                 callback && callback();
                 dispatch(loadPackages(serviceCenterId))
-                // dispatch(loadPackageById(id))
+                dispatch(loadPackageById(id))
             }
         })
         .catch(err => {
