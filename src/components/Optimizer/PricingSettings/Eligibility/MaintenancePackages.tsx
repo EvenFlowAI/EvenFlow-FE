@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {NoItemsLoading} from "../../../UI/NoItemsLoading";
 import {DemandTable, TableCell, TableRow} from "../../AppointmentAllocation/UI";
 import {styled, Switch, TableBody, TableHead} from "@material-ui/core";
 import {TableContainer} from "../UI";
 import {useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadMPList} from "../../../../store/reducers/pricingSettings/actions";
+import {loadMPList, setPricingOptimization} from "../../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
 
 const headCellStyles = {
@@ -46,7 +46,12 @@ const MaintenancePackages = () => {
 
     const handleSwitch = (id: number) => async (e: any, value: boolean) => {
         if (selectedSC) {
-            console.log(id, value)
+            const data = {
+                serviceCenterId: selectedSC.id,
+                pageIndex: 0,
+                pageSize: 0,
+            }
+            dispatch(setPricingOptimization(id, value, data))
         }
     }
 

@@ -220,3 +220,17 @@ export const loadMPList = (data: IGetMPListData): AppThunk => dispatch => {
         })
         .finally(() => dispatch(setLoading(false)));
 }
+
+export const setPricingOptimization = (id: number, isApplyPricingOptimization: boolean, data: IGetMPListData): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.MaintenancePackages.SetPricingOptimization, {urlParams: {id}, data: {isApplyPricingOptimization}})
+        .then(result => {
+            if (result) {
+                dispatch(loadMPList(data));
+            }
+        })
+        .catch(err => {
+            console.log('set pricing optimization for package error', err)
+        })
+        .finally(() => dispatch(setLoading(false)));
+}
