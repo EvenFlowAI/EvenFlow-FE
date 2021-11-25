@@ -68,18 +68,19 @@ export const AppointmentTimeSelector: React.FC<TProps> =
     }, [scProfile])
 
     const slots: TSlot[] = useMemo(() => {
+        let start = moment.utc(date).hour(7).minutes(0).second(0).millisecond(0);
+        let end = moment.utc(date).hour(20).minutes(0).second(0).millisecond(0);
         if (slotRange) {
-            const start = moment.utc(slotRange.start, 'HH:mm:SS');
-            const end = moment.utc(slotRange.end, 'HH:mm:SS');
-            const slots: TSlot[] = [];
-            let cDate = moment.utc(start);
-            while (cDate.isSameOrBefore(end, 'minute')) {
-                slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
-                cDate = moment.utc(cDate).add(30, 'minutes');
-            }
-            return slots;
+            start = moment.utc(slotRange.start, 'HH:mm:SS');
+            end = moment.utc(slotRange.end, 'HH:mm:SS');
         }
-        return [];
+        const slots: TSlot[] = [];
+        let cDate = moment.utc(start);
+        while (cDate.isSameOrBefore(end, 'minute')) {
+            slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
+            cDate = moment.utc(cDate).add(30, 'minutes');
+        }
+        return slots;
     }, [date, slotRange]);
 
     const handleSelect = (a: IRemappedAppointmentSlot|null) => {
