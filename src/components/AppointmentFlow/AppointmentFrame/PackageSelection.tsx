@@ -125,6 +125,7 @@ const Wrapper = styled('div')(({theme}) => ({
             fontWeight: 'bold',
             borderTop: border,
             paddingBottom: 10,
+            fontSize: 14,
         },
         "&.last": {
             borderBottomColor: "#000000",
@@ -330,6 +331,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                     ? <PackageSelectionMobile
                         data={packages}
                         isBmWService={isBmWService}
+                        isSanfordInfinity={isSanfordInfinity}
                         />
                     : <Wrapper>
                         <div className='top'/>
@@ -364,7 +366,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         {/*    {packages.map(p => <div className={setClasses(p.id, '')}>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}*/}
                         {/*</React.Fragment>*/}
                         {/*}*/}
-                        {isSanfordInfinity || isBmWService && <React.Fragment key="maintenance">
+                        {(isSanfordInfinity || isBmWService) && <React.Fragment key="maintenance">
                             <div className="totalMaintenance">Total Maintenance Value:</div>
                             {packages.map(p => <div className={setClasses(p.id, '')}>${p.marketPriceServiceRequests}</div>)}
                         </React.Fragment>
