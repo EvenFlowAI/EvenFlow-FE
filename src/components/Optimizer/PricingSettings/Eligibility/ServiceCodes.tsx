@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {SquarePaper} from "../../../UI/Paper";
-import {PaperTitle, TableContainer} from "../UI";
+import {TableContainer} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {loadSrList, setEligibleRequest} from "../../../../store/reducers/pricingSettings/actions";
 import {NoItemsLoading} from "../../../UI/NoItemsLoading";
-import {Divider, styled, Switch, TableBody, TableHead} from "@material-ui/core";
+import {styled, Switch, TableBody, TableHead} from "@material-ui/core";
 import {DemandTable, TableCell, TableRow} from "../../AppointmentAllocation/UI";
 
 const headCellStyles = {
@@ -62,10 +61,7 @@ export const ServiceCodes = () => {
         }
     }
 
-    return <SquarePaper variant="outlined">
-        <PaperTitle>Service codes eligibility status</PaperTitle>
-        <Divider />
-        <TableContainer>
+    return <TableContainer>
             <NoItemsLoading items={srList} loading={loading} />
             {srList.length ? <TableWrapper>
                 <DemandTable>
@@ -121,5 +117,4 @@ export const ServiceCodes = () => {
                 </DemandTable>
             </TableWrapper> : null}
         </TableContainer>
-    </SquarePaper>
 };

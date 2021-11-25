@@ -82,3 +82,10 @@ export type TNewRequestsToPricing = {
     serviceCenterId: number;
     serviceRequestIds: number[];
 }
+
+export interface IGetMPListData {
+    serviceCenterId: number;
+    podId?: number;
+    pageIndex: number;
+    pageSize: number;
+}
