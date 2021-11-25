@@ -416,8 +416,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                 key={p.id}>
                                 {(isBmWService || isSanfordInfinity) &&
                                 <div className="before">
-                                    ${p.complimentaryServices.reduce((acc, el) => acc + el.price, 0)
-                                + p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}
+                                    ${p.marketPriceComplimentaryServices + p.marketPriceServiceRequests}
                                 </div>}
                                 <div className="currentWrp">
                                     <div className="triangle"/>
