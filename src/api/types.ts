@@ -32,7 +32,8 @@ export enum EServiceCategoryPage {
 export enum EServiceCenterName {
     RiverviewFord,
     BMWSchererville,
-    DealertrackTest
+    DealertrackTest,
+    SanfordInfinity
 }
 
 export enum EVehiclePropType {
@@ -282,6 +283,8 @@ export interface IPackageOptions {
     price: number;
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
+    marketPriceServiceRequests: number;
+    marketPriceComplimentaryServices: number;
 }
 
 export interface IPackage {
