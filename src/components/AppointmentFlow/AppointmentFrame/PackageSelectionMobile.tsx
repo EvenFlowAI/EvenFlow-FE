@@ -270,8 +270,8 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                                     :<span>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>
                                 }
                             </div>
-                            <div className={isBmWService ? classes.totalSums : classes.total}>
-                                {isBmWService &&
+                            <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
+                                {(isBmWService || isSanfordInfinity) &&
                                 <div className={classes.prevPrice}>
                                     ${item.complimentaryServices.reduce((acc, el) => acc + +el.price, 0)
                                 + item.serviceRequests.reduce((acc, el) => acc + +el.price, 0)}

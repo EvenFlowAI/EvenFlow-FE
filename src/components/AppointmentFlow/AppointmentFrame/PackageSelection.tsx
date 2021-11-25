@@ -412,9 +412,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         {packages.map(p =>
                             <div
                                 onClick={handleClick(p)}
-                                className={setClasses(p.id, `total ${isBmWService ? 'priceWithBefore' : 'price'} end`)}
+                                className={setClasses(p.id, `total ${isBmWService || isSanfordInfinity ? 'priceWithBefore' : 'price'} end`)}
                                 key={p.id}>
-                                {isBmWService &&
+                                {(isBmWService || isSanfordInfinity) &&
                                 <div className="before">
                                     ${p.complimentaryServices.reduce((acc, el) => acc + el.price, 0)
                                 + p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}
