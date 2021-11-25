@@ -115,6 +115,21 @@ export const createPackage = (id: number, data: INewPackage, callback: () => voi
     })
 }
 
+export const loadAllComplimentary = (serviceCenterId: number): AppThunk => dispatch => {
+    const data = {
+        serviceCenterId,
+        pageIndex: 0,
+        pageSize: 0,
+    }
+    Api.call(Api.endpoints.ComplimentaryServices.GetByQuery, {data})
+        .then(result => {
+            dispatch(getAllComplimentary(result.data.result))
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
+
 export const loadComplimentary = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     dispatch(setComplimentaryLoading(true))
     const { complimentaryPageData, complimentarySortOrder, complimentarySearchTerm } = getState().packages;

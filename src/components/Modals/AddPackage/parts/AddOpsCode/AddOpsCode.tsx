@@ -20,6 +20,8 @@ import Checkbox from "../../../../UI/Checkbox";
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: IAssignedServiceRequest[];
     setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
+    handleSave?: () => void;
+    isEligible?: boolean;
 }
 
 const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
@@ -69,11 +71,13 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         isLoading,
         servicesCount,
         search,
+        assignedPageData,
     ] = useSelector((state: RootState) => [
         state.serviceRequests.assignedList,
         state.serviceRequests.assignedLoading,
         state.serviceRequests.assignedPaging.numberOfRecords,
         state.serviceRequests.assignedFilter.searchTerm,
+        state.serviceRequests.assignedPageData,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.assignedPageData,
@@ -82,7 +86,7 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
 
     useEffect(() => {
         if (props.open && selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id));
+            dispatch(loadAssignedServiceRequests(selectedSC.id, props.isEligible));
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex]);
 
@@ -90,6 +94,11 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         dispatch(setAssignedFilter({searchTerm: ''}));
         props.onClose();
     }, [props.onClose, dispatch])
+
+    const handleSave = useCallback(() => {
+        props.handleSave && props.handleSave();
+        handleClose();
+    }, [props.selectedCodes])
 
     const handleSelect = useCallback((el: IAssignedServiceRequest) => {
         props.setSelectedCodes(prev => {
@@ -106,7 +115,7 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id));
+            dispatch(loadAssignedServiceRequests(selectedSC.id, props.isEligible));
         }
     }, [dispatch, selectedSC]);
 
@@ -133,6 +142,7 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                     index="id"
                     smallHeaderFont
                     startActions={preActions}
+                    hidePagination={servicesCount <= assignedPageData.pageSize}
                     compact
                     rowData={tableData}
                     isLoading={isLoading}
@@ -147,6 +157,11 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                 <Button onClick={handleClose}>
                     Close
                 </Button>
+                {props.handleSave && (
+                    <Button onClick={handleSave} color="primary" variant="contained">
+                    Save
+                </Button>)
+                }
             </DialogActions>
         </BaseModal>
     );

@@ -49,6 +49,7 @@ type TTabLabelProps = {
 type PackageSelectionMobileProps = {
     data: TPackage[];
     isBmWService: boolean;
+    isSanfordInfinity: boolean;
 }
 
 const useStyles = makeStyles(() => ({
@@ -205,7 +206,7 @@ const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
     return <div className={classes.iconWrapper}>{isSelected && <Done  className={classes.icon} htmlColor={'white'}/>} {text}</div>
 }
 
-const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, isBmWService }) => {
+const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, isBmWService, isSanfordInfinity }) => {
     const [value, setValue] = useState<string>('1');
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -248,10 +249,15 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                             <div className={classes.serviceRequests}>
                                 {item.serviceRequests.map(item => <p className={classes.serviceRequest}>{item.description}</p>)}
                             </div>
-                            { isBmWService && <div className={classes.totalMaintenance}>
+                            {/*{ isBmWService && <div className={classes.totalMaintenance}>*/}
+                            {/*    <span>Total Maintenance Value:</span>*/}
+                            {/*    <span>${item.serviceRequests.reduce((a, b) => a + +b.price, 0)}</span>*/}
+                            {/*    </div>*/}
+                            {/*}*/}
+                            { (isBmWService || isSanfordInfinity) && <div className={classes.totalMaintenance}>
                                 <span>Total Maintenance Value:</span>
-                                <span>${item.serviceRequests.reduce((a, b) => a + +b.price, 0)}</span>
-                                </div>
+                                <span>${item.marketPriceServiceRequests}</span>
+                            </div>
                             }
                             <div className={classes.complimentaryTitle}>Complimentary</div>
                             <div className={classes.complimentaryServices}>
@@ -259,10 +265,13 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                             </div>
                             <div className={classes.complimentaryTotal}>
                                 <span>Total Complimentary Value:</span>
-                                <span>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>
+                                {isBmWService || isSanfordInfinity
+                                    ? <span>{item.marketPriceComplimentaryServices ? `$${item.marketPriceComplimentaryServices}` : ''}</span>
+                                    :<span>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>
+                                }
                             </div>
-                            <div className={isBmWService ? classes.totalSums : classes.total}>
-                                {isBmWService &&
+                            <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
+                                {(isBmWService || isSanfordInfinity) &&
                                 <div className={classes.prevPrice}>
                                     ${item.complimentaryServices.reduce((acc, el) => acc + +el.price, 0)
                                 + item.serviceRequests.reduce((acc, el) => acc + +el.price, 0)}
