@@ -36,16 +36,19 @@ const EligibilityStatuses = () => {
                             return <Tab label={t.label} value={t.id} key={t.id} />;
                         })}
                     </TabList>
+                </TabContext>
+            </PaperTitle>
+
+            <TabContext value={selectedTab}>
                     {tabs.map(t => {
                         return <TabPanel
-                            style={{width: "100%", padding: "24px 0"}}
+                            style={{width: "100%", padding: "0"}}
                             key={t.id}
                             value={t.id}>
                             {t.component}
                         </TabPanel>
                     })}
                 </TabContext>
-            </PaperTitle>
         </SquarePaper>
     );
 };
