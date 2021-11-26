@@ -80,7 +80,7 @@ const MaintenancePackages = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {mpList.concat(mpList).concat(mpList).map(el => {
+                            {mpList.map(el => {
                                 return <TableRow key={el.id}>
                                     <TableCell style={leftAlign}>{el.name}</TableCell>
                                     <TableCell>
