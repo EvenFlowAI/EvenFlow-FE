@@ -214,14 +214,11 @@ export const AppointmentSlotsDesirability = () => {
         const t = desirabilityItems[0]
             ? desirabilityItems[0].timeSlotType
             : ETimeSlotType.ThirtyMinutes;
-        if (slotRange) {
-
-        }
         setForm({
             timeSlotType: t,
             items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end)
         });
-    }, [desirabilityItems]);
+    }, [desirabilityItems, slotRange]);
 
     const [slots1, slots2]: [TSlot[], TSlot[]] = useMemo(() => {
         const slots = [...form.items];
