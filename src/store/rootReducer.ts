@@ -19,6 +19,7 @@ import {pricingSettingsReducer} from "./reducers/pricingSettings/reducer";
 import {appointmentFrameReducer} from "./reducers/appointmentFrameReducer/reducer";
 import {packagesReducer} from "./reducers/packages/reducer";
 import {vehicleDetailsReducer} from "./reducers/vehicleDetails/reducer";
+import {transportationOptionsReducer} from "./reducers/transportationNeeds/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -42,5 +43,6 @@ export const rootReducer = combineReducers({
     serviceRequests: serviceRequestsReducer,
     packages: packagesReducer,
     vehicleDetails: vehicleDetailsReducer,
+    transportation: transportationOptionsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
