@@ -18,12 +18,6 @@ export interface ITransportationOptionRules {
     dayOfWeeks: string[];
 }
 
-export type TTimeObject = {
-    hours: number;
-    minutes: number;
-    seconds: number;
-}
-
 export interface ITrOptionServiceTRequest {
     id: number;
     code: string;
@@ -40,8 +34,8 @@ export interface ITransportationOptionRule {
         end: string;
     };
     timeOfDay: {
-        start: TTimeObject;
-        end: TTimeObject;
+        start: string;
+        end: string;
     };
     customerSegments: string[];
     dayOfWeeks: string[];

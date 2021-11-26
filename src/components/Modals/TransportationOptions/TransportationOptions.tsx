@@ -11,8 +11,9 @@ import {
     loadTransportationOptions,
     updateTransportationOption
 } from "../../../store/reducers/transportationNeeds/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
+import EditTransportationOptionDialog from "./EditTransportationOptionDialog";
 
 const headCellStyles = {
     fontSize: 12,
@@ -39,6 +40,7 @@ const TableWrapper = styled("div")(({theme}) => ({
 export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
     const [editingElement, setEditingElement] = useState<ITransportationOptionFull | null>(null);
     const { options, isLoading } = useSelector((state: RootState) => state.transportation);
+    const { isOpen, onOpen, onClose } = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
 
@@ -58,8 +60,9 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
         }
     }
 
-    const onEditClick = (el: ITransportationOptionFull) => {
-        setEditingElement(el);
+    const onEditClick = async (el: ITransportationOptionFull) => {
+        await setEditingElement(el);
+        await onOpen();
     }
 
     return <BaseModal {...props} width={700}>
@@ -111,5 +114,6 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
         <DialogActions>
             <Button color="primary" onClick={props.onClose}>Close</Button>
         </DialogActions>
+        <EditTransportationOptionDialog open={isOpen} onClose={onClose} editingElement={editingElement}/>
     </BaseModal>
 }
