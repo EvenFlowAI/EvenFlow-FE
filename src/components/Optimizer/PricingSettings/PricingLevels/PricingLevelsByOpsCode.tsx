@@ -8,7 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import EditPricingLevel from "../../../Modals/EditPricingLevel/EditPricingLevel";
 import {useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAssignedServiceRequests} from "../../../../store/reducers/serviceRequests/actions";
+import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {loadRequestsPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
 import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types";
@@ -57,10 +57,15 @@ const PricingLevelsByOpsCode = () => {
         await onOpen();
     }
 
+    const getData = async (id: number) => {
+        await dispatch(setAssignedPageData({pageSize: 0, pageIndex: 0}));
+        await dispatch(loadAssignedServiceRequests(id, true));
+        dispatch(loadRequestsPricingLevels(id));
+    }
+
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id, true));
-            dispatch(loadRequestsPricingLevels(selectedSC.id));
+            getData(selectedSC.id).then();
         }
     }, [selectedSC])
 
@@ -79,7 +84,9 @@ const PricingLevelsByOpsCode = () => {
                     }
                     return {
                         id: item.id,
-                        serviceRequest: item.serviceRequest.description ?? item.serviceRequestOverride?.description,
+                        serviceRequest: item.serviceRequestOverride?.description?.length
+                            ? item.serviceRequestOverride?.description
+                            : item.serviceRequest.description,
                         opsCode: item.serviceRequest.code,
                         discount,
                         premium,

@@ -10,7 +10,7 @@ import {Autocomplete} from "@material-ui/lab";
 import {useDispatch} from "react-redux";
 import {updateSRPricingLevels} from "../../../store/reducers/pricingSettings/actions";
 import {useSCs} from "../../../utils/hooks";
-import {EDemandCategory, TNewRequestsToPricing} from "../../../store/reducers/pricingSettings/types";
+import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
 type TEditPricingLevelsProps = DialogProps & {
   prisingLevel: TPricingLevel | null;
@@ -85,6 +85,10 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
 
     const onCancel = () => {
         setFormIsChecked(false);
+        setOpsCode('');
+        setDiscount(DEFAULT_OPTION);
+        setPremium(DEFAULT_OPTION);
+        setService('');
         props.onClose();
     }
 
@@ -159,7 +163,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
             <Box p={1}/>
             <Autocomplete
                 style={{ marginBottom: 10 }}
-                options={getOptions(101, 200)}
+                options={getOptions(100, 200)}
                 value={premium}
                 onChange={onPremiumChange}
                 renderInput={autocompleteRender({
