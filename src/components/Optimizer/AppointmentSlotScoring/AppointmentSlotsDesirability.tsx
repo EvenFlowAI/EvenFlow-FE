@@ -16,7 +16,11 @@ import {generateSlots, TSlot} from "./utils";
 import {DesirabilityButton} from "../../UI/ConfigButton";
 import {useDispatch, useSelector} from "react-redux";
 import {SC_UNDEFINED, timeString} from "../../../config/constants";
-import {loadDesirability, loadRange, saveDesirability} from "../../../store/reducers/slotScoring/actions";
+import {
+    loadDesirability,
+    loadHorsOfOperations,
+    saveDesirability
+} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {Caption} from "../../UI/Caption";
@@ -202,7 +206,7 @@ export const AppointmentSlotsDesirability = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadDesirability(selectedSC.id, selectedPod?.id));
-            dispatch(loadRange(selectedSC.id, selectedPod?.id));
+            dispatch(loadHorsOfOperations(selectedSC.id));
         }
     }, [dispatch, selectedSC, selectedPod]);
 
@@ -210,14 +214,11 @@ export const AppointmentSlotsDesirability = () => {
         const t = desirabilityItems[0]
             ? desirabilityItems[0].timeSlotType
             : ETimeSlotType.ThirtyMinutes;
-        if (slotRange) {
-
-        }
         setForm({
             timeSlotType: t,
             items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end)
         });
-    }, [desirabilityItems]);
+    }, [desirabilityItems, slotRange]);
 
     const [slots1, slots2]: [TSlot[], TSlot[]] = useMemo(() => {
         const slots = [...form.items];

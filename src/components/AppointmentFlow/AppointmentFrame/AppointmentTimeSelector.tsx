@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
@@ -10,6 +10,7 @@ import {RootState} from "../../../store/rootReducer";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
+import {loadHorsOfOperations} from "../../../store/reducers/slotScoring/actions";
 
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
@@ -54,15 +55,27 @@ type TProps = {
 }
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
-    const selectedAppointment = useSelector((state: RootState) => state.appointment.appointment);
-    const selectedTiming = useSelector((state : RootState) => state.appointmentFrame.selectedTiming);
+    const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {selectedTiming} = useSelector((state : RootState) => state.appointmentFrame);
+    const {slotRange} = useSelector((state : RootState) => state.slotScoring);
     const dispatch = useDispatch();
     const classes = useStyles();
 
+    useEffect(() => {
+        if (scProfile) {
+            dispatch(loadHorsOfOperations(scProfile.id))
+        }
+    }, [scProfile])
+
     const slots: TSlot[] = useMemo(() => {
-        // TODO: Start end dates?
-        const start = moment.utc(date).hour(7).minute(0).second(0).millisecond(0);
-        const end = moment.utc(start).hour(18);
+        let start = moment.utc(date).hour(7).minutes(0).second(0).millisecond(0);
+        let end = moment.utc(date).hour(20).minutes(0).second(0).millisecond(0);
+        if (slotRange) {
+            const [startHours, startMinutes] = slotRange.start.split(':');
+            const [endHours, endMinutes] = slotRange.end.split(':');
+            start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
+            end = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
+        }
         const slots: TSlot[] = [];
         let cDate = moment.utc(start);
         while (cDate.isSameOrBefore(end, 'minute')) {
@@ -70,7 +83,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             cDate = moment.utc(cDate).add(30, 'minutes');
         }
         return slots;
-    }, [date]);
+    }, [date, slotRange]);
 
     const handleSelect = (a: IRemappedAppointmentSlot|null) => {
         const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;

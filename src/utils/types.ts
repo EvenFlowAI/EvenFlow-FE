@@ -1,5 +1,6 @@
 import {TRole} from "../store/reducers/users/types";
 import {IRemappedAppointmentSlot} from "../store/reducers/appointment/types";
+import moment from "moment";
 
 export type TCalendarProps = {
     text: string;
