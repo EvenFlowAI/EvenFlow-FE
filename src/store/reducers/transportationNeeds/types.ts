@@ -59,3 +59,23 @@ export enum ECustomerSegment {
     HighValue,
     EndOfWarranty
 }
+
+export enum ETransportationType {
+    Shuttle,
+    Loaner,
+    Rental,
+    BookRide,
+    VehiclePickUpDropOff
+}
+
+export enum ETransportationDays {
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    EveryDay,
+    LastWeekdayInMonth
+}
