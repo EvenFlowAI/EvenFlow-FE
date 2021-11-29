@@ -305,6 +305,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         onBack();
     }
 
+
     const handleNext = (): void => {
         if (selectedPackage) {
             const packageOptions = ['Good', 'Better', 'Best'];
