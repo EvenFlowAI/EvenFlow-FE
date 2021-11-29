@@ -29,6 +29,7 @@ import {
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import Mileage from "./parts/Mileage/Mileage";
 
+
 type TModalProps = DialogProps & {
     isEditing?: boolean;
 };
