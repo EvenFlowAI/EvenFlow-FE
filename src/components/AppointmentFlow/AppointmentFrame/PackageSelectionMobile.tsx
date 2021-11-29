@@ -273,7 +273,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                             <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
                                 {(isBmWService || isSanfordInfinity) &&
                                 <div className={classes.prevPrice}>
-                                    ${item.marketPriceComplimentaryServices + item.marketPriceServiceRequests}
+                                    ${item.marketPriceServiceRequests + item.marketPriceComplimentaryServices}
                                 </div>}
                                 <div className={classes.currentWrp}>
                                     <div className={classes.triangle}/>
