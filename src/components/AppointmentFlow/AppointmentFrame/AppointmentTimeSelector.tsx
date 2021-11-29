@@ -71,8 +71,10 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         let start = moment.utc(date).hour(7).minutes(0).second(0).millisecond(0);
         let end = moment.utc(date).hour(20).minutes(0).second(0).millisecond(0);
         if (slotRange) {
-            start = moment.utc(slotRange.start, 'HH:mm:SS');
-            end = moment.utc(slotRange.end, 'HH:mm:SS');
+            const [startHours, startMinutes] = slotRange.start.split(':');
+            const [endHours, endMinutes] = slotRange.end.split(':');
+            start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
+            end = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
         }
         const slots: TSlot[] = [];
         let cDate = moment.utc(start);
