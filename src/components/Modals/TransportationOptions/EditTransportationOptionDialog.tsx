@@ -14,7 +14,9 @@ import moment from "moment";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
-import {TextField} from "../../UI/TextField";
+import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
+import { ReactComponent as Calendar } from "../../../assets/img/date_range.svg";
+import { ReactComponent as Watch } from "../../../assets/img/watch_round.svg";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
@@ -35,6 +37,27 @@ type TOption = {
     value: number;
     name: string;
 }
+
+const useStyles = makeStyles(() => ({
+    wrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '24px 48px',
+    },
+    input: {
+        marginBottom: 20,
+    },
+    smallWrapper: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+    label: {
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+        fontSize: 12,
+        marginBottom: 5,
+    }
+}));
 
 const getOptions = (optionsArray: string[]) => {
     const options: TOption[] = [];
@@ -63,6 +86,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const autoCompleteStyles = useAutocompleteStyles();
+    const classes = useStyles();
 
     useEffect(() => {
         setSegmentOptions(() => {
@@ -80,14 +104,6 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             dispatch(loadAssignedServiceRequests(selectedSC.id))
         }
     }, [selectedSC])
-
-    const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
-        setCustomerSegment(value)
-    }
-
-    const onDayOfWeekChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
-        setDayOfWeek(value)
-    }
 
     useEffect(() => {
         if (props.editingElement) {
@@ -108,13 +124,11 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                start: moment.utc()
                    .hours(+startHours)
                    .minutes(+startMinutes)
-                   .second(+startSeconds)
-                   .format('HH:mm:SS'),
+                   .second(+startSeconds),
                end: moment.utc()
                    .hours(+endHours)
                    .minutes(+endMinutes)
-                   .second(+endSeconds)
-                   .format('HH:mm:SS'),
+                   .second(+endSeconds),
             }));
             setDuration(() => ({
                 start: moment.utc(rules.duration.start),
@@ -123,8 +137,15 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         }
     }, [props.editingElement])
 
-    const handleTimeChange = (type: keyof TTimeObject) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-        const date = event.target.value;
+    const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+        setCustomerSegment(value)
+    }
+
+    const onDayOfWeekChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+        setDayOfWeek(value)
+    }
+
+    const handleTime = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
         setTimeOfDay((prev) => {
             if (prev) {
                 return {...prev, [type as keyof TTimeObject]: moment(date).format('HH:mm:SS')};
@@ -134,70 +155,87 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         })
     }
 
-    const handleDateChange = (type: keyof TTimeObject) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-        const date = event.target.value;
+    const handleDateChange = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
         setDuration((prev) => {
             if (prev) {
-                return {...prev, [type as keyof TTimeObject]: moment(date)};
+                return {...prev, [type as keyof TTimeObject]: date};
             } else {
-                return {[type as keyof TTimeObject]: moment(date)}
+                return {[type as keyof TTimeObject]: date}
             }
         })
     }
 
-    return <BaseModal {...props} width={700}>
+    return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>Manage Rules</DialogTitle>
         <DialogContent>
-            <Autocomplete
-                fullWidth
-                classes={autoCompleteStyles}
-                getOptionLabel={option => option.name}
-                options={segmentOptions}
-                getOptionSelected={(option, value) => option.name === ECustomerSegment[+value]}
-                value={customerSegment}
-                onChange={onCustomerSegmentChange}
-                renderInput={autocompleteRender({label: 'Applicable Customer Segment', placeholder: 'Select Customer Segment'})}
-            />
-            <Autocomplete
-                fullWidth
-                classes={autoCompleteStyles}
-                options={dayOFWeekOptions}
-                getOptionLabel={option => option.name}
-                getOptionSelected={(option, value) => option.name === ETransportationDays[+value]}
-                value={dayOfWeek}
-                onChange={onDayOfWeekChange}
-                renderInput={autocompleteRender({label: 'Day Of Week', placeholder: 'Select Day Of Week'})}
-            />
-            <TextField
-                style={{width: '47%'}}
-                type="time"
-                value={timeOfDay?.start || null}
-                onChange={handleTimeChange('start')}
-                placeholder="Select Time"
-                label="Time Of Day"
-            />
-            <TextField
-                style={{width: '47%'}}
-                type="time"
-                value={timeOfDay?.end || null}
-                placeholder="Select Time"
-                onChange={handleTimeChange('end')}
-            />
-            <TextField
-                style={{width: '47%'}}
-                type="date"
-                value={duration?.start || null}
-                onChange={handleDateChange('start')}
-                placeholder="Select Date"
-                label="Duration"
-            />
-            <TextField
-                style={{width: '47%'}}
-                type="date"
-                value={duration?.end || null}
-                placeholder="Select Date"
-                onChange={handleDateChange('end')}
-            />
+            <div className={classes.wrapper}>
+                <Autocomplete
+                    fullWidth
+                    classes={autoCompleteStyles}
+                    style={{ marginBottom: 20 }}
+                    getOptionLabel={option => option.name}
+                    options={segmentOptions}
+                    getOptionSelected={(option, value) => option.name === ECustomerSegment[+value]}
+                    value={customerSegment}
+                    onChange={onCustomerSegmentChange}
+                    renderInput={autocompleteRender({label: 'Applicable Customer Segment', placeholder: 'Select Customer Segment'})}
+                />
+                    <Autocomplete
+                        fullWidth
+                        classes={autoCompleteStyles}
+                        options={dayOFWeekOptions}
+                        style={{ marginBottom: 20 }}
+                        getOptionLabel={option => option.name}
+                        getOptionSelected={(option, value) => option.name === ETransportationDays[+value]}
+                        value={dayOfWeek}
+                        onChange={onDayOfWeekChange}
+                        renderInput={autocompleteRender({label: 'Day Of Week', placeholder: 'Select Day Of Week'})}
+                    />
+                <div className={classes.label}>Time Of Day</div>
+                <div className={classes.smallWrapper}>
+                    <TimePicker
+                        placeholder={"Start Time"}
+                        value={timeOfDay?.start ?? null}
+                        style={{ marginBottom: 20, width: '47%' }}
+                        onChange={handleTime('start')}
+                        id={"Time Of Day From"}
+                        InputProps={{
+                            endAdornment: <Watch />
+                        }}
+                    />
+                    <TimePicker
+                        placeholder={"End Time"}
+                        value={timeOfDay?.end ?? null}
+                        onChange={handleTime('end')}
+                        style={{ marginBottom: 20, width: '47%' }}
+                        id={"Time Of Day To"}
+                        InputProps={{
+                            endAdornment: <Watch />
+                        }}
+                    />
+                </div>
+                <div className={classes.label}>Duration</div>
+                <div className={classes.smallWrapper}>
+                    <DatePicker
+                        value={duration?.start ?? null}
+                        format="MMM D, YYYY"
+                        style={{ marginBottom: 20, width: '47%' }}
+                        onChange={handleDateChange('start')}
+                        InputProps={{
+                            endAdornment: <Calendar />
+                        }}
+                    />
+                    <DatePicker
+                        value={duration?.end ?? null}
+                        format="MMM D, YYYY"
+                        style={{ marginBottom: 20, width: '47%' }}
+                        onChange={handleDateChange('end')}
+                        InputProps={{
+                            endAdornment: <Calendar />
+                        }}
+                    />
+                </div>
+            </div>
         </DialogContent>
     </BaseModal>;
 };

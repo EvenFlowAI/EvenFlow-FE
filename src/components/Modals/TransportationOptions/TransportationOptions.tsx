@@ -5,7 +5,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {DemandTable, TableCell, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
 import {TableContainer} from "../../Optimizer/PricingSettings/UI";
-import {ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
+import {ETransportationType, ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
 import {useDispatch, useSelector} from "react-redux";
 import {
     loadTransportationOptions,
@@ -36,6 +36,19 @@ const TableWrapper = styled("div")(({theme}) => ({
         }
     }
 }))
+
+
+const getOptionString = (option: string) => {
+    const string = ETransportationType[+option];
+    const array = [];
+    for (let i = 0; i < string.length; i++) {
+        if (string[i] === string[i].toUpperCase() && i > 0) {
+            array.push(' ')
+        }
+        array.push(string[i])
+    }
+    return array.join('');
+}
 
 export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
     const [editingElement, setEditingElement] = useState<ITransportationOptionFull | null>(null);
@@ -86,7 +99,7 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
                         <TableBody>
                             {options.map(el => {
                                 return <TableRow key={el.id}>
-                                    <TableCell style={leftAlign}>{el.type}</TableCell>
+                                    <TableCell style={leftAlign}>{getOptionString(el.type)}</TableCell>
                                     <TableCell>
                                         <Button
                                             style={{ textTransform: 'none' }}
