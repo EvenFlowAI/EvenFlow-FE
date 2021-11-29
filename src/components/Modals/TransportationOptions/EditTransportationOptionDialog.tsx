@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {
@@ -17,6 +17,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
 import { ReactComponent as Calendar } from "../../../assets/img/date_range.svg";
 import { ReactComponent as Watch } from "../../../assets/img/watch_round.svg";
+import Checkbox from "../../UI/Checkbox";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
@@ -165,6 +167,27 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         })
     }
 
+    const onRequestCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: string) => {
+
+    }
+
+    const renderRequestOption = useCallback((option: string) => {
+        const allRequestsSelected = false;
+        //const checked = !!serviceRequests.find(item => item.id === option) || allRequestsSelected;
+        const checked = false;
+        return <React.Fragment>
+            <Checkbox
+                color="primary"
+                icon={checked
+                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
+                checked={checked}
+                onChange={e => onRequestCheckboxChange(e, option)}
+            />
+            {option}
+        </React.Fragment>
+    }, [serviceRequests, assignedList]);
+
     return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>Manage Rules</DialogTitle>
         <DialogContent>
@@ -180,6 +203,21 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     onChange={onCustomerSegmentChange}
                     renderInput={autocompleteRender({label: 'Applicable Customer Segment', placeholder: 'Select Customer Segment'})}
                 />
+                {/*<Autocomplete*/}
+                {/*    multiple*/}
+                {/*    style={{ marginBottom: 20 }}*/}
+                {/*    classes={classes}*/}
+                {/*    options={assignedList.map(i)}*/}
+                {/*    disableCloseOnSelect*/}
+                {/*    renderOption={renderModelOption}*/}
+                {/*    value={selectedModels}*/}
+                {/*    onChange={onModelChange}*/}
+                {/*    renderInput={autocompleteRender({*/}
+                {/*        label: "Model",*/}
+                {/*        error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,*/}
+                {/*        placeholder: 'Select Model'*/}
+                {/*    })}*/}
+                {/*/>*/}
                     <Autocomplete
                         fullWidth
                         classes={autoCompleteStyles}
