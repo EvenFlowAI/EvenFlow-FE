@@ -44,6 +44,7 @@ const Wrapper = styled('div')(({theme}) => ({
     [theme.breakpoints.down('sm')]: {
         overflowX: "auto"
     },
+
     "& .currentWrp": {
         flexBasis: "50%",
         display: "flex",
@@ -132,7 +133,7 @@ const Wrapper = styled('div')(({theme}) => ({
         },
         "&.totalComplimentary": {
             padding: "16px 8px",
-            color: "#008331"
+            color: "#008331",
         },
         "&.total": {
             padding: 8,
@@ -142,7 +143,8 @@ const Wrapper = styled('div')(({theme}) => ({
                 alignItems: "center",
                 justifyContent: "center",
                 "& .current": {
-                    flexGrow: 1
+                    flexGrow: 1,
+                    fontSize: 20
                 }
             },
             '&.priceWithBefore': {
@@ -153,10 +155,12 @@ const Wrapper = styled('div')(({theme}) => ({
                 "&>.before": {
                     textDecoration: "line-through",
                     fontWeight: "bold",
-                    color: "#142EA1"
+                    color: "#142EA1",
+                    fontSize: 20,
                 },
                 "& .current": {
-                    flexGrow: 1
+                    flexGrow: 1,
+                    fontSize: 20
                 }
             },
             "&>.info": {
@@ -369,7 +373,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                         {/*}*/}
                         {(isSanfordInfinity || isBmWService) && <React.Fragment key="maintenance">
                             <div className="totalMaintenance">Total Maintenance Value:</div>
-                            {packages.map(p => <div className={setClasses(p.id, '')}>${p.marketPriceServiceRequests}</div>)}
+                            {packages.map(p => <div className={setClasses(p.id, '')}>
+                                <span style={{ fontSize: 20 }}>${p.marketPriceServiceRequests}</span>
+                            </div>)}
                         </React.Fragment>
                         }
                         <div className="green subtitle">Complimentary</div>
@@ -396,7 +402,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                             return <div
                                 onClick={handleClick(p)}
                                 className={setClasses(p.id, "totalComplimentary last")}
-                                key={p.id}>{p.marketPriceComplimentaryServices ? `$${p.marketPriceComplimentaryServices}` : ''}</div>;
+                                key={p.id}>
+                                <span style={{ fontSize: 20 }}>{p.marketPriceComplimentaryServices ? `$${p.marketPriceComplimentaryServices}` : ''}</span>
+                            </div>;
                         })
                         : packages.map(p => {
                                 const price = p.complimentaryServices.reduce(
@@ -405,7 +413,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                 return <div
                                     onClick={handleClick(p)}
                                     className={setClasses(p.id, "totalComplimentary last")}
-                                    key={p.id}>{price ? `$${price}` : ''}</div>;
+                                    key={p.id}>
+                                    <span style={{ fontSize: 20 }}>{price ? `$${price}` : ''}</span>
+                                </div>;
                             })}
                         <div className="total end">
                             Total <span className="info">(excluding taxes)</span>
