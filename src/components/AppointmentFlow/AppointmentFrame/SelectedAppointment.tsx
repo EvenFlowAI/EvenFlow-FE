@@ -48,6 +48,13 @@ const List = styled('ul')(({theme}) => ({
                     fontSize: 14
                 }
             },
+        },
+        "& .service-list": {
+            display: 'block',
+            maxHeight: 120,
+            overflow: "auto",
+            border: '1px solid rgb(218, 218, 218)',
+            padding: 8,
         }
     },
     "& ul": {
@@ -162,9 +169,10 @@ export const SelectedAppointment = () => {
             {!isSm && <h4>Your selections</h4>}
             <Wrapper>
                 <List>
-                    <li className="service-item">{!isSm && 'Service Needed:'} {
-                        getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)
-                    }
+                    <li className={"service-item"}>{!isSm && 'Service Needed:'}
+                        <span className={selectedPackage ? undefined : "service-list"}>
+                            {getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)}
+                        </span>
                         {selectedPackage && isSm && price && <div className="price">$
                             {Math.floor(price)}
                             <span>

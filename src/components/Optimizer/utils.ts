@@ -8,7 +8,7 @@ export const optimizerRoot: TTitle = {
     title: "Optimizer Settings"
 }
 const getTotal = (includedRequests: TExtendedService[]): number => {
-    const price = includedRequests.reduce((a, b) => a + +b.price, 0);
+    const price = includedRequests.reduce((a, b) => a + +b.laborAmount + +b.partsAmount, 0);
     return Number.isInteger(price) ? price : +price.toFixed(2);
 }
 
