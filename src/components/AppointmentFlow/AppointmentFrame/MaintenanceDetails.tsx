@@ -8,7 +8,7 @@ import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
-    loadMakes, loadModels,
+    loadMakes,
     setMaintenanceDetails,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -53,7 +53,7 @@ const blankOptions: TOptionsState = {};
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {maintenanceDetails, selectedVehicle, makes, models}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
@@ -103,21 +103,16 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         } else {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         }
-        if (models.length) {
-            if (selectedVehicle?.make) {
-                const currentMake = makes.find(item => item.name === selectedVehicle.make);
-                if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
-            } else {
-                setCurrentModels(models);
-            }
+        if (selectedVehicle?.make) {
+            const currentMake = makes.find(item => item.name === selectedVehicle.make);
+            if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
         } else {
-            setCurrentModels(['Other']);
+            setCurrentModels(() => makes.map(item => item.models).flat());
         }
-    }, [makes, models])
+    }, [makes, selectedVehicle])
 
     useEffect(() => {
         dispatch(loadMakes(decodeSCID(id)));
-        dispatch(loadModels(decodeSCID(id)));
         dispatch(loadMileage(decodeSCID(id)));
     }, [id]);
 
@@ -131,7 +126,6 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             setErrors(e => e.filter(err => err !== name));
             if (name === 'make') {
                 if (option === 'Other') {
-
                     setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
                     if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
                 } else {
