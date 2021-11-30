@@ -82,9 +82,6 @@ const useStyles = makeStyles(() => ({
         borderRadius: '50%',
     },
     tablesWrapper: {
-        // display: "grid",
-        // gridTemplateColumns: '5fr 2fr',
-        // gridGap: 16,
     },
     details: {
         display: "block",
