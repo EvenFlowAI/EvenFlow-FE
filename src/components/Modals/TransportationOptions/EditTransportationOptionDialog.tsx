@@ -1,10 +1,9 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {
     ECustomerSegment, ETransportationDays,
     ITransportationOptionFull,
-    ITrOptionServiceTRequest
 } from "../../../store/reducers/transportationNeeds/types";
 import {useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -61,6 +60,30 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
+const useMultipleACStyles = makeStyles(() => ({
+    tag: {
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: '#7898FF',
+        borderRadius: 4,
+        color: 'white',
+        fontWeight: 'bold',
+        margin: '1px 2px',
+        '& > svg': {
+            color: 'white',
+        }
+    },
+    option: {
+        padding: 0,
+        fontSize: 15,
+        height: 28,
+    },
+    inputRoot: {
+        padding: 5,
+        paddingRight: 8,
+    },
+}))
+
 const getOptions = (optionsArray: string[]) => {
     const options: TOption[] = [];
     optionsArray.forEach((option, index) => {
@@ -84,11 +107,20 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
     const [timeOfDay, setTimeOfDay] = useState<TTimeObject | null>(null);
     const [duration, setDuration] = useState<TTimeObject | null>(null);
-    const [serviceRequests, setServiceRequests] = useState<ITrOptionServiceTRequest[]>([]);
+    const [serviceRequests, setServiceRequests] = useState<TOption[]>([]);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const autoCompleteStyles = useAutocompleteStyles();
     const classes = useStyles();
+    const multipleACSClasses = useMultipleACStyles();
+
+    const requestsOptions = useMemo(() => {
+        const options = assignedList.map(item => ({name: item.serviceRequest.code, value: item.id}))
+        options.unshift({name: 'All', value: 0});
+        return options
+    }, [assignedList])
 
     useEffect(() => {
         setSegmentOptions(() => {
@@ -117,7 +149,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             const day = dayOFWeekOptions.find(item => item.value === +rules.dayOfWeeks[0]);
             if (day) setDayOfWeek(day);
 
-            setServiceRequests(rules.serviceRequests);
+            setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
 
             const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
             const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
@@ -167,14 +199,33 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         })
     }
 
-    const onRequestCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: string) => {
-
+    const onRequestChange = (e: ChangeEvent<{}>, value: TOption[]) => {
+        if (value.find(option => option.name === 'All')) {
+            setServiceRequests(assignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
+        } else {
+            setServiceRequests(value);
+        }
     }
 
-    const renderRequestOption = useCallback((option: string) => {
-        const allRequestsSelected = false;
-        //const checked = !!serviceRequests.find(item => item.id === option) || allRequestsSelected;
-        const checked = false;
+    const onRequestCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: TOption) => {
+        setFormIsChecked(false);
+        if (!e.target.checked) {
+            setServiceRequests(prev => {
+                let data = option.name === 'All' ? [] : prev;
+                return data
+                    .filter(item => item.value !== option.value)
+                    .sort((a, b) => serviceRequests.find(el => el.value === a.value)
+                        ? serviceRequests.find(el => el.value === b.value)
+                            ? 0 : -1 : 1)
+            })
+        }
+    }
+
+    const renderRequestOption = useCallback((option: TOption) => {
+        const allRequestsSelected = assignedList.length
+            ? !assignedList.find(item => !serviceRequests.find(el => el.value === item.id))
+            : false;
+        const checked = !!serviceRequests.find(item => item.value === option.value) || allRequestsSelected;
         return <React.Fragment>
             <Checkbox
                 color="primary"
@@ -184,7 +235,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 checked={checked}
                 onChange={e => onRequestCheckboxChange(e, option)}
             />
-            {option}
+            {option.name}
         </React.Fragment>
     }, [serviceRequests, assignedList]);
 
@@ -203,21 +254,22 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     onChange={onCustomerSegmentChange}
                     renderInput={autocompleteRender({label: 'Applicable Customer Segment', placeholder: 'Select Customer Segment'})}
                 />
-                {/*<Autocomplete*/}
-                {/*    multiple*/}
-                {/*    style={{ marginBottom: 20 }}*/}
-                {/*    classes={classes}*/}
-                {/*    options={assignedList.map(i)}*/}
-                {/*    disableCloseOnSelect*/}
-                {/*    renderOption={renderModelOption}*/}
-                {/*    value={selectedModels}*/}
-                {/*    onChange={onModelChange}*/}
-                {/*    renderInput={autocompleteRender({*/}
-                {/*        label: "Model",*/}
-                {/*        error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,*/}
-                {/*        placeholder: 'Select Model'*/}
-                {/*    })}*/}
-                {/*/>*/}
+                <Autocomplete
+                    multiple
+                    style={{ marginBottom: 20 }}
+                    classes={multipleACSClasses}
+                    options={requestsOptions}
+                    disableCloseOnSelect
+                    getOptionLabel={option => option.name}
+                    renderOption={renderRequestOption}
+                    value={serviceRequests}
+                    onChange={onRequestChange}
+                    renderInput={autocompleteRender({
+                        label: "Service Requests",
+                        error: !serviceRequests.length && formIsChecked,
+                        placeholder: 'Select Service Requests'
+                    })}
+                />
                     <Autocomplete
                         fullWidth
                         classes={autoCompleteStyles}
