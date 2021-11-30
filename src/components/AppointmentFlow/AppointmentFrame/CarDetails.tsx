@@ -4,10 +4,9 @@ import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {IVehicle} from "../../../store/reducers/appointment/types";
-import moment from "moment";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {loadMakes, loadModels, updateVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {loadMakes, updateVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TextField} from "../../UI/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -50,7 +49,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
-    const {selectedVehicle, makes, models}= useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, makes}= useSelector((state: RootState) => state.appointmentFrame);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {id} = useParams();
@@ -83,7 +82,6 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
 
     useEffect(() => {
         dispatch(loadMakes(decodeSCID(id)));
-        dispatch(loadModels(decodeSCID(id)));
         dispatch(loadMileage(decodeSCID(id)));
     }, [id]);
 
@@ -99,17 +97,13 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         } else {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         }
-        if (models.length) {
-            if (selectedVehicle?.make) {
-                const currentMake = makes.find(item => item.name === selectedVehicle.make);
-                if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
-            } else {
-                setCurrentModels(models);
-            }
+        if (selectedVehicle?.make) {
+            const currentMake = makes.find(item => item.name === selectedVehicle.make);
+            if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
         } else {
-            setCurrentModels(['Other']);
+            setCurrentModels(() => makes.map(item => item.models).flat());
         }
-    }, [makes, models])
+    }, [makes, selectedVehicle])
 
     const handleChange = (name: keyof IVehicle) =>
         (e: React.ChangeEvent<{}>, option: string|number|object|null) => {
