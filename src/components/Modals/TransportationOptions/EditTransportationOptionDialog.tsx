@@ -5,7 +5,7 @@ import {
     ECustomerSegment, ETransportationDays,
     ITransportationOptionFull, ITransportationOptionRules,
 } from "../../../store/reducers/transportationNeeds/types";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -142,6 +142,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const autoCompleteStyles = useAutocompleteStyles();
     const classes = useStyles();
     const multipleACSClasses = useMultipleACStyles();
+    const showError = useException();
 
     const allRequestsSelected = useMemo(() => assignedList.length
             ? !assignedList.find(item => !serviceRequests.find(el => el.value === item.id))
@@ -203,14 +204,17 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }, [props.editingElement])
 
     const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+        setFormIsChecked(false);
         setCustomerSegment(value)
     }
 
     const onDayOfWeekChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+        setFormIsChecked(false);
         setDayOfWeek(value)
     }
 
     const handleTime = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
+        setFormIsChecked(false);
         setTimeOfDay((prev) => {
             if (prev) {
                 return {...prev, [type as keyof TTimeObject]: moment(date).format('HH:mm:SS')};
@@ -221,6 +225,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }
 
     const handleDateChange = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
+        setFormIsChecked(false);
         setDuration((prev) => {
             if (prev) {
                 return {...prev, [type as keyof TTimeObject]: date};
@@ -231,6 +236,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }
 
     const onRequestChange = (e: ChangeEvent<{}>, value: TOption[]) => {
+        setFormIsChecked(false);
         if (value.find(option => option.name === 'All')) {
             setServiceRequests(assignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
         } else {
@@ -277,8 +283,14 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         props.onClose();
     }
 
+    const isValid = () => {
+        return (serviceRequests.length || allRequestsSelected) && timeOfDay?.start && timeOfDay?.end && duration?.start && duration?.end &&
+            dayOfWeek && customerSegment;
+    }
+
     const onSave = () => {
-        if (selectedSC && props.editingElement) {
+        setFormIsChecked(true);
+        if (selectedSC && props.editingElement && isValid()) {
             const data: ITransportationOptionRules = {
                 isAllServiceRequestsIncluded: allRequestsSelected,
             }
@@ -296,6 +308,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             }
             if (dayOfWeek) data.dayOfWeeks = [dayOfWeek.value];
             dispatch(editTransportationOptionRules(props.editingElement.id, selectedSC.id, data, onCancel))
+        } else {
+            showError('Please fill all required fields')
         }
     }
 
@@ -309,10 +323,15 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     style={{ marginBottom: 20 }}
                     getOptionLabel={option => option.name}
                     options={segmentOptions}
+                    disableClearable
                     getOptionSelected={(option, value) => option.name === ECustomerSegment[+value]}
-                    value={customerSegment}
+                    value={customerSegment || undefined}
                     onChange={onCustomerSegmentChange}
-                    renderInput={autocompleteRender({label: 'Applicable Customer Segment', placeholder: 'Select Customer Segment'})}
+                    renderInput={autocompleteRender({
+                        label: 'Applicable Customer Segment',
+                        placeholder: 'Select Customer Segment',
+                        error: !customerSegment && formIsChecked,
+                    })}
                 />
                 <Autocomplete
                     multiple
@@ -320,6 +339,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     classes={multipleACSClasses}
                     options={requestsOptions}
                     disableCloseOnSelect
+                    disableClearable
                     getOptionLabel={option => option.name}
                     renderOption={renderRequestOption}
                     value={serviceRequests}
@@ -336,10 +356,15 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         options={dayOFWeekOptions}
                         style={{ marginBottom: 20 }}
                         getOptionLabel={option => option.name}
+                        disableClearable
                         getOptionSelected={(option, value) => option.name === ETransportationDays[+value]}
-                        value={dayOfWeek}
+                        value={dayOfWeek || undefined}
                         onChange={onDayOfWeekChange}
-                        renderInput={autocompleteRender({label: 'Day Of Week', placeholder: 'Select Day Of Week'})}
+                        renderInput={autocompleteRender({
+                            label: 'Day Of Week',
+                            placeholder: 'Select Day Of Week',
+                            error: !dayOfWeek && formIsChecked,
+                        })}
                     />
                 <div className={classes.label}>Time Of Day</div>
                 <div className={classes.smallWrapper}>
@@ -350,7 +375,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         onChange={handleTime('start')}
                         id={"Time Of Day From"}
                         InputProps={{
-                            endAdornment: <Watch />
+                            endAdornment: <Watch />,
+                            error: !timeOfDay?.start && formIsChecked,
                         }}
                     />
                     <TimePicker
@@ -360,7 +386,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         style={{ marginBottom: 20, width: '47%' }}
                         id={"Time Of Day To"}
                         InputProps={{
-                            endAdornment: <Watch />
+                            endAdornment: <Watch />,
+                            error: !timeOfDay?.end && formIsChecked,
                         }}
                     />
                 </div>
@@ -372,7 +399,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         style={{ marginBottom: 20, width: '47%' }}
                         onChange={handleDateChange('start')}
                         InputProps={{
-                            endAdornment: <Calendar />
+                            endAdornment: <Calendar />,
+                            error: !duration?.start && formIsChecked,
                         }}
                     />
                     <DatePicker
@@ -381,7 +409,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         style={{ marginBottom: 20, width: '47%' }}
                         onChange={handleDateChange('end')}
                         InputProps={{
-                            endAdornment: <Calendar />
+                            endAdornment: <Calendar />,
+                            error: !duration?.end && formIsChecked,
                         }}
                     />
                 </div>
