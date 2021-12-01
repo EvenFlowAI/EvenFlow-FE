@@ -107,12 +107,13 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             nonInteraction: true
         });
         if (selectedPackage) {
+            const price = selectedPackage.serviceRequests.reduce((acc, el) => acc + el.price, 0);
             ReactGA.event({
                 category: 'User',
                 action: 'Selected Service Requests',
                 label: `Requests Codes: 
-                ${selectedPackage.serviceRequests.map(item => (`${item.code} - ${item.description}`)).join(', ')} 
-                with Price $${selectedPackage.serviceRequests.reduce((acc, el) => acc + el.price, 0)}`,
+                ${selectedPackage.serviceRequests.map(item => (`${item.code} - ${item.description}`)).join(', ')}
+                ${!isNaN(price) ? `with Price ${+price}` : ''}`,
                 nonInteraction: true
             });
         }
