@@ -90,8 +90,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         ReactGA.event({
             category: 'User',
             action: 'Clicked on Appointment Slot',
-            label: a?.price?.value ? `With Price ${a?.price?.value}` : '',
-            nonInteraction: true,
+            label: a?.price?.value ? `With Price $${a.price.value}` : '',
         });
         dispatch(selectAppointment(data));
     }
