@@ -12,7 +12,6 @@ import {setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import { v4 as uuidv4 } from 'uuid';
-import {TRACKER} from "../../config/config";
 
 const mh400 = "@media (max-height: 400px)";
 const mh600 = "@media (max-height: 600px)";
@@ -87,7 +86,6 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
             category: 'User',
             action: 'Enters Page',
             label: `As New User`,
-            nonInteraction: true
         });
         onComplete();
     }

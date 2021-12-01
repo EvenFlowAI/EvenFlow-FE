@@ -313,7 +313,6 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 category: 'User',
                 action: `Selected Package`,
                 label: `With ${packageOptions[selectedPackage.type]} Option`,
-                nonInteraction: true
             })
         }
         onNext();
