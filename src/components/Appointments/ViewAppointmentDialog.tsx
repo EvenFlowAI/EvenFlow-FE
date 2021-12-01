@@ -65,7 +65,7 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>&TCall
                     <ListItem>
                         <ListItemIcon><Schedule /></ListItemIcon>
                         <ListItemText
-                            primary={ `${moment(payload.dateInUtc).format("LL")} ${moment(payload.timeSlot, timeSpanString).format(timeString)}`}
+                            primary={ `${moment(payload.dateInUtc).utc().format("LL")} ${moment(payload.timeSlot, timeSpanString).format(timeString)}`}
                         />
                     </ListItem>
                     {payload.serviceRequests.map(sr => {

@@ -28,6 +28,8 @@ type TAssignOpsCodeModalProps = DialogProps & {
     setSelectedCodes: Dispatch<SetStateAction<TAssignedRequest[]>>;
     title: string;
     isEditing?: boolean;
+    optionError: boolean;
+    setOptionError: Dispatch<SetStateAction<boolean>>;
 }
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
@@ -86,13 +88,15 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         isLoading,
         servicesCount,
         search,
-        currentPackage
+        currentPackage,
+        nonSelectedPageData,
     ] = useSelector((state: RootState) => [
         state.serviceRequests.nonSelectedList,
         state.serviceRequests.nonSelectedLoading,
         state.serviceRequests.nonSelectedPaging.numberOfRecords,
         state.serviceRequests.nonSelectedFilter.searchTerm,
         state.packages.currentPackage,
+        state.serviceRequests.nonSelectedPageData
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
@@ -133,6 +137,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
             });
         } else {
             showError('Please select option first');
+            props.setOptionError(true);
         }
     }, [props.setSelectedCodes, selectedOption])
 
@@ -143,7 +148,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id));
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
     }, [dispatch, selectedSC]);
 
@@ -159,6 +164,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     }
 
     const onSelectOption = useCallback((e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
+        props.setOptionError(false);
         setSelectedOption(value);
         if (props.isEditing && currentPackage && value) {
             const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === value.type)
@@ -177,7 +183,8 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     const getSelectedOpsCode = (selectedOption: TSelectedOption): string => {
         let code = ''
         const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === selectedOption.type)
-        if (assignedCode) code = `${assignedCode.code} ${assignedCode.description}`;
+        if (assignedCode) code = `${assignedCode.code} `;
+        if (assignedCode?.description) code += assignedCode.description;
         return code;
     }
 
@@ -208,10 +215,11 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                         renderInput={autocompleteRender({
                             label: "Select A Package Option",
                             fullWidth: true,
-                            placeholder: 'Select An Option'
+                            placeholder: 'Select An Option',
+                            error: props.optionError,
                         })}
                         value={selectedOption}/>
-                    {currentPackage && selectedOption && <div className={classes.selectedCode}>
+                    {currentPackage && selectedOption && props.isEditing && <div className={classes.selectedCode}>
                         Selected:  {getSelectedOpsCode(selectedOption)}
                     </div>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
@@ -221,6 +229,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                     index="id"
                     startActions={preActions}
                     compact
+                    hidePagination={servicesCount <= nonSelectedPageData.pageSize}
                     rowData={tableData}
                     isLoading={isLoading}
                     page={pageIndex}

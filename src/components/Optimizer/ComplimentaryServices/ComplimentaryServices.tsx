@@ -20,7 +20,7 @@ import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../config/constants";
 import AddServiceManually from "../../Modals/AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
-import {addOpsCodeFromList} from "../../../store/reducers/complimentary/actions";
+import {addOpsCodeFromList, loadAllComplimentary} from "../../../store/reducers/complimentary/actions";
 import {IOrder} from "../../../types/types";
 
 const ComplimentaryServices = () => {
@@ -34,12 +34,14 @@ const ComplimentaryServices = () => {
         servicesCount,
         sortOrder,
         searchTerm,
+        allComplimentary,
     ] = useSelector((state: RootState) => [
         state.packages.complimentary,
         state.packages.isComplimentaryLoading,
         state.packages.complimentaryPaging.numberOfRecords,
         state.packages.complimentarySortOrder,
         state.packages.complimentarySearchTerm,
+        state.packages.allComplimentary,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
@@ -61,16 +63,23 @@ const ComplimentaryServices = () => {
     ]
 
     useEffect(() => {
-        if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
+        if (selectedSC) {
+            dispatch(loadComplimentary(selectedSC.id))
+        }
     }, [selectedSC])
 
+    const handleAddManuallyClose = () => {
+        setEditedItem(undefined);
+        onAddManuallyClose();
+    }
+
     useEffect(() => {
-            setSelectedOpsCodes(() => {
-                const data: number[] = [];
-                complimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
-                return data;
-            });
-    }, [complimentary])
+        setSelectedOpsCodes(() => {
+            const data: number[] = [];
+            allComplimentary.forEach(item => item.serviceRequestId && data.push(item.serviceRequestId));
+            return data;
+        });
+    }, [allComplimentary])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setComplimentarySearchTerm(e.target.value))
@@ -136,6 +145,11 @@ const ComplimentaryServices = () => {
         if (selectedSC) await dispatch(loadComplimentary(selectedSC.id));
     }
 
+    const handleAddOpsCodeOpen = () => {
+        if (selectedSC) dispatch(loadAllComplimentary(selectedSC.id))
+        onAddOpsCodeOpen()
+    }
+
     return (
         <div>
             <TitleContainer
@@ -151,7 +165,7 @@ const ComplimentaryServices = () => {
                         style={{marginLeft: 16}}
                         color="primary"
                         variant="contained"
-                        onClick={onAddOpsCodeOpen}
+                        onClick={handleAddOpsCodeOpen}
                     >
                         Add Ops Code
                     </Button>
@@ -192,7 +206,7 @@ const ComplimentaryServices = () => {
                 onClose={onAddOpsCodeClose}
                 onSave={onAddOpsCode}
                 selectedPreviously={selectedOpsCodes}/>
-            <AddServiceManually open={isAddManuallyOpen} onClose={onAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
+            <AddServiceManually open={isAddManuallyOpen} onClose={handleAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
         </div>
     );
 };

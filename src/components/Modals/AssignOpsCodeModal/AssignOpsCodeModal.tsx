@@ -70,6 +70,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     const [selectedCode, setSelectedCode] = useState<number | null>(null);
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
+    const [optionError, setOptionError] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
@@ -81,12 +82,14 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
         servicesCount,
         search,
         currentPackage,
+        nonSelectedPageData,
     ] = useSelector((state: RootState) => [
         state.serviceRequests.nonSelectedList,
         state.serviceRequests.nonSelectedLoading,
         state.serviceRequests.nonSelectedPaging.numberOfRecords,
         state.serviceRequests.nonSelectedFilter.searchTerm,
         state.packages.currentPackage,
+        state.serviceRequests.nonSelectedPageData
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
@@ -110,6 +113,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
         if (selectedOption) {
             setSelectedCode(el.id);
         } else {
+            setOptionError(true);
             showError('Please select An Option first')
         }
 
@@ -121,7 +125,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id));
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
     }, [dispatch, selectedSC]);
 
@@ -144,6 +148,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     }
 
     const onSelectOption = useCallback((e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
+        setOptionError(false);
         setSelectedOption(value);
         if (currentPackage && value) {
             const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === value.type)
@@ -154,13 +159,14 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     const getSelectedOpsCode = (selectedOption: TSelectedOption): string => {
         let code = ''
         const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === selectedOption.type)
-        if (assignedCode) code = `${assignedCode.code} ${assignedCode.description}`;
+        if (assignedCode?.code) code = assignedCode.code.toString();
+        if (assignedCode?.description) code += ` ${assignedCode.description}`
         return code;
     }
 
     return (
         <BaseModal {...props}>
-            <DialogTitle onClose={handleClose}>ASSIGN OPS CODE</DialogTitle>
+            <DialogTitle onClose={handleClose}>ASSIGN MAINTENANCE PACKAGE OPTIONS OPS CODES </DialogTitle>
             <div className={classes.subTitle}>{props.packageName}</div>
             <DialogContent>
                 <div className={classes.wrapper}>
@@ -173,7 +179,8 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
                         renderInput={autocompleteRender({
                             label: "Select A Package Option",
                             fullWidth: true,
-                            placeholder: 'Select An Option'
+                            placeholder: 'Select An Option',
+                            error: optionError,
                         })}
                         value={selectedOption}/>}
                     {currentPackage && selectedOption && <div className={classes.selectedCode}>
@@ -186,6 +193,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
                     index="id"
                     startActions={preActions}
                     compact
+                    hidePagination={servicesCount <= nonSelectedPageData.pageSize}
                     rowData={tableData}
                     isLoading={isLoading}
                     page={pageIndex}

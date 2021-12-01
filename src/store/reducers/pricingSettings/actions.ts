@@ -1,17 +1,20 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EDemandCategory,
-    IDayOfWeekSetting,
+    IDayOfWeekSetting, IGetMPListData,
     IPricingDemand,
     IPricingLevel,
-    IPricingSetting,
+    IPricingSetting, IRequestPricingSettings,
     ITimeOfYearSetting,
-    ITimeWindowEl
+    ITimeWindowEl, TNewRequestsToPricing
 } from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import moment from "moment";
+import {IPackageShort} from "../packages/types";
+
+export const setLoading = createAction<boolean>("PricingSettings/SetLoading");
 
 export const getPricingLevels = createAction<IPricingLevel[]>("PricingSettings/GetPL");
 export const loadPricingLevels = (serviceCenterId: number): AppThunk => async dispatch => {
@@ -121,4 +124,113 @@ export const setTimeOfYearPricing = (data: ITimeOfYearSetting): AppThunk => asyn
         );
     }
     await dispatch(loadTimeOfYearPricing(data.serviceCenterId));
+}
+
+export const getRequestsPricingLevels = createAction<IRequestPricingSettings[]>("PrisingSettings/GetSRPricingLevels");
+export const loadRequestsPricingLevels = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.PricingSettings.GetServiceRequestsPricingLevels, {params: {serviceCenterId}})
+        .then(result => {
+            if (result) {
+                dispatch(getRequestsPricingLevels(result.data));
+            }
+        })
+        .catch(err => {
+            console.log('get service requests pricing levels error', err)
+        })
+        .finally(() => {
+            dispatch(setLoading(false));
+        })
+}
+
+export const updateSRPricingLevels = (serviceRequestId: number, data: Partial<IRequestPricingSettings>, callback = () => {}): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.ChangeServiceRequestPricingLevels, {urlParams: {id: serviceRequestId}, data })
+        .then(result => {
+            if (data.serviceCenterId && result) {
+                dispatch(loadRequestsPricingLevels(data.serviceCenterId));
+                callback();
+            }
+        })
+        .catch(err => {
+            console.log('update service request pricing level error', err)
+        })
+}
+
+export const getSRPricingSettings = createAction<IRequestPricingSettings[]>("PricingSettings/GetSRPricingSettings");
+export const loadSRPricingSettings = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.PricingSettings.GetServiceRequestsPricingSettings, {params: {serviceCenterId}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getSRPricingSettings(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('load service requests pricing settings error', err)
+        })
+        .finally(() => {
+            dispatch(setLoading(false));
+        })
+}
+
+export const updateSRPricingSettings = (serviceRequestId: number, data: Partial<IRequestPricingSettings>): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.UpdateServiceRequestPricingSettings, {urlParams: {id: serviceRequestId}, data})
+        .then(result => {
+            if (result && data.serviceCenterId) dispatch(loadSRPricingSettings(data.serviceCenterId))
+        })
+        .catch(err => {
+            console.log('update service request pricing settings error', err)
+        })
+}
+
+export const deleteSRPricingSettings = (id: number, serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.DeleteServiceRequestPricingSettings, {urlParams: {id}})
+        .then(result => {
+            if (result) dispatch(loadSRPricingSettings(serviceCenterId))
+        })
+        .catch(err => {
+            console.log('delete service request pricing settings error', err)
+        })
+}
+
+
+export const addServiceRequestsToPricing = (data: TNewRequestsToPricing): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.AddServiceRequests, {data})
+        .then(result => {
+            if (result) {
+                dispatch(loadSRPricingSettings(data.serviceCenterId))
+            }
+        })
+        .catch(err => {
+            console.log('add service requests to pricing settings error', err)
+        })
+}
+
+export const getMPList = createAction<IPackageShort[]>("PricingSettings/GetMPList");
+export const loadMPList = (data: IGetMPListData): AppThunk => dispatch => {
+    dispatch(setLoading);
+    Api.call(Api.endpoints.MaintenancePackages.GetShortByQuery, {data})
+        .then(res => {
+            if (res?.data?.result) {
+                dispatch(getMPList(res.data.result))
+            }
+        })
+        .catch(err => {
+            console.log('load maintenance packages eligibility list error', err);
+        })
+        .finally(() => dispatch(setLoading(false)));
+}
+
+export const setPricingOptimization = (id: number, isApplyPricingOptimization: boolean, data: IGetMPListData): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.MaintenancePackages.SetPricingOptimization, {urlParams: {id}, data: {isApplyPricingOptimization}})
+        .then(result => {
+            if (result) {
+                dispatch(loadMPList(data));
+            }
+        })
+        .catch(err => {
+            console.log('set pricing optimization for package error', err)
+        })
+        .finally(() => dispatch(setLoading(false)));
 }

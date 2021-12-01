@@ -151,14 +151,16 @@ type ApiRoutes = {
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
-        | "GetByQuery" | "PackageOptions" | "ByVehicle", TApiRoute>,
+        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
     Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
-        | "GetLevels" | "SetLevels" | "Calculation", TApiRoute>,
+        | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
+        | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
+        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -172,12 +174,13 @@ type ApiRoutes = {
         | "Eligibility"
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
-        | "SetOptimization" | "GetOptimization" | "SetValues", TApiRoute>,
+        | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange", TApiRoute>,
     TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
-    Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes", TApiRoute>,
+    Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "RemoveMake" | "UpdateMake" | "CreateMake"
+        | "GetMileage" | "RemoveMileage" | "CreateMileage", TApiRoute>,
 }
 
 type TOptions = {
@@ -271,6 +274,7 @@ export class Api {
             GetByQuery: {route: "/maintenance-packages/by-query", method: "post"},
             PackageOptions: {route: "/maintenance-packages/{id}/options", method: "put"},
             ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "post"},
+            GetShortByQuery: {route: "/maintenance-packages/short-by-query", method: "post"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
@@ -308,6 +312,12 @@ export class Api {
             GetLevels: {route: "/pricing-settings/levels", method: "get"},
             SetLevels: {route: "/pricing-settings/levels", method: "put"},
             Calculation: {route: "/pricing-settings/calculation", method: "get"},
+            GetServiceRequestsPricingLevels: {route: "/pricing-settings/service-requests/pricing-levels", method: "get"},
+            ChangeServiceRequestPricingLevels: {route: "/pricing-settings/service-requests/pricing-levels/{id}", method: "put"},
+            GetServiceRequestsPricingSettings: {route: "/pricing-settings/service-requests", method: "get"},
+            UpdateServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "put"},
+            DeleteServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "delete"},
+            AddServiceRequests: {route: "/pricing-settings/service-requests", method: "post"},
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},
@@ -371,7 +381,9 @@ export class Api {
             GetDesirability: {route: "/slot-scoring/desirability", method: "get"},
             SetOptimization: {route: "/slot-scoring/optimization-settings", method: "put"},
             GetOptimization: {route: "/slot-scoring/optimization-settings", method: "get"},
-            SetValues: {route: "/slot-scoring/optimization-settings/values", method: "put"}
+            SetValues: {route: "/slot-scoring/optimization-settings/values", method: "put"},
+            GetRange: {route: "/slot-scoring/range", method: "get"},
+            UpdateRange: {route: "/slot-scoring/range", method: "put"},
         },
         TransportationOptions: {
             Edit: {route: "/transportation-options", method: "put"},
@@ -409,7 +421,13 @@ export class Api {
             GetByVIN: {route: "/vehicles/by-vin", method: "get"},
             GetByQuery: {route: "/vehicles/by-query", method: "post"},
             Models: {route: "/vehicles/models", method: "get"},
-            Makes: {route: "/vehicles/makes", method: "get"}
+            Makes: {route: "/vehicles/makes", method: "get"},
+            RemoveMake: {route: "/vehicles/makes/{id}", method: "delete"},
+            UpdateMake: {route: "/vehicles/makes/{id}", method: "put"},
+            CreateMake: {route: "/vehicles/makes", method: "post"},
+            GetMileage: {route: "/vehicles/mileage", method: "get"},
+            RemoveMileage: {route: "/vehicles/mileage/{id}", method: "delete"},
+            CreateMileage: {route: "/vehicles/mileage", method: "post"},
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {

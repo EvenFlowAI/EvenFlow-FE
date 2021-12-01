@@ -6,7 +6,8 @@ const initialState: DealershipState = {
     loading: false,
     saving: false,
     paging: {...defaultPaging},
-    pageData: {...defaultPageData}
+    pageData: {...defaultPageData},
+    searchTerm: '',
 };
 
 export const dealershipGroupsReducer =(
@@ -31,6 +32,8 @@ export const dealershipGroupsReducer =(
             return {...state, pageData: {...state.pageData, ...action.payload}};
         case "Dealership/ChangePaging":
             return {...state, paging: action.payload};
+        case "Dealership/SetSearchTerm":
+            return {...state, searchTerm: action.payload};
         default:
             return state;
     }

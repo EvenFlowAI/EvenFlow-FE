@@ -9,8 +9,8 @@ export interface IServiceRequest {
     warrantyInvoiceAmount: number;
     status: EServiceStatus;
     price: number;
-    partsUnitCost?: number;
-    numberOfParts?: number;
+    partsUnitCost: number;
+    numberOfParts: number;
 }
 export interface IServiceRequestShort {
     id: 0;
@@ -92,7 +92,9 @@ export interface ISRAdminForm {
     countOfTechnicians: number;
     skillLevelOfTechnicians: number;
     invoiceAmount: number;
-    warrantyInvoiceAmount: number;
+    warrantyInvoiceAmount: number
+    numberOfParts: number;
+    partsUnitCost: number;
 }
 
 export interface ISRAdmin {
@@ -104,5 +106,7 @@ export interface ISRAdmin {
     skillLevelOfTechnicians: number;
     invoiceAmount: number;
     warrantyInvoiceAmount: number;
-    status: EServiceStatus
+    status: EServiceStatus;
+    numberOfParts: number;
+    partsUnitCost: number;
 }

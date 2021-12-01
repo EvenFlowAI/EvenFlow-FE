@@ -47,6 +47,16 @@ const rowData: TableRowDataType<ISRAdmin>[] = [
         val: el => `$${el.invoiceAmount}`
     },
     {
+        header: "Parts Unit Cost",
+        align: "center",
+        val: el => `$${el.partsUnitCost}`
+    },
+    {
+        header: "Number Of Parts",
+        align: "center",
+        val: el => `${el.numberOfParts}`
+    },
+    {
         header: "Status",
         align: "center",
         val: el => el.status === EServiceStatus.Archived

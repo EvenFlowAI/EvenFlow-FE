@@ -9,6 +9,8 @@ type TSummaryProps = {
     onInputChange?: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => void;
     isEdit?: boolean;
     setIsEdit?: Dispatch<SetStateAction<boolean>>
+    isComplimentary?: boolean;
+    packageHasComplimentary?: boolean;
 }
 
 const cellStyles = {
@@ -61,6 +63,12 @@ const useStyles = makeStyles(() => ({
       border: 'none',
       outline: 'none',
     },
+    errorCell: {
+        ...cellStyles,
+        position: "relative",
+        border: '1px solid red',
+        color: 'red',
+    },
     value: {
         width: 56,
         textAlign: 'center',
@@ -68,7 +76,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInputChange, isEdit, setIsEdit
+const SummaryRow: React.FC<TSummaryProps> = ({ isComplimentary, packageHasComplimentary, summaryText, valuesArray, onInputChange, isEdit, setIsEdit
 }) => {
     const classes = useStyles();
 
@@ -79,12 +87,30 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
     const getValue = (item: TSummaryCell) => {
         if (isEdit) return item.numberValue;
         if (item.fieldName.toLowerCase().includes('price')) {
-            return `$${item.numberValue}`
+            let value = Number.isInteger(item.numberValue) ? item.numberValue : item.numberValue.toFixed(2)
+            return `$${value}`
         }
         if (item.fieldName.toLowerCase().includes('hours')) {
-            return `${item.numberValue}h`
+            let value = Number.isInteger(item.numberValue) ? item.numberValue : item.numberValue.toFixed(1)
+            return `${value}h`
         }
          return item.numberValue;
+    }
+
+    const getClassName = (item: TSummaryCell) => {
+        if (isComplimentary && !packageHasComplimentary) {
+            return classes.cell;
+        }
+        if (item.isEditable) {
+            if (item.fieldName.toLowerCase().includes('hours') && item.numberValue > 100) {
+                return classes.errorCell;
+            }
+            if (item.numberValue <= 0) {
+                return classes.errorCell;
+            }
+            return classes.editableCell
+        }
+        return classes.cell;
     }
 
     return (
@@ -95,12 +121,14 @@ const SummaryRow: React.FC<TSummaryProps> = ({ summaryText, valuesArray, onInput
                     .sort((a, b) => a.optionType - b.optionType)
                     .map((item, index) => <div
                     key={index}
-                    className={item.isEditable ? classes.editableCell : classes.cell}>
+                    className={getClassName(item)}>
                         {
                             item.isEditable && isEdit ? <input
                                 type="number"
-                                min="0.01"
-                                step="0.01"
+                                min={item.fieldName.toLowerCase().includes('hours') ? "0.1" : "0.01"}
+                                step={item.fieldName.toLowerCase().includes('hours') ? "0.1" : "0.01"}
+                                max={item.fieldName.toLowerCase().includes('hours') ? '100' : undefined}
+                                maxLength={3}
                                 className={classes.input}
                                 value={getValue(item)}
                                 disabled={!isEdit}

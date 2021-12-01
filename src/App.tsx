@@ -14,18 +14,27 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ReactGA, {GaOptions} from 'react-ga';
-import {TRACKER} from "./config/config";
+
+// todo add new parent links while go live with new dealerships
+const testingDomain = 'https://testifraime.herokuapp.com/';
+const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', testingDomain];
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
     const [trackerCreated, setTrackerCreated] = useState(false);
 
-    function createTracker(opt_clientId: string | undefined) {
+    function createTracker(opt_clientId = '') {
+        const TRACKER = process.env.REACT_APP_ENV === "stage"
+            ? "UA-210743216-4"
+            : process.env.REACT_APP_ENV === "production"
+                ? "UA-210743216-3"
+                : "UA-210743216-5";
         if (!trackerCreated) {
             const options: GaOptions = {
                 siteSpeedSampleRate: 100,
                 cookieDomain: 'auto',
                 allowLinker: true,
+                storage: 'none',
             }
             if (opt_clientId) options.clientId = opt_clientId
 
@@ -39,16 +48,16 @@ const App = () => {
     }
 
     useEffect(() => {
-        trackerCreated && ReactGA.pageview(window.location.pathname + window.location.search);
+        trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
     }, [trackerCreated])
 
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                if (event.origin !=  'https://dev.evenflow.ai') return;
-                createTracker(event.data?.instanceId);
+                if (!prodParentLinks.includes(event.origin)) return;
+                if (typeof event.data === 'string') createTracker(event.data);
             });
-            setTimeout(createTracker);
+            setTimeout(createTracker, 3000);
         }
     }, [trackerCreated]);
 

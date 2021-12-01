@@ -1,5 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
+    getMakes,
+    getModels,
     selectService,
     selectSubService,
     setAdvisor,
@@ -18,7 +20,7 @@ import {
 import {
     EServiceCategoryPage,
     ICustomer,
-    ILoadedVehicle, IPackage,
+    ILoadedVehicle, IMake, IPackage,
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
@@ -48,6 +50,8 @@ type TState = {
     isPackagesLoading: boolean;
     consultants: IServiceConsultant[];
     currentScreen: string;
+    makes: IMake[];
+    models: string[];
 }
 const initialState: TState = {
     service: null,
@@ -70,6 +74,8 @@ const initialState: TState = {
     isPackagesLoading: false,
     consultants: [],
     currentScreen: '',
+    makes: [],
+    models: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -166,5 +172,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setCurrentFrameScreen, (state, { payload }) => {
         return {...state, currentScreen: payload};
+    })
+    .addCase(getMakes, (state, { payload }) => {
+        return {...state, makes: payload }
+    })
+    .addCase(getModels, (state, { payload }) => {
+        return {...state, models: payload }
     })
 )

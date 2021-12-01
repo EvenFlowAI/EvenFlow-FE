@@ -5,10 +5,12 @@ import {
     IDesirabilityForm,
     IDesirabilityItem, IOptimizationSetting,
     IOptimizationSettingsCreateForm, IOptimizationSettingValueForm,
-    IProximity
+    IProximity, ISlotRange
 } from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
+import {IHOODataForm} from "../serviceCenters/types";
+import moment from "moment";
 
 export const getProximity = createAction<IProximity[]>("SlotScoring/GetProximity");
 export const loadProximity = (serviceCenterId?: number, podId?: number): AppThunk => async dispatch => {
@@ -59,4 +61,38 @@ export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): 
 export const setSettingValues = (data: IOptimizationSettingValueForm, serviceCenterId:number, podId?: number): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
     dispatch(loadOptimizationSettings(serviceCenterId, podId));
+}
+
+export const getRange = createAction<ISlotRange>("SlotScoring/GetRange");
+export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => dispatch => {
+    const data = {serviceCenterId, podId}
+    Api.call(Api.endpoints.SlotScoring.GetRange, {params: data})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getRange(result.data));
+            }
+        })
+        .catch(err => {
+            console.log('load slot range error', err)
+        })
+}
+
+export const loadHorsOfOperations = (id: number): AppThunk => dispatch => {
+    Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id}})
+        .then(result => {
+            if (result?.data) {
+                const startTimes = result.data.map(item => moment(item.from, 'HH:mm:SS'));
+                const endTimes = result.data.map(item => moment(item.to, 'HH:mm:SS'));
+                const maxTime = moment.max(endTimes).format('HH:mm:SS');
+                const minTime = moment.min(startTimes).format('HH:mm:SS');
+                const data: ISlotRange = {
+                    start: minTime,
+                    end: maxTime,
+                }
+                dispatch(getRange(data));
+            }
+        })
+        .catch(err => {
+            console.log('get hours of operations error', err)
+        })
 }

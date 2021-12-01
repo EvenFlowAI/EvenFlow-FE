@@ -44,3 +44,12 @@ export interface IComplimentaryServiceByQuery {
     partsAmount: number;
     serviceRequestId: number;
 }
+
+export interface IPackageShort {
+    id: number;
+    name: string;
+    isApplyPricingOptimization: boolean;
+    baseMarketPrice: number;
+    valueMarketPrice: number;
+    preferredMarketPrice: number;
+}

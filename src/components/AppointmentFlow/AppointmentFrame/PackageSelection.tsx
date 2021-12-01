@@ -125,6 +125,7 @@ const Wrapper = styled('div')(({theme}) => ({
             fontWeight: 'bold',
             borderTop: border,
             paddingBottom: 10,
+            fontSize: 14,
         },
         "&.last": {
             borderBottomColor: "#000000",
@@ -187,7 +188,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-
+    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
     const isRiverviewFord = useMemo(() => scProfile?.id === 2 ||  scProfile?.id === 19 ||  scProfile?.id === 29, [scProfile])
 
     const [packages, services, complimentary]: [TPackage[], TService[], TComplimentary[]]
@@ -300,10 +301,10 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
             category: 'User',
             action: 'Went back',
             label: 'From Selection Package Page',
-            nonInteraction: true
         })
         onBack();
     }
+
 
     const handleNext = (): void => {
         if (selectedPackage) {
@@ -331,6 +332,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                     ? <PackageSelectionMobile
                         data={packages}
                         isBmWService={isBmWService}
+                        isSanfordInfinity={isSanfordInfinity}
                         />
                     : <Wrapper>
                         <div className='top'/>
@@ -360,9 +362,14 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                 )}
                             </React.Fragment>;
                         })}
-                        {isBmWService && <React.Fragment key="maintenance">
+                        {/*{isBmWService && <React.Fragment key="maintenance">*/}
+                        {/*    <div className="totalMaintenance">Total Maintenance Value:</div>*/}
+                        {/*    {packages.map(p => <div className={setClasses(p.id, '')}>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}*/}
+                        {/*</React.Fragment>*/}
+                        {/*}*/}
+                        {(isSanfordInfinity || isBmWService) && <React.Fragment key="maintenance">
                             <div className="totalMaintenance">Total Maintenance Value:</div>
-                            {packages.map(p => <div className={setClasses(p.id, '')}>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}
+                            {packages.map(p => <div className={setClasses(p.id, '')}>${p.marketPriceServiceRequests}</div>)}
                         </React.Fragment>
                         }
                         <div className="green subtitle">Complimentary</div>
@@ -384,27 +391,33 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                             )}
                         </React.Fragment>)}
                         <div className="totalComplimentary last">Total Complimentary Value</div>
-                        {packages.map(p => {
-                            const price = p.complimentaryServices.reduce(
-                                (acc, el) => acc + el.price, 0
-                            );
+                        {isBmWService|| isSanfordInfinity
+                            ? packages.map(p => {
                             return <div
                                 onClick={handleClick(p)}
                                 className={setClasses(p.id, "totalComplimentary last")}
-                                key={p.id}>{price ? `$${price}` : ''}</div>;
-                        })}
+                                key={p.id}>{p.marketPriceComplimentaryServices ? `$${p.marketPriceComplimentaryServices}` : ''}</div>;
+                        })
+                        : packages.map(p => {
+                                const price = p.complimentaryServices.reduce(
+                                    (acc, el) => acc + el.price, 0
+                                );
+                                return <div
+                                    onClick={handleClick(p)}
+                                    className={setClasses(p.id, "totalComplimentary last")}
+                                    key={p.id}>{price ? `$${price}` : ''}</div>;
+                            })}
                         <div className="total end">
                             Total <span className="info">(excluding taxes)</span>
                         </div>
                         {packages.map(p =>
                             <div
                                 onClick={handleClick(p)}
-                                className={setClasses(p.id, `total ${isBmWService ? 'priceWithBefore' : 'price'} end`)}
+                                className={setClasses(p.id, `total ${isBmWService || isSanfordInfinity ? 'priceWithBefore' : 'price'} end`)}
                                 key={p.id}>
-                                {isBmWService &&
+                                {(isBmWService || isSanfordInfinity) &&
                                 <div className="before">
-                                    ${p.complimentaryServices.reduce((acc, el) => acc + el.price, 0)
-                                + p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}
+                                    ${p.marketPriceComplimentaryServices + p.marketPriceServiceRequests}
                                 </div>}
                                 <div className="currentWrp">
                                     <div className="triangle"/>

@@ -39,13 +39,15 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
         isLoading,
         servicesCount,
         search,
-        order
+        order,
+        nonSelectedPageData
     ] = useSelector((state: RootState) => [
         state.serviceRequests.nonSelectedList,
         state.serviceRequests.nonSelectedLoading,
         state.serviceRequests.nonSelectedPaging.numberOfRecords,
         state.serviceRequests.nonSelectedFilter.searchTerm,
         state.serviceRequests.nonSelectedOrder,
+        state.serviceRequests.nonSelectedPageData,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
@@ -69,17 +71,12 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex, order]);
 
-    // useEffect(() => {
-    //   if (props.selectedPreviously) {
-    //       setSelectedCodes(props.selectedPreviously);
-    //   }
-    // }, [props.selectedPreviously])
-
     const handleSearch = useCallback(() => {
         if (selectedSC) {
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id));
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id, Boolean(props.selectedPreviously)));
         }
-    }, [dispatch, selectedSC]);
+    }, [dispatch, selectedSC, props.selectedPreviously]);
+
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
     }
@@ -136,6 +133,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
                 index="id"
                 startActions={preActions}
                 compact
+                hidePagination={serviceList.length < nonSelectedPageData.pageSize}
                 rowData={tableData}
                 isLoading={isLoading}
                 page={pageIndex}

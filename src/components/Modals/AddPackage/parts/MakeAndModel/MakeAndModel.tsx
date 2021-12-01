@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, Dispatch, SetStateAction} from 'react';
+import React, {ChangeEvent, useCallback, Dispatch, SetStateAction, useState} from 'react';
 import {autocompleteRender} from "../../../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
@@ -19,7 +19,7 @@ type MakeAndModelProps = {
     isApplyBusinessRules?:boolean;
 }
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles(() => ({
     tag: {
         display: 'flex',
         alignItems: 'center',
@@ -53,13 +53,14 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                                                        setFormIsChecked,
                                                        isApplyBusinessRules}) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
+    const [models, setModels] = useState<string[]>([]);
     const classes = useStyles();
 
     const getSortedMakes = (makesFromDB: IMake[]): string[] => {
         const data: string[] = makesFromDB
             .map(make => make.name)
             .sort((a, b) => selectedMakes.includes(a) ? selectedMakes.includes(b) ? 0 : -1 : 1);
-        data.unshift('Apply To All');
+        if (data.length) data.unshift('Apply To All');
         return data;
     }
 
@@ -68,19 +69,26 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             .map(make => make.models)
             .flat(1)
             .sort((a, b) => selectedModels.includes(a) ? selectedModels.includes(b) ? 0 : -1 : 1);
-        data.unshift('Apply To All');
+        if (data.length) data.unshift('Apply To All');
         return data;
     }
 
     const onMakeChange = (e: ChangeEvent<{}>, value: string[]) => {
         if (value.includes('Apply To All')) {
             setSelectedMakes(() => makesFromDB.map(item => item.name));
-        } else setSelectedMakes(value);
+            setModels(getSortedModels(makesFromDB));
+        } else {
+            setSelectedMakes(value);
+            const filteredMakes = makesFromDB.filter(item => value.includes(item.name))
+            setModels(getSortedModels(filteredMakes));
+            setSelectedModels(prev => prev.filter(item => filteredMakes.find(make => make.models.includes(item))))
+        }
     }
 
     const onModelChange = (e: ChangeEvent<{}>, value: string[]) => {
         if (value.includes('Apply To All')) {
-            setSelectedModels(() => makesFromDB.map(item => item.models).flat(1));
+            const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+            setSelectedModels(() => filteredMakes.map(item => item.models).flat(1));
         } else setSelectedModels(value);
     }
 
@@ -124,10 +132,12 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
     }, [makesFromDB, selectedMakes]);
 
     const renderModelOption = useCallback((option: string) => {
-        const allModelsSelected = Boolean(!makesFromDB
+        const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+        const allModelsSelected = filteredMakes.length ? Boolean(!filteredMakes
             .map(item => item.models)
             .flat(1)
             .find(model => !selectedModels.includes(model)))
+            : false;
         const checked = selectedModels.includes(option) || allModelsSelected;
         return <React.Fragment>
             <Checkbox
@@ -165,7 +175,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     style={{ marginBottom: 10 }}
                     classes={classes}
                     disabled={disabled}
-                    options={getSortedModels(makesFromDB)}
+                    options={models}
                     disableCloseOnSelect
                     renderOption={renderModelOption}
                     value={selectedModels}
