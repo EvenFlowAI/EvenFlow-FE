@@ -21,6 +21,10 @@ import {
 import AddOpsCodeModal from "../../../Modals/AddPackage/parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Loading} from "../../../UI/Loading";
+import {
+    loadAssignedServiceRequests,
+    setAssignedPageData
+} from "../../../../store/reducers/serviceRequests/actions";
 
 enum SliderRange {
     Min = -10,
@@ -66,6 +70,7 @@ type SliderObject = {
 const DayOfWeekOpsCode = () => {
     const { onOpen, onClose, isOpen } = useModal();
     const { srPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);
+    const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [opsCodes, setOpsCodes] = useState<TOpsCode[]>([]);
     const [slidersState, setSlidersState] = useState<SliderObject>({});
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
@@ -74,11 +79,26 @@ const DayOfWeekOpsCode = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
+    const getData = async (serviceCenterId: number) => {
+        await dispatch(setAssignedPageData({ pageSize: 0, pageIndex: 0}));
+        await dispatch(loadAssignedServiceRequests(serviceCenterId));
+        await dispatch(setAssignedPageData({ pageSize: 10, pageIndex: 0 }))
+    }
+
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadSRPricingSettings(selectedSC.id))
+            getData(selectedSC.id).then();
         }
     }, [selectedSC])
+
+    useEffect(() => {
+        if (assignedList.length && srPricingSettings) {
+            setSelectedCodes(() => {
+                return assignedList.filter(item => srPricingSettings.find(el => el.serviceRequestId === item.id));
+            })
+        }
+    }, [assignedList, srPricingSettings])
 
     useEffect(() => {
         if (srPricingSettings) {
