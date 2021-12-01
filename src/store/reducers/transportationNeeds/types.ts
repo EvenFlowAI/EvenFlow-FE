@@ -15,7 +15,8 @@ export interface ITransportationOptionRules {
         end: any;
     };
     customerSegments?: ECustomerSegment[];
-    dayOfWeeks: string[];
+    dayOfWeeks?: number[];
+    serviceRequests?: number[];
 }
 
 export interface ITrOptionServiceTRequest {

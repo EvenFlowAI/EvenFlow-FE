@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {
     ECustomerSegment, ETransportationDays,
-    ITransportationOptionFull,
+    ITransportationOptionFull, ITransportationOptionRules,
 } from "../../../store/reducers/transportationNeeds/types";
 import {useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -18,6 +18,8 @@ import { ReactComponent as Calendar } from "../../../assets/img/date_range.svg";
 import { ReactComponent as Watch } from "../../../assets/img/watch_round.svg";
 import Checkbox from "../../UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {Button, Divider} from "@material-ui/core";
+import {editTransportationOptionRules} from "../../../store/reducers/transportationNeeds/actions";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
@@ -57,7 +59,32 @@ const useStyles = makeStyles(() => ({
         fontWeight: 'bold',
         fontSize: 12,
         marginBottom: 5,
-    }
+    },
+    actionsWrapper: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        paddingTop: 14,
+    },
+    buttonsWrapper: {
+        display: 'flex',
+        justifyContent: "space-between",
+        alignItems: 'center',
+    },
+    cancelButton: {
+        color: '#9FA2B4',
+        marginRight: 20,
+        border: 'none',
+        outline: 'none',
+    },
+    saveButton: {
+        background: '#7898FF',
+        color: 'white',
+        border: '1px solid #7898FF',
+        outline: 'none',
+        '&:hover': {
+            color: '#7898FF'
+        }
+    },
 }));
 
 const useMultipleACStyles = makeStyles(() => ({
@@ -115,6 +142,10 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const autoCompleteStyles = useAutocompleteStyles();
     const classes = useStyles();
     const multipleACSClasses = useMultipleACStyles();
+
+    const allRequestsSelected = useMemo(() => assignedList.length
+            ? !assignedList.find(item => !serviceRequests.find(el => el.value === item.id))
+            : false, [assignedList, serviceRequests]);
 
     const requestsOptions = useMemo(() => {
         const options = assignedList.map(item => ({name: item.serviceRequest.code, value: item.id}))
@@ -222,9 +253,6 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }
 
     const renderRequestOption = useCallback((option: TOption) => {
-        const allRequestsSelected = assignedList.length
-            ? !assignedList.find(item => !serviceRequests.find(el => el.value === item.id))
-            : false;
         const checked = !!serviceRequests.find(item => item.value === option.value) || allRequestsSelected;
         return <React.Fragment>
             <Checkbox
@@ -239,8 +267,40 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         </React.Fragment>
     }, [serviceRequests, assignedList]);
 
-    return <BaseModal {...props} width={500}>
-        <DialogTitle onClose={props.onClose}>Manage Rules</DialogTitle>
+    const onCancel = () => {
+        setCustomerSegment(null);
+        setDayOfWeek(null);
+        setServiceRequests([]);
+        setDuration(null);
+        setTimeOfDay(null);
+        setFormIsChecked(false);
+        props.onClose();
+    }
+
+    const onSave = () => {
+        if (selectedSC && props.editingElement) {
+            const data: ITransportationOptionRules = {
+                isAllServiceRequestsIncluded: allRequestsSelected,
+            }
+            if (duration) data.duration = {
+                start: moment(duration.start).toISOString(),
+                end: moment(duration.end).toISOString(),
+            }
+            if (timeOfDay) data.timeOfDay = {
+                start: moment(timeOfDay.start).format("HH:mm:ss"),
+                end: moment(timeOfDay.end).format("HH:mm:ss"),
+            }
+            if (customerSegment) data.customerSegments = [customerSegment.value];
+            if (serviceRequests.length && !allRequestsSelected) {
+                data.serviceRequests = serviceRequests.map(item => item.value);
+            }
+            if (dayOfWeek) data.dayOfWeeks = [dayOfWeek.value];
+            dispatch(editTransportationOptionRules(props.editingElement.id, selectedSC.id, data, onCancel))
+        }
+    }
+
+    return <BaseModal {...props} width={500} onClose={onCancel}>
+        <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
         <DialogContent>
             <div className={classes.wrapper}>
                 <Autocomplete
@@ -327,6 +387,23 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 </div>
             </div>
         </DialogContent>
+        <Divider style={{ margin: 0 }}/>
+        <DialogActions>
+            <div className={classes.actionsWrapper}>
+                <div className={classes.buttonsWrapper}>
+                    <Button
+                        onClick={onCancel}
+                        className={classes.cancelButton}>
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={onSave}
+                        className={classes.saveButton}>
+                        Save
+                    </Button>
+                </div>
+            </div>
+        </DialogActions>
     </BaseModal>;
 };
 

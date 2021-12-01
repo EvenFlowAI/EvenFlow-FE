@@ -32,11 +32,12 @@ export const updateTransportationOption = (data: IEditedTransportationOption): A
         })
 }
 
-export const editTransportationOptionRules = (optionId: number, serviceCenterId: number, data: ITransportationOptionRules): AppThunk => dispatch => {
+export const editTransportationOptionRules = (optionId: number, serviceCenterId: number, data: ITransportationOptionRules, successCallback = () => {}): AppThunk => dispatch => {
     Api.call(Api.endpoints.TransportationOptions.Rules, {urlParams: {id: optionId}, data})
         .then(result => {
             if (result) {
                 dispatch(loadTransportationOptions(serviceCenterId))
+                successCallback();
             }
         })
         .catch(err => {
