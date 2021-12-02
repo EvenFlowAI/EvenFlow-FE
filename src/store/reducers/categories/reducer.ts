@@ -1,6 +1,6 @@
 import {ICategory} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {getCategoriesByPage, setCategoriesLoading} from "./actions";
+import {getCategoriesByPage, setCategoriesLoading, setCategoriesPage} from "./actions";
 
 type TState = {
     categories: ICategory[];
@@ -20,5 +20,8 @@ export const categoriesReducer = createReducer(initialState, builder => builder
     })
     .addCase(setCategoriesLoading, (state, { payload }) => {
         return {...state, isLoading: payload};
+    })
+    .addCase(setCategoriesPage, (state, {payload}) => {
+        return {...state, page: payload};
     })
 )

@@ -200,11 +200,6 @@ export const AdminDashboard: React.FC = () => {
     } = useModal();
     // todo change actions
     const {
-        onClose: onCloseServicesOps,
-        onOpen: onOpenServicesOps,
-        isOpen: isOpenServicesOps,
-    } = useModal();
-    const {
         onClose: onCloseConsultant,
         onOpen: onOpenConsultant,
         isOpen: isOpenConsultant,
@@ -219,6 +214,10 @@ export const AdminDashboard: React.FC = () => {
 
     const onOpenVehicle = (): void => {
         history.push(Routes.Admin.VehicleDetails);
+    }
+
+    const onOpenServicesOps = (): void => {
+        history.push(Routes.Admin.ServiceOpsCodesMapping);
     }
 
     const items: TItem[] = [

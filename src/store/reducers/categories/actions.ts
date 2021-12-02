@@ -24,7 +24,7 @@ export const loadCategoriesByPage = (): AppThunk => (dispatch, getState) => {
                 console.log('get categories by page error', err)
             })
             .finally(() => {
-                dispatch(setCategoriesLoading(true));
+                dispatch(setCategoriesLoading(false));
             })
     }
 }
