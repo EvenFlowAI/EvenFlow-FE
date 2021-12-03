@@ -274,11 +274,6 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }, [serviceRequests, assignedList]);
 
     const onCancel = () => {
-        setCustomerSegment(null);
-        setDayOfWeek(null);
-        setServiceRequests([]);
-        setDuration(null);
-        setTimeOfDay(null);
         setFormIsChecked(false);
         props.onClose();
     }
