@@ -217,9 +217,9 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setFormIsChecked(false);
         setTimeOfDay((prev) => {
             if (prev) {
-                return {...prev, [type as keyof TTimeObject]: moment(date).format('HH:mm:SS')};
+                return {...prev, [type as keyof TTimeObject]: moment(date)};
             } else {
-                return {[type as keyof TTimeObject]: moment(date).format('HH:mm:SS')}
+                return {[type as keyof TTimeObject]: moment(date)}
             }
         })
     }
@@ -274,11 +274,6 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }, [serviceRequests, assignedList]);
 
     const onCancel = () => {
-        setCustomerSegment(null);
-        setDayOfWeek(null);
-        setServiceRequests([]);
-        setDuration(null);
-        setTimeOfDay(null);
         setFormIsChecked(false);
         props.onClose();
     }

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, styled, Switch, TableBody, TableHead} from "@material-ui/core";
 import {DialogProps, TViewMode} from "../types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {DemandTable, TableCell, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
 import {TableContainer} from "../../Optimizer/PricingSettings/UI";
@@ -124,9 +124,6 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
                 </TableWrapper> : null}
             </TableContainer>
         </DialogContent>
-        <DialogActions>
-            <Button color="primary" onClick={props.onClose}>Close</Button>
-        </DialogActions>
         <EditTransportationOptionDialog open={isOpen} onClose={onClose} editingElement={editingElement}/>
     </BaseModal>
 }
