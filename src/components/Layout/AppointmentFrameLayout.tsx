@@ -117,7 +117,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         if (currentFrameScreen === currentScreen) {
-            document.onvisibilitychange = () => {
+            window.onbeforeunload = () => {
                 ReactGA.event({
                     category: 'User',
                     action: 'Abandoned Page',

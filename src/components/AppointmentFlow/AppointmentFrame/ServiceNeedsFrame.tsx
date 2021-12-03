@@ -112,7 +112,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 category: 'User',
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
-                nonInteraction: true
             })
 
             switch (selectedService?.id) {
