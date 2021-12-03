@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Actions} from "./Actions";
+import axios from 'axios';
 import {StepWrapper} from './StepWrapper';
 import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
 import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
@@ -66,7 +67,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         }
     }
 
-
     useEffect(() => {
         setLoading(true);
         Api.call<IServiceCategory[]>(
@@ -87,13 +87,14 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                     data.forEach(el => {
                         if (el.iconPath) {
                             // TODO: Load icons after BE Fix <CORS>
-                            // fetch(el.iconPath)
-                            //     .then(r => r.text())
-                            //     .then(loadedIcon =>
-                            //         setServiceCategories(c =>
-                            //             c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
-                            //         )
-                            //     )
+                            axios.get(el.iconPath, {withCredentials: false})
+                                .then(loadedIcon => {
+                                        console.log(loadedIcon);
+                                        // setServiceCategories(c =>
+                                        //     c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
+                                        // )
+                                }
+                                )
                         }
                     });
                 }
