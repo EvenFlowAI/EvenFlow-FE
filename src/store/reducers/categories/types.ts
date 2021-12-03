@@ -7,14 +7,25 @@ export interface ICategory {
     page: EServiceCategoryPage;
     iconPath?: string;
     serviceRequests: IServiceRequestShort[];
+    type: EServiceCategoryType;
 }
 
 export type TUpdateCategoryData = {
     name: string;
     serviceRequests: number[];
     page: number;
+    type: EServiceCategoryType;
 }
 
 export type TNewCategory = TUpdateCategoryData & {
     serviceCenterId: number;
 }
+
+export enum EServiceCategoryType {
+    GeneralCategory,
+    MaintenancePackage,
+    IndividualServices,
+    LinkToPage2
+}
+
+export type TSuccessCallback = (id: number) => void;

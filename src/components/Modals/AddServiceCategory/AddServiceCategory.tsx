@@ -1,8 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import { CheckBoxOutlineBlank, CheckBoxOutlined } from "@material-ui/icons";
 import {DialogProps} from "../types";
-import {ICategory, TNewCategory, TUpdateCategoryData} from "../../../store/reducers/categories/types";
+import {
+    EServiceCategoryType,
+    ICategory,
+    TNewCategory,
+    TUpdateCategoryData
+} from "../../../store/reducers/categories/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {Divider, Button} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
@@ -11,15 +15,14 @@ import {Autocomplete} from "@material-ui/lab";
 import {SearchInput} from "../../UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    loadAllAssignedServiceRequests, loadAssignedServiceRequests, setAssignedFilter,
+    loadAllAssignedServiceRequests, setAssignedFilter,
 } from "../../../store/reducers/serviceRequests/actions";
 import {useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
-import {TableRowDataType} from "../../UI/types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import Checkbox from "../../UI/Checkbox";
-import {Table} from "../../UI/Table";
-import {createCategory, updateCategory} from "../../../store/reducers/categories/actions";
+import {createCategory, updateCategory, updateCategoryIcon} from "../../../store/reducers/categories/actions";
+import OpsCodesTable from "./OpsCodesTable";
+import FileInput from "./FileInput";
 
 type TAddServiceCategoryProps = DialogProps & {
     isEditing?: boolean;
@@ -34,12 +37,14 @@ const useStyles = makeStyles(() => ({
     },
     uploadBtn: {
         width: '100%',
-        textTransform: 'none'
-    },
-    scrollableTable: {
-        maxHeight: 300,
-        overflowY: 'auto',
-        marginBottom: 20,
+        textTransform: 'none',
+        padding: 10,
+        border: 'none',
+        borderRadius: 4,
+        color: 'white',
+        fontWeight: 'bold',
+        backgroundColor: '#7898FF',
+        cursor: 'pointer',
     },
     label: {
         textTransform: "uppercase",
@@ -55,6 +60,9 @@ const useStyles = makeStyles(() => ({
     inputWrapper: {
         display: 'flex',
         flexDirection: 'column',
+    },
+    cancelButton: {
+        color: '#9FA2B4'
     }
 }))
 
@@ -65,50 +73,46 @@ type TOption = {
 
 const pageOptions = [{name: 'Owned By Booking Flow (Page 1)', value: 0}, {name: 'Owned By Booking Flow (Page 2)', value: 1}];
 
-const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
-    {
-        header: "OPS CODE",
-        val: el => el.serviceRequest.code
-    },
-    {
-        header: "DESCRIPTION",
-        val: el => el.serviceRequestOverride?.description?.length ?  el.serviceRequestOverride.description : el.serviceRequest.description
-    },
-    {
-        header: "PARTS UNIT COST",
-        align: "center",
-        val: el => `$${el.serviceRequestOverride?.partsUnitCost ?? el.serviceRequest.partsUnitCost}`
-    },
-    {
-        header: "# Of PARTS",
-        align: "center",
-        val: el => `${el.serviceRequestOverride?.numberOfParts ?? el.serviceRequest.numberOfParts}`
-    },
-    {
-        header: "PARTS AMOUNT",
-        align: "center",
-        val: el => `$${el.serviceRequestOverride?.partsAmount ?? 0}`
-    },
-    {
-        header: "INVOICE AMOUNT",
-        align: "center",
-        val: el => `$${el.serviceRequestOverride?.invoiceAmount ?? el.serviceRequest.invoiceAmount}`
-    },
-]
+const categoryOptions = Object.keys(EServiceCategoryType)
+    .filter(item => Number.isNaN(+item))
+    // @ts-ignore
+    .map(item => ({name: item, value: EServiceCategoryType[item]}));
+
+export interface IIconState {
+    file: File | null;
+    dataUrl?: string;
+}
+
+const getOptionLabel = (option: TOption) => {
+    const array = [];
+    for (let i = 0; i < option.name.length; i++) {
+        if (option.name[i] === option.name[i].toUpperCase() && i > 0) {
+            array.push(' ');
+        }
+        array.push(option.name[i]);
+    }
+    return array.join('');
+}
 
 const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ...props}) => {
-    const { allAssignedList, assignedFilter, assignedLoading } = useSelector((state: RootState) => state.serviceRequests);
+    const { allAssignedList, assignedFilter } = useSelector((state: RootState) => state.serviceRequests);
+    const { page } = useSelector((state: RootState) => state.categories);
+    const [fileState, setFileState] = useState<IIconState>({file: null, dataUrl: editingItem?.iconPath || undefined});
     const [categoryName, setCategoryName] = useState<string>('');
     const [definedPage, setDefinedPage] = useState<TOption | null>(null);
+    const [categoryType, setCategoryType] = useState<TOption | null>(null);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
+
     const classes = useStyles();
     const { selectedSC } = useSCs();
     const dispatch = useDispatch();
 
     useEffect(() => {
         selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
-    }, [selectedSC])
+        const currentPageOption = pageOptions.find(item => item.value === page);
+        currentPageOption && setDefinedPage(currentPageOption);
+    }, [selectedSC, page])
 
     useEffect(() => {
         if (editingItem && allAssignedList) {
@@ -116,8 +120,10 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             const page = pageOptions.find(option => option.value === +editingItem.page);
             page && setDefinedPage(page);
             setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
+            const currentType = categoryOptions.find(item => item.value === +editingItem.type);
+            currentType && setCategoryType(currentType)
         }
-    }, [editingItem, allAssignedList])
+    }, [editingItem, allAssignedList, categoryOptions])
 
     const onCancel = () => {
         setFormIsChecked(false);
@@ -126,21 +132,27 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         props.onClose();
     }
 
+    const onSuccessCreate = (categoryId: number) => {
+        if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file));
+    }
+
     const onSave = () => {
         if (selectedSC) {
             setFormIsChecked(true);
-            if (categoryName && selectedCodes.length && definedPage) {
+            if (categoryName && selectedCodes.length && definedPage && categoryType) {
                 const data: TUpdateCategoryData = {
                     name: categoryName,
                     serviceRequests: selectedCodes.map(item => item.id),
-                    page: definedPage.value
+                    page: definedPage.value,
+                    type: categoryType.value
                 }
                 if (editingItem) {
                     dispatch(updateCategory(editingItem.id, data));
+                    if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file));
                 }
                 else {
                     const newData: TNewCategory = {...data, serviceCenterId: selectedSC.id};
-                    dispatch(createCategory(newData));
+                    dispatch(createCategory(newData, onSuccessCreate));
                 }
                 onCancel();
             }
@@ -157,25 +169,14 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setDefinedPage(value);
     }
 
-    const handleSelect = useCallback((el: IAssignedServiceRequest) => {
-        setSelectedCodes(prev => {
-            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
-        });
-    }, [setSelectedCodes])
-
-    const preActions = useCallback((el: IAssignedServiceRequest) => {
-        return <Checkbox
-            color="primary"
-            icon={ !!selectedCodes.find(item => item.id === el.id)
-                ? <CheckBoxOutlined htmlColor="#3855FE"/>
-                : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
-            checked={!!selectedCodes.find(item => item.id === el.id)}
-            onChange={() => handleSelect(el)} />
-    }, [selectedCodes, handleSelect])
+    const onCategoryTypeChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+        setFormIsChecked(false);
+        setCategoryType(value);
+    }
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id));
+            dispatch(loadAllAssignedServiceRequests(selectedSC.id));
         }
     }, [dispatch, selectedSC]);
 
@@ -183,7 +184,6 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         dispatch(setAssignedFilter({searchTerm: e.target.value}));
     }, [dispatch])
 
-    const onUploadClick = () => {}
 
     return (
         <BaseModal {...props} width={1128} onClose={onCancel}>
@@ -202,7 +202,6 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     <Autocomplete
                         disableClearable
                         options={pageOptions}
-                        disableCloseOnSelect
                         getOptionSelected={(option) => option.value === definedPage?.value}
                         getOptionLabel={option => option.name}
                         value={definedPage || undefined}
@@ -212,34 +211,30 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                             placeholder: 'Select a page',
                         })}
                     />
-                    <div className={classes.buttonWrapper}>
-                        <Button className={classes.uploadBtn} onClick={onUploadClick} color="primary" variant="contained">
-                            Upload Service Category Icon
-                        </Button>
-                    </div>
+                    <FileInput state={fileState} setState={setFileState}/>
                     <div className={classes.inputWrapper}>
                         <label className={classes.label}>Add ops Codes</label>
                         <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={assignedFilter.searchTerm} />
                     </div>
-                </div>
-                <Divider/>
-                <div className={classes.scrollableTable}>
-                    <Table<IAssignedServiceRequest>
-                        data={allAssignedList}
-                        index="id"
-                        smallHeaderFont
-                        startActions={preActions}
-                        hidePagination
-                        compact
-                        rowData={RowData}
-                        isLoading={assignedLoading}
-                        count={allAssignedList.length}
+                    <Autocomplete
+                        disableClearable
+                        options={categoryOptions}
+                        getOptionSelected={(option) => option.value === categoryType?.value}
+                        getOptionLabel={getOptionLabel}
+                        value={categoryType || undefined}
+                        onChange={onCategoryTypeChange}
+                        renderInput={autocompleteRender({
+                            label: 'Link for Booking Flow',
+                            placeholder: 'Select Link To Screen On Booking Flow',
+                        })}
                     />
                 </div>
+                <Divider/>
+                <OpsCodesTable selectedCodes={selectedCodes} setSelectedCodes={setSelectedCodes}/>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel}>
-                    Close
+                <Button onClick={onCancel} className={classes.cancelButton}>
+                    Cancel
                 </Button>
                 <Button onClick={onSave} color="primary" variant="contained">
                     Save

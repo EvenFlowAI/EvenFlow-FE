@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {ICategory, TNewCategory, TUpdateCategoryData} from "./types";
+import {ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData} from "./types";
 
 export const setCategoriesPage = createAction<number>("Categories/SetPage");
 export const setCategoriesLoading = createAction<boolean>("Categories/SetLoading");
@@ -52,11 +52,12 @@ export const updateCategory = (id: number, data: TUpdateCategoryData): AppThunk 
         })
 }
 
-export const createCategory = (data: TNewCategory): AppThunk => dispatch => {
+export const createCategory = (data: TNewCategory, callback: TSuccessCallback): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCategories.Create, {data})
         .then(result => {
             if (result) {
                 dispatch(loadCategoriesByPage())
+                if (result.data?.id) callback(result.data.id);
             }
         })
         .catch(err => {
