@@ -16,7 +16,6 @@ export const loadCategoriesByPage = (): AppThunk => (dispatch, getState) => {
         Api.call(Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId:  selectedSC.id, page}})
             .then(result => {
                 if (result) {
-                    console.log(result);
                     dispatch(getCategoriesByPage(result.data))
                 }
             })

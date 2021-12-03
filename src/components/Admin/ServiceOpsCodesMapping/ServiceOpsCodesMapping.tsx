@@ -9,8 +9,9 @@ import {RootState} from "../../../store/rootReducer";
 import {TableRowDataType} from "../../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {ICategory} from "../../../store/reducers/categories/types";
-import {useConfirm, useException, useMessage} from "../../../utils/hooks";
+import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {Table} from "../../UI/Table";
+import AddServiceCategory from "../../Modals/AddServiceCategory/AddServiceCategory";
 
 const RowData: TableRowDataType<ICategory>[] = [
     {val: (el: ICategory) => el.name, header: "Service Category Name"},
@@ -25,10 +26,12 @@ const ServiceOpsCodesMapping = () => {
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
+    const {isOpen, onOpen, onClose} = useModal();
+    const {selectedSC} = useSCs();
 
     useEffect(() => {
-        dispatch(loadCategoriesByPage());
-    }, [])
+        selectedSC && dispatch(loadCategoriesByPage());
+    }, [selectedSC])
 
     const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
@@ -76,15 +79,16 @@ const ServiceOpsCodesMapping = () => {
 
     const openEdit = () => {
         setAnchorEl(null);
-        // onOpen();
+        onOpen();
     }
 
-    const onOpenAdd = () => {
-
+    const onOpenAdd = async () => {
+        await setCurrentItem(null);
+        await onOpen();
     }
 
     return (
-        <TabContext value={selectedTab}>
+            <TabContext value={selectedTab}>
             <TitleContainer title="Service Ops Codes Mapping" pad />
             <TabList
                 onChange={handleTabChange}
@@ -135,6 +139,7 @@ const ServiceOpsCodesMapping = () => {
                     <MenuItem onClick={askRemove}>Remove</MenuItem>
                 </Menu>
             </TabPanel>
+                <AddServiceCategory open={isOpen} editingItem={currentItem} onClose={onClose}/>
         </TabContext>
     );
 };
