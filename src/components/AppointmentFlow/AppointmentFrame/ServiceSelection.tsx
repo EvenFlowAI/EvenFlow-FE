@@ -19,6 +19,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 /*const cards: TServiceCard[] = [
     {
@@ -49,7 +50,8 @@ const addServices: IServiceCategory[] = [
         name: "Search Individual Services",
         loadedIcon: <RecallIcon />,
         page: EServiceCategoryPage.Page2,
-        serviceRequests: []
+        serviceRequests: [],
+        type: EServiceCategoryType.GeneralCategory,
     },
     /*{
         id: -2,
@@ -66,7 +68,8 @@ const addBMWServices: IServiceCategory[] = [
         name: "Search Individual Services",
         loadedIcon: <CarIcon />,
         page: EServiceCategoryPage.Page2,
-        serviceRequests: []
+        serviceRequests: [],
+        type: EServiceCategoryType.IndividualServices,
     },
 ]
 
@@ -102,6 +105,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 if (more) {
                     nServices.push(more);
                 }
+                // TODO change to setServices(data);
                 setServices(nServices);
             })
             .finally(() => {

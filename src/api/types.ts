@@ -10,6 +10,7 @@ import {IOffer} from "../store/reducers/offers/types";
 import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
+import {EServiceCategoryType} from "../store/reducers/categories/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -210,6 +211,7 @@ export interface IServiceCategory {
     iconPath?: string;
     loadedIcon?: JSX.Element | string;
     serviceRequests: IServiceRequest[];
+    type: EServiceCategoryType;
 }
 
 export interface IServiceConsultantShort {
