@@ -50,27 +50,31 @@ const useStyles = makeStyles(() => ({
 type TOpsCodesTableProps = {
     selectedCodes: IAssignedServiceRequest[];
     setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
+    disabled: boolean;
 }
 
-const OpsCodesTable: React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSelectedCodes }) => {
+const OpsCodesTable: React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSelectedCodes, disabled }) => {
     const { allAssignedList, assignedLoading } = useSelector((state: RootState) => state.serviceRequests);
     const classes = useStyles()
 
     const handleSelect = useCallback((el: IAssignedServiceRequest) => {
-        setSelectedCodes(prev => {
-            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
-        });
-    }, [setSelectedCodes])
+        if (!disabled) {
+            setSelectedCodes(prev => {
+                return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
+            });
+        }
+    }, [setSelectedCodes, disabled])
 
     const preActions = useCallback((el: IAssignedServiceRequest) => {
         return <Checkbox
             color="primary"
+            disabled={disabled}
             icon={ !!selectedCodes.find(item => item.id === el.id)
                 ? <CheckBoxOutlined htmlColor="#3855FE"/>
                 : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
             checked={!!selectedCodes.find(item => item.id === el.id)}
             onChange={() => handleSelect(el)} />
-    }, [selectedCodes, handleSelect])
+    }, [selectedCodes, handleSelect, disabled])
 
     return (
         <div className={classes.scrollableTable}>

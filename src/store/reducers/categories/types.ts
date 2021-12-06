@@ -12,7 +12,7 @@ export interface ICategory {
 
 export type TUpdateCategoryData = {
     name: string;
-    serviceRequests: number[];
+    serviceRequests?: number[];
     page: number;
     type: EServiceCategoryType;
 }
