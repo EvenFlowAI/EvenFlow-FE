@@ -10,7 +10,6 @@ interface IIconState {
 const allowedFileTypes = ['image/svg+xml', 'image/svg'];
 
 type TFileInputProps = {
-    state: IIconState;
     setState: Dispatch<SetStateAction<IIconState>>
 }
 
@@ -43,7 +42,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 
-const FileInput: React.FC<TFileInputProps> = ({ state, setState }) => {
+const FileInput: React.FC<TFileInputProps> = ({ setState }) => {
     const ref = createRef<HTMLInputElement>();
     const showError = useException();
     const showMessage = useMessage();
@@ -58,14 +57,14 @@ const FileInput: React.FC<TFileInputProps> = ({ state, setState }) => {
                 if (!allowedFileTypes.includes(file.type)) {
                     return showError('Please upload only SVG icon')
                 }
-                if (e.target) {
-                    setState({...state, dataUrl: e.target.result
+                if (e.target?.result) {
+                    setState(prev => ({...prev, dataUrl: e.target?.result
                             ? e.target.result as string : undefined
-                    });
+                    }));
                     showMessage('Icon is ready to Save!')
                 }
             }
-            setState({...state, file});
+            setState(prev => ({...prev, file}));
             if (ref.current) {
                 ref.current.files = null;
                 ref.current.value = "";

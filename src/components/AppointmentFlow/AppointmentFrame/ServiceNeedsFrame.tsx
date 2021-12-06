@@ -16,9 +16,10 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, EServiceCenterName, IServiceCategory} from "../../../api/types";
-import { Loading } from '../../UI/Loading';
+import {Loading} from '../../UI/Loading';
 import {tellMoreCard} from "../../../store/reducers/appointmentFrameReducer/initial";
 import ReactGA from "react-ga";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 
 const icons: JSX.Element[] = [
@@ -31,7 +32,8 @@ const packageCard: IServiceCategory = {
     name: "The Works Quick Lane Check Up",
     loadedIcon: <WorksIcon />,
     page: EServiceCategoryPage.Page1,
-    serviceRequests: []
+    serviceRequests: [],
+    type: EServiceCategoryType.MaintenancePackage,
 };
 
 const BMWPackageCard: IServiceCategory = {
@@ -39,9 +41,9 @@ const BMWPackageCard: IServiceCategory = {
     name: "Factory Or Dealer Scheduled Maintenance",
     loadedIcon: <WorksIcon />,
     page: EServiceCategoryPage.Page1,
-    serviceRequests: []
+    serviceRequests: [],
+    type: EServiceCategoryType.MaintenancePackage,
 }
-
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -82,17 +84,17 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest;
                     const card = isBmWService ? BMWPackageCard : packageCard;
                     setServiceCategories([
-                        card, ...data.map((el, idx) => icons[idx] ? {...el, loadedIcon: icons[idx]} : el), tellMoreCard
+                        card, ...data, tellMoreCard
                     ]);
+                    // TODO uncomment;
+                    // setServiceCategories(data);
                     data.forEach(el => {
                         if (el.iconPath) {
-                            // TODO: Load icons after BE Fix <CORS>
                             axios.get(el.iconPath, {withCredentials: false})
-                                .then(loadedIcon => {
-                                        console.log(loadedIcon);
-                                        // setServiceCategories(c =>
-                                        //     c.map(cat => cat.id === el.id ? {...cat, loadedIcon} : cat)
-                                        // )
+                                .then(({ data }) => {
+                                        setServiceCategories(c =>
+                                            c.map(cat => cat.id === el.id ? {...cat, loadedIcon: data} : cat)
+                                        )
                                 }
                                 )
                         }
@@ -114,11 +116,13 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
 
-            switch (selectedService?.id) {
-                case -2:
-                    return onSelect('serviceSelection');
-                case -1:
+            switch (selectedService?.type) {
+                case 2:
+                    return onSelect('opsCode');
+                case 1:
                     return onSelect('maintenanceDetails');
+                case 3:
+                    return onSelect('serviceSelection')
                 default:
                     return onSelect('describeMore');
             }
