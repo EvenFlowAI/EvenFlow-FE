@@ -2,9 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Actions} from "./Actions";
 import axios from 'axios';
 import {StepWrapper} from './StepWrapper';
-import {ReactComponent as TireIcon} from "../../../assets/img/tire-rotation-icon.svg";
-import {ReactComponent as WorksIcon} from "../../../assets/img/oil-icon.svg";
-import {ReactComponent as BrakeIcon} from "../../../assets/img/breaks-icon.svg";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -15,35 +12,9 @@ import {ServiceCard} from "./ServiceCard";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
-import {EServiceCategoryPage, EServiceCenterName, IServiceCategory} from "../../../api/types";
+import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import {Loading} from '../../UI/Loading';
-import {tellMoreCard} from "../../../store/reducers/appointmentFrameReducer/initial";
 import ReactGA from "react-ga";
-import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-
-
-const icons: JSX.Element[] = [
-    <TireIcon />,
-    <BrakeIcon />,
-];
-
-const packageCard: IServiceCategory = {
-    id: -1,
-    name: "The Works Quick Lane Check Up",
-    loadedIcon: <WorksIcon />,
-    page: EServiceCategoryPage.Page1,
-    serviceRequests: [],
-    type: EServiceCategoryType.MaintenancePackage,
-};
-
-const BMWPackageCard: IServiceCategory = {
-    id: -1,
-    name: "Factory Or Dealer Scheduled Maintenance",
-    loadedIcon: <WorksIcon />,
-    page: EServiceCategoryPage.Page1,
-    serviceRequests: [],
-    type: EServiceCategoryType.MaintenancePackage,
-}
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -52,9 +23,7 @@ type TProps = {
 }
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>(
-        [packageCard, tellMoreCard]
-    );
+    const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const selectedService = useSelector((state: RootState) => state.appointmentFrame.service);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
@@ -80,14 +49,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         )
             .then(({data}) => {
                 if (scProfile) {
-                    const isBmWService = scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-                        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest;
-                    const card = isBmWService ? BMWPackageCard : packageCard;
-                    setServiceCategories([
-                        card, ...data, tellMoreCard
-                    ]);
-                    // TODO uncomment;
-                    // setServiceCategories(data);
+                    setServiceCategories(data);
+
                     data.forEach(el => {
                         if (el.iconPath) {
                             axios.get(el.iconPath, {withCredentials: false})

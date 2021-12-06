@@ -66,7 +66,9 @@ export const createCategory = (data: TNewCategory, callback: TSuccessCallback): 
 }
 
 export const updateCategoryIcon = (id: number, file: File): AppThunk => dispatch => {
-    Api.call(Api.endpoints.ServiceCategories.UpdateIcon, {urlParams: {id}, data: file})
+    const data = new FormData();
+    data.append("file", file, file.name);
+    Api.call(Api.endpoints.ServiceCategories.UpdateIcon, {urlParams: {id}, data})
         .then(result => {
             if (result) {
                 dispatch(loadCategoriesByPage())

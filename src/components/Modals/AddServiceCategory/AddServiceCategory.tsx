@@ -15,7 +15,7 @@ import {Autocomplete} from "@material-ui/lab";
 import {SearchInput} from "../../UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../store/reducers/serviceRequests/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {
@@ -111,6 +111,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const classes = useStyles();
     const { selectedSC } = useSCs();
     const dispatch = useDispatch();
+    const showError = useException();
 
     useEffect(() => {
         selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
@@ -147,15 +148,18 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const onSave = () => {
         if (selectedSC) {
             setFormIsChecked(true);
-            if (categoryName && selectedCodes.length && definedPage && categoryType) {
+            if (categoryName && definedPage && categoryType) {
                 const data: TUpdateCategoryData = {
                     name: categoryName,
                     page: definedPage.value,
                     type: categoryType.value,
-                    serviceRequests: [],
                 }
                 if (categoryType.value !== (EServiceCategoryType.MaintenancePackage || EServiceCategoryType.LinkToPage2)) {
-                    data.serviceRequests = selectedCodes.map(item => item.id);
+                    if (selectedCodes.length) {
+                        data.serviceRequests = selectedCodes.map(item => item.id);
+                    } else {
+                        return showError('Please choose service requests for category')
+                    }
                 }
                 if (editingItem) {
                     dispatch(updateCategory(editingItem.id, data));
@@ -238,6 +242,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                         renderInput={autocompleteRender({
                             label: 'Link for Booking Flow',
                             placeholder: 'Select Link To Screen On Booking Flow',
+                            error: !categoryType && formIsChecked,
                         })}
                     />
                 </div>
