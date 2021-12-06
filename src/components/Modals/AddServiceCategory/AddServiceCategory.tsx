@@ -117,10 +117,10 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
         const currentPageOption = pageOptions.find(item => item.value === page);
         currentPageOption && setDefinedPage(currentPageOption);
-    }, [selectedSC, page])
+    }, [selectedSC, page, pageOptions])
 
     useEffect(() => {
-        if (editingItem && allAssignedList) {
+        if (editingItem && allAssignedList && props.open) {
             setCategoryName(editingItem.name);
             const page = pageOptions.find(option => option.value === +editingItem.page);
             page && setDefinedPage(page);
@@ -128,7 +128,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             const currentType = categoryOptions.find(item => item.value === +editingItem.type);
             currentType && setCategoryType(currentType)
         }
-    }, [editingItem, allAssignedList, categoryOptions])
+    }, [editingItem, allAssignedList, categoryOptions, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
@@ -153,8 +153,9 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     name: categoryName,
                     page: definedPage.value,
                     type: categoryType.value,
+                    serviceRequests: [],
                 }
-                if (categoryType.value !== (EServiceCategoryType.MaintenancePackage || EServiceCategoryType.LinkToPage2)) {
+                if (categoryType.value !== EServiceCategoryType.MaintenancePackage && categoryType.value !== EServiceCategoryType.LinkToPage2) {
                     if (selectedCodes.length) {
                         data.serviceRequests = selectedCodes.map(item => item.id);
                     } else {
