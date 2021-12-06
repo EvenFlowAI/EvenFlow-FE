@@ -13,7 +13,7 @@ const getTotal = (includedRequests: TExtendedService[]): number => {
 }
 
 const getComplimentaryTotal = (includedRequests: TExtendedComplimentary[]): number => {
-    const price = includedRequests.reduce((a, b) => a + +b.price, 0);
+    const price = includedRequests.reduce((a, b) => a + +b.laborAmount + +b.partsAmount, 0);
     return Number.isInteger(price) ? price : +price.toFixed(2);
 }
 
@@ -25,9 +25,8 @@ const getComplimentaryHours = (includedRequests: TExtendedComplimentary[]): numb
     return includedRequests.reduce((a, b) => a + +b.durationInHours, 0);
 }
 
-
 export const getOptionsTableData = (pack: IPackageById) => {
-    const { options, serviceRequests, complimentaryServices} = pack;
+    const { options, serviceRequests, complimentaryServices } = pack;
     const data: IDetailsData = {
         invoicedRequestLaborHours: [],
         complimentaryLaborHours: [],

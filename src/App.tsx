@@ -16,8 +16,8 @@ import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout
 import ReactGA, {GaOptions} from 'react-ga';
 
 // todo add new parent links while go live with new dealerships
-const testingDomain = 'https://testifraime.herokuapp.com/';
-const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', testingDomain];
+
+const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/'];
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
