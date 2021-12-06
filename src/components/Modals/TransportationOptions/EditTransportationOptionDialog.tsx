@@ -217,6 +217,10 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setFormIsChecked(false);
         setTimeOfDay((prev) => {
             if (prev) {
+                if (prev.start && type === 'end' && moment(date).diff(prev.start) < 0) {
+                    showError('The End Time Needs To Be More than The Start Time')
+                    return prev;
+                }
                 return {...prev, [type as keyof TTimeObject]: moment(date)};
             } else {
                 return {[type as keyof TTimeObject]: moment(date)}
@@ -228,6 +232,10 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setFormIsChecked(false);
         setDuration((prev) => {
             if (prev) {
+                if (prev.start && type === 'end' && moment(date).diff(prev.start) < 0) {
+                    showError('The Start Duration Date Needs To Be Less than The End Date');
+                    return prev;
+                }
                 return {...prev, [type as keyof TTimeObject]: date};
             } else {
                 return {[type as keyof TTimeObject]: date}
