@@ -183,6 +183,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const onCategoryTypeChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
         setCategoryType(value);
+        setSelectedCodes([]);
     }
 
     const handleSearch = useCallback(() => {
