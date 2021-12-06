@@ -8,19 +8,22 @@ import {
     TUpdateCategoryData
 } from "../../../store/reducers/categories/types";
 import {makeStyles} from "@material-ui/core/styles";
-import {Divider, Button} from "@material-ui/core";
+import {Button, Divider} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {SearchInput} from "../../UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    loadAllAssignedServiceRequests, setAssignedFilter,
-} from "../../../store/reducers/serviceRequests/actions";
+import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../store/reducers/serviceRequests/actions";
 import {useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {createCategory, updateCategory, updateCategoryIcon} from "../../../store/reducers/categories/actions";
+import {
+    createCategory,
+    setCategoriesPage,
+    updateCategory,
+    updateCategoryIcon
+} from "../../../store/reducers/categories/actions";
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
 
@@ -93,11 +96,12 @@ const getOptionLabel = (option: TOption) => {
     }
     return array.join('');
 }
+const initialFileState = {file: null, dataUrl: undefined};
 
 const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ...props}) => {
     const { allAssignedList, assignedFilter } = useSelector((state: RootState) => state.serviceRequests);
     const { page } = useSelector((state: RootState) => state.categories);
-    const [fileState, setFileState] = useState<IIconState>({file: null, dataUrl: editingItem?.iconPath || undefined});
+    const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [categoryName, setCategoryName] = useState<string>('');
     const [definedPage, setDefinedPage] = useState<TOption | null>(null);
     const [categoryType, setCategoryType] = useState<TOption | null>(null);
@@ -129,6 +133,10 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setFormIsChecked(false);
         setCategoryName('');
         dispatch(setAssignedFilter({searchTerm: ''}));
+        dispatch(setCategoriesPage(0));
+        setFileState(initialFileState);
+        setSelectedCodes([]);
+        setCategoryType(null);
         props.onClose();
     }
 
@@ -142,9 +150,12 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             if (categoryName && selectedCodes.length && definedPage && categoryType) {
                 const data: TUpdateCategoryData = {
                     name: categoryName,
-                    serviceRequests: selectedCodes.map(item => item.id),
                     page: definedPage.value,
-                    type: categoryType.value
+                    type: categoryType.value,
+                    serviceRequests: [],
+                }
+                if (categoryType.value !== (EServiceCategoryType.MaintenancePackage || EServiceCategoryType.LinkToPage2)) {
+                    data.serviceRequests = selectedCodes.map(item => item.id);
                 }
                 if (editingItem) {
                     dispatch(updateCategory(editingItem.id, data));
@@ -230,7 +241,11 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     />
                 </div>
                 <Divider/>
-                <OpsCodesTable selectedCodes={selectedCodes} setSelectedCodes={setSelectedCodes}/>
+                <OpsCodesTable
+                    selectedCodes={selectedCodes}
+                    setSelectedCodes={setSelectedCodes}
+                    disabled={categoryType?.value === EServiceCategoryType.MaintenancePackage
+                    || categoryType?.value === EServiceCategoryType.LinkToPage2}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} className={classes.cancelButton}>
