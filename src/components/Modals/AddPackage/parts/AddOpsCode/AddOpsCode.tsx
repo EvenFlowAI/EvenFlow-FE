@@ -22,6 +22,8 @@ type TAssignOpsCodeModalProps = DialogProps & {
     setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
     handleSave?: () => void;
     isEligible?: boolean;
+    handleSelect: (el: IAssignedServiceRequest) => void;
+    disabledIds?: number[]
 }
 
 const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
@@ -100,18 +102,14 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         handleClose();
     }, [props.selectedCodes])
 
-    const handleSelect = useCallback((el: IAssignedServiceRequest) => {
-        props.setSelectedCodes(prev => {
-            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
-        });
-    }, [props.setSelectedCodes])
-
     const preActions = useCallback((el: IAssignedServiceRequest) => {
+        const checked = !!props.selectedCodes.find(item => item.id === el.id);
         return <Checkbox
             color="primary"
-            checked={!!props.selectedCodes.find(item => item.id === el.id)}
-            onChange={() => handleSelect(el)} />
-    }, [props.selectedCodes, handleSelect])
+            disabled={props.disabledIds?.includes(el.id)}
+            checked={checked}
+            onChange={() => props.handleSelect(el)} />
+    }, [props.selectedCodes, props.handleSelect, props.disabledIds])
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {

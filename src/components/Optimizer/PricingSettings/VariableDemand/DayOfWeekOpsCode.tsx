@@ -85,6 +85,21 @@ const DayOfWeekOpsCode = () => {
         await dispatch(setAssignedPageData({ pageSize: 10, pageIndex: 0 }))
     }
 
+    const setInitialSliders = (srPricingSettings: IRequestPricingSettings[]) => {
+        setSlidersState(() => {
+            const data: SliderObject = {}
+            srPricingSettings.map(item => {
+                const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
+                const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
+                data[item.serviceRequestId] = {
+                    low: lowValue ? lowValue.value : 0,
+                    high: highValue ? highValue.value : 0,
+                }
+            })
+            return data;
+        })
+    }
+
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadSRPricingSettings(selectedSC.id))
@@ -118,18 +133,7 @@ const DayOfWeekOpsCode = () => {
                 })
                 .sort((a, b) => a.id - b.id)
             )
-            setSlidersState(() => {
-                const data: SliderObject = {}
-                srPricingSettings.map(item => {
-                    const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
-                    const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
-                    data[item.serviceRequestId] = {
-                        low: lowValue ? lowValue.value : 0,
-                        high: highValue ? highValue.value : 0,
-                    }
-                })
-                return data;
-            })
+            setInitialSliders(srPricingSettings);
         }
     }, [srPricingSettings])
 
@@ -149,9 +153,26 @@ const DayOfWeekOpsCode = () => {
         if (selectedSC && selectedCodes.length) {
             const data: TNewRequestsToPricing = {
                 serviceCenterId: selectedSC.id,
-                serviceRequestIds: selectedCodes.map(item => item.id),
+                serviceRequestIds: selectedCodes
+                    .map(item => item.id)
+                    .filter(item => !srPricingSettings.find(el => el.serviceRequestId === item)),
             }
             dispatch(addServiceRequestsToPricing(data))
+        }
+    }
+
+    const handleSaveChanges = (id: number, type: "low" | "high", value: number | number[]) => {
+        if (selectedSC) {
+            const data: Partial<IRequestPricingSettings> = {
+                serviceCenterId: selectedSC.id,
+                values: [
+                    {
+                        demandCategory: type === "low" ? EDemandCategory.Low : EDemandCategory.High,
+                        value: +value as number,
+                    }
+                ]
+            }
+            dispatch(updateSRPricingSettings(id, data))
         }
     }
 
@@ -160,19 +181,18 @@ const DayOfWeekOpsCode = () => {
     }, [])
 
     const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
-        if (selectedSC) {
-            const data: Partial<IRequestPricingSettings> = {
-                serviceCenterId: selectedSC.id,
-                values: [
-                    {
-                        demandCategory: type === "low" ? EDemandCategory.Low : EDemandCategory.High,
-                        value: +val as number,
-                    }
-                ]
-            }
-            dispatch(updateSRPricingSettings(id, data))
-        }
-    }, [selectedSC])
+        askConfirm({
+            title: `Are you sure want to change the value?`,
+            onConfirm: () => handleSaveChanges(id, type, val),
+            onCancel: () => setInitialSliders(srPricingSettings),
+        });
+    }, [selectedSC, srPricingSettings])
+
+    const handleSelectOpsCode = useCallback((el: IAssignedServiceRequest) => {
+        setSelectedCodes(prev => {
+            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
+        });
+    }, [setSelectedCodes])
 
     return <SquarePaper variant="outlined">
         <Box display="flex" mr={2} alignItems="center">
@@ -255,6 +275,8 @@ const DayOfWeekOpsCode = () => {
         <AddOpsCodeModal
             setSelectedCodes={setSelectedCodes}
             selectedCodes={selectedCodes}
+            handleSelect={handleSelectOpsCode}
+            disabledIds={srPricingSettings.map(item => item.serviceRequestId)}
             open={isOpen}
             onClose={onClose}
             isEligible={true}

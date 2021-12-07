@@ -387,6 +387,12 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         return isApplyBusinessRules && formIsChecked && isError;
     }
 
+    const handleOpsCodeSelect = useCallback((el: IAssignedServiceRequest) => {
+        setOpsCodes(prev => {
+            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
+        });
+    }, [setOpsCodes])
+
     return (
         <BaseModal {...props} width={540} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>{props.isEditing ? 'Edit': 'Add'} Maintenance Package</DialogTitle>
@@ -558,6 +564,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                 selectedCodes={complimentary}
                 setSelectedCodes={setComplimentary}/>
             <AddOpsCode
+                handleSelect={handleOpsCodeSelect}
                 open={isAddOpsCodeOpen}
                 onClose={onAddOpsCodeClose}
                 selectedCodes={opsCodes}
