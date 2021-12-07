@@ -20,7 +20,6 @@ import {RootState} from "../../../store/rootReducer";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {
     createCategory,
-    setCategoriesPage,
     updateCategory,
     updateCategoryIcon
 } from "../../../store/reducers/categories/actions";
@@ -134,7 +133,6 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setFormIsChecked(false);
         setCategoryName('');
         dispatch(setAssignedFilter({searchTerm: ''}));
-        dispatch(setCategoriesPage(0));
         setFileState(initialFileState);
         setSelectedCodes([]);
         setCategoryType(null);
