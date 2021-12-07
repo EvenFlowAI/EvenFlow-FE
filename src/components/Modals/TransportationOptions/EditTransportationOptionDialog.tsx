@@ -181,7 +181,11 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             const day = dayOFWeekOptions.find(item => item.value === +rules.dayOfWeeks[0]);
             if (day) setDayOfWeek(day);
 
-            setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
+            if (rules.isAllServiceRequestsIncluded) {
+                setServiceRequests(assignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
+            } else {
+                setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
+            }
 
             const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
             const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
