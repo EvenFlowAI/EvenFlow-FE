@@ -149,7 +149,9 @@ const DayOfWeekOpsCode = () => {
         if (selectedSC && selectedCodes.length) {
             const data: TNewRequestsToPricing = {
                 serviceCenterId: selectedSC.id,
-                serviceRequestIds: selectedCodes.map(item => item.id),
+                serviceRequestIds: selectedCodes
+                    .map(item => item.id)
+                    .filter(item => !srPricingSettings.find(el => el.serviceRequestId === item)),
             }
             dispatch(addServiceRequestsToPricing(data))
         }
@@ -173,6 +175,12 @@ const DayOfWeekOpsCode = () => {
             dispatch(updateSRPricingSettings(id, data))
         }
     }, [selectedSC])
+
+    const handleSelectOpsCode = useCallback((el: IAssignedServiceRequest) => {
+        setSelectedCodes(prev => {
+            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
+        });
+    }, [setSelectedCodes])
 
     return <SquarePaper variant="outlined">
         <Box display="flex" mr={2} alignItems="center">
@@ -255,6 +263,8 @@ const DayOfWeekOpsCode = () => {
         <AddOpsCodeModal
             setSelectedCodes={setSelectedCodes}
             selectedCodes={selectedCodes}
+            handleSelect={handleSelectOpsCode}
+            disabledIds={srPricingSettings.map(item => item.serviceRequestId)}
             open={isOpen}
             onClose={onClose}
             isEligible={true}
