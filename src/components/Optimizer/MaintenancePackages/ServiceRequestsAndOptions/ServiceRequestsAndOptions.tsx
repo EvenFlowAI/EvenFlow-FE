@@ -113,7 +113,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                         <TableCell className={classes.requestCell} key="2" align="center" width={100}>{request.durationInHours}</TableCell>
                         <TableCell className={classes.requestCell} key="3" align="center" width={100}>${request.laborAmount}</TableCell>
                         <TableCell className={classes.requestCell} key="4" align="center" width={100}>${request.partsAmount}</TableCell>
-                        <TableCell className={classes.requestCell} key="5" align="center" width={100}>${request.laborAmount + request.partsAmount}</TableCell>
+                        <TableCell className={classes.requestCell} key="5" align="center" width={100}>${request.price}</TableCell>
                         <TableCell className={classes.emptyCell} width={16} key="6"/>
 
                         {props.data.find(item => item.requestId === request.id)?.cellData
