@@ -205,7 +205,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 end: moment.utc(rules.duration.end),
             }));
         }
-    }, [props.editingElement])
+    }, [props.editingElement, segmentOptions, dayOFWeekOptions, assignedList])
 
     const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
