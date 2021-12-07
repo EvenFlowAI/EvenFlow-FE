@@ -7,11 +7,11 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
-import {TAdvisorForm, TSelectChange, TTechnicianForm} from "./types";
+import {TAdvisorForm, TDMSConsultantChange, TSelectChange, TTechnicianForm} from "./types";
 import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
 import {IEmployee, IEmployeeForm} from "../../../store/reducers/employees/types";
-import {createEmployee, loadAll, updateEmployee} from "../../../store/reducers/employees/actions";
-import {useException, useMessage} from "../../../utils/hooks";
+import {createEmployee, loadAll, loadDMSAdvisors, updateEmployee} from "../../../store/reducers/employees/actions";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {IUserForm, TRole} from "../../../store/reducers/users/types";
 import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
@@ -24,11 +24,12 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     const handleChangeRole = (role: string) => {
         setRole(role as Roles);
     }
-    const {shortSC, shortLoading, savingE, savingU} = useSelector((state: RootState) => ({
+    const {shortSC, shortLoading, savingE, savingU, DmsAdvisors} = useSelector((state: RootState) => ({
         shortSC: state.serviceCenters.shortSC,
         shortLoading: state.serviceCenters.shortLoading,
         savingE: state.employees.saving,
         savingU: state.users.saving,
+        DmsAdvisors: state.scEmployees.DmsAdvisors
     }));
 
     const [avatar, setAvatar] = useState<File | undefined>();
@@ -37,10 +38,15 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
+    const {selectedSC} = useSCs();
 
     useEffect(() => {
         dispatch(loadShortSC());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (selectedSC) dispatch(loadDMSAdvisors(selectedSC.id))
+    }, [selectedSC, dispatch])
 
     const buttonStyle = (r: string) => ({
         startIcon: role === r ? <RadioButtonChecked /> : <RadioButtonUnchecked />,
@@ -93,6 +99,16 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             setTechnicianForm({...technicianForm, serviceCenter: typeof value !== 'string' ? value : null});
         }
     }
+
+    const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        setAdvisorForm(prev => ({...prev, showOnBooking: checked}));
+    }
+
+    const handleDMSConsultantChange =  (r: Roles.Advisor | Roles.Technician): TDMSConsultantChange => (e, value) => {
+        if (r === Roles.Advisor) {
+            setAdvisorForm(prev => ({...prev, dmsId: value ? +value.id : null}));
+        }
+    }
     const handleRoleChange = (e: any, value: TRole) => {
         setAdvisorForm({...advisorForm, role: value});
     }
@@ -109,6 +125,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         if (role !== Roles.Technician) {
             data = {
                 ...advisorForm,
+                dmsId: advisorForm?.dmsId ? +advisorForm?.dmsId : null,
                 serviceCenterId: advisorForm.serviceCenter?.id || null
             } as IUserForm;
         } else {
@@ -183,8 +200,11 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             <AvatarContainer onChange={(f) => setAvatar(f)} dataUrl={payload?.avatarPath} />
             {role === Roles.Advisor
                 ? <AdvisorForm
+                    onShowOnBookingChange={handleShowOnBookingChange}
+                    dmsConsultants={DmsAdvisors}
                     form={advisorForm}
                     isEdit={Boolean(payload)}
+                    onDMSConsultantChange={handleDMSConsultantChange(Roles.Advisor)}
                     onSelectChange={handleSelectChange(Roles.Advisor)}
                     onRoleChange={handleRoleChange}
                     shortSC={shortSC}

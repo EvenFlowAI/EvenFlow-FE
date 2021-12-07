@@ -87,17 +87,3 @@ export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch =
         console.log('get Makes error', err)
     })
 }
-
-export const loadModels = (serviceCenterId: number): AppThunk => async dispatch => {
-    Api.call<string[]>(
-        Api.endpoints.Vehicles.Models,
-        {params: {serviceCenterId}}
-    ).then(({data}) => {
-        if (data) {
-            dispatch(getModels(data));
-        }
-    })
-        .catch(err => {
-            console.log('get Makes error', err)
-        })
-}
