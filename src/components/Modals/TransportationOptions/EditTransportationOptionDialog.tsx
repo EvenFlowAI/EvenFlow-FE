@@ -232,7 +232,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setFormIsChecked(false);
         setDuration((prev) => {
             if (prev) {
-                if (prev.start && type === 'end' && moment(date).diff(prev.start) < 0) {
+                if (prev.start && type === 'end' && moment(date).diff(prev.start) / 1000 / 60 / 60 < -24) {
                     showError('The End Duration Date needs to be more than the Start Date');
                     return prev;
                 }
