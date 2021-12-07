@@ -233,7 +233,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setDuration((prev) => {
             if (prev) {
                 if (prev.start && type === 'end' && moment(date).diff(prev.start) < 0) {
-                    showError('The Start Duration Date Needs To Be Less than The End Date');
+                    showError('The End Duration Date needs to be more than the Start Date');
                     return prev;
                 }
                 return {...prev, [type as keyof TTimeObject]: date};

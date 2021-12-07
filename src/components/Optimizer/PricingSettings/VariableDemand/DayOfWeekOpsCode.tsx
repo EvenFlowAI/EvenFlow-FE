@@ -85,6 +85,21 @@ const DayOfWeekOpsCode = () => {
         await dispatch(setAssignedPageData({ pageSize: 10, pageIndex: 0 }))
     }
 
+    const setInitialSliders = (srPricingSettings: IRequestPricingSettings[]) => {
+        setSlidersState(() => {
+            const data: SliderObject = {}
+            srPricingSettings.map(item => {
+                const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
+                const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
+                data[item.serviceRequestId] = {
+                    low: lowValue ? lowValue.value : 0,
+                    high: highValue ? highValue.value : 0,
+                }
+            })
+            return data;
+        })
+    }
+
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadSRPricingSettings(selectedSC.id))
@@ -118,18 +133,7 @@ const DayOfWeekOpsCode = () => {
                 })
                 .sort((a, b) => a.id - b.id)
             )
-            setSlidersState(() => {
-                const data: SliderObject = {}
-                srPricingSettings.map(item => {
-                    const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
-                    const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
-                    data[item.serviceRequestId] = {
-                        low: lowValue ? lowValue.value : 0,
-                        high: highValue ? highValue.value : 0,
-                    }
-                })
-                return data;
-            })
+            setInitialSliders(srPricingSettings);
         }
     }, [srPricingSettings])
 
@@ -157,24 +161,32 @@ const DayOfWeekOpsCode = () => {
         }
     }
 
-    const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
-        setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
-    }, [])
-
-    const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+    const handleSaveChanges = (id: number, type: "low" | "high", value: number | number[]) => {
         if (selectedSC) {
             const data: Partial<IRequestPricingSettings> = {
                 serviceCenterId: selectedSC.id,
                 values: [
                     {
                         demandCategory: type === "low" ? EDemandCategory.Low : EDemandCategory.High,
-                        value: +val as number,
+                        value: +value as number,
                     }
                 ]
             }
             dispatch(updateSRPricingSettings(id, data))
         }
-    }, [selectedSC])
+    }
+
+    const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+        setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
+    }, [])
+
+    const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+        askConfirm({
+            title: `Are you sure want to change the value?`,
+            onConfirm: () => handleSaveChanges(id, type, val),
+            onCancel: () => setInitialSliders(srPricingSettings),
+        });
+    }, [selectedSC, srPricingSettings])
 
     const handleSelectOpsCode = useCallback((el: IAssignedServiceRequest) => {
         setSelectedCodes(prev => {
