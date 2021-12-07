@@ -15,6 +15,7 @@ export const CardWrapper = styled("div")<Theme, {active?: boolean}>(({theme, act
     gridTemplateColumns: "1fr",
     gridTemplateRows: "1fr 1fr",
     width: "100%",
+    maxWidth: 250,
     transition: "all .2s",
     background: active ? '#000000' : "transparent",
     color: active ? "#FFFFFF" : "#252733",
