@@ -54,9 +54,9 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
                     return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.name}>
                         <TableCell className={classes.requestCell} key={request.name}>{request.name}</TableCell>
                         <TableCell className={classes.requestCell} key={request.name} width={100}>{request.durationInHours}</TableCell>
-                        <TableCell className={classes.requestCell} key={request.name} width={100}>${request.laborAmount}</TableCell>
+                        <TableCell className={classes.requestCell} key={request.name} width={100}>${request.price}</TableCell>
                         <TableCell className={classes.requestCell} key={request.name} width={100}>${request.partsAmount}</TableCell>
-                        <TableCell className={classes.requestCell} key={request.name} width={100}>${request.laborAmount + request.partsAmount}</TableCell>
+                        <TableCell className={classes.requestCell} key={request.name} width={100}>${request.price}</TableCell>
                         <TableCell className={classes.emptyCell} width={16} key="empty"/>
                         {props.data.find(item => item.requestId === request.id)?.cellData
                             .sort((a, b) => a.optionType - b.optionType)

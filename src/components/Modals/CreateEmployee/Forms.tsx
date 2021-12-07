@@ -1,9 +1,9 @@
 import React from "react";
 import {Autocomplete} from "@material-ui/lab";
 import {IServiceCenter} from "../../../store/reducers/serviceCenters/types";
-import {Grid} from "@material-ui/core";
+import {Divider, FormControlLabel, Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
-import {TAdvisorForm, TSelectChange, TTechnicianForm} from "./types";
+import {TAdvisorForm, TDMSConsultantChange, TSelectChange, TTechnicianForm} from "./types";
 import {ToggleButtons} from "../../UI/ToggleButtons";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {TRole} from "../../../store/reducers/users/types";
@@ -11,13 +11,18 @@ import {userRoles} from "../../../config/constants";
 
 
 export const initialAdvisorForm: TAdvisorForm = {
-    firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null, role: "Manager"
+    firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null, role: "Manager", position: '',
+    showOnBooking: false, dmsId: ''
 }
 export const initialTechnicianForm: TTechnicianForm = {
     firstName: '', lastName: '', serviceCenter: null, phoneNumber: "",
     hourlyRate: '', overtimeRate: '', email: "", technicianLevel: 1
 }
 
+export type TConsultantOption = {
+    id: number;
+    name: string;
+}
 
 type TAFormProps = {
     onChange: React.ChangeEventHandler<HTMLInputElement>,
@@ -26,7 +31,10 @@ type TAFormProps = {
     form: TAdvisorForm,
     isEdit: boolean,
     loading: boolean,
-    shortSC: IServiceCenter[]
+    shortSC: IServiceCenter[];
+    dmsConsultants: TConsultantOption[];
+    onDMSConsultantChange: TDMSConsultantChange;
+    onShowOnBookingChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 };
 type TTFormProps = {
     isEdit: boolean;
@@ -106,7 +114,44 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 value={props.form.role || null}
                 renderInput={autocompleteRender({label: "Role", fullWidth: true})}
             />}
-
+        </Grid>
+        <Grid item xs={12}>
+            <Divider color="#DADADA" style={{ margin: 0 }}/>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+            <Autocomplete
+                options={props.dmsConsultants}
+                onChange={props.onDMSConsultantChange}
+                getOptionLabel={i => i.name}
+                getOptionSelected={(o, s) => o.id === s.id}
+                loading={props.loading}
+                value={props.dmsConsultants.find(item => +item.id === props.form.dmsId) || null}
+                renderInput={autocompleteRender({label: "Assign Advisor from DMS", fullWidth: true, placeholder: "Select Advisor"})}
+            />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+            <TextField
+                label="Position"
+                id="position"
+                value={props.form.position}
+                name="position"
+                placeholder="Type position"
+                onChange={props.onChange}
+                fullWidth
+            />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+            <FormControlLabel
+                labelPlacement="start"
+                control={
+                    <Switch
+                        disabled={!props.form.dmsId}
+                        name="showInBooking"
+                        onChange={props.onShowOnBookingChange}
+                        checked={props.form.showOnBooking || false}
+                        color="primary" />
+                }
+                label={<span style={{ fontWeight: 'bold', textTransform: 'uppercase', fontSize: 13 }}>Display On Booking Flow</span>} />
         </Grid>
     </Grid>
 }

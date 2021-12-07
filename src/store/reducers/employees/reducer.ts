@@ -1,9 +1,9 @@
-import {IEmployee, IEmployeeFilters, TEmployeeActions} from "./types";
+import {IEmployee, IEmployeeFilters, TDmsAdvisor, TEmployeeActions} from "./types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {createReducer} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
-import {getSCAdvisors, getSCEmployees, setEmplOrder, setEmplSearch} from "./actions";
+import {getDMSAdvisors, getSCAdvisors, getSCEmployees, setEmplOrder, setEmplSearch} from "./actions";
 import {defaultOrder} from "../../../config/config";
 
 export type TEmployeesState = {
@@ -35,7 +35,7 @@ const initialState: TEmployeesState = {
     saving: false,
     paging: {...defaultPaging},
     pageData: {...defaultPageData},
-    filters: {}
+    filters: {},
 }
 
 export const employeesReducer = (state=initialState, action: TEmployeeActions): TEmployeesState => {
@@ -80,10 +80,12 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
 type TSCState = {
     advisorsList: IAdvisorShort[];
     techniciansList: IAdvisorShort[];
+    DmsAdvisors: TDmsAdvisor[];
 }
 const scInitialState: TSCState = {
     advisorsList: [],
-    techniciansList: []
+    techniciansList: [],
+    DmsAdvisors: [],
 }
 
 export const scEmployees = createReducer(scInitialState, builder => builder
@@ -92,5 +94,8 @@ export const scEmployees = createReducer(scInitialState, builder => builder
     })
     .addCase(getSCEmployees, (state, {payload}) => {
         return {...state, techniciansList: payload};
+    })
+    .addCase(getDMSAdvisors, (state, { payload }) => {
+        return {...state, DmsAdvisors: payload};
     })
 )

@@ -99,10 +99,12 @@ export const loadAssignedServiceRequests = (serviceCenterId: number, isEligible?
     }
 }
 
-export const loadAllAssignedServiceRequests = (serviceCenterId: number): AppThunk => dispatch => {
+export const loadAllAssignedServiceRequests = (serviceCenterId: number): AppThunk => (dispatch, getState) => {
+    dispatch(setAssignedLoading(true));
+    const {assignedFilter} = getState().serviceRequests;
     Api.call(
         Api.endpoints.ServiceRequests.GetAssignedOverrides,
-        {params: {pageIndex: 0, pageSize: 0, serviceCenterId}}
+        {params: {pageIndex: 0, pageSize: 0, serviceCenterId, ...assignedFilter}}
     )
         .then(result => {
             if (result?.data?.result) dispatch(getAllAssignedServiceRequests(result.data.result));
@@ -110,7 +112,9 @@ export const loadAllAssignedServiceRequests = (serviceCenterId: number): AppThun
         .catch(err => {
             console.log('get all assigned requests error', err)
         })
+        .finally(() => dispatch(setAssignedLoading(false)));
 }
+
 export const updateAssignedServiceRequest = (
     data: IServiceRequestOverrideEditRequest, id: number, serviceCenterId?: number,
 ): AppThunk =>
