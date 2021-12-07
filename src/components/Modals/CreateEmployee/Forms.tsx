@@ -145,6 +145,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 labelPlacement="start"
                 control={
                     <Switch
+                        disabled={!props.form.dmsId}
                         name="showInBooking"
                         onChange={props.onShowOnBookingChange}
                         checked={props.form.showOnBooking || false}
