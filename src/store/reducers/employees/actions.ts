@@ -2,7 +2,7 @@ import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {Api} from "../../../config/requests";
 import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
-import {IEmployee, IEmployeeForm, TEmployeeActions} from "./types";
+import {IEmployee, IEmployeeForm, TDmsAdvisor, TEmployeeActions} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
@@ -143,3 +143,16 @@ export const loadSCEmployees = (serviceCenterId: number): AppThunk => async disp
 }
 export const setEmplSearch = createAction<string>("SCEmployees/SetSearch");
 export const setEmplOrder = createAction<IOrder<IEmployee>>("SCEmployees/SetOrder")
+
+export const getDMSAdvisors = createAction<TDmsAdvisor[]>("SCEmployees/GetDMSAdvisors");
+export const loadDMSAdvisors = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceConsultants.GetDmsAdvisors, {urlParams: {id: serviceCenterId}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getDMSAdvisors(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('get DMS Advisors', err)
+        })
+}

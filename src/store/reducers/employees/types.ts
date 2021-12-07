@@ -24,6 +24,9 @@ export interface IEmployee {
     role: string;
     phoneNumber: string;
     avatarPath?: string;
+    position?: string;
+    showOnBooking?: boolean;
+    dmsId?: string | number;
 }
 
 export interface IEmployeeFilters {
@@ -72,3 +75,8 @@ export type TEmployeeActions =
     | TChangePaging
     | TChangeFilters
     | TGetAll;
+
+export type TDmsAdvisor = {
+    id: number;
+    name: string;
+}
