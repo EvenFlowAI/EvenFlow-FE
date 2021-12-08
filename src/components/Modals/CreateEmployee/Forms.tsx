@@ -52,6 +52,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 label="First name"
                 id="firstName"
                 name="firstName"
+                placeholder="Type First Name"
                 value={props.form.firstName}
                 onChange={props.onChange}
                 fullWidth
@@ -62,6 +63,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 label="Last name"
                 id="lastName"
                 name="lastName"
+                placeholder="Type Last Name"
                 value={props.form.lastName}
                 onChange={props.onChange}
                 fullWidth
@@ -82,6 +84,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 label="Phone number"
                 id="phoneNumber"
                 value={props.form.phoneNumber}
+                placeholder="Type Phone Number"
                 name="phoneNumber"
                 onChange={props.onChange}
                 fullWidth
@@ -95,7 +98,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
                 value={props.form.serviceCenter || null}
-                renderInput={autocompleteRender({label: "Service Center", fullWidth: true})}
+                renderInput={autocompleteRender({label: "Service Center", fullWidth: true, placeholder: "Select Service Center"})}
             />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -112,7 +115,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 loading={props.loading}
                 disableClearable
                 value={props.form.role || null}
-                renderInput={autocompleteRender({label: "Role", fullWidth: true})}
+                renderInput={autocompleteRender({label: "Role", fullWidth: true, placeholder: "Select Role"})}
             />}
         </Grid>
         <Grid item xs={12}>
@@ -125,7 +128,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 getOptionLabel={i => i.name}
                 getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
-                value={props.dmsConsultants.find(item => +item.id === props.form.dmsId) || null}
+                value={props.form?.dmsId ? props.dmsConsultants.find(item => +item.id === Number(props.form?.dmsId)) : null}
                 renderInput={autocompleteRender({label: "Assign Advisor from DMS", fullWidth: true, placeholder: "Select Advisor"})}
             />
         </Grid>
