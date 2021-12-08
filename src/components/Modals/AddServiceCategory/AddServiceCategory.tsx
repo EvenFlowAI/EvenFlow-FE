@@ -113,10 +113,10 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const showError = useException();
 
     useEffect(() => {
-        selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
+        props.open && selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
         const currentPageOption = pageOptions.find(item => item.value === page);
         currentPageOption && setDefinedPage(currentPageOption);
-    }, [selectedSC, page, pageOptions])
+    }, [selectedSC, page, pageOptions, props.open])
 
     useEffect(() => {
         if (editingItem && allAssignedList && props.open) {
