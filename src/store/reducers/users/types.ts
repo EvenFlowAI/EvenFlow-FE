@@ -21,7 +21,7 @@ export interface IUserForm {
     phoneNumber: string;
     role: TRole;
     serviceCenterId: number;
-    dmsId?: number;
+    dmsId?: string;
     showOnBookingFlow?: boolean;
     position?: string;
 }
