@@ -106,7 +106,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
 
     const handleDMSConsultantChange =  (r: Roles.Advisor | Roles.Technician): TDMSConsultantChange => (e, value) => {
         if (r === Roles.Advisor) {
-            setAdvisorForm(prev => ({...prev, dmsId: value ? +value.id : null}));
+            setAdvisorForm(prev => ({...prev, dmsId: value ? value.id : null}));
         }
     }
     const handleRoleChange = (e: any, value: TRole) => {
@@ -125,7 +125,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         if (role !== Roles.Technician) {
             data = {
                 ...advisorForm,
-                dmsId: advisorForm?.dmsId ? +advisorForm?.dmsId : null,
+                dmsId: advisorForm?.dmsId ?? null,
                 serviceCenterId: advisorForm.serviceCenter?.id || null
             } as IUserForm;
         } else {
