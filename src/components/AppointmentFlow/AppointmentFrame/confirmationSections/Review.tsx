@@ -28,6 +28,8 @@ const ButtonLink = styled('div')({
     }
 })
 
+const TRANSPORTATION_SHORT_DESCRIPTION = ["I will take the shuttle", "I would like a loaner vehicle", "I would like a rental", "Book me a ride", "I will vehicle pick up / drop off services"]
+
 export const Review = () => {
     const [
         selectedSr,
@@ -55,7 +57,11 @@ export const Review = () => {
                 <li className="service-item">{getMaintenanceDescription(
                     srList, selectedSr, sP, sc, ssc
                 )}</li>
-                <li>Transportation needs: {transportation?.description ?? "Yes, I will be waiting"}</li>
+                <li>Transportation needs: {
+                    typeof transportation?.type === 'number'
+                    ? TRANSPORTATION_SHORT_DESCRIPTION[transportation.type]
+                    : "I will wait at the dealership"}
+                </li>
                 {/* TODO: Advisor | consultant*/}
                 <li>Advisor: {consultant?.name ?? "Any Available"}</li>
             </Wrapper>
