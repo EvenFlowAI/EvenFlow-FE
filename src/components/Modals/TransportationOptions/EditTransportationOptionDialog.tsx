@@ -7,7 +7,9 @@ import {
 } from "../../../store/reducers/transportationNeeds/types";
 import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
+import {
+    loadAllAssignedServiceRequests,
+} from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
@@ -167,7 +169,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id))
+            dispatch(loadAllAssignedServiceRequests(selectedSC.id))
         }
     }, [selectedSC])
 

@@ -53,7 +53,7 @@ const List = styled('ul')(({theme}) => ({
             display: 'block',
             maxHeight: 120,
             overflow: "auto",
-            border: '1px solid rgb(218, 218, 218)',
+            // border: '1px solid rgb(218, 218, 218)',
             padding: 8,
         }
     },
