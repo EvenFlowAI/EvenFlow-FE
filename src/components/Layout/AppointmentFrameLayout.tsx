@@ -39,7 +39,7 @@ import {
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
 import './MaintenanceDetails.css';
-import ReactGA from "react-ga";
+import ReactGA, {GaOptions} from "react-ga";
 
 const Container = styled('div')({
     display: "flex",
@@ -81,9 +81,16 @@ const SCREENS = {
     vehicleData: 'vehicleData',
 }
 
+
+// todo add new parent links while go live with new dealerships
+
+const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
+
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
+    const [trackerCreated, setTrackerCreated] = useState(false);
+
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
@@ -96,6 +103,46 @@ export const AppointmentFrameLayout = () => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
+
+    function createTracker(opt_clientId = '', origin = '') {
+        const TRACKER = process.env.REACT_APP_ENV === "stage"
+            ? "UA-210743216-4"
+            : process.env.REACT_APP_ENV === "production"
+                ? origin.includes("bmwofschererville")
+                    ? "UA-210743216-6"
+                    : "UA-210743216-3"
+                : "UA-210743216-5";
+        if (!trackerCreated) {
+            const options: GaOptions = {
+                siteSpeedSampleRate: 100,
+                cookieDomain: 'auto',
+                allowLinker: true,
+                storage: 'none',
+            }
+            if (opt_clientId) options.clientId = opt_clientId
+
+            ReactGA.initialize(TRACKER, {
+                debug: true,
+                titleCase: false,
+                gaOptions: options,
+            });
+            setTrackerCreated(true);
+        }
+    }
+
+    useEffect(() => {
+        trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
+    }, [trackerCreated])
+
+    useEffect(() => {
+        if (!trackerCreated) {
+            window.addEventListener('message', function(event) {
+                if (!prodParentLinks.includes(event.origin)) return;
+                if (typeof event.data === 'string') createTracker(event.data, event.origin);
+            });
+            setTimeout(createTracker, 3000);
+        }
+    }, [trackerCreated]);
 
     const handleLogin = useCallback(() => {
         clearCustomerCache();
