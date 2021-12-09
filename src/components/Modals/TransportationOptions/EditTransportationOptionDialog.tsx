@@ -163,9 +163,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         })
         setDayOfWeekOptions(() => {
             const days = Object.keys(ETransportationDays).filter(key => Number.isNaN(+key));
-            const options = getOptions(days);
-            options.unshift({name: 'All', value: 100})
-            return options;
+            return getOptions(days);
         })
     }, [ECustomerSegment])
 
@@ -178,12 +176,14 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     useEffect(() => {
         if (props.editingElement) {
             const {rules} = props.editingElement;
+            let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.find(el => item.value === +el));
+            if (rules.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
+                days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
+            }
+            setDaysOfWeek(days);
 
             const segment = segmentOptions.find(item => item.value === +rules.customerSegments[0]);
             if (segment) setCustomerSegment(segment);
-
-            const days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.find(el => item.value === +el));
-            if (days) setDaysOfWeek(days);
 
             if (rules.isAllServiceRequestsIncluded) {
                 setServiceRequests(allAssignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
@@ -216,15 +216,6 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setCustomerSegment(value)
     }
 
-    const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption[]) => {
-        setFormIsChecked(false);
-        if (value.find(option => option.name === 'All')) {
-            setDaysOfWeek(dayOFWeekOptions);
-        } else {
-            setDaysOfWeek(value);
-        }
-    }
-
     const handleTime = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
         setFormIsChecked(false);
         setTimeOfDay((prev) => {
@@ -255,6 +246,15 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         })
     }
 
+    const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption[]) => {
+        setFormIsChecked(false);
+        if (value.find(option => option.value === ETransportationDays.EveryDay)) {
+            setDaysOfWeek(dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay));
+        } else {
+            setDaysOfWeek(value);
+        }
+    }
+
     const onRequestChange = (e: ChangeEvent<{}>, value: TOption[]) => {
         setFormIsChecked(false);
         if (value.find(option => option.name === 'All')) {
@@ -282,7 +282,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setFormIsChecked(false);
         if (!e.target.checked) {
             setDaysOfWeek(prev => {
-                let data = option.name === 'All' ? [] : prev;
+                let data = option.value === ETransportationDays.EveryDay ? [] : prev;
                 return data
                     .filter(item => item.value !== option.value)
                     .sort((a, b) => daysOfWeek.find(el => el.value === a.value)
@@ -293,8 +293,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }
 
     const renderDayOfWeekOption = useCallback((option: TOption) => {
-        const allOptionsSelected = Boolean(daysOfWeek.length) && daysOfWeek.length === dayOFWeekOptions.length - 1;
-        const checked = !!daysOfWeek.find(item => item.value === option.value) || allOptionsSelected;
+        const allOptionsSelected = Boolean(daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1);
+        const checked = Boolean(daysOfWeek.find(item => item.value === option.value)) || allOptionsSelected;
         return <React.Fragment>
             <Checkbox
                 color="primary"
@@ -330,7 +330,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
 
     const isValid = () => {
         return (serviceRequests.length || allRequestsSelected) && timeOfDay?.start && timeOfDay?.end && duration?.start && duration?.end &&
-            daysOfWeek && customerSegment;
+            daysOfWeek.length && customerSegment;
     }
 
     const onSave = () => {
@@ -351,7 +351,11 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             if (serviceRequests.length && !allRequestsSelected) {
                 data.serviceRequests = serviceRequests.map(item => item.value);
             }
-            if (daysOfWeek) data.dayOfWeeks = daysOfWeek.map(item => item.value);
+            if (daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1) {
+                data.dayOfWeeks = [ETransportationDays.EveryDay];
+            } else {
+                data.dayOfWeeks = daysOfWeek.map(item => item.value);
+            }
             dispatch(editTransportationOptionRules(props.editingElement.id, selectedSC.id, data, onCancel))
         } else {
             showError('Please fill all required fields')

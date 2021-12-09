@@ -78,5 +78,4 @@ export enum ETransportationDays {
     Friday,
     Saturday,
     EveryDay,
-    LastWeekdayInMonth
 }
