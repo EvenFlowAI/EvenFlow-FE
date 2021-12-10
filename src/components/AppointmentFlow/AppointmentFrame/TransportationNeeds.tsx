@@ -126,12 +126,13 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const [
         s, ss,
-        individualOps, packageOpt
+        individualOps, packageOpt, appointmentDate
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
         state.appointment.selectedSR,
-        state.appointmentFrame.selectedPackage
+        state.appointmentFrame.selectedPackage,
+        state.appointment.appointment?.appointmentDate,
     ]);
 
     const serviceRequestIds = useMemo(() => {
@@ -140,18 +141,18 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         setLoading(true);
-        Api.call<ITransportation[]>(
-            Api.endpoints.TransportationOptions.GetActive,
-            {
-                data: {
-                    serviceCenterId: decodeSCID(id),
-                    serviceRequestIds,
-                    maintenancePackageOptionId: packageOpt?.id ?? null
-                }
-            }
-        ).then(({data}) => {
+        const data = {
+            serviceCenterId: decodeSCID(id),
+            serviceRequestIds,
+            maintenancePackageOptionId: packageOpt?.id ?? null,
+            slot: appointmentDate,
+        }
+        if (appointmentDate) data.slot = appointmentDate;
+        Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
+            .then(({data}) => {
             setTransportations(data);
-        }).finally(() => {
+        })
+            .finally(() => {
                 setLoading(false)
             })
     }, [id, serviceRequestIds, packageOpt]);
