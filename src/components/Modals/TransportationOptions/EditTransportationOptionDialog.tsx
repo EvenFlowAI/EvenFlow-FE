@@ -176,7 +176,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     useEffect(() => {
         if (props.editingElement) {
             const {rules} = props.editingElement;
-            let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.find(el => item.value === +el));
+            let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.includes(item.value));
             if (rules.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
                 days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
             }
