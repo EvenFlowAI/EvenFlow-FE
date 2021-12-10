@@ -73,7 +73,7 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>&TCall
                             ? <ListItem key={payload.maintenancePackageOption.name}>
                                 <ListItemIcon><Settings /></ListItemIcon>
                                 <ListItemText
-                                    primary={payload.maintenancePackageOption.maintenancePackageName}
+                                    primary={`Package Name: ${payload.maintenancePackageOption.maintenancePackageName}`}
                                     secondary={payload.maintenancePackageOption.name} />
                             </ListItem>
                             : null
