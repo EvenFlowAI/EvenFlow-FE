@@ -236,14 +236,15 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const handleDateChange = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
         setFormIsChecked(false);
         setDuration((prev) => {
+            const value = moment.utc(date).hours(type === 'start' ? 0 : 1);
             if (prev) {
                 if (prev.start && type === 'end' && moment(date).diff(prev.start) / 1000 / 60 / 60 < -24) {
                     showError('The End Duration Date needs to be more than the Start Date');
                     return prev;
                 }
-                return {...prev, [type as keyof TTimeObject]: date};
+                return {...prev, [type as keyof TTimeObject]: value};
             } else {
-                return {[type as keyof TTimeObject]: date}
+                return {[type as keyof TTimeObject]: value}
             }
         })
     }
