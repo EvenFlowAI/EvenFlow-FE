@@ -176,38 +176,40 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     useEffect(() => {
         if (props.editingElement) {
             const {rules} = props.editingElement;
-            let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.includes(item.value));
-            if (rules.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
-                days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
+            if (rules) {
+                let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.includes(item.value));
+                if (rules.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
+                    days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
+                }
+                setDaysOfWeek(days);
+
+                const segment = segmentOptions.find(item => item.value === +rules.customerSegments[0]);
+                if (segment) setCustomerSegment(segment);
+
+                if (rules.isAllServiceRequestsIncluded) {
+                    setServiceRequests(allAssignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
+                } else {
+                    setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
+                }
+
+                const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
+                const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
+
+                setTimeOfDay(() => ({
+                    start: moment.utc()
+                        .hours(+startHours)
+                        .minutes(+startMinutes)
+                        .second(+startSeconds),
+                    end: moment.utc()
+                        .hours(+endHours)
+                        .minutes(+endMinutes)
+                        .second(+endSeconds),
+                }));
+                setDuration(() => ({
+                    start: moment.utc(rules.duration.start),
+                    end: moment.utc(rules.duration.end),
+                }));
             }
-            setDaysOfWeek(days);
-
-            const segment = segmentOptions.find(item => item.value === +rules.customerSegments[0]);
-            if (segment) setCustomerSegment(segment);
-
-            if (rules.isAllServiceRequestsIncluded) {
-                setServiceRequests(allAssignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
-            } else {
-                setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
-            }
-
-            const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
-            const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
-
-            setTimeOfDay(() => ({
-               start: moment.utc()
-                   .hours(+startHours)
-                   .minutes(+startMinutes)
-                   .second(+startSeconds),
-               end: moment.utc()
-                   .hours(+endHours)
-                   .minutes(+endMinutes)
-                   .second(+endSeconds),
-            }));
-            setDuration(() => ({
-                start: moment.utc(rules.duration.start),
-                end: moment.utc(rules.duration.end),
-            }));
         }
     }, [props.editingElement, segmentOptions, dayOFWeekOptions, allAssignedList])
 
@@ -356,7 +358,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             } else {
                 data.dayOfWeeks = daysOfWeek.map(item => item.value);
             }
-            dispatch(editTransportationOptionRules(props.editingElement.id, selectedSC.id, data, onCancel))
+            props.editingElement.id && dispatch(editTransportationOptionRules(props.editingElement.id, selectedSC.id, data, onCancel))
         } else {
             showError('Please fill all required fields')
         }
