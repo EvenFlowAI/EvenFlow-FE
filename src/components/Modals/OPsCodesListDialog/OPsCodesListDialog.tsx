@@ -71,8 +71,10 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex, order]);
 
-    const handleSearch = useCallback(() => {
+    const handleSearch = useCallback(async () => {
         if (selectedSC) {
+            changePage(null, 0);
+            dispatch(setNonSelectedPageData({pageIndex: 0}));
             dispatch(loadNonSelectedServiceRequests(selectedSC.id, Boolean(props.selectedPreviously)));
         }
     }, [dispatch, selectedSC, props.selectedPreviously]);
@@ -133,7 +135,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
                 index="id"
                 startActions={preActions}
                 compact
-                hidePagination={serviceList.length < nonSelectedPageData.pageSize}
+                hidePagination={servicesCount < nonSelectedPageData.pageSize}
                 rowData={tableData}
                 isLoading={isLoading}
                 page={pageIndex}
