@@ -77,6 +77,6 @@ export type TEmployeeActions =
     | TGetAll;
 
 export type TDmsAdvisor = {
-    id: number;
+    id: string;
     name: string;
 }

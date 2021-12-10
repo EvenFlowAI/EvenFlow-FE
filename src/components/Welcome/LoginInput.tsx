@@ -86,7 +86,6 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const isXS = useMediaQuery(theme.breakpoints.down("sm"));
     const classes = useStyles();
     const showError = useException();
-    // const showMessage = useMessage();
     const dispatch = useDispatch();
     const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
     const sessionId = useSelector((state: RootState) => state.appointment.sessionId);
@@ -108,7 +107,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
             // showMessage("We've send a code with an email for confirmation.");
             onComplete();
             ReactGA.event({
-                category: 'User',
+                category: 'EvenFlow User',
                 action: 'Enters Page',
                 label: `As Returning Customer`,
             });

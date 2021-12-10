@@ -20,7 +20,7 @@ export const initialTechnicianForm: TTechnicianForm = {
 }
 
 export type TConsultantOption = {
-    id: number;
+    id: string;
     name: string;
 }
 
@@ -128,7 +128,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 getOptionLabel={i => i.name}
                 getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
-                value={props.form?.dmsId ? props.dmsConsultants.find(item => +item.id === Number(props.form?.dmsId)) : null}
+                value={props.form?.dmsId ? props.dmsConsultants.find(item => item.id.toString() === props.form?.dmsId) : null}
                 renderInput={autocompleteRender({label: "Assign Advisor from DMS", fullWidth: true, placeholder: "Select Advisor"})}
             />
         </Grid>

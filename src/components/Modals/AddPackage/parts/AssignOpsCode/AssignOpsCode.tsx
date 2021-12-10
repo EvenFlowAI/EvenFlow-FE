@@ -146,9 +146,11 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         return <Radio color="primary" checked={checked} onChange={() => handleSelect(el)} />
     }, [props.selectedCodes, handleSelect])
 
-    const handleSearch = useCallback(() => {
+    const handleSearch = useCallback(async () => {
         if (selectedSC) {
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
+            changePage(null, 0)
+            await dispatch(setNonSelectedPageData({pageIndex: 0}))
+            await dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
     }, [dispatch, selectedSC]);
 

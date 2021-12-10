@@ -12,7 +12,7 @@ export type TAdvisorForm = {
     phoneNumber: string;
     lastName: string;
     serviceCenter: IServiceCenter | null;
-    dmsId: number | string | null;
+    dmsId: string | null;
     position: string;
     showOnBooking: boolean;
 }

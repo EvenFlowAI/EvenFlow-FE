@@ -7,7 +7,9 @@ import {
 } from "../../../store/reducers/transportationNeeds/types";
 import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
+import {
+    loadAllAssignedServiceRequests,
+} from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
@@ -127,9 +129,9 @@ const getOptions = (optionsArray: string[]) => {
 }
 
 const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOptionDialogProps> = (props) => {
-    const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
+    const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
-    const [dayOfWeek, setDayOfWeek] = useState<TOption | null>(null);
+    const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
     const [segmentOptions, setSegmentOptions] = useState<TOption[]>([]);
     const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
     const [timeOfDay, setTimeOfDay] = useState<TTimeObject | null>(null);
@@ -144,15 +146,15 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const multipleACSClasses = useMultipleACStyles();
     const showError = useException();
 
-    const allRequestsSelected = useMemo(() => assignedList.length
-            ? !assignedList.find(item => !serviceRequests.find(el => el.value === item.id))
-            : false, [assignedList, serviceRequests]);
+    const allRequestsSelected = useMemo(() => allAssignedList.length
+            ? !allAssignedList.find(item => !serviceRequests.find(el => el.value === item.id))
+            : false, [allAssignedList, serviceRequests]);
 
     const requestsOptions = useMemo(() => {
-        const options = assignedList.map(item => ({name: item.serviceRequest.code, value: item.id}))
+        const options = allAssignedList.map(item => ({name: item.serviceRequest.code, value: item.id}))
         options.unshift({name: 'All', value: 0});
         return options
-    }, [assignedList])
+    }, [allAssignedList])
 
     useEffect(() => {
         setSegmentOptions(() => {
@@ -167,54 +169,53 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id))
+            dispatch(loadAllAssignedServiceRequests(selectedSC.id))
         }
     }, [selectedSC])
 
     useEffect(() => {
         if (props.editingElement) {
             const {rules} = props.editingElement;
+            if (rules) {
+                let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.includes(item.value));
+                if (rules.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
+                    days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
+                }
+                setDaysOfWeek(days);
 
-            const segment = segmentOptions.find(item => item.value === +rules.customerSegments[0]);
-            if (segment) setCustomerSegment(segment);
+                const segment = segmentOptions.find(item => item.value === +rules.customerSegments[0]);
+                if (segment) setCustomerSegment(segment);
 
-            const day = dayOFWeekOptions.find(item => item.value === +rules.dayOfWeeks[0]);
-            if (day) setDayOfWeek(day);
+                if (rules.isAllServiceRequestsIncluded) {
+                    setServiceRequests(allAssignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
+                } else {
+                    setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
+                }
 
-            if (rules.isAllServiceRequestsIncluded) {
-                setServiceRequests(assignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
-            } else {
-                setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
+                const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
+                const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
+
+                setTimeOfDay(() => ({
+                    start: moment.utc()
+                        .hours(+startHours)
+                        .minutes(+startMinutes)
+                        .second(+startSeconds),
+                    end: moment.utc()
+                        .hours(+endHours)
+                        .minutes(+endMinutes)
+                        .second(+endSeconds),
+                }));
+                setDuration(() => ({
+                    start: moment.utc(rules.duration.start),
+                    end: moment.utc(rules.duration.end),
+                }));
             }
-
-            const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
-            const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
-
-            setTimeOfDay(() => ({
-               start: moment.utc()
-                   .hours(+startHours)
-                   .minutes(+startMinutes)
-                   .second(+startSeconds),
-               end: moment.utc()
-                   .hours(+endHours)
-                   .minutes(+endMinutes)
-                   .second(+endSeconds),
-            }));
-            setDuration(() => ({
-                start: moment.utc(rules.duration.start),
-                end: moment.utc(rules.duration.end),
-            }));
         }
-    }, [props.editingElement, segmentOptions, dayOFWeekOptions, assignedList])
+    }, [props.editingElement, segmentOptions, dayOFWeekOptions, allAssignedList])
 
     const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
         setCustomerSegment(value)
-    }
-
-    const onDayOfWeekChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
-        setFormIsChecked(false);
-        setDayOfWeek(value)
     }
 
     const handleTime = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
@@ -235,22 +236,32 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const handleDateChange = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
         setFormIsChecked(false);
         setDuration((prev) => {
+            const value = moment.utc(date).hours(type === 'start' ? 0 : 1);
             if (prev) {
                 if (prev.start && type === 'end' && moment(date).diff(prev.start) / 1000 / 60 / 60 < -24) {
                     showError('The End Duration Date needs to be more than the Start Date');
                     return prev;
                 }
-                return {...prev, [type as keyof TTimeObject]: date};
+                return {...prev, [type as keyof TTimeObject]: value};
             } else {
-                return {[type as keyof TTimeObject]: date}
+                return {[type as keyof TTimeObject]: value}
             }
         })
+    }
+
+    const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption[]) => {
+        setFormIsChecked(false);
+        if (value.find(option => option.value === ETransportationDays.EveryDay)) {
+            setDaysOfWeek(dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay));
+        } else {
+            setDaysOfWeek(value);
+        }
     }
 
     const onRequestChange = (e: ChangeEvent<{}>, value: TOption[]) => {
         setFormIsChecked(false);
         if (value.find(option => option.name === 'All')) {
-            setServiceRequests(assignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
+            setServiceRequests(allAssignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
         } else {
             setServiceRequests(value);
         }
@@ -270,6 +281,36 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         }
     }
 
+    const onDayOfWeekCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: TOption) => {
+        setFormIsChecked(false);
+        if (!e.target.checked) {
+            setDaysOfWeek(prev => {
+                let data = option.value === ETransportationDays.EveryDay ? [] : prev;
+                return data
+                    .filter(item => item.value !== option.value)
+                    .sort((a, b) => daysOfWeek.find(el => el.value === a.value)
+                        ? daysOfWeek.find(el => el.value === b.value)
+                            ? 0 : -1 : 1)
+            })
+        }
+    }
+
+    const renderDayOfWeekOption = useCallback((option: TOption) => {
+        const allOptionsSelected = Boolean(daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1);
+        const checked = Boolean(daysOfWeek.find(item => item.value === option.value)) || allOptionsSelected;
+        return <React.Fragment>
+            <Checkbox
+                color="primary"
+                icon={checked
+                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
+                checked={checked}
+                onChange={e => onDayOfWeekCheckboxChange(e, option)}
+            />
+            {option.name}
+        </React.Fragment>
+    }, [daysOfWeek, dayOFWeekOptions])
+
     const renderRequestOption = useCallback((option: TOption) => {
         const checked = !!serviceRequests.find(item => item.value === option.value) || allRequestsSelected;
         return <React.Fragment>
@@ -283,7 +324,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             />
             {option.name}
         </React.Fragment>
-    }, [serviceRequests, assignedList]);
+    }, [serviceRequests, allAssignedList]);
 
     const onCancel = () => {
         setFormIsChecked(false);
@@ -292,7 +333,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
 
     const isValid = () => {
         return (serviceRequests.length || allRequestsSelected) && timeOfDay?.start && timeOfDay?.end && duration?.start && duration?.end &&
-            dayOfWeek && customerSegment;
+            daysOfWeek.length && customerSegment;
     }
 
     const onSave = () => {
@@ -313,8 +354,12 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             if (serviceRequests.length && !allRequestsSelected) {
                 data.serviceRequests = serviceRequests.map(item => item.value);
             }
-            if (dayOfWeek) data.dayOfWeeks = [dayOfWeek.value];
-            dispatch(editTransportationOptionRules(props.editingElement.id, selectedSC.id, data, onCancel))
+            if (daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1) {
+                data.dayOfWeeks = [ETransportationDays.EveryDay];
+            } else {
+                data.dayOfWeeks = daysOfWeek.map(item => item.value);
+            }
+            props.editingElement.id && dispatch(editTransportationOptionRules(props.editingElement.id, selectedSC.id, data, onCancel))
         } else {
             showError('Please fill all required fields')
         }
@@ -358,19 +403,21 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     })}
                 />
                     <Autocomplete
+                        multiple
                         fullWidth
-                        classes={autoCompleteStyles}
+                        classes={multipleACSClasses}
                         options={dayOFWeekOptions}
                         style={{ marginBottom: 20 }}
                         getOptionLabel={option => option.name}
                         disableClearable
-                        getOptionSelected={(option, value) => option.name === ETransportationDays[+value]}
-                        value={dayOfWeek || undefined}
+                        disableCloseOnSelect
+                        renderOption={renderDayOfWeekOption}
+                        value={daysOfWeek}
                         onChange={onDayOfWeekChange}
                         renderInput={autocompleteRender({
                             label: 'Day Of Week',
                             placeholder: 'Select Day Of Week',
-                            error: !dayOfWeek && formIsChecked,
+                            error: !daysOfWeek.length && formIsChecked,
                         })}
                     />
                 <div className={classes.label}>Time Of Day</div>

@@ -189,7 +189,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     const onSubmit = useCallback((): void => {
         if (selectedType) {
             ReactGA.event({
-                category: 'User',
+                category: 'EvenFlow User',
                 action: 'Selected Timing Type',
                 label: `Selected ${timingTypes[selectedType]}`,
             });

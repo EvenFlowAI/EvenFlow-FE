@@ -39,17 +39,20 @@ export interface ITransportationOptionRule {
         end: string;
     };
     customerSegments: string[];
-    dayOfWeeks: string[];
+    dayOfWeeks: number[];
     isAllServiceRequestsIncluded?: boolean;
     serviceRequests: ITrOptionServiceTRequest[];
 }
 
-export interface ITransportationOptionFull {
-    id: number;
+export interface INewTransportationOption {
     type: string;
-    state: string;
+    state: number;
     serviceCenterId: number;
-    rules: ITransportationOptionRule,
+}
+
+export interface ITransportationOptionFull extends INewTransportationOption{
+    id?: number;
+    rules?: ITransportationOptionRule,
 }
 
 export enum ECustomerSegment {
@@ -78,5 +81,4 @@ export enum ETransportationDays {
     Friday,
     Saturday,
     EveryDay,
-    LastWeekdayInMonth
 }
