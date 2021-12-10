@@ -5,7 +5,11 @@ import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {DemandTable, TableCell, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
 import {TableContainer} from "../../Optimizer/PricingSettings/UI";
-import {ETransportationType, ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
+import {
+    ETransportationType,
+    INewTransportationOption,
+    ITransportationOptionFull
+} from "../../../store/reducers/transportationNeeds/types";
 import {useDispatch, useSelector} from "react-redux";
 import {
     loadTransportationOptions,
@@ -53,6 +57,7 @@ const getOptionString = (option: string) => {
 export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
     const [editingElement, setEditingElement] = useState<ITransportationOptionFull | null>(null);
     const { options, isLoading } = useSelector((state: RootState) => state.transportation);
+    const [initialOptions, setInitialOptions] = useState<ITransportationOptionFull[]>([]);
     const { isOpen, onOpen, onClose } = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -62,6 +67,23 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
             dispatch(loadTransportationOptions(selectedSC.id))
         }
     }, [selectedSC])
+
+    useEffect(() => {
+        if (selectedSC) {
+            setInitialOptions(() => {
+                return Object.keys(ETransportationType).filter(item => Number.isNaN(+item)).map(key => {
+                    // @ts-ignore
+                    const type = ETransportationType[key];
+                    const option = options.find(item => item.type === type);
+                    return option || {
+                        type,
+                        state: 0,
+                        serviceCenterId: selectedSC.id
+                    } as INewTransportationOption
+                })
+            })
+        }
+    }, [selectedSC, options])
 
     const handleSwitch = (type: number) => async (e: any, value: boolean) => {
         if (selectedSC) {
@@ -83,7 +105,7 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
         <DialogContent>
             <TableContainer>
                 <NoItemsLoading items={options} loading={isLoading} />
-                {options.length ? <TableWrapper>
+                {initialOptions.length ? <TableWrapper>
                     <DemandTable>
                         <TableHead>
                             <TableRow>
@@ -97,13 +119,14 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {options.map(el => {
-                                return <TableRow key={el.id}>
+                            {initialOptions.map(el => {
+                                return <TableRow key={el.type}>
                                     <TableCell style={leftAlign}>{getOptionString(el.type)}</TableCell>
                                     <TableCell>
                                         <Button
                                             style={{ textTransform: 'none' }}
                                             variant="text"
+                                            disabled={!Boolean(el.state)}
                                             color="primary"
                                             onClick={() => onEditClick(el)}>
                                             Edit

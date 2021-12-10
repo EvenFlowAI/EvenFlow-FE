@@ -44,12 +44,15 @@ export interface ITransportationOptionRule {
     serviceRequests: ITrOptionServiceTRequest[];
 }
 
-export interface ITransportationOptionFull {
-    id: number;
+export interface INewTransportationOption {
     type: string;
-    state: string;
+    state: number;
     serviceCenterId: number;
-    rules: ITransportationOptionRule,
+}
+
+export interface ITransportationOptionFull extends INewTransportationOption{
+    id?: number;
+    rules?: ITransportationOptionRule,
 }
 
 export enum ECustomerSegment {
