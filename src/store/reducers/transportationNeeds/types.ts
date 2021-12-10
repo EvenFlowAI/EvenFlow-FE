@@ -39,7 +39,7 @@ export interface ITransportationOptionRule {
         end: string;
     };
     customerSegments: string[];
-    dayOfWeeks: string[];
+    dayOfWeeks: number[];
     isAllServiceRequestsIncluded?: boolean;
     serviceRequests: ITrOptionServiceTRequest[];
 }
