@@ -20,7 +20,9 @@ const useStyles = makeStyles(() => ({
     option: {
         border: '1px solid #DADADA',
         borderRadius: 2,
-        marginBottom: 20,
+        '&:first-child': {
+            marginBottom: 20,
+        },
     },
     optionsWrapper: {
         display: 'flex',
@@ -52,24 +54,25 @@ const PricingDisplay: React.FC = () => {
     const [value, setValue] = useState<string>('optionA');
     const classes = useStyles();
 
+    // TODO request
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
 
     return <SquarePaper variant="outlined">
-        <PaperTitle>Pricing Display</PaperTitle>
+        <PaperTitle>Prices Display</PaperTitle>
         <Divider />
         <RadioGroup row aria-label="position" name="position" value={value} onChange={onChange} className={classes.optionsWrapper}>
             <FormControlLabel
                 className={value === 'optionA' ? classes.checkedOption :  classes.option}
                 value="optionA"
                 control={<Radio color="primary"/>}
-                label={<Label title="OPTION A" text="Display pricing as a percent (%) off the Premium level"/>}
+                label={<Label title="OPTION A" text="Display round prices"/>}
                 labelPlacement="end"
             />
             <FormControlLabel
                 className={value === 'optionB' ? classes.checkedOption :  classes.option}
                 value="optionB"
                 control={<Radio color="primary"/>}
-                label={<Label title="OPTION B" text="Display pricing as a percent (%) off the Premium level"/>}
+                label={<Label title="OPTION B" text="Display fractional prices"/>}
                 labelPlacement="end"
             />
         </RadioGroup>

@@ -64,7 +64,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
         if (subService) {
             const requestsString = subService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
             ReactGA.event({
-                category: 'User',
+                category: 'EvenFlow User',
                 action: 'Selected Sub Service',
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })

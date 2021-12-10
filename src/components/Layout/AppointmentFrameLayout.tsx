@@ -166,7 +166,7 @@ export const AppointmentFrameLayout = () => {
         if (currentFrameScreen === currentScreen) {
             window.onbeforeunload = () => {
                 ReactGA.event({
-                    category: 'User',
+                    category: 'EvenFlow User',
                     action: 'Abandoned Page',
                     label: `From Page ${SCREENS[currentScreen]}`,
                     nonInteraction: true

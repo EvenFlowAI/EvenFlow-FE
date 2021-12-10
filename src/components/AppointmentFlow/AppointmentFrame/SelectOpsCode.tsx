@@ -126,7 +126,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
 
     const handleNext = () => {
         ReactGA.event({
-            category: 'User',
+            category: 'EvenFlow User',
             action: 'Selected Individual Service Requests',
             label: `With Codes ${srList.filter(item => selectedCode.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         })

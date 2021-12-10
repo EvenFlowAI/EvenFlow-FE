@@ -144,6 +144,7 @@ export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
     date: moment.Moment;
     timingType?: number;
+    appointmentDate?: string;
 }
 
 export interface IAppointmentFilters {
