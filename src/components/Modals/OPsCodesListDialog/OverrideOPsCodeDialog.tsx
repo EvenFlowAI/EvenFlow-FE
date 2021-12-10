@@ -13,7 +13,6 @@ import {useDispatch} from "react-redux";
 import {updateAssignedServiceRequest} from "../../../store/reducers/serviceRequests/actions";
 import {ToggleButtons} from "../../UI/ToggleButtons";
 
-
 type TForm = {
     description: string;
     durationInHours: string;

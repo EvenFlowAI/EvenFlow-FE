@@ -111,9 +111,11 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
             onChange={() => props.handleSelect(el)} />
     }, [props.selectedCodes, props.handleSelect, props.disabledIds])
 
-    const handleSearch = useCallback(() => {
+    const handleSearch = useCallback(async () => {
         if (selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id, props.isEligible));
+            changePage(null, 0);
+            await dispatch(setAssignedPageData({ pageIndex: 0 }));
+            await dispatch(loadAssignedServiceRequests(selectedSC.id, props.isEligible));
         }
     }, [dispatch, selectedSC]);
 
