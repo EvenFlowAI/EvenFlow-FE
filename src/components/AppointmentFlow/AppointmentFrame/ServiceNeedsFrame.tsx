@@ -74,7 +74,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         if (selectedService) {
             const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
             ReactGA.event({
-                category: 'User',
+                category: 'EvenFlow User',
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })

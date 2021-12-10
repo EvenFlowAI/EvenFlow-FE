@@ -88,7 +88,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
     const handleSelect = (a: IRemappedAppointmentSlot|null) => {
         const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
         ReactGA.event({
-            category: 'User',
+            category: 'EvenFlow User',
             action: 'Clicked on Appointment Slot',
             label: a?.price?.value ? `With Price $${a.price.value}` : '',
         });

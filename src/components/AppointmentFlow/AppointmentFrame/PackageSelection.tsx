@@ -302,7 +302,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
 
     const handleBack = (): void => {
         ReactGA.event({
-            category: 'User',
+            category: 'EvenFlow User',
             action: 'Went back',
             label: 'From Selection Package Page',
         })
@@ -314,7 +314,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         if (selectedPackage) {
             const packageOptions = ['Good', 'Better', 'Best'];
             ReactGA.event({
-                category: 'User',
+                category: 'EvenFlow User',
                 action: `Selected Package`,
                 label: `With ${packageOptions[selectedPackage.type]} Option`,
             })

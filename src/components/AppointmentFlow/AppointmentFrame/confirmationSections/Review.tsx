@@ -28,7 +28,7 @@ const ButtonLink = styled('div')({
     }
 })
 
-const TRANSPORTATION_SHORT_DESCRIPTION = ["I will take the shuttle", "I would like a loaner vehicle", "I would like a rental", "Book me a ride", "I will vehicle pick up / drop off services"]
+const TRANSPORTATION_SHORT_DESCRIPTION = ["I will take the shuttle", "I would like a loaner vehicle", "I would like a rental car", "I would like to book me a ride", "I would like vehicle pick up / drop off services"]
 
 export const Review = () => {
     const [

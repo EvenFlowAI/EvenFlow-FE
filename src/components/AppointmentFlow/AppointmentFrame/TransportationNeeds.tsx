@@ -169,7 +169,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleNext = (): void => {
         ReactGA.event({
-            category: 'User',
+            category: 'EvenFlow User',
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
