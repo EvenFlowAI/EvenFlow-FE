@@ -106,6 +106,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const [categoryType, setCategoryType] = useState<TOption | null>(null);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
+    const [orderIndex, setOrderIndex] = useState<string>('');
 
     const classes = useStyles();
     const { selectedSC } = useSCs();
@@ -126,6 +127,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
             const currentType = categoryOptions.find(item => item.value === +editingItem.type);
             currentType && setCategoryType(currentType)
+            if (editingItem.orderIndex) setOrderIndex(editingItem.orderIndex.toString())
         }
     }, [editingItem, allAssignedList, categoryOptions, props.open])
 
@@ -136,6 +138,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setFileState(initialFileState);
         setSelectedCodes([]);
         setCategoryType(null);
+        setOrderIndex('');
         props.onClose();
     }
 
@@ -146,12 +149,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const onSave = () => {
         if (selectedSC) {
             setFormIsChecked(true);
-            if (categoryName && definedPage && categoryType) {
+            if (categoryName && definedPage && categoryType && orderIndex) {
                 const data: TUpdateCategoryData = {
                     name: categoryName,
                     page: definedPage.value,
                     type: categoryType.value,
                     serviceRequests: [],
+                    orderIndex: Number(orderIndex),
                 }
                 if (categoryType.value !== EServiceCategoryType.MaintenancePackage && categoryType.value !== EServiceCategoryType.LinkToPage2) {
                     if (selectedCodes.length) {
@@ -181,6 +185,11 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const onDefinedPageChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
         setDefinedPage(value);
+    }
+
+    const onOrderIndexChange = (e: React.ChangeEvent<{}>, value: string): void => {
+        setFormIsChecked(false);
+        setOrderIndex(value);
     }
 
     const onCategoryTypeChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
@@ -242,6 +251,17 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                             label: 'Link for Booking Flow',
                             placeholder: 'Select Link To Screen On Booking Flow',
                             error: !categoryType && formIsChecked,
+                        })}
+                    />
+                    <Autocomplete
+                        disableClearable
+                        options={['1', '2', '3', '4', '5']}
+                        value={orderIndex}
+                        onChange={onOrderIndexChange}
+                        renderInput={autocompleteRender({
+                            label: 'Order Index for Booking Flow',
+                            placeholder: 'Select Order Index',
+                            error: !orderIndex && formIsChecked,
                         })}
                     />
                 </div>

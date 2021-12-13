@@ -8,6 +8,7 @@ export interface ICategory {
     iconPath?: string;
     serviceRequests: IServiceRequestShort[];
     type: EServiceCategoryType;
+    orderIndex?: number;
 }
 
 export type TUpdateCategoryData = {
@@ -15,6 +16,7 @@ export type TUpdateCategoryData = {
     serviceRequests?: number[];
     page: number;
     type: EServiceCategoryType;
+    orderIndex?: number;
 }
 
 export type TNewCategory = TUpdateCategoryData & {
