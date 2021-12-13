@@ -154,6 +154,11 @@ export const appointmentStatuses: TEnumKeyLabel<AppointmentStatus> = {
     [AppointmentStatus.Cancelled]: "Canceled"
 }
 
+export interface IMaintenancePackageOption {
+    name: string;
+    maintenancePackageName: string;
+}
+
 export interface IListAppointment {
     id: number;
     hashKey: string;
@@ -167,6 +172,7 @@ export interface IListAppointment {
     customerId: string;
     serviceCategory: IServiceCategory|null;
     maintenancePackageOptionId: number | null;
+    maintenancePackageOption: IMaintenancePackageOption | null;
     driver: IDriverInfo;
     duration: number;
     transactionValue: number;
