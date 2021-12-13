@@ -138,7 +138,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setFileState(initialFileState);
         setSelectedCodes([]);
         setCategoryType(null);
-        setOrderIndex('Default');
+        setOrderIndex('');
         props.onClose();
     }
 
@@ -255,7 +255,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     />
                     <Autocomplete
                         disableClearable
-                        options={['1', '2', '3', '4']}
+                        options={['1', '2', '3', '4', '5']}
                         value={orderIndex}
                         onChange={onOrderIndexChange}
                         renderInput={autocompleteRender({
