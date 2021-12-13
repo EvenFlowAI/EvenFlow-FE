@@ -14,7 +14,8 @@ import {Table} from "../../UI/Table";
 import AddServiceCategory from "../../Modals/AddServiceCategory/AddServiceCategory";
 
 const RowData: TableRowDataType<ICategory>[] = [
-    {val: (el: ICategory) => el.name, header: "Service Category Name"},
+    {val: (el: ICategory) => el.name, header: "Service Category Name",  width: 300},
+    {val: (el: ICategory) => el.orderIndex?.toString() ?? '', header: "Order Index", align: 'center', width: 150},
 ];
 
 const ServiceOpsCodesMapping = () => {
