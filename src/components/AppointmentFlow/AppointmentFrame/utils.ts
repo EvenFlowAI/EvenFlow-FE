@@ -25,8 +25,8 @@ export const collectServiceRequestIds = (
         // selectedPackage.
     }
     if (individualOpsCodes) {
+        ids = [];
         for (let c of individualOpsCodes) {
-            ids = [];
             ids.push(c);
         }
     }
