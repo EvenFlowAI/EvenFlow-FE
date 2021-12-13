@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {SearchDB, SearchInput} from "../../UI/SearchInput";
 import {loadAll, setSCSearch, setSelectedDealershipGroupId} from "../../../store/reducers/serviceCenters/actions";
-import {changePageData, loadAll as loadAllDealerShipGroups} from "../../../store/reducers/dealershipGroups/actions";
+import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {makeStyles} from "@material-ui/core/styles";
@@ -38,7 +38,6 @@ export const ServiceCenterActions = () => {
     useEffect(() => {
         if (currentUser?.isSuperUser) {
             dispatch(changePageData({pageIndex: 0, pageSize: 0}))
-            dispatch(loadAllDealerShipGroups())
         }
     }, [currentUser])
 
