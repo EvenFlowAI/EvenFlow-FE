@@ -32,3 +32,21 @@ export type TMaintenanceDetails = {
     oilType?: string;
     serviceInterval?: string;
 }
+
+export interface IFrameScreens {
+    carSelection: 'Car Selection';
+    serviceNeeds: 'Service Needs';
+    packageSelection: 'Package Selection';
+    maintenanceDetails: 'Car Details';
+    carDetails: 'Car Details';
+    consultantSelection: 'Consultant Selection';
+    serviceSelection: 'Service Selection';
+    describeMore: 'Describe More';
+    appointmentConfirmation: 'Appointment Confirmation';
+    appointmentSelection: 'Appointment Selection';
+    appointmentConfirmed: 'Appointment Confirmed';
+    appointmentTiming: 'Appointment Timing';
+    transportationNeeds: 'Transportation Needs';
+    opsCode: "opsCode";
+    vehicleData: 'vehicleData';
+}
