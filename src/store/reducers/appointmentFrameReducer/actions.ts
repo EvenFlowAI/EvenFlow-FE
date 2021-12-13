@@ -13,6 +13,7 @@ import {IAppointmentId, TMaintenanceDetails} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
+import {TScreen} from "../../../components/Layout/types";
 
 export const selectService = createAction<IServiceCategory>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory>("fAppointment/selectSubService");
@@ -32,9 +33,10 @@ export const setUpdateAppointment = createAction<IListAppointment>("fAppointment
 export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPackages");
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
 export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
-export const setCurrentFrameScreen = createAction<string>('fAppointment/setCurrentScreen');
+export const setCurrentFrameScreen = createAction<TScreen>('fAppointment/setCurrentScreen');
 export const getMakes = createAction<IMake[]>('fAppointment/GetMakes');
 export const getModels = createAction<string[]>('fAppointment/GetModels');
+export const setTrackerCreated = createAction<boolean>('fAppointment/SetTrackerCreated')
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(

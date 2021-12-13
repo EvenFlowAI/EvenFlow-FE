@@ -32,7 +32,7 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setTrackerCreated,
     setUpdateAppointment,
     setVehicle
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -81,15 +81,13 @@ const SCREENS = {
     vehicleData: 'vehicleData',
 }
 
-
 // todo add new parent links while go live with new dealerships
 
-const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
+export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
-    const [trackerCreated, setTrackerCreated] = useState(false);
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -101,10 +99,10 @@ export const AppointmentFrameLayout = () => {
     const showError = useException();
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
-    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
+    const {selectedVehicle, trackerCreated} = useSelector((state: RootState) => state.appointmentFrame);
 
-    function createTracker(opt_clientId = '', origin = '') {
+    function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = process.env.REACT_APP_ENV === "stage"
             ? "UA-210743216-4"
             : process.env.REACT_APP_ENV === "production"
@@ -126,7 +124,7 @@ export const AppointmentFrameLayout = () => {
                 titleCase: false,
                 gaOptions: options,
             });
-            setTrackerCreated(true);
+            dispatch(setTrackerCreated(true));
         }
     }
 
@@ -138,9 +136,9 @@ export const AppointmentFrameLayout = () => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
                 if (!prodParentLinks.includes(event.origin)) return;
-                if (typeof event.data === 'string') createTracker(event.data, event.origin);
+                if (typeof event.data === 'string') createTracker(event.data, event.origin, trackerCreated);
             });
-            setTimeout(createTracker, 3000);
+            setTimeout(createTracker, 2000);
         }
     }, [trackerCreated]);
 
@@ -163,6 +161,9 @@ export const AppointmentFrameLayout = () => {
     }, [customerLoadedData, dispatch, handleLogin]);
 
     useEffect(() => {
+        if (currentFrameScreen) {
+            setCurrentScreen(currentFrameScreen);
+        }
         if (currentFrameScreen === currentScreen) {
             window.onbeforeunload = () => {
                 ReactGA.event({

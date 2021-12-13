@@ -12,7 +12,7 @@ import {
     setPackage, setPackages,
     setReminders,
     setTime,
-    setTiming,
+    setTiming, setTrackerCreated,
     setTransportation,
     setUpdateAppointment,
     setVehicle, updateVehicle
@@ -30,6 +30,7 @@ import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {TMaintenanceDetails} from "./types";
 import {tellMoreCard} from "./initial";
+import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -49,9 +50,10 @@ type TState = {
     packages: IPackage[];
     isPackagesLoading: boolean;
     consultants: IServiceConsultant[];
-    currentScreen: string;
+    currentScreen: TScreen | '';
     makes: IMake[];
     models: string[];
+    trackerCreated: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -76,6 +78,7 @@ const initialState: TState = {
     currentScreen: '',
     makes: [],
     models: [],
+    trackerCreated: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -178,5 +181,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(getModels, (state, { payload }) => {
         return {...state, models: payload }
+    })
+    .addCase(setTrackerCreated, (state, { payload }) => {
+        return {...state, trackerCreated: payload}
     })
 )
