@@ -24,7 +24,7 @@ export const collectServiceRequestIds = (
         // DO not send any ops codes
         // selectedPackage.
     }
-    if (individualOpsCodes) {
+    if (individualOpsCodes?.length) {
         ids = [];
         for (let c of individualOpsCodes) {
             ids.push(c);
