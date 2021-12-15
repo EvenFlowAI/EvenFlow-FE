@@ -73,14 +73,32 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
                 serviceCenterId: selectedSC.id,
                 values: [],
             }
-            if (values.low && data.values) data.values.push({
-                demandCategory: EDemandCategory.Low,
-                    value: values.low,
-            })
-            if (values.high && data.values) data.values.push({
-                demandCategory: EDemandCategory.High,
-                    value: values.high,
-            });
+            if (values.low && data.values) {
+                if (values.low > 10 || values.low < -10) {
+                    return showError('Value must not be more than 10 and less than -10')
+                }
+                if (!values.low.toString().match(/(^-?\d*\.?\d{1,3}?)$/)) {
+                    return showError('Value must be a number with maximum 3 decimal digits')
+                } else {
+                    data.values.push({
+                        demandCategory: EDemandCategory.Low,
+                        value: values.low,
+                    })
+                }
+            }
+            if (values.high && data.values) {
+                if (values.high > 10 || values.high < -10) {
+                    return showError('Value must not be more than 10 and less than -10')
+                }
+                if (!values.high.toString().match(/(^-?\d*\.?\d{1,3}?)$/)) {
+                    return showError('Value must be a number with maximum 3 decimal digits')
+                } else {
+                    data.values.push({
+                        demandCategory: EDemandCategory.High,
+                        value: values.high,
+                    });
+                }
+            }
             dispatch(updateSRPricingSettings(props.editingItem.id, data))
             onCancel();
         }
@@ -88,11 +106,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
 
     const onInputChange = (type: "low" | "high") => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         e.persist();
-        if (+e.target.value > 10 || +e.target.value < -10) {
-            showError('Value must not be more than 10 and less than -10')
-        } else {
-            setValues(prev => ({...prev, [type]: e.target.value}))
-        }
+        setValues(prev => ({...prev, [type]: e.target.value}))
     }
     return <BaseModal  {...props} width={340} onClose={onCancel}>
         <DialogTitle onClose={onCancel}>Edit Pricing Levels By Ops Code</DialogTitle>
@@ -100,6 +114,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
             <TextField type="number"
                        fullWidth
                        label="Low"
+                       error={!!values.low && (values.low > 10 || values.low < -10)}
                        style={{ marginBottom: 20 }}
                        inputProps={{ min: SliderRange.Min, max: SliderRange.Max, step: 0.001}}
                        value={values.low}
@@ -108,6 +123,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
             <TextField type="number"
                        fullWidth
                        label="High"
+                       error={!!values.high && (values.high > 10 || values.high < -10)}
                        style={{ marginBottom: 20 }}
                        inputProps={{ min: SliderRange.Min, max: SliderRange.Max, step: 0.001}}
                        value={values.high}
