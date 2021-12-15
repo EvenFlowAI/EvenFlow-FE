@@ -62,8 +62,8 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
     }, [props.editingItem])
 
     const onCancel = () => {
+        if (props.editingItem) setValues({low: props.editingItem.low, high: props.editingItem.high});
         props.onClose()
-        setValues(initialValues);
     }
 
     const onSave = () => {
