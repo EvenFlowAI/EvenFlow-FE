@@ -8,7 +8,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {DenseTable} from "../../AppointmentAllocation/UI";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    addServiceRequestsToPricing, deleteSRPricingSettings,
+    addServiceRequestsToPricing,
+    deleteSRPricingSettings,
     loadSRPricingSettings,
     updateSRPricingSettings
 } from "../../../../store/reducers/pricingSettings/actions";
@@ -21,10 +22,8 @@ import {
 import AddOpsCodeModal from "../../../Modals/AddPackage/parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Loading} from "../../../UI/Loading";
-import {
-    loadAssignedServiceRequests,
-    setAssignedPageData
-} from "../../../../store/reducers/serviceRequests/actions";
+import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";
+import {TextField} from "../../../UI/TextField";
 
 enum SliderRange {
     Min = -10,
@@ -137,18 +136,6 @@ const DayOfWeekOpsCode = () => {
         }
     }, [srPricingSettings])
 
-    const deleteOpsCode = (item: TOpsCode) => {
-        if (selectedSC) {
-            askConfirm({
-                title: `Are you sure want to remove ops code ${item?.opsCode}?`,
-                isRemove: true,
-                onConfirm: () => {
-                    dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
-                }
-            });
-        }
-    }
-
     const handleAddOpsCode = () => {
         if (selectedSC && selectedCodes.length) {
             const data: TNewRequestsToPricing = {
@@ -161,32 +148,61 @@ const DayOfWeekOpsCode = () => {
         }
     }
 
-    const handleSaveChanges = (id: number, type: "low" | "high", value: number | number[]) => {
+    const handleSaveChanges = (item: TOpsCode) => {
         if (selectedSC) {
             const data: Partial<IRequestPricingSettings> = {
                 serviceCenterId: selectedSC.id,
                 values: [
                     {
-                        demandCategory: type === "low" ? EDemandCategory.Low : EDemandCategory.High,
-                        value: +value as number,
+                        demandCategory: EDemandCategory.Low,
+                        value: slidersState[item.id].low,
+                    },
+                    {
+                        demandCategory: EDemandCategory.High,
+                        value: slidersState[item.id].high,
                     }
                 ]
             }
-            dispatch(updateSRPricingSettings(id, data))
+            dispatch(updateSRPricingSettings(item.id, data))
         }
     }
 
-    const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
-        setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
-    }, [])
-
-    const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+    const saveOpsCode = (item: TOpsCode) => {
         askConfirm({
             title: `Are you sure want to change the value?`,
-            onConfirm: () => handleSaveChanges(id, type, val),
+            onConfirm: () => handleSaveChanges(item),
             onCancel: () => setInitialSliders(srPricingSettings),
         });
-    }, [selectedSC, srPricingSettings])
+    }
+
+    const deleteOpsCode = (item: TOpsCode) => {
+        if (selectedSC) {
+            askConfirm({
+                title: `Are you sure want to remove ops code ${item?.opsCode}?`,
+                isRemove: true,
+                onConfirm: () => {
+                    dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
+                }
+            });
+        }
+    }
+
+    const onInputChange = (id: number, type: "low" | "high") => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        event.persist();
+        setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: event.target.value}}))
+    }
+
+    // const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+    //     setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
+    // }, [])
+
+    // const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+    //     askConfirm({
+    //         title: `Are you sure want to change the value?`,
+    //         onConfirm: () => handleSaveChanges(id, type, val),
+    //         onCancel: () => setInitialSliders(srPricingSettings),
+    //     });
+    // }, [selectedSC, srPricingSettings])
 
     const handleSelectOpsCode = useCallback((el: IAssignedServiceRequest) => {
         setSelectedCodes(prev => {
@@ -213,12 +229,13 @@ const DayOfWeekOpsCode = () => {
                                     <TableCell className={classes.headerCell} width="22%">
                                         Ops Code
                                     </TableCell>
-                                    <TableCell className={classes.headerCell} width="30%">
+                                    <TableCell className={classes.headerCell} width="26%">
                                         Low
                                     </TableCell>
-                                    <TableCell className={classes.headerCell} width="30%">
+                                    <TableCell className={classes.headerCell} width="26%">
                                         High
                                     </TableCell>
+                                    <TableCell width="8%"/>
                                     <TableCell width="8%"/>
                                 </TableRow>
                             </TableHead>
@@ -229,32 +246,55 @@ const DayOfWeekOpsCode = () => {
                                             {item.opsCode}
                                         </TableCell>
                                         <TableCell key="low">
-                                            <Slider
-                                                min={SliderRange.Min}
-                                                max={SliderRange.Max}
-                                                onChangeCommitted={handleChangeCommitted(item.id, "low")}
-                                                onChange={handleChange(item.id, "low")}
-                                                marks={[
-                                                    {value: SliderRange.Min, label: SliderRange.Min},
-                                                    {value: SliderRange.Max, label: SliderRange.Max}
-                                                ]}
-                                                value={slidersState[item.id].low}
-                                                valueLabelDisplay="on"
-                                            />
+                                            <TextField type="number"
+                                                       fullWidth
+                                                        inputProps={{ min: SliderRange.Min, max: SliderRange.Max, step: 0.001}}
+                                                        value={slidersState[item.id].low}
+                                                        onChange={onInputChange(item.id, "low")}
+                                                        />
+                                            {/*<Slider*/}
+                                            {/*    min={SliderRange.Min}*/}
+                                            {/*    max={SliderRange.Max}*/}
+                                            {/*    onChangeCommitted={handleChangeCommitted(item.id, "low")}*/}
+                                            {/*    onChange={handleChange(item.id, "low")}*/}
+                                            {/*    step={0.01}*/}
+                                            {/*    marks={[*/}
+                                            {/*        {value: SliderRange.Min, label: SliderRange.Min},*/}
+                                            {/*        {value: SliderRange.Max, label: SliderRange.Max}*/}
+                                            {/*    ]}*/}
+                                            {/*    value={slidersState[item.id].low}*/}
+                                            {/*    valueLabelDisplay="on"*/}
+                                            {/*/>*/}
                                         </TableCell>
                                         <TableCell key="high">
-                                            <Slider
-                                                min={SliderRange.Min}
-                                                max={SliderRange.Max}
-                                                onChangeCommitted={handleChangeCommitted(item.id, "high")}
-                                                onChange={handleChange(item.id, "high")}
-                                                marks={[
-                                                    {value: SliderRange.Min, label: SliderRange.Min},
-                                                    {value: SliderRange.Max, label: SliderRange.Max}
-                                                ]}
-                                                value={slidersState[item.id].high}
-                                                valueLabelDisplay="on"
+                                            <TextField type="number"
+                                                       fullWidth
+                                                       inputProps={{ min: SliderRange.Min, max: SliderRange.Max, step: 0.001}}
+                                                       value={slidersState[item.id].high}
+                                                       onChange={onInputChange(item.id, "high")}
                                             />
+                                            {/*<Slider*/}
+                                            {/*    min={SliderRange.Min}*/}
+                                            {/*    max={SliderRange.Max}*/}
+                                            {/*    step={0.01}*/}
+                                            {/*    onChangeCommitted={handleChangeCommitted(item.id, "high")}*/}
+                                            {/*    onChange={handleChange(item.id, "high")}*/}
+                                            {/*    marks={[*/}
+                                            {/*        {value: SliderRange.Min, label: SliderRange.Min},*/}
+                                            {/*        {value: SliderRange.Max, label: SliderRange.Max}*/}
+                                            {/*    ]}*/}
+                                            {/*    value={slidersState[item.id].high}*/}
+                                            {/*    valueLabelDisplay="on"*/}
+                                            {/*/>*/}
+                                        </TableCell>
+                                        <TableCell key="save" align='center'>
+                                            <Button
+                                                variant="text"
+                                                style={{textTransform: 'none'}}
+                                                onClick={() => saveOpsCode(item)}
+                                                color="primary">
+                                                Save
+                                            </Button>
                                         </TableCell>
                                         <TableCell key="remove" align='center'>
                                             <Button
