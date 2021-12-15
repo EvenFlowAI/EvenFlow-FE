@@ -7,7 +7,7 @@ import {Box, Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {updateSRPricingLevels} from "../../../store/reducers/pricingSettings/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
 type TEditPricingLevelsProps = DialogProps & {
@@ -61,6 +61,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const [premium, setPremium] = useState<string | null>(null);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const showError = useException();
     const {selectedSC} = useSCs();
     const classes = useStyles();
 
@@ -121,11 +122,19 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
 
     const onDiscountChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         e.persist()
-        setDiscount(e.target.value.toString());
+        if (+e.target.value > 100 || +e.target.value < 0) {
+            showError('Discount value must not be less than 0 and more than 100')
+        } else {
+            setDiscount(e.target.value.toString());
+        }
     }
     const onPremiumChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         e.persist()
-        setPremium(e.target.value.toString());
+        if (+e.target.value > 100 || +e.target.value < 0) {
+            showError('Premium value must not be less than 100 and more than 200')
+        } else {
+            setPremium(e.target.value.toString());
+        }
     }
 
     return <BaseModal  {...props} width={540} onClose={onCancel}>
@@ -157,7 +166,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 placeholder='Select Discount'
                 error={!discount && formIsChecked}
                 onChange={onDiscountChange}
-                value={Number(discount)}/>
+                value={discount ?? ''}/>
             {/*<Autocomplete*/}
             {/*    style={{ marginBottom: 10 }}*/}
             {/*    options={getOptions()}*/}
@@ -178,7 +187,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 placeholder='Select Premium'
                 error={!premium && formIsChecked}
                 onChange={onPremiumChange}
-                value={Number(premium)}/>
+                value={premium ?? ''}/>
             {/*<Autocomplete*/}
             {/*    style={{ marginBottom: 10 }}*/}
             {/*    options={getOptions(100, 200)}*/}

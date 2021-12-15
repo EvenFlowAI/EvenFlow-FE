@@ -7,7 +7,7 @@ import {Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {EDemandCategory, IRequestPricingSettings} from "../../../store/reducers/pricingSettings/types";
 import {updateSRPricingSettings} from "../../../store/reducers/pricingSettings/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 
 type TEditDayOfWeekOpsCodeProps = DialogProps & {
@@ -55,6 +55,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
     const [values, setValues] = useState<TState>(initialValues);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showError = useException();
     const classes = useStyles();
 
     useEffect(() => {
@@ -87,7 +88,11 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
 
     const onInputChange = (type: "low" | "high") => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         e.persist();
-        setValues(prev => ({...prev, [type]: e.target.value}))
+        if (+e.target.value > 10 || +e.target.value < -10) {
+            showError('Value must not be more than 10 and less than -10')
+        } else {
+            setValues(prev => ({...prev, [type]: e.target.value}))
+        }
     }
     return <BaseModal  {...props} width={340} onClose={onCancel}>
         <DialogTitle onClose={onCancel}>Edit Pricing Levels By Ops Code</DialogTitle>
