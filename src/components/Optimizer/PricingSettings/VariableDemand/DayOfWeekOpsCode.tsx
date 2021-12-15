@@ -23,9 +23,9 @@ import AddOpsCodeModal from "../../../Modals/AddPackage/parts/AddOpsCode/AddOpsC
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Loading} from "../../../UI/Loading";
 import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";
-import {TextField} from "../../../UI/TextField";
+import EditDayOfWeekOpsCode from "../../../Modals/EditDayOFWeekOpsCode/EditDayOFWeekOpsCode";
 
-enum SliderRange {
+export enum SliderRange {
     Min = -10,
     Max = 10
 }
@@ -43,9 +43,14 @@ const Slider = withStyles({
             right: -25
         }
     },
+    valueLabel: {
+        '& > span': {
+            width: 40
+        }
+    }
 })(ValueSlider);
 
-type TOpsCode = {
+export type TOpsCode = {
     opsCode: string;
     low: number;
     high: number;
@@ -68,11 +73,13 @@ type SliderObject = {
 
 const DayOfWeekOpsCode = () => {
     const { onOpen, onClose, isOpen } = useModal();
+    const { onOpen: onEditOpen, onClose: onEditClose, isOpen: isEditOpen } = useModal();
     const { srPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);
     const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [opsCodes, setOpsCodes] = useState<TOpsCode[]>([]);
     const [slidersState, setSlidersState] = useState<SliderObject>({});
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
+    const [editingItem, setEditingItem] = useState<TOpsCode | null>(null);
     const {askConfirm} = useConfirm();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -167,14 +174,6 @@ const DayOfWeekOpsCode = () => {
         }
     }
 
-    const saveOpsCode = (item: TOpsCode) => {
-        askConfirm({
-            title: `Are you sure want to change the value?`,
-            onConfirm: () => handleSaveChanges(item),
-            onCancel: () => setInitialSliders(srPricingSettings),
-        });
-    }
-
     const deleteOpsCode = (item: TOpsCode) => {
         if (selectedSC) {
             askConfirm({
@@ -187,14 +186,9 @@ const DayOfWeekOpsCode = () => {
         }
     }
 
-    const onInputChange = (id: number, type: "low" | "high") => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        event.persist();
-        setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: event.target.value}}))
-    }
-
-    // const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
-    //     setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
-    // }, [])
+    const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+        setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
+    }, [])
 
     // const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
     //     askConfirm({
@@ -209,6 +203,11 @@ const DayOfWeekOpsCode = () => {
             return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
         });
     }, [setSelectedCodes])
+
+    const onEditClick = async (item: TOpsCode) => {
+        await setEditingItem(item);
+        await onEditOpen();
+    }
 
     return <SquarePaper variant="outlined">
         <Box display="flex" mr={2} alignItems="center">
@@ -246,54 +245,44 @@ const DayOfWeekOpsCode = () => {
                                             {item.opsCode}
                                         </TableCell>
                                         <TableCell key="low">
-                                            <TextField type="number"
-                                                       fullWidth
-                                                        inputProps={{ min: SliderRange.Min, max: SliderRange.Max, step: 0.001}}
-                                                        value={slidersState[item.id].low}
-                                                        onChange={onInputChange(item.id, "low")}
-                                                        />
-                                            {/*<Slider*/}
-                                            {/*    min={SliderRange.Min}*/}
-                                            {/*    max={SliderRange.Max}*/}
-                                            {/*    onChangeCommitted={handleChangeCommitted(item.id, "low")}*/}
-                                            {/*    onChange={handleChange(item.id, "low")}*/}
-                                            {/*    step={0.01}*/}
-                                            {/*    marks={[*/}
-                                            {/*        {value: SliderRange.Min, label: SliderRange.Min},*/}
-                                            {/*        {value: SliderRange.Max, label: SliderRange.Max}*/}
-                                            {/*    ]}*/}
-                                            {/*    value={slidersState[item.id].low}*/}
-                                            {/*    valueLabelDisplay="on"*/}
-                                            {/*/>*/}
+                                            <Slider
+                                                min={SliderRange.Min}
+                                                max={SliderRange.Max}
+                                                // onChangeCommitted={handleChangeCommitted(item.id, "low")}
+                                                onChange={handleChange(item.id, "low")}
+                                                disabled
+                                                step={0.01}
+                                                marks={[
+                                                    {value: SliderRange.Min, label: SliderRange.Min},
+                                                    {value: SliderRange.Max, label: SliderRange.Max}
+                                                ]}
+                                                value={slidersState[item.id].low}
+                                                valueLabelDisplay="on"
+                                            />
                                         </TableCell>
                                         <TableCell key="high">
-                                            <TextField type="number"
-                                                       fullWidth
-                                                       inputProps={{ min: SliderRange.Min, max: SliderRange.Max, step: 0.001}}
-                                                       value={slidersState[item.id].high}
-                                                       onChange={onInputChange(item.id, "high")}
+                                            <Slider
+                                                min={SliderRange.Min}
+                                                max={SliderRange.Max}
+                                                step={0.01}
+                                                disabled
+                                                // onChangeCommitted={handleChangeCommitted(item.id, "high")}
+                                                onChange={handleChange(item.id, "high")}
+                                                marks={[
+                                                    {value: SliderRange.Min, label: SliderRange.Min},
+                                                    {value: SliderRange.Max, label: SliderRange.Max}
+                                                ]}
+                                                value={slidersState[item.id].high}
+                                                valueLabelDisplay="on"
                                             />
-                                            {/*<Slider*/}
-                                            {/*    min={SliderRange.Min}*/}
-                                            {/*    max={SliderRange.Max}*/}
-                                            {/*    step={0.01}*/}
-                                            {/*    onChangeCommitted={handleChangeCommitted(item.id, "high")}*/}
-                                            {/*    onChange={handleChange(item.id, "high")}*/}
-                                            {/*    marks={[*/}
-                                            {/*        {value: SliderRange.Min, label: SliderRange.Min},*/}
-                                            {/*        {value: SliderRange.Max, label: SliderRange.Max}*/}
-                                            {/*    ]}*/}
-                                            {/*    value={slidersState[item.id].high}*/}
-                                            {/*    valueLabelDisplay="on"*/}
-                                            {/*/>*/}
                                         </TableCell>
                                         <TableCell key="save" align='center'>
                                             <Button
                                                 variant="text"
                                                 style={{textTransform: 'none'}}
-                                                onClick={() => saveOpsCode(item)}
+                                                onClick={() => onEditClick(item)}
                                                 color="primary">
-                                                Save
+                                                Edit
                                             </Button>
                                         </TableCell>
                                         <TableCell key="remove" align='center'>
@@ -312,6 +301,7 @@ const DayOfWeekOpsCode = () => {
                         : <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>No data</div>
             }
         </Box>
+        <EditDayOfWeekOpsCode open={isEditOpen} editingItem={editingItem} onClose={onEditClose}/>
         <AddOpsCodeModal
             setSelectedCodes={setSelectedCodes}
             selectedCodes={selectedCodes}
