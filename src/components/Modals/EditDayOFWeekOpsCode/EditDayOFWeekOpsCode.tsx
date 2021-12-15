@@ -7,7 +7,7 @@ import {Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {EDemandCategory, IRequestPricingSettings} from "../../../store/reducers/pricingSettings/types";
 import {updateSRPricingSettings} from "../../../store/reducers/pricingSettings/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 
 type TEditDayOfWeekOpsCodeProps = DialogProps & {
@@ -55,6 +55,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
     const [values, setValues] = useState<TState>(initialValues);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showError = useException();
     const classes = useStyles();
 
     useEffect(() => {
@@ -72,14 +73,32 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
                 serviceCenterId: selectedSC.id,
                 values: [],
             }
-            if (values.low && data.values) data.values.push({
-                demandCategory: EDemandCategory.Low,
-                    value: values.low,
-            })
-            if (values.high && data.values) data.values.push({
-                demandCategory: EDemandCategory.High,
-                    value: values.high,
-            });
+            if (values.low && data.values) {
+                if (values.low > 10 || values.low < -10) {
+                    return showError('Value must not be more than 10 and less than -10')
+                }
+                if (!values.low.toString().match(/(^-?\d*\.?\d{1,3}?)$/)) {
+                    return showError('Value must be a number with maximum 3 decimal digits')
+                } else {
+                    data.values.push({
+                        demandCategory: EDemandCategory.Low,
+                        value: values.low,
+                    })
+                }
+            }
+            if (values.high && data.values) {
+                if (values.high > 10 || values.high < -10) {
+                    return showError('Value must not be more than 10 and less than -10')
+                }
+                if (!values.high.toString().match(/(^-?\d*\.?\d{1,3}?)$/)) {
+                    return showError('Value must be a number with maximum 3 decimal digits')
+                } else {
+                    data.values.push({
+                        demandCategory: EDemandCategory.High,
+                        value: values.high,
+                    });
+                }
+            }
             dispatch(updateSRPricingSettings(props.editingItem.id, data))
             onCancel();
         }
@@ -95,6 +114,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
             <TextField type="number"
                        fullWidth
                        label="Low"
+                       error={!!values.low && (values.low > 10 || values.low < -10)}
                        style={{ marginBottom: 20 }}
                        inputProps={{ min: SliderRange.Min, max: SliderRange.Max, step: 0.001}}
                        value={values.low}
@@ -103,6 +123,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
             <TextField type="number"
                        fullWidth
                        label="High"
+                       error={!!values.high && (values.high > 10 || values.high < -10)}
                        style={{ marginBottom: 20 }}
                        inputProps={{ min: SliderRange.Min, max: SliderRange.Max, step: 0.001}}
                        value={values.high}
