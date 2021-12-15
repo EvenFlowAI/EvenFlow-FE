@@ -23,10 +23,10 @@ export type TPricingLevel = {
 
 const RowData: TableRowDataType<TPricingLevel>[] = [
     {val: (el: TPricingLevel, index: number) => `${index + 1}`, header: "#"},
-    {val: (el: TPricingLevel) => el.serviceRequest, header: "INDIVIDUAL SERVICE", width: '60%'},
+    {val: (el: TPricingLevel) => el.serviceRequest, header: "INDIVIDUAL SERVICE", width: '55%'},
     {val: (el: TPricingLevel) => el.opsCode, header: "OPS CODE"},
-    {val: (el: TPricingLevel) => el.discount ? `${el.discount}%` : 'Default', header: "DISCOUNT"},
-    {val: (el: TPricingLevel) => el.premium ? `${el.premium}%` : 'Default', header: "PREMIUM"},
+    {val: (el: TPricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "DISCOUNT"},
+    {val: (el: TPricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "PREMIUM"},
 ];
 
 const useStyles = makeStyles(() => ({

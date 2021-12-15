@@ -1,12 +1,10 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {TextField} from "../../UI/TextField";
 import {DialogProps} from "../types";
 import {TPricingLevel} from "../../Optimizer/PricingSettings/PricingLevels/PricingLevelsByOpsCode";
 import {Box, Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {Autocomplete} from "@material-ui/lab";
 import {useDispatch} from "react-redux";
 import {updateSRPricingLevels} from "../../../store/reducers/pricingSettings/actions";
 import {useSCs} from "../../../utils/hooks";
@@ -59,8 +57,8 @@ const DEFAULT_OPTION = 'Default';
 const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const [service, setService] = useState<string>('');
     const [opsCode, setOpsCode] = useState<string>('');
-    const [discount, setDiscount] = useState<string | null>(DEFAULT_OPTION);
-    const [premium, setPremium] = useState<string | null>(DEFAULT_OPTION);
+    const [discount, setDiscount] = useState<string | null>(null);
+    const [premium, setPremium] = useState<string | null>(null);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -75,13 +73,13 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
         }
     }, [props.prisingLevel])
 
-    const getOptions = (from = 0, to = 100) => {
-        let options = [DEFAULT_OPTION];
-        for (let i = from; i <= to; i++) {
-            options.push(i.toString())
-        }
-        return options;
-    }
+    // const getOptions = (from = 0, to = 100) => {
+    //     let options = [DEFAULT_OPTION];
+    //     for (let i = from; i <= to; i++) {
+    //         options.push(i.toString())
+    //     }
+    //     return options;
+    // }
 
     const onCancel = () => {
         setFormIsChecked(false);
@@ -99,13 +97,13 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 serviceCenterId: selectedSC.id,
                 values: [],
             }
-            if (discount !== DEFAULT_OPTION) {
+            if (discount) {
                 data.values.push({
                     demandCategory: EDemandCategory.Low,
                     value: Number(discount)
                 })
             }
-            if (premium !== DEFAULT_OPTION) {
+            if (premium) {
                 data.values.push({
                     demandCategory: EDemandCategory.High,
                     value: Number(premium)
@@ -121,11 +119,13 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
         if (fieldName === 'service') setService(e.target.value)
     }
 
-    const onDiscountChange = (e: ChangeEvent<{}>, value: string | null) => {
-        setDiscount(value);
+    const onDiscountChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        e.persist()
+        setDiscount(e.target.value.toString());
     }
-    const onPremiumChange = (e: ChangeEvent<{}>, value: string | null) => {
-        setPremium(value);
+    const onPremiumChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        e.persist()
+        setPremium(e.target.value.toString());
     }
 
     return <BaseModal  {...props} width={540} onClose={onCancel}>
@@ -149,29 +149,47 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 onChange={e => onTextFieldChange(e, 'opsCode')}
                 value={opsCode}/>
             <Box p={1}/>
-            <Autocomplete
-                style={{ marginBottom: 10 }}
-                options={getOptions()}
-                value={discount}
+            <TextField
+                fullWidth
+                label='Discount'
+                type="number"
+                inputProps={{min: 0, max: 100, step: 0.001}}
+                placeholder='Select Discount'
+                error={!discount && formIsChecked}
                 onChange={onDiscountChange}
-                renderInput={autocompleteRender({
-                    label: "Discount",
-                    error: !discount && formIsChecked,
-                    placeholder: 'Select Discount'
-                })}
-            />
+                value={Number(discount)}/>
+            {/*<Autocomplete*/}
+            {/*    style={{ marginBottom: 10 }}*/}
+            {/*    options={getOptions()}*/}
+            {/*    value={discount}*/}
+            {/*    onChange={onDiscountChange}*/}
+            {/*    renderInput={autocompleteRender({*/}
+            {/*        label: "Discount",*/}
+            {/*        error: !discount && formIsChecked,*/}
+            {/*        placeholder: 'Select Discount'*/}
+            {/*    })}*/}
+            {/*/>*/}
             <Box p={1}/>
-            <Autocomplete
-                style={{ marginBottom: 10 }}
-                options={getOptions(100, 200)}
-                value={premium}
+            <TextField
+                fullWidth
+                label='Premium'
+                type="number"
+                inputProps={{min: 100, max: 200, step: 0.001}}
+                placeholder='Select Premium'
+                error={!premium && formIsChecked}
                 onChange={onPremiumChange}
-                renderInput={autocompleteRender({
-                    label: "Premium",
-                    error: !premium && formIsChecked,
-                    placeholder: 'Select Premium'
-                })}
-            />
+                value={Number(premium)}/>
+            {/*<Autocomplete*/}
+            {/*    style={{ marginBottom: 10 }}*/}
+            {/*    options={getOptions(100, 200)}*/}
+            {/*    value={premium}*/}
+            {/*    onChange={onPremiumChange}*/}
+            {/*    renderInput={autocompleteRender({*/}
+            {/*        label: "Premium",*/}
+            {/*        error: !premium && formIsChecked,*/}
+            {/*        placeholder: 'Select Premium'*/}
+            {/*    })}*/}
+            {/*/>*/}
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
         <DialogActions>
