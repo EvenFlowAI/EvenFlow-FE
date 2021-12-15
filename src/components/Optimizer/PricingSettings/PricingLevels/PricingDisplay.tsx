@@ -1,8 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PaperTitle} from "../UI";
 import {Divider, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import {SquarePaper} from "../../../UI/Paper";
 import {makeStyles} from "@material-ui/core/styles";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
+import {Loading} from "../../../UI/Loading";
+import {changeRoundPriceSetting} from "../../../../store/reducers/pricingSettings/actions";
+import {useConfirm, useSCs} from "../../../../utils/hooks";
 
 type TLabelProps = {
     title: string;
@@ -51,31 +56,53 @@ const Label: React.FC<TLabelProps> = ({title, text}) => {
 }
 
 const PricingDisplay: React.FC = () => {
-    const [value, setValue] = useState<string>('optionA');
+    const { isRoundPriceLoading, roundPrice } = useSelector((state: RootState) => state.pricingSettings);
+    const [value, setValue] = useState<string>('decimal');
+    const {askConfirm} = useConfirm();
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
     const classes = useStyles();
 
-    // TODO request
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
+    useEffect(() => {
+        setValue(roundPrice ? 'round' : 'decimal');
+    }, [roundPrice])
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (selectedSC) {
+            e.persist();
+            askConfirm({
+                title: `Are you sure want to change the option?`,
+                onConfirm: () => {
+                    setValue(e.target.value);
+                    dispatch(changeRoundPriceSetting(selectedSC.id, e.target.value === 'round'))
+                }
+            });
+        }
+    }
 
     return <SquarePaper variant="outlined">
         <PaperTitle>Prices Display</PaperTitle>
         <Divider />
-        <RadioGroup row aria-label="position" name="position" value={value} onChange={onChange} className={classes.optionsWrapper}>
-            <FormControlLabel
-                className={value === 'optionA' ? classes.checkedOption :  classes.option}
-                value="optionA"
-                control={<Radio color="primary"/>}
-                label={<Label title="OPTION A" text="Display round prices"/>}
-                labelPlacement="end"
-            />
-            <FormControlLabel
-                className={value === 'optionB' ? classes.checkedOption :  classes.option}
-                value="optionB"
-                control={<Radio color="primary"/>}
-                label={<Label title="OPTION B" text="Display fractional prices"/>}
-                labelPlacement="end"
-            />
-        </RadioGroup>
+        {isRoundPriceLoading
+            ? <Loading/>
+            : <RadioGroup row aria-label="position" name="position" value={value} onChange={onChange} className={classes.optionsWrapper}>
+                <FormControlLabel
+                    className={value === 'round' ? classes.checkedOption :  classes.option}
+                    value="round"
+                    control={<Radio color="primary"/>}
+                    label={<Label title="OPTION A" text="Display round prices"/>}
+                    labelPlacement="end"
+                />
+                <FormControlLabel
+                    className={value === 'decimal' ? classes.checkedOption :  classes.option}
+                    value="decimal"
+                    control={<Radio color="primary"/>}
+                    label={<Label title="OPTION B" text="Display fractional prices"/>}
+                    labelPlacement="end"
+                />
+            </RadioGroup>
+        }
+
     </SquarePaper>
 };
 
