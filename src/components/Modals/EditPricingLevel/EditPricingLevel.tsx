@@ -52,8 +52,6 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const DEFAULT_OPTION = 'Default';
-
 const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const [service, setService] = useState<string>('');
     const [opsCode, setOpsCode] = useState<string>('');
@@ -66,33 +64,31 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const classes = useStyles();
 
     useEffect(() => {
-        if (props.prisingLevel) {
+        if (props.prisingLevel && props.open) {
             setService(props.prisingLevel.serviceRequest);
             setOpsCode(props.prisingLevel.opsCode);
             props.prisingLevel?.premium && setPremium(props.prisingLevel.premium);
             props.prisingLevel?.discount && setDiscount(props.prisingLevel.discount);
         }
-    }, [props.prisingLevel])
-
-    // const getOptions = (from = 0, to = 100) => {
-    //     let options = [DEFAULT_OPTION];
-    //     for (let i = from; i <= to; i++) {
-    //         options.push(i.toString())
-    //     }
-    //     return options;
-    // }
+    }, [props.prisingLevel, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
         setOpsCode('');
-        setDiscount(DEFAULT_OPTION);
-        setPremium(DEFAULT_OPTION);
+        setDiscount(null);
+        setPremium(null);
         setService('');
         props.onClose();
     }
 
     const onSave = () => {
         setFormIsChecked(true);
+        if (!discount || +discount > 100 || +discount < 0) {
+            return showError('Discount value must not be less than 0 and more than 100')
+        }
+        if (!premium || +premium > 200 || +premium < 100) {
+            return showError('Premium value must not be less than 100 and more than 200')
+        }
         if (props.prisingLevel && selectedSC) {
             const data: TUpdatedSettings = {
                 serviceCenterId: selectedSC.id,
@@ -122,19 +118,11 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
 
     const onDiscountChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         e.persist()
-        if (+e.target.value > 100 || +e.target.value < 0) {
-            showError('Discount value must not be less than 0 and more than 100')
-        } else {
-            setDiscount(e.target.value.toString());
-        }
+        setDiscount(e.target.value.toString());
     }
     const onPremiumChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         e.persist()
-        if (+e.target.value > 100 || +e.target.value < 0) {
-            showError('Premium value must not be less than 100 and more than 200')
-        } else {
-            setPremium(e.target.value.toString());
-        }
+        setPremium(e.target.value.toString());
     }
 
     return <BaseModal  {...props} width={540} onClose={onCancel}>
@@ -164,20 +152,9 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 type="number"
                 inputProps={{min: 0, max: 100, step: 0.001}}
                 placeholder='Select Discount'
-                error={!discount && formIsChecked}
+                error={formIsChecked && (!discount || +discount < 0 || +discount > 100)}
                 onChange={onDiscountChange}
                 value={discount ?? ''}/>
-            {/*<Autocomplete*/}
-            {/*    style={{ marginBottom: 10 }}*/}
-            {/*    options={getOptions()}*/}
-            {/*    value={discount}*/}
-            {/*    onChange={onDiscountChange}*/}
-            {/*    renderInput={autocompleteRender({*/}
-            {/*        label: "Discount",*/}
-            {/*        error: !discount && formIsChecked,*/}
-            {/*        placeholder: 'Select Discount'*/}
-            {/*    })}*/}
-            {/*/>*/}
             <Box p={1}/>
             <TextField
                 fullWidth
@@ -185,20 +162,9 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 type="number"
                 inputProps={{min: 100, max: 200, step: 0.001}}
                 placeholder='Select Premium'
-                error={!premium && formIsChecked}
+                error={formIsChecked && (!premium || +premium < 100 || +premium > 200)}
                 onChange={onPremiumChange}
                 value={premium ?? ''}/>
-            {/*<Autocomplete*/}
-            {/*    style={{ marginBottom: 10 }}*/}
-            {/*    options={getOptions(100, 200)}*/}
-            {/*    value={premium}*/}
-            {/*    onChange={onPremiumChange}*/}
-            {/*    renderInput={autocompleteRender({*/}
-            {/*        label: "Premium",*/}
-            {/*        error: !premium && formIsChecked,*/}
-            {/*        placeholder: 'Select Premium'*/}
-            {/*    })}*/}
-            {/*/>*/}
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
         <DialogActions>
