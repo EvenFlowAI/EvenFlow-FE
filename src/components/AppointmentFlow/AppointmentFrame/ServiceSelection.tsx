@@ -14,7 +14,6 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
-import axios from "axios";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
@@ -39,17 +38,17 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
         )
             .then(({data}) => {
                 setServices(data);
-                data.forEach(el => {
-                    if (el.iconPath) {
-                        axios.get(el.iconPath, {withCredentials: false})
-                            .then(({ data }) => {
-                                setServices(c =>
-                                        c.map(cat => cat.id === el.id ? {...cat, loadedIcon: data} : cat)
-                                    )
-                                }
-                            )
-                    }
-                });
+                // data.forEach(el => {
+                //     if (el.iconPath) {
+                //         axios.get(el.iconPath, {withCredentials: false})
+                //             .then(({ data }) => {
+                //                 setServices(c =>
+                //                         c.map(cat => cat.id === el.id ? {...cat, loadedIcon: data} : cat)
+                //                     )
+                //                 }
+                //             )
+                //     }
+                // });
             })
             .finally(() => {
                 setLoading(false);
