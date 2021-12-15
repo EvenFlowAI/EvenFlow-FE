@@ -55,8 +55,8 @@ const useStyles = makeStyles(() => ({
 const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const [service, setService] = useState<string>('');
     const [opsCode, setOpsCode] = useState<string>('');
-    const [discount, setDiscount] = useState<string | null>(null);
-    const [premium, setPremium] = useState<string | null>(null);
+    const [discount, setDiscount] = useState<string>('');
+    const [premium, setPremium] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const dispatch = useDispatch();
     const showError = useException();
@@ -75,18 +75,18 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const onCancel = () => {
         setFormIsChecked(false);
         setOpsCode('');
-        setDiscount(null);
-        setPremium(null);
+        setDiscount('');
+        setPremium('');
         setService('');
         props.onClose();
     }
 
     const onSave = () => {
         setFormIsChecked(true);
-        if (!discount || +discount > 100 || +discount < 0) {
+        if (discount && (+discount > 100 || +discount < 0)) {
             return showError('Discount value must not be less than 0 and more than 100')
         }
-        if (!premium || +premium > 200 || +premium < 100) {
+        if (premium && (+premium > 200 || +premium < 100)) {
             return showError('Premium value must not be less than 100 and more than 200')
         }
         if (props.prisingLevel && selectedSC) {
@@ -151,8 +151,8 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 label='Discount'
                 type="number"
                 inputProps={{min: 0, max: 100, step: 0.001}}
-                placeholder='Select Discount'
-                error={formIsChecked && (!discount || +discount < 0 || +discount > 100)}
+                placeholder='Type Discount'
+                error={formIsChecked && (+discount < 0 || +discount > 100)}
                 onChange={onDiscountChange}
                 value={discount ?? ''}/>
             <Box p={1}/>
@@ -161,8 +161,8 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 label='Premium'
                 type="number"
                 inputProps={{min: 100, max: 200, step: 0.001}}
-                placeholder='Select Premium'
-                error={formIsChecked && (!premium || +premium < 100 || +premium > 200)}
+                placeholder='Type Premium'
+                error={formIsChecked && (premium !== '' && +premium < 100 || premium !== '' && +premium > 200)}
                 onChange={onPremiumChange}
                 value={premium ?? ''}/>
         </DialogContent>
