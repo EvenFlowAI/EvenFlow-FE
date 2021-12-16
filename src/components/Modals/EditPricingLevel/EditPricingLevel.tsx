@@ -89,7 +89,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
         if (premium && (+premium > 200 || +premium < 100)) {
             return showError('Premium value must not be less than 100 and more than 200')
         }
-        if (!discount.match(/(^\d*\.?\d{1,3}?)$/) || !premium.match(/(^\d*\.?\d{1,3}?)$/)) {
+        if ((discount && !discount.match(/(^\d*\.?\d{1,3}?)$/)) || (premium && !premium.match(/(^\d*\.?\d{1,3}?)$/))) {
             return showError('Value must be a number with maximum 3 decimal digits')
         }
         if (props.prisingLevel && selectedSC) {
