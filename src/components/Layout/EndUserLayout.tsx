@@ -46,7 +46,9 @@ export const EndUserLayout = () => {
             : process.env.REACT_APP_ENV === "production"
                 ? origin.includes("bmwofschererville")
                     ? "UA-210743216-6"
-                    : "UA-210743216-3"
+                    : origin.includes("riverviewford")
+                        ? "UA-210743216-3"
+                        : "UA-210743216-5"
                 : "UA-210743216-5";
         if (!trackerCreated) {
             const options: GaOptions = {
