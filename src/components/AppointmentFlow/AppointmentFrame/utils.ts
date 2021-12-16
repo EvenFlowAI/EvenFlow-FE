@@ -8,7 +8,8 @@ export const getAppointmentDate = (date: moment.Moment, d: number) => {
 export const collectServiceRequestIds = (
     s: IServiceCategory|null, sub: IServiceCategory|null, selectedPackage?: IPackageOptions|null
 , individualOpsCodes?: number[]): number[] => {
-    const ids = [];
+    let ids = [];
+    //TODO change logic after
     if (s) {
         for (let i=0; i<s.serviceRequests.length; i++) {
             ids.push(s.serviceRequests[i].id);
@@ -23,7 +24,8 @@ export const collectServiceRequestIds = (
         // DO not send any ops codes
         // selectedPackage.
     }
-    if (individualOpsCodes) {
+    if (individualOpsCodes?.length) {
+        ids = [];
         for (let c of individualOpsCodes) {
             ids.push(c);
         }

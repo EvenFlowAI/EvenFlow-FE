@@ -10,6 +10,7 @@ import {IOffer} from "../store/reducers/offers/types";
 import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
+import {EServiceCategoryType} from "../store/reducers/categories/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -153,6 +154,11 @@ export const appointmentStatuses: TEnumKeyLabel<AppointmentStatus> = {
     [AppointmentStatus.Cancelled]: "Canceled"
 }
 
+export interface IMaintenancePackageOption {
+    name: string;
+    maintenancePackageName: string;
+}
+
 export interface IListAppointment {
     id: number;
     hashKey: string;
@@ -166,6 +172,7 @@ export interface IListAppointment {
     customerId: string;
     serviceCategory: IServiceCategory|null;
     maintenancePackageOptionId: number | null;
+    maintenancePackageOption: IMaintenancePackageOption | null;
     driver: IDriverInfo;
     duration: number;
     transactionValue: number;
@@ -210,6 +217,7 @@ export interface IServiceCategory {
     iconPath?: string;
     loadedIcon?: JSX.Element | string;
     serviceRequests: IServiceRequest[];
+    type: EServiceCategoryType;
 }
 
 export interface IServiceConsultantShort {

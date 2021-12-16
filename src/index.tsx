@@ -14,14 +14,14 @@ import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <ThemeProvider theme={theme}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <CssBaseline />
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
-                </MuiPickersUtilsProvider>
-            </ThemeProvider>
+                <ThemeProvider theme={theme}>
+                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                        <CssBaseline />
+                        <BrowserRouter>
+                            <App />
+                        </BrowserRouter>
+                    </MuiPickersUtilsProvider>
+                </ThemeProvider>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root')

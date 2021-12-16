@@ -68,6 +68,16 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>&TCall
                             primary={ `${moment(payload.dateInUtc).utc().format("LL")} ${moment(payload.timeSlot, timeSpanString).format(timeString)}`}
                         />
                     </ListItem>
+                    {
+                        payload.maintenancePackageOption
+                            ? <ListItem key={payload.maintenancePackageOption.name}>
+                                <ListItemIcon><Settings /></ListItemIcon>
+                                <ListItemText
+                                    primary={`Package Name: ${payload.maintenancePackageOption.maintenancePackageName}`}
+                                    secondary={payload.maintenancePackageOption.name} />
+                            </ListItem>
+                            : null
+                    }
                     {payload.serviceRequests.map(sr => {
                         return <ListItem key={sr.id}>
                             <ListItemIcon><Settings /></ListItemIcon>

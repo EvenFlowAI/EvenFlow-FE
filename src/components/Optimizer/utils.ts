@@ -25,9 +25,8 @@ const getComplimentaryHours = (includedRequests: TExtendedComplimentary[]): numb
     return includedRequests.reduce((a, b) => a + +b.durationInHours, 0);
 }
 
-
 export const getOptionsTableData = (pack: IPackageById) => {
-    const { options, serviceRequests, complimentaryServices} = pack;
+    const { options, serviceRequests, complimentaryServices } = pack;
     const data: IDetailsData = {
         invoicedRequestLaborHours: [],
         complimentaryLaborHours: [],

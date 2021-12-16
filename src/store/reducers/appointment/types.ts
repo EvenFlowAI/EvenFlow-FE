@@ -4,7 +4,13 @@ import {TEnumMap} from "../utils";
 import {EDemandCategory} from "../pricingSettings/types";
 import {EOfferType, IOffer} from "../offers/types";
 import moment from "moment";
-import {ICreateAppointmentResp, ICustomerLoadedData, ILoadedVehicle, ITransportation} from "../../../api/types";
+import {
+    ICreateAppointmentResp,
+    ICustomerLoadedData,
+    ILoadedVehicle,
+    IServiceCategory,
+    ITransportation
+} from "../../../api/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -138,6 +144,7 @@ export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
     date: moment.Moment;
     timingType?: number;
+    appointmentDate?: string;
 }
 
 export interface IAppointmentFilters {
@@ -167,6 +174,7 @@ export type TAppointmentState = {
     searchedDateRange: ISearchedDateRange|null;
     appointmentSlots: IRemappedAppointmentSlot[];
     appointmentFilters: IAppointmentFilters;
+    serviceCategories: IServiceCategory[];
 };
 export enum EReminderType {
     Email, Phone, Sms

@@ -152,6 +152,7 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '8px 12px 22px 12px',
+        fontSize: 20,
     },
     currentWrp: {
         display: "flex",
@@ -168,7 +169,7 @@ const useStyles = makeStyles(() => ({
     current: {
         background: "#000000",
         color: "#FFFFFF",
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
         padding: '0 7px',
     },
@@ -180,7 +181,7 @@ const useStyles = makeStyles(() => ({
     prevPrice: {
         color: '#828282',
         textDecoration: "line-through",
-        fontSize: 12,
+        fontSize: 20,
     },
     total: {
         display: 'flex',
@@ -256,7 +257,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                             {/*}*/}
                             { (isBmWService || isSanfordInfinity) && <div className={classes.totalMaintenance}>
                                 <span>Total Maintenance Value:</span>
-                                <span>${item.marketPriceServiceRequests}</span>
+                                <span style={{ fontSize: 20 }}>${item.marketPriceServiceRequests}</span>
                             </div>
                             }
                             <div className={classes.complimentaryTitle}>Complimentary</div>
@@ -266,8 +267,8 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                             <div className={classes.complimentaryTotal}>
                                 <span>Total Complimentary Value:</span>
                                 {isBmWService || isSanfordInfinity
-                                    ? <span>{item.marketPriceComplimentaryServices ? `$${item.marketPriceComplimentaryServices}` : ''}</span>
-                                    :<span>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>
+                                    ? <span style={{ fontSize: 20 }}>{item.marketPriceComplimentaryServices ? `$${item.marketPriceComplimentaryServices}` : ''}</span>
+                                    :<span style={{ fontSize: 20 }}>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>
                                 }
                             </div>
                             <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>

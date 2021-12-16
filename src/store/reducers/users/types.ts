@@ -21,6 +21,9 @@ export interface IUserForm {
     phoneNumber: string;
     role: TRole;
     serviceCenterId: number;
+    dmsId?: string;
+    showOnBookingFlow?: boolean;
+    position?: string;
 }
 export interface IAdvisorShort {
     id: string;

@@ -28,7 +28,6 @@ import {SquarePaper} from "../../UI/Paper";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as ServiceCodes} from "../../../assets/img/serviceOpsCodes.svg";
 import {ReactComponent as Transportation} from "../../../assets/img/transportation_options.svg";
-import {ReactComponent as Consultant} from "../../../assets/img/consultant_configuration.svg";
 import {ReactComponent as Vehicle} from "../../../assets/img/vehicleDetails.svg";
 
 const useStyles = makeStyles(theme => ({
@@ -198,17 +197,6 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenTransOptions,
         isOpen: isOpenTransOptions,
     } = useModal();
-    // todo change actions
-    const {
-        onClose: onCloseServicesOps,
-        onOpen: onOpenServicesOps,
-        isOpen: isOpenServicesOps,
-    } = useModal();
-    const {
-        onClose: onCloseConsultant,
-        onOpen: onOpenConsultant,
-        isOpen: isOpenConsultant,
-    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -219,6 +207,10 @@ export const AdminDashboard: React.FC = () => {
 
     const onOpenVehicle = (): void => {
         history.push(Routes.Admin.VehicleDetails);
+    }
+
+    const onOpenServicesOps = (): void => {
+        history.push(Routes.Admin.ServiceOpsCodesMapping);
     }
 
     const items: TItem[] = [
@@ -232,7 +224,6 @@ export const AdminDashboard: React.FC = () => {
         {label: "Pods", icon: <FormatListNumbered htmlColor='rgb(94, 95, 102)'/>, action: onOpenPods},
         {label: "Transportation Options", icon: <Transportation />, action: onOpenTransOptions},
         {label: "Service Ops Codes Mapping", icon: <ServiceCodes />, action: onOpenServicesOps},
-        {label: "Consultant Configuration", icon: <Consultant />, action: onOpenConsultant},
         {label: "Vehicle Detail Options", icon: <Vehicle />, action: onOpenVehicle},
     ];
 

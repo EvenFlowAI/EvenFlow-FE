@@ -5,7 +5,13 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useDebounce} from "../../../utils/hooks";
-import {handleSearch, loadSRs, selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {
+    handleSearch,
+    loadServiceCategories,
+    loadSRs,
+    selectAppointment,
+    selectSR
+} from "../../../store/reducers/appointment/actions";
 import {decodeSCID} from "../../../utils/utils";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {InputLoading, TextField} from "../UI";
@@ -14,6 +20,8 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {checkSelectedCar} from "./utils";
 import ReactGA from "react-ga";
+import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 
 const Wrapper = styled('div')({
@@ -56,14 +64,17 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [searchInput, setSearch] = useState<string>("");
+    const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
 
     const {id} = useParams();
-    const [selectedCode, srList, search, vehicles, vehicle] = useSelector((state: RootState) => [
+    const [selectedCode, srList, search, vehicles, vehicle, scProfile, serviceCategories] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointment.search,
         state.appointment.customerLoadedData?.vehicles,
-        state.appointment.customerSelectedVehicle
+        state.appointment.customerSelectedVehicle,
+        state.appointment.scProfile,
+        state.appointment.serviceCategories
     ]);
     const dispatch = useDispatch();
     const isInit = useRef(true);
@@ -93,6 +104,17 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
         fetchData().finally();
     }, [id, dispatch, search]);
 
+    useEffect(() => {
+        if (scProfile) dispatch(loadServiceCategories(scProfile.id, 1))
+    }, [scProfile])
+
+    useEffect(() => {
+        const indServicesCategory = serviceCategories.find(item => item.type === +EServiceCategoryType.IndividualServices)
+        if (indServicesCategory) {
+            setOpsCodesList(indServicesCategory.serviceRequests);
+        }
+    }, [serviceCategories])
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
     }
@@ -104,7 +126,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
 
     const handleNext = () => {
         ReactGA.event({
-            category: 'User',
+            category: 'EvenFlow User',
             action: 'Selected Individual Service Requests',
             label: `With Codes ${srList.filter(item => selectedCode.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         })
@@ -134,7 +156,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
                     }}
                 />
                 <CodesWrapper>
-                    {srList.map(s => {
+                    {opsCodesList.map(s => {
                         return <Code
                             key={s.id}
                             label={s?.description ?? s.code}

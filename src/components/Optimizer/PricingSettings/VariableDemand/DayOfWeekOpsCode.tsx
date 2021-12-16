@@ -8,7 +8,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {DenseTable} from "../../AppointmentAllocation/UI";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    addServiceRequestsToPricing, deleteSRPricingSettings,
+    addServiceRequestsToPricing,
+    deleteSRPricingSettings,
     loadSRPricingSettings,
     updateSRPricingSettings
 } from "../../../../store/reducers/pricingSettings/actions";
@@ -21,8 +22,10 @@ import {
 import AddOpsCodeModal from "../../../Modals/AddPackage/parts/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Loading} from "../../../UI/Loading";
+import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";
+import EditDayOfWeekOpsCode from "../../../Modals/EditDayOFWeekOpsCode/EditDayOFWeekOpsCode";
 
-enum SliderRange {
+export enum SliderRange {
     Min = -10,
     Max = 10
 }
@@ -40,9 +43,14 @@ const Slider = withStyles({
             right: -25
         }
     },
+    valueLabel: {
+        '& > span': {
+            width: 40
+        }
+    }
 })(ValueSlider);
 
-type TOpsCode = {
+export type TOpsCode = {
     opsCode: string;
     low: number;
     high: number;
@@ -65,20 +73,53 @@ type SliderObject = {
 
 const DayOfWeekOpsCode = () => {
     const { onOpen, onClose, isOpen } = useModal();
+    const { onOpen: onEditOpen, onClose: onEditClose, isOpen: isEditOpen } = useModal();
     const { srPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);
+    const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [opsCodes, setOpsCodes] = useState<TOpsCode[]>([]);
     const [slidersState, setSlidersState] = useState<SliderObject>({});
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
+    const [editingItem, setEditingItem] = useState<TOpsCode | null>(null);
     const {askConfirm} = useConfirm();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
 
+    const getData = async (serviceCenterId: number) => {
+        await dispatch(setAssignedPageData({ pageSize: 0, pageIndex: 0}));
+        await dispatch(loadAssignedServiceRequests(serviceCenterId));
+        await dispatch(setAssignedPageData({ pageSize: 10, pageIndex: 0 }))
+    }
+
+    const setInitialSliders = (srPricingSettings: IRequestPricingSettings[]) => {
+        setSlidersState(() => {
+            const data: SliderObject = {}
+            srPricingSettings.map(item => {
+                const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
+                const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
+                data[item.serviceRequestId] = {
+                    low: lowValue ? lowValue.value : 0,
+                    high: highValue ? highValue.value : 0,
+                }
+            })
+            return data;
+        })
+    }
+
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadSRPricingSettings(selectedSC.id))
+            getData(selectedSC.id).then();
         }
     }, [selectedSC])
+
+    useEffect(() => {
+        if (assignedList.length && srPricingSettings) {
+            setSelectedCodes(() => {
+                return assignedList.filter(item => srPricingSettings.find(el => el.serviceRequestId === item.id));
+            })
+        }
+    }, [assignedList, srPricingSettings])
 
     useEffect(() => {
         if (srPricingSettings) {
@@ -98,20 +139,40 @@ const DayOfWeekOpsCode = () => {
                 })
                 .sort((a, b) => a.id - b.id)
             )
-            setSlidersState(() => {
-                const data: SliderObject = {}
-                srPricingSettings.map(item => {
-                    const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
-                    const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
-                    data[item.serviceRequestId] = {
-                        low: lowValue ? lowValue.value : 0,
-                        high: highValue ? highValue.value : 0,
-                    }
-                })
-                return data;
-            })
+            setInitialSliders(srPricingSettings);
         }
     }, [srPricingSettings])
+
+    const handleAddOpsCode = () => {
+        if (selectedSC && selectedCodes.length) {
+            const data: TNewRequestsToPricing = {
+                serviceCenterId: selectedSC.id,
+                serviceRequestIds: selectedCodes
+                    .map(item => item.id)
+                    .filter(item => !srPricingSettings.find(el => el.serviceRequestId === item)),
+            }
+            dispatch(addServiceRequestsToPricing(data))
+        }
+    }
+
+    const handleSaveChanges = (item: TOpsCode) => {
+        if (selectedSC) {
+            const data: Partial<IRequestPricingSettings> = {
+                serviceCenterId: selectedSC.id,
+                values: [
+                    {
+                        demandCategory: EDemandCategory.Low,
+                        value: slidersState[item.id].low,
+                    },
+                    {
+                        demandCategory: EDemandCategory.High,
+                        value: slidersState[item.id].high,
+                    }
+                ]
+            }
+            dispatch(updateSRPricingSettings(item.id, data))
+        }
+    }
 
     const deleteOpsCode = (item: TOpsCode) => {
         if (selectedSC) {
@@ -125,34 +186,28 @@ const DayOfWeekOpsCode = () => {
         }
     }
 
-    const handleAddOpsCode = () => {
-        if (selectedSC && selectedCodes.length) {
-            const data: TNewRequestsToPricing = {
-                serviceCenterId: selectedSC.id,
-                serviceRequestIds: selectedCodes.map(item => item.id),
-            }
-            dispatch(addServiceRequestsToPricing(data))
-        }
-    }
-
     const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
         setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
     }, [])
 
-    const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
-        if (selectedSC) {
-            const data: Partial<IRequestPricingSettings> = {
-                serviceCenterId: selectedSC.id,
-                values: [
-                    {
-                        demandCategory: type === "low" ? EDemandCategory.Low : EDemandCategory.High,
-                        value: +val as number,
-                    }
-                ]
-            }
-            dispatch(updateSRPricingSettings(id, data))
-        }
-    }, [selectedSC])
+    // const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
+    //     askConfirm({
+    //         title: `Are you sure want to change the value?`,
+    //         onConfirm: () => handleSaveChanges(id, type, val),
+    //         onCancel: () => setInitialSliders(srPricingSettings),
+    //     });
+    // }, [selectedSC, srPricingSettings])
+
+    const handleSelectOpsCode = useCallback((el: IAssignedServiceRequest) => {
+        setSelectedCodes(prev => {
+            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
+        });
+    }, [setSelectedCodes])
+
+    const onEditClick = async (item: TOpsCode) => {
+        await setEditingItem(item);
+        await onEditOpen();
+    }
 
     return <SquarePaper variant="outlined">
         <Box display="flex" mr={2} alignItems="center">
@@ -173,12 +228,13 @@ const DayOfWeekOpsCode = () => {
                                     <TableCell className={classes.headerCell} width="22%">
                                         Ops Code
                                     </TableCell>
-                                    <TableCell className={classes.headerCell} width="30%">
+                                    <TableCell className={classes.headerCell} width="26%">
                                         Low
                                     </TableCell>
-                                    <TableCell className={classes.headerCell} width="30%">
+                                    <TableCell className={classes.headerCell} width="26%">
                                         High
                                     </TableCell>
+                                    <TableCell width="8%"/>
                                     <TableCell width="8%"/>
                                 </TableRow>
                             </TableHead>
@@ -192,8 +248,10 @@ const DayOfWeekOpsCode = () => {
                                             <Slider
                                                 min={SliderRange.Min}
                                                 max={SliderRange.Max}
-                                                onChangeCommitted={handleChangeCommitted(item.id, "low")}
+                                                // onChangeCommitted={handleChangeCommitted(item.id, "low")}
                                                 onChange={handleChange(item.id, "low")}
+                                                disabled
+                                                step={0.01}
                                                 marks={[
                                                     {value: SliderRange.Min, label: SliderRange.Min},
                                                     {value: SliderRange.Max, label: SliderRange.Max}
@@ -206,7 +264,9 @@ const DayOfWeekOpsCode = () => {
                                             <Slider
                                                 min={SliderRange.Min}
                                                 max={SliderRange.Max}
-                                                onChangeCommitted={handleChangeCommitted(item.id, "high")}
+                                                step={0.01}
+                                                disabled
+                                                // onChangeCommitted={handleChangeCommitted(item.id, "high")}
                                                 onChange={handleChange(item.id, "high")}
                                                 marks={[
                                                     {value: SliderRange.Min, label: SliderRange.Min},
@@ -215,6 +275,15 @@ const DayOfWeekOpsCode = () => {
                                                 value={slidersState[item.id].high}
                                                 valueLabelDisplay="on"
                                             />
+                                        </TableCell>
+                                        <TableCell key="save" align='center'>
+                                            <Button
+                                                variant="text"
+                                                style={{textTransform: 'none'}}
+                                                onClick={() => onEditClick(item)}
+                                                color="primary">
+                                                Edit
+                                            </Button>
                                         </TableCell>
                                         <TableCell key="remove" align='center'>
                                             <Button
@@ -232,9 +301,12 @@ const DayOfWeekOpsCode = () => {
                         : <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>No data</div>
             }
         </Box>
+        <EditDayOfWeekOpsCode open={isEditOpen} editingItem={editingItem} onClose={onEditClose}/>
         <AddOpsCodeModal
             setSelectedCodes={setSelectedCodes}
             selectedCodes={selectedCodes}
+            handleSelect={handleSelectOpsCode}
+            disabledIds={srPricingSettings.map(item => item.serviceRequestId)}
             open={isOpen}
             onClose={onClose}
             isEligible={true}

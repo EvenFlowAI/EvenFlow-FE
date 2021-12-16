@@ -24,7 +24,7 @@ import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
     IListAppointment,
-    ILoadedVehicle,
+    ILoadedVehicle, IServiceCategory,
     ITransportation
 } from "../../../api/types";
 import {EDemandCategory} from "../pricingSettings/types";
@@ -61,6 +61,7 @@ export const changePrivacy = createAction<Partial<IPrivacy>>("Appointment/Change
 export const changePersonalInformation = createAction<Partial<IPersonalInformation>>("Appointment/ChangePersonalInformation");
 export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
+export const getServiceCategories = createAction<IServiceCategory[]>("Appointment/GetServiceCategories");
 
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
@@ -230,4 +231,16 @@ export const getCustomerCache = (): ICustomerLoadedData|null => {
     } catch {
         return null;
     }
+}
+
+export const loadServiceCategories = (serviceCenterId: number, page: number): AppThunk => dispatch => {
+    Api.call<IServiceCategory[]>(
+        Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId, page}}
+    )
+        .then(({data}) => {
+            if (data) dispatch(getServiceCategories(data))
+        })
+        .catch(err => {
+            console.log('load all service categories error', err)
+        })
 }

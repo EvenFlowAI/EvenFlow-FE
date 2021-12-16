@@ -95,7 +95,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
 
     useEffect(() => {
         ReactGA.event({
-            category: 'User',
+            category: 'EvenFlow User',
             action: 'Created Appointment',
             nonInteraction: true,
         })

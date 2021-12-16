@@ -83,7 +83,7 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
         dispatch(setVehicle(getBlankVehicle()));
         saveCustomerCache(c);
         ReactGA.event({
-            category: 'User',
+            category: 'EvenFlow User',
             action: 'Enters Page',
             label: `As New User`,
         });
