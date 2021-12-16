@@ -1,15 +1,13 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {TextField} from "../../UI/TextField";
 import {DialogProps} from "../types";
 import {TPricingLevel} from "../../Optimizer/PricingSettings/PricingLevels/PricingLevelsByOpsCode";
 import {Box, Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {Autocomplete} from "@material-ui/lab";
 import {useDispatch} from "react-redux";
 import {updateSRPricingLevels} from "../../../store/reducers/pricingSettings/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 
 type TEditPricingLevelsProps = DialogProps & {
@@ -54,58 +52,58 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const DEFAULT_OPTION = 'Default';
-
 const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const [service, setService] = useState<string>('');
     const [opsCode, setOpsCode] = useState<string>('');
-    const [discount, setDiscount] = useState<string | null>(DEFAULT_OPTION);
-    const [premium, setPremium] = useState<string | null>(DEFAULT_OPTION);
+    const [discount, setDiscount] = useState<string>('');
+    const [premium, setPremium] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const showError = useException();
     const {selectedSC} = useSCs();
     const classes = useStyles();
 
     useEffect(() => {
-        if (props.prisingLevel) {
+        if (props.prisingLevel && props.open) {
             setService(props.prisingLevel.serviceRequest);
             setOpsCode(props.prisingLevel.opsCode);
             props.prisingLevel?.premium && setPremium(props.prisingLevel.premium);
             props.prisingLevel?.discount && setDiscount(props.prisingLevel.discount);
         }
-    }, [props.prisingLevel])
-
-    const getOptions = (from = 0, to = 100) => {
-        let options = [DEFAULT_OPTION];
-        for (let i = from; i <= to; i++) {
-            options.push(i.toString())
-        }
-        return options;
-    }
+    }, [props.prisingLevel, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
         setOpsCode('');
-        setDiscount(DEFAULT_OPTION);
-        setPremium(DEFAULT_OPTION);
+        setDiscount('');
+        setPremium('');
         setService('');
         props.onClose();
     }
 
     const onSave = () => {
         setFormIsChecked(true);
+        if (discount && (+discount > 100 || +discount < 0)) {
+            return showError('Discount value must not be less than 0 and more than 100')
+        }
+        if (premium && (+premium > 200 || +premium < 100)) {
+            return showError('Premium value must not be less than 100 and more than 200')
+        }
+        if (!discount.match(/(^\d*\.?\d{1,3}?)$/) || !premium.match(/(^\d*\.?\d{1,3}?)$/)) {
+            return showError('Value must be a number with maximum 3 decimal digits')
+        }
         if (props.prisingLevel && selectedSC) {
             const data: TUpdatedSettings = {
                 serviceCenterId: selectedSC.id,
                 values: [],
             }
-            if (discount !== DEFAULT_OPTION) {
+            if (discount) {
                 data.values.push({
                     demandCategory: EDemandCategory.Low,
                     value: Number(discount)
                 })
             }
-            if (premium !== DEFAULT_OPTION) {
+            if (premium) {
                 data.values.push({
                     demandCategory: EDemandCategory.High,
                     value: Number(premium)
@@ -121,11 +119,13 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
         if (fieldName === 'service') setService(e.target.value)
     }
 
-    const onDiscountChange = (e: ChangeEvent<{}>, value: string | null) => {
-        setDiscount(value);
+    const onDiscountChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        e.persist()
+        setDiscount(e.target.value.toString());
     }
-    const onPremiumChange = (e: ChangeEvent<{}>, value: string | null) => {
-        setPremium(value);
+    const onPremiumChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        e.persist()
+        setPremium(e.target.value.toString());
     }
 
     return <BaseModal  {...props} width={540} onClose={onCancel}>
@@ -149,29 +149,25 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                 onChange={e => onTextFieldChange(e, 'opsCode')}
                 value={opsCode}/>
             <Box p={1}/>
-            <Autocomplete
-                style={{ marginBottom: 10 }}
-                options={getOptions()}
-                value={discount}
+            <TextField
+                fullWidth
+                label='Discount'
+                type="number"
+                inputProps={{min: 0, max: 100, step: 0.001}}
+                placeholder='Type Discount'
+                error={formIsChecked && (+discount < 0 || +discount > 100)}
                 onChange={onDiscountChange}
-                renderInput={autocompleteRender({
-                    label: "Discount",
-                    error: !discount && formIsChecked,
-                    placeholder: 'Select Discount'
-                })}
-            />
+                value={discount ?? ''}/>
             <Box p={1}/>
-            <Autocomplete
-                style={{ marginBottom: 10 }}
-                options={getOptions(100, 200)}
-                value={premium}
+            <TextField
+                fullWidth
+                label='Premium'
+                type="number"
+                inputProps={{min: 100, max: 200, step: 0.001}}
+                placeholder='Type Premium'
+                error={formIsChecked && (premium !== '' && +premium < 100 || premium !== '' && +premium > 200)}
                 onChange={onPremiumChange}
-                renderInput={autocompleteRender({
-                    label: "Premium",
-                    error: !premium && formIsChecked,
-                    placeholder: 'Select Premium'
-                })}
-            />
+                value={premium ?? ''}/>
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
         <DialogActions>
