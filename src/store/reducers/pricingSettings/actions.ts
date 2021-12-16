@@ -234,3 +234,27 @@ export const setPricingOptimization = (id: number, isApplyPricingOptimization: b
         })
         .finally(() => dispatch(setLoading(false)));
 }
+export const getRoundPriceSetting = createAction<boolean>('PricingSettings/GetRoundPriceSetting');
+export const setRoundPriceLoading = createAction<boolean>('PricingSettings/SetRoundPriceLoading');
+
+export const loadRoundPriceSetting = (id: number): AppThunk => dispatch => {
+    dispatch(setRoundPriceLoading(true))
+    Api.call(Api.endpoints.ServiceCenters.GetRoundPrice, {urlParams: {id}})
+        .then(result => {
+            dispatch(getRoundPriceSetting(result.data))
+        })
+        .catch(err => {
+            console.log('set round price setting error', err)
+        })
+        .finally(() => dispatch(setRoundPriceLoading(false)))
+}
+
+export const changeRoundPriceSetting = (id: number, isRoundPrice: boolean): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.ChangeRoundPrice, {urlParams: {id}, data: {isRoundPrice}})
+        .then(result => {
+            if (result) dispatch(loadRoundPriceSetting(id))
+        })
+        .catch(err => {
+            console.log('change round price setting error', err)
+        })
+}

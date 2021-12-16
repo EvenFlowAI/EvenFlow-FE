@@ -45,7 +45,7 @@ const Slider = withStyles({
     },
     valueLabel: {
         '& > span': {
-            width: 40
+            width: 57
         }
     }
 })(ValueSlider);

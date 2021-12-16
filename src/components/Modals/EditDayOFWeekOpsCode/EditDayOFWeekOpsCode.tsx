@@ -77,8 +77,8 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
                 if (values.low > 10 || values.low < -10) {
                     return showError('Value must not be more than 10 and less than -10')
                 }
-                if (!values.low.toString().match(/(^-?\d*\.?\d{1,3}?)$/)) {
-                    return showError('Value must be a number with maximum 3 decimal digits')
+                if (!values.low.toString().match(/(^-?\d*\.?\d{1,6}?)$/)) {
+                    return showError('Value must be a number with maximum 6 decimal digits')
                 } else {
                     data.values.push({
                         demandCategory: EDemandCategory.Low,
@@ -90,8 +90,8 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
                 if (values.high > 10 || values.high < -10) {
                     return showError('Value must not be more than 10 and less than -10')
                 }
-                if (!values.high.toString().match(/(^-?\d*\.?\d{1,3}?)$/)) {
-                    return showError('Value must be a number with maximum 3 decimal digits')
+                if (!values.high.toString().match(/(^-?\d*\.?\d{1,6}?)$/)) {
+                    return showError('Value must be a number with maximum 6 decimal digits')
                 } else {
                     data.values.push({
                         demandCategory: EDemandCategory.High,
@@ -109,7 +109,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
         setValues(prev => ({...prev, [type]: e.target.value}))
     }
     return <BaseModal  {...props} width={340} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Edit Pricing Levels By Ops Code</DialogTitle>
+        <DialogTitle onClose={onCancel}>Edit Day Of Week Ops Code</DialogTitle>
         <DialogContent>
             <TextField type="number"
                        fullWidth
