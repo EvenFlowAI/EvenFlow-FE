@@ -104,7 +104,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             serviceCategoryId: appointmentFrame.subService?.id ?? appointmentFrame.service?.id ?? null,
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
         };
-        if ((data.serviceCategoryId && data.serviceCategoryId < 1) || (data.serviceCategoryId && data.maintenancePackageOptionId)) {
+        if ((data.serviceCategoryId && data.serviceCategoryId < 1) || (data.serviceCategoryId && data.maintenancePackageOptionId) || data.serviceRequestIds.length) {
             data.serviceCategoryId = null;
         }
         const endpoint = data?.hashKey
