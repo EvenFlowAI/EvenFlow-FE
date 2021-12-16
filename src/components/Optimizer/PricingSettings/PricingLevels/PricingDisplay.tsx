@@ -6,7 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../UI/Loading";
-import {changeRoundPriceSetting} from "../../../../store/reducers/pricingSettings/actions";
+import {changeRoundPriceSetting, loadRoundPriceSetting} from "../../../../store/reducers/pricingSettings/actions";
 import {useConfirm, useSCs} from "../../../../utils/hooks";
 
 type TLabelProps = {
@@ -66,6 +66,10 @@ const PricingDisplay: React.FC = () => {
     useEffect(() => {
         setValue(roundPrice ? 'round' : 'decimal');
     }, [roundPrice])
+
+    useEffect(() => {
+        selectedSC && dispatch(loadRoundPriceSetting(selectedSC.id));
+    }, [selectedSC])
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (selectedSC) {
