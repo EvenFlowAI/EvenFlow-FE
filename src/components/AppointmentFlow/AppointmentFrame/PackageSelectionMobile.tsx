@@ -279,7 +279,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                                 <div className={classes.currentWrp}>
                                     <div className={classes.triangle}/>
                                     <div
-                                        className={classes.current}>${Number.isInteger(item.price) ? item.price : +item.price.toFixed(2)}</div>
+                                        className={classes.current}>${item.price}</div>
                                 </div>
                             </div>
                         </div>
