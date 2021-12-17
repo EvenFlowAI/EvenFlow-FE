@@ -17,6 +17,8 @@ import {frameTheme} from "../../theme/theme";
 import {setCurrentFrameScreen, setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA, {GaOptions} from "react-ga";
 import {prodParentLinks} from "../Layout/AppointmentFrameLayout";
+import {LocalTokens} from "../../types/types";
+import {v4 as uuidv4} from "uuid";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
@@ -68,6 +70,16 @@ export const Welcome = () => {
             setTimeout(createTracker, 1000);
         }
     }, [trackerCreated]);
+
+    useEffect(() => {
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
+    }, [sessionStorage])
 
     useEffect(() => {
         clearStorage();
