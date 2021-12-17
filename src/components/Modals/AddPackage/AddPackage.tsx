@@ -256,7 +256,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
             if (currentPackage.businessRules) {
                 setSelectedMakes(currentPackage.businessRules.vehicleMakes);
                 setSelectedModels(currentPackage.businessRules.vehicleModels);
-                setSelectedMileages(currentPackage.businessRules.vehicleMileageValues);
+                setSelectedMileages(currentPackage.businessRules.vehicleMileageValues.map(item => item.toString()));
                 setVehiclesData({
                     yearFrom: currentPackage.businessRules.vehicleYearRange?.from?.toString(),
                     yearTo: currentPackage.businessRules.vehicleYearRange?.to?.toString(),
