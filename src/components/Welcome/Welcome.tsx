@@ -14,7 +14,7 @@ import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
-import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setCurrentFrameScreen, setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA, {GaOptions} from "react-ga";
 import {prodParentLinks} from "../Layout/AppointmentFrameLayout";
 
@@ -80,6 +80,7 @@ export const Welcome = () => {
 
     const onComplete = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
+        dispatch(setCurrentFrameScreen("carSelection"));
         history.push(
             route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );
