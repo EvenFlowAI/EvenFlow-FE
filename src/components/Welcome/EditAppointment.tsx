@@ -16,6 +16,7 @@ import {RootState} from "../../store/rootReducer";
 import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
 import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import moment from "moment";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -23,7 +24,7 @@ const ContentContainer = styled("div")({
     fontWeight: "bold"
 });
 
-type TState = "loading" | "error" | "canceled";
+type TState = "loading" | "error" | "canceled" | "passed";
 
 export const EditAppointment = () => {
     const [state, setState] = useState<TState>("loading");
@@ -63,6 +64,10 @@ export const EditAppointment = () => {
                     setState("canceled");
                     return;
                 }
+                const [hours, minutes] = data.timeSlot.split(":");
+                if (moment.utc().diff(moment(data.dateInUtc).hours(+hours).minutes(+minutes)) >= 0) {
+                    setState("passed");
+                }
                 history.replace(`${Routes.EndUser.AppointmentFrameBase}/${encodeSCID(data.serviceCenterId)}`);
             })
             .catch((e) => {
@@ -81,6 +86,20 @@ export const EditAppointment = () => {
         switch (state) {
             case "error":
                 return <NotFoundError />
+            case "passed":
+                return <div>
+                    <p>Appointment time is already passed.</p>
+                    <p>
+                        <small>If you want to schedule a different one,
+                            please click a button below</small>
+                    </p> <br/>
+                    <Button
+                        onClick={handleCreateNew}
+                        startIcon={<Edit />}
+                        color="primary" variant="contained">
+                        Schedule appointment
+                    </Button>
+                </div>
             case "canceled":
                 return <div>
                     <p>Appointment is already cancelled.</p>
