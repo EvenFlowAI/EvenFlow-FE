@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
+import moment from "moment";
 
 const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, offPeak?: boolean}>(({theme, available, offPeak, selected}) => ({
     display: "flex",
@@ -36,8 +37,17 @@ type TProps = {
 }
 export const TimeSlotCard: React.FC<TProps> =
     ({timeSlot, slot, onSelect, selected}) => {
-    const getContent = () => {
-        if (!slot) {
+    const [timePassed, setTimePassed] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (slot) {
+            const differenceInMSeconds = moment(slot.time, 'HH:mm').diff(moment());
+            differenceInMSeconds > 0 && setTimeout(() => setTimePassed(true), differenceInMSeconds);
+        }
+    }, [slot])
+
+    const getContent = (timePassed: boolean): string => {
+        if (!slot || timePassed) {
             return "Not Available";
         }
         if (slot.price.amountOfSavingMoney) {
@@ -47,9 +57,9 @@ export const TimeSlotCard: React.FC<TProps> =
     }
     const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
     return (
-        <Wrapper available={Boolean(slot)} selected={selected} offPeak={isOffPeak}>
+        <Wrapper available={Boolean(slot) && !timePassed} selected={selected} offPeak={isOffPeak}>
             <div>{timeSlot}</div>
-            <div onClick={() => onSelect(slot ?? null)} className="availability">{getContent()}</div>
+            <div onClick={() => onSelect(slot ?? null)} className="availability">{getContent(timePassed)}</div>
         </Wrapper>
     );
 };
