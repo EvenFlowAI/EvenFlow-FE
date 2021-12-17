@@ -67,6 +67,7 @@ export const EditAppointment = () => {
                 const [hours, minutes] = data.timeSlot.split(":");
                 if (moment.utc().diff(moment(data.dateInUtc).hours(+hours).minutes(+minutes)) >= 0) {
                     setState("passed");
+                    return;
                 }
                 history.replace(`${Routes.EndUser.AppointmentFrameBase}/${encodeSCID(data.serviceCenterId)}`);
             })
