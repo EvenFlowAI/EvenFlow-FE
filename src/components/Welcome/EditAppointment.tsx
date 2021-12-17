@@ -17,6 +17,8 @@ import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
 import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
+import {LocalTokens} from "../../types/types";
+import {v4 as uuidv4} from "uuid";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -75,6 +77,16 @@ export const EditAppointment = () => {
                 setState("error");
             })
     }, [id, dispatch, history]);
+
+    useEffect(() => {
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
+    }, [sessionStorage])
 
     const handleCreateNew = () => {
         if (selectedSC) {

@@ -67,9 +67,9 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
 
     useEffect(() => {
         const uid = uuidv4();
-        localStorage.setItem(LocalTokens.sessionId, uid);
+        sessionStorage.setItem(LocalTokens.sessionId, uid);
         window.addEventListener('unload', () => {
-            localStorage.setItem(LocalTokens.sessionId, '')
+            sessionStorage.setItem(LocalTokens.sessionId, '')
         })
     }, [])
 

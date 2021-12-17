@@ -14,6 +14,8 @@ import {Edit} from "@material-ui/icons";
 import {Routes} from "../../config/routes";
 import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
+import {v4 as uuidv4} from "uuid";
+import {LocalTokens} from "../../types/types";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
 
@@ -59,7 +61,16 @@ export const CancelAppointment = () => {
         if (appointment?.serviceCenterId) {
             dispatch(loadSCProfile(appointment.serviceCenterId));
         }
-    }, [appointment, dispatch]);
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
+    }, [appointment, dispatch, sessionStorage]);
+
+
 
     const handleCancel = async () => {
         setSaving(true);
