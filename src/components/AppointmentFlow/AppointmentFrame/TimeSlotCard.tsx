@@ -59,7 +59,7 @@ export const TimeSlotCard: React.FC<TProps> =
     return (
         <Wrapper available={Boolean(slot) && !timePassed} selected={selected} offPeak={isOffPeak}>
             <div>{timeSlot}</div>
-            <div onClick={() => onSelect(slot ?? null)} className="availability">{getContent(timePassed)}</div>
+            <div onClick={() => timePassed ? {} : onSelect(slot ?? null)} className="availability">{getContent(timePassed)}</div>
         </Wrapper>
     );
 };
