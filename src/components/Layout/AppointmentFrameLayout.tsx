@@ -26,7 +26,7 @@ import {
     loadSCProfile,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {decodeSCID} from "../../utils/utils";
+import {decodeSCID, getTracker} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
@@ -39,9 +39,10 @@ import {
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
 import './MaintenanceDetails.css';
-import ReactGA, {GaOptions} from "react-ga";
+import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
+import {options} from "./EndUserLayout";
 
 const Container = styled('div')({
     display: "flex",
@@ -105,22 +106,8 @@ export const AppointmentFrameLayout = () => {
     const {selectedVehicle, trackerCreated} = useSelector((state: RootState) => state.appointmentFrame);
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
-        const TRACKER = process.env.REACT_APP_ENV === "stage"
-            ? "UA-210743216-4"
-            : process.env.REACT_APP_ENV === "production"
-                ? origin.includes("bmwofschererville")
-                    ? "UA-210743216-6"
-                    : origin.includes("riverviewford")
-                        ? "UA-210743216-3"
-                        : "UA-210743216-5"
-                : "UA-210743216-5";
+        const TRACKER = getTracker(origin);
         if (!trackerCreated) {
-            const options: GaOptions = {
-                siteSpeedSampleRate: 100,
-                cookieDomain: 'auto',
-                allowLinker: true,
-                storage: 'none',
-            }
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
