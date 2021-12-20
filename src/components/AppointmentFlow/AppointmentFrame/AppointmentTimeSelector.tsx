@@ -61,11 +61,11 @@ export const AppointmentTimeSelector: React.FC<TProps> =
     const dispatch = useDispatch();
     const classes = useStyles();
 
-    useEffect(() => {
-        if (scProfile) {
-            dispatch(loadHorsOfOperations(scProfile.id))
-        }
-    }, [scProfile])
+        useEffect(() => {
+            if (scProfile) {
+                dispatch(loadHorsOfOperations(scProfile.id))
+            }
+        }, [scProfile])
 
     const slots: TSlot[] = useMemo(() => {
         let start = moment.utc(date).hour(7).minutes(0).second(0).millisecond(0);

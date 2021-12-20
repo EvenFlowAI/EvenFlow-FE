@@ -14,9 +14,11 @@ import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
-import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setCurrentFrameScreen, setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA, {GaOptions} from "react-ga";
 import {prodParentLinks} from "../Layout/AppointmentFrameLayout";
+import {LocalTokens} from "../../types/types";
+import {v4 as uuidv4} from "uuid";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
@@ -70,6 +72,16 @@ export const Welcome = () => {
     }, [trackerCreated]);
 
     useEffect(() => {
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
+    }, [sessionStorage])
+
+    useEffect(() => {
         clearStorage();
     }, []);
     useEffect(() => {
@@ -80,6 +92,7 @@ export const Welcome = () => {
 
     const onComplete = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
+        dispatch(setCurrentFrameScreen("carSelection"));
         history.push(
             route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );

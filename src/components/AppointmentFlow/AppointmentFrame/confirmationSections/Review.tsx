@@ -18,15 +18,15 @@ const Wrapper = styled('ul')({
         textTransform: "capitalize"
     }
 });
-const ButtonLink = styled('div')({
-    textDecoration: "underline",
-    marginTop: 10,
-    fontWeight: "bold",
-    cursor: "pointer",
-    "&:hover": {
-        textDecoration: "none"
-    }
-})
+// const ButtonLink = styled('div')({
+//     textDecoration: "underline",
+//     marginTop: 10,
+//     fontWeight: "bold",
+//     cursor: "pointer",
+//     "&:hover": {
+//         textDecoration: "none"
+//     }
+// })
 
 const TRANSPORTATION_SHORT_DESCRIPTION = ["I will take the shuttle", "I would like a loaner vehicle", "I would like a rental car", "I would like to book me a ride", "I would like vehicle pick up / drop off services"]
 
@@ -65,7 +65,6 @@ export const Review = () => {
                 {/* TODO: Advisor | consultant*/}
                 <li>Advisor: {consultant?.name ?? "Any Available"}</li>
             </Wrapper>
-            <ButtonLink>View Details</ButtonLink>
         </div>
     );
 };

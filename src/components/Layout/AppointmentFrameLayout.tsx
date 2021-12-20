@@ -40,6 +40,8 @@ import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA, {GaOptions} from "react-ga";
+import {LocalTokens} from "../../types/types";
+import {v4 as uuidv4} from "uuid";
 
 const Container = styled('div')({
     display: "flex",
@@ -143,6 +145,16 @@ export const AppointmentFrameLayout = () => {
             setTimeout(createTracker, 2000);
         }
     }, [trackerCreated]);
+
+    useEffect(() => {
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
+    }, [sessionStorage])
 
     const handleLogin = useCallback(() => {
         clearCustomerCache();

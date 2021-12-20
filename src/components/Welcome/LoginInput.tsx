@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
@@ -15,6 +15,8 @@ import {LoadingButton} from "../UI/Button";
 import {useException} from "../../utils/hooks";
 import {TView} from "./types";
 import ReactGA from "react-ga";
+import {LocalTokens} from "../../types/types";
+import {v4 as uuidv4} from "uuid";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -90,6 +92,17 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
     const sessionId = useSelector((state: RootState) => state.appointment.sessionId);
     const serviceCenter = useSelector((state: RootState) => state.appointment.scProfile)
+
+    useEffect(() => {
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
+    }, [sessionStorage])
+
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setCustomerEnteredEmail(value));
     }
