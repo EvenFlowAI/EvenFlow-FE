@@ -15,12 +15,13 @@ import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds} from "./utils";
 import {Api} from "../../../config/requests";
-import {setAppointmentId} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAppointmentId, updateVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
-import {useException} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
+import CreateAppointment from "../../Modals/CreateAppointment/CreateAppointment";
 
 const Wrapper = styled('div')(({theme}) => ({
     // width: "100%",
@@ -54,17 +55,30 @@ type TProps = {
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
-
-    const {id} = useParams();
-    const dispatch = useDispatch();
     const [appointment, appointmentFrame] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame
     ]);
 
+    const {id} = useParams();
+    const {isOpen, onClose, onOpen} = useModal();
     const showError = useException();
+    const dispatch = useDispatch();
 
-    const handleCreateAppointment = () => {
+    const onCreateClick = () => {
+        appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
+    }
+
+    const onSave = (vin: string) => async () => {
+        if (vin) {
+            await dispatch(updateVehicle({vin}));
+            await handleCreateAppointment(vin);
+        } else {
+            return showError('Enter VIN or choose SUBMIT Without VIN')
+        }
+    }
+
+    const handleCreateAppointment = (vin = '') => {
         // TODO: UpdateFlow?
         const data: IUpdateAppointment = {
             id: appointmentFrame.id,
@@ -81,13 +95,13 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             consultantId: appointmentFrame.advisor?.id,
             vehicle: {
                 dmsId: null,
-                vin: "",
                 driveType: "",
                 engineType: "",
                 make: "",
                 model: "",
                 transmission: "",
                 ...(appointmentFrame.selectedVehicle ?? {}),
+                vin: appointmentFrame.selectedVehicle?.vin || vin,
                 year: appointmentFrame?.selectedVehicle?.year
                     ? String(appointmentFrame.selectedVehicle.year) : null,
                 mileage: appointmentFrame.maintenanceDetails?.serviceInterval ?? null,
@@ -119,6 +133,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     id: data.id,
                     hashKey: data.hashKey,
                 }));
+                dispatch(updateVehicle({vin: ''}));
                 if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
                     const d = {
                         ...appointment.customerLoadedData
@@ -155,7 +170,10 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     })
                 }
             })
-            .finally(() => {setSaving(false)})
+            .finally(() => {
+                setSaving(false);
+                vin.length && dispatch(updateVehicle({vin: ''}));
+            })
     }
 
     return <StepWrapper>
@@ -172,6 +190,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
 
         </Wrapper>
-        <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
+        <Actions loading={saving} onBack={onBack} onNext={onCreateClick} />
+        <CreateAppointment open={isOpen} onSave={onSave} loading={saving} onClose={onClose} onSaveWithoutVin={handleCreateAppointment}/>
     </StepWrapper>
 };

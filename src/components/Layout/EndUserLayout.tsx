@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadSCProfile} from "../../store/reducers/appointment/actions";
 import {CancelAppointment} from "../Welcome/CancelAppointment";
 import {EditAppointment} from "../Welcome/EditAppointment";
-import {decodeSCID} from "../../utils/utils";
+import {decodeSCID, getTracker} from "../../utils/utils";
 import {useLayout} from "../../utils/hooks";
 import ReactGA, {GaOptions} from "react-ga";
 import {RootState} from "../../store/rootReducer";
@@ -34,6 +34,13 @@ const frameStyles = {
 
 const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
 
+export const options: GaOptions = {
+    siteSpeedSampleRate: 100,
+    cookieDomain: 'auto',
+    allowLinker: true,
+    storage: 'none',
+}
+
 export const EndUserLayout = () => {
     const { trackerCreated } = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
@@ -41,24 +48,9 @@ export const EndUserLayout = () => {
     const isFrame = useLayout();
 
     function createTracker(opt_clientId = '', origin = '') {
-        const TRACKER = process.env.REACT_APP_ENV === "stage"
-            ? "UA-210743216-4"
-            : process.env.REACT_APP_ENV === "production"
-                ? origin.includes("bmwofschererville")
-                    ? "UA-210743216-6"
-                    : origin.includes("riverviewford")
-                        ? "UA-210743216-3"
-                        : "UA-210743216-5"
-                : "UA-210743216-5";
+        const TRACKER = getTracker(origin);
         if (!trackerCreated) {
-            const options: GaOptions = {
-                siteSpeedSampleRate: 100,
-                cookieDomain: 'auto',
-                allowLinker: true,
-                storage: 'none',
-            }
             if (opt_clientId) options.clientId = opt_clientId
-
             ReactGA.initialize(TRACKER, {
                 debug: true,
                 titleCase: false,
