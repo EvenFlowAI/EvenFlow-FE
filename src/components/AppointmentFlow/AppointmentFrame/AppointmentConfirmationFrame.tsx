@@ -83,7 +83,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         }
     }
 
-    const handleCreateAppointment = (vin = '') => {
+    const handleCreateAppointment = (vin = '', withVin = true) => {
         // TODO: UpdateFlow?
         const data: IUpdateAppointment = {
             id: appointmentFrame.id,
@@ -106,7 +106,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 model: "",
                 transmission: "",
                 ...(appointmentFrame.selectedVehicle ?? {}),
-                vin: appointmentFrame.selectedVehicle?.vin || vin,
+                vin: withVin ? appointmentFrame.selectedVehicle?.vin || vin : '',
                 year: appointmentFrame?.selectedVehicle?.year
                     ? String(appointmentFrame.selectedVehicle.year) : null,
                 mileage: appointmentFrame.maintenanceDetails?.serviceInterval ?? null,
@@ -138,7 +138,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     id: data.id,
                     hashKey: data.hashKey,
                 }));
-                dispatch(updateVehicle({vin: ''}));
                 if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
                     const d = {
                         ...appointment.customerLoadedData
@@ -177,7 +176,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             })
             .finally(() => {
                 setSaving(false);
-                vin.length && dispatch(updateVehicle({vin: ''}));
             })
     }
 
@@ -196,6 +194,12 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
         </Wrapper>
         <Actions loading={saving} onBack={onBack} onNext={onCreateClick} />
-        <CreateAppointment open={isOpen} onSave={onSave} loading={saving} onClose={onClose} onSaveWithoutVin={handleCreateAppointment}/>
+        <CreateAppointment
+            open={isOpen}
+            onSave={onSave}
+            loading={saving}
+            onClose={onClose}
+            onSaveWithoutVin={() => handleCreateAppointment('', false)}
+        />
     </StepWrapper>
 };
