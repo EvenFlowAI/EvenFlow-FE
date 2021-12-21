@@ -34,8 +34,8 @@ export const LoadingButton: React.FC<Props> = ({loading, classes, ...props}) => 
     }
 
     return <div className={wrapperClassName}>
-        <Button variant="contained"
-                color="primary"
+        <Button variant={props.variant ?? "contained"}
+                color={props.color ?? "primary"}
                 fullWidth
                 classes={buttonClasses}
                 {...props}
