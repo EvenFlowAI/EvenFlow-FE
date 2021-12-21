@@ -9,7 +9,7 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {ICreateAppointmentResp, IUpdateAppointment} from "../../../api/types";
+import {EServiceCenterName, ICreateAppointmentResp, IUpdateAppointment} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
@@ -66,7 +66,12 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const dispatch = useDispatch();
 
     const onCreateClick = () => {
-        appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
+        if (appointment.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+            || appointment.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest) {
+            appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
+        } else {
+            handleCreateAppointment()
+        }
     }
 
     const onSave = (vin: string) => async () => {
