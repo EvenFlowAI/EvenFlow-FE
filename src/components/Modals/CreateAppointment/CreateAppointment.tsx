@@ -33,7 +33,7 @@ const CreateAppointment: React.FC<TCreateAppointmentProps> = (props) => {
     >
         <DialogTitle onClose={onCancel}>Do you want to save VIN Code for future appointments?</DialogTitle>
         <DialogContent>
-            <TextField value={vin} onChange={handleVinChange} fullWidth placeholder="Type VIN"/>,
+            <TextField value={vin} onChange={handleVinChange} fullWidth placeholder="Type VIN"/>
         </DialogContent>
         <DialogActions>
             <LoadingButton
