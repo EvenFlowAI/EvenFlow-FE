@@ -152,6 +152,10 @@ export const AdminDashboard: React.FC = () => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
     }, [currentUser]);
 
+    const isManager: boolean = useMemo(() => {
+        return ["Manager"].includes(currentUser?.role || "")
+    }, [currentUser]);
+
     const {
         onClose: onCloseAddress,
         onOpen: onOpenAddress,
@@ -251,7 +255,7 @@ export const AdminDashboard: React.FC = () => {
                         <div className={classes.icon}>{item.icon}</div>
                         <h4 className={classes.label}>{item.label}</h4>
                         <span className={classes.edit} onClick={item.action}>
-                            {isCCRView
+                            {isCCRView || isManager && item.label === "Holidays"
                                 ? "View"
                                 : "Edit"
                             }
