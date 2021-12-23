@@ -4,4 +4,5 @@ export type TActionProps = {
     nextDisabled?: boolean;
     nextLabel?: string;
     loading?: boolean;
+    onAddServices?: () => void;
 };

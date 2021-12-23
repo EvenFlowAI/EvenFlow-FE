@@ -3,7 +3,7 @@ import {
     getMakes,
     getModels,
     selectService,
-    selectSubService,
+    selectSubService, setAdditionalServicesChosen,
     setAdvisor,
     setAppointmentId, setConsultants, setCurrentFrameScreen,
     setCustomer,
@@ -54,6 +54,7 @@ type TState = {
     makes: IMake[];
     models: string[];
     trackerCreated: boolean;
+    isAdditionalServices: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -79,6 +80,7 @@ const initialState: TState = {
     makes: [],
     models: [],
     trackerCreated: false,
+    isAdditionalServices: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -184,5 +186,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setTrackerCreated, (state, { payload }) => {
         return {...state, trackerCreated: payload}
+    })
+    .addCase(setAdditionalServicesChosen, (state, {payload}) => {
+        return {...state, isAdditionalServices: payload};
     })
 )

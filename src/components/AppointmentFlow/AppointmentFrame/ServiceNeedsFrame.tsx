@@ -48,22 +48,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         )
             .then(({data}) => {
                 setServiceCategories(data);
-                //if (scProfile) {
-                    // const dataWithIcons = data.map(el => {
-                    //     if (el.iconPath) {
-                    //         axios.get(el.iconPath, {withCredentials: false})
-                    //             .then(({ data }) => {
-                    //                 return {...el, loadedIcon: data};
-                    //                 //     setServiceCategories(c =>
-                    //                 //         c.map(cat => cat.id === el.id ? {...cat, loadedIcon: data} : cat)
-                    //                 //     )
-                    //             }
-                    //             )
-                    //     }
-                    //     return el;
-                    // });
-
-              //  }
             })
             .finally(() => {setLoading(false)});
     }, [id, scProfile]);

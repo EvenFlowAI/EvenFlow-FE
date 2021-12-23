@@ -6,7 +6,7 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAdditionalServicesChosen, setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
@@ -20,6 +20,7 @@ import {
 import { ReactComponent as CheckboxCircle } from "../../../assets/img/done_icon_black.svg";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
+import {useConfirm} from "../../../utils/hooks";
 
 const border = '1px solid #DADADA';
 
@@ -181,15 +182,16 @@ const Info = styled("p")({
     marginTop: 18,
 })
 
-export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
+export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddServices}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
-    const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
-    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
-    const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
+    const {selectedPackage, selectedVehicle, maintenanceDetails} = useSelector((state: RootState) => state.appointmentFrame);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+
     const theme = useTheme();
+    const {askConfirm} = useConfirm();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
@@ -309,6 +311,10 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         onBack();
     }
 
+    const addServices = () => {
+        dispatch(setAdditionalServicesChosen(true));
+        if (onAddServices) onAddServices();
+    }
 
     const handleNext = (): void => {
         if (selectedPackage) {
@@ -319,7 +325,13 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 label: `With ${packageOptions[selectedPackage.type]} Option`,
             })
         }
-        onNext();
+        askConfirm({
+            title: "Would you like additional services?",
+            confirmContent: "Yes",
+            cancelContent: "No",
+            onConfirm: addServices,
+            onCancel: onNext,
+        })
     }
 
     return (
