@@ -84,7 +84,7 @@ const AdminLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: ["Owner", "Manager"]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner"]},
-    {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager", "Advisor"]}
+    {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager"]}
 ]
 const MainLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: ["Owner", "Manager"]},
