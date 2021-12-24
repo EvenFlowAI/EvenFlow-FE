@@ -33,7 +33,7 @@ export const AdminPage = () => {
                 ? <PrivateRoute
                     path={`${Routes.Admin.ServiceRequests}`} component={ServiceRequests} />
                 : null}
-            <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>
+            {!hideDashboard && <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>}
             {!currentUser.isSuperUser ?
                 <PrivateRoute path={Routes.Admin.Appointments} component={Appointments} />
                 : null}

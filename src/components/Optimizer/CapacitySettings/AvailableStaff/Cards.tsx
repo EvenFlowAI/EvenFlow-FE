@@ -2,7 +2,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Alarm, DateRange, FreeBreakfastOutlined, LockOutlined, PlaceOutlined} from "@material-ui/icons";
 import {Card} from "@material-ui/core";
 import React from "react";
-import {useModal} from "../../../../utils/hooks";
+import {useCurrentUser, useModal} from "../../../../utils/hooks";
 import {EditAddress} from "../../../Modals/EditAddress/EditAddress";
 import {HourOfOperations} from "../../../Modals/HourOfOperations/HourOfOperations";
 import {WeeklySchedule} from "../../../Modals/WeeklySchedule/WeeklySchedule";
@@ -85,6 +85,7 @@ type TCardItem = {
 }
 
 export const Cards = () => {
+    const currentUser = useCurrentUser();
     const {
         onClose: onCloseAddress,
         onOpen: onOpenAddress,
@@ -132,7 +133,9 @@ export const Cards = () => {
                         <h3 className={classes.titleContent}>{card.label}</h3>
                     </div>
                 </div>
-                <div className={classes.edit} onClick={card.action}>Edit</div>
+                <div className={classes.edit} onClick={card.action}>
+                    {card.label === "Holidays" && currentUser?.role === "Manager" ? "View": "Edit"}
+                </div>
             </Card>
         )}
         <EditAddress open={isAddressOpen} onClose={onCloseAddress} />
