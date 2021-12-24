@@ -1,7 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
-import {Button, Grid, MenuItem, Select, useMediaQuery, useTheme} from "@material-ui/core";
+import {
+    Button,
+    FormControlLabel,
+    Grid,
+    MenuItem,
+    Select,
+    styled,
+    Switch,
+    useMediaQuery,
+    useTheme
+} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useModal} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
@@ -33,9 +43,27 @@ type TForm = {
     timeEnd: moment.Moment|null;
     podId?: number;
 }
+
+const ForAll = styled(FormControlLabel)({
+    width: "100%",
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    textTransform: "uppercase",
+    "& span": {
+        fontSize: 14,
+        color: '#7898FF',
+        fontWeight: 'bold',
+        "&:last-child": {
+            padding: "8px 8px 8px 0"
+        }
+    }
+});
 export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const {isOpen, onClose, onOpen} = useModal();
     const [saving, setSaving] = useState<boolean>(false);
+    const [setForAll, setSetForAll] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
     const pods = useSelector((state: RootState) => state.pods.shortPodsList);
     const showMessage = useMessage();
@@ -99,6 +127,10 @@ export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, cust
             setSaving(false);
             showError(e);
         }
+    }
+
+    const onSetForAll = (e: React.ChangeEvent<{}>, checked: boolean) => {
+        setSetForAll(checked);
     }
 
     return <BaseModal {...props} width={500}>
@@ -179,6 +211,17 @@ export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, cust
                         Clear schedule for {date.format("dddd")}
                     </LoadingButton> : null}
                 </Grid> : null}
+                <Grid item xs={12}>
+                    <ForAll
+                        label="SET FOR ALL"
+                        labelPlacement="start"
+                        control={<Switch
+                            style={{marginBottom: 3}}
+                            color="primary"
+                            checked={setForAll}
+                            onChange={onSetForAll}/>}
+                    />
+                </Grid>
             </Grid>
         </DialogContent>
         <DialogActions>
