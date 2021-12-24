@@ -10,7 +10,7 @@ type IUsersState = {
 }
 const initialState: IUsersState = {
     saving: false,
-    lading: false,
+    loading: false,
 }
 
 export function usersReducer(state=initialState, action: TUserActions): IUsersState {
