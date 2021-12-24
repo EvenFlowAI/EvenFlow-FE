@@ -37,7 +37,8 @@ export interface IAdvisorShort {
 
 export type TGetCurrentUser = {type: "User/GetCurrentUser", payload: ICurrentUser};
 type TSaving = {type: "User/Saving", payload: boolean};
-export type TUserActions = TSaving | TGetCurrentUser;
+type TLoading = {type: "User/Loading", payload: boolean};
+export type TUserActions = TSaving | TGetCurrentUser | TLoading;
 export type TRole =
     | "Super Admin"
     | "Owner"
