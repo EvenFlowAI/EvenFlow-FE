@@ -8,10 +8,13 @@ const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
 });
 export const getCurrentUser = (): AppThunk => async dispatch => {
     try {
+        dispatch(saving(true));
         const {data} = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
         dispatch(_getCurrentUser(data));
     } catch (e) {
         console.error(e);
+    } finally {
+        dispatch(saving(false));
     }
 }
 export const saveEmployeeAvatar = (avatar: File, id: string): AppThunk => async dispatch => {
