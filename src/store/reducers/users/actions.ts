@@ -6,12 +6,16 @@ import {IEmployee} from "../employees/types";
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
     type: "User/GetCurrentUser", payload
 });
+const loading = (payload: boolean): TUserActions => ({type: "User/Loading", payload});
 export const getCurrentUser = (): AppThunk => async dispatch => {
     try {
+        dispatch(loading(true));
         const {data} = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
         dispatch(_getCurrentUser(data));
     } catch (e) {
         console.error(e);
+    } finally {
+        dispatch(loading(false));
     }
 }
 export const saveEmployeeAvatar = (avatar: File, id: string): AppThunk => async dispatch => {

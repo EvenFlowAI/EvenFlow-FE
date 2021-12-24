@@ -11,6 +11,9 @@ import {useLocation, useHistory, matchPath} from "react-router-dom";
 import clsx from "clsx";
 import {ArrowForwardIos, Close} from "@material-ui/icons";
 import {BookingModal} from "../Modals/BookingModal/BookingModal";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/rootReducer";
+import {Loading} from "../UI/Loading";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -113,6 +116,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const {onClose: onModalClose, isOpen, onOpen} = useModal();
 
     const currentUser = useCurrentUser();
+    const { loading } = useSelector((state: RootState) => state.users);
     const {pathname} = useLocation();
     const {selectedSC} = useSCs();
     const history = useHistory();
@@ -150,25 +154,28 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
             : null}
         <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI"/>
         <List disablePadding>
-            {links.map(link => {
-                if (typeof link.roles === "boolean") {
-                    if (!link.roles) {
-                        return null;
+            {loading
+                ? <Loading/>
+                : links.map(link => {
+                    if (typeof link.roles === "boolean") {
+                        if (!link.roles) {
+                            return null;
+                        }
+                    } else {
+                        if (currentUser?.role && !link.roles.includes(currentUser.role)) {
+                            return null;
+                        }
                     }
-                } else {
-                    if (currentUser?.role && !link.roles.includes(currentUser.role)) {
-                        return null;
-                    }
-                }
-                return <ListItem
-                    disableGutters
-                    className={clsx(classes.listItem, link.sub ? classes.subMenu : "")}
-                    component={NavLink}
-                    to={link.to}
-                    onClick={closeSidebar}
-                    exact={link.exact}
-                    key={link.to}>{link.name}</ListItem>;
-            })}
+                    return <ListItem
+                        disableGutters
+                        className={clsx(classes.listItem, link.sub ? classes.subMenu : "")}
+                        component={NavLink}
+                        to={link.to}
+                        onClick={closeSidebar}
+                        exact={link.exact}
+                        key={link.to}>{link.name}</ListItem>;
+                })
+            }
         </List>
         <div style={{flex: 1}} />
         {selectedSC
