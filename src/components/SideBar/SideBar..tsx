@@ -116,7 +116,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const {onClose: onModalClose, isOpen, onOpen} = useModal();
 
     const currentUser = useCurrentUser();
-    const { saving } = useSelector((state: RootState) => state.users);
+    const { loading } = useSelector((state: RootState) => state.users);
     const {pathname} = useLocation();
     const {selectedSC} = useSCs();
     const history = useHistory();
@@ -154,7 +154,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
             : null}
         <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI"/>
         <List disablePadding>
-            {saving
+            {loading
                 ? <Loading/>
                 : links.map(link => {
                     if (typeof link.roles === "boolean") {
