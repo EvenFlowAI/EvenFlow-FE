@@ -81,13 +81,13 @@ const SULinks: LinkType[] = [
     {to: Routes.Admin.ServiceRequests, name: "Service Requests", roles: ["Super Admin"]}
 ];
 const AdminLinks: LinkType[] = [
-    {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: true},
+    {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: ["Owner", "Manager"]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner"]},
     {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager", "Advisor"]}
 ]
 const MainLinks: LinkType[] = [
-    {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: true},
+    {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.Base, name: "Optimizer Settings", exact: true, roles: true},
     {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true, roles: ["Owner", "Manager"]},
