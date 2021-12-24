@@ -11,12 +11,14 @@ import {loadConsultants, setAdvisor} from "../../../store/reducers/appointmentFr
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
-    display: "flex",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr 1fr",
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: "20px",
+    gridGap: "20px",
     width: "100%",
     [theme.breakpoints.down('sm')]: {
         flexDirection: "column",
@@ -95,6 +97,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }, [id]);
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
+        dispatch(selectAppointment(null));
         dispatch(setAdvisor(c));
     }
 

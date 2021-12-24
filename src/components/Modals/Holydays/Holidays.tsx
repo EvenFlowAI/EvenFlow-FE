@@ -15,6 +15,7 @@ import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
 import moment from "moment";
 import {setHolidayPageData} from "../../../store/reducers/holidays/actions";
 import {Api} from "../../../config/requests";
+import {Roles} from "../../../config/constants";
 
 const useStyles = makeStyles({
     divider: {
@@ -36,10 +37,12 @@ const rowData: TableRowDataType<IHoliday>[] = [
 export const Holidays: React.FC<DialogProps&TViewMode> = props => {
     const [
         holidays,
-        isLoading
+        isLoading,
+        currentUser,
     ] = useSelector((state: RootState) => [
         state.holidays.holidaysList,
-        state.holidays.loading
+        state.holidays.loading,
+        state.users.currentUser,
     ]);
     const [editedItem, setEditedItem] = useState<IHoliday|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -97,7 +100,7 @@ export const Holidays: React.FC<DialogProps&TViewMode> = props => {
     }
 
     const actions = (el: IHoliday) => {
-        return <IconButton onClick={openMenu(el)}>
+        return <IconButton onClick={openMenu(el)} disabled={currentUser?.role === Roles.Manager}>
             <MoreHoriz />
         </IconButton>
     }
@@ -114,7 +117,7 @@ export const Holidays: React.FC<DialogProps&TViewMode> = props => {
     const classes = useStyles();
     return <BaseModal {...props} width={720}>
         <DialogTitle onClose={props.onClose}>Holidays</DialogTitle>
-        {!props.viewMode ? <div className={classes.addHoliday}>
+        {!props.viewMode && currentUser?.role !== Roles.Manager ? <div className={classes.addHoliday}>
             <Button variant="contained" color="primary" onClick={handleOpenCreate}>Add Holiday</Button>
         </div> : null}
         <Table<IHoliday>

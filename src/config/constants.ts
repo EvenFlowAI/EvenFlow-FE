@@ -66,7 +66,8 @@ export const WeekDayNames = [
 export enum Roles {
     Advisor='Advisor',
     Technician='Technician',
-    Owner='Owner'
+    Owner='Owner',
+    Manager='Manager',
 }
 
 export const userRoles: TRole[] = [

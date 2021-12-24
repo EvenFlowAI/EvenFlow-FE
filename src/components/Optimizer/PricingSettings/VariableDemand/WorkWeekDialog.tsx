@@ -80,23 +80,31 @@ export const WorkWeekDialog: React.FC<DialogProps> = ({onAction, payload, ...pro
             }
         }
     }
+
+    const getContent = () => {
+        const days = moment.weekdays().map((wd, idx) => {
+            return <React.Fragment key={wd}>
+                <Box component="span" fontWeight="bold">{wd}</Box>
+                <Box>
+                    <SwitchButtons<number>
+                        onClick={handleSwitch(idx as EDay)}
+                        active={form[idx as EDay]}
+                        buttons={buttons} />
+                </Box>
+            </React.Fragment>
+        });
+        const sunday = days[0]
+        days.shift();
+        days.push(sunday)
+        return days;
+    }
     return <BaseModal {...props} width={400}>
         <DialogTitle onClose={props.onClose}>Work week settings</DialogTitle>
         <DialogContent>
             <Box display="grid" gridGap={10} gridTemplateColumns="1fr 220px">
                 <Box component="span" fontWeight="bold" color={"text.disabled"}>Day</Box>
                 <Box component="span" fontWeight="bold" color={"text.disabled"}>Demand Category</Box>
-                {moment.weekdays().map((wd, idx) => {
-                    return <React.Fragment key={wd}>
-                        <Box component="span" fontWeight="bold">{wd}</Box>
-                        <Box>
-                            <SwitchButtons<number>
-                                onClick={handleSwitch(idx as EDay)}
-                                active={form[idx as EDay]}
-                                buttons={buttons} />
-                        </Box>
-                    </React.Fragment>
-                })}
+                {getContent()}
             </Box>
         </DialogContent>
         <DialogActions>
