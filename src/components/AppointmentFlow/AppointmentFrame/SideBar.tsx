@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TScreen} from "../../Layout/types";
 import {ProgressStepper} from "../ProgressStepper";
@@ -61,6 +61,14 @@ const menuItems: string[] = [
     "Appointment Confirmation"
 ];
 
+const stepScreens: TScreen[] = [
+    "serviceNeeds",
+    "consultantSelection",
+    "appointmentTiming",
+    "transportationNeeds",
+    "appointmentConfirmation",
+]
+
 type TStepProps = {
     active: number;
     steps: number;
@@ -80,20 +88,32 @@ const MobileSteps: React.FC<TStepProps> = ({active, steps, currentLabel, nextLab
 
 type TProps = {
     screen: TScreen;
+    handleSetScreen: (screen: TScreen) => void;
 }
-export const SideBar: React.FC<TProps> = ({screen}) => {
+export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
+    const [passed, setPassed] = useState<TScreen[]>(["serviceNeeds"]);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isActive = (idx: number): boolean => {
         return stepsMap[screen] === idx;
     }
+
+    useEffect(() => {
+        setPassed(prev => Array.from(new Set([...prev, screen])))
+    }, [screen])
+
+    const getButtonState = (index: number) => {
+        return stepsMap[screen] < index + 1 && stepsMap[passed[passed.length - 1]] < index + 1;
+    }
+
     return (
         <Wrapper>
             {!isSm ? menuItems.map((item, idx) => {
                 return <li key={item}>
                     <Button
                         fullWidth
-                        disabled={stepsMap[screen] < idx+1}
+                        disabled={getButtonState(idx)}
+                        onClick={() => handleSetScreen(stepScreens[idx])}
                         color="primary"
                         variant={isActive(idx+1) ? "contained" : "outlined"}>
                         <Index>{idx + 1}</Index> {item}
