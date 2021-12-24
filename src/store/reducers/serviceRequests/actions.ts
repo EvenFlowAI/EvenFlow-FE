@@ -199,7 +199,7 @@ export const getSCRequestsShort = createAction<IAssignedServiceRequestShort[]>("
 export const loadSCRequestsShort = (serviceCenterId: number): AppThunk => async dispatch => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
         Api.endpoints.ServiceRequests.GetShort,
-        {params: {serviceCenterId, pageSize: 0}}
+        {params: {serviceCenterId, pageSize: 0, isEligible: true}}
     );
     dispatch(getSCRequestsShort(result));
 }
