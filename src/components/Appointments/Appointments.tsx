@@ -3,7 +3,7 @@ import {timeSpanString, timeString, Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {AppointmentActions} from "./AppointmentActions";
 import {useConfirm, useException, useMessage, useModal, useSCs, useStatePagination} from "../../utils/hooks";
-import {AppointmentStatus, appointmentStatuses, IListAppointment} from "../../api/types";
+import {AppointmentStatus, appointmentStatuses, EAppointmentStatus, IListAppointment} from "../../api/types";
 import {API} from "../../api/api";
 import {TableRowDataType} from "../UI/types";
 import {Table} from "../UI/Table";
@@ -14,11 +14,12 @@ import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
 import {getAppointmentDate} from "../../utils/utils";
 import {AppointmentDialog} from "./AppointmentDialog";
 import {IOrder} from "../../types/types";
+import AppointmentFilters from "./AppointmentFilters";
 
 const cols: TableRowDataType<IListAppointment>[] = [
     {header: "Date", val: el => moment.utc(el.dateInUtc).format("LL"), orderId: "date"},
-    {header: "Time", val: el => moment(el.timeSlot, timeSpanString).format(timeString), orderId: "timeSlot"},
-    {header: "Full Name", val: el => el.driver.fullName},
+    {header: "Time", val: el => moment(el.timeSlot, timeSpanString).format(timeString)},
+    {header: "Full Name", val: el => el.driver.fullName, orderId: "fullName"},
     {header: "Car Info", val: el => `${el.vehicle.make} ${el.vehicle.model} ${el.vehicle.year}`},
     {header: "Status", val: el => appointmentStatuses[el.appointmentStatus], orderId: "appointmentStatus"}
 ]
@@ -30,6 +31,9 @@ export const Appointments = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [count, setCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [status, setStatus] = useState<EAppointmentStatus | null | unknown>(null);
+    const [date, setDate] = useState<moment.Moment | null>(null);
+    const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [order, setOrder] = useState<IOrder<IListAppointment>>({
         orderBy: "date",
         isAscending: true,
@@ -51,6 +55,8 @@ export const Appointments = () => {
                 serviceCenterId: selectedSC.id,
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
+                date,
+                status,
                 searchTerm,
             })
                 .then(({data: {paging, result}}) => {
@@ -60,7 +66,7 @@ export const Appointments = () => {
                 .catch( () => {setAppointments([])})
                 .finally(() => { setLoading(false); });
         }
-    }, [selectedSC, pageData, order, searchTerm]);
+    }, [selectedSC, pageData, order, searchTerm, date, status]);
 
     useEffect(() => {
         refresh();
@@ -136,11 +142,32 @@ export const Appointments = () => {
         setSearchTerm(e.target.value)
     }
 
+    const onFilterOpen = () => {
+        setFiltersOpen(prev => !prev);
+    }
+
+    const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
+        setStatus(e.target.value);
+    }
+
+    const onDateChange = (date: moment.Moment | null): void => {
+        setDate(date)
+    }
+
     return <>
         <TitleContainer
             title={Titles.Appointments}
             pad
-            actions={<AppointmentActions onAction={refresh} searchTerm={searchTerm} handleSearchChange={handleSearchChange} onSearch={refresh}/>} />
+            actions={<AppointmentActions
+                onAction={refresh}
+                searchTerm={searchTerm}
+                onFilterOpen={onFilterOpen}
+                handleSearchChange={handleSearchChange}
+                onSearch={refresh}/>}
+        />
+        {isFiltersOpen ?
+            <AppointmentFilters status={status} handleSelectStatus={handleSelectStatus} selectedDate={date} onChange={onDateChange}/>
+            : null}
         <Table<IListAppointment>
             data={appointments}
             onSort={handleSort}

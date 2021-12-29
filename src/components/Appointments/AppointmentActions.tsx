@@ -9,13 +9,21 @@ type TProps = {
     searchTerm: string;
     handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSearch: () => void;
+    onFilterOpen: () => void;
 }
-export const AppointmentActions: React.FC<TProps> = ({onAction, searchTerm, handleSearchChange, onSearch}) => {
+export const AppointmentActions: React.FC<TProps> = ({onAction, searchTerm, handleSearchChange, onSearch, onFilterOpen}) => {
     const {isOpen, onOpen, onClose} = useModal();
 
     return <>
         <Box>
         <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} />
+            <Button
+                onClick={onFilterOpen}
+                style={{ marginLeft: 20 }}
+                variant="outlined"
+                color="primary">
+               Filters
+            </Button>
         <Button
             onClick={onOpen}
             style={{ marginLeft: 20 }}
