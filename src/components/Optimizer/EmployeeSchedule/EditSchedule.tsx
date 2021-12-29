@@ -3,12 +3,9 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals
 import {DialogProps} from "../../Modals/types";
 import {
     Button,
-    FormControlLabel,
     Grid,
     MenuItem,
     Select,
-    styled,
-    Switch,
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
@@ -44,28 +41,13 @@ type TForm = {
     podId?: number;
 }
 
-const ForAll = styled(FormControlLabel)({
-    width: "100%",
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    textTransform: "uppercase",
-    "& span": {
-        fontSize: 14,
-        color: '#7898FF',
-        fontWeight: 'bold',
-        "&:last-child": {
-            padding: "8px 8px 8px 0"
-        }
-    }
-});
 export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
-    const {isOpen, onClose, onOpen} = useModal();
     const [saving, setSaving] = useState<boolean>(false);
-    const [setForAll, setSetForAll] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
     const pods = useSelector((state: RootState) => state.pods.shortPodsList);
+    const { employeesList } = useSelector((state: RootState) => state.employeesSchedule);
+
+    const {isOpen, onClose, onOpen} = useModal();
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
@@ -129,11 +111,14 @@ export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, cust
         }
     }
 
-    const onSetForAll = (e: React.ChangeEvent<{}>, checked: boolean) => {
-        setSetForAll(checked);
+    const handleSetForAll = () => {
+        const schedules = employeesList.find(item => item.employee.id === employee.id)?.schedules;
+        if (schedules) {
+
+        }
     }
 
-    return <BaseModal {...props} width={500}>
+    return <BaseModal {...props} width={750}>
         <DialogTitle onClose={props.onClose}>Edit employee schedule</DialogTitle>
         <DialogContent>
             <Grid container alignItems="flex-end" spacing={2}>
@@ -211,17 +196,6 @@ export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, cust
                         Clear schedule for {date.format("dddd")}
                     </LoadingButton> : null}
                 </Grid> : null}
-                <Grid item xs={12}>
-                    <ForAll
-                        label="SET FOR ALL"
-                        labelPlacement="start"
-                        control={<Switch
-                            style={{marginBottom: 3}}
-                            color="primary"
-                            checked={setForAll}
-                            onChange={onSetForAll}/>}
-                    />
-                </Grid>
             </Grid>
         </DialogContent>
         <DialogActions>
@@ -237,6 +211,12 @@ export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, cust
                 onClick={handleSave(true)}
             >
                 Set for {date.format("dddd")}
+            </LoadingButton>
+            <LoadingButton
+                loading={saving}
+                onClick={handleSetForAll}
+            >
+                Set for all shifts
             </LoadingButton>
         </DialogActions>
         <CreateEmployee open={isOpen} payload={employee} onAction={() => onEmployeeUpdate(employee.id)} onClose={onClose} />
