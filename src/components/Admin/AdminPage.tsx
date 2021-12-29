@@ -18,8 +18,9 @@ import ServiceOpsCodesMapping from "./ServiceOpsCodesMapping/ServiceOpsCodesMapp
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
+    const hideDashboard = !!currentUser && ["Call Center Rep", "Advisor"].includes(currentUser?.role);
+
     if (!currentUser) return null;
-    const hideDashboard = ["Call Center Rep", "Advisor"].includes(currentUser?.role);
 
     return <ContentContainer>
         <Switch>
@@ -52,7 +53,9 @@ export const AdminPage = () => {
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
-                : <Redirect to={Routes.Admin.Base} />}
+                : hideDashboard
+                    ? <Redirect to={Routes.Admin.Appointments} />
+                    : <Redirect to={Routes.Admin.Base} />}
         </Switch>
     </ContentContainer>;
 }
