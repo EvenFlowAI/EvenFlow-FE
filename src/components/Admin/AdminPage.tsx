@@ -1,5 +1,5 @@
-import React from "react";
-import {Switch, Redirect} from "react-router-dom";
+import React, {useEffect} from "react";
+import {Switch, Redirect, useHistory} from "react-router-dom";
 import {DealershipGroups} from "./DealershipGroups/DealershipGroups";
 import {ServiceCenters} from "./ServiceCenters/ServiceCenters";
 import {Employees} from "./Employees/Employees";
@@ -18,8 +18,16 @@ import ServiceOpsCodesMapping from "./ServiceOpsCodesMapping/ServiceOpsCodesMapp
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
+    const history = useHistory();
+    const hideDashboard = !!currentUser && ["Call Center Rep", "Advisor"].includes(currentUser?.role);
+
+    useEffect(() => {
+        if (currentUser && !currentUser?.isSuperUser && hideDashboard) {
+            history.push(Routes.Admin.Appointments);
+        }
+    }, [currentUser]);
+
     if (!currentUser) return null;
-    const hideDashboard = ["Call Center Rep", "Advisor"].includes(currentUser?.role);
 
     return <ContentContainer>
         <Switch>
