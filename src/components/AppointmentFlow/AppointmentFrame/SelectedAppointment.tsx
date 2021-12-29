@@ -174,10 +174,10 @@ export const SelectedAppointment = () => {
                             {getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)}
                         </span>
                         {selectedPackage && isSm && price && <div className="price">$
-                            {Math.floor(price)}
-                            <span>
-                                    .{(price % 1).toFixed(2).slice(2)}
-                                </span>
+                            {price}
+                            {/*<span>*/}
+                            {/*        .{(price % 1).toFixed(2).slice(2)}*/}
+                            {/*    </span>*/}
                         </div>}
                     </li>
                         <li>
@@ -210,10 +210,10 @@ export const SelectedAppointment = () => {
                     {selectedPackage
                         ? <>
                             {!isSm && <div className="price">$
-                                {Math.floor(price)}
-                                <span>
-                                    .{(price % 1).toFixed(2).slice(2)}
-                                </span>
+                                {price}
+                                {/*<span>*/}
+                                {/*    .{(price % 1).toFixed(2).slice(2)}*/}
+                                {/*</span>*/}
                             </div>}
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>Save by booking at off peak times!</div>
                         </> : null}

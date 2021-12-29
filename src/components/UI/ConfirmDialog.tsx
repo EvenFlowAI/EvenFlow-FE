@@ -7,26 +7,35 @@ import {useConfirm} from "../../utils/hooks";
 import {LoadingButton} from "./Button";
 import {ReportProblemOutlined} from "@material-ui/icons";
 
-
 export const ConfirmDialog: React.FC = () => {
     const {open, payload} = useSelector((state: RootState) => state.modals.confirm);
     const {closeConfirm} = useConfirm();
     const [loading, setLoading] = useState<boolean>(false);
-    const onClose = useCallback(() => {
+
+    const onClose = useCallback(async () => {
         if (payload?.onCancel) {
-            payload.onCancel();
+            setLoading(true)
+            try {
+                await payload.onCancel();
+            } catch (e) {
+                throw e;
+            } finally {
+                setLoading(false);
+            }
         }
         closeConfirm();
     }, [payload, closeConfirm]);
+
     const onConfirm = useCallback(async () => {
         if (payload?.onConfirm) {
             setLoading(true)
             try {
                 await payload.onConfirm();
-                setLoading(false);
             } catch (e) {
-                setLoading(false);
                 throw e;
+            }
+            finally {
+                setLoading(false);
             }
         }
         closeConfirm();
@@ -54,9 +63,17 @@ export const ConfirmDialog: React.FC = () => {
         {payload.content ? <DialogContent>{payload.content}</DialogContent> : null}
         {payload.isRemove ? <Divider style={{margin: "0 0 10px"}} /> : null}
         <DialogActions>
-            <Button onClick={onClose}>
-                Cancel
-            </Button>
+            {payload.cancelContent && payload.onCancel
+                ? <LoadingButton
+                    loading={loading}
+                    onClick={onClose}
+                    variant="contained">
+                    {payload.cancelContent}
+                </LoadingButton>
+                : <Button onClick={onClose}>
+                    {payload.cancelContent ?? "Cancel"}
+                </Button>}
+
             <LoadingButton
                 loading={loading}
                 onClick={onConfirm}

@@ -185,3 +185,15 @@ export const copyTextToClipboard = (text: string) => {
     console.error('Async: Could not copy text: ', err);
   });
 }
+
+export const getTracker = (origin: string): string => {
+    return process.env.REACT_APP_ENV === "stage"
+        ? "UA-210743216-4"
+        : process.env.REACT_APP_ENV === "production"
+            ? origin.includes("bmwofschererville")
+                ? "UA-210743216-6"
+                : origin.includes("riverviewford")
+                    ? "UA-210743216-3"
+                    : "UA-210743216-5"
+            : "UA-210743216-5";
+}

@@ -18,7 +18,10 @@ import ServiceOpsCodesMapping from "./ServiceOpsCodesMapping/ServiceOpsCodesMapp
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
+    const hideDashboard = !!currentUser && ["Call Center Rep", "Advisor"].includes(currentUser?.role);
+
     if (!currentUser) return null;
+
     return <ContentContainer>
         <Switch>
             {currentUser.isSuperUser
@@ -31,11 +34,11 @@ export const AdminPage = () => {
                 ? <PrivateRoute
                     path={`${Routes.Admin.ServiceRequests}`} component={ServiceRequests} />
                 : null}
-            <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>
+            {!hideDashboard && <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>}
             {!currentUser.isSuperUser ?
                 <PrivateRoute path={Routes.Admin.Appointments} component={Appointments} />
                 : null}
-            {!currentUser.isSuperUser
+            {!currentUser.isSuperUser && !hideDashboard
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null}
             {!currentUser.isSuperUser
@@ -50,7 +53,9 @@ export const AdminPage = () => {
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
-                : <Redirect to={Routes.Admin.Base} />}
+                : hideDashboard
+                    ? <Redirect to={Routes.Admin.Appointments} />
+                    : <Redirect to={Routes.Admin.Base} />}
         </Switch>
     </ContentContainer>;
 }

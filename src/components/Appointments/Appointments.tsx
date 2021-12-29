@@ -13,13 +13,14 @@ import {MoreHoriz} from "@material-ui/icons";
 import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
 import {getAppointmentDate} from "../../utils/utils";
 import {AppointmentDialog} from "./AppointmentDialog";
+import {IOrder} from "../../types/types";
 
 const cols: TableRowDataType<IListAppointment>[] = [
-    {header: "Date", val: el => moment.utc(el.dateInUtc).format("LL")},
-    {header: "Time", val: el => moment(el.timeSlot, timeSpanString).format(timeString)},
+    {header: "Date", val: el => moment.utc(el.dateInUtc).format("LL"), orderId: "date"},
+    {header: "Time", val: el => moment(el.timeSlot, timeSpanString).format(timeString), orderId: "timeSlot"},
     {header: "Full Name", val: el => el.driver.fullName},
     {header: "Car Info", val: el => `${el.vehicle.make} ${el.vehicle.model} ${el.vehicle.year}`},
-    {header: "Status", val: el => appointmentStatuses[el.appointmentStatus]}
+    {header: "Status", val: el => appointmentStatuses[el.appointmentStatus], orderId: "appointmentStatus"}
 ]
 
 export const Appointments = () => {
@@ -28,6 +29,11 @@ export const Appointments = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [count, setCount] = useState<number>(0);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [order, setOrder] = useState<IOrder<IListAppointment>>({
+        orderBy: "date",
+        isAscending: true,
+    })
     const {selectedSC} = useSCs();
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const {isOpen, onClose, onOpen} = useModal();
@@ -43,7 +49,9 @@ export const Appointments = () => {
                 pageIndex: pageData.pageIndex,
                 pageSize: pageData.pageSize,
                 serviceCenterId: selectedSC.id,
-                orderBy: "date"
+                orderBy: order.orderBy,
+                isAscending: order.isAscending,
+                searchTerm,
             })
                 .then(({data: {paging, result}}) => {
                     setAppointments(result);
@@ -52,7 +60,7 @@ export const Appointments = () => {
                 .catch( () => {setAppointments([])})
                 .finally(() => { setLoading(false); });
         }
-    }, [selectedSC, pageData]);
+    }, [selectedSC, pageData, order, searchTerm]);
 
     useEffect(() => {
         refresh();
@@ -120,10 +128,24 @@ export const Appointments = () => {
         </IconButton>
     }
 
+    const handleSort = (data: IOrder<IListAppointment>) => () => {
+        setOrder(data);
+    }
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value)
+    }
+
     return <>
-        <TitleContainer title={Titles.Appointments} pad actions={<AppointmentActions onAction={refresh} />} />
+        <TitleContainer
+            title={Titles.Appointments}
+            pad
+            actions={<AppointmentActions onAction={refresh} searchTerm={searchTerm} handleSearchChange={handleSearchChange} onSearch={refresh}/>} />
         <Table<IListAppointment>
             data={appointments}
+            onSort={handleSort}
+            order={order.orderBy}
+            isAscending={order.isAscending}
             noDataTitle="No upcoming appointments scheduled"
             isLoading={loading}
             rowData={cols}

@@ -4,6 +4,7 @@ export type TConfirmModalPayload = {
     isRemove?: boolean;
     icon?: JSX.Element;
     confirmContent?: string;
+    cancelContent?: string;
     onConfirm: () => void;
     onCancel?: () => void;
 }

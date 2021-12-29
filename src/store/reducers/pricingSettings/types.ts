@@ -39,6 +39,7 @@ export interface ITimeWindowEl {
 export enum EDay {
     Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
 }
+
 export interface IPricingSetting {
     day: EDay;
     lowPrice: number;

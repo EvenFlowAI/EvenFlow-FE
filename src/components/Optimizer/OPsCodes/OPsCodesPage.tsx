@@ -171,6 +171,8 @@ export const OPsCodesPage = () => {
     }
     const handleSearch = useCallback(() => {
         if (selectedSC) {
+            changePage(null, 0);
+            dispatch(setAssignedPageData({pageIndex: 0}));
             dispatch(loadAssignedServiceRequests(selectedSC.id));
         }
     }, [selectedSC, dispatch]);
@@ -238,6 +240,7 @@ export const OPsCodesPage = () => {
             onChangePage={changePage}
             onChangeRowsPerPage={changeRowsPerPage}
             count={requestsCount}
+            hidePagination={requestsCount < pageSize}
             actions={actions}
             isLoading={isLoading}
         />

@@ -6,9 +6,11 @@ import {Roles} from "../../../config/constants";
 type IUsersState = {
     currentUser?: ICurrentUser,
     saving: boolean,
+    loading: boolean;
 }
 const initialState: IUsersState = {
-    saving: false
+    saving: false,
+    loading: false,
 }
 
 export function usersReducer(state=initialState, action: TUserActions): IUsersState {
@@ -29,6 +31,8 @@ export function usersReducer(state=initialState, action: TUserActions): IUsersSt
             }};
         case "User/Saving":
             return {...state, saving: action.payload};
+        case "User/Loading":
+            return {...state, loading: action.payload};
         default:
             return state;
     }

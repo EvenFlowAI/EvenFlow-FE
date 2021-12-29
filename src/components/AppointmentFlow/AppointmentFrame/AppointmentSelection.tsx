@@ -205,6 +205,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
+                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={!appointment} />
                 <AppointmentDateSelector
                     dateChangeDisabled={selectedTimingType !== EAppointmentTimingType.SpecialOffers}
                     appointments={groupedAppointments}
@@ -221,7 +222,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     loading={loading}
                 />
             </Wrapper>
-            <Actions onBack={handleBack} onNext={handleNext} nextDisabled={!appointment} />
+            {/*<Actions onBack={handleBack} onNext={handleNext} nextDisabled={!appointment} />*/}
         </StepWrapper>
     );
 };

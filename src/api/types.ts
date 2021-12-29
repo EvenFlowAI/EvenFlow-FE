@@ -135,8 +135,9 @@ export interface IListAppointmentRequest {
     pageIndex: number;
     pageSize?: number;
     date?: ParsableDate;
-    orderBy?: "requestDate" | "date" | "transactionValue";
+    orderBy?: string;
     isAscending?: boolean;
+    searchTerm?: string;
 }
 
 export interface IDriverInfo {

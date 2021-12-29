@@ -5,7 +5,7 @@ import {SearchInput} from "../../UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
     changeComplimentaryPageData,
-    loadComplimentary,
+    loadComplimentary, setComplimentaryPageData,
     setComplimentarySearchTerm,
     setComplimentarySort
 } from "../../../store/reducers/packages/actions";
@@ -86,7 +86,11 @@ const ComplimentaryServices = () => {
     }
 
     const handleSearch = useCallback(() => {
-        if (selectedSC) dispatch(loadComplimentary(selectedSC.id))
+        if (selectedSC) {
+            changePage(null, 0);
+            dispatch(setComplimentaryPageData({pageIndex: 0}));
+            dispatch(loadComplimentary(selectedSC.id));
+        }
     }, [selectedSC]);
 
     const handleCloseMenu = () => {
@@ -189,7 +193,7 @@ const ComplimentaryServices = () => {
                     isLoading={isLoading}
                     page={pageIndex}
                     onSort={handleSort}
-                    hidePagination={servicesCount < 11}
+                    hidePagination={servicesCount < pageSize}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}
                     onChangeRowsPerPage={changeRowsPerPage}

@@ -14,60 +14,27 @@ import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
-import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
-import ReactGA, {GaOptions} from "react-ga";
-import {prodParentLinks} from "../Layout/AppointmentFrameLayout";
+import {setCurrentFrameScreen} from "../../store/reducers/appointmentFrameReducer/actions";
+import {LocalTokens} from "../../types/types";
+import {v4 as uuidv4} from "uuid";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
     const history = useHistory();
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
-    const { trackerCreated } = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
 
-    function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
-        const TRACKER = process.env.REACT_APP_ENV === "stage"
-            ? "UA-210743216-4"
-            : process.env.REACT_APP_ENV === "production"
-                ? origin.includes("bmwofschererville")
-                    ? "UA-210743216-6"
-                    : origin.includes("riverviewford")
-                        ? "UA-210743216-3"
-                        : "UA-210743216-5"
-                : "UA-210743216-5";
-        if (!trackerCreated) {
-            const options: GaOptions = {
-                siteSpeedSampleRate: 100,
-                cookieDomain: 'auto',
-                allowLinker: true,
-                storage: 'none',
-            }
-            if (opt_clientId) options.clientId = opt_clientId
-
-            ReactGA.initialize(TRACKER, {
-                debug: true,
-                titleCase: false,
-                gaOptions: options,
-            });
-            dispatch(setTrackerCreated(true));
-        }
-    }
-
     useEffect(() => {
-        trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
-    }, [trackerCreated])
-
-    useEffect(() => {
-        if (!trackerCreated) {
-            window.addEventListener('message', function(event) {
-                if (!prodParentLinks.includes(event.origin)) return;
-                if (typeof event.data === 'string') createTracker(event.data, event.origin, trackerCreated);
-            });
-            setTimeout(createTracker, 1000);
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
         }
-    }, [trackerCreated]);
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
+    }, [sessionStorage])
 
     useEffect(() => {
         clearStorage();
@@ -80,6 +47,7 @@ export const Welcome = () => {
 
     const onComplete = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
+        dispatch(setCurrentFrameScreen("carSelection"));
         history.push(
             route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );
