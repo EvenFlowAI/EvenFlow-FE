@@ -15,6 +15,13 @@ import {getAppointmentDate} from "../../utils/utils";
 import {AppointmentDialog} from "./AppointmentDialog";
 import {IOrder} from "../../types/types";
 import AppointmentFilters from "./AppointmentFilters";
+import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
+import {useDispatch, useSelector} from "react-redux";
+import {loadAppointments} from "../../store/reducers/appointments/actions";
+import {RootState} from "../../store/rootReducer";
+import AppointmentsCalendar from "./AppointmentsCalendar";
+
+export type TView = "calendar" | "list";
 
 const cols: TableRowDataType<IListAppointment>[] = [
     {header: "Date", val: el => moment.utc(el.dateInUtc).format("LL"), orderId: "date"},
@@ -25,15 +32,14 @@ const cols: TableRowDataType<IListAppointment>[] = [
 ]
 
 export const Appointments = () => {
-    const [appointments, setAppointments] = useState<IListAppointment[]>([]);
+    const { appointments, isLoading, count } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IListAppointment|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [count, setCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | null | unknown>(null);
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
+    const [selectedView, setSelectedView] = useState<TView>("list");
     const [order, setOrder] = useState<IOrder<IListAppointment>>({
         orderBy: "date",
         isAscending: true,
@@ -45,11 +51,11 @@ export const Appointments = () => {
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
+    const dispatch = useDispatch();
 
     const refresh = useCallback(() => {
          if (selectedSC) {
-            setLoading(true);
-            API.appointment.list({
+            const data: IAppointmentsRequest = {
                 pageIndex: pageData.pageIndex,
                 pageSize: pageData.pageSize,
                 serviceCenterId: selectedSC.id,
@@ -58,13 +64,8 @@ export const Appointments = () => {
                 date,
                 status,
                 searchTerm,
-            })
-                .then(({data: {paging, result}}) => {
-                    setAppointments(result);
-                    setCount(paging.numberOfRecords);
-                })
-                .catch( () => {setAppointments([])})
-                .finally(() => { setLoading(false); });
+            }
+             dispatch(loadAppointments(data));
         }
     }, [selectedSC, pageData, order, searchTerm, date, status]);
 
@@ -154,6 +155,10 @@ export const Appointments = () => {
         setDate(date)
     }
 
+    const handleChangeView = (type: TView) => () => {
+        setSelectedView(type);
+    }
+
     return <>
         <TitleContainer
             title={Titles.Appointments}
@@ -161,6 +166,8 @@ export const Appointments = () => {
             actions={<AppointmentActions
                 onAction={refresh}
                 searchTerm={searchTerm}
+                selectedView={selectedView}
+                handleChangeView={handleChangeView}
                 onFilterOpen={onFilterOpen}
                 handleSearchChange={handleSearchChange}
                 onSearch={refresh}/>}
@@ -168,40 +175,45 @@ export const Appointments = () => {
         {isFiltersOpen ?
             <AppointmentFilters status={status} handleSelectStatus={handleSelectStatus} selectedDate={date} onChange={onDateChange}/>
             : null}
-        <Table<IListAppointment>
-            data={appointments}
-            onSort={handleSort}
-            order={order.orderBy}
-            isAscending={order.isAscending}
-            noDataTitle="No upcoming appointments scheduled"
-            isLoading={loading}
-            rowData={cols}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            count={count}
-            page={pageData.pageIndex}
-            rowsPerPage={pageData.pageSize}
-            index="id"
-            actions={actions}
-        />
-        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-            <MenuItem onClick={handleView}>View</MenuItem>
-            <MenuItem
-                disabled={
-                    viewItem?.appointmentStatus === AppointmentStatus.Cancelled
-                    || !viewItem?.isEditable
-                }
-                onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem
-                disabled={
-                    viewItem?.appointmentStatus === AppointmentStatus.Cancelled
-                    || !viewItem?.isEditable
-                }
-                onClick={handleCancel}>Cancel</MenuItem>
-        </Menu>
-        <ViewAppointmentDialog
-            onEditAppointment={handleEditCallback} onCancelAppointment={handleCancelCallback}
-            open={isOpen} payload={viewItem} onClose={onClose} />
+        {selectedView === "list"
+            ? <div>
+                <Table<IListAppointment>
+                    data={appointments}
+                    onSort={handleSort}
+                    order={order.orderBy}
+                    isAscending={order.isAscending}
+                    noDataTitle="No upcoming appointments scheduled"
+                    isLoading={isLoading}
+                    rowData={cols}
+                    onChangePage={onChangePage}
+                    onChangeRowsPerPage={onChangeRowsPerPage}
+                    count={count}
+                    page={pageData.pageIndex}
+                    rowsPerPage={pageData.pageSize}
+                    index="id"
+                    actions={actions}
+                />
+                <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+                    <MenuItem onClick={handleView}>View</MenuItem>
+                    <MenuItem
+                        disabled={
+                            viewItem?.appointmentStatus === AppointmentStatus.Cancelled
+                            || !viewItem?.isEditable
+                        }
+                        onClick={handleEdit}>Edit</MenuItem>
+                    <MenuItem
+                        disabled={
+                            viewItem?.appointmentStatus === AppointmentStatus.Cancelled
+                            || !viewItem?.isEditable
+                        }
+                        onClick={handleCancel}>Cancel</MenuItem>
+                </Menu>
+                <ViewAppointmentDialog
+                    onEditAppointment={handleEditCallback} onCancelAppointment={handleCancelCallback}
+                    open={isOpen} payload={viewItem} onClose={onClose} />
+            </div>
+            : <AppointmentsCalendar date={date} order={order} selectedView={selectedView} searchTerm={searchTerm} status={status}/>
+        }
         <AppointmentDialog
             payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />
     </>
