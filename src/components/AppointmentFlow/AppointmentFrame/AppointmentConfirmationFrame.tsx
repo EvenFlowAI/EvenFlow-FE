@@ -15,7 +15,7 @@ import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds} from "./utils";
 import {Api} from "../../../config/requests";
-import {setAppointmentId, updateVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAppointmentId} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
@@ -71,15 +71,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
         } else {
             handleCreateAppointment()
-        }
-    }
-
-    const onSave = (vin: string) => async () => {
-        if (vin) {
-            await dispatch(updateVehicle({vin}));
-            await handleCreateAppointment(vin);
-        } else {
-            return showError('Enter VIN or choose SUBMIT Without VIN')
         }
     }
 
@@ -196,10 +187,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         <Actions loading={saving} onBack={onBack} onNext={onCreateClick} />
         <CreateAppointment
             open={isOpen}
-            onSave={onSave}
             loading={saving}
             onClose={onClose}
-            onSaveWithoutVin={() => handleCreateAppointment('', false)}
+            handleCreateAppointment={handleCreateAppointment}
         />
     </StepWrapper>
 };
