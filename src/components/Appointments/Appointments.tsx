@@ -212,7 +212,10 @@ export const Appointments = () => {
                     onEditAppointment={handleEditCallback} onCancelAppointment={handleCancelCallback}
                     open={isOpen} payload={viewItem} onClose={onClose} />
             </div>
-            : <AppointmentsCalendar date={date} order={order} selectedView={selectedView} searchTerm={searchTerm} status={status}/>
+            : <AppointmentsCalendar
+                selectedView={selectedView}
+                onDateChange={onDateChange}
+            />
         }
         <AppointmentDialog
             payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />

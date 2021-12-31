@@ -4,8 +4,7 @@ import {loadAppointments} from "../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useSCs} from "../../utils/hooks";
 import moment, {Moment} from "moment";
-import {EAppointmentStatus, IListAppointment} from "../../api/types";
-import {IOrder} from "../../types/types";
+import {IListAppointment} from "../../api/types";
 import {TView} from "./Appointments";
 import {RootState} from "../../store/rootReducer";
 import {useCalendarStyles} from "../Optimizer/CapacitySettings/AvailableStaff/Calendar";
@@ -15,13 +14,21 @@ import clsx from "clsx";
 import {Paper} from '@material-ui/core';
 import {ReactComponent as Active} from "../../assets/img/date_1.svg";
 import {ReactComponent as FreeSlots} from "../../assets/img/date_2.svg";
+import {Loading} from "../UI/Loading";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+    number: {
+        '& > span': {
+            fontSize: 14,
+            marginLeft: 3,
+        }
+    }
+}))
 
 type TCalendarProps = {
-    date: moment.Moment | null;
-    status: EAppointmentStatus | null | unknown;
-    searchTerm: string;
-    order: IOrder<IListAppointment>;
     selectedView: TView;
+    onDateChange: (date: moment.Moment | null) => void;
 }
 
 type TDayType = "prev" | "cur" | "next"
@@ -34,11 +41,12 @@ type TDay = {
 
 type TAppointmentsByDate = {[key: string]: IListAppointment[]}
 
-const AppointmentsCalendar: React.FC<TCalendarProps> = ({ order, date, status, searchTerm,selectedView }) => {
-    const { appointments } = useSelector((state: RootState) => state.appointments);
+const AppointmentsCalendar: React.FC<TCalendarProps> = ({ onDateChange, selectedView }) => {
+    const { appointments, isLoading } = useSelector((state: RootState) => state.appointments);
     const [startDate, setStartDate] = useState<Moment>(moment());
     const [appointmentsByDate, setAppointmentsByDate] = useState<TAppointmentsByDate>({})
-    const classes = useCalendarStyles();
+    const calendarClasses = useCalendarStyles();
+    const classes = useStyles();
     const dispatch = useDispatch();
     const {selectedSC}= useSCs();
 
@@ -52,7 +60,7 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ order, date, status, s
 
     const days: TDay[] = useMemo(() => {
         const days: TDay[] = [];
-        const cur = moment(date).startOf("month");
+        const cur = moment(startDate).startOf("month");
         const daysInMonth = cur.daysInMonth();
         const startDay = cur.day();
         cur.subtract(startDay, 'days');
@@ -74,7 +82,7 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ order, date, status, s
         }
 
         return days;
-    }, [date]);
+    }, [startDate]);
 
     useEffect(() => {
         if (selectedSC && selectedView === "calendar") {
@@ -82,56 +90,63 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ order, date, status, s
                 pageIndex: 0,
                 pageSize: 0,
                 serviceCenterId: selectedSC.id,
-                orderBy: order.orderBy,
-                isAscending: order.isAscending,
-                date,
-                status,
-                searchTerm,
             }
             dispatch(loadAppointments(data));
         }
-    }, [selectedSC, order, date, status, searchTerm, selectedView])
+    }, [selectedSC, selectedView])
 
     useEffect(() => {
         setAppointmentsByDate(() => {
             const data: TAppointmentsByDate = {};
             appointments.forEach(item => {
-                data[item.dateInUtc as string] = data[item.dateInUtc as string] ? [...data[item.dateInUtc as string], item] : [item];
+                const dateString = moment(item.dateInUtc).startOf('day').format('YYYY-MM-DD');
+                data[dateString] = data[dateString] ? [...data[dateString], item] : [item];
             })
             return data
         })
     }, [appointments])
 
-    return (
-        <Paper className={classes.paper} variant="outlined">
-            <h2 className={classes.title}>Calendar</h2>
+    const openDetails = (date: Moment) => {
+        onDateChange(date);
+    }
+
+    return isLoading
+        ? <Loading/>
+        : <div style={{ width: '100%', padding: 20 }}>
+            <Paper className={calendarClasses.paper} variant="outlined">
+            <h2 className={calendarClasses.title}>Calendar</h2>
             <CalendarControls date={startDate} onChange={handleMonthChange} />
-            <div className={classes.calendarWrapper}>
+            <div className={calendarClasses.calendarWrapper}>
                 {WeekDayNames.map(day =>
-                    <div className={classes.weekDay} key={day}>{day}</div>
+                    <div className={calendarClasses.weekDay} key={day}>{day}</div>
                 )}
                 {days.map(d =>{
-                    const dateInUtc: string = moment(d.date).utc().toISOString();
+                    const dateString = moment(d.date).local().startOf('day').format('YYYY-MM-DD');
                        return <div
+                           onClick={() => openDetails(d.date)}
                             className={clsx(
-                                classes.dayCell,
+                                calendarClasses.dayCell,
                                 d.type === "cur"
-                                    ? d.date.isBefore(today, "day")
-                                        ? classes.prevMonth
-                                        : classes.currentMonth
-                                    : classes.prevMonth,
-                                d.date.isSame(today, "day") ? classes.today : ""
+                                    ? d.date.isBefore(moment().startOf('month'), "day")
+                                        ? calendarClasses.prevMonth
+                                        : calendarClasses.currentMonth
+                                    : calendarClasses.prevMonth,
+                                d.date.isSame(today, "day") ? calendarClasses.today : ""
                             )}
                             key={`${d.day}-${d.type}`}>
-                            <span className={classes.dayNumber}>{d.day}</span>
-                            <span className={classes.iconBlock}><Active/> - {appointmentsByDate[dateInUtc]?.length || 0}</span>
-                            <span className={classes.iconBlock}><FreeSlots /> - 2</span>
+                            <span className={calendarClasses.dayNumber}>{d.day}</span>
+                           <span className={clsx(calendarClasses.iconBlock, classes.number)}>
+                                <Active/><span> - {appointmentsByDate[dateString]?.length || 0}</span>
+                           </span>
+                           <span className={clsx(calendarClasses.iconBlock, classes.number)}>
+                               <FreeSlots /> <span> - 20</span>
+                           </span>
                         </div>
                 }
                 )}
             </div>
         </Paper>
-    );
+        </div>
 };
 
 export default AppointmentsCalendar;

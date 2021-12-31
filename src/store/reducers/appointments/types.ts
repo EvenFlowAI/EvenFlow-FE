@@ -5,9 +5,9 @@ export interface IAppointmentsRequest {
     pageIndex: number;
     pageSize: number;
     serviceCenterId: number;
-    orderBy: keyof IListAppointment | string | undefined;
-    isAscending: boolean;
-    date: moment.Moment | null;
-    status: EAppointmentStatus | null | unknown;
-    searchTerm: string;
+    orderBy?: keyof IListAppointment | string | undefined;
+    isAscending?: boolean;
+    date?: moment.Moment | null;
+    status?: EAppointmentStatus | null | unknown;
+    searchTerm?: string;
 }

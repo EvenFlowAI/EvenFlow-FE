@@ -26,7 +26,7 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
 
     return <>
         <Box>
-            <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} />
+            {selectedView === 'list' && <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} />}
             <ButtonGroup color="primary" style={{ marginLeft: 20 }}>
                 {views.map(view =>
                     <Button
@@ -41,6 +41,7 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
                 onClick={onFilterOpen}
                 style={{ marginLeft: 20 }}
                 variant="outlined"
+                disabled={selectedView === "calendar"}
                 color="primary">
                 Filters
             </Button>
