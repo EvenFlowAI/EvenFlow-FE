@@ -42,8 +42,10 @@ type TDay = {
 
 type TAppointmentsByDate = {[key: string]: IListAppointment[]}
 
-const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
-    const { appointments, isLoading } = useSelector((state: RootState) => state.appointments);
+// todo replace data for all appointments in another redux state field;
+
+const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView, date }) => {
+    const { allAppointments, isLoading } = useSelector((state: RootState) => state.appointments);
     const [startDate, setStartDate] = useState<Moment>(moment());
     const [appointmentsByDate, setAppointmentsByDate] = useState<TAppointmentsByDate>({})
 
@@ -100,13 +102,13 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedV
     useEffect(() => {
         setAppointmentsByDate(() => {
             const data: TAppointmentsByDate = {};
-            appointments.forEach(item => {
+            allAppointments.forEach(item => {
                 const dateString = moment(item.dateInUtc).startOf('day').format('YYYY-MM-DD');
                 data[dateString] = data[dateString] ? [...data[dateString], item] : [item];
             })
             return data
         })
-    }, [appointments])
+    }, [allAppointments])
 
     return isLoading
         ? <Loading/>
