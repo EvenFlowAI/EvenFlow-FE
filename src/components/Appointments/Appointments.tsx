@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadAppointments} from "../../store/reducers/appointments/actions";
 import {RootState} from "../../store/rootReducer";
 import AppointmentsCalendar from "./AppointmentsCalendar";
+import AppointmentsListDialog from "./AppointmentsListDialog";
 
 export type TView = "calendar" | "list";
 
@@ -48,20 +49,21 @@ export const Appointments = () => {
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isEditOpen, onClose: onEditClose, onOpen: onEditOpen} = useModal();
+    const {isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen} = useModal();
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
     const dispatch = useDispatch();
 
     const refresh = useCallback(() => {
-         if (selectedSC) {
+         if (selectedSC && selectedView === 'list') {
             const data: IAppointmentsRequest = {
                 pageIndex: pageData.pageIndex,
                 pageSize: pageData.pageSize,
                 serviceCenterId: selectedSC.id,
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
-                date,
+                date: moment(date).set('hour', 8),
                 status,
                 searchTerm,
             }
@@ -159,6 +161,11 @@ export const Appointments = () => {
         setSelectedView(type);
     }
 
+    const handleOpenDetails = (date: moment.Moment | null): void => {
+        setDate(date);
+        onListOpen();
+    }
+
     return <>
         <TitleContainer
             title={Titles.Appointments}
@@ -213,11 +220,13 @@ export const Appointments = () => {
                     open={isOpen} payload={viewItem} onClose={onClose} />
             </div>
             : <AppointmentsCalendar
+                date={date}
+                openDetails={handleOpenDetails}
                 selectedView={selectedView}
-                onDateChange={onDateChange}
             />
         }
         <AppointmentDialog
             payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />
+        <AppointmentsListDialog open={isListOpen} date={date} onClose={onListClose}/>
     </>
 };

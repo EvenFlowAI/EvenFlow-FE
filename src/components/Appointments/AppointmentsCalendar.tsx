@@ -28,7 +28,8 @@ const useStyles = makeStyles(() => ({
 
 type TCalendarProps = {
     selectedView: TView;
-    onDateChange: (date: moment.Moment | null) => void;
+    date: moment.Moment | null;
+    openDetails: (date: moment.Moment | null) => void;
 }
 
 type TDayType = "prev" | "cur" | "next"
@@ -41,10 +42,11 @@ type TDay = {
 
 type TAppointmentsByDate = {[key: string]: IListAppointment[]}
 
-const AppointmentsCalendar: React.FC<TCalendarProps> = ({ onDateChange, selectedView }) => {
+const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
     const { appointments, isLoading } = useSelector((state: RootState) => state.appointments);
     const [startDate, setStartDate] = useState<Moment>(moment());
     const [appointmentsByDate, setAppointmentsByDate] = useState<TAppointmentsByDate>({})
+
     const calendarClasses = useCalendarStyles();
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -106,10 +108,6 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ onDateChange, selected
         })
     }, [appointments])
 
-    const openDetails = (date: Moment) => {
-        onDateChange(date);
-    }
-
     return isLoading
         ? <Loading/>
         : <div style={{ width: '100%', padding: 20 }}>
@@ -121,15 +119,13 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ onDateChange, selected
                     <div className={calendarClasses.weekDay} key={day}>{day}</div>
                 )}
                 {days.map(d =>{
-                    const dateString = moment(d.date).local().startOf('day').format('YYYY-MM-DD');
+                    const dateString = moment(d.date).startOf('day').format('YYYY-MM-DD');
                        return <div
-                           onClick={() => openDetails(d.date)}
+                           onClick={() => openDetails(moment(d.date))}
                             className={clsx(
                                 calendarClasses.dayCell,
                                 d.type === "cur"
-                                    ? d.date.isBefore(moment().startOf('month'), "day")
-                                        ? calendarClasses.prevMonth
-                                        : calendarClasses.currentMonth
+                                    ? calendarClasses.currentMonth
                                     : calendarClasses.prevMonth,
                                 d.date.isSame(today, "day") ? calendarClasses.today : ""
                             )}
