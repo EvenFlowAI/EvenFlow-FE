@@ -28,7 +28,6 @@ const useStyles = makeStyles(() => ({
 
 type TCalendarProps = {
     selectedView: TView;
-    date: moment.Moment | null;
     openDetails: (date: moment.Moment | null) => void;
 }
 
@@ -42,9 +41,7 @@ type TDay = {
 
 type TAppointmentsByDate = {[key: string]: IListAppointment[]}
 
-// todo replace data for all appointments in another redux state field;
-
-const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView, date }) => {
+const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
     const { allAppointments, isLoading } = useSelector((state: RootState) => state.appointments);
     const [startDate, setStartDate] = useState<Moment>(moment());
     const [appointmentsByDate, setAppointmentsByDate] = useState<TAppointmentsByDate>({})
@@ -123,7 +120,7 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedV
                 {days.map(d =>{
                     const dateString = moment(d.date).startOf('day').format('YYYY-MM-DD');
                        return <div
-                           onClick={() => openDetails(moment(d.date))}
+                           onClick={() => openDetails(d.date)}
                             className={clsx(
                                 calendarClasses.dayCell,
                                 d.type === "cur"

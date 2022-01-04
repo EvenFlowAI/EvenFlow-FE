@@ -42,7 +42,7 @@ export const Appointments = () => {
                 serviceCenterId: selectedSC.id,
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
-                date: moment(date).set('hour', 8),
+                date: moment(date).add(moment(date).utcOffset(), 'minute'),
                 status,
                 searchTerm,
             }
@@ -103,7 +103,6 @@ export const Appointments = () => {
         {selectedView === "list"
             ? <AppointmentsTable onEditOpen={onEditOpen} refresh={refresh} order={order} setOrder={setOrder}/>
             : <AppointmentsCalendar
-                date={date}
                 openDetails={handleOpenDetails}
                 selectedView={selectedView}
             />
