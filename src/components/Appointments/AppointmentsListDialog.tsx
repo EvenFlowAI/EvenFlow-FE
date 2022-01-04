@@ -27,10 +27,10 @@ const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
             const data: IAppointmentsRequest = {
                 pageIndex: 0,
                 pageSize: 0,
-                date: moment(props.date).set('hour', 8),
+                date: moment(props.date).add(moment(props.date).utcOffset(), 'minute'),
                 serviceCenterId: selectedSC.id,
             }
-            dispatch(loadAppointments(data));
+            dispatch(loadAppointments(data))
         }
     }, [selectedSC, props.date, props.open])
 
