@@ -36,9 +36,9 @@ const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
 
 
     return (
-        <BaseModal {...props} width={800} onClose={props.onClose} onExit={props.onClose}>
+        <BaseModal {...props} width={850} onClose={props.onClose} onExit={props.onClose}>
             <DialogTitle onClose={props.onClose}>Appointments for {moment(props.date).format('YYYY-MM-DD')}</DialogTitle>
-            <DialogContent>
+            <DialogContent style={{ overflowY: 'auto' }}>
                 <AppointmentsTable
                     refresh={props.refresh}
                     order={props.order}

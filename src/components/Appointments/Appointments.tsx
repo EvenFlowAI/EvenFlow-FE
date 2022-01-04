@@ -43,7 +43,8 @@ export const Appointments = () => {
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
                 date: moment(date).add(moment(date).utcOffset(), 'minute'),
-                status,
+                // @ts-ignore
+                status: EAppointmentStatus[status],
                 searchTerm,
             }
              dispatch(loadAppointments(data));
@@ -71,6 +72,11 @@ export const Appointments = () => {
     }
 
     const handleChangeView = (type: TView) => () => {
+        if (type === "calendar") {
+            setFiltersOpen(false);
+            setDate(null);
+            setStatus(null);
+        }
         setSelectedView(type);
     }
 
