@@ -48,7 +48,7 @@ export const Appointments = () => {
             }
              dispatch(loadAppointments(data));
         }
-    }, [selectedSC, pageData, order, searchTerm, date, status]);
+    }, [selectedSC, pageData, order, searchTerm, date, status, selectedView]);
 
     useEffect(() => {
         refresh();
