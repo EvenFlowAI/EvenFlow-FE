@@ -8,7 +8,7 @@ import clsx from "clsx";
 import {Star, SupervisorAccount} from "@material-ui/icons";
 
 
-const useStyles = makeStyles(theme => ({
+export const useCalendarStyles = makeStyles(theme => ({
     title: {
         textAlign: "center",
         position: "absolute",
@@ -120,7 +120,7 @@ export const Calendar = () => {
     }, [date]);
 
 
-    const classes = useStyles();
+    const classes = useCalendarStyles();
     return <Paper className={classes.paper} variant="outlined">
         <h2 className={classes.title}>Calendar</h2>
         <CalendarControls date={date} onChange={handleMonthChange} />

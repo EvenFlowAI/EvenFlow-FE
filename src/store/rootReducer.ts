@@ -21,6 +21,7 @@ import {packagesReducer} from "./reducers/packages/reducer";
 import {vehicleDetailsReducer} from "./reducers/vehicleDetails/reducer";
 import {transportationOptionsReducer} from "./reducers/transportationNeeds/reducer";
 import {categoriesReducer} from "./reducers/categories/reducer";
+import {appointmentsReducer} from "./reducers/appointments/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -30,6 +31,7 @@ export const rootReducer = combineReducers({
     demandSegments: demandSegmentsReducer,
     employees: employeesReducer,
     employeesSchedule: schedulesReducer,
+    appointments: appointmentsReducer,
     optimizationWindows: optimizationWindowsReducer,
     offers: offersReducer,
     scEmployees: scEmployees,

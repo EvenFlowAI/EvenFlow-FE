@@ -138,6 +138,7 @@ export interface IListAppointmentRequest {
     orderBy?: string;
     isAscending?: boolean;
     searchTerm?: string;
+    status?: EAppointmentStatus | unknown;
 }
 
 export interface IDriverInfo {
@@ -345,3 +346,5 @@ export interface IPackageOptionDetailed {
     name?: string;
     serviceRequestAssignedId?: number;
 }
+
+export enum EAppointmentStatus {Active, Canceled}
