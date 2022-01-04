@@ -86,8 +86,8 @@ export const Appointments = () => {
     }
 
     const onListDialogClose = () => {
-       setDate(null);
        onListClose();
+       setTimeout(() => setDate(null));
     }
 
     return <>
