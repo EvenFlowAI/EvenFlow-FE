@@ -7,8 +7,8 @@ import moment from "moment";
 import {getAppointmentDate} from "../../utils/utils";
 import {API} from "../../api/api";
 import {MoreHoriz} from "@material-ui/icons";
-import {IOrder} from "../../types/types";
-import {useConfirm, useException, useMessage, useModal, useStatePagination} from "../../utils/hooks";
+import {IOrder, IPageRequest} from "../../types/types";
+import {useConfirm, useException, useMessage, useModal} from "../../utils/hooks";
 import {TableRowDataType} from "../UI/types";
 import {timeSpanString, timeString} from "../../config/constants";
 import {useSelector} from "react-redux";
@@ -27,13 +27,16 @@ type TAppointmentsTable = {
     order: IOrder<IListAppointment>;
     setOrder: React.Dispatch<React.SetStateAction<IOrder<IListAppointment>>>
     onEditOpen: () => void;
+    onChangePage: (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number) => void;
+    onChangeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    pageData: IPageRequest;
 }
 
-export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ refresh, setOrder, order, onEditOpen }) => {
+export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
     const { appointments, isLoading, count } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IListAppointment|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
+
     const {isOpen, onClose, onOpen} = useModal();
     const showMessage = useMessage();
     const showError = useException();
@@ -48,10 +51,12 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ refresh, setOr
         setAnchorEl(null);
         onOpen();
     }
+
     const handleEdit = () => {
         setAnchorEl(null);
         onEditOpen();
     }
+
     const handleCancel = () => {
         setAnchorEl(null);
         if (viewItem?.appointmentStatus === AppointmentStatus.Cancelled) {
@@ -71,6 +76,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ refresh, setOr
             }
         }
     }
+
     const _handleCancel = async () => {
         if (viewItem) {
             try {
@@ -104,6 +110,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ refresh, setOr
     const handleSort = (data: IOrder<IListAppointment>) => () => {
         setOrder(data);
     }
+
     return <>
         <Table<IListAppointment>
             data={appointments}
