@@ -19,12 +19,14 @@ import {TimePicker} from "../../UI/DateTimePickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {setEmployeesSchedule} from "../../../store/reducers/schedules/actions";
+import {loadEmployeesSchedule, setEmployeesSchedule} from "../../../store/reducers/schedules/actions";
 import {RootState} from "../../../store/rootReducer";
 import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 import {Close} from "@material-ui/icons";
 import {API} from "../../../api/api";
 import {TIds} from "./types";
+import {Api} from "../../../config/requests";
+import {getStartEndDates} from "./utils";
 
 type TProps = DialogProps<ISchedule> & {
     date: moment.Moment;
@@ -111,11 +113,49 @@ export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, cust
         }
     }
 
-    const handleSetForAll = () => {
+    const handleSetForWeek = async () => {
         const schedules = employeesList.find(item => item.employee.id === employee.id)?.schedules;
-        if (schedules) {
-
+        setSaving(true);
+        for (let i = 0; i < 7; i++) {
+            const initialData: IScheduleForm = {
+                date: moment(date).day(i).toISOString(),
+                employeeId: employee.id,
+                startAt: form.timeStart?.format(timeSpanString),
+                finishAt: form.timeEnd?.format(timeSpanString),
+                serviceCenterId: employee.serviceCenterId,
+                podId: form.podId,
+                isRecurring: false,
+            }
+            const schedule = schedules?.find(item => item.dayOfWeek === i);
+            if (schedule) {
+                const data: IScheduleForm = {
+                    ...schedule,
+                    ...initialData,
+                    date: moment(schedule.date).day(i).toISOString(),
+                    id: schedule.id,
+                }
+                Api.call(Api.endpoints.EmployeeSchedule.Update, {data, urlParams: {id: data.id}})
+                    .then(() => {
+                        const [st, nd] = getStartEndDates(moment(schedule.date), isXS);
+                        dispatch(loadEmployeesSchedule(st, nd, employee.serviceCenterId));
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    })
+                    .finally(() => setSaving(false))
+            } else {
+                Api.call(Api.endpoints.EmployeeSchedule.Create, {data: initialData})
+                    .then(() => {
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    })
+                    .finally(() => setSaving(false))
+            }
         }
+        const [st, nd] = getStartEndDates(moment(date), isXS);
+        await dispatch(loadEmployeesSchedule(st, nd, employee.serviceCenterId));
+        setSaving(false);
     }
 
     return <BaseModal {...props} width={750}>
@@ -214,9 +254,9 @@ export const EditSchedule: React.FC<TProps> = ({date, onClear, recursiveId, cust
             </LoadingButton>
             <LoadingButton
                 loading={saving}
-                onClick={handleSetForAll}
+                onClick={handleSetForWeek}
             >
-                Set for all shifts
+                Set for week
             </LoadingButton>
         </DialogActions>
         <CreateEmployee open={isOpen} payload={employee} onAction={() => onEmployeeUpdate(employee.id)} onClose={onClose} />
