@@ -385,7 +385,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                         {(isSanfordInfinity || isBmWService) && <React.Fragment key="maintenance">
                             <div className="totalMaintenance">Total Maintenance Value:</div>
                             {packages.map(p => <div className={setClasses(p.id, '')}>
-                                <span style={{ fontSize: 20 }}>${p.marketPriceServiceRequests}</span>
+                                <span style={{ fontSize: 20 }}>${p.price}</span>
                             </div>)}
                         </React.Fragment>
                         }
@@ -438,7 +438,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                                 key={p.id}>
                                 {(isBmWService || isSanfordInfinity) &&
                                 <div className="before">
-                                    ${p.marketPriceComplimentaryServices + p.marketPriceServiceRequests}
+                                    ${p.marketPriceComplimentaryServices + p.price}
                                 </div>}
                                 <div className="currentWrp">
                                     <div className="triangle"/>

@@ -11,6 +11,7 @@ export interface ISchedule {
     finishAt: ParsableDate;
     isRecurring: boolean;
     status: EWorkingStatus;
+    dayOfWeek?: number;
 }
 export interface IEmployeeSchedule {
     employee: IEmployee,

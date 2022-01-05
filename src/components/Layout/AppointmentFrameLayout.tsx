@@ -329,7 +329,7 @@ export const AppointmentFrameLayout = () => {
         <MuiThemeProvider theme={frameTheme}>
             <Container>
                 {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
-                    ? <SideBar screen={currentScreen} /> : null}
+                    ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
                 {!['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
                 {isXs && currentScreen === 'packageSelection'
@@ -339,7 +339,7 @@ export const AppointmentFrameLayout = () => {
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? component
                     : !isSm ? <SidebarWrapper>
-                        <SideBar screen={currentScreen} />
+                        <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/>
                         {component}
                     </SidebarWrapper> : component
                 }

@@ -110,7 +110,6 @@ export const ScheduleCalendar = () => {
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const [start, end] = useMemo(() => getStartEndDates(selectedDate, isXS), [selectedDate, isXS])
 
-    // const now = moment();
     const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS]);
 
     useEffect(() => {
@@ -234,6 +233,7 @@ export const ScheduleCalendar = () => {
                 </TableBody>
             </ScheduleTable>
             <EditSchedule
+                selectedDate={selectedDate}
                 date={editedDate}
                 employee={editedEmployee}
                 onEmployeeUpdate={updateEditedEmployee}
