@@ -150,9 +150,11 @@ export const SelectedAppointment = () => {
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
-    const price = appointment?.priceWithOffer?.value
-        ?? appointment?.price.value
-        ?? selectedPackage?.price ?? 0;
+    // const price = appointment?.priceWithOffer?.value
+    //     ?? appointment?.price.value
+    //     ?? selectedPackage?.price ?? 0;
+
+    const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
