@@ -1,11 +1,14 @@
 import React from 'react';
 import {ConfirmationTitle} from "../Title";
-import {styled} from "@material-ui/core";
+import {Button, styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 
 const Price = styled('div')({
-    marginTop: 8
+    marginTop: 8,
+    display: "flex",
+    justifyContent: 'space-between',
+    alignItems: 'center',
 })
 
 export const SelectedPrice = () => {
@@ -13,7 +16,17 @@ export const SelectedPrice = () => {
     return (
         <div>
             <ConfirmationTitle>Selected Price</ConfirmationTitle>
-            <Price>${appointment?.price.value ?? 0}</Price>
+            <Price>
+                <span>${appointment?.price.value ?? 0}</span>
+                <Button
+                    color="primary"
+                    variant="outlined"
+                    onClick={() => {}}
+                    style={{ textDecoration: 'underline' }}
+                >
+                    View Details
+                </Button>
+            </Price>
         </div>
     );
 };

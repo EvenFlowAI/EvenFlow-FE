@@ -27,6 +27,7 @@ export interface ISR {
     id: number;
     code: string;
     description?: string;
+    price?: number;
 }
 export type TS1Form = {
     year: string|null;
