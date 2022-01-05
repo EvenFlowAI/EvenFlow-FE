@@ -170,14 +170,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                 }
             }
         }
-        // const start = moment(selectedDate)
-        //     .startOf('week')
-        //     .add(1, 'days')
-        //     .toISOString();
-        // const end = moment(selectedDate)
-        //     .endOf('week')
-        //     .add(1, 'days')
-        //     .toISOString();
+
         const [start, end] = getStartEndDates(selectedDate, isXS);
         await dispatch(loadEmployeesSchedule(start, end, employee.serviceCenterId));
         setSaving(false);
