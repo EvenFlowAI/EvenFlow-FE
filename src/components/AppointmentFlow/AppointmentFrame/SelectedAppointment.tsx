@@ -173,12 +173,7 @@ export const SelectedAppointment = () => {
                         <span className={selectedPackage ? undefined : "service-list"}>
                             {getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)}
                         </span>
-                        {selectedPackage && isSm && price && <div className="price">$
-                            {price}
-                            {/*<span>*/}
-                            {/*        .{(price % 1).toFixed(2).slice(2)}*/}
-                            {/*    </span>*/}
-                        </div>}
+                        {isSm && Boolean(price) && <div className="price">${price}</div>}
                     </li>
                         <li>
                             <div className={classes.selectWrapper}>
@@ -207,16 +202,10 @@ export const SelectedAppointment = () => {
                     {appointment && !isSm ? <DateWrapper>
                         Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
                     </DateWrapper> : null}
-                    {selectedPackage
-                        ? <>
-                            {!isSm && <div className="price">$
-                                {price}
-                                {/*<span>*/}
-                                {/*    .{(price % 1).toFixed(2).slice(2)}*/}
-                                {/*</span>*/}
-                            </div>}
-                            <div className="info" style={{ fontSize: isSm ? 14: 28 }}>Save by booking at off peak times!</div>
-                        </> : null}
+                    <>
+                        {!isSm && Boolean(price) && <div className="price">$ {price}</div>}
+                        <div className="info" style={{ fontSize: isSm ? 14: 28 }}>Save by booking at off peak times!</div>
+                    </>
                     </PriceWrapper>
             </Wrapper>
         </div>
