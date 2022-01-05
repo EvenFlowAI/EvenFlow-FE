@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {DialogTitle, BaseModal, DialogContent} from "../Modals/BaseModal";
 import moment from "moment";
 import {DialogProps} from "../Modals/types";
-import {useSCs} from "../../utils/hooks";
+import {useSCs, useStatePagination} from "../../utils/hooks";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
 import {loadAppointments} from "../../store/reducers/appointments/actions";
 import {useDispatch} from "react-redux";
@@ -21,6 +21,7 @@ type TDialogProps = DialogProps & {
 const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
     const {selectedSC}= useSCs();
     const dispatch = useDispatch();
+    const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
 
     useEffect(() => {
         if (selectedSC && props.open && props.date) {
@@ -34,15 +35,17 @@ const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
         }
     }, [selectedSC, props.date, props.open])
 
-
     return (
         <BaseModal {...props} width={850} onClose={props.onClose} onExit={props.onClose}>
-            <DialogTitle onClose={props.onClose}>Appointments for {moment(props.date).format('YYYY-MM-DD')}</DialogTitle>
+            <DialogTitle onClose={props.onClose}>Appointments for {props.date ? moment(props.date).format('YYYY-MM-DD') : ''}</DialogTitle>
             <DialogContent style={{ overflowY: 'auto' }}>
                 <AppointmentsTable
                     refresh={props.refresh}
                     order={props.order}
+                    pageData={pageData}
                     setOrder={props.setOrder}
+                    onChangePage={onChangePage}
+                    onChangeRowsPerPage={onChangeRowsPerPage}
                     onEditOpen={props.onEditOpen}
                 />
             </DialogContent>

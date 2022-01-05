@@ -29,7 +29,7 @@ export const Appointments = () => {
         isAscending: true,
     })
     const {selectedSC} = useSCs();
-    const {pageData} = useStatePagination();
+    const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const {isOpen: isEditOpen, onClose: onEditClose, onOpen: onEditOpen} = useModal();
     const {isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen} = useModal();
     const dispatch = useDispatch();
@@ -86,8 +86,8 @@ export const Appointments = () => {
     }
 
     const onListDialogClose = () => {
-       setDate(null);
        onListClose();
+       setTimeout(() => setDate(null));
     }
 
     return <>
@@ -107,7 +107,15 @@ export const Appointments = () => {
             <AppointmentFilters status={status} handleSelectStatus={handleSelectStatus} selectedDate={date} onChange={onDateChange}/>
             : null}
         {selectedView === "list"
-            ? <AppointmentsTable onEditOpen={onEditOpen} refresh={refresh} order={order} setOrder={setOrder}/>
+            ? <AppointmentsTable
+                onEditOpen={onEditOpen}
+                refresh={refresh}
+                order={order}
+                setOrder={setOrder}
+                pageData={pageData}
+                onChangePage={onChangePage}
+                onChangeRowsPerPage={onChangeRowsPerPage}
+            />
             : <AppointmentsCalendar
                 openDetails={handleOpenDetails}
                 selectedView={selectedView}
