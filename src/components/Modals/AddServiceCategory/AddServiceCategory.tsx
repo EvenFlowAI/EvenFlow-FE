@@ -97,7 +97,7 @@ const getOptionLabel = (option: TOption) => {
 }
 const initialFileState = {file: null, dataUrl: undefined};
 
-const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ...props}) => {
+const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, isEditing, ...props}) => {
     const { allAssignedList, assignedFilter } = useSelector((state: RootState) => state.serviceRequests);
     const { page } = useSelector((state: RootState) => state.categories);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
@@ -211,7 +211,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
 
     return (
         <BaseModal {...props} width={1128} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>{props.isEditing ? 'Edit': 'Add'} Service Category</DialogTitle>
+            <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} Service Category</DialogTitle>
             <DialogContent>
                 <div className={classes.inputsWrapper}>
                     <div>

@@ -128,7 +128,7 @@ const getOptions = (optionsArray: string[]) => {
     return options;
 }
 
-const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOptionDialogProps> = (props) => {
+const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOptionDialogProps> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
     const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
@@ -174,8 +174,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }, [selectedSC])
 
     useEffect(() => {
-        if (props.editingElement) {
-            const {rules} = props.editingElement;
+        if (editingElement) {
+            const {rules} = editingElement;
             if (rules) {
                 let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.includes(item.value));
                 if (rules.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
@@ -211,14 +211,14 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 }));
             }
         }
-    }, [props.editingElement, segmentOptions, dayOFWeekOptions, allAssignedList])
+    }, [editingElement, segmentOptions, dayOFWeekOptions, allAssignedList])
 
     const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
         setCustomerSegment(value)
     }
 
-    const handleTime = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
+    const handleTime = useCallback((type: keyof TTimeObject) => (date: moment.Moment | null): void => {
         setFormIsChecked(false);
         setTimeOfDay((prev) => {
             if (prev) {
@@ -231,9 +231,9 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 return {[type as keyof TTimeObject]: moment(date)}
             }
         })
-    }
+    }, [])
 
-    const handleDateChange = (type: keyof TTimeObject) => (date: moment.Moment | null): void => {
+    const handleDateChange = useCallback((type: keyof TTimeObject) => (date: moment.Moment | null): void => {
         setFormIsChecked(false);
         setDuration((prev) => {
             const value = moment.utc(date).hours(type === 'start' ? 0 : 1);
@@ -247,27 +247,27 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 return {[type as keyof TTimeObject]: value}
             }
         })
-    }
+    }, [])
 
-    const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption[]) => {
+    const onDayOfWeekChange = useCallback((e: ChangeEvent<{}>, value: TOption[]) => {
         setFormIsChecked(false);
         if (value.find(option => option.value === ETransportationDays.EveryDay)) {
             setDaysOfWeek(dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay));
         } else {
             setDaysOfWeek(value);
         }
-    }
+    }, [dayOFWeekOptions])
 
-    const onRequestChange = (e: ChangeEvent<{}>, value: TOption[]) => {
+    const onRequestChange = useCallback((e: ChangeEvent<{}>, value: TOption[]) => {
         setFormIsChecked(false);
         if (value.find(option => option.name === 'All')) {
             setServiceRequests(allAssignedList.map(item => ({ name: item.serviceRequest.code, value: item.id})));
         } else {
             setServiceRequests(value);
         }
-    }
+    }, [allAssignedList])
 
-    const onRequestCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: TOption) => {
+    const onRequestCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: TOption) => {
         setFormIsChecked(false);
         if (!e.target.checked) {
             setServiceRequests(prev => {
@@ -279,9 +279,9 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                             ? 0 : -1 : 1)
             })
         }
-    }
+    }, [serviceRequests])
 
-    const onDayOfWeekCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: TOption) => {
+    const onDayOfWeekCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: TOption) => {
         setFormIsChecked(false);
         if (!e.target.checked) {
             setDaysOfWeek(prev => {
@@ -293,7 +293,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                             ? 0 : -1 : 1)
             })
         }
-    }
+    }, [daysOfWeek])
 
     const renderDayOfWeekOption = useCallback((option: TOption) => {
         const allOptionsSelected = Boolean(daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1);
@@ -336,9 +336,9 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             daysOfWeek.length && customerSegment;
     }
 
-    const onSave = () => {
+    const onSave = useCallback(() => {
         setFormIsChecked(true);
-        if (selectedSC && props.editingElement && isValid()) {
+        if (selectedSC && editingElement && isValid()) {
             const data: ITransportationOptionRules = {
                 isAllServiceRequestsIncluded: allRequestsSelected,
             }
@@ -359,11 +359,12 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             } else {
                 data.dayOfWeeks = daysOfWeek.map(item => item.value);
             }
-            props.editingElement.id && dispatch(editTransportationOptionRules(props.editingElement.id, selectedSC.id, data, onCancel))
+            editingElement.id && dispatch(editTransportationOptionRules(editingElement.id, selectedSC.id, data, onCancel))
         } else {
             showError('Please fill all required fields')
         }
-    }
+    }, [selectedSC, editingElement, isValid, allRequestsSelected, duration, timeOfDay, customerSegment,
+        serviceRequests, daysOfWeek, dayOFWeekOptions, onCancel])
 
     return <BaseModal {...props} width={500} onClose={onCancel}>
         <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
