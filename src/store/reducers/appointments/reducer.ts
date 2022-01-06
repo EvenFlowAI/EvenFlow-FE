@@ -5,7 +5,7 @@ import {
     getAppointments,
     setAllAppointmentsCount,
     setAppointmentsCount,
-    setAppointmentsLoading
+    setAppointmentsLoading, setAppointmentsModalLoading
 } from "./actions";
 
 type TState = {
@@ -13,6 +13,7 @@ type TState = {
     count: number;
     allCount: number;
     isLoading: boolean;
+    isModalLoading: boolean;
     allAppointments: IListAppointment[];
 }
 
@@ -21,6 +22,7 @@ const initialState: TState = {
     count: 0,
     allCount: 0,
     isLoading: false,
+    isModalLoading: false,
     allAppointments: [],
 }
 
@@ -39,5 +41,8 @@ export const appointmentsReducer = createReducer(initialState, builder => builde
     })
     .addCase(setAllAppointmentsCount, (state, { payload} ) => {
         return {...state, allCount: payload}
+    })
+    .addCase(setAppointmentsModalLoading, (state, { payload} ) => {
+        return {...state, isModalLoading: payload}
     })
 )

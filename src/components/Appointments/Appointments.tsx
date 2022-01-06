@@ -9,15 +9,17 @@ import {AppointmentDialog} from "./AppointmentDialog";
 import {IOrder} from "../../types/types";
 import AppointmentFilters from "./AppointmentFilters";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {loadAppointments} from "../../store/reducers/appointments/actions";
 import AppointmentsCalendar from "./AppointmentsCalendar";
 import AppointmentsListDialog from "./AppointmentsListDialog";
 import {AppointmentsTable} from "./AppointmentsTable";
+import {RootState} from "../../store/rootReducer";
 
 export type TView = "calendar" | "list";
 
 export const Appointments = () => {
+    const { isLoading } = useSelector((state: RootState) => state.appointments);
     const [viewItem] = useState<IListAppointment|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | null | unknown>(null);
@@ -109,6 +111,7 @@ export const Appointments = () => {
         {selectedView === "list"
             ? <AppointmentsTable
                 onEditOpen={onEditOpen}
+                isLoading={isLoading}
                 refresh={refresh}
                 order={order}
                 setOrder={setOrder}

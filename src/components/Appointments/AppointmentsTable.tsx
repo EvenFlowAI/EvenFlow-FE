@@ -30,10 +30,11 @@ type TAppointmentsTable = {
     onChangePage: (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number) => void;
     onChangeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     pageData: IPageRequest;
+    isLoading: boolean;
 }
 
-export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
-    const { appointments, isLoading, count } = useSelector((state: RootState) => state.appointments);
+export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ isLoading, refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
+    const { appointments, count } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IListAppointment|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 

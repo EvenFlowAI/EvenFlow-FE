@@ -29,6 +29,7 @@ import {Api} from "../../../config/requests";
 import {getStartEndDates} from "./utils";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 type TProps = DialogProps<ISchedule> & {
     selectedDate: moment.Moment;
@@ -44,6 +45,17 @@ type TForm = {
     timeStart: moment.Moment|null;
     timeEnd: moment.Moment|null;
     podId?: number;
+}
+
+
+const getRequestDate = (i: number, date: moment.Moment | ParsableDate): ParsableDate => {
+    let requestDate = moment(date).day(i).toISOString();
+    if (i === 0) {
+        requestDate = moment(date).day() > 0 ?
+            moment(date).add(1, 'weeks').day(i).toISOString()
+            : moment(date).toISOString()
+    }
+    return requestDate;
 }
 
 export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
@@ -73,7 +85,8 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             if (payload) {
                 setForm({
                     timeStart: moment(payload.startAt, timeSpanString),
-                    timeEnd: moment(payload.finishAt, timeSpanString)
+                    timeEnd: moment(payload.finishAt, timeSpanString),
+                    podId: payload.podId,
                 });
             } else {
                 setForm({timeStart: null, timeEnd: null});
@@ -130,9 +143,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
 
         for (let i = 0; i < 7; i++) {
             const initialData: IScheduleForm = {
-                date: i === 0
-                    ? moment(date).add(1, 'weeks').day(i).toISOString()
-                    : moment(date).day(i).toISOString(),
+                date: getRequestDate(i, date),
                 employeeId: employee.id,
                 startAt: form.timeStart?.format(timeSpanString),
                 finishAt: form.timeEnd?.format(timeSpanString),
@@ -152,9 +163,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                         const data: IScheduleForm = {
                             ...schedule,
                             ...initialData,
-                            date: i === 0
-                                ? moment(schedule.date).add(1, 'weeks').day(i).toISOString()
-                                : moment(schedule.date).day(i).toISOString(),
+                            date: getRequestDate(i, schedule.date),
                             id: schedule.id,
                         }
                         Api.call(Api.endpoints.EmployeeSchedule.Update, {data, urlParams: {id: data.id}})
@@ -170,10 +179,10 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                 }
             }
         }
-
         const [start, end] = getStartEndDates(selectedDate, isXS);
         await dispatch(loadEmployeesSchedule(start, end, employee.serviceCenterId));
         setSaving(false);
+        props.onClose();
     }
 
     return <BaseModal {...props} width={750}>
