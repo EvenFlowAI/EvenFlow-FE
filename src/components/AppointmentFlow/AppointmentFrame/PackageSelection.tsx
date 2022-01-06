@@ -185,11 +185,11 @@ const Info = styled("p")({
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddServices}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
-    const {selectedPackage, selectedVehicle, maintenanceDetails} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedPackage, selectedVehicle, maintenanceDetails, isAdditionalServices} = useSelector((state: RootState) => state.appointmentFrame);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
 
     const theme = useTheme();
-    const {askConfirm} = useConfirm();
+    const {askConfirm, closeConfirm} = useConfirm();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
@@ -325,13 +325,23 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 label: `With ${packageOptions[selectedPackage.type]} Option`,
             })
         }
-        askConfirm({
-            title: "Would you like additional services?",
-            confirmContent: "Yes",
-            cancelContent: "No",
-            onConfirm: addServices,
-            onCancel: onNext,
-        })
+        if (isAdditionalServices && selectedPackage) {
+            askConfirm({
+                title: `Do you want to change the selected Package Option?`,
+                confirmContent: "Yes",
+                cancelContent: "No",
+                onConfirm: onNext,
+                onCancel: closeConfirm,
+            })
+        } else {
+            askConfirm({
+                title: "Would you like additional services?",
+                confirmContent: "Yes",
+                cancelContent: "No",
+                onConfirm: addServices,
+                onCancel: onNext,
+            })
+        }
     }
 
     return (
