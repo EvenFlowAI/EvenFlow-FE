@@ -47,13 +47,16 @@ type TForm = {
     podId?: number;
 }
 
-
 const getRequestDate = (i: number, date: moment.Moment | ParsableDate): ParsableDate => {
     let requestDate = moment(date).day(i).toISOString();
     if (i === 0) {
         requestDate = moment(date).day() > 0 ?
             moment(date).add(1, 'weeks').day(i).toISOString()
             : moment(date).toISOString()
+    } else {
+        if (moment(date).day() === 0) {
+            requestDate = moment(date).subtract(1, 'weeks').day(i).toISOString()
+        }
     }
     return requestDate;
 }

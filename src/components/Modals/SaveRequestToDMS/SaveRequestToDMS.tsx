@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
+import React, {useEffect, useState, Dispatch, SetStateAction, useCallback} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {IPackageById, IPackageOptionDetailed, TExtendedService} from "../../../api/types";
@@ -118,14 +118,14 @@ export const useTableStyles = makeStyles(() => ({
     },
 }));
 
-const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
+const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPackageData, onSave, ...props}) => {
     const [newRequests, setNewRequests] = useState<TExtendedService[]>([]);
     const [temporaryData, setTemporaryData] = useState<IPackageById | null>(null);
     const classes = useTableStyles();
 
     useEffect(() => {
-        setTemporaryData(props.packageData)
-    }, [props.packageData])
+        setTemporaryData(packageData)
+    }, [packageData])
 
     useEffect(() => {
         setNewRequests(prev => {
@@ -136,7 +136,7 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
         })
     }, [temporaryData])
 
-    const getCellClass = (cellIndex: number, rowIndex: number) => {
+    const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (cellIndex === 0) {
             switch (rowIndex) {
                 case 0:
@@ -165,9 +165,9 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
             default:
                 return classes.cell
         }
-    }
+    }, [newRequests, classes])
 
-    const onCheckboxClick = (option: IPackageOptionDetailed, requestId: number): void => {
+    const onCheckboxClick = useCallback((option: IPackageOptionDetailed, requestId: number): void => {
         setTemporaryData(prev => {
             if (prev) {
                 const optionToUpdate = prev.options.find(item => item.type === option.type);
@@ -195,16 +195,16 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
             }
             return prev;
         })
-    }
+    }, [])
 
     const onCancel = (): void => {
         props.onClose();
     }
 
-    const onSave = async () => {
+    const onSaveRequest = async () => {
         if (temporaryData) {
-            await props.setPackageData(temporaryData);
-            await props.onSave(temporaryData);
+            await setPackageData(temporaryData);
+            await onSave(temporaryData);
         }
     }
 
@@ -262,7 +262,7 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = (props) => {
                         Cancel
                     </Button>
                     <Button
-                        onClick={onSave}
+                        onClick={onSaveRequest}
                         className={classes.saveButton}>
                         save
                     </Button>
