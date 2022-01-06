@@ -85,7 +85,8 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             if (payload) {
                 setForm({
                     timeStart: moment(payload.startAt, timeSpanString),
-                    timeEnd: moment(payload.finishAt, timeSpanString)
+                    timeEnd: moment(payload.finishAt, timeSpanString),
+                    podId: payload.podId,
                 });
             } else {
                 setForm({timeStart: null, timeEnd: null});
