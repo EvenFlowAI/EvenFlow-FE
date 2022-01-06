@@ -12,6 +12,7 @@ export interface ISchedule {
     isRecurring: boolean;
     status: EWorkingStatus;
     dayOfWeek?: number;
+    podId?: number;
 }
 export interface IEmployeeSchedule {
     employee: IEmployee,
