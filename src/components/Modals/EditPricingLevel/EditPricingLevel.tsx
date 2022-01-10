@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {TextField} from "../../UI/TextField";
 import {DialogProps} from "../types";
@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
+const EditPricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLevel, ...props}) => {
     const [service, setService] = useState<string>('');
     const [opsCode, setOpsCode] = useState<string>('');
     const [discount, setDiscount] = useState<string>('');
@@ -64,24 +64,24 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
     const classes = useStyles();
 
     useEffect(() => {
-        if (props.prisingLevel && props.open) {
-            setService(props.prisingLevel.serviceRequest);
-            setOpsCode(props.prisingLevel.opsCode);
-            props.prisingLevel?.premium && setPremium(props.prisingLevel.premium);
-            props.prisingLevel?.discount && setDiscount(props.prisingLevel.discount);
+        if (prisingLevel && props.open) {
+            setService(prisingLevel.serviceRequest);
+            setOpsCode(prisingLevel.opsCode);
+            prisingLevel?.premium && setPremium(prisingLevel.premium);
+            prisingLevel?.discount && setDiscount(prisingLevel.discount);
         }
-    }, [props.prisingLevel, props.open])
+    }, [prisingLevel, props.open])
 
-    const onCancel = () => {
+    const onCancel = useCallback(() => {
         setFormIsChecked(false);
         setOpsCode('');
         setDiscount('');
         setPremium('');
         setService('');
         props.onClose();
-    }
+    }, [])
 
-    const onSave = () => {
+    const onSave = useCallback(() => {
         setFormIsChecked(true);
         if (discount && (+discount > 100 || +discount < 0)) {
             return showError('Discount value must not be less than 0 and more than 100')
@@ -92,7 +92,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
         if ((discount && !discount.match(/(^\d*\.?\d{1,3}?)$/)) || (premium && !premium.match(/(^\d*\.?\d{1,3}?)$/))) {
             return showError('Value must be a number with maximum 3 decimal digits')
         }
-        if (props.prisingLevel && selectedSC) {
+        if (prisingLevel && selectedSC) {
             const data: TUpdatedSettings = {
                 serviceCenterId: selectedSC.id,
                 values: [],
@@ -109,9 +109,9 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = (props) => {
                     value: Number(premium)
                 })
             }
-            dispatch(updateSRPricingLevels(props.prisingLevel.id, data, onCancel))
+            dispatch(updateSRPricingLevels(prisingLevel.id, data, onCancel))
         }
-    }
+    }, [prisingLevel, onCancel, premium, discount, selectedSC])
 
     const onTextFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
         setFormIsChecked(false);

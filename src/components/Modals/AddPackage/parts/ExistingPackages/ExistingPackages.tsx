@@ -18,28 +18,21 @@ export const existingPackagesTableData: TableRowDataType<IPackageByQuery>[] = [
     {header: "Package Name", val: el => el.name, width: '90%'}
 ]
 
-const ExistingPackages: React.FC<TAssignOpsCodeModalProps> = (props) => {
+const ExistingPackages: React.FC<TAssignOpsCodeModalProps> = ({selectedPackages, setSelectedPackages, ...props}) => {
     const { packages } = useSelector((state: RootState) => state.packages);
 
     const handleSelect = useCallback((el: IPackageByQuery) => {
-        props.setSelectedPackages(prev => {
+        setSelectedPackages(prev => {
             return  prev.includes(+el.id) ? prev.filter(item => item !== el.id) : [...prev, el.id]
         });
-    }, [props.setSelectedPackages])
+    }, [setSelectedPackages])
 
     const preActions = useCallback((el: IPackageByQuery) => {
-        return <Checkbox color="primary" checked={props.selectedPackages.includes(+el.id)} onChange={() => handleSelect(el)} />
-    }, [props.selectedPackages, handleSelect])
-
-    const getModalProps = (props: TAssignOpsCodeModalProps) => {
-        const modalProps = {...props};
-        delete modalProps.selectedPackages;
-        delete modalProps.setSelectedPackages;
-        return modalProps;
-    }
+        return <Checkbox color="primary" checked={selectedPackages.includes(+el.id)} onChange={() => handleSelect(el)} />
+    }, [selectedPackages, handleSelect])
 
     return (
-        <BaseModal {...getModalProps(props)} width={400}>
+        <BaseModal {...props} width={400}>
             <DialogTitle onClose={props.onClose}>Add Existing Packages</DialogTitle>
             <DialogContent>
                 <Table<IPackageByQuery>
