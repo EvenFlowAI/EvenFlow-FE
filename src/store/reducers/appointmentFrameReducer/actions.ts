@@ -38,6 +38,7 @@ export const getMakes = createAction<IMake[]>('fAppointment/GetMakes');
 export const getModels = createAction<string[]>('fAppointment/GetModels');
 export const setTrackerCreated = createAction<boolean>('fAppointment/SetTrackerCreated');
 export const setAdditionalServicesChosen = createAction<boolean>('fAppointment/SetAdditionalServicesChosen');
+export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPackageIsSelected');
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(

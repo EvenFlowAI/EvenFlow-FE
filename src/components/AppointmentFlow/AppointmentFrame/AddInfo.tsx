@@ -20,11 +20,13 @@ type TProps = {
     onAddServices: () => void;
 };
 export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServices}) => {
-    const [service, subService, vehicle, vehicles] = useSelector(({appointmentFrame, appointment}: RootState) => [
+    const [service, subService, vehicle, vehicles, selectedPackage, selectedSR] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.service,
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
-        appointment.customerLoadedData?.vehicles
+        appointment.customerLoadedData?.vehicles,
+        appointmentFrame.selectedPackage,
+        appointment.selectedSR,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -44,13 +46,15 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
     }
 
     const onSubmit = () => {
-        askConfirm({
-            title: "Would you like additional services?",
-            confirmContent: "Yes",
-            cancelContent: "No",
-            onConfirm: onAddServices,
-            onCancel: handleNext,
-        })
+        if (!selectedPackage || !selectedSR.length) {
+            askConfirm({
+                title: "Would you like additional services?",
+                confirmContent: "Yes",
+                cancelContent: "No",
+                onConfirm: onAddServices,
+                onCancel: handleNext,
+            })
+        }
     }
 
     return (

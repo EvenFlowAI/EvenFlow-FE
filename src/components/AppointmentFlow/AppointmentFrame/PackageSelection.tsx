@@ -6,7 +6,11 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setAdditionalServicesChosen, setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setAdditionalServicesChosen,
+    setPackage,
+    setPackageIsSelected
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
@@ -20,7 +24,8 @@ import {
 import { ReactComponent as CheckboxCircle } from "../../../assets/img/done_icon_black.svg";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
-import {useConfirm} from "../../../utils/hooks";
+import {useConfirm, useModal} from "../../../utils/hooks";
+import ConfirmChangeOption from "../../Modals/ConfirmChangeOption/ConfirmChangeOption";
 
 const border = '1px solid #DADADA';
 
@@ -185,11 +190,13 @@ const Info = styled("p")({
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddServices}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
-    const {selectedPackage, selectedVehicle, maintenanceDetails, isAdditionalServices} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedPackage, selectedVehicle, maintenanceDetails, packageIsSelected, service, subService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
 
     const theme = useTheme();
-    const {askConfirm, closeConfirm} = useConfirm();
+    const { isOpen, onOpen, onClose } = useModal();
+    const {askConfirm} = useConfirm();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
@@ -316,24 +323,9 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         if (onAddServices) onAddServices();
     }
 
-    const handleNext = (): void => {
-        if (selectedPackage) {
-            const packageOptions = ['Good', 'Better', 'Best'];
-            ReactGA.event({
-                category: 'EvenFlow User',
-                action: `Selected Package`,
-                label: `With ${packageOptions[selectedPackage.type]} Option`,
-            })
-        }
-        if (isAdditionalServices && selectedPackage) {
-            askConfirm({
-                title: `Do you want to change the selected Package Option?`,
-                confirmContent: "Yes",
-                cancelContent: "No",
-                onConfirm: onNext,
-                onCancel: closeConfirm,
-            })
-        } else {
+    const askAdditionalServices = () => {
+        const categoryChosen = service?.type === 0 || subService?.type === 0;
+        if (!categoryChosen || !selectedSR.length) {
             askConfirm({
                 title: "Would you like additional services?",
                 confirmContent: "Yes",
@@ -341,6 +333,25 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 onConfirm: addServices,
                 onCancel: onNext,
             })
+        } else {
+            onNext();
+        }
+    }
+
+    const handleNext = (): void => {
+        if (selectedPackage) {
+            dispatch(setPackageIsSelected(true));
+            const packageOptions = ['Good', 'Better', 'Best'];
+            ReactGA.event({
+                category: 'EvenFlow User',
+                action: `Selected Package`,
+                label: `With ${packageOptions[selectedPackage.type]} Option`,
+            })
+            if (packageIsSelected) {
+                onOpen();
+            } else {
+                askAdditionalServices()
+            }
         }
     }
 
@@ -468,6 +479,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 onBack={handleBack}
                 nextDisabled={!selectedPackage}
                 onNext={handleNext} />
+            <ConfirmChangeOption open={isOpen} onClose={onClose} onSave={askAdditionalServices}/>
         </StepWrapper>
     );
 };
