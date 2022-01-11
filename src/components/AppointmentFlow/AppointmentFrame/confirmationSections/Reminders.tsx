@@ -17,8 +17,9 @@ const FlexGroup = styled(FormGroup)({
 })
 
 export const Reminders = () => {
+    const {reminders}= useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
-    const reminders = useSelector((state: RootState) => state.appointmentFrame.reminders);
+
     const handleChange = (t: EReminderType) => () => {
         if (reminders.includes(t)) {
             dispatch(setReminders(reminders.filter(r => r !== t)));
