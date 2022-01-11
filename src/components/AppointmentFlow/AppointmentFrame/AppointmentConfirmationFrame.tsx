@@ -24,6 +24,7 @@ import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/
 import CreateAppointment from "../../Modals/CreateAppointment/CreateAppointment";
 import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
+import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 
 const Wrapper = styled('div')(({theme}) => ({
     // width: "100%",
@@ -206,5 +207,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             onClose={onClose}
             handleCreateAppointment={handleCreateAppointment}
         />
+        <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
     </StepWrapper>
 };
