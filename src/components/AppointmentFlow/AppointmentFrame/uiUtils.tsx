@@ -20,3 +20,21 @@ export const getMaintenanceDescription = (
     }
     return service?.name ?? "-";
 }
+
+export const getServicesDescription = (
+    srList: ISR[],
+    selectedSR: number[],
+    service?: IServiceCategory|null,
+    subService?: IServiceCategory|null) => {
+    const services: string[] = [];
+
+    if (selectedSR.length) {
+        const filtered: (string | undefined)[] = srList
+            .filter(el => selectedSR.includes(el.id))
+            .map(el => el.description);
+        filtered.forEach(item => item && services.push(item));
+    }
+    if (service?.type === 0) services.push(service.name);
+    if (subService?.type === 0) services.push(subService.name);
+    return  services;
+}

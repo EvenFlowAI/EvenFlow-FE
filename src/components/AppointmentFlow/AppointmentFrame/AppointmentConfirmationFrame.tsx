@@ -22,6 +22,9 @@ import {useParams} from "react-router-dom";
 import {useException, useModal} from "../../../utils/hooks";
 import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import CreateAppointment from "../../Modals/CreateAppointment/CreateAppointment";
+import Vehicle from "./confirmationSections/Vehicle";
+import ServiceRequests from "./confirmationSections/ServiceRequests";
+import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 
 const Wrapper = styled('div')(({theme}) => ({
     // width: "100%",
@@ -34,6 +37,10 @@ const Wrapper = styled('div')(({theme}) => ({
         gap: "20px",
         justifyContent: "flex-start",
         alignItems: "stretch"
+    },
+    "& > .itemizedLink": {
+        textDecoration: 'underline',
+        textTransform: 'none',
     },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
@@ -62,6 +69,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
     const {id} = useParams();
     const {isOpen, onClose, onOpen} = useModal();
+    const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
 
@@ -173,12 +181,20 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     return <StepWrapper>
         <Wrapper>
             <div>
-                <UserData errors={errors} setErrors={setErrors}/>
                 <SelectedDate onChangeSlot={onChangeSlot} />
+                <Review />
+                <Vehicle/>
+                <ServiceRequests/>
+                <SelectedPrice/>
+                <div
+                    role="presentation"
+                    style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
+                    onClick={onFeesOpen}>
+                    View itemized fees of services
+                </div>
             </div>
             <div>
-                <Review />
-                {appointmentFrame.selectedPackage ? <SelectedPrice/> : null}
+                <UserData errors={errors} setErrors={setErrors}/>
                 <Reminders />
                 <Info>By using this service you accept the terms of our Visitor Agreement.</Info>
             </div>
@@ -191,5 +207,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             onClose={onClose}
             handleCreateAppointment={handleCreateAppointment}
         />
+        <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
     </StepWrapper>
 };
