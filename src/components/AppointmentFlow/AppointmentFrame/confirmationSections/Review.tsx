@@ -17,43 +17,21 @@ const Wrapper = styled('ul')({
         textTransform: "capitalize"
     }
 });
-// const ButtonLink = styled('div')({
-//     textDecoration: "underline",
-//     marginTop: 10,
-//     fontWeight: "bold",
-//     cursor: "pointer",
-//     "&:hover": {
-//         textDecoration: "none"
-//     }
-// })
 
 const TRANSPORTATION_SHORT_DESCRIPTION = ["I will take the shuttle", "I would like a loaner vehicle", "I would like a rental car", "I would like to book me a ride", "I would like vehicle pick up / drop off services"]
 
 export const Review = () => {
     const [
-        selectedSr,
-        srList,
-        sc, ssc,
         consultant,
         transportation,
-        sP
     ] = useSelector((state: RootState) => [
-        state.appointment.selectedSR,
-        state.appointment.serviceRequests,
-        state.appointmentFrame.service,
-        state.appointmentFrame.subService,
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
-        state.appointmentFrame.selectedPackage
     ]);
     return (
         <div>
-            <ConfirmationTitle>Review</ConfirmationTitle>
+            <ConfirmationTitle>Appointment Details</ConfirmationTitle>
             <Wrapper>
-                {sP && <li>{sP.name} package</li>}
-                {/*<li className="service-item">{getMaintenanceDescription(*/}
-                {/*    srList, selectedSr, sP, sc, ssc*/}
-                {/*)}</li>*/}
                 <li>Transportation needs: {
                     typeof transportation?.type === 'number'
                     ? TRANSPORTATION_SHORT_DESCRIPTION[transportation.type]

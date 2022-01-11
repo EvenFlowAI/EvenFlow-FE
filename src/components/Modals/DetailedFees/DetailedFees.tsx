@@ -8,10 +8,6 @@ import {Dialog, styled} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ErrorOutline} from "@material-ui/icons";
 
-type TDetailedFeesProps = DialogProps & {
-
-}
-
 const List = styled('ul')({
     display: "flex",
     alignItems: "flex-start",
@@ -82,24 +78,26 @@ const useDialogStyles = makeStyles({
     }
 });
 
-const DetailedFees: React.FC<TDetailedFeesProps> = ({ open, onClose, }) => {
+const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const [
         selectedSr,
         srList,
         sc,
         ssc,
-        appointment
+        appointment,
+        selectedPackage,
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
         state.appointment.appointment,
+        state.appointmentFrame.selectedPackage,
     ]);
     const classes = useStyles();
     const dialogClasses = useDialogStyles();
 
-    const services = getServicesDescription(srList, selectedSr, sc, ssc);
+    const services = getServicesDescription(srList, selectedSr, sc, ssc, selectedPackage);
 
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>

@@ -25,8 +25,13 @@ export const getServicesDescription = (
     srList: ISR[],
     selectedSR: number[],
     service?: IServiceCategory|null,
-    subService?: IServiceCategory|null) => {
+    subService?: IServiceCategory|null,
+    selectedPackage?: IPackageOptions|null) => {
     const services: string[] = [];
+    if (selectedPackage) services.push(`${selectedPackage.name} package`)
+
+    if (service?.type === 0) services.push(service.name);
+    if (subService?.type === 0) services.push(subService.name);
 
     if (selectedSR.length) {
         const filtered: (string | undefined)[] = srList
@@ -34,7 +39,6 @@ export const getServicesDescription = (
             .map(el => el.description);
         filtered.forEach(item => item && services.push(item));
     }
-    if (service?.type === 0) services.push(service.name);
-    if (subService?.type === 0) services.push(subService.name);
+
     return  services;
 }
