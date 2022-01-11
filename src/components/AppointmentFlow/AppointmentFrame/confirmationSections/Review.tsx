@@ -3,7 +3,6 @@ import {ConfirmationTitle} from "../Title";
 import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {getMaintenanceDescription} from "../uiUtils";
 
 const Wrapper = styled('ul')({
     display: "flex",
@@ -34,7 +33,6 @@ export const Review = () => {
     const [
         selectedSr,
         srList,
-        vehicle,
         sc, ssc,
         consultant,
         transportation,
@@ -42,7 +40,6 @@ export const Review = () => {
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
-        state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
         state.appointmentFrame.advisor,
@@ -53,10 +50,10 @@ export const Review = () => {
         <div>
             <ConfirmationTitle>Review</ConfirmationTitle>
             <Wrapper>
-                <li>{vehicle?.year} {vehicle?.make} {vehicle?.model}</li>
-                <li className="service-item">{getMaintenanceDescription(
-                    srList, selectedSr, sP, sc, ssc
-                )}</li>
+                {sP && <li>{sP.name} package</li>}
+                {/*<li className="service-item">{getMaintenanceDescription(*/}
+                {/*    srList, selectedSr, sP, sc, ssc*/}
+                {/*)}</li>*/}
                 <li>Transportation needs: {
                     typeof transportation?.type === 'number'
                     ? TRANSPORTATION_SHORT_DESCRIPTION[transportation.type]
