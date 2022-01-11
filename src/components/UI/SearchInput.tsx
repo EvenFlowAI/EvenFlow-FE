@@ -7,8 +7,9 @@ export type TSearchInputProps = TextInputProps & {
     onSearch: () => void;
     delay?: number;
     value?: string;
+    placeholder?: string;
 };
-export const SearchInput: React.FC<TSearchInputProps> = ({onSearch, value, delay = 1000, ...props}) => {
+export const SearchInput: React.FC<TSearchInputProps> = ({placeholder, onSearch, value, delay = 1000, ...props}) => {
     const isInit = useRef(true);
     const debouncedSearch = useDebounce(value, delay);
     useEffect(() => {
@@ -19,7 +20,7 @@ export const SearchInput: React.FC<TSearchInputProps> = ({onSearch, value, delay
     useEffect(() => {isInit.current = false}, []);
 
     return <TextField
-        placeholder="Search..."
+        placeholder={placeholder ?? "Search..."}
         endAdornment={<Search />}
         value={value}
         {...props}

@@ -182,8 +182,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         <Wrapper>
             <div>
                 <SelectedDate onChangeSlot={onChangeSlot} />
-                <Review />
                 <Vehicle/>
+                <Review />
                 <ServiceRequests/>
                 <SelectedPrice/>
                 <div
