@@ -134,7 +134,7 @@ export interface IAppointmentSlotsRequest {
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;
     offerType?: EOfferType;
-    serviceCategoryId?: number,
+    serviceCategoryIds?: number[],
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
     serviceRequestIds: number[];

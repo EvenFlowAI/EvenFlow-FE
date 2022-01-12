@@ -1,6 +1,6 @@
 import React from 'react';
 import {ConfirmationTitle} from "../Title";
-import {Button, styled} from "@material-ui/core";
+import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 
@@ -18,14 +18,6 @@ export const SelectedPrice = () => {
             <ConfirmationTitle>Selected Price</ConfirmationTitle>
             <Price>
                 <span>${appointment?.price.value ?? 0}</span>
-                <Button
-                    color="primary"
-                    variant="outlined"
-                    onClick={() => {}}
-                    style={{ textDecoration: 'underline' }}
-                >
-                    View Details
-                </Button>
             </Price>
         </div>
     );
