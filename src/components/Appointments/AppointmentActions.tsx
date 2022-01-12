@@ -26,7 +26,7 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
 
     return <>
         <Box>
-            {selectedView === 'list' && <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} />}
+            {selectedView === 'list' && <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} placeholder="Search customer..."/>}
             <ButtonGroup color="primary" style={{ marginLeft: 20 }}>
                 {views.map(view =>
                     <Button

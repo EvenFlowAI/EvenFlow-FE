@@ -71,7 +71,7 @@ const initialState: TState = {
         phoneNumber: "",
         email: ""
     },
-    reminders: [],
+    reminders: [0, 2],
     transportation: null,
     maintenanceDetails: {},
     packages: [],
