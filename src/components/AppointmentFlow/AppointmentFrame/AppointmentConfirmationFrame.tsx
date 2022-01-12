@@ -83,9 +83,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     }
 
     const handleCreateAppointment = (vin = '', withVin = true) => {
-        const serviceCategoryIds: number[] = [];
-        if (appointmentFrame.subService) serviceCategoryIds.push(appointmentFrame.subService.id);
-        if (appointmentFrame.service) serviceCategoryIds.push(appointmentFrame.service.id);
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
@@ -121,7 +118,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointment.selectedSR
             ),
             date: appointment.appointment?.id.split("|")[0] || "",
-            serviceCategoryIds: serviceCategoryIds.filter(item => item > 0),
+            serviceCategoryIds: appointmentFrame.categoriesIds,
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
         };
         const endpoint = data?.hashKey

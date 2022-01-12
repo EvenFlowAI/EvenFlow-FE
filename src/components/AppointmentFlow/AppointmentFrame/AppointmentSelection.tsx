@@ -57,6 +57,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         selectedOpsCodes,
         appointment,
         consultant,
+        categoriesIds,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -69,6 +70,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointment.selectedSR,
         state.appointment.appointment,
         state.appointmentFrame.advisor,
+        state.appointmentFrame.categoriesIds,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
@@ -137,9 +139,6 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, []);
 
     useEffect(() => {
-        const serviceCategoryIds: number[] = [];
-        if (subService?.id) serviceCategoryIds.push(subService.id);
-        if (service?.id) serviceCategoryIds.push(service.id);
         async function loadData () {
             if (id) {
                 setLoading(true);
@@ -156,7 +155,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                         serviceRequestIds: collectServiceRequestIds(
                             service, subService, selectedPackage, selectedOpsCodes
                         ),
-                        serviceCategoryIds: serviceCategoryIds.filter(item => item > 0),
+                        serviceCategoryIds: categoriesIds,
                         countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration

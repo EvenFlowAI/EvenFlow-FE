@@ -4,7 +4,7 @@ import {StepWrapper} from './StepWrapper';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {selectService} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {selectCategoriesIds, selectService} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
@@ -63,6 +63,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
+
+            dispatch(selectCategoriesIds(selectedService.id));
 
             switch (selectedService?.type) {
                 case 2:
