@@ -27,6 +27,7 @@ export interface ISR {
     id: number;
     code: string;
     description?: string;
+    price?: number;
 }
 export type TS1Form = {
     year: string|null;
@@ -57,6 +58,7 @@ export interface IVehicle {
     transmission: string;
     driveType: string;
     engineType: string;
+    serviceInterval: string;
 }
 export type TS3Form = {
     date?: ParsableDate,
@@ -132,7 +134,7 @@ export interface IAppointmentSlotsRequest {
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;
     offerType?: EOfferType;
-    serviceCategoryId?: number,
+    serviceCategoryIds?: number[],
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
     serviceRequestIds: number[];

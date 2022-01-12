@@ -1,15 +1,15 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getMakes,
-    getModels,
+    getModels, selectCategoriesIds,
     selectService,
-    selectSubService,
+    selectSubService, setAdditionalServicesChosen,
     setAdvisor,
     setAppointmentId, setConsultants, setCurrentFrameScreen,
     setCustomer,
     setFrameDescription, setLoadingPackages,
     setMaintenanceDetails,
-    setPackage, setPackages,
+    setPackage, setPackageIsSelected, setPackages,
     setReminders,
     setTime,
     setTiming, setTrackerCreated,
@@ -54,6 +54,9 @@ type TState = {
     makes: IMake[];
     models: string[];
     trackerCreated: boolean;
+    isAdditionalServices: boolean;
+    packageIsSelected: boolean;
+    categoriesIds: number[];
 }
 const initialState: TState = {
     service: null,
@@ -79,6 +82,9 @@ const initialState: TState = {
     makes: [],
     models: [],
     trackerCreated: false,
+    isAdditionalServices: false,
+    packageIsSelected: false,
+    categoriesIds: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -87,7 +93,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             ...state,
             service: payload,
             subService: null,
-            selectedPackage: null,
         };
     })
     .addCase(selectSubService, (state, {payload}) => {
@@ -184,5 +189,18 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setTrackerCreated, (state, { payload }) => {
         return {...state, trackerCreated: payload}
+    })
+    .addCase(setAdditionalServicesChosen, (state, {payload}) => {
+        return {...state, isAdditionalServices: payload};
+    })
+    .addCase(setPackageIsSelected, (state, {payload}) => {
+        return {...state, packageIsSelected: payload};
+    })
+    .addCase(selectCategoriesIds, (state, {payload}) => {
+        return {...state, categoriesIds:
+                state.categoriesIds.includes(payload)
+                    ? state.categoriesIds.filter(item => item === payload)
+                    : [...state.categoriesIds, payload]
+        }
     })
 )

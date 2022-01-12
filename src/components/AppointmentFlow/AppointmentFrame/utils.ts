@@ -25,12 +25,12 @@ export const collectServiceRequestIds = (
         // selectedPackage.
     }
     if (individualOpsCodes?.length) {
-        ids = [];
         for (let c of individualOpsCodes) {
             ids.push(c);
         }
     }
-    return ids;
+    const set = new Set(ids)
+    return Array.from(set);
 }
 
 export const checkSelectedCar = (vehicle: ILoadedVehicle|null, vehicles?: ILoadedVehicle[]): boolean => {

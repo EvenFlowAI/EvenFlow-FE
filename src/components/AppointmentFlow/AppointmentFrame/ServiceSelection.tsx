@@ -5,7 +5,7 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {selectSubService} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {selectCategoriesIds, selectSubService} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
@@ -67,6 +67,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 action: 'Selected Sub Service',
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
+            dispatch(selectCategoriesIds(subService.id));
             switch (subService.type) {
                 case 2:
                     return onNext('opsCode');

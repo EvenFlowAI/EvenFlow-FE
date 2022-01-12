@@ -18,7 +18,7 @@ import {
 import {ArrowDropDownCircleOutlined, Search} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
-import {handleSearch, loadSRs, selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {handleSearch, loadSRs, selectAppointment} from "../../../store/reducers/appointment/actions";
 import {useDispatch, useSelector} from "react-redux";
 import { useParams } from 'react-router-dom';
 import {RootState} from "../../../store/rootReducer";
@@ -110,7 +110,7 @@ export const ServiceNeedsS2: React.FC<TStepProps> = ({prev, next, isCompleted}) 
     }
 
     const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(selectSR(value ? Number(value) : null));
+        // dispatch(selectSR(value ? Number(value) : null));
         dispatch(selectAppointment(null));
     }
 

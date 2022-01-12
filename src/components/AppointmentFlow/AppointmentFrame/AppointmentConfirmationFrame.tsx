@@ -9,7 +9,7 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {EServiceCenterName, ICreateAppointmentResp, IUpdateAppointment} from "../../../api/types";
+import {EServiceCenterName, ICreateAppointmentResp} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
@@ -83,8 +83,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     }
 
     const handleCreateAppointment = (vin = '', withVin = true) => {
-        // TODO: UpdateFlow?
-        const data: IUpdateAppointment = {
+        const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
             appointmentTimingType: appointmentFrame.selectedTiming ?? EAppointmentTimingType.FirstAvailable,
@@ -119,16 +118,15 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointment.selectedSR
             ),
             date: appointment.appointment?.id.split("|")[0] || "",
-            serviceCategoryId: appointmentFrame.subService?.id ?? appointmentFrame.service?.id ?? null,
+            serviceCategoryIds: appointmentFrame.categoriesIds,
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
         };
-        if ((data.serviceCategoryId && data.serviceCategoryId < 1) || (data.serviceCategoryId && data.maintenancePackageOptionId) || data.serviceRequestIds.length) {
-            data.serviceCategoryId = null;
-        }
         const endpoint = data?.hashKey
             ? Api.endpoints.Appointments.UpdateByKey
             : Api.endpoints.Appointments.Create;
+
         setSaving(true);
+
         Api.call<ICreateAppointmentResp>(
             endpoint, { data, urlParams: {id: data.hashKey} }
         )
