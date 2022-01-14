@@ -3,7 +3,6 @@ import {DialogContent, DialogTitle} from "../BaseModal";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {DialogProps} from "../types";
-import {getServicesDescription} from "../../AppointmentFlow/AppointmentFrame/uiUtils";
 import {Dialog, styled} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ErrorOutline} from "@material-ui/icons";
@@ -26,7 +25,7 @@ const List = styled('ul')({
 const Info = styled('div')({
     display: 'flex',
     alignItems: 'center',
-    margin: '12px 0 24px 0',
+    marginBottom: 24,
     padding: 0,
     "& > .text": {
         marginLeft: 10,
@@ -45,6 +44,12 @@ const useStyles = makeStyles(() => ({
             borderBottom: '1px solid rgba(0, 0, 0, 0.15)'
         }
     },
+    price: {
+        width: '20%',
+        fontWeight: 600,
+        fontSize: 16,
+        textAlign: 'end',
+    }
 }))
 
 const useDialogStyles = makeStyles({
@@ -75,29 +80,14 @@ const useDialogStyles = makeStyles({
     dialogPaper: {
         backgroundColor: '#E5E5E5',
         maxWidth: 525,
+        paddingBottom: 24,
     }
 });
 
 const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
-    const [
-        selectedSr,
-        srList,
-        appointment,
-        selectedPackage,
-        allServiceCategories,
-        categoriesIds,
-    ] = useSelector((state: RootState) => [
-        state.appointment.selectedSR,
-        state.appointment.serviceRequests,
-        state.appointment.appointment,
-        state.appointmentFrame.selectedPackage,
-        state.appointment.allServiceCategories,
-        state.appointmentFrame.categoriesIds,
-    ]);
-    const classes = useStyles();
+    const {appointment} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
-
-    const services = getServicesDescription(srList, selectedSr, selectedPackage, allServiceCategories, categoriesIds);
+    const classes = useStyles();
 
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
@@ -106,9 +96,18 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
             </DialogTitle>
             <DialogContent>
                 <List>
-                    {services.map(item => <li className={classes.item}><span>{item}</span><ErrorOutline/></li>)}
+                    {appointment?.serviceRequestPrices?.map(item => <li className={classes.item}>
+                        <span>{item.requestName}</span>
+                        {typeof item.priceValue !== 'undefined' && !Number.isNaN(item.priceValue)
+                            ? <span className={classes.price}>$ {item.priceValue}</span>
+                            : <Info/>}
+                    </li>)}
                 </List>
-                <Info><ErrorOutline/><span className="text">Service item will be quoted at dealership</span></Info>
+                {appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined') && <Info>
+                  <ErrorOutline/>
+                  <span className="text">Service item will be quoted at dealership</span>
+                </Info>}
+
             </DialogContent>
         </Dialog>
     );
