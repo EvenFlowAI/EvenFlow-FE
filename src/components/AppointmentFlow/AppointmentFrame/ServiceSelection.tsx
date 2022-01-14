@@ -67,7 +67,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 action: 'Selected Sub Service',
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
-            dispatch(selectCategoriesIds(subService.id));
+            subService.type === 0 && dispatch(selectCategoriesIds(subService.id));
             switch (subService.type) {
                 case 2:
                     return onNext('opsCode');
