@@ -62,6 +62,7 @@ export const changePersonalInformation = createAction<Partial<IPersonalInformati
 export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
 export const getServiceCategories = createAction<IServiceCategory[]>("Appointment/GetServiceCategories");
+export const getAllServiceCategories = createAction<IServiceCategory[]>("Appointment/GetAllServiceCategories");
 
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
@@ -239,6 +240,18 @@ export const loadServiceCategories = (serviceCenterId: number, page: number): Ap
     )
         .then(({data}) => {
             if (data) dispatch(getServiceCategories(data))
+        })
+        .catch(err => {
+            console.log('load all service categories error', err)
+        })
+}
+
+export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(
+        Api.endpoints.ServiceCategories.GetByQuery, {data: {serviceCenterId, pageSize: 0, pageIndex: 0}}
+    )
+        .then(({data}) => {
+            if (data?.result) dispatch(getAllServiceCategories(data.result))
         })
         .catch(err => {
             console.log('load all service categories error', err)

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -20,14 +20,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useException, useModal} from "../../../utils/hooks";
-import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
+import {
+    loadAllServiceCategories,
+    saveCustomerCache,
+    setCustomerLoadedData
+} from "../../../store/reducers/appointment/actions";
 import CreateAppointment from "../../Modals/CreateAppointment/CreateAppointment";
 import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 
 const Wrapper = styled('div')(({theme}) => ({
-    // width: "100%",
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "20px",
@@ -72,6 +75,10 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
+    }, [appointment.scProfile])
 
     const onCreateClick = () => {
         if (appointment.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville

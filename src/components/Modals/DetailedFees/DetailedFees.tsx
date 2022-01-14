@@ -82,22 +82,22 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const [
         selectedSr,
         srList,
-        sc,
-        ssc,
         appointment,
         selectedPackage,
+        allServiceCategories,
+        categoriesIds,
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
-        state.appointmentFrame.service,
-        state.appointmentFrame.subService,
         state.appointment.appointment,
         state.appointmentFrame.selectedPackage,
+        state.appointment.allServiceCategories,
+        state.appointmentFrame.categoriesIds,
     ]);
     const classes = useStyles();
     const dialogClasses = useDialogStyles();
 
-    const services = getServicesDescription(srList, selectedSr, sc, ssc, selectedPackage);
+    const services = getServicesDescription(srList, selectedSr, selectedPackage, allServiceCategories, categoriesIds);
 
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
