@@ -145,6 +145,7 @@ export interface IAppointmentSlotsRequest {
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
     date: moment.Moment;
+    serviceRequestPrices?: IServiceRequestPrice[];
     timingType?: number;
     appointmentDate?: string;
 }
@@ -189,4 +190,9 @@ export const APPOINTMENT_STATE_SAVED_KEY = "APPOINTMENT_SAVED";
 export interface IMake {
     name: string;
     models: string[];
+}
+
+export interface IServiceRequestPrice {
+    requestName: string;
+    priceValue?: number;
 }

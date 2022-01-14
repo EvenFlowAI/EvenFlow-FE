@@ -3,7 +3,6 @@ import {styled} from "@material-ui/core";
 import {ConfirmationTitle} from "../Title";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {getServicesDescription} from "../uiUtils";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -27,27 +26,14 @@ const List = styled('ul')({
 });
 
 const ServiceRequests = () => {
-    const [
-        selectedSr,
-        srList,
-        selectedPackage,
-        allServiceCategories,
-        categoriesIds,
-    ] = useSelector((state: RootState) => [
-        state.appointment.selectedSR,
-        state.appointment.serviceRequests,
-        state.appointmentFrame.selectedPackage,
-        state.appointment.allServiceCategories,
-        state.appointmentFrame.categoriesIds,
-    ]);
-    const services = getServicesDescription(srList, selectedSr, selectedPackage, allServiceCategories, categoriesIds);
-    return services.length
+    const {appointment} = useSelector((state: RootState) => state.appointment);
+    return appointment?.serviceRequestPrices?.length
         ? <div>
             <TitleWrapper>
                 <ConfirmationTitle>Service Requests: </ConfirmationTitle>
             </TitleWrapper>
             <List>
-                {services.map(item => <li className="service-item">{item}</li>)}
+                {appointment?.serviceRequestPrices.map(item => <li className="service-item">{item.requestName}</li>)}
             </List>
         </div>
         : null;

@@ -20,28 +20,3 @@ export const getMaintenanceDescription = (
     }
     return service?.name ?? "-";
 }
-
-export const getServicesDescription = (
-    srList: ISR[],
-    selectedSR: number[],
-    selectedPackage?: IPackageOptions|null,
-    allServiceCategories?: IServiceCategory[],
-    categoriesIds?: number[]) => {
-    const services: string[] = [];
-
-    if (selectedPackage) services.push(`${selectedPackage.name} package`)
-
-    if (categoriesIds?.length && allServiceCategories?.length) {
-        const selectedCategories = allServiceCategories.filter(category => categoriesIds.includes(category.id) && category.type === 0);
-        selectedCategories.forEach(category => services.push(category.name))
-    }
-
-    if (selectedSR.length) {
-        const filtered: (string | undefined)[] = srList
-            .filter(el => selectedSR.includes(el.id))
-            .map(el => el.description);
-        filtered.forEach(item => item && services.push(item));
-    }
-
-    return  services;
-}
