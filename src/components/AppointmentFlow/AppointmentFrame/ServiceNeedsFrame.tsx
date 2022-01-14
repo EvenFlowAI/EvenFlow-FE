@@ -64,7 +64,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
 
-            dispatch(selectCategoriesIds(selectedService.id));
+            selectedService.type === 0 && dispatch(selectCategoriesIds(selectedService.id));
 
             switch (selectedService?.type) {
                 case 2:
