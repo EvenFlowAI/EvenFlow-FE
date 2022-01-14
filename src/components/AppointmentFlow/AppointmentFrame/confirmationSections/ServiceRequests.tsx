@@ -30,17 +30,17 @@ const ServiceRequests = () => {
     const [
         selectedSr,
         srList,
-        sc,
-        ssc,
-        selectedPackage
+        selectedPackage,
+        allServiceCategories,
+        categoriesIds,
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
-        state.appointmentFrame.service,
-        state.appointmentFrame.subService,
         state.appointmentFrame.selectedPackage,
+        state.appointment.allServiceCategories,
+        state.appointmentFrame.categoriesIds,
     ]);
-    const services = getServicesDescription(srList, selectedSr, sc, ssc, selectedPackage);
+    const services = getServicesDescription(srList, selectedSr, selectedPackage, allServiceCategories, categoriesIds);
     return services.length
         ? <div>
             <TitleWrapper>

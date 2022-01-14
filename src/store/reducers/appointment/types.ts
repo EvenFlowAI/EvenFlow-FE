@@ -177,6 +177,7 @@ export type TAppointmentState = {
     appointmentSlots: IRemappedAppointmentSlot[];
     appointmentFilters: IAppointmentFilters;
     serviceCategories: IServiceCategory[];
+    allServiceCategories: IServiceCategory[];
 };
 export enum EReminderType {
     Email, Phone, Sms

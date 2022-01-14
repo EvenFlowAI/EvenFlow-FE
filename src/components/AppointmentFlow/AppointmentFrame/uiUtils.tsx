@@ -24,14 +24,17 @@ export const getMaintenanceDescription = (
 export const getServicesDescription = (
     srList: ISR[],
     selectedSR: number[],
-    service?: IServiceCategory|null,
-    subService?: IServiceCategory|null,
-    selectedPackage?: IPackageOptions|null) => {
+    selectedPackage?: IPackageOptions|null,
+    allServiceCategories?: IServiceCategory[],
+    categoriesIds?: number[]) => {
     const services: string[] = [];
+
     if (selectedPackage) services.push(`${selectedPackage.name} package`)
 
-    if (service?.type === 0) services.push(service.name);
-    if (subService?.type === 0) services.push(subService.name);
+    if (categoriesIds?.length && allServiceCategories?.length) {
+        const selectedCategories = allServiceCategories.filter(category => categoriesIds.includes(category.id) && category.type === 0);
+        selectedCategories.forEach(category => services.push(category.name))
+    }
 
     if (selectedSR.length) {
         const filtered: (string | undefined)[] = srList
