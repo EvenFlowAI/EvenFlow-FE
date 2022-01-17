@@ -11,3 +11,11 @@ export interface IAppointmentsRequest {
     status?: EAppointmentStatus | null | unknown;
     searchTerm?: string;
 }
+
+export interface IVehicleDetails {
+    vehicleVin?: string;
+    vehicleMake?: string;
+    vehicleModel?: string;
+    vehicleYear?: string;
+    vehicleMileage?: string;
+}

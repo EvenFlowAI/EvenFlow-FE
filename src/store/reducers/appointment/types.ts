@@ -49,6 +49,7 @@ export interface IVehicleData {
     driveType: string;
     engineType: string;
 }
+
 export interface IVehicle {
     vin: string;
     make: string;
