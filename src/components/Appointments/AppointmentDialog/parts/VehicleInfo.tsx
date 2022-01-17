@@ -101,7 +101,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
                                 value={form.vehicleVin}
                                 id="vehicleVin"
                                 name="vehicleVin"
-                                placeholder="Enter Driver VIN"
+                                placeholder="Enter VIN"
                                 endAdornment={
                                     vinLoading ?
                                         <InputLoading />
