@@ -1,9 +1,9 @@
 import React from 'react';
 import {Button, Box, ButtonGroup} from "@material-ui/core";
-import {useModal} from "../../utils/hooks";
+import {useModal} from "../../../utils/hooks";
 import {AppointmentDialog} from "./AppointmentDialog";
-import {SearchInput} from "../UI/SearchInput";
-import {TView} from "./Appointments";
+import {SearchInput} from "../../UI/SearchInput";
+import {TView} from "../Appointments";
 
 type TProps = {
     onAction?: () => void;

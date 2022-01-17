@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {DialogProps} from "../Modals/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../Modals/BaseModal";
-import {ICreateAppointment, IListAppointment, ITransportation} from "../../api/types";
+import {DialogProps} from "../../Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
+import {ICreateAppointment, IListAppointment, ITransportation} from "../../../api/types";
 import {
     Button,
     Checkbox,
@@ -13,36 +13,34 @@ import {
     MenuItem,
     Select
 } from "@material-ui/core";
-import {LoadingButton} from "../UI/Button";
-import {useException, useMessage, useSCs} from "../../utils/hooks";
+import {LoadingButton} from "../../UI/Button";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {
     EAppointmentTimingType,
     EReminderType,
     IAppointmentSlot,
     ISR,
     IVehicleData
-} from "../../store/reducers/appointment/types";
-import {TextField} from "../UI/TextField";
+} from "../../../store/reducers/appointment/types";
+import {TextField} from "../../UI/TextField";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../UI/AutocompleteRender";
-import {DatePicker} from "../UI/DateTimePickers";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {DatePicker} from "../../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {API} from "../../api/api";
+import {API} from "../../../api/api";
 import moment from "moment";
-import {timeString, VIN_LENGTH} from "../../config/constants";
+import {timeString, VIN_LENGTH} from "../../../config/constants";
 import {CalendarToday} from "@material-ui/icons";
-import {Api} from "../../config/requests";
-import {InputLoading} from "../AppointmentFlow/UI";
-import {validatePhoneNumber} from "../../utils/utils";
-import {EDemandCategory} from "../../store/reducers/pricingSettings/types";
-import {loadMakes} from "../../store/reducers/appointmentFrameReducer/actions";
-import {loadMileage} from "../../store/reducers/vehicleDetails/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/rootReducer";
-import {yearOptions} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import {IVehicleDetails} from "../../store/reducers/appointments/types";
+import {Api} from "../../../config/requests";
+import {validatePhoneNumber} from "../../../utils/utils";
+import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
+import {loadMakes} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import {useDispatch} from "react-redux";
+import {IVehicleDetails} from "../../../store/reducers/appointments/types";
+import VehicleInfo from "./parts/VehicleInfo";
 
-type TForm = {
+export type TForm = {
     date: string;
     slot: string;
     reminderTypes: EReminderType[];
@@ -62,6 +60,7 @@ type TForm = {
     comment: string;
     serviceRequestIds: number[];
 };
+
 const initialForm: TForm = {
     date: "string",
     slot: "",
@@ -83,21 +82,9 @@ const initialForm: TForm = {
     serviceRequestIds: [],
 };
 
-type TOptionsState = {[s: string]: string[]};
-const blankOptions: TOptionsState = {};
-
-type TSelect = {
-    label: string;
-    name: keyof IVehicleDetails;
-    options?: string[]|string;
-};
-
 type TKey = keyof IVehicleDetails;
 
 export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
-    const {makes}= useSelector((state: RootState) => state.appointmentFrame);
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
-
     const [form, setForm] = useState<TForm>(initialForm);
     const initialRef = useRef(false);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
@@ -111,22 +98,12 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
     const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
-    const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const [errors, setErrors] = useState<TKey[]>([]);
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const oldVin = useRef<string>("");
-
-    const selects: TSelect[] = [
-        {label: "VIN", name: "vehicleVin"},
-        {label: "Make", name: "vehicleMake", options: 'make'},
-        {label: "Model", name: "vehicleModel", options: "model",},
-        {label: "Year", name: "vehicleYear", options: yearOptions},
-        {label: "Mileage", name:"vehicleMileage", options: mileage.map(item => item.value.toString())},
-    ];
 
     useEffect(() => {
         if (props.open) {
@@ -200,6 +177,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
             })
         }
     }, [selectedSC, props.open, selectedSR]);
+
     useEffect(() => {
         let waiting = true;
         if (selectedSC && props.open && filterDate) {
@@ -291,15 +269,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         }
     }, [selectedSC]);
 
-    useEffect(() => {
-        if (makes.length) {
-            setLoadedOptions(prevOptions => ({...prevOptions, make: makes.map(item => item.name)}));
-            setCurrentModels(() => makes.map(item => item.models).flat());
-        } else {
-            setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
-        }
-    }, [makes])
-
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         if (name === "driverPhoneNumber") {
             value = validatePhoneNumber(value);
@@ -387,22 +356,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         return moment.utc(date).format(`LL - ${timeString}`);
     }
 
-    const handleSelectChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
-        if (option && !skip) {
-            setErrors(e => e.filter(err => err !== name));
-            if (name === 'vehicleMake') {
-                if (option === 'Other') {
-                    setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
-                    setForm(prev => ({...prev, vehicleModel: 'Other', [name]: option}));
-                } else {
-                    const currentMake = makes.find(item => item.name === option);
-                    if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
-                }
-            }
-            setForm(prev => ({...prev, [name]: option}));
-        }
-    }
-
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Update"} Appointment</DialogTitle>
         <DialogContent>
@@ -446,137 +399,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-                <Grid item xs={12}>
-                    <h3>Vehicle info</h3>
-                </Grid>
-                {selects.map(select => {
-                    const hasError = errors.includes(select.name);
-                    if (select.options) {
-                        return <Grid item xs={12}  sm={6}>
-                            <Autocomplete
-                            key={select.name}
-                            options={typeof select.options === 'string'
-                                ? loadedOptions[select.options] ?? []
-                                : select.options}
-                            onChange={handleSelectChange(select.name)}
-                            disableClearable
-                            autoComplete={true}
-                            renderInput={autocompleteRender({
-                                label: select.label,
-                                placeholder: hasError ? `${select.label} required` : `Select ${select.label}`,
-                                error: hasError,
-                                required: true
-                            })}
-                            value={form[select.name]}
-                        />
-                        </Grid>
-                    } else {
-                        return <Grid item xs={12}>
-                            <TextField
-                                label="VIN"
-                                value={form.vehicleVin}
-                                id="vehicleVin"
-                                name="vehicleVin"
-                                placeholder="Enter Driver VIN"
-                                endAdornment={
-                                    vinLoading ?
-                                        <InputLoading />
-                                        : undefined
-                                }
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                    }
-                }
-                )}
-                {/*<Grid item xs={12}>*/}
-                {/*    <TextField*/}
-                {/*        label="VIN"*/}
-                {/*        value={form.vehicleVin}*/}
-                {/*        id="vehicleVin"*/}
-                {/*        name="vehicleVin"*/}
-                {/*        endAdornment={*/}
-                {/*            vinLoading ?*/}
-                {/*                <InputLoading />*/}
-                {/*                : undefined*/}
-                {/*        }*/}
-                {/*        onChange={handleChange}*/}
-                {/*        fullWidth*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={12} sm={5}>*/}
-                {/*    <TextField*/}
-                {/*        label="Make"*/}
-                {/*        value={form.vehicleMake}*/}
-                {/*        id="vehicleMake"*/}
-                {/*        name="vehicleMake"*/}
-                {/*        onChange={handleChange}*/}
-                {/*        fullWidth*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={12} sm={5}>*/}
-                {/*    <TextField*/}
-                {/*        label="Model"*/}
-                {/*        value={form.vehicleModel}*/}
-                {/*        id="vehicleModel"*/}
-                {/*        name="vehicleModel"*/}
-                {/*        onChange={handleChange}*/}
-                {/*        fullWidth*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={12} sm={2}>*/}
-                {/*    <TextField*/}
-                {/*        label="Year"*/}
-                {/*        value={form.vehicleYear}*/}
-                {/*        id="vehicleYear"*/}
-                {/*        name="vehicleYear"*/}
-                {/*        onChange={handleChange}*/}
-                {/*        fullWidth*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={12} sm={3}>*/}
-                {/*    <TextField*/}
-                {/*        label="Drive Type"*/}
-                {/*        value={form.vehicleDriveType}*/}
-                {/*        id="vehicleDriveType"*/}
-                {/*        name="vehicleDriveType"*/}
-                {/*        onChange={handleChange}*/}
-                {/*        fullWidth*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={12} sm={3}>*/}
-                {/*    <TextField*/}
-                {/*        label="Transmission"*/}
-                {/*        value={form.vehicleTransmission}*/}
-                {/*        id="vehicleTransmission"*/}
-                {/*        name="vehicleTransmission"*/}
-                {/*        onChange={handleChange}*/}
-                {/*        fullWidth*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={12} sm={3}>*/}
-                {/*    <TextField*/}
-                {/*        label="Engine Type"*/}
-                {/*        value={form.vehicleEngineType}*/}
-                {/*        id="vehicleEngineType"*/}
-                {/*        name="vehicleEngineType"*/}
-                {/*        onChange={handleChange}*/}
-                {/*        fullWidth*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={12} sm={3}>*/}
-                {/*    <TextField*/}
-                {/*        label="Mileage"*/}
-                {/*        value={form.vehicleMileage}*/}
-                {/*        id="vehicleMileage"*/}
-                {/*        type="number"*/}
-                {/*        inputProps={{min: 0, step: 1000}}*/}
-                {/*        name="vehicleMileage"*/}
-                {/*        onChange={handleChange}*/}
-                {/*        fullWidth*/}
-                {/*    />*/}
-                {/*</Grid>*/}
+                <VehicleInfo form={form} setForm={setForm} handleChange={handleChange} setErrors={setErrors} errors={errors} vinLoading={vinLoading}/>
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
@@ -661,13 +484,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                                 onChange={handleReminderChange(EReminderType.Sms)} name="reminders"/>}
                             label="SMS"
                         />
-                        {/*<FormControlLabel*/}
-                        {/*    control={<Checkbox*/}
-                        {/*        color="primary"*/}
-                        {/*        checked={form.reminderTypes.includes(EReminderType.Phone)}*/}
-                        {/*        onChange={handleReminderChange(EReminderType.Phone)} name="reminders"/>}*/}
-                        {/*    label="Phone"*/}
-                        {/*/>*/}
                     </FormGroup>
                 </Grid>
                 <Grid item xs={12}>

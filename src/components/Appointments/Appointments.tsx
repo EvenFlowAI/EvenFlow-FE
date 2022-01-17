@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
-import {AppointmentActions} from "./AppointmentActions";
+import {AppointmentActions} from "./AppointmentDialog/AppointmentActions";
 import {useModal, useSCs, useStatePagination} from "../../utils/hooks";
 import {EAppointmentStatus, IListAppointment} from "../../api/types";
 import moment from "moment";
-import {AppointmentDialog} from "./AppointmentDialog";
+import {AppointmentDialog} from "./AppointmentDialog/AppointmentDialog";
 import {IOrder} from "../../types/types";
 import AppointmentFilters from "./AppointmentFilters";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
