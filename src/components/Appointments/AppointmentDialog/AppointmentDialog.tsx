@@ -4,14 +4,8 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals
 import {ICreateAppointment, IListAppointment, ITransportation} from "../../../api/types";
 import {
     Button,
-    Checkbox,
     Divider,
-    FormControlLabel,
-    FormGroup,
-    FormLabel,
     Grid,
-    MenuItem,
-    Select
 } from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
@@ -23,14 +17,10 @@ import {
     IVehicleData
 } from "../../../store/reducers/appointment/types";
 import {TextField} from "../../UI/TextField";
-import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {DatePicker} from "../../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {API} from "../../../api/api";
 import moment from "moment";
-import {timeString, VIN_LENGTH} from "../../../config/constants";
-import {CalendarToday} from "@material-ui/icons";
+import {VIN_LENGTH} from "../../../config/constants";
 import {Api} from "../../../config/requests";
 import {validatePhoneNumber} from "../../../utils/utils";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
@@ -39,6 +29,11 @@ import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {useDispatch} from "react-redux";
 import {IVehicleDetails} from "../../../store/reducers/appointments/types";
 import VehicleInfo from "./parts/VehicleInfo";
+import DriverInfo from "./parts/DriverInfo";
+import ServicesSelection from "./parts/ServicesSelection";
+import SlotSelection from "./parts/SlotSelection";
+import Transportation from "./parts/Transportation";
+import Reminders from "./parts/Reminders";
 
 export type TForm = {
     date: string;
@@ -88,7 +83,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const [form, setForm] = useState<TForm>(initialForm);
     const initialRef = useRef(false);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
-    const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [filterDate, setDate] = useState<ParsableDate>("");
     const [srList, setSrList] = useState<ISR[]>([]);
     const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
@@ -104,6 +98,26 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const oldVin = useRef<string>("");
+
+    const fillDataByVin = useCallback((d: IVehicleData) => {
+        setForm(f => ({
+            ...f,
+            vehicleModel: d.model || f.vehicleModel,
+            vehicleMake: d.make || f.vehicleMake,
+            vehicleEngineType: d.engineType || f.vehicleEngineType,
+            vehicleTransmission: d.transmission || f.vehicleTransmission,
+            vehicleDriveType: d.driveType || f.vehicleDriveType,
+            vehicleYear: d.year ? String(d.year) : f.vehicleYear,
+            vehicleMileage: d.mileage ? String(d.mileage) : f.vehicleMileage
+        }))
+    }, []);
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadMakes(selectedSC.id));
+            dispatch(loadMileage(selectedSC.id));
+        }
+    }, [selectedSC]);
 
     useEffect(() => {
         if (props.open) {
@@ -163,18 +177,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 .finally(() => {
                     setSrLoading(false);
                 });
-            Api.call<ITransportation[]>(
-                Api.endpoints.TransportationOptions.GetActive,
-                {
-                    data: {
-                        serviceCenterId: selectedSC.id,
-                        serviceRequestIds: selectedSR,
-                        maintenancePackageOptionId: null
-                    }
-                }
-            ).then(({data}) => {
-                setTransportations(data);
-            })
         }
     }, [selectedSC, props.open, selectedSR]);
 
@@ -232,19 +234,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         }
     }, [filterDate, selectedSR, preloadedSlot]);
 
-    const fillDataByVin = useCallback((d: IVehicleData) => {
-        setForm(f => ({
-            ...f,
-            vehicleModel: d.model || f.vehicleModel,
-            vehicleMake: d.make || f.vehicleMake,
-            vehicleEngineType: d.engineType || f.vehicleEngineType,
-            vehicleTransmission: d.transmission || f.vehicleTransmission,
-            vehicleDriveType: d.driveType || f.vehicleDriveType,
-            vehicleYear: d.year ? String(d.year) : f.vehicleYear,
-            vehicleMileage: d.mileage ? String(d.mileage) : f.vehicleMileage
-        }))
-    }, []);
-
     useEffect(() => {
         if (form.vehicleVin.length === VIN_LENGTH && oldVin.current !== form.vehicleVin) {
             const t = setTimeout(() => {
@@ -261,43 +250,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
             return () => clearTimeout(t);
         }
     }, [form.vehicleVin, showError, fillDataByVin]);
-
-    useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadMakes(selectedSC.id));
-            dispatch(loadMileage(selectedSC.id));
-        }
-    }, [selectedSC]);
-
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
-        if (name === "driverPhoneNumber") {
-            value = validatePhoneNumber(value);
-        }
-        setForm({...form, [name]: value});
-    }
-    const handleSRChange = (e: any, value: ISR[]) => {
-        setSelectedSR(value);
-        setSelectedSlot(null);
-    }
-    const handleReminderChange = (t: EReminderType) => () => {
-        setForm({
-            ...form,
-            reminderTypes: form.reminderTypes.includes(t)
-                ? form.reminderTypes.filter(rt => rt !== t)
-                : [...form.reminderTypes, t]
-        });
-    }
-    const handleSlotChange = (e: any, value: IAppointmentSlot|null) => {
-        setSelectedSlot(value);
-    }
-
-    const handleChangeTransportationNeeds = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
-        const option = transportations.find(el => el.name === value)
-        setForm({
-            ...form,
-            transportationOption: option ?? null
-        });
-    }
 
     const handleSave = async () => {
         if (!selectedSC) {
@@ -351,141 +303,61 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         }
     }
 
-    const getDate = (option: IAppointmentSlot) => {
-        const date = `${String(option.date).split("T")[0]}T${option.time}Z`;
-        return moment.utc(date).format(`LL - ${timeString}`);
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
+        if (name === "driverPhoneNumber") {
+            value = validatePhoneNumber(value);
+        }
+        setForm({...form, [name]: value});
+    }
+
+    const handleSRChange = (e: any, value: ISR[]) => {
+        setSelectedSR(value);
+        setSelectedSlot(null);
     }
 
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Update"} Appointment</DialogTitle>
         <DialogContent>
             <Grid alignItems="center" container spacing={2}>
-                <Grid item xs={12}>
-                    <h3>Driver info</h3>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <TextField
-                        label="Driver name"
-                        id="driverName"
-                        name="driverName"
-                        fullWidth
-                        placeholder="Enter Driver Name"
-                        onChange={handleChange}
-                        value={form.driverName}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <TextField
-                        label="Driver email"
-                        value={form.driverEmail}
-                        id="driverEmail"
-                        placeholder="Enter Driver Email"
-                        name="driverEmail"
-                        onChange={handleChange}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <TextField
-                        label="Phone number"
-                        value={form.driverPhoneNumber}
-                        id="driverPhoneNumber"
-                        placeholder="Enter Driver Phone Number"
-                        name="driverPhoneNumber"
-                        onChange={handleChange}
-                        fullWidth
-                    />
-                </Grid>
+
+                <DriverInfo form={form} handleChange={handleChange} />
+
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-                <VehicleInfo form={form} setForm={setForm} handleChange={handleChange} setErrors={setErrors} errors={errors} vinLoading={vinLoading}/>
+
+                <VehicleInfo
+                    form={form}
+                    setForm={setForm}
+                    handleChange={handleChange}
+                    setErrors={setErrors}
+                    errors={errors}
+                    vinLoading={vinLoading}
+                />
+
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-                <Grid item xs={12}>
-                    <Autocomplete
-                        multiple
-                        onChange={handleSRChange}
-                        value={selectedSR}
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        loading={srLoading}
-                        getOptionSelected={(option, value) => option.id === value.id}
-                        getOptionLabel={(option) => `${option.code}: ${option.description}`}
-                        renderInput={autocompleteRender({label: "Service Requests"})}
-                        options={srList}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <DatePicker
-                        value={filterDate || null}
-                        onChange={setDate}
-                        label="Date"
-                        disablePast
-                        InputProps={{
-                            endAdornment: <CalendarToday />
-                        }}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={8}>
-                    <Autocomplete
-                        loading={slotsLoading}
-                        value={selectedSlot}
-                        getOptionSelected={(option, value) => option.date === value.date && option.time === value.time}
-                        getOptionLabel={option =>
-                            `${getDate(option)} - $${
-                                option.priceWithOffer?.value ? option.priceWithOffer.value.toFixed(2) : option.price.value.toFixed(2)
-                            }`
-                        }
-                        onChange={handleSlotChange}
-                        renderInput={autocompleteRender({label: "Time slot"})}
-                        options={slots}
-                    />
-                </Grid>
+
+                <ServicesSelection selectedSR={selectedSR} handleSRChange={handleSRChange} srList={srList} srLoading={srLoading}/>
+
+                <SlotSelection
+                    selectedSlot={selectedSlot}
+                    setSelectedSlot={setSelectedSlot}
+                    filterDate={filterDate}
+                    setDate={setDate}
+                    slots={slots}
+                    slotsLoading={slotsLoading}
+                />
+
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-                <Grid item xs={12}>
-                    <Select
-                        label="Transportation Description"
-                        id="transportationDescription"
-                        placeholder="Transportation needs"
-                        name="transportationDescription"
-                        value={form.transportationOption}
-                        onChange={handleChangeTransportationNeeds}
-                        fullWidth
-                    >
-                        {transportations.map(option =>
-                            <MenuItem key={option.name} value={option.name}>{option.description}</MenuItem>
-                        )}
-                    </Select>
-                </Grid>
-                <Grid item xs={12}>
-                    <FormLabel
-                        style={{fontWeight: "bold", textTransform: "uppercase",
-                            fontSize: "12px", marginBottom: 4, color: "#000"}}>Reminders</FormLabel>
-                    <FormGroup row>
-                        <FormControlLabel
-                            control={<Checkbox
-                                color="primary"
-                                checked={form.reminderTypes.includes(EReminderType.Email)}
-                                onChange={handleReminderChange(EReminderType.Email)} name="reminders"/>}
-                            label="Email"
-                        />
-                        <FormControlLabel
-                            control={<Checkbox
-                                color="primary"
-                                checked={form.reminderTypes.includes(EReminderType.Sms)}
-                                onChange={handleReminderChange(EReminderType.Sms)} name="reminders"/>}
-                            label="SMS"
-                        />
-                    </FormGroup>
-                </Grid>
+
+                <Transportation form={form} setForm={setForm} selectedSR={selectedSR} />
+
+                <Reminders setForm={setForm} form={form} />
+
                 <Grid item xs={12}>
                     <TextField
                         label="Comment"
@@ -498,12 +370,13 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                         fullWidth
                     />
                 </Grid>
+
             </Grid>
         </DialogContent>
+
         <DialogActions>
-            <Button onClick={props.onClose}>
-                Cancel
-            </Button>
+            <Button onClick={props.onClose}>Cancel</Button>
+
             <LoadingButton
                 loading={loading}
                 onClick={handleSave}

@@ -27,7 +27,7 @@ type TVehicleInfoProps = {
     setForm: Dispatch<SetStateAction<TForm>>;
     form: TForm;
     vinLoading: boolean;
-    handleChange: React.ChangeEventHandler<HTMLInputElement>,
+    handleChange: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, form, vinLoading, handleChange }) => {
