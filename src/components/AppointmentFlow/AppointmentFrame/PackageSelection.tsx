@@ -283,7 +283,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                     serviceCenterId: decodeSCID(id),
                     vehicle: {
                         ...selectedVehicle,
-                        mileage: maintenanceDetails.serviceInterval
+                        mileage: selectedVehicle?.serviceInterval ?? maintenanceDetails.serviceInterval
                     }
                 }
             }
@@ -398,11 +398,6 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                                 )}
                             </React.Fragment>;
                         })}
-                        {/*{isBmWService && <React.Fragment key="maintenance">*/}
-                        {/*    <div className="totalMaintenance">Total Maintenance Value:</div>*/}
-                        {/*    {packages.map(p => <div className={setClasses(p.id, '')}>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}*/}
-                        {/*</React.Fragment>*/}
-                        {/*}*/}
                         {(isSanfordInfinity || isBmWService) && <React.Fragment key="maintenance">
                             <div className="totalMaintenance">Total Maintenance Value:</div>
                             {packages.map(p => <div className={setClasses(p.id, '')}>

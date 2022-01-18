@@ -87,6 +87,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 make: selectedVehicle.make,
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
+                serviceInterval: selectedVehicle?.mileage?.toString() || selectedVehicle?.serviceInterval?.toString() || "",
             }));
         }
     }, [dispatch, selectedVehicle]);
@@ -119,8 +120,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (isXS) e.preventDefault();
         if (option && !skip) {
-            dispatch(setMaintenanceDetails({[name]: option ?? null}));
             if (["year", "model", "make", "serviceInterval"].includes(name)) {
+                dispatch(setMaintenanceDetails({[name]: option ?? null}));
                 dispatch(updateVehicle({[name]: option}))
             }
             setErrors(e => e.filter(err => err !== name));
