@@ -109,6 +109,7 @@ export interface ILoadedVehicle {
     mileage: number|null;
     warrantyExpiration?: ParsableDate;
     appointmentHashKeys: string[];
+    serviceInterval?: string;
 }
 
 export interface IPasswordRecoveryData {
