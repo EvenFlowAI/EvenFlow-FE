@@ -1,5 +1,5 @@
 import moment from "moment";
-import {EAppointmentStatus, IListAppointment} from "../../../api/types";
+import {EAppointmentStatus, IListAppointment, IVehicle} from "../../../api/types";
 
 export interface IAppointmentsRequest {
     pageIndex: number;
@@ -18,4 +18,9 @@ export interface IVehicleDetails {
     vehicleModel?: string;
     vehicleYear?: string;
     vehicleMileage?: string;
+}
+
+export interface IPackageRequestData {
+    serviceCenterId: number;
+    vehicle: IVehicle;
 }

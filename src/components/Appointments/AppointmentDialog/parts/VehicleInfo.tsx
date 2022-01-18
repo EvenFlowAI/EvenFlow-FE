@@ -1,14 +1,16 @@
 import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
-import {Grid} from "@material-ui/core";
+import {Button, Grid} from "@material-ui/core";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../UI/AutocompleteRender";
 import {TextField} from "../../../UI/TextField";
 import {InputLoading} from "../../../AppointmentFlow/UI";
 import {yearOptions} from "../../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 import {IVehicleDetails} from "../../../../store/reducers/appointments/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TForm} from "../AppointmentDialog";
+import {useSCs} from "../../../../utils/hooks";
+import {loadPackageByVehicle} from "../../../../store/reducers/appointments/actions";
 
 type TSelect = {
     label: string;
@@ -28,12 +30,15 @@ type TVehicleInfoProps = {
     form: TForm;
     vinLoading: boolean;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
+    isDataValid: boolean;
 }
 
-const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, form, vinLoading, handleChange }) => {
+const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, form, vinLoading, handleChange, isDataValid }) => {
     const {makes}= useSelector((state: RootState) => state.appointmentFrame);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
 
     const selects: TSelect[] = [
         {label: "VIN", name: "vehicleVin"},
@@ -65,6 +70,21 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
                 }
             }
             setForm(prev => ({...prev, [name]: option}));
+        }
+    }
+
+    const getPackage = () => {
+        if (selectedSC && isDataValid) {
+            dispatch(loadPackageByVehicle({
+                serviceCenterId: selectedSC.id,
+                vehicle: {
+                    vin: form.vehicleVin,
+                    make: form.vehicleMake,
+                    model: form.vehicleModel,
+                    mileage: +form.vehicleMileage,
+                    year: +form.vehicleYear,
+                }
+            }))
         }
     }
 
@@ -114,6 +134,15 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
                     }
                 }
             )}
+            <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end'}}>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    disabled={!isDataValid}
+                    onClick={getPackage}>
+                    Get Package By Vehicle Info
+                </Button>
+            </Grid>
         </React.Fragment>
     );
 };

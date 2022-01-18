@@ -1,7 +1,12 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {DialogProps} from "../../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
-import {ICreateAppointment, IListAppointment, ITransportation} from "../../../api/types";
+import {
+    ICreateAppointment,
+    IListAppointment,
+    IPackageAppointments, IPackageOptions,
+    ITransportation
+} from "../../../api/types";
 import {
     Button,
     Divider,
@@ -34,6 +39,7 @@ import ServicesSelection from "./parts/ServicesSelection";
 import SlotSelection from "./parts/SlotSelection";
 import Transportation from "./parts/Transportation";
 import Reminders from "./parts/Reminders";
+import {ICategory} from "../../../store/reducers/categories/types";
 
 export type TForm = {
     date: string;
@@ -86,6 +92,9 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const [filterDate, setDate] = useState<ParsableDate>("");
     const [srList, setSrList] = useState<ISR[]>([]);
     const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
+    const [selectedPackage, setSelectedPackage] = useState<IPackageAppointments | null>(null);
+    const [selectedPackageOption, setSelectedPackageOption] = useState<IPackageOptions | null>(null);
     const [srLoading, setSrLoading] = useState<boolean>(false);
     const [slots, setSlots] = useState<IAppointmentSlot[]>([]);
     const [preloadedSlot, setPreloadedSlot] = useState<IAppointmentSlot|null>(null);
@@ -98,6 +107,10 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const oldVin = useRef<string>("");
+    const isVehicleDataValid = useMemo(() => {
+        return Boolean(form.vehicleMake) && Boolean(form.vehicleYear) && Boolean(form.vehicleModel) && Boolean(form.vehicleMileage)
+    }, [form])
+
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
@@ -315,6 +328,21 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         setSelectedSlot(null);
     }
 
+    const handleCategoryChange = (e: ChangeEvent<{}>, value: ICategory[]) => {
+        setSelectedCategories(value);
+        setSelectedSlot(null);
+    }
+
+    const handlePackageChange = (e: ChangeEvent<{}>, value: IPackageAppointments | null) => {
+        setSelectedPackage(value);
+        setSelectedSlot(null);
+    }
+
+    const handlePackageOptionChange = (e: ChangeEvent<{}>, value: IPackageOptions | null) => {
+        setSelectedPackageOption(value);
+        setSelectedSlot(null);
+    }
+
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Update"} Appointment</DialogTitle>
         <DialogContent>
@@ -332,6 +360,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     handleChange={handleChange}
                     setErrors={setErrors}
                     errors={errors}
+                    isDataValid={isVehicleDataValid}
                     vinLoading={vinLoading}
                 />
 
@@ -339,7 +368,19 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     <Divider />
                 </Grid>
 
-                <ServicesSelection selectedSR={selectedSR} handleSRChange={handleSRChange} srList={srList} srLoading={srLoading}/>
+                <ServicesSelection
+                    selectedSR={selectedSR}
+                    handleSRChange={handleSRChange}
+                    selectedCategories={selectedCategories}
+                    handleCategoryChange={handleCategoryChange}
+                    handlePackageChange={handlePackageChange}
+                    selectedPackage={selectedPackage}
+                    handlePackageOptionChange={handlePackageOptionChange}
+                    disabled={!isVehicleDataValid}
+                    selectedPackageOption={selectedPackageOption}
+                    srList={srList}
+                    srLoading={srLoading}
+                />
 
                 <SlotSelection
                     selectedSlot={selectedSlot}

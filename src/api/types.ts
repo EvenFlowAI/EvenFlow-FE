@@ -100,16 +100,19 @@ export interface ICustomerLoadedData {
     vehicles: ILoadedVehicle[];
 }
 
-export interface ILoadedVehicle {
-    dmsId?: string;
+export interface IVehicle {
     vin: string;
     make: string;
     model: string;
     year: number|null;
     mileage: number|null;
+    serviceInterval?: string;
+}
+
+export interface ILoadedVehicle  extends IVehicle {
+    dmsId?: string;
     warrantyExpiration?: ParsableDate;
     appointmentHashKeys: string[];
-    serviceInterval?: string;
 }
 
 export interface IPasswordRecoveryData {
@@ -299,7 +302,18 @@ export interface IPackageOptions {
 }
 
 export interface IPackage {
+    isApplyPricingOptimization?: boolean;
+    maintenancePackageName?: string;
     options: IPackageOptions[];
+}
+
+export interface IPackage {
+    options: IPackageOptions[];
+}
+
+export interface IPackageAppointments extends IPackage{
+    isApplyPricingOptimization: boolean;
+    maintenancePackageName: string;
 }
 
 export interface IPackageByQuery {

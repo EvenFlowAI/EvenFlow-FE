@@ -1,8 +1,8 @@
-import {IListAppointment} from "../../../api/types";
+import {IListAppointment, IPackageAppointments} from "../../../api/types";
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getAllAppointments,
-    getAppointments,
+    getAppointments, getPackageByVehicle,
     setAllAppointmentsCount,
     setAppointmentsCount,
     setAppointmentsLoading, setAppointmentsModalLoading
@@ -15,6 +15,7 @@ type TState = {
     isLoading: boolean;
     isModalLoading: boolean;
     allAppointments: IListAppointment[];
+    packages: IPackageAppointments[];
 }
 
 const initialState: TState = {
@@ -24,6 +25,7 @@ const initialState: TState = {
     isLoading: false,
     isModalLoading: false,
     allAppointments: [],
+    packages: [],
 }
 
 export const appointmentsReducer = createReducer(initialState, builder => builder
@@ -44,5 +46,8 @@ export const appointmentsReducer = createReducer(initialState, builder => builde
     })
     .addCase(setAppointmentsModalLoading, (state, { payload} ) => {
         return {...state, isModalLoading: payload}
+    })
+    .addCase(getPackageByVehicle, (state, { payload} ) => {
+        return {...state, packages: payload}
     })
 )
