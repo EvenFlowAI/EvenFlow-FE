@@ -10,7 +10,7 @@ import {loadMakes, updateVehicle} from "../../../store/reducers/appointmentFrame
 import {TextField} from "../../UI/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {ILoadedVehicle} from "../../../api/types";
+import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
@@ -50,13 +50,16 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const {selectedVehicle, makes}= useSelector((state: RootState) => state.appointmentFrame);
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const {customerLoadedData, scProfile}= useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {id} = useParams();
     const dispatch = useDispatch();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const showError = useException();
+    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
+
 
     const isNewVehicleView = useMemo(() => {
         return !Boolean(customerLoadedData?.vehicles.find(v => v.vin === selectedVehicle?.vin));
@@ -182,7 +185,9 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         value={getSelectValue(select)}
                     />
                 }
-                return <div key={select.name}>
+                return isBmWService && select.name === 'vin'
+                    ? null
+                    : <div key={select.name}>
                     <TextField
                         onChange={handleTextChange(select.name)}
                         label={select.label}
