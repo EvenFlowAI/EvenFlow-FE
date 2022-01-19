@@ -60,9 +60,8 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
-
     const isNewVehicleView = useMemo(() => {
-        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin === selectedVehicle?.vin));
+        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
     }, [selectedVehicle, customerLoadedData]);
 
     const selects: TSelect[] = [
