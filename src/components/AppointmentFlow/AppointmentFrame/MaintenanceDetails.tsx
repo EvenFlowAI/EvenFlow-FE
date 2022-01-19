@@ -14,7 +14,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
-import {ILoadedVehicle} from "../../../api/types";
+import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
@@ -54,7 +54,7 @@ type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {maintenanceDetails, selectedVehicle, makes}= useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
@@ -63,6 +63,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const {id} = useParams();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const selects: TSelect[] = [
         {label: "VIN", name: "vin", noVehicle: true},
@@ -203,7 +205,9 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         }
                     />
                 }
-                return <div key={select.name}>
+                return isBmWService && select.name === 'vin'
+                    ? null
+                    : <div key={select.name}>
                     <TextField
                         onChange={handleTextChange(select.name)}
                         label={select.label}
