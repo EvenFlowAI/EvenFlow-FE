@@ -221,7 +221,6 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     loading={loading}
                 />
             </Wrapper>
-            {/*<Actions onBack={handleBack} onNext={handleNext} nextDisabled={!appointment} />*/}
         </StepWrapper>
     );
 };

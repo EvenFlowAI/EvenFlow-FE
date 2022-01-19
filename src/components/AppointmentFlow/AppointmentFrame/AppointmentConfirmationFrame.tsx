@@ -87,7 +87,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     //     }
     // }
 
-    const handleCreateAppointment = (vin = '', withVin = true) => {
+    const handleCreateAppointment = () => {
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
@@ -109,7 +109,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 model: "",
                 transmission: "",
                 ...(appointmentFrame.selectedVehicle ?? {}),
-                vin: withVin ? appointmentFrame.selectedVehicle?.vin || vin : '',
+                vin: appointmentFrame.selectedVehicle?.vin ?? '',
                 year: appointmentFrame?.selectedVehicle?.year
                     ? String(appointmentFrame.selectedVehicle.year) : null,
                 mileage: appointmentFrame.maintenanceDetails?.serviceInterval ?? null,
@@ -126,6 +126,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             serviceCategoryIds: appointmentFrame.categoriesIds,
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
         };
+
         const endpoint = data?.hashKey
             ? Api.endpoints.Appointments.UpdateByKey
             : Api.endpoints.Appointments.Create;
