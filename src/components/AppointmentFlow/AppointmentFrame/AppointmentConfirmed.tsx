@@ -80,7 +80,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         s, ss,
         selectedPackage,
         customer,
-        vehicle
+        vehicle,
+        allServiceCategories,
+        categoriesIds,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceRequests,
@@ -90,8 +92,13 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.subService,
         state.appointmentFrame.selectedPackage,
         state.appointmentFrame.customer,
-        state.appointmentFrame.selectedVehicle
+        state.appointmentFrame.selectedVehicle,
+        state.appointment.allServiceCategories,
+        state.appointmentFrame.categoriesIds,
     ]);
+
+    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds),
+        [srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
 
     useEffect(() => {
         ReactGA.event({
@@ -113,8 +120,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 content: scProfile?.address ? concatAddress(scProfile?.address) : ""
             },
             {
-                label: "Service type",
-                content: getMaintenanceDescription(srList, selectedSR, selectedPackage, s, ss)
+                label: servicesList?.length > 1 ? "Services type" : "Service type",
+                content: servicesList.map(item => <div>{item}</div>)
             },
             {
                 label: "Selected Price",
@@ -155,6 +162,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         });
         window.open(url);
     }
+
 
     return <StepWrapper>
         <Wrapper>
