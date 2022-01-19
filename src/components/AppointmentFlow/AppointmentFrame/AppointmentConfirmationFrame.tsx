@@ -9,7 +9,7 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {EServiceCenterName, ICreateAppointmentResp} from "../../../api/types";
+import {ICreateAppointmentResp} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
@@ -25,7 +25,6 @@ import {
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../../store/reducers/appointment/actions";
-import CreateAppointment from "../../Modals/CreateAppointment/CreateAppointment";
 import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
@@ -71,7 +70,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     ]);
 
     const {id} = useParams();
-    const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
@@ -80,14 +78,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
     }, [appointment.scProfile])
 
-    const onCreateClick = () => {
-        if (appointment.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-            || appointment.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest) {
-            appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
-        } else {
-            handleCreateAppointment()
-        }
-    }
+    // const onCreateClick = () => {
+    //     if (appointment.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+    //         || appointment.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest) {
+    //         appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
+    //     } else {
+    //         handleCreateAppointment()
+    //     }
+    // }
 
     const handleCreateAppointment = (vin = '', withVin = true) => {
         const data = {
@@ -205,13 +203,13 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
 
         </Wrapper>
-        <Actions loading={saving} onBack={onBack} onNext={onCreateClick} />
-        <CreateAppointment
-            open={isOpen}
-            loading={saving}
-            onClose={onClose}
-            handleCreateAppointment={handleCreateAppointment}
-        />
+        <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
+        {/*<CreateAppointment*/}
+        {/*    open={isOpen}*/}
+        {/*    loading={saving}*/}
+        {/*    onClose={onClose}*/}
+        {/*    handleCreateAppointment={handleCreateAppointment}*/}
+        {/*/>*/}
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
     </StepWrapper>
 };

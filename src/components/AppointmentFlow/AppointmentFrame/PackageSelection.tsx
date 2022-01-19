@@ -191,8 +191,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
     const {selectedPackage, selectedVehicle, maintenanceDetails, packageIsSelected, service, subService} = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR} = useSelector((state: RootState) => state.appointment);
-    const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+    const {selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
 
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
@@ -464,8 +463,10 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             </div>
                         )}
                         <Info>
-                            Note: The maintenance packages may not be available for all vehicle types. Please speak with
-                            your Service Advisor to understand where restrictions apply.
+                            {isBmWService
+                                ? 'Note: Please ask your service advisor regarding factory covered maintenance services.'
+                                : 'Note: The maintenance packages may not be available for all vehicle types. Please speak with your Service Advisor to understand where restrictions apply.'
+                            }
                         </Info>
                     </Wrapper>
                 }
