@@ -163,6 +163,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         window.open(url);
     }
 
+
     return <StepWrapper>
         <Wrapper>
             <h2>Appointment Confirmed!</h2>
