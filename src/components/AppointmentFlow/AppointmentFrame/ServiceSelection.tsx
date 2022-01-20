@@ -5,7 +5,11 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {selectCategoriesIds, selectSubService} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    selectCategoriesIds,
+    selectSubService,
+    setAdditionalServicesChosen
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
@@ -20,7 +24,7 @@ type TProps = {
     onBack: TCallback;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
-    const {subService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {subService, isAdditionalServices, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -38,17 +42,6 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
         )
             .then(({data}) => {
                 setServices(data);
-                // data.forEach(el => {
-                //     if (el.iconPath) {
-                //         axios.get(el.iconPath, {withCredentials: false})
-                //             .then(({ data }) => {
-                //                 setServices(c =>
-                //                         c.map(cat => cat.id === el.id ? {...cat, loadedIcon: data} : cat)
-                //                     )
-                //                 }
-                //             )
-                //     }
-                // });
             })
             .finally(() => {
                 setLoading(false);
@@ -67,7 +60,16 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 action: 'Selected Sub Service',
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
-            subService.type === 0 && dispatch(selectCategoriesIds(subService.id));
+            if (subService.type === 0) {
+                if (isAdditionalServices) {
+                    dispatch(setAdditionalServicesChosen(false));
+                    const categories = categoriesIds.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
+                    dispatch(selectCategoriesIds(categories));
+                } else {
+                    dispatch(selectCategoriesIds([subService.id]));
+                }
+            }
+
             switch (subService.type) {
                 case 2:
                     return onNext('opsCode');

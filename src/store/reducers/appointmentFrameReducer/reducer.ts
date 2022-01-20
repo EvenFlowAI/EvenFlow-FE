@@ -197,10 +197,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, packageIsSelected: payload};
     })
     .addCase(selectCategoriesIds, (state, {payload}) => {
-        return {...state, categoriesIds:
-                state.categoriesIds.includes(payload)
-                    ? state.categoriesIds
-                    : [...state.categoriesIds, payload]
-        }
+        return {...state, categoriesIds: payload};
     })
 )
