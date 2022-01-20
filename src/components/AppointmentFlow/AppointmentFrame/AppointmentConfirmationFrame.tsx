@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -9,13 +9,13 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {ICreateAppointmentResp} from "../../../api/types";
+import {EServiceCenterName, ICreateAppointmentResp} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds} from "./utils";
 import {Api} from "../../../config/requests";
-import {setAppointmentId} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAppointmentId, setReminders} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
@@ -73,10 +73,16 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
+    const isBmWService = useMemo(() => appointment?.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || appointment?.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [appointment.scProfile]);
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
     }, [appointment.scProfile])
+
+    useEffect(() => {
+        if (!isBmWService) dispatch(setReminders([0, 2]));
+    }, [isBmWService])
 
     // const onCreateClick = () => {
     //     if (appointment.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
@@ -199,7 +205,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>
-                <Reminders />
+                {!isBmWService && <Reminders/>}
                 <Info>By using this service you accept the terms of our Visitor Agreement.</Info>
             </div>
 
