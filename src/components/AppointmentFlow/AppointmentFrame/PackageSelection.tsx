@@ -9,7 +9,7 @@ import {RootState} from "../../../store/rootReducer";
 import {
     setAdditionalServicesChosen,
     setPackage,
-    setPackageIsSelected
+    setPackageIsSelected, setSelectedPackageOptionType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
@@ -190,7 +190,7 @@ const Info = styled("p")({
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddServices}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
-    const {selectedPackage, selectedVehicle, maintenanceDetails, packageIsSelected, service, subService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedPackage, selectedVehicle, maintenanceDetails, packageIsSelected, service, subService, packageOptionType} = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
 
     const theme = useTheme();
@@ -323,6 +323,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
     }
 
     const askAdditionalServices = () => {
+        selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
         const categoryChosen = service?.type === 0 || subService?.type === 0;
         if (!categoryChosen || !selectedSR.length) {
             askConfirm({
@@ -352,6 +353,12 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 askAdditionalServices()
             }
         }
+    }
+
+    const handleDontChangeOption = () => {
+        const prevPackage = packages.find(p => p.type === packageOptionType);
+        if (prevPackage) dispatch(setPackage(prevPackage));
+        onClose();
     }
 
     return (
@@ -475,7 +482,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 onBack={handleBack}
                 nextDisabled={!selectedPackage}
                 onNext={handleNext} />
-            <ConfirmChangeOption open={isOpen} onClose={onClose} onSave={askAdditionalServices}/>
+            <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={askAdditionalServices}/>
         </StepWrapper>
     );
 };

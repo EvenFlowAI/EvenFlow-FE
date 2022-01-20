@@ -10,7 +10,7 @@ import {
     setFrameDescription, setLoadingPackages,
     setMaintenanceDetails,
     setPackage, setPackageIsSelected, setPackages,
-    setReminders,
+    setReminders, setSelectedPackageOptionType,
     setTime,
     setTiming, setTrackerCreated,
     setTransportation,
@@ -56,6 +56,7 @@ type TState = {
     trackerCreated: boolean;
     isAdditionalServices: boolean;
     packageIsSelected: boolean;
+    packageOptionType: number | null;
     categoriesIds: number[];
 }
 const initialState: TState = {
@@ -85,6 +86,7 @@ const initialState: TState = {
     isAdditionalServices: false,
     packageIsSelected: false,
     categoriesIds: [],
+    packageOptionType: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -198,5 +200,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(selectCategoriesIds, (state, {payload}) => {
         return {...state, categoriesIds: payload};
+    })
+    .addCase(setSelectedPackageOptionType, (state, {payload}) => {
+        return {...state, packageOptionType: payload};
     })
 )
