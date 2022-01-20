@@ -72,7 +72,7 @@ const initialState: TState = {
         phoneNumber: "",
         email: ""
     },
-    reminders: [0, 2],
+    reminders: [],
     transportation: null,
     maintenanceDetails: {},
     packages: [],
