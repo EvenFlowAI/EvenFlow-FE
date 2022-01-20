@@ -4,7 +4,11 @@ import {StepWrapper} from './StepWrapper';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {selectCategoriesIds, selectService} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    selectCategoriesIds,
+    selectService,
+    setAdditionalServicesChosen
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
@@ -23,7 +27,7 @@ type TProps = {
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
-    const selectedService = useSelector((state: RootState) => state.appointmentFrame.service);
+    const {service: selectedService, isAdditionalServices, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
@@ -63,8 +67,21 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
-
-            selectedService.type === 0 && dispatch(selectCategoriesIds(selectedService.id));
+            if (selectedService.type === 0) {
+                if (isAdditionalServices) {
+                    dispatch(setAdditionalServicesChosen(false));
+                    const categories = categoriesIds.includes(selectedService.id) ? categoriesIds : [...categoriesIds, selectedService.id];
+                    dispatch(selectCategoriesIds(categories));
+                } else {
+                    let categories = [...categoriesIds];
+                    if (categories.length) {
+                        categories[categories.length - 1] = selectedService.id;
+                    } else {
+                        categories = [selectedService.id]
+                    }
+                    dispatch(selectCategoriesIds(categories));
+                }
+            }
 
             switch (selectedService?.type) {
                 case 2:
