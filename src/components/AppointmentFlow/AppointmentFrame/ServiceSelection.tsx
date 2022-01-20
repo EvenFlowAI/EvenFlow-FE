@@ -66,7 +66,13 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                     const categories = categoriesIds.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
                     dispatch(selectCategoriesIds(categories));
                 } else {
-                    dispatch(selectCategoriesIds([subService.id]));
+                    let categories = [...categoriesIds];
+                    if (categories.length) {
+                        categories[categories.length - 1] = subService.id;
+                    } else {
+                        categories = [subService.id]
+                    }
+                    dispatch(selectCategoriesIds(categories));
                 }
             }
 

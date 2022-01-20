@@ -73,7 +73,13 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                     const categories = categoriesIds.includes(selectedService.id) ? categoriesIds : [...categoriesIds, selectedService.id];
                     dispatch(selectCategoriesIds(categories));
                 } else {
-                    dispatch(selectCategoriesIds([selectedService.id]));
+                    let categories = [...categoriesIds];
+                    if (categories.length) {
+                        categories[categories.length - 1] = selectedService.id;
+                    } else {
+                        categories = [selectedService.id]
+                    }
+                    dispatch(selectCategoriesIds(categories));
                 }
             }
 
