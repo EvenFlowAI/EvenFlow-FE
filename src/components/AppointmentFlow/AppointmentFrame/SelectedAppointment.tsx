@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {MenuItem, Select, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -6,7 +6,7 @@ import {getMaintenanceDescription} from "./uiUtils";
 import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {loadAllServiceCategories, selectAppointment} from "../../../store/reducers/appointment/actions";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -53,7 +53,6 @@ const List = styled('ul')(({theme}) => ({
             display: 'block',
             maxHeight: 120,
             overflow: "auto",
-            // border: '1px solid rgb(218, 218, 218)',
             padding: 8,
         }
     },
@@ -135,9 +134,8 @@ const useStyles = makeStyles(theme => ({
 
 // TODO: Advisor|consultant
 export const SelectedAppointment = () => {
-    const appointmentData = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
-    const { selectedPackage, advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile } = useSelector((state: RootState) => state.appointment);
+    const { selectedPackage, advisor, consultants, categoriesIds } = useSelector((state: RootState) => state.appointmentFrame);
+    const { scProfile, allServiceCategories } = useSelector((state: RootState) => state.appointment);
     const appointment = useSelector((state: RootState) => state.appointment.appointment);
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
@@ -149,10 +147,8 @@ export const SelectedAppointment = () => {
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-
-    // const price = appointment?.priceWithOffer?.value
-    //     ?? appointment?.price.value
-    //     ?? selectedPackage?.price ?? 0;
+    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds),
+        [srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
 
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
 
@@ -166,15 +162,19 @@ export const SelectedAppointment = () => {
         }
     }
 
+    useEffect(() => {
+        scProfile && dispatch(loadAllServiceCategories(scProfile.id))
+    }, [scProfile])
+
     return (
         <div>
             {!isSm && <h4>Your selections</h4>}
             <Wrapper>
                 <List>
-                    <li className={"service-item"}>{!isSm && 'Service Needed:'}
-                        <span className={selectedPackage ? undefined : "service-list"}>
-                            {getMaintenanceDescription(srList, selectedSR, selectedPackage, appointmentData.service, appointmentData.subService)}
-                        </span>
+                    <li className={"service-item"}>
+                        <div className="service-list">
+                            {selectedServices.map(item => <div>{item}</div>)}
+                        </div>
                         {isSm && Boolean(price) && <div className="price">${price}</div>}
                     </li>
                         <li>

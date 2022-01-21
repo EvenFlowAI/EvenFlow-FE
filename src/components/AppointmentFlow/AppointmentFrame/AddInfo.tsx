@@ -4,7 +4,10 @@ import {StepWrapper} from "./StepWrapper";
 import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import { setFrameDescription } from '../../../store/reducers/appointmentFrameReducer/actions';
+import {
+    setAdditionalServicesChosen,
+    setFrameDescription
+} from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../../components/Layout/types";
@@ -51,7 +54,10 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 title: "Would you like additional services?",
                 confirmContent: "Yes",
                 cancelContent: "No",
-                onConfirm: onAddServices,
+                onConfirm: () => {
+                    dispatch(setAdditionalServicesChosen(true));
+                    onAddServices();
+                },
                 onCancel: handleNext,
             })
         }

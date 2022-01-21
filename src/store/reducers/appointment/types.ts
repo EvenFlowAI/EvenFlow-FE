@@ -8,7 +8,7 @@ import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
     ILoadedVehicle,
-    IServiceCategory,
+    IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
 
@@ -179,7 +179,7 @@ export type TAppointmentState = {
     appointmentSlots: IRemappedAppointmentSlot[];
     appointmentFilters: IAppointmentFilters;
     serviceCategories: IServiceCategory[];
-    allServiceCategories: IServiceCategory[];
+    allServiceCategories: IServiceCategoryShort[];
 };
 export enum EReminderType {
     Email, Phone, Sms

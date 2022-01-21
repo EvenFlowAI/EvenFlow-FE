@@ -38,7 +38,7 @@ export const Review = () => {
                     : "I will wait at the dealership"}
                 </li>
                 {/* TODO: Advisor | consultant*/}
-                <li>Advisor: {consultant?.name ?? "Any Available"}</li>
+                <li>Service Advisor: {consultant?.name ?? "Any Available"}</li>
             </Wrapper>
         </div>
     );
