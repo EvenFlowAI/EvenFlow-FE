@@ -51,7 +51,6 @@ const Transportation: React.FC<TTransportationProps> = ({ form , setForm, select
         <Grid item xs={12}>
             <Select
                 input={<TextField label="Transportation Description" placeholder="Transportation needs"/>}
-                disabled={(!selectedSR.length && !serviceCategoryIds.length && !maintenancePackageOptionId) || !slot}
                 id="transportationDescription"
                 placeholder="Transportation needs"
                 name="transportationDescription"
