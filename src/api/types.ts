@@ -213,9 +213,12 @@ export interface ISessionId {
     "session-id": string;
 }
 
-export interface IServiceCategory {
+export interface IServiceCategoryShort {
     id: number;
     name: string;
+}
+
+export interface IServiceCategory extends IServiceCategoryShort {
     page: EServiceCategoryPage;
     iconPath?: string;
     loadedIcon?: JSX.Element | string;

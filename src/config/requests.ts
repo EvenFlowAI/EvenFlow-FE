@@ -162,7 +162,7 @@ type ApiRoutes = {
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
         | "DeleteServiceRequestPricingSettings" | "AddServiceRequests", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
-        | "GetByQuery" | "GetByPage", TApiRoute>
+        | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice", TApiRoute>,
@@ -327,6 +327,7 @@ export class Api {
             Retrieve: {route: "/service-categories/{id}", method: "get"},
             GetByQuery: {route: "/service-categories/by-query", method: "post"},
             GetByPage: {route: "/service-categories/by-page", method: "post"},
+            GetShortByQuery: {route: "/service-categories/short-by-query", method: "post"},
         },
         ServiceCenters: {
             Create: {route: "/service-centers", method: "post"},
