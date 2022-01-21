@@ -1,12 +1,12 @@
 import React from "react";
-import {IPackageOptions, IServiceCategory} from "../../../api/types";
+import {IPackageOptions, IServiceCategoryShort} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 
 export const getMaintenanceDescription = (
     srList: ISR[],
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
-    allCategories?: IServiceCategory[],
+    allCategories?: IServiceCategoryShort[],
     selectedCategories?: number[]) => {
     const services: string[] = [];
 

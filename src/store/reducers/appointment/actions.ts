@@ -24,7 +24,7 @@ import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
     IListAppointment,
-    ILoadedVehicle, IServiceCategory,
+    ILoadedVehicle, IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
 import {EDemandCategory} from "../pricingSettings/types";
@@ -62,7 +62,7 @@ export const changePersonalInformation = createAction<Partial<IPersonalInformati
 export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
 export const getServiceCategories = createAction<IServiceCategory[]>("Appointment/GetServiceCategories");
-export const getAllServiceCategories = createAction<IServiceCategory[]>("Appointment/GetAllServiceCategories");
+export const getAllServiceCategories = createAction<IServiceCategoryShort[]>("Appointment/GetAllServiceCategories");
 
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
@@ -248,7 +248,7 @@ export const loadServiceCategories = (serviceCenterId: number, page: number): Ap
 
 export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => dispatch => {
     Api.call(
-        Api.endpoints.ServiceCategories.GetByQuery, {data: {serviceCenterId, pageSize: 0, pageIndex: 0}}
+        Api.endpoints.ServiceCategories.GetShortByQuery, {data: {serviceCenterId, pageSize: 0, pageIndex: 0}}
     )
         .then(({data}) => {
             if (data?.result) dispatch(getAllServiceCategories(data.result))
