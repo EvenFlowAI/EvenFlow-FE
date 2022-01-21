@@ -43,8 +43,8 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
     const selects: TSelect[] = [
         {label: "VIN", name: "vehicleVin"},
         {label: "Make", name: "vehicleMake", options: 'make'},
-        {label: "Model", name: "vehicleModel", options: "model",},
         {label: "Year", name: "vehicleYear", options: yearOptions},
+        {label: "Model", name: "vehicleModel", options: "model",},
         {label: "Mileage", name:"vehicleMileage", options: mileage.map(item => item.value.toString())},
     ];
 

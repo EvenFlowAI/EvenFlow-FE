@@ -132,13 +132,20 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
         }
     }, [selectedSC]);
 
+    const clearForm = () => {
+        initialRef.current = false;
+        setForm(initialForm);
+        setSelectedSR([]);
+        setSelectedPackage(null);
+        setSelectedPackageOption(null);
+        setSelectedCategories([]);
+        setDate("");
+        setSelectedSlot(null);
+    }
+
     useEffect(() => {
         if (props.open) {
-            initialRef.current = false;
-            setForm(initialForm);
-            setSelectedSR([]);
-            setDate("");
-            setSelectedSlot(null);
+            clearForm();
             if (payload) {
                 setForm({
                     date: String(payload.dateInUtc),
@@ -205,6 +212,8 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     appointmentTimingType: EAppointmentTimingType.PreferredDate,
                     fromDate: moment(filterDate).toISOString(),
                     serviceRequestIds: selectedSR.map(sr => sr.id),
+                    maintenancePackageOptionId: selectedPackageOption?.id ?? null,
+                    serviceCategoryIds: selectedCategories.map(item => item.id),
                     serviceCenterId: selectedSC.id
                 })
                 .then(({data: {items}}) => {
@@ -395,7 +404,14 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     <Divider />
                 </Grid>
 
-                <Transportation form={form} setForm={setForm} selectedSR={selectedSR} />
+                <Transportation
+                    form={form}
+                    setForm={setForm}
+                    selectedSR={selectedSR}
+                    slot={selectedSlot}
+                    serviceCategoryIds={selectedCategories.map(item => item.id)}
+                    maintenancePackageOptionId={selectedPackageOption?.id}
+                />
 
                 <Reminders setForm={setForm} form={form} />
 

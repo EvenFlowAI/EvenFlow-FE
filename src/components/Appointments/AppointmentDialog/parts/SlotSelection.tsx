@@ -37,7 +37,8 @@ const SlotSelection: React.FC<TSlotSelectionProps> = ({ slotsLoading, selectedSl
                     label="Date"
                     disablePast
                     InputProps={{
-                        endAdornment: <CalendarToday />
+                        endAdornment: <CalendarToday />,
+                        placeholder: "Select Date"
                     }}
                     fullWidth
                 />
@@ -53,7 +54,7 @@ const SlotSelection: React.FC<TSlotSelectionProps> = ({ slotsLoading, selectedSl
                         }`
                     }
                     onChange={handleSlotChange}
-                    renderInput={autocompleteRender({label: "Time slot"})}
+                    renderInput={autocompleteRender({label: "Time slot", placeholder: "Select Slot"})}
                     options={slots}
                 />
             </Grid>

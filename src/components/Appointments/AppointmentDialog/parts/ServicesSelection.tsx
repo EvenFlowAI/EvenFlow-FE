@@ -88,7 +88,7 @@ const ServicesSelection: React.FC<TServicesSelectionProps> = ({
                 <Autocomplete
                     onChange={handlePackageChange}
                     value={selectedPackage}
-                    disabled={disabled}
+                    disabled={disabled || !packages.length}
                     ChipProps={{
                         color: "primary",
                         style: {borderRadius: 4},
