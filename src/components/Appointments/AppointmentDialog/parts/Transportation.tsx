@@ -47,7 +47,7 @@ const Transportation: React.FC<TTransportationProps> = ({ payload, form , setFor
                 setForm(prev => ({...prev, transportationOption: transportation}))
             }
         }
-    }, [transportations])
+    }, [transportations, payload])
 
     const handleChangeTransportationNeeds = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
         const option = transportations.find(el => el.name === value)
