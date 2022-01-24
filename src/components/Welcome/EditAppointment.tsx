@@ -19,6 +19,7 @@ import {selectService, setUpdateAppointment, setVehicle} from "../../store/reduc
 import moment from "moment";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
+import {loadCategoriesByQuery} from "../../store/reducers/categories/actions";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -33,7 +34,7 @@ export const EditAppointment = () => {
     const selectedSC: number|undefined = useSelector((state: RootState) => {
         return state.appointment.scProfile?.id
     });
-    const { serviceCategories } = useSelector((state: RootState) => state.appointment);
+    const { allCategories } = useSelector((state: RootState) => state.categories);
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -41,8 +42,7 @@ export const EditAppointment = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            // TODO change request
-            // dispatch(loadServiceCategories(selectedSC, 0));
+            dispatch(loadCategoriesByQuery(selectedSC))
         }
     }, [selectedSC])
 
@@ -51,10 +51,11 @@ export const EditAppointment = () => {
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
                 dispatch(setUpdateAppointment(data));
-                if (data.serviceCategories && serviceCategories) {
+                if (data.serviceCategories && allCategories) {
                     const ids = data.serviceCategories.map(item => item.id);
-                    const service = serviceCategories.find(item => ids.includes(item.id));
-                    service && dispatch(selectService(service));
+                    const service = allCategories.find(item => ids.includes(item.id));
+                    // TODO uncomment
+                    // service && dispatch(selectService(service));
                 }
                 const vehicle: ILoadedVehicle = {
                     ...data.vehicle,
@@ -89,7 +90,7 @@ export const EditAppointment = () => {
             .catch((e) => {
                 setState("error");
             })
-    }, [id, dispatch, history, serviceCategories]);
+    }, [id, dispatch, history, allCategories]);
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
