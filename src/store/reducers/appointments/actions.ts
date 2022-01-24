@@ -1,15 +1,17 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IListAppointment} from "../../../api/types";
-import {IAppointmentsRequest} from "./types";
+import {IAppointmentByQuery, IPackageAppointments} from "../../../api/types";
+import {IAppointmentsRequest, IPackageRequestData} from "./types";
 import {AppThunk} from "../../../types/types";
 import {API} from "../../../api/api";
+import {Api} from "../../../config/requests";
 
-export const getAppointments = createAction<IListAppointment[]>("Appointments/GetAppointments");
-export const getAllAppointments = createAction<IListAppointment[]>("Appointments/GetAllAppointments");
+export const getAppointments = createAction<IAppointmentByQuery[]>("Appointments/GetAppointments");
+export const getAllAppointments = createAction<IAppointmentByQuery[]>("Appointments/GetAllAppointments");
 export const setAppointmentsLoading = createAction<boolean>("Appointments/SetAppointmentsLoading");
 export const setAppointmentsModalLoading = createAction<boolean>("Appointments/SetAppointmentsModalLoading");
 export const setAppointmentsCount = createAction<number>("Appointments/SetAppointmentsCount");
 export const setAllAppointmentsCount = createAction<number>("Appointments/SetAllAppointmentsCount");
+export const getPackageByVehicle = createAction<IPackageAppointments[]>("Appointments/GetPackageByVehicle");
 
 export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispatch => {
     dispatch(setAppointmentsLoading(true));
@@ -43,6 +45,18 @@ export const loadAppointmentsForModal = (data: IAppointmentsRequest): AppThunk =
         })
         .catch(err => {
             console.log('load appointments for calendar', err)
+        })
+        .finally(() => dispatch(setAppointmentsModalLoading(false)))
+}
+
+export const loadPackageByVehicle = (data: IPackageRequestData): AppThunk => dispatch => {
+    dispatch(setAppointmentsModalLoading(true));
+    Api.call<IPackageAppointments[]>(Api.endpoints.MaintenancePackages.ByVehicle, {data})
+        .then(({data}) => {
+            data && data[0] && dispatch(getPackageByVehicle([data[0]]))
+        })
+        .catch(err => {
+            console.log('load package by vehicle', err)
         })
         .finally(() => dispatch(setAppointmentsModalLoading(false)))
 }

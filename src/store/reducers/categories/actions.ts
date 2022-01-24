@@ -6,6 +6,7 @@ import {ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData} from "./
 export const setCategoriesPage = createAction<number>("Categories/SetPage");
 export const setCategoriesLoading = createAction<boolean>("Categories/SetLoading");
 export const getCategoriesByPage = createAction<ICategory[]>("Categories/GetCategoriesByPage");
+export const getCategoriesByQuery = createAction<ICategory[]>("Categories/GetCategoriesByQuery");
 
 export const loadCategoriesByPage = (): AppThunk => (dispatch, getState) => {
     dispatch(setCategoriesLoading(true));
@@ -76,5 +77,18 @@ export const updateCategoryIcon = (id: number, file: File): AppThunk => dispatch
         })
         .catch(err => {
             console.log('update category icon error', err)
+        })
+}
+
+export const loadCategoriesByQuery = (id: number): AppThunk => dispatch => {
+    dispatch(setCategoriesLoading(true));
+    Api.call(Api.endpoints.ServiceCategories.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getCategoriesByQuery(result.data.result))
+            }
+        })
+        .catch(err => {
+            console.log('get categories by query', err)
         })
 }

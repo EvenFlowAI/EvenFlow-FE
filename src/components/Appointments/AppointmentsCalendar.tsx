@@ -4,7 +4,7 @@ import {loadAppointments} from "../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useSCs} from "../../utils/hooks";
 import moment, {Moment} from "moment";
-import {IListAppointment} from "../../api/types";
+import {IAppointmentByQuery} from "../../api/types";
 import {TView} from "./Appointments";
 import {RootState} from "../../store/rootReducer";
 import {useCalendarStyles} from "../Optimizer/CapacitySettings/AvailableStaff/Calendar";
@@ -39,7 +39,7 @@ type TDay = {
     type: TDayType
 }
 
-type TAppointmentsByDate = {[key: string]: IListAppointment[]}
+type TAppointmentsByDate = {[key: string]: IAppointmentByQuery[]}
 
 const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
     const { allAppointments, isLoading } = useSelector((state: RootState) => state.appointments);

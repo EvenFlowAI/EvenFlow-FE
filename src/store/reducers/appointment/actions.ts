@@ -21,9 +21,9 @@ import {AppThunk, PaginatedAPIResponse, TCallback} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import moment from "moment";
 import {
+    IAppointmentByQuery,
     ICreateAppointmentResp,
     ICustomerLoadedData,
-    IListAppointment,
     ILoadedVehicle, IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
@@ -63,7 +63,6 @@ export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
 export const getServiceCategories = createAction<IServiceCategory[]>("Appointment/GetServiceCategories");
 export const getAllServiceCategories = createAction<IServiceCategoryShort[]>("Appointment/GetAllServiceCategories");
-
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
 export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => async dispatch => {
@@ -127,7 +126,7 @@ export const setCustomerVehicle = createAction<ILoadedVehicle|null>("Appointment
 
 export const setSessionId = createAction<string>("Appointment/SetSessionId");
 export const setEditAppointment = createAction<TAppointmentState>("Appointment/SetEditAppointment");
-export const loadEditAppointment = (appointment: IListAppointment): AppThunk => (dispatch, getState) => {
+export const loadEditAppointment = (appointment: IAppointmentByQuery): AppThunk => (dispatch, getState) => {
     const state = {...getState().appointment};
 
     state.selectedSR = appointment.serviceRequests.map(sr => sr.id);
@@ -239,6 +238,7 @@ export const loadServiceCategories = (serviceCenterId: number, page: number): Ap
         Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId, page}}
     )
         .then(({data}) => {
+            console.log(data)
             if (data) dispatch(getServiceCategories(data))
         })
         .catch(err => {

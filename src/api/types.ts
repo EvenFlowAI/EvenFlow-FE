@@ -10,7 +10,7 @@ import {IOffer} from "../store/reducers/offers/types";
 import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
-import {EServiceCategoryType} from "../store/reducers/categories/types";
+import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -85,7 +85,7 @@ export interface IUpdateAppointment extends ICreateAppointment {
     hashKey?: string;
 }
 
-export interface ICreateAppointmentResp extends IListAppointment {
+export interface ICreateAppointmentResp extends IAppointmentByQuery {
     id: number;
     hashKey: string;
 }
@@ -100,16 +100,19 @@ export interface ICustomerLoadedData {
     vehicles: ILoadedVehicle[];
 }
 
-export interface ILoadedVehicle {
-    dmsId?: string;
+export interface IVehicle {
     vin: string;
     make: string;
     model: string;
     year: number|null;
     mileage: number|null;
+    serviceInterval?: string;
+}
+
+export interface ILoadedVehicle  extends IVehicle {
+    dmsId?: string;
     warrantyExpiration?: ParsableDate;
     appointmentHashKeys: string[];
-    serviceInterval?: string;
 }
 
 export interface IPasswordRecoveryData {
@@ -160,9 +163,11 @@ export const appointmentStatuses: TEnumKeyLabel<AppointmentStatus> = {
 export interface IMaintenancePackageOption {
     name: string;
     maintenancePackageName: string;
+    maintenancePackageId?: number;
+    id?: number;
 }
 
-export interface IListAppointment {
+export interface IBaseAppointment {
     id: number;
     hashKey: string;
     appointmentStatus: AppointmentStatus;
@@ -173,7 +178,6 @@ export interface IListAppointment {
     vehicleId: number;
     vehicle: IVehicleData;
     customerId: string;
-    serviceCategory: IServiceCategory|null;
     maintenancePackageOptionId: number | null;
     maintenancePackageOption: IMaintenancePackageOption | null;
     driver: IDriverInfo;
@@ -190,6 +194,14 @@ export interface IListAppointment {
     serviceRequests: IServiceRequestShort[];
     createdBy: string;
     user?: ICurrentUser;
+}
+
+export interface IListAppointment extends IBaseAppointment {
+    serviceCategory: ICategory|null;
+}
+
+export interface IAppointmentByQuery extends IBaseAppointment {
+    serviceCategories: ICategory[];
 }
 
 export interface ISearchCustomerParams {
@@ -224,11 +236,6 @@ export interface IServiceCategory extends IServiceCategoryShort {
     loadedIcon?: JSX.Element | string;
     serviceRequests: IServiceRequest[];
     type: EServiceCategoryType;
-}
-
-export interface IServiceConsultantShort {
-    id: string;
-    name: string
 }
 
 export interface IServiceConsultant {
@@ -302,7 +309,18 @@ export interface IPackageOptions {
 }
 
 export interface IPackage {
+    isApplyPricingOptimization?: boolean;
+    maintenancePackageName?: string;
     options: IPackageOptions[];
+}
+
+export interface IPackage {
+    options: IPackageOptions[];
+}
+
+export interface IPackageAppointments extends IPackage{
+    isApplyPricingOptimization: boolean;
+    maintenancePackageName: string;
 }
 
 export interface IPackageByQuery {

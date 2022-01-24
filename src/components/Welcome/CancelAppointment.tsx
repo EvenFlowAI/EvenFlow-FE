@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {WelcomeLayout} from "./WelcomeLayout";
 import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../api/api";
-import {AppointmentStatus, IListAppointment} from "../../api/types";
+import {AppointmentStatus, IAppointmentByQuery} from "../../api/types";
 import {useException} from "../../utils/hooks";
 import {LoadingButton} from "../UI/Button";
 import {Loading} from "../UI/Loading";
@@ -31,7 +31,7 @@ const Info = styled("p")({
 })
 
 export const CancelAppointment = () => {
-    const [appointment, setAppointment] = useState<IListAppointment|null>(null);
+    const [appointment, setAppointment] = useState<IAppointmentByQuery|null>(null);
     const [tState, setTState] = useState<TState>("loading");
     const [loading, setLoading] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
