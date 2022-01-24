@@ -2,8 +2,8 @@ import React, {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} f
 import {DialogProps} from "../../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {
+    IAppointmentByQuery,
     ICreateAppointment,
-    IListAppointment,
     IPackageAppointments, IPackageOptions,
     ITransportation
 } from "../../../api/types";
@@ -31,7 +31,7 @@ import {validatePhoneNumber} from "../../../utils/utils";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 import {loadMakes} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {IVehicleDetails} from "../../../store/reducers/appointments/types";
 import VehicleInfo from "./parts/VehicleInfo";
 import DriverInfo from "./parts/DriverInfo";
@@ -40,6 +40,7 @@ import SlotSelection from "./parts/SlotSelection";
 import Transportation from "./parts/Transportation";
 import Reminders from "./parts/Reminders";
 import {ICategory} from "../../../store/reducers/categories/types";
+import {RootState} from "../../../store/rootReducer";
 
 export type TForm = {
     date: string;
@@ -85,7 +86,8 @@ const initialForm: TForm = {
 
 type TKey = keyof IVehicleDetails;
 
-export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAction, payload, ...props}) => {
+export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({onAction, payload, ...props}) => {
+    const { packages } = useSelector((state: RootState) => state.appointments);
     const [form, setForm] = useState<TForm>(initialForm);
     const initialRef = useRef(false);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
@@ -110,7 +112,6 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
     const isVehicleDataValid = useMemo(() => {
         return Boolean(form.vehicleMake) && Boolean(form.vehicleYear) && Boolean(form.vehicleModel) && Boolean(form.vehicleMileage)
     }, [form])
-
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
@@ -168,8 +169,8 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                     serviceRequestIds: payload.serviceRequests.map(sr => sr.id)
                 });
                 setSelectedSR(payload.serviceRequests);
+                setSelectedCategories(payload.serviceCategories);
                 setDate(payload.dateInUtc);
-                // setSelectedPackageOption(payload.maintenancePackageOptionId);
                 const slot: IAppointmentSlot = {
                     date: payload.dateInUtc,
                     time: payload.timeSlot,
@@ -181,9 +182,15 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 }
                 setSelectedSlot(slot);
                 setPreloadedSlot(slot);
+                const selectedPackage = packages.find(item => item.options.find(option => option.id === payload?.maintenancePackageOption?.id))
+                if (selectedPackage) {
+                    const option = selectedPackage.options.find(option => option.id === payload?.maintenancePackageOption?.id);
+                    option && setSelectedPackageOption(option);
+                    setSelectedPackage(selectedPackage);
+                }
             }
         }
-    }, [props.open, payload]);
+    }, [props.open, payload, packages]);
 
     useEffect(() => {
         if (props.open && selectedSC) {

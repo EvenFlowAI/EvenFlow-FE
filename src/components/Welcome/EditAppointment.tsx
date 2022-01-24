@@ -15,7 +15,7 @@ import {Edit} from "@material-ui/icons";
 import {RootState} from "../../store/rootReducer";
 import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
-import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {selectService, setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
@@ -33,16 +33,29 @@ export const EditAppointment = () => {
     const selectedSC: number|undefined = useSelector((state: RootState) => {
         return state.appointment.scProfile?.id
     });
+    const { serviceCategories } = useSelector((state: RootState) => state.appointment);
 
     const history = useHistory();
     const dispatch = useDispatch();
     const {id} = useParams();
 
     useEffect(() => {
+        if (selectedSC) {
+            // TODO change request
+            // dispatch(loadServiceCategories(selectedSC, 0));
+        }
+    }, [selectedSC])
+
+    useEffect(() => {
         API.appointment.getByKey(id)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
                 dispatch(setUpdateAppointment(data));
+                if (data.serviceCategories && serviceCategories) {
+                    const ids = data.serviceCategories.map(item => item.id);
+                    const service = serviceCategories.find(item => ids.includes(item.id));
+                    service && dispatch(selectService(service));
+                }
                 const vehicle: ILoadedVehicle = {
                     ...data.vehicle,
                     appointmentHashKeys: [data.hashKey]
@@ -76,7 +89,7 @@ export const EditAppointment = () => {
             .catch((e) => {
                 setState("error");
             })
-    }, [id, dispatch, history]);
+    }, [id, dispatch, history, serviceCategories]);
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {

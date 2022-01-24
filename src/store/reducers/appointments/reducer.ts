@@ -1,4 +1,4 @@
-import {IListAppointment, IPackageAppointments} from "../../../api/types";
+import {IAppointmentByQuery, IPackageAppointments} from "../../../api/types";
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getAllAppointments,
@@ -9,12 +9,12 @@ import {
 } from "./actions";
 
 type TState = {
-    appointments: IListAppointment[];
+    appointments: IAppointmentByQuery[];
     count: number;
     allCount: number;
     isLoading: boolean;
     isModalLoading: boolean;
-    allAppointments: IListAppointment[];
+    allAppointments: IAppointmentByQuery[];
     packages: IPackageAppointments[];
 }
 

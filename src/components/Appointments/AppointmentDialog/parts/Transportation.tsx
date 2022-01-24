@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Grid, MenuItem, Select} from "@material-ui/core";
 import {Api} from "../../../../config/requests";
-import {IListAppointment, ITransportation} from "../../../../api/types";
+import {IAppointmentByQuery, ITransportation} from "../../../../api/types";
 import {useSCs} from "../../../../utils/hooks";
 import {TForm} from "../AppointmentDialog";
 import {IAppointmentSlot, ISR} from "../../../../store/reducers/appointment/types";
@@ -14,7 +14,7 @@ type TTransportationProps = {
     maintenancePackageOptionId: number | undefined;
     slot: IAppointmentSlot | null;
     serviceCategoryIds: number[];
-    payload: IListAppointment | undefined;
+    payload: IAppointmentByQuery | undefined;
 }
 
 const Transportation: React.FC<TTransportationProps> = ({ payload, form , setForm, selectedSR, maintenancePackageOptionId, slot, serviceCategoryIds }) => {

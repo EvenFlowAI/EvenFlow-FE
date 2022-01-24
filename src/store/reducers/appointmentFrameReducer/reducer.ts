@@ -18,7 +18,6 @@ import {
     setVehicle, updateVehicle
 } from "./actions";
 import {
-    EServiceCategoryPage,
     ICustomer,
     ILoadedVehicle, IMake, IPackage,
     IPackageOptions,
@@ -29,7 +28,6 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {TMaintenanceDetails} from "./types";
-import {tellMoreCard} from "./initial";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -148,26 +146,13 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, maintenanceDetails: {...state.maintenanceDetails, ...payload}}
     })
     .addCase(setUpdateAppointment, (state, {payload}) => {
-        const c: Partial<TState> = {};
-        let category = payload.serviceCategory;
-        if (category) {
-            category = {...category, serviceRequests: category.serviceRequests ? [...category.serviceRequests] : []}
-            if (category.page === EServiceCategoryPage.Page1) {
-                c.service = category;
-            } else if (category.page === EServiceCategoryPage.Page2) {
-                c.subService = category;
-                c.service = tellMoreCard;
-            } else {
-                // TODO: Package??
-            }
-        }
         return {
             ...state,
             id: payload.id,
             hashKey: payload.hashKey,
             customer: {...payload.driver},
             reminders: payload.reminderTypes,
-            ...c,
+            categoriesIds: payload.serviceCategories?.map(item => item.id),
             description: payload.comment
         };
     })

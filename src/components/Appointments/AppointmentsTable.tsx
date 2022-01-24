@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Table} from "../UI/Table";
-import {AppointmentStatus, appointmentStatuses, IListAppointment} from "../../api/types";
+import {AppointmentStatus, appointmentStatuses, IAppointmentByQuery} from "../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
 import moment from "moment";
@@ -14,7 +14,7 @@ import {timeSpanString, timeString} from "../../config/constants";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 
-const cols: TableRowDataType<IListAppointment>[] = [
+const cols: TableRowDataType<IAppointmentByQuery>[] = [
     {header: "Date", val: el => moment.utc(el.dateInUtc).format("LL"), orderId: "date"},
     {header: "Time", val: el => moment(el.timeSlot, timeSpanString).format(timeString)},
     {header: "Full Name", val: el => el.driver.fullName, orderId: "fullName"},
@@ -24,15 +24,15 @@ const cols: TableRowDataType<IListAppointment>[] = [
 
 type TAppointmentsTable = {
     refresh: () => void;
-    order: IOrder<IListAppointment>;
-    setOrder: React.Dispatch<React.SetStateAction<IOrder<IListAppointment>>>
+    order: IOrder<IAppointmentByQuery>;
+    setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointmentByQuery>>>
     onEditOpen: () => void;
     onChangePage: (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number) => void;
     onChangeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     pageData: IPageRequest;
     isLoading: boolean;
-    viewItem?: IListAppointment|undefined;
-    setViewItem?: Dispatch<SetStateAction<IListAppointment|undefined>>
+    viewItem?: IAppointmentByQuery|undefined;
+    setViewItem?: Dispatch<SetStateAction<IAppointmentByQuery|undefined>>
 }
 
 export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
@@ -44,7 +44,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
     const showError = useException();
     const {askConfirm} = useConfirm();
 
-    const handleOpen = (el: IListAppointment) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const handleOpen = (el: IAppointmentByQuery) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setViewItem && setViewItem(el);
         setAnchorEl(e.currentTarget)
     }
@@ -101,7 +101,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
         handleCancel();
     }
 
-    const actions = (el: IListAppointment) => {
+    const actions = (el: IAppointmentByQuery) => {
         return <IconButton
             size="small"
             onClick={handleOpen(el)}>
@@ -109,12 +109,12 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
         </IconButton>
     }
 
-    const handleSort = (data: IOrder<IListAppointment>) => () => {
+    const handleSort = (data: IOrder<IAppointmentByQuery>) => () => {
         setOrder(data);
     }
 
     return <>
-        <Table<IListAppointment>
+        <Table<IAppointmentByQuery>
             data={appointments}
             onSort={handleSort}
             order={order.orderBy}

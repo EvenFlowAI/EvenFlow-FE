@@ -3,7 +3,7 @@ import {Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {AppointmentActions} from "./AppointmentDialog/AppointmentActions";
 import {useModal, useSCs, useStatePagination} from "../../utils/hooks";
-import {EAppointmentStatus, IListAppointment} from "../../api/types";
+import {EAppointmentStatus, IAppointmentByQuery} from "../../api/types";
 import moment from "moment";
 import {AppointmentDialog} from "./AppointmentDialog/AppointmentDialog";
 import {IOrder} from "../../types/types";
@@ -20,13 +20,13 @@ export type TView = "calendar" | "list";
 
 export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);
-    const [viewItem, setViewItem] = useState<IListAppointment|undefined>(undefined);
+    const [viewItem, setViewItem] = useState<IAppointmentByQuery|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | null | unknown>(null);
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<TView>("list");
-    const [order, setOrder] = useState<IOrder<IListAppointment>>({
+    const [order, setOrder] = useState<IOrder<IAppointmentByQuery>>({
         orderBy: "date",
         isAscending: true,
     })
@@ -131,6 +131,8 @@ export const Appointments = () => {
         <AppointmentsListDialog
             open={isListOpen}
             date={date}
+            viewItem={viewItem}
+            setViewItem={setViewItem}
             onClose={onListDialogClose}
             onEditOpen={onEditOpen}
             refresh={refresh}
