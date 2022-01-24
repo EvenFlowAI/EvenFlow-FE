@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Grid, MenuItem, Select} from "@material-ui/core";
 import {Api} from "../../../../config/requests";
-import {ITransportation} from "../../../../api/types";
+import {IListAppointment, ITransportation} from "../../../../api/types";
 import {useSCs} from "../../../../utils/hooks";
 import {TForm} from "../AppointmentDialog";
 import {IAppointmentSlot, ISR} from "../../../../store/reducers/appointment/types";
@@ -14,14 +14,15 @@ type TTransportationProps = {
     maintenancePackageOptionId: number | undefined;
     slot: IAppointmentSlot | null;
     serviceCategoryIds: number[];
+    payload: IListAppointment | undefined;
 }
 
-const Transportation: React.FC<TTransportationProps> = ({ form , setForm, selectedSR, maintenancePackageOptionId, slot, serviceCategoryIds }) => {
+const Transportation: React.FC<TTransportationProps> = ({ payload, form , setForm, selectedSR, maintenancePackageOptionId, slot, serviceCategoryIds }) => {
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const {selectedSC} = useSCs();
 
     useEffect(() => {
-        if (selectedSC && (selectedSR.length || serviceCategoryIds.length || maintenancePackageOptionId) && slot) {
+        if (selectedSC && slot && (selectedSR.length || serviceCategoryIds.length || maintenancePackageOptionId)) {
             Api.call<ITransportation[]>(
                 Api.endpoints.TransportationOptions.GetActive,
                 {
@@ -38,6 +39,15 @@ const Transportation: React.FC<TTransportationProps> = ({ form , setForm, select
             })
         }
     }, [selectedSC, selectedSR, serviceCategoryIds, maintenancePackageOptionId, slot])
+
+    useEffect(() => {
+        if (payload) {
+            const transportation = transportations.find(item => item.type === payload.transportationOption?.type);
+            if (transportation) {
+                setForm(prev => ({...prev, transportationOption: transportation}))
+            }
+        }
+    }, [transportations])
 
     const handleChangeTransportationNeeds = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
         const option = transportations.find(el => el.name === value)

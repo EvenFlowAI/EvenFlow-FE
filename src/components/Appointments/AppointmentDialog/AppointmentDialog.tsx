@@ -169,6 +169,7 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 });
                 setSelectedSR(payload.serviceRequests);
                 setDate(payload.dateInUtc);
+                // setSelectedPackageOption(payload.maintenancePackageOptionId);
                 const slot: IAppointmentSlot = {
                     date: payload.dateInUtc,
                     time: payload.timeSlot,
@@ -405,12 +406,13 @@ export const AppointmentDialog: React.FC<DialogProps<IListAppointment>> = ({onAc
                 </Grid>
 
                 <Transportation
+                    payload={payload}
                     form={form}
                     setForm={setForm}
                     selectedSR={selectedSR}
                     slot={selectedSlot}
                     serviceCategoryIds={selectedCategories.map(item => item.id)}
-                    maintenancePackageOptionId={selectedPackageOption?.id}
+                    maintenancePackageOptionId={selectedPackageOption?.id || payload?.maintenancePackageOptionId || undefined}
                 />
 
                 <Reminders setForm={setForm} form={form} />

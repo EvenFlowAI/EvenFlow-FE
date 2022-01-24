@@ -20,7 +20,7 @@ export type TView = "calendar" | "list";
 
 export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);
-    const [viewItem] = useState<IListAppointment|undefined>(undefined);
+    const [viewItem, setViewItem] = useState<IListAppointment|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | null | unknown>(null);
     const [date, setDate] = useState<moment.Moment | null>(null);
@@ -110,6 +110,8 @@ export const Appointments = () => {
             : null}
         {selectedView === "list"
             ? <AppointmentsTable
+                viewItem={viewItem}
+                setViewItem={setViewItem}
                 onEditOpen={onEditOpen}
                 isLoading={isLoading}
                 refresh={refresh}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Table} from "../UI/Table";
 import {AppointmentStatus, appointmentStatuses, IListAppointment} from "../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
@@ -31,11 +31,12 @@ type TAppointmentsTable = {
     onChangeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     pageData: IPageRequest;
     isLoading: boolean;
+    viewItem?: IListAppointment|undefined;
+    setViewItem?: Dispatch<SetStateAction<IListAppointment|undefined>>
 }
 
-export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ isLoading, refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
+export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
     const { appointments, count } = useSelector((state: RootState) => state.appointments);
-    const [viewItem, setViewItem] = useState<IListAppointment|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
     const {isOpen, onClose, onOpen} = useModal();
@@ -44,7 +45,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ isLoading, ref
     const {askConfirm} = useConfirm();
 
     const handleOpen = (el: IListAppointment) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        setViewItem(el);
+        setViewItem && setViewItem(el);
         setAnchorEl(e.currentTarget)
     }
 
@@ -82,7 +83,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ isLoading, ref
         if (viewItem) {
             try {
                 await API.appointment.cancel(viewItem.id);
-                setViewItem(undefined);
+                setViewItem && setViewItem(undefined);
                 showMessage("Canceled");
                 refresh();
             } catch (e) {

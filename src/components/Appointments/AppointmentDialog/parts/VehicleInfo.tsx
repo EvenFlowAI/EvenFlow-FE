@@ -49,12 +49,13 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
     ];
 
     useEffect(() => {
+        if (selectedSC && isDataValid) getPackage();
         if (makes.length) {
             setLoadedOptions(prevOptions => ({...prevOptions, make: makes.map(item => item.name)}));
         } else {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         }
-    }, [makes])
+    }, [makes, selectedSC, isDataValid])
 
     const handleSelectChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
