@@ -18,6 +18,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
+import CartTable from "./CartTable";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
@@ -95,6 +96,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                         key={card.name}/>
                 })}
             </CardsWrapper> : <Loading />}
+            <CartTable/>
             <Actions
                 nextDisabled={!subService}
                 onNext={handleSubmit}

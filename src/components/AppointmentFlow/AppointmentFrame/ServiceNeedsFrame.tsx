@@ -18,6 +18,7 @@ import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import {Loading} from '../../UI/Loading';
 import ReactGA from "react-ga";
+import CartTable from "./CartTable";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -106,6 +107,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                         key={card.name}/>
                 })}
             </CardsWrapper> : <Loading />}
+            <CartTable/>
             <Actions
                 nextDisabled={!selectedService}
                 onNext={handleSubmit}
