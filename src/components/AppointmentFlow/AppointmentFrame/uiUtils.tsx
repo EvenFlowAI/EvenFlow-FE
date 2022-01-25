@@ -44,9 +44,9 @@ export const getMaintenanceList = (
         const filtered = srList.filter(el => selectedSR.includes(el.id));
         filtered.forEach(item => item && services.push({id: item.id, name: item.description ?? item.code, type: 'service'}));
     }
-    // if (selectedCategories && allCategories) {
-    //     const categories = allCategories.filter(category => selectedCategories.includes(category.id))
-    //     categories.forEach(item => services.push(item.name))
-    // }
+    if (selectedCategories && allCategories) {
+        const categories = allCategories.filter(category => selectedCategories.includes(category.id))
+        categories.forEach(item => services.push({id: item.id, name: item.name, type: 'category'}))
+    }
     return services;
 }
