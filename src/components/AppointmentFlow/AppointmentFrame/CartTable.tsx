@@ -1,10 +1,11 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {IconButton, useTheme} from "@material-ui/core";
 import {getMaintenanceDescription} from "./uiUtils";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
+import {loadAllServiceCategories} from "../../../store/reducers/appointment/actions";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -45,21 +46,26 @@ const CartItem: React.FC<TCartItemProps> = ({ title, onClick}) => {
     const classes = useStyles();
     return <div className={classes.itemWrapper}>
         <div>{title}</div>
-        <IconButton onClick={() => onClick(title)}><TrashBin/></IconButton>
+        <IconButton onClick={() => onClick(title)} style={{padding: 0}}><TrashBin/></IconButton>
     </div>
 }
 
 const CartTable = () => {
     const { selectedPackage, categoriesIds } = useSelector((state: RootState) => state.appointmentFrame);
-    const { allServiceCategories } = useSelector((state: RootState) => state.appointment);
+    const { allServiceCategories, scProfile } = useSelector((state: RootState) => state.appointment);
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests
     ]);
     const theme = useTheme();
     const classes = useStyles(theme);
+    const dispatch = useDispatch();
     const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds),
         [srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
+
+    useEffect(() => {
+        scProfile && dispatch(loadAllServiceCategories(scProfile.id))
+    }, [scProfile])
 
     const onClick = (name: string) => {
         console.log(name);

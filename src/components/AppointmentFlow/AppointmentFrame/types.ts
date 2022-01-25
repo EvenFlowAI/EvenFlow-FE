@@ -6,3 +6,11 @@ export type TActionProps = {
     loading?: boolean;
     onAddServices?: () => void;
 };
+
+export type EMaintenanceItemType = 'category' | 'package' | 'service'
+
+export type IMaintenanceItem = {
+    id: number;
+    name: string;
+    type: EMaintenanceItemType;
+}
