@@ -23,8 +23,7 @@ type TProps = {
     onAddServices: () => void;
 };
 export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServices}) => {
-    const [service, subService, vehicle, vehicles, selectedPackage, selectedSR] = useSelector(({appointmentFrame, appointment}: RootState) => [
-        appointmentFrame.service,
+    const [subService, vehicle, vehicles, selectedPackage, selectedSR] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
         appointment.customerLoadedData?.vehicles,
@@ -71,9 +70,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 onChange={handleChange}
                 value={description}
                 rows={4}
-                placeholder={
-                    subService?.name ?? service?.name ?? "Type Here"
-                }
+                placeholder="Describe what`s going on"
             />
             <Actions onBack={() => onBack(screenToReturn)} onNext={onSubmit} />
         </StepWrapper>
