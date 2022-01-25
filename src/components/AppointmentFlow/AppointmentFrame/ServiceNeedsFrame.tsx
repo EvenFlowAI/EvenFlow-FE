@@ -19,6 +19,7 @@ import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import {Loading} from '../../UI/Loading';
 import ReactGA from "react-ga";
 import CartTable from "./CartTable";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -28,7 +29,7 @@ type TProps = {
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
-    const {service: selectedService, isAdditionalServices, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
+    const {service: selectedService, isAdditionalServices, categoriesIds, selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
@@ -82,6 +83,12 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                     }
                     dispatch(selectCategoriesIds(categories));
                 }
+            } else {
+                if (!isAdditionalServices && categoriesIds.length) {
+                    let categories = [...categoriesIds];
+                    categories.pop();
+                    dispatch(selectCategoriesIds(categories));
+                }
             }
 
             switch (selectedService?.type) {
@@ -101,6 +108,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             {!loading ? <CardsWrapper>
                 {serviceCategories.map(card => {
                     return <ServiceCard
+                        selected={categoriesIds.includes(card.id) || (card.type === EServiceCategoryType.MaintenancePackage && Boolean(selectedPackage))}
                         active={selectedService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}

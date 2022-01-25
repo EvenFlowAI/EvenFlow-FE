@@ -5,6 +5,7 @@ import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    selectCategoriesIds,
     setAdditionalServicesChosen,
     setFrameDescription
 } from '../../../store/reducers/appointmentFrameReducer/actions';
@@ -23,12 +24,14 @@ type TProps = {
     onAddServices: () => void;
 };
 export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServices}) => {
-    const [subService, vehicle, vehicles, selectedPackage, selectedSR] = useSelector(({appointmentFrame, appointment}: RootState) => [
+    const [subService, vehicle, vehicles, selectedPackage, selectedSR, service, categoriesIds] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
         appointment.customerLoadedData?.vehicles,
         appointmentFrame.selectedPackage,
         appointment.selectedSR,
+        appointmentFrame.service,
+        appointmentFrame.categoriesIds,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -62,6 +65,19 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
         }
     }
 
+    const handleBack = () => {
+        let categories: number[] = [];
+        if (subService && categoriesIds.includes(subService.id)) {
+            categories = categoriesIds.filter(id => id !== subService?.id)
+        } else {
+            if (service && categoriesIds.includes(service.id)) {
+                categories = categoriesIds.filter(id => id !== service?.id)
+            }
+        }
+        dispatch(selectCategoriesIds(categories))
+        onBack(screenToReturn);
+    }
+
     return (
         <StepWrapper>
             <TextField
@@ -72,7 +88,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 rows={4}
                 placeholder="Describe what`s going on"
             />
-            <Actions onBack={() => onBack(screenToReturn)} onNext={onSubmit} />
+            <Actions onBack={handleBack} onNext={onSubmit} />
         </StepWrapper>
     );
 };
