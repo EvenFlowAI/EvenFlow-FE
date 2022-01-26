@@ -5,6 +5,7 @@ import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    selectCategoriesIds,
     setAdditionalServicesChosen,
     setFrameDescription
 } from '../../../store/reducers/appointmentFrameReducer/actions';
@@ -12,6 +13,8 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../../components/Layout/types";
 import {useConfirm} from "../../../utils/hooks";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {selectSR} from "../../../store/reducers/appointment/actions";
 
 type TProps = {
     onFillCar: TCallback;
@@ -23,13 +26,14 @@ type TProps = {
     onAddServices: () => void;
 };
 export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServices}) => {
-    const [service, subService, vehicle, vehicles, selectedPackage, selectedSR] = useSelector(({appointmentFrame, appointment}: RootState) => [
-        appointmentFrame.service,
+    const [subService, vehicle, vehicles, selectedPackage, selectedSR, service, categoriesIds] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
         appointment.customerLoadedData?.vehicles,
         appointmentFrame.selectedPackage,
         appointment.selectedSR,
+        appointmentFrame.service,
+        appointmentFrame.categoriesIds,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -51,7 +55,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
     const onSubmit = () => {
         if (!selectedPackage || !selectedSR.length) {
             askConfirm({
-                title: "Would you like additional services?",
+                title: "Would you like to add more services?",
                 confirmContent: "Yes",
                 cancelContent: "No",
                 onConfirm: () => {
@@ -60,7 +64,23 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 },
                 onCancel: handleNext,
             })
+        } else handleNext()
+    }
+
+    const handleBack = () => {
+        let categories = [...categoriesIds];
+        if (subService && categoriesIds.includes(subService.id)) {
+            categories = categoriesIds.filter(id => id !== subService?.id)
+        } else {
+            if (service && categoriesIds.includes(service.id)) {
+                categories = categoriesIds.filter(id => id !== service?.id)
+            }
         }
+        if (subService?.type === EServiceCategoryType.IndividualServices) {
+            dispatch(selectSR(null));
+        }
+        dispatch(selectCategoriesIds(categories))
+        onBack(screenToReturn);
     }
 
     return (
@@ -71,11 +91,9 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 onChange={handleChange}
                 value={description}
                 rows={4}
-                placeholder={
-                    subService?.name ?? service?.name ?? "Type Here"
-                }
+                placeholder="Describe what`s going on"
             />
-            <Actions onBack={() => onBack(screenToReturn)} onNext={onSubmit} />
+            <Actions onBack={handleBack} onNext={onSubmit} />
         </StepWrapper>
     );
 };

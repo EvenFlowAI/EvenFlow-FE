@@ -150,6 +150,8 @@ export const SelectedAppointment = () => {
     const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds),
         [srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
 
+    console.log(selectedServices);
+
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {

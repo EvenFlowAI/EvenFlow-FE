@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TScreen} from "../../Layout/types";
 import {ProgressStepper} from "../ProgressStepper";
+import {setAdditionalServicesChosen} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useDispatch} from "react-redux";
 
 const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -93,9 +95,15 @@ type TProps = {
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const [passed, setPassed] = useState<TScreen[]>(["serviceNeeds"]);
     const theme = useTheme();
+    const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isActive = (idx: number): boolean => {
         return stepsMap[screen] === idx;
+    }
+
+    const onClick = (idx: number) => {
+        if (idx === 0) dispatch(setAdditionalServicesChosen(true));
+        handleSetScreen(stepScreens[idx])
     }
 
     useEffect(() => {
@@ -113,7 +121,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
                     <Button
                         fullWidth
                         disabled={getButtonState(idx)}
-                        onClick={() => handleSetScreen(stepScreens[idx])}
+                        onClick={() => onClick(idx)}
                         color="primary"
                         variant={isActive(idx+1) ? "contained" : "outlined"}>
                         <Index>{idx + 1}</Index> {item}

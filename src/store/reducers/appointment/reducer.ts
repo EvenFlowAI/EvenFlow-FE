@@ -223,7 +223,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, sessionId: payload};
     })
     .addCase(selectService, (state) => {
-        return {...state, appointment: null, selectedSR: []}
+        return {...state, appointment: null}
     })
     .addCase(selectSubService, (state) => {
         return {...state, appointment: null}

@@ -322,12 +322,17 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         if (onAddServices) onAddServices();
     }
 
+    const onSave = async () => {
+        await onClose();
+        await askAdditionalServices();
+    }
+
     const askAdditionalServices = () => {
         selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
         const categoryChosen = service?.type === 0 || subService?.type === 0;
         if (!categoryChosen || !selectedSR.length) {
             askConfirm({
-                title: "Would you like additional services?",
+                title: "Would you like to add more services?",
                 confirmContent: "Yes",
                 cancelContent: "No",
                 onConfirm: addServices,
@@ -347,7 +352,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 action: `Selected Package`,
                 label: `With ${packageOptions[selectedPackage.type]} Option`,
             })
-            if (packageIsSelected) {
+            if (packageIsSelected && packageOptionType !== selectedPackage.type) {
                 onOpen();
             } else {
                 askAdditionalServices()
@@ -482,7 +487,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 onBack={handleBack}
                 nextDisabled={!selectedPackage}
                 onNext={handleNext} />
-            <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={askAdditionalServices}/>
+            <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
         </StepWrapper>
     );
 };

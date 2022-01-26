@@ -18,14 +18,16 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
+import CartTable from "./CartTable";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
     onBack: TCallback;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
-    const {subService, isAdditionalServices, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {subService, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
     const [loading, setLoading] = useState<boolean>(false);
@@ -61,20 +63,10 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
             if (subService.type === 0) {
-                if (isAdditionalServices) {
-                    dispatch(setAdditionalServicesChosen(false));
-                    const categories = categoriesIds.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
-                    dispatch(selectCategoriesIds(categories));
-                } else {
-                    let categories = [...categoriesIds];
-                    if (categories.length) {
-                        categories[categories.length - 1] = subService.id;
-                    } else {
-                        categories = [subService.id]
-                    }
-                    dispatch(selectCategoriesIds(categories));
-                }
+                const categories = categoriesIds.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
+                dispatch(selectCategoriesIds(categories));
             }
+            dispatch(setAdditionalServicesChosen(false));
 
             switch (subService.type) {
                 case 2:
@@ -84,21 +76,31 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             }
         }
     }
+
+    const handleBack = () => {
+        dispatch(selectSubService(null));
+        onBack();
+    }
+
     return (
         <StepWrapper>
             {!loading ? <CardsWrapper>
                 {services.map(card => {
                     return <ServiceCard
+                        selected={categoriesIds.includes(card.id)
+                        || (card.type === EServiceCategoryType.IndividualServices && Boolean(selectedSR?.length))
+                        }
                         active={subService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
                         key={card.name}/>
                 })}
             </CardsWrapper> : <Loading />}
+            <CartTable/>
             <Actions
                 nextDisabled={!subService}
                 onNext={handleSubmit}
-                onBack={onBack} />
+                onBack={handleBack} />
         </StepWrapper>
     );
 };

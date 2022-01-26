@@ -16,8 +16,8 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
 
-export const selectService = createAction<IServiceCategory>("fAppointment/selectService");
-export const selectSubService = createAction<IServiceCategory>("fAppointment/selectSubService");
+export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
+export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
 export const setFrameDescription = createAction<string>("fAppointment/setFrameDescription");
 export const setPackage = createAction<IPackageOptions|null>("fAppointment/setPackage");
 export const setAdvisor = createAction<IServiceConsultant|null>("fAppointment/setAdvisor");
