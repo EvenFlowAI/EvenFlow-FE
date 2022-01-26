@@ -6,9 +6,10 @@ import {TForm} from "../AppointmentDialog";
 type TDriverInfoProps = {
     form: TForm;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
+    errors: string[];
 }
 
-const DriverInfo: React.FC<TDriverInfoProps> = ({ handleChange, form }) => {
+const DriverInfo: React.FC<TDriverInfoProps> = ({ handleChange, form, errors }) => {
     return (
         <React.Fragment>
             <Grid item xs={12}>
@@ -23,6 +24,7 @@ const DriverInfo: React.FC<TDriverInfoProps> = ({ handleChange, form }) => {
                     placeholder="Enter Driver Name"
                     onChange={handleChange}
                     value={form.driverName}
+                    error={errors.includes("driverName")}
                 />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -33,6 +35,7 @@ const DriverInfo: React.FC<TDriverInfoProps> = ({ handleChange, form }) => {
                     placeholder="Enter Driver Email"
                     name="driverEmail"
                     onChange={handleChange}
+                    error={errors.includes("driverEmail")}
                     fullWidth
                 />
             </Grid>
@@ -43,6 +46,7 @@ const DriverInfo: React.FC<TDriverInfoProps> = ({ handleChange, form }) => {
                     id="driverPhoneNumber"
                     placeholder="Enter Driver Phone Number"
                     name="driverPhoneNumber"
+                    error={errors.includes("driverPhoneNumber")}
                     onChange={handleChange}
                     fullWidth
                 />

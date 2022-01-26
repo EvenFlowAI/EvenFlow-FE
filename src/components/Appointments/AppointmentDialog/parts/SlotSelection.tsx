@@ -16,10 +16,13 @@ type TSlotSelectionProps = {
     slots: IAppointmentSlot[];
     filterDate: ParsableDate;
     setDate: Dispatch<SetStateAction<ParsableDate>>;
+    errors: string[];
+    setErrors: Dispatch<SetStateAction<string[]>>;
 }
 
-const SlotSelection: React.FC<TSlotSelectionProps> = ({ slotsLoading, selectedSlot, setSelectedSlot, slots, filterDate, setDate }) => {
+const SlotSelection: React.FC<TSlotSelectionProps> = ({ setErrors, errors, slotsLoading, selectedSlot, setSelectedSlot, slots, filterDate, setDate }) => {
     const handleSlotChange = (e: any, value: IAppointmentSlot|null) => {
+        setErrors(prev => prev.filter(item => item !== "slot"));
         setSelectedSlot(value);
     }
 
@@ -28,17 +31,23 @@ const SlotSelection: React.FC<TSlotSelectionProps> = ({ slotsLoading, selectedSl
         return moment.utc(date).format(`LL - ${timeString}`);
     }
 
+    const handleDateChange = (date: ParsableDate) => {
+        setErrors(prev => prev.filter(item => item !== "date"));
+        setDate(date);
+    }
+
     return (
         <React.Fragment>
             <Grid item xs={12} sm={4}>
                 <DatePicker
                     value={filterDate || null}
-                    onChange={setDate}
+                    onChange={handleDateChange}
                     label="Date"
                     disablePast
+                    error={errors.includes("date")}
                     InputProps={{
                         endAdornment: <CalendarToday />,
-                        placeholder: "Select Date"
+                        placeholder: "Select Date",
                     }}
                     fullWidth
                 />
@@ -54,7 +63,7 @@ const SlotSelection: React.FC<TSlotSelectionProps> = ({ slotsLoading, selectedSl
                         }`
                     }
                     onChange={handleSlotChange}
-                    renderInput={autocompleteRender({label: "Time slot", placeholder: "Select Slot"})}
+                    renderInput={autocompleteRender({label: "Time slot", placeholder: "Select Slot", error: errors.includes("slot")})}
                     options={slots}
                 />
             </Grid>
