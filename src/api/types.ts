@@ -179,7 +179,8 @@ export interface IBaseAppointment {
     vehicle: IVehicleData;
     customerId: string;
     maintenancePackageOptionId: number | null;
-    maintenancePackageOption: IMaintenancePackageOption | null;
+    maintenancePackageOption: IPackageOptions | null;
+    // maintenancePackageOption: IMaintenancePackageOption | null;
     driver: IDriverInfo;
     duration: number;
     transactionValue: number;
@@ -306,6 +307,7 @@ export interface IPackageOptions {
     complimentaryServices: TExtendedComplimentary[];
     marketPriceServiceRequests: number;
     marketPriceComplimentaryServices: number;
+    maintenancePackageName: string;
 }
 
 export interface IPackage {

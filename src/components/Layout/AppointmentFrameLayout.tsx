@@ -32,7 +32,7 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    setCurrentFrameScreen, setTrackerCreated,
+    setCurrentFrameScreen, setPackage, setTrackerCreated,
     setUpdateAppointment,
     setVehicle
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -209,10 +209,9 @@ export const AppointmentFrameLayout = () => {
                 const {data} = await API.appointment.getByKey(key);
                 dispatch(setUpdateAppointment(data));
                 data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
-                console.log(data);
-                // if (data.maintenancePackageOption) {
-                //
-                // }
+                if (data.maintenancePackageOption) {
+                    dispatch(setPackage(data.maintenancePackageOption))
+                }
                 handleSetScreen('serviceNeeds');
             } catch (e) {
                 showError(e);
