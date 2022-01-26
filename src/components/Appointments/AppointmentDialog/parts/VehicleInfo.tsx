@@ -49,13 +49,16 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
     ];
 
     useEffect(() => {
-        if (selectedSC && isDataValid) getPackage();
         if (makes.length) {
             setLoadedOptions(prevOptions => ({...prevOptions, make: makes.map(item => item.name)}));
         } else {
             setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
         }
-    }, [makes, selectedSC, isDataValid])
+    }, [makes])
+
+    useEffect(() => {
+        if (selectedSC && isDataValid) getPackage();
+    }, [selectedSC, isDataValid])
 
     const handleSelectChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
@@ -97,9 +100,8 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
             {selects.map(select => {
                     const hasError = errors.includes(select.name);
                     if (select.options) {
-                        return <Grid item xs={12}  sm={6}>
+                        return <Grid key={select.name} item xs={12} sm={6}>
                             <Autocomplete
-                                key={select.name}
                                 options={typeof select.options === 'string'
                                     ? loadedOptions[select.options] ?? []
                                     : select.options}
