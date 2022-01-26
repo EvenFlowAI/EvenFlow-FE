@@ -327,7 +327,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         const categoryChosen = service?.type === 0 || subService?.type === 0;
         if (!categoryChosen || !selectedSR.length) {
             askConfirm({
-                title: "Would you like additional services?",
+                title: "Would you like to add more services?",
                 confirmContent: "Yes",
                 cancelContent: "No",
                 onConfirm: addServices,

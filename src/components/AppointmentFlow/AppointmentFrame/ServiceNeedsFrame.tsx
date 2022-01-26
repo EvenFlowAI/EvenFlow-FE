@@ -29,7 +29,7 @@ type TProps = {
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
-    const {service: selectedService, isAdditionalServices, categoriesIds, selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
+    const {service: selectedService, categoriesIds, selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
@@ -70,26 +70,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
             if (selectedService.type === 0) {
-                if (isAdditionalServices) {
-                    dispatch(setAdditionalServicesChosen(false));
-                    const categories = categoriesIds.includes(selectedService.id) ? categoriesIds : [...categoriesIds, selectedService.id];
-                    dispatch(selectCategoriesIds(categories));
-                } else {
-                    let categories = [...categoriesIds];
-                    if (categories.length) {
-                        categories[categories.length - 1] = selectedService.id;
-                    } else {
-                        categories = [selectedService.id]
-                    }
-                    dispatch(selectCategoriesIds(categories));
-                }
-            } else {
-                if (!isAdditionalServices && categoriesIds.length) {
-                    let categories = [...categoriesIds];
-                    categories.pop();
-                    dispatch(selectCategoriesIds(categories));
-                }
+                const categories = categoriesIds.includes(selectedService.id) ? categoriesIds : [...categoriesIds, selectedService.id];
+                dispatch(selectCategoriesIds(categories));
             }
+            dispatch(setAdditionalServicesChosen(false));
 
             switch (selectedService?.type) {
                 case 2:

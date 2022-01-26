@@ -13,6 +13,8 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../../components/Layout/types";
 import {useConfirm} from "../../../utils/hooks";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {selectSR} from "../../../store/reducers/appointment/actions";
 
 type TProps = {
     onFillCar: TCallback;
@@ -53,7 +55,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
     const onSubmit = () => {
         if (!selectedPackage || !selectedSR.length) {
             askConfirm({
-                title: "Would you like additional services?",
+                title: "Would you like to add more services?",
                 confirmContent: "Yes",
                 cancelContent: "No",
                 onConfirm: () => {
@@ -62,17 +64,20 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 },
                 onCancel: handleNext,
             })
-        }
+        } else handleNext()
     }
 
     const handleBack = () => {
-        let categories: number[] = [];
+        let categories = [...categoriesIds];
         if (subService && categoriesIds.includes(subService.id)) {
             categories = categoriesIds.filter(id => id !== subService?.id)
         } else {
             if (service && categoriesIds.includes(service.id)) {
                 categories = categoriesIds.filter(id => id !== service?.id)
             }
+        }
+        if (subService?.type === EServiceCategoryType.IndividualServices) {
+            dispatch(selectSR(null));
         }
         dispatch(selectCategoriesIds(categories))
         onBack(screenToReturn);

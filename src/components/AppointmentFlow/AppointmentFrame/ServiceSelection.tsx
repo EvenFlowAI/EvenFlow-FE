@@ -26,7 +26,7 @@ type TProps = {
     onBack: TCallback;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
-    const {subService, isAdditionalServices, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
+    const {subService, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -63,27 +63,10 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
             if (subService.type === 0) {
-                if (isAdditionalServices) {
-                    dispatch(setAdditionalServicesChosen(false));
-                    const categories = categoriesIds.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
-                    dispatch(selectCategoriesIds(categories));
-                } else {
-                    let categories = [...categoriesIds];
-                    if (categories.length) {
-                        categories[categories.length - 1] = subService.id;
-                    } else {
-                        categories = [subService.id]
-                    }
-                    dispatch(selectCategoriesIds(categories));
-                }
-            } else {
-                if (!isAdditionalServices && categoriesIds.length) {
-                    // !subService?.type === EServiceCategoryType.IndividualServices
-                    let categories = [...categoriesIds];
-                    categories.pop();
-                    dispatch(selectCategoriesIds(categories));
-                }
+                const categories = categoriesIds.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
+                dispatch(selectCategoriesIds(categories));
             }
+            dispatch(setAdditionalServicesChosen(false));
 
             switch (subService.type) {
                 case 2:
@@ -93,6 +76,12 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             }
         }
     }
+
+    const handleBack = () => {
+        dispatch(selectSubService(null));
+        onBack();
+    }
+
     return (
         <StepWrapper>
             {!loading ? <CardsWrapper>
@@ -111,7 +100,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             <Actions
                 nextDisabled={!subService}
                 onNext={handleSubmit}
-                onBack={onBack} />
+                onBack={handleBack} />
         </StepWrapper>
     );
 };

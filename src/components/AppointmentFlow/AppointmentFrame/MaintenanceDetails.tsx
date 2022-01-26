@@ -8,8 +8,8 @@ import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
-    loadMakes,
-    setMaintenanceDetails,
+    loadMakes, selectService,
+    setMaintenanceDetails, setPackage,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -20,6 +20,7 @@ import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -53,7 +54,7 @@ const blankOptions: TOptionsState = {};
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {maintenanceDetails, selectedVehicle, makes}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
@@ -175,6 +176,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }
     }
 
+    const handleBack = () => {
+        if (service?.type === EServiceCategoryType.MaintenancePackage) {
+            dispatch(setPackage(null))
+            dispatch(selectService(null));
+        }
+        onBack();
+    }
+
     return (<StepWrapper>
         <SelectWrapper>
             {selects.map(select => {
@@ -224,6 +233,6 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 </div>
             })}
         </SelectWrapper>
-        <Actions onBack={onBack} onNext={handleNext} />
+        <Actions onBack={handleBack} onNext={handleNext} />
     </StepWrapper>);
 };
