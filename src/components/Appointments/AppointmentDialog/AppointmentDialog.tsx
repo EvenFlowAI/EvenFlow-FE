@@ -32,7 +32,6 @@ import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 import {loadMakes} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {IVehicleDetails} from "../../../store/reducers/appointments/types";
 import VehicleInfo from "./parts/VehicleInfo";
 import DriverInfo from "./parts/DriverInfo";
 import ServicesSelection from "./parts/ServicesSelection";
@@ -64,7 +63,7 @@ export type TForm = {
 };
 
 const initialForm: TForm = {
-    date: "string",
+    date: "",
     slot: "",
     reminderTypes: [],
     driverName: "",
@@ -84,7 +83,9 @@ const initialForm: TForm = {
     serviceRequestIds: [],
 };
 
-type TKey = keyof IVehicleDetails;
+export type TKey = keyof TForm;
+
+const requiredFields = ['date', 'slot', 'driverName', 'driverPhoneNumber', 'driverEmail', 'vehicleMake', 'vehicleYear', 'vehicleModel', 'vehicleMileage']
 
 export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({onAction, payload, ...props}) => {
     const { packages } = useSelector((state: RootState) => state.appointments);
@@ -103,7 +104,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
     const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [errors, setErrors] = useState<TKey[]>([]);
+    const [errors, setErrors] = useState<string[]>([]);
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
@@ -282,8 +283,24 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         }
     }, [form.vehicleVin, showError, fillDataByVin]);
 
+    const checkIsValid = (): boolean => {
+        let isValid = true;
+        for (let field in form) {
+            // @ts-ignore
+            if (requiredFields.includes(field) && !form[field]) {
+                isValid = false;
+                setErrors(prev => {
+                    if (prev.includes(field)) return prev;
+                    return [...prev, field]
+                })
+            }
+        }
+        return isValid;
+    }
+
     const handleSave = async () => {
-        if (!selectedSC) {
+        const isValid = checkIsValid();
+        if (!selectedSC || !isValid) {
             return;
         }
         setLoading(true);
@@ -335,6 +352,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     }
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
+        setErrors(prev => prev.filter(item => item !== name));
         if (name === "driverPhoneNumber") {
             value = validatePhoneNumber(value);
         }
@@ -366,7 +384,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         <DialogContent>
             <Grid alignItems="center" container spacing={2}>
 
-                <DriverInfo form={form} handleChange={handleChange} />
+                <DriverInfo form={form} handleChange={handleChange} errors={errors}/>
 
                 <Grid item xs={12}>
                     <Divider />
@@ -407,6 +425,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     setDate={setDate}
                     slots={slots}
                     slotsLoading={slotsLoading}
+                    errors={errors}
+                    setErrors={setErrors}
                 />
 
                 <Grid item xs={12}>

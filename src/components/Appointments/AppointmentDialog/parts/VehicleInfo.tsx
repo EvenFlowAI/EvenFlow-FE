@@ -8,7 +8,7 @@ import {yearOptions} from "../../../AppointmentFlow/AppointmentFrame/Maintenance
 import {IVehicleDetails} from "../../../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {TForm} from "../AppointmentDialog";
+import {TForm, TKey} from "../AppointmentDialog";
 import {useSCs} from "../../../../utils/hooks";
 import {loadPackageByVehicle} from "../../../../store/reducers/appointments/actions";
 
@@ -21,11 +21,9 @@ type TSelect = {
 type TOptionsState = {[s: string]: string[]};
 const blankOptions: TOptionsState = {};
 
-type TKey = keyof IVehicleDetails;
-
 type TVehicleInfoProps = {
-    errors: TKey[];
-    setErrors: Dispatch<SetStateAction<TKey[]>>;
+    errors: string[];
+    setErrors: Dispatch<SetStateAction<string[]>>;
     setForm: Dispatch<SetStateAction<TForm>>;
     form: TForm;
     vinLoading: boolean;
