@@ -23,7 +23,7 @@ import {RootState} from "../../store/rootReducer";
 import {
     clearCustomerCache, getBlankVehicle,
     getCustomerCache,
-    loadSCProfile,
+    loadSCProfile, loadSRs, selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, getTracker} from "../../utils/utils";
@@ -179,6 +179,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
+        dispatch(loadSRs(decodeSCID(id)));
     }, [id, dispatch]);
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
@@ -207,6 +208,11 @@ export const AppointmentFrameLayout = () => {
             try {
                 const {data} = await API.appointment.getByKey(key);
                 dispatch(setUpdateAppointment(data));
+                data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
+                console.log(data);
+                // if (data.maintenancePackageOption) {
+                //
+                // }
                 handleSetScreen('serviceNeeds');
             } catch (e) {
                 showError(e);
