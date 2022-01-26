@@ -107,7 +107,6 @@ export const AppointmentFrameLayout = () => {
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
-        console.log(TRACKER);
         if (!trackerCreated) {
             if (opt_clientId) options.clientId = opt_clientId
 
@@ -127,7 +126,6 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                console.log(event.origin);
                 if (!prodParentLinks.includes(event.origin)) return;
                 if (typeof event.data === 'string') createTracker(event.data, event.origin, trackerCreated);
             });
