@@ -322,6 +322,11 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         if (onAddServices) onAddServices();
     }
 
+    const onSave = async () => {
+        await onClose();
+        await askAdditionalServices();
+    }
+
     const askAdditionalServices = () => {
         selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
         const categoryChosen = service?.type === 0 || subService?.type === 0;
@@ -482,7 +487,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 onBack={handleBack}
                 nextDisabled={!selectedPackage}
                 onNext={handleNext} />
-            <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={askAdditionalServices}/>
+            <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
         </StepWrapper>
     );
 };
