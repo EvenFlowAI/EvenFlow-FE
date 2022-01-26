@@ -146,7 +146,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
 
     useEffect(() => {
         if (props.open) {
-            clearForm();
             if (payload) {
                 setForm({
                     date: String(payload.dateInUtc),
@@ -189,6 +188,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     setSelectedPackage(selectedPackage);
                 }
             }
+        } else {
+            clearForm();
         }
     }, [props.open, payload, packages]);
 
