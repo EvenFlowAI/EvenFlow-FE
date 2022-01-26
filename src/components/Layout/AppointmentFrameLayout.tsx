@@ -23,7 +23,7 @@ import {RootState} from "../../store/rootReducer";
 import {
     clearCustomerCache, getBlankVehicle,
     getCustomerCache,
-    loadSCProfile,
+    loadSCProfile, loadSRs, selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, getTracker} from "../../utils/utils";
@@ -32,7 +32,7 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    setCurrentFrameScreen, setTrackerCreated,
+    setCurrentFrameScreen, setPackage, setTrackerCreated,
     setUpdateAppointment,
     setVehicle
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -179,6 +179,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
+        dispatch(loadSRs(decodeSCID(id)));
     }, [id, dispatch]);
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
@@ -207,6 +208,10 @@ export const AppointmentFrameLayout = () => {
             try {
                 const {data} = await API.appointment.getByKey(key);
                 dispatch(setUpdateAppointment(data));
+                data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
+                if (data.maintenancePackageOption) {
+                    dispatch(setPackage(data.maintenancePackageOption))
+                }
                 handleSetScreen('serviceNeeds');
             } catch (e) {
                 showError(e);

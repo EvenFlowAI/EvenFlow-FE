@@ -153,7 +153,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             customer: {...payload.driver},
             reminders: payload.reminderTypes,
             categoriesIds: payload.serviceCategories?.map(item => item.id),
-            description: payload.comment
+            description: payload.comment,
+            // selectedPackage: payload.maintenancePackageOption ?? null,
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
