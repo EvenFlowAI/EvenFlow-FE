@@ -107,7 +107,7 @@ const CartTable = () => {
     return selectedServices?.length
         ? <div className={classes.wrapper}>
             <div className={classes.title}>
-                <span>Selected Services List</span>
+                <span>Selected Services</span>
                 {isSM && <IconButton onClick={() => setOpen(prev => !prev)}>
                     {isOpen ? <ExpandLess/> : <ExpandMore/>}
                 </IconButton>}
