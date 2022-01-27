@@ -54,7 +54,7 @@ export const EndUserLayout = () => {
         console.log('________WINDOW________', window.location)
         console.log('______________TRACKER____________________', TRACKER)
         console.log('______________ORIGIN____________________', originSite)
-        if (!trackerCreated) {
+        if (!trackerCreated && originSite) {
             if (opt_clientId) options.clientId = opt_clientId
             ReactGA.initialize(TRACKER, {
                 debug: true,
@@ -75,7 +75,7 @@ export const EndUserLayout = () => {
                 if (!prodParentLinks.includes(event.origin)) return;
                 if (typeof event.data === 'string') createTracker(event.data, event.origin);
             });
-            setTimeout(createTracker, 3000);
+            // setTimeout(createTracker, 3000);
         }
     }, [trackerCreated]);
 
