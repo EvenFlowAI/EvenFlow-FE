@@ -106,8 +106,13 @@ export const AppointmentFrameLayout = () => {
     const {selectedVehicle, trackerCreated} = useSelector((state: RootState) => state.appointmentFrame);
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
-        const TRACKER = getTracker(origin);
-        if (!trackerCreated) {
+        let originSite = origin;
+        if (!originSite && window.location.ancestorOrigins.length) originSite = window.location.ancestorOrigins[0];
+        const TRACKER = getTracker(originSite);
+        console.log('________WINDOW________', window.location)
+        console.log('______________TRACKER____________________', TRACKER)
+        console.log('______________ORIGIN____________________', originSite)
+        if (!trackerCreated && originSite) {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
