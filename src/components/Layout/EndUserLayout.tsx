@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Switch, Route, useParams} from "react-router-dom";
+import {Switch, Route, useParams, useHistory, useLocation} from "react-router-dom";
 import {endUserTheme} from "../../theme/theme";
 import {ThemeProvider} from "@material-ui/core";
 import {Routes} from "../../config/routes";
@@ -44,11 +44,14 @@ export const options: GaOptions = {
 export const EndUserLayout = () => {
     const { trackerCreated } = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
+    const location = useLocation();
+    const history = useHistory();
     const dispatch = useDispatch();
     const isFrame = useLayout();
 
     function createTracker(opt_clientId = '', origin = '') {
         const TRACKER = getTracker(origin);
+        console.log('________WINDOW________', window.location)
         console.log('______________TRACKER____________________', TRACKER)
         console.log('______________ORIGIN____________________', origin)
         if (!trackerCreated) {
