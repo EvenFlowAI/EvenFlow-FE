@@ -51,7 +51,8 @@ export enum EMaintenanceOptionType {
 
 export interface ICreateAppointment {
     id?: number;
-    serviceCategoryId: number | null,
+    serviceCategoryId?: number | null;
+    serviceCategoryIds?: number[];
     maintenancePackageOptionId: number | null;
     date: ParsableDate;
     slot: string;
