@@ -78,18 +78,18 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>&TC
                             </ListItem>
                             : null
                     }
-                    {payload.serviceRequests.map(sr => {
+                    {payload.serviceRequests ? payload.serviceRequests.map(sr => {
                         return <ListItem key={sr.id}>
                             <ListItemIcon><Settings /></ListItemIcon>
                             <ListItemText primary={sr.code} secondary={sr.description} />
                         </ListItem>
-                    })}
-                    {payload.serviceCategories.map(category => {
+                    }) : null}
+                    {payload.serviceCategories ? payload.serviceCategories.map(category => {
                         return <ListItem key={category.id}>
                             <ListItemIcon><Settings /></ListItemIcon>
                             <ListItemText primary={category.name} />
                         </ListItem>
-                    })}
+                    }) : null}
                     <Divider />
                     <Info appointment={payload} />
                     <Divider />
