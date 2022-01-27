@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -9,22 +9,27 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {EServiceCenterName, ICreateAppointmentResp, IUpdateAppointment} from "../../../api/types";
+import {EServiceCenterName, ICreateAppointmentResp} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds} from "./utils";
 import {Api} from "../../../config/requests";
-import {setAppointmentId} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAppointmentId, setReminders} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useException, useModal} from "../../../utils/hooks";
-import {saveCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
-import CreateAppointment from "../../Modals/CreateAppointment/CreateAppointment";
+import {
+    loadAllServiceCategories,
+    saveCustomerCache,
+    setCustomerLoadedData
+} from "../../../store/reducers/appointment/actions";
+import Vehicle from "./confirmationSections/Vehicle";
+import ServiceRequests from "./confirmationSections/ServiceRequests";
+import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 
 const Wrapper = styled('div')(({theme}) => ({
-    // width: "100%",
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "20px",
@@ -34,6 +39,10 @@ const Wrapper = styled('div')(({theme}) => ({
         gap: "20px",
         justifyContent: "flex-start",
         alignItems: "stretch"
+    },
+    "& > .itemizedLink": {
+        textDecoration: 'underline',
+        textTransform: 'none',
     },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
@@ -61,22 +70,31 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     ]);
 
     const {id} = useParams();
-    const {isOpen, onClose, onOpen} = useModal();
+    const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
+    const isBmWService = useMemo(() => appointment?.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || appointment?.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [appointment.scProfile]);
 
-    const onCreateClick = () => {
-        if (appointment.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-            || appointment.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest) {
-            appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
-        } else {
-            handleCreateAppointment()
-        }
-    }
+    useEffect(() => {
+        appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
+    }, [appointment.scProfile])
 
-    const handleCreateAppointment = (vin = '', withVin = true) => {
-        // TODO: UpdateFlow?
-        const data: IUpdateAppointment = {
+    useEffect(() => {
+        if (!isBmWService) dispatch(setReminders([0, 2]));
+    }, [isBmWService])
+
+    // const onCreateClick = () => {
+    //     if (appointment.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+    //         || appointment.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest) {
+    //         appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
+    //     } else {
+    //         handleCreateAppointment()
+    //     }
+    // }
+
+    const handleCreateAppointment = () => {
+        const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
             appointmentTimingType: appointmentFrame.selectedTiming ?? EAppointmentTimingType.FirstAvailable,
@@ -97,7 +115,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 model: "",
                 transmission: "",
                 ...(appointmentFrame.selectedVehicle ?? {}),
-                vin: withVin ? appointmentFrame.selectedVehicle?.vin || vin : '',
+                vin: appointmentFrame.selectedVehicle?.vin ?? '',
                 year: appointmentFrame?.selectedVehicle?.year
                     ? String(appointmentFrame.selectedVehicle.year) : null,
                 mileage: appointmentFrame.maintenanceDetails?.serviceInterval ?? null,
@@ -111,16 +129,16 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointment.selectedSR
             ),
             date: appointment.appointment?.id.split("|")[0] || "",
-            serviceCategoryId: appointmentFrame.subService?.id ?? appointmentFrame.service?.id ?? null,
+            serviceCategoryIds: appointmentFrame.categoriesIds,
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
         };
-        if ((data.serviceCategoryId && data.serviceCategoryId < 1) || (data.serviceCategoryId && data.maintenancePackageOptionId) || data.serviceRequestIds.length) {
-            data.serviceCategoryId = null;
-        }
+
         const endpoint = data?.hashKey
             ? Api.endpoints.Appointments.UpdateByKey
             : Api.endpoints.Appointments.Create;
+
         setSaving(true);
+
         Api.call<ICreateAppointmentResp>(
             endpoint, { data, urlParams: {id: data.hashKey} }
         )
@@ -173,23 +191,32 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     return <StepWrapper>
         <Wrapper>
             <div>
-                <UserData errors={errors} setErrors={setErrors}/>
                 <SelectedDate onChangeSlot={onChangeSlot} />
+                <Vehicle/>
+                <Review />
+                <ServiceRequests/>
+                <SelectedPrice/>
+                <div
+                    role="presentation"
+                    style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
+                    onClick={onFeesOpen}>
+                    View itemized fees of services
+                </div>
             </div>
             <div>
-                <Review />
-                {appointmentFrame.selectedPackage ? <SelectedPrice/> : null}
-                <Reminders />
+                <UserData errors={errors} setErrors={setErrors}/>
+                {!isBmWService && <Reminders/>}
                 <Info>By using this service you accept the terms of our Visitor Agreement.</Info>
             </div>
 
         </Wrapper>
-        <Actions loading={saving} onBack={onBack} onNext={onCreateClick} />
-        <CreateAppointment
-            open={isOpen}
-            loading={saving}
-            onClose={onClose}
-            handleCreateAppointment={handleCreateAppointment}
-        />
+        <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
+        {/*<CreateAppointment*/}
+        {/*    open={isOpen}*/}
+        {/*    loading={saving}*/}
+        {/*    onClose={onClose}*/}
+        {/*    handleCreateAppointment={handleCreateAppointment}*/}
+        {/*/>*/}
+        <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
     </StepWrapper>
 };

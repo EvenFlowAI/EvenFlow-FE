@@ -23,7 +23,7 @@ import {RootState} from "../../store/rootReducer";
 import {
     clearCustomerCache, getBlankVehicle,
     getCustomerCache,
-    loadSCProfile,
+    loadSCProfile, loadSRs, selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, getTracker} from "../../utils/utils";
@@ -32,7 +32,7 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    setCurrentFrameScreen, setTrackerCreated,
+    setCurrentFrameScreen, setPackage, setTrackerCreated,
     setUpdateAppointment,
     setVehicle
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -103,7 +103,7 @@ export const AppointmentFrameLayout = () => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
-    const {selectedVehicle, trackerCreated} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, trackerCreated, isAdditionalServices} = useSelector((state: RootState) => state.appointmentFrame);
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -179,6 +179,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
+        dispatch(loadSRs(decodeSCID(id)));
     }, [id, dispatch]);
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
@@ -207,6 +208,10 @@ export const AppointmentFrameLayout = () => {
             try {
                 const {data} = await API.appointment.getByKey(key);
                 dispatch(setUpdateAppointment(data));
+                data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
+                if (data.maintenancePackageOption) {
+                    dispatch(setPackage(data.maintenancePackageOption))
+                }
                 handleSetScreen('serviceNeeds');
             } catch (e) {
                 showError(e);
@@ -244,11 +249,13 @@ export const AppointmentFrameLayout = () => {
             packageSelection: <PackageSelection
                 onBack={handleChangeScreen('maintenanceDetails')}
                 onNext={handleChangeScreen('consultantSelection')}
+                onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             describeMore: <AddInfo
                 onBack={handleSetScreen}
                 onNext={handleChangeScreen('consultantSelection')}
-                onFillCar={handleChangeScreen('carDetails')}
+                onFillCar={handleChangeScreen(isAdditionalServices ? 'consultantSelection' : 'carDetails')}
+                onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             opsCode: <SelectOpsCode
                 onBack={handleChangeScreen('serviceSelection')}

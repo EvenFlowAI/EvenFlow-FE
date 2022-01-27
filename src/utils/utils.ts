@@ -7,7 +7,7 @@ import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
 import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../store/reducers/appointment/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {IListAppointment} from "../api/types";
+import {IAppointmentByQuery} from "../api/types";
 import moment from "moment";
 import {encode, decode} from 'url-safe-base64';
 
@@ -92,11 +92,11 @@ export const validatePhoneNumber = (value: string): string => {
     return value;
 }
 
-export const getAppointmentDate = (appointment: IListAppointment) => {
+export const getAppointmentDate = (appointment: IAppointmentByQuery) => {
     const date = `${String(appointment.dateInUtc).split("T")[0]}T${appointment.timeSlot}Z`;
     return moment.utc(date);
 }
-export const getAppointmentVehicle = ({vehicle}: IListAppointment) => {
+export const getAppointmentVehicle = ({vehicle}: IAppointmentByQuery) => {
     return `${vehicle.make} ${vehicle.model} ${vehicle.year}`;
 }
 

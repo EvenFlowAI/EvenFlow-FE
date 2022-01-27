@@ -5,7 +5,7 @@ import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
-import {AppointmentStatus, appointmentStatuses, IListAppointment} from "../../api/types";
+import {AppointmentStatus, appointmentStatuses, IAppointmentByQuery} from "../../api/types";
 import {Table} from "../UI/Table";
 import {TableRowDataType} from "../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
@@ -16,7 +16,7 @@ import {Routes} from "../../config/routes";
 import {useHistory} from "react-router-dom";
 
 
-const cols: TableRowDataType<IListAppointment>[] = [
+const cols: TableRowDataType<IAppointmentByQuery>[] = [
     {
         header: "Date",
         val: el =>
@@ -42,7 +42,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         appointment.sessionId,
         appointment.scProfile
     ]);
-    const [editedItem, setEditedItem] = useState<IListAppointment|null>(null);
+    const [editedItem, setEditedItem] = useState<IAppointmentByQuery|null>(null);
     const {askConfirm} = useConfirm();
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const showError = useException();
@@ -50,7 +50,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     const dispatch = useDispatch();
     const showMessage = useMessage();
 
-    const [appointments, setAppointments] = useState<IListAppointment[]>([]);
+    const [appointments, setAppointments] = useState<IAppointmentByQuery[]>([]);
 
     const loadAppointments = useCallback(async (sessionId: string, serviceCenterId: number) => {
         setLoading(true);
@@ -72,7 +72,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         }
     }, [sessionId, props.open, loadAppointments, serviceCenter]);
 
-    const openMenu = (item: IListAppointment) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    const openMenu = (item: IAppointmentByQuery) => (e: React.MouseEvent<HTMLButtonElement>) => {
         setEditedItem(item);
         setAnchorEl(e.currentTarget);
     }
@@ -124,7 +124,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         }
     }
 
-    const actions = (el: IListAppointment) => {
+    const actions = (el: IAppointmentByQuery) => {
         return <IconButton
             disabled={
                 el.appointmentStatus === AppointmentStatus.Cancelled || !el.isEditable
@@ -138,7 +138,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     return <BaseModal {...props}>
         <DialogTitle>My appointments</DialogTitle>
         <DialogContent>
-            <Table<IListAppointment>
+            <Table<IAppointmentByQuery>
                 data={appointments}
                 noDataTitle="You have no appointments yet"
                 isLoading={loading}

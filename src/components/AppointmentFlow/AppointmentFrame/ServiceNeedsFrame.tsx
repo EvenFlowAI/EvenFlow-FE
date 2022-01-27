@@ -4,7 +4,11 @@ import {StepWrapper} from './StepWrapper';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {selectService} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    selectCategoriesIds,
+    selectService,
+    setAdditionalServicesChosen
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
@@ -14,6 +18,8 @@ import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import {Loading} from '../../UI/Loading';
 import ReactGA from "react-ga";
+import CartTable from "./CartTable";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -23,7 +29,7 @@ type TProps = {
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
-    const selectedService = useSelector((state: RootState) => state.appointmentFrame.service);
+    const {service: selectedService, categoriesIds, selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
@@ -48,22 +54,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         )
             .then(({data}) => {
                 setServiceCategories(data);
-                //if (scProfile) {
-                    // const dataWithIcons = data.map(el => {
-                    //     if (el.iconPath) {
-                    //         axios.get(el.iconPath, {withCredentials: false})
-                    //             .then(({ data }) => {
-                    //                 return {...el, loadedIcon: data};
-                    //                 //     setServiceCategories(c =>
-                    //                 //         c.map(cat => cat.id === el.id ? {...cat, loadedIcon: data} : cat)
-                    //                 //     )
-                    //             }
-                    //             )
-                    //     }
-                    //     return el;
-                    // });
-
-              //  }
             })
             .finally(() => {setLoading(false)});
     }, [id, scProfile]);
@@ -79,6 +69,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
+            if (selectedService.type === 0) {
+                const categories = categoriesIds.includes(selectedService.id) ? categoriesIds : [...categoriesIds, selectedService.id];
+                dispatch(selectCategoriesIds(categories));
+            }
+            dispatch(setAdditionalServicesChosen(false));
 
             switch (selectedService?.type) {
                 case 2:
@@ -97,12 +92,14 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             {!loading ? <CardsWrapper>
                 {serviceCategories.map(card => {
                     return <ServiceCard
+                        selected={categoriesIds.includes(card.id) || (card.type === EServiceCategoryType.MaintenancePackage && Boolean(selectedPackage))}
                         active={selectedService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
                         key={card.name}/>
                 })}
             </CardsWrapper> : <Loading />}
+            <CartTable/>
             <Actions
                 nextDisabled={!selectedService}
                 onNext={handleSubmit}

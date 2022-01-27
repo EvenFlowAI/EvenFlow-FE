@@ -10,16 +10,16 @@ export const CardsWrapper = styled("div")(({theme}) => ({
     }
 }));
 
-export const CardWrapper = styled("div")<Theme, {active?: boolean}>(({theme, active}) => ({
+export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: boolean}>(({theme, active, selected}) => ({
     display: "grid",
     gridTemplateColumns: "1fr",
     gridTemplateRows: "1fr 1fr",
     width: "100%",
     maxWidth: 250,
     transition: "all .2s",
-    background: active ? '#000000' : "transparent",
+    background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
     color: active ? "#FFFFFF" : "#252733",
-    border: `1px solid ${active ? '#000000' : '#DADADA'}`,
+    border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
     fontSize: 24,
     textAlign: "center",
     alignItems: "center",

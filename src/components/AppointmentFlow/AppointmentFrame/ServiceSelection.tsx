@@ -5,7 +5,11 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {selectSubService} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    selectCategoriesIds,
+    selectSubService,
+    setAdditionalServicesChosen
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
@@ -14,14 +18,16 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
+import CartTable from "./CartTable";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
     onBack: TCallback;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
-    const {subService} = useSelector((state: RootState) => state.appointmentFrame);
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {subService, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
     const [loading, setLoading] = useState<boolean>(false);
@@ -38,17 +44,6 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
         )
             .then(({data}) => {
                 setServices(data);
-                // data.forEach(el => {
-                //     if (el.iconPath) {
-                //         axios.get(el.iconPath, {withCredentials: false})
-                //             .then(({ data }) => {
-                //                 setServices(c =>
-                //                         c.map(cat => cat.id === el.id ? {...cat, loadedIcon: data} : cat)
-                //                     )
-                //                 }
-                //             )
-                //     }
-                // });
             })
             .finally(() => {
                 setLoading(false);
@@ -67,6 +62,12 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 action: 'Selected Sub Service',
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
+            if (subService.type === 0) {
+                const categories = categoriesIds.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
+                dispatch(selectCategoriesIds(categories));
+            }
+            dispatch(setAdditionalServicesChosen(false));
+
             switch (subService.type) {
                 case 2:
                     return onNext('opsCode');
@@ -75,21 +76,31 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             }
         }
     }
+
+    const handleBack = () => {
+        dispatch(selectSubService(null));
+        onBack();
+    }
+
     return (
         <StepWrapper>
             {!loading ? <CardsWrapper>
                 {services.map(card => {
                     return <ServiceCard
+                        selected={categoriesIds.includes(card.id)
+                        || (card.type === EServiceCategoryType.IndividualServices && Boolean(selectedSR?.length))
+                        }
                         active={subService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
                         key={card.name}/>
                 })}
             </CardsWrapper> : <Loading />}
+            <CartTable/>
             <Actions
                 nextDisabled={!subService}
                 onNext={handleSubmit}
-                onBack={onBack} />
+                onBack={handleBack} />
         </StepWrapper>
     );
 };

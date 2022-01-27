@@ -4,4 +4,13 @@ export type TActionProps = {
     nextDisabled?: boolean;
     nextLabel?: string;
     loading?: boolean;
+    onAddServices?: () => void;
 };
+
+export type EMaintenanceItemType = 'category' | 'package' | 'service'
+
+export type IMaintenanceItem = {
+    id: number;
+    name: string;
+    type: EMaintenanceItemType;
+}

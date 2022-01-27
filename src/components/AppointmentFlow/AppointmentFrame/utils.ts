@@ -10,27 +10,28 @@ export const collectServiceRequestIds = (
 , individualOpsCodes?: number[]): number[] => {
     let ids = [];
     //TODO change logic after
-    if (s) {
-        for (let i=0; i<s.serviceRequests.length; i++) {
-            ids.push(s.serviceRequests[i].id);
-        }
-    }
-    if (sub) {
-        for (let i=0; i < sub.serviceRequests.length; i++) {
-            ids.push(sub.serviceRequests[i].id);
-        }
-    }
+
+    // if (s) {
+    //     for (let i=0; i<s.serviceRequests.length; i++) {
+    //         ids.push(s.serviceRequests[i].id);
+    //     }
+    // }
+    // if (sub) {
+    //     for (let i=0; i < sub.serviceRequests.length; i++) {
+    //         ids.push(sub.serviceRequests[i].id);
+    //     }
+    // }
     if (selectedPackage) {
         // DO not send any ops codes
         // selectedPackage.
     }
     if (individualOpsCodes?.length) {
-        ids = [];
         for (let c of individualOpsCodes) {
             ids.push(c);
         }
     }
-    return ids;
+    const set = new Set(ids)
+    return Array.from(set);
 }
 
 export const checkSelectedCar = (vehicle: ILoadedVehicle|null, vehicles?: ILoadedVehicle[]): boolean => {

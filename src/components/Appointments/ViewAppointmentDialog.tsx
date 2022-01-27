@@ -9,13 +9,13 @@ import {
     ListItemText
 } from "@material-ui/core";
 import {DialogProps} from "../Modals/types";
-import {AppointmentStatus, IListAppointment} from "../../api/types";
+import {AppointmentStatus, IAppointmentByQuery} from "../../api/types";
 import {Settings, LocalOffer, Schedule, MonetizationOn} from "@material-ui/icons";
 import {getOfferValue} from "../AppointmentFlow/AppointmentSelections/UI";
 import moment from "moment";
 import {timeSpanString, timeString} from "../../config/constants";
 
-const Info: React.FC<{appointment: IListAppointment}> = ({appointment}) => {
+const Info: React.FC<{appointment: IAppointmentByQuery}> = ({appointment}) => {
     return <><ListItem>
             Car info
         </ListItem>
@@ -28,7 +28,7 @@ const Info: React.FC<{appointment: IListAppointment}> = ({appointment}) => {
     </>
 }
 
-const ContactInfo: React.FC<{driver: IListAppointment["driver"]}> = ({driver}) => {
+const ContactInfo: React.FC<{driver: IAppointmentByQuery["driver"]}> = ({driver}) => {
     return <>
         <ListItem>
             Customer info
@@ -42,7 +42,7 @@ const ContactInfo: React.FC<{driver: IListAppointment["driver"]}> = ({driver}) =
     </>
 }
 
-const Offer: React.FC<{offer: IListAppointment['offer']}> = ({offer}) => {
+const Offer: React.FC<{offer: IAppointmentByQuery['offer']}> = ({offer}) => {
     if (!offer) {
         return null;
     }
@@ -56,7 +56,7 @@ type TCallbackProps = {
     onEditAppointment: () => void;
     onCancelAppointment: () => void;
 }
-export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>&TCallbackProps> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
+export const ViewAppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>&TCallbackProps> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
@@ -78,12 +78,18 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IListAppointment>&TCall
                             </ListItem>
                             : null
                     }
-                    {payload.serviceRequests.map(sr => {
+                    {payload.serviceRequests ? payload.serviceRequests.map(sr => {
                         return <ListItem key={sr.id}>
                             <ListItemIcon><Settings /></ListItemIcon>
                             <ListItemText primary={sr.code} secondary={sr.description} />
                         </ListItem>
-                    })}
+                    }) : null}
+                    {payload.serviceCategories ? payload.serviceCategories.map(category => {
+                        return <ListItem key={category.id}>
+                            <ListItemIcon><Settings /></ListItemIcon>
+                            <ListItemText primary={category.name} />
+                        </ListItem>
+                    }) : null}
                     <Divider />
                     <Info appointment={payload} />
                     <Divider />

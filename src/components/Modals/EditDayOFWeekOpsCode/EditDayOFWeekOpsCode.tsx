@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../BaseModal";
 import {DialogProps} from "../types";
 import {SliderRange, TOpsCode} from "../../Optimizer/PricingSettings/VariableDemand/DayOfWeekOpsCode";
@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
+const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem, ...props}) => {
     const initialValues: TState = {
         low: undefined,
         high: undefined
@@ -59,16 +59,16 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
     const classes = useStyles();
 
     useEffect(() => {
-        if (props.editingItem) setValues({low: props.editingItem.low, high: props.editingItem.high});
-    }, [props.editingItem])
+        if (editingItem) setValues({low: editingItem.low, high: editingItem.high});
+    }, [editingItem])
 
-    const onCancel = () => {
-        if (props.editingItem) setValues({low: props.editingItem.low, high: props.editingItem.high});
+    const onCancel = useCallback(() => {
+        if (editingItem) setValues({low: editingItem.low, high: editingItem.high});
         props.onClose()
-    }
+    }, [editingItem, props.onClose])
 
-    const onSave = () => {
-        if (selectedSC && props.editingItem) {
+    const onSave = useCallback(() => {
+        if (selectedSC && editingItem) {
             const data: Partial<IRequestPricingSettings> = {
                 serviceCenterId: selectedSC.id,
                 values: [],
@@ -99,10 +99,10 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = (props) => {
                     });
                 }
             }
-            dispatch(updateSRPricingSettings(props.editingItem.id, data))
+            dispatch(updateSRPricingSettings(editingItem.id, data))
             onCancel();
         }
-    }
+    }, [selectedSC, editingItem, onCancel, values, showError])
 
     const onInputChange = (type: "low" | "high") => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         e.persist();

@@ -1,9 +1,9 @@
 import React from 'react';
 import {Button, Box, ButtonGroup} from "@material-ui/core";
-import {useModal} from "../../utils/hooks";
+import {useModal} from "../../../utils/hooks";
 import {AppointmentDialog} from "./AppointmentDialog";
-import {SearchInput} from "../UI/SearchInput";
-import {TView} from "./Appointments";
+import {SearchInput} from "../../UI/SearchInput";
+import {TView} from "../Appointments";
 
 type TProps = {
     onAction?: () => void;
@@ -26,7 +26,7 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
 
     return <>
         <Box>
-            {selectedView === 'list' && <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} />}
+            {selectedView === 'list' && <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} placeholder="Search customer..."/>}
             <ButtonGroup color="primary" style={{ marginLeft: 20 }}>
                 {views.map(view =>
                     <Button

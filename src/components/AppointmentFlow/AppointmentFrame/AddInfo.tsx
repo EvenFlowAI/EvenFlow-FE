@@ -4,11 +4,17 @@ import {StepWrapper} from "./StepWrapper";
 import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import { setFrameDescription } from '../../../store/reducers/appointmentFrameReducer/actions';
+import {
+    selectCategoriesIds,
+    setAdditionalServicesChosen,
+    setFrameDescription
+} from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../../components/Layout/types";
-
+import {useConfirm} from "../../../utils/hooks";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {selectSR} from "../../../store/reducers/appointment/actions";
 
 type TProps = {
     onFillCar: TCallback;
@@ -17,16 +23,21 @@ type TProps = {
     nextDisabled?: boolean;
     nextLabel?: string;
     loading?: boolean;
+    onAddServices: () => void;
 };
-export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
-    const [service, subService, vehicle, vehicles] = useSelector(({appointmentFrame, appointment}: RootState) => [
-        appointmentFrame.service,
+export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServices}) => {
+    const [subService, vehicle, vehicles, selectedPackage, selectedSR, service, categoriesIds] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
-        appointment.customerLoadedData?.vehicles
+        appointment.customerLoadedData?.vehicles,
+        appointmentFrame.selectedPackage,
+        appointment.selectedSR,
+        appointmentFrame.service,
+        appointmentFrame.categoriesIds,
     ]);
-    const description = useSelector(({appointmentFrame}: RootState) => appointmentFrame.description);
+    const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
+    const {askConfirm} = useConfirm();
     const screenToReturn = useMemo(() => subService ? 'serviceSelection' : 'serviceNeeds', [subService])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
@@ -41,6 +52,37 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
         }
     }
 
+    const onSubmit = () => {
+        if (!selectedPackage || !selectedSR.length) {
+            askConfirm({
+                title: "Would you like to add more services?",
+                confirmContent: "Yes",
+                cancelContent: "No",
+                onConfirm: () => {
+                    dispatch(setAdditionalServicesChosen(true));
+                    onAddServices();
+                },
+                onCancel: handleNext,
+            })
+        } else handleNext()
+    }
+
+    const handleBack = () => {
+        let categories = [...categoriesIds];
+        if (subService && categoriesIds.includes(subService.id)) {
+            categories = categoriesIds.filter(id => id !== subService?.id)
+        } else {
+            if (service && categoriesIds.includes(service.id)) {
+                categories = categoriesIds.filter(id => id !== service?.id)
+            }
+        }
+        if (subService?.type === EServiceCategoryType.IndividualServices) {
+            dispatch(selectSR(null));
+        }
+        dispatch(selectCategoriesIds(categories))
+        onBack(screenToReturn);
+    }
+
     return (
         <StepWrapper>
             <TextField
@@ -49,11 +91,9 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar}) => {
                 onChange={handleChange}
                 value={description}
                 rows={4}
-                placeholder={
-                    subService?.name ?? service?.name ?? "Type Here"
-                }
+                placeholder="Describe what`s going on"
             />
-            <Actions onBack={() => onBack(screenToReturn)} onNext={handleNext} />
+            <Actions onBack={handleBack} onNext={onSubmit} />
         </StepWrapper>
     );
 };

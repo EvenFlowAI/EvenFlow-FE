@@ -1,24 +1,28 @@
-import React, {useEffect} from 'react';
+import React, {Dispatch, SetStateAction, useEffect} from 'react';
 import {DialogTitle, BaseModal, DialogContent} from "../Modals/BaseModal";
 import moment from "moment";
 import {DialogProps} from "../Modals/types";
 import {useSCs, useStatePagination} from "../../utils/hooks";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
-import {loadAppointments} from "../../store/reducers/appointments/actions";
-import {useDispatch} from "react-redux";
-import {IListAppointment} from "../../api/types";
+import {loadAppointmentsForModal} from "../../store/reducers/appointments/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {IAppointmentByQuery} from "../../api/types";
 import {AppointmentsTable} from "./AppointmentsTable";
 import {IOrder} from "../../types/types";
+import {RootState} from "../../store/rootReducer";
 
 type TDialogProps = DialogProps & {
     date: moment.Moment | null;
     refresh: () => void;
-    order: IOrder<IListAppointment>;
-    setOrder: React.Dispatch<React.SetStateAction<IOrder<IListAppointment>>>
+    order: IOrder<IAppointmentByQuery>;
+    setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointmentByQuery>>>
     onEditOpen: () => void;
+    viewItem?: IAppointmentByQuery|undefined;
+    setViewItem?: Dispatch<SetStateAction<IAppointmentByQuery|undefined>>
 }
 
 const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
+    const { isModalLoading } = useSelector((state: RootState) => state.appointments);
     const {selectedSC}= useSCs();
     const dispatch = useDispatch();
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
@@ -31,7 +35,7 @@ const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
                 date: moment(props.date).add(moment(props.date).utcOffset(), 'minute'),
                 serviceCenterId: selectedSC.id,
             }
-            dispatch(loadAppointments(data))
+            dispatch(loadAppointmentsForModal(data))
         }
     }, [selectedSC, props.date, props.open])
 
@@ -40,6 +44,8 @@ const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
             <DialogTitle onClose={props.onClose}>Appointments for {props.date ? moment(props.date).format('YYYY-MM-DD') : ''}</DialogTitle>
             <DialogContent style={{ overflowY: 'auto' }}>
                 <AppointmentsTable
+                    viewItem={props.viewItem}
+                    isLoading={isModalLoading}
                     refresh={props.refresh}
                     order={props.order}
                     pageData={pageData}
@@ -47,6 +53,7 @@ const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
                     onChangePage={onChangePage}
                     onChangeRowsPerPage={onChangeRowsPerPage}
                     onEditOpen={props.onEditOpen}
+                    setViewItem={props.setViewItem}
                 />
             </DialogContent>
         </BaseModal>

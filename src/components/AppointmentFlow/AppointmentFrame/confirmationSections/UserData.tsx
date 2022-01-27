@@ -48,7 +48,7 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
                 name="fullName"
                 fullWidth
                 placeholder="Type here"
-                label="Full Name" />
+                label="Full Name:" />
             <TextField
                 onChange={handleChange}
                 value={customer?.phoneNumber}
@@ -56,7 +56,7 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
                 fullWidth
                 error={errors.includes('phonenumber')}
                 placeholder="Type here"
-                label="Phone Number" />
+                label="Phone Number:" />
             <TextField
                 onChange={handleChange}
                 value={customer?.email}
@@ -64,7 +64,7 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
                 name="email"
                 fullWidth
                 placeholder="Type here"
-                label="Email" />
+                label="Email:" />
         </Wrapper>
     );
 };

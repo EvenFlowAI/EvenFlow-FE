@@ -15,10 +15,11 @@ import {Edit} from "@material-ui/icons";
 import {RootState} from "../../store/rootReducer";
 import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
-import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {selectService, setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
+import {loadCategoriesByQuery} from "../../store/reducers/categories/actions";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -33,16 +34,29 @@ export const EditAppointment = () => {
     const selectedSC: number|undefined = useSelector((state: RootState) => {
         return state.appointment.scProfile?.id
     });
+    const { allCategories } = useSelector((state: RootState) => state.categories);
 
     const history = useHistory();
     const dispatch = useDispatch();
     const {id} = useParams();
 
     useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadCategoriesByQuery(selectedSC))
+        }
+    }, [selectedSC])
+
+    useEffect(() => {
         API.appointment.getByKey(id)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
                 dispatch(setUpdateAppointment(data));
+                if (data.serviceCategories && allCategories) {
+                    const ids = data.serviceCategories.map(item => item.id);
+                    const service = allCategories.find(item => ids.includes(item.id));
+                    // TODO uncomment
+                    // service && dispatch(selectService(service));
+                }
                 const vehicle: ILoadedVehicle = {
                     ...data.vehicle,
                     appointmentHashKeys: [data.hashKey]
@@ -76,7 +90,7 @@ export const EditAppointment = () => {
             .catch((e) => {
                 setState("error");
             })
-    }, [id, dispatch, history]);
+    }, [id, dispatch, history, allCategories]);
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {

@@ -68,8 +68,7 @@ export const useStyles = makeStyles(() => ({
     },
 }))
 
-const AddMakeModel:React.FC<TAddMakeModalProps> = (props) => {
-    const {onClose, isEditing} = props;
+const AddMakeModel:React.FC<TAddMakeModalProps> = ({ isEditing, onClose, ...props}) => {
     const { currentMake, makes } = useSelector((state: RootState) => state.vehicleDetails);
     const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);

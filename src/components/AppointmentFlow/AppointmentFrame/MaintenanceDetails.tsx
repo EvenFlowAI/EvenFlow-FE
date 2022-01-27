@@ -8,18 +8,19 @@ import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
-    loadMakes,
-    setMaintenanceDetails,
+    loadMakes, selectService,
+    setMaintenanceDetails, setPackage,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
-import {ILoadedVehicle} from "../../../api/types";
+import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -53,8 +54,8 @@ const blankOptions: TOptionsState = {};
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {maintenanceDetails, selectedVehicle, makes}= useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {maintenanceDetails, selectedVehicle, makes, service}= useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
@@ -63,6 +64,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const {id} = useParams();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const selects: TSelect[] = [
         {label: "VIN", name: "vin", noVehicle: true},
@@ -78,7 +81,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const showError = useException();
 
     const isNewVehicleView = useMemo(() => {
-        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin === selectedVehicle?.vin));
+        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
     }, [selectedVehicle, customerLoadedData]);
 
     useEffect(() => {
@@ -87,6 +90,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 make: selectedVehicle.make,
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
+                serviceInterval: selectedVehicle?.mileage?.toString() || selectedVehicle?.serviceInterval?.toString() || "",
             }));
         }
     }, [dispatch, selectedVehicle]);
@@ -119,8 +123,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (isXS) e.preventDefault();
         if (option && !skip) {
-            dispatch(setMaintenanceDetails({[name]: option ?? null}));
             if (["year", "model", "make", "serviceInterval"].includes(name)) {
+                dispatch(setMaintenanceDetails({[name]: option ?? null}));
                 dispatch(updateVehicle({[name]: option}))
             }
             setErrors(e => e.filter(err => err !== name));
@@ -172,6 +176,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }
     }
 
+    const handleBack = () => {
+        if (service?.type === EServiceCategoryType.MaintenancePackage) {
+            dispatch(setPackage(null))
+            dispatch(selectService(null));
+        }
+        onBack();
+    }
+
     return (<StepWrapper>
         <SelectWrapper>
             {selects.map(select => {
@@ -202,7 +214,9 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         }
                     />
                 }
-                return <div key={select.name}>
+                return isBmWService && select.name === 'vin'
+                    ? null
+                    : <div key={select.name}>
                     <TextField
                         onChange={handleTextChange(select.name)}
                         label={select.label}
@@ -219,6 +233,6 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 </div>
             })}
         </SelectWrapper>
-        <Actions onBack={onBack} onNext={handleNext} />
+        <Actions onBack={handleBack} onNext={handleNext} />
     </StepWrapper>);
 };
