@@ -70,7 +70,7 @@ export const EndUserLayout = () => {
                 if (!prodParentLinks.includes(event.origin)) return;
                 if (typeof event.data === 'string') createTracker(event.data, event.origin);
             });
-            setTimeout(createTracker, 2000);
+            setTimeout(createTracker, 3000);
         }
     }, [trackerCreated]);
 
