@@ -336,8 +336,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 isNeedCall: form.isNeedCall,
                 gmt: moment().utcOffset(),
                 offerId: selectedSlot?.offer?.id || null,
-                serviceCategoryId: null,
-                maintenancePackageOptionId: null,
+                serviceCategoryIds: selectedCategories.map(item => item.id),
+                maintenancePackageOptionId: selectedPackageOption?.id ?? null,
                 driver: {
                     email: form.driverEmail,
                     phoneNumber: form.driverPhoneNumber,
