@@ -1,5 +1,5 @@
 import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
-import {Button, Grid} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../UI/AutocompleteRender";
 import {TextField} from "../../../UI/TextField";
@@ -135,15 +135,15 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
                     }
                 }
             )}
-            <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end'}}>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    disabled={!isDataValid}
-                    onClick={getPackage}>
-                    Get Package By Vehicle Info
-                </Button>
-            </Grid>
+            {/*<Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end'}}>*/}
+            {/*    <Button*/}
+            {/*        color="primary"*/}
+            {/*        variant="contained"*/}
+            {/*        disabled={!isDataValid}*/}
+            {/*        onClick={getPackage}>*/}
+            {/*        Get Package By Vehicle Info*/}
+            {/*    </Button>*/}
+            {/*</Grid>*/}
         </React.Fragment>
     );
 };
