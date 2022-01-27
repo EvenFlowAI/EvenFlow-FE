@@ -187,6 +187,7 @@ export const copyTextToClipboard = (text: string) => {
 }
 
 export const getTracker = (origin: string): string => {
+    console.log(origin);
     return process.env.REACT_APP_ENV === "stage"
         ? "UA-210743216-4"
         : process.env.REACT_APP_ENV === "production"
