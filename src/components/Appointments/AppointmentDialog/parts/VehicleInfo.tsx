@@ -29,9 +29,10 @@ type TVehicleInfoProps = {
     vinLoading: boolean;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
     isDataValid: boolean;
+    onVehicleDetailsChange: () => void;
 }
 
-const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, form, vinLoading, handleChange, isDataValid }) => {
+const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, errors, setErrors, setForm, form, vinLoading, handleChange, isDataValid }) => {
     const {makes}= useSelector((state: RootState) => state.appointmentFrame);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
@@ -56,7 +57,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
 
     useEffect(() => {
         if (selectedSC && isDataValid) getPackage();
-    }, [selectedSC, isDataValid])
+    }, [selectedSC, isDataValid, form.vehicleMake, form.vehicleModel, form.vehicleYear, form.vehicleMileage])
 
     const handleSelectChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
@@ -72,6 +73,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
                 }
             }
             setForm(prev => ({...prev, [name]: option}));
+            onVehicleDetailsChange();
         }
     }
 
@@ -135,15 +137,6 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ errors, setErrors, setForm, 
                     }
                 }
             )}
-            {/*<Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end'}}>*/}
-            {/*    <Button*/}
-            {/*        color="primary"*/}
-            {/*        variant="contained"*/}
-            {/*        disabled={!isDataValid}*/}
-            {/*        onClick={getPackage}>*/}
-            {/*        Get Package By Vehicle Info*/}
-            {/*    </Button>*/}
-            {/*</Grid>*/}
         </React.Fragment>
     );
 };
