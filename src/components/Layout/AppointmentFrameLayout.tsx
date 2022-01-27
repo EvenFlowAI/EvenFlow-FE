@@ -126,6 +126,7 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
+                console.log(event);
                 if (!prodParentLinks.includes(event.origin)) return;
                 if (typeof event.data === 'string') createTracker(event.data, event.origin, trackerCreated);
             });
