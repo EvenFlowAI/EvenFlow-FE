@@ -49,6 +49,8 @@ export const EndUserLayout = () => {
 
     function createTracker(opt_clientId = '', origin = '') {
         const TRACKER = getTracker(origin);
+        console.log('______________TRACKER____________________', TRACKER)
+        console.log('______________ORIGIN____________________', origin)
         if (!trackerCreated) {
             if (opt_clientId) options.clientId = opt_clientId
             ReactGA.initialize(TRACKER, {
