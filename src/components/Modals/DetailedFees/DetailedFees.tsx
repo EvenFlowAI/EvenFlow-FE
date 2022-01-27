@@ -12,7 +12,7 @@ const List = styled('ul')({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     flexDirection: "column",
-    gap: "12px",
+    marginBottom: 20,
     margin: "12px 0 0",
     padding: 0,
     listStyle: "none",
@@ -98,9 +98,9 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                 <List>
                     {appointment?.serviceRequestPrices?.map(item => <li className={classes.item}>
                         <span>{item.requestName}</span>
-                        {typeof item.priceValue !== 'undefined' && !Number.isNaN(item.priceValue)
+                        {Object(item).hasOwnProperty('priceValue')
                             ? <span className={classes.price}>$ {item.priceValue}</span>
-                            : <Info/>}
+                            : <ErrorOutline/>}
                     </li>)}
                 </List>
                 {appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined') && <Info>
