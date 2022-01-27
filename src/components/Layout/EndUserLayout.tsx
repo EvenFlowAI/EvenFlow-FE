@@ -47,15 +47,11 @@ export const EndUserLayout = () => {
     const dispatch = useDispatch();
     const isFrame = useLayout();
 
-    function createTracker(opt_clientId = '', origin = '') {
-        let originSite = origin;
-        if (!originSite && window.location.ancestorOrigins.length) originSite = window.location.ancestorOrigins[0];
-        const TRACKER = getTracker(originSite);
-        console.log('________WINDOW________', window.location)
-        console.log('______________TRACKER____________________', TRACKER)
-        console.log('______________ORIGIN____________________', originSite)
-        if (!trackerCreated && originSite) {
+    function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
+        const TRACKER = getTracker(origin);
+        if (!trackerCreated) {
             if (opt_clientId) options.clientId = opt_clientId
+
             ReactGA.initialize(TRACKER, {
                 debug: true,
                 titleCase: false,
@@ -73,7 +69,9 @@ export const EndUserLayout = () => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
                 if (!prodParentLinks.includes(event.origin)) return;
-                if (typeof event.data === 'string') createTracker(event.data, event.origin);
+                let originSite = event.origin;
+                if (window.location.ancestorOrigins.length) originSite = window.location.ancestorOrigins[0];
+                createTracker(event.data, originSite, trackerCreated);
             });
             // setTimeout(createTracker, 3000);
         }
