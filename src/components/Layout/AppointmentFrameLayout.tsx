@@ -107,6 +107,8 @@ export const AppointmentFrameLayout = () => {
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
+        console.log(origin);
+        console.log(TRACKER);
         if (!trackerCreated) {
             if (opt_clientId) options.clientId = opt_clientId
 
