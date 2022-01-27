@@ -72,7 +72,7 @@ export enum ETransportation {
     PickUpVehicle,
     Rental,
     Shuttle,
-    LoanerCar
+    LoanerCar,
 }
 export const transportations: TEnumMap<ETransportation>[][] = [
     [
