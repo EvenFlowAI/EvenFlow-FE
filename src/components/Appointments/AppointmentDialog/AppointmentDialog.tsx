@@ -214,7 +214,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         let waiting = true;
         if (selectedSC && props.open && filterDate) {
             setSlotsLoading(true);
-            if (!selectedSR.length) {
+            if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
                 setSlots([]);
                 setSlotsLoading(false);
             } else {
@@ -258,7 +258,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         return () => {
             waiting = false;
         };
-    }, [selectedSC, props.open, filterDate, selectedSR, showError, preloadedSlot]);
+    }, [selectedSC, props.open, filterDate, selectedSR, showError, preloadedSlot, selectedPackageOption, selectedCategories]);
 
     useEffect(() => {
         if (preloadedSlot && initialRef.current) {
@@ -286,6 +286,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const checkIsValid = (): boolean => {
         let isValid = true;
         if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
+            isValid = false;
             showError("Please choose at least one Service Request or Service Category or Package Option")
         }
         for (let field in form) {
