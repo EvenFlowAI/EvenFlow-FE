@@ -285,11 +285,16 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
 
     const checkIsValid = (): boolean => {
         let isValid = true;
+        if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
+            showError("Please choose at least one Service Request or Service Category or Package Option")
+        }
         for (let field in form) {
             if (field === "date" && !filterDate) {
+                isValid = false;
                 setErrors(prev => [...prev, "date"])
             }
             if (field === "slot" && !selectedSlot) {
+                isValid = false;
                 setErrors(prev => [...prev, "slot"])
             }
             // @ts-ignore
