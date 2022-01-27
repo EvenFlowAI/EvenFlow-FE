@@ -85,7 +85,7 @@ const initialForm: TForm = {
 
 export type TKey = keyof TForm;
 
-const requiredFields = ['date', 'slot', 'driverName', 'driverPhoneNumber', 'driverEmail', 'vehicleMake', 'vehicleYear', 'vehicleModel', 'vehicleMileage']
+const requiredFields = ['driverName', 'driverPhoneNumber', 'driverEmail', 'vehicleMake', 'vehicleYear', 'vehicleModel', 'vehicleMileage']
 
 export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({onAction, payload, ...props}) => {
     const { packages } = useSelector((state: RootState) => state.appointments);
@@ -286,6 +286,12 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const checkIsValid = (): boolean => {
         let isValid = true;
         for (let field in form) {
+            if (field === "date" && !filterDate) {
+                setErrors(prev => [...prev, "date"])
+            }
+            if (field === "slot" && !selectedSlot) {
+                setErrors(prev => [...prev, "slot"])
+            }
             // @ts-ignore
             if (requiredFields.includes(field) && !form[field]) {
                 isValid = false;
