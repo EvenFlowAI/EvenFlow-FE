@@ -168,8 +168,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     transportationOption: payload.transportationOption,
                     serviceRequestIds: payload.serviceRequests.map(sr => sr.id)
                 });
-                setSelectedSR(payload.serviceRequests);
-                setSelectedCategories(payload.serviceCategories);
+                payload.serviceRequests && setSelectedSR(payload.serviceRequests);
+                payload.serviceCategories && setSelectedCategories(payload.serviceCategories);
                 setDate(payload.dateInUtc);
                 const slot: IAppointmentSlot = {
                     date: payload.dateInUtc,
@@ -391,6 +391,11 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setSelectedSlot(null);
     }
 
+    const onVehicleDetailsChange = () => {
+        setSelectedPackage(null);
+        setSelectedPackageOption(null);
+    }
+
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Update"} Appointment</DialogTitle>
         <DialogContent>
@@ -410,6 +415,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     errors={errors}
                     isDataValid={isVehicleDataValid}
                     vinLoading={vinLoading}
+                    onVehicleDetailsChange={onVehicleDetailsChange}
                 />
 
                 <Grid item xs={12}>
