@@ -47,10 +47,11 @@ export const EndUserLayout = () => {
     const dispatch = useDispatch();
     const isFrame = useLayout();
 
-    function createTracker(opt_clientId = '', origin = '') {
+    function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
         if (!trackerCreated) {
             if (opt_clientId) options.clientId = opt_clientId
+
             ReactGA.initialize(TRACKER, {
                 debug: true,
                 titleCase: false,
@@ -68,11 +69,23 @@ export const EndUserLayout = () => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
                 if (!prodParentLinks.includes(event.origin)) return;
-                if (typeof event.data === 'string') createTracker(event.data, event.origin);
+                let originSite = event.origin;
+                if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
+                if (originSite) createTracker(event.data, originSite, trackerCreated);
             });
-            setTimeout(createTracker, 2000);
         }
-    }, [trackerCreated]);
+    }, [trackerCreated, window.location?.ancestorOrigins]);
+
+    useEffect(() => {
+        if (!trackerCreated) {
+            setTimeout(() => {
+                const url = (window.location != window.parent?.location)
+                    ? document.referrer
+                    : document.location.href;
+                createTracker('', url, trackerCreated);
+            }, 3000);
+        }
+    }, [window.location, document.referrer, document.location])
 
     useEffect(() => {
         const decoded = decodeSCID(id);
