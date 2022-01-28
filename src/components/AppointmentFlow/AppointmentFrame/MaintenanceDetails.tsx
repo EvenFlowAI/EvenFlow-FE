@@ -40,7 +40,8 @@ type TSelect = {
     allOverride?: boolean;
 };
 
-const year = moment.utc().add(1, 'year').year();
+let year = moment.utc().year()
+if (moment().month() > 9) year = moment.utc().add(1, 'year').year();
 const YEARS = 20;
 export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 

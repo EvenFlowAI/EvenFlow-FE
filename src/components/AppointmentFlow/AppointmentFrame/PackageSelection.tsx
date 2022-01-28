@@ -117,7 +117,7 @@ const Wrapper = styled('div')(({theme}) => ({
             textTransform: "uppercase"
         },
         "&.service": {
-            padding: "6px 8px"
+            padding: "6px 8px",
         },
         "&.green": {
             background: "#E6FCEC"
@@ -395,7 +395,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             const isLast = idx + 1 === services.length;
                             const cls = `service${isLast ? ' last' : ''}`;
                             return <React.Fragment key={s.id}>
-                                <div className={cls}>{s.description}</div>
+                                <div className={cls} style={isBmWService ? {fontSize: 18} : {}}>{s.description}</div>
                                 {packages.map(p => {
                                         const clsx = p.lastIdx === idx ? 'service last' : cls;
                                         const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
@@ -410,7 +410,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             </React.Fragment>;
                         })}
                         {(isSanfordInfinity || isBmWService) && <React.Fragment key="maintenance">
-                            <div className="totalMaintenance">Total Maintenance Value:</div>
+                            <div className="totalMaintenance" style={isBmWService ? {fontSize: 16} : {}}>Total Maintenance Value:</div>
                             {packages.map(p => <div className={setClasses(p.id, '')}>
                                 <span style={{ fontSize: 20 }}>${p.price}</span>
                             </div>)}
@@ -424,7 +424,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                                 className={setClasses(p.id, "green subtitle")}/>
                         )}
                         {complimentary.map(c => <React.Fragment key={c.name}>
-                            <div className="service">{c.name}</div>
+                            <div className="service" style={isBmWService ? {fontSize: 18} : {}}>{c.name}</div>
                             {packages.map(p =>
                                 <div
                                     key={p.id}
@@ -434,7 +434,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                                 </div>
                             )}
                         </React.Fragment>)}
-                        <div className="totalComplimentary last">Total Complimentary Value</div>
+                        <div className="totalComplimentary last" style={isBmWService ? {fontSize: 16} : {}}>Total Complimentary Value</div>
                         {isBmWService|| isSanfordInfinity
                             ? packages.map(p => {
                             return <div
@@ -455,8 +455,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                                     <span style={{ fontSize: 20 }}>{price ? `$${price}` : ''}</span>
                                 </div>;
                             })}
-                        <div className="total end">
-                            Total <span className="info">(excluding taxes)</span>
+                        <div className="total end" style={isBmWService ? {fontSize: 16} : {}}>
+                            Total <span className="info" >(excluding taxes)</span>
                         </div>
                         {packages.map(p =>
                             <div
