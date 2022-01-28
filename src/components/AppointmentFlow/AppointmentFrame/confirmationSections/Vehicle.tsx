@@ -16,7 +16,7 @@ const Vehicle = () => {
     return (
         <div>
             <TitleWrapper>
-                <ConfirmationTitle>Vehicle: </ConfirmationTitle>
+                <ConfirmationTitle>Vehicle</ConfirmationTitle>
             </TitleWrapper>
             <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model} {selectedVehicle?.year}
         </div>
