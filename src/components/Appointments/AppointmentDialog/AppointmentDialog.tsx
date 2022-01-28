@@ -345,7 +345,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 },
                 comment: form.comment,
                 reminderTypes: form.reminderTypes,
-                appointmentTimingType: EAppointmentTimingType.PreferredDate
+                appointmentTimingType: EAppointmentTimingType.PreferredDate,
+                transportationType: form.transportationOption?.type,
             }
             if (payload) {
                 data.id = payload.id;

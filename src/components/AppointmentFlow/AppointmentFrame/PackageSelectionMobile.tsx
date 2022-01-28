@@ -191,15 +191,25 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const getTitleStyle = (index: number): object => {
+type TStyleProp = {
+    backgroundColor?: string;
+    fontSize?: number;
+}
+
+const getTitleStyle = (index: number, isBMWService: boolean): TStyleProp => {
+    let style: TStyleProp = {};
     switch (index) {
         case 0:
-            return { backgroundColor: '#C0C0C0' };
+            style = { backgroundColor: '#C0C0C0' };
+            break;
         case 1:
-            return { backgroundColor: '#B18965' };
+            style = { backgroundColor: '#B18965' };
+            break;
         default:
-            return { backgroundColor: '#E3CD59' };
+            style = { backgroundColor: '#E3CD59' };
     }
+    if (isBMWService) style.fontSize = 16;
+    return style;
 }
 
 const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
@@ -238,6 +248,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                     aria-label="icon tabs example">
                     {data.map((item, index) => (
                         <Tab
+                            style={isBmWService ? {fontSize: 16} : {}}
                         className={index === +value ? classes.selectedTab : classes.tabWrapper}
                         value={`${index}`}
                         label={<TabLabel text={item.name} isSelected={index === +value}/>}/>)
@@ -246,26 +257,28 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                 {data.map((item, index) => (
                     <TabPanel value={`${index}`}>
                         <div className={classes.contentWrapper}>
-                            <div className={classes.packageName} style={getTitleStyle(index)}>{item.name}</div>
+                            <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
                             <div className={classes.serviceRequests}>
-                                {item.serviceRequests.map(item => <p className={classes.serviceRequest}>{item.description}</p>)}
+                                {item.serviceRequests.map(item => (
+                                    <p className={classes.serviceRequest}
+                                    style={isBmWService ? {fontSize: 18} : {}}>
+                                    {item.description}
+                                    </p>
+                                ))}
                             </div>
-                            {/*{ isBmWService && <div className={classes.totalMaintenance}>*/}
-                            {/*    <span>Total Maintenance Value:</span>*/}
-                            {/*    <span>${item.serviceRequests.reduce((a, b) => a + +b.price, 0)}</span>*/}
-                            {/*    </div>*/}
-                            {/*}*/}
                             { (isBmWService || isSanfordInfinity) && <div className={classes.totalMaintenance}>
-                                <span>Total Maintenance Value:</span>
+                                <span style={isBmWService ? {fontSize: 16} : {}}>Total Maintenance Value:</span>
                                 <span style={{ fontSize: 20 }}>${item.price}</span>
                             </div>
                             }
-                            <div className={classes.complimentaryTitle}>Complimentary</div>
+                            <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>Complimentary</div>
                             <div className={classes.complimentaryServices}>
-                                {item.complimentaryServices.map(item => <p className={classes.serviceRequest}>{item.name}</p>)}
+                                {item.complimentaryServices.map(item => (
+                                    <p className={classes.serviceRequest} style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                                ))}
                             </div>
                             <div className={classes.complimentaryTotal}>
-                                <span>Total Complimentary Value:</span>
+                                <span style={isBmWService ? {fontSize: 16} : {}}>Total Complimentary Value:</span>
                                 {isBmWService || isSanfordInfinity
                                     ? <span style={{ fontSize: 20 }}>{item.marketPriceComplimentaryServices ? `$${item.marketPriceComplimentaryServices}` : ''}</span>
                                     :<span style={{ fontSize: 20 }}>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>

@@ -50,6 +50,7 @@ const Transportation: React.FC<TTransportationProps> = ({ payload, form , setFor
     }, [transportations, payload])
 
     const handleChangeTransportationNeeds = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
+        debugger;
         const option = transportations.find(el => el.name === value)
         setForm({
             ...form,
@@ -64,7 +65,7 @@ const Transportation: React.FC<TTransportationProps> = ({ payload, form , setFor
                 id="transportationDescription"
                 placeholder="Transportation needs"
                 name="transportationDescription"
-                value={form.transportationOption || "Yes, I will be waiting"}
+                value={form.transportationOption?.name || "Yes, I will be waiting"}
                 onChange={handleChangeTransportationNeeds}
                 fullWidth
             >
