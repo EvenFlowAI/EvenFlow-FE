@@ -77,7 +77,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     }
 
     useEffect(() => {
-        if (customerLoadedData && !customerLoadedData?.id) {
+        if (customerLoadedData && !customerLoadedData.vehicles?.length) {
             onNext();
         }
         dispatch(setMaintenanceDetails({ serviceInterval: ''}));
