@@ -125,19 +125,25 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
-            if (window.location.ancestorOrigins.length) {
-                createTracker('', window.location.ancestorOrigins[0], trackerCreated);
-            }
-            // window.addEventListener('message', function(event) {
-            //     if (!prodParentLinks.includes(event.origin)) return;
-            //     let originSite = event.origin;
-            //     if (window.location.ancestorOrigins.length) originSite = window.location.ancestorOrigins[0];
-            //     console.log('-------ORIGIN-----------', originSite)
-            //     createTracker(event.data, originSite, trackerCreated);
-            // });
-            // setTimeout(createTracker, 3000);
+            window.addEventListener('message', function(event) {
+                if (!prodParentLinks.includes(event.origin)) return;
+                let originSite = event.origin;
+                if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
+                if (originSite) createTracker(event.data, originSite, trackerCreated);
+            });
         }
-    }, [trackerCreated]);
+    }, [trackerCreated, window.location?.ancestorOrigins]);
+
+    useEffect(() => {
+        if (!trackerCreated) {
+            setTimeout(() => {
+                const url = (window.location != window.parent?.location)
+                    ? document.referrer
+                    : document.location.href;
+                createTracker('', url, trackerCreated);
+            }, 3000);
+        }
+    }, [window.location, document.referrer, document.location])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
