@@ -129,7 +129,7 @@ export const AppointmentFrameLayout = () => {
                 if (!prodParentLinks.includes(event.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-                createTracker(event.data, originSite, trackerCreated);
+                if (originSite) createTracker(event.data, originSite, trackerCreated);
             });
         }
     }, [trackerCreated, window.location?.ancestorOrigins]);
@@ -137,12 +137,13 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (!trackerCreated) {
             setTimeout(() => {
-                if (window.location?.ancestorOrigins?.length) {
-                    createTracker('', window.location.ancestorOrigins[0], trackerCreated);
-                }
+                const url = (window.location != window.parent?.location)
+                    ? document.referrer
+                    : document.location.href;
+                createTracker('', url, trackerCreated);
             }, 3000);
         }
-    }, [trackerCreated, window.location?.ancestorOrigins])
+    }, [window.location, document.referrer, document.location])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
