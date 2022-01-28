@@ -1,17 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
-import { Actions } from './Actions';
+import {Actions} from './Actions';
 import {styled, Theme} from "@material-ui/core";
 import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/any-consultant.svg';
 import {useParams} from "react-router-dom";
 import {TCallback} from "../../../types/types";
-import { IServiceConsultant } from '../../../api/types';
-import {loadConsultants, setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {IServiceConsultant} from '../../../api/types';
+import {
+    loadConsultants, selectCategoriesIds,
+    selectService, selectSubService,
+    setAdvisor,
+    setPackage
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -81,10 +87,10 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
 
 export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const dispatch = useDispatch();
-    const {advisor: selectedConsultant, consultants}= useSelector((state: RootState) => state.appointmentFrame);
-
+    const {advisor: selectedConsultant, consultants, selectedPackage, service, subService, categoriesIds}= useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
+    const dispatch = useDispatch();
 
     const getData = async (id: string) => {
         setLoading(true);
@@ -99,6 +105,28 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(selectAppointment(null));
         dispatch(setAdvisor(c));
+    }
+
+    const handleBack = () => {
+        let categories = [...categoriesIds];
+        if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
+            dispatch(setPackage(null));
+            dispatch(selectService(null));
+        }
+        if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
+            dispatch(selectSR(null));
+            dispatch(selectSubService(null));
+        }
+        if (service && categoriesIds.includes(service.id)) {
+            dispatch(selectService(null));
+            categories = categories.filter(item => item !== service.id);
+        }
+        if (subService && categoriesIds.includes(subService.id)) {
+            dispatch(selectSubService(null));
+            categories = categories.filter(item => item !== subService.id);
+        }
+        dispatch(selectCategoriesIds(categories));
+        onBack();
     }
 
     return (<StepWrapper>
@@ -119,6 +147,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             </React.Fragment>
             }
         </ConsultantsWrapper>
-        <Actions onNext={onNext} onBack={onBack} />
+        <Actions onNext={onNext} onBack={handleBack} />
     </StepWrapper>);
 };

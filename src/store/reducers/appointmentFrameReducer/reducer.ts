@@ -1,16 +1,16 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getMakes,
-    getModels,
+    getModels, selectCategoriesIds,
     selectService,
-    selectSubService,
+    selectSubService, setAdditionalServicesChosen,
     setAdvisor,
     setAppointmentId, setConsultants, setCurrentFrameScreen,
     setCustomer,
     setFrameDescription, setLoadingPackages,
     setMaintenanceDetails,
-    setPackage, setPackages,
-    setReminders,
+    setPackage, setPackageIsSelected, setPackages,
+    setReminders, setSelectedPackageOptionType,
     setTime,
     setTiming, setTrackerCreated,
     setTransportation,
@@ -18,7 +18,6 @@ import {
     setVehicle, updateVehicle
 } from "./actions";
 import {
-    EServiceCategoryPage,
     ICustomer,
     ILoadedVehicle, IMake, IPackage,
     IPackageOptions,
@@ -29,7 +28,6 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {TMaintenanceDetails} from "./types";
-import {tellMoreCard} from "./initial";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -54,6 +52,10 @@ type TState = {
     makes: IMake[];
     models: string[];
     trackerCreated: boolean;
+    isAdditionalServices: boolean;
+    packageIsSelected: boolean;
+    packageOptionType: number | null;
+    categoriesIds: number[];
 }
 const initialState: TState = {
     service: null,
@@ -79,6 +81,10 @@ const initialState: TState = {
     makes: [],
     models: [],
     trackerCreated: false,
+    isAdditionalServices: false,
+    packageIsSelected: false,
+    categoriesIds: [],
+    packageOptionType: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -87,7 +93,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             ...state,
             service: payload,
             subService: null,
-            selectedPackage: null,
         };
     })
     .addCase(selectSubService, (state, {payload}) => {
@@ -141,27 +146,15 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, maintenanceDetails: {...state.maintenanceDetails, ...payload}}
     })
     .addCase(setUpdateAppointment, (state, {payload}) => {
-        const c: Partial<TState> = {};
-        let category = payload.serviceCategory;
-        if (category) {
-            category = {...category, serviceRequests: category.serviceRequests ? [...category.serviceRequests] : []}
-            if (category.page === EServiceCategoryPage.Page1) {
-                c.service = category;
-            } else if (category.page === EServiceCategoryPage.Page2) {
-                c.subService = category;
-                c.service = tellMoreCard;
-            } else {
-                // TODO: Package??
-            }
-        }
         return {
             ...state,
             id: payload.id,
             hashKey: payload.hashKey,
             customer: {...payload.driver},
             reminders: payload.reminderTypes,
-            ...c,
-            description: payload.comment
+            categoriesIds: payload.serviceCategories?.map(item => item.id),
+            description: payload.comment,
+            // selectedPackage: payload.maintenancePackageOption ?? null,
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
@@ -184,5 +177,17 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setTrackerCreated, (state, { payload }) => {
         return {...state, trackerCreated: payload}
+    })
+    .addCase(setAdditionalServicesChosen, (state, {payload}) => {
+        return {...state, isAdditionalServices: payload};
+    })
+    .addCase(setPackageIsSelected, (state, {payload}) => {
+        return {...state, packageIsSelected: payload};
+    })
+    .addCase(selectCategoriesIds, (state, {payload}) => {
+        return {...state, categoriesIds: payload};
+    })
+    .addCase(setSelectedPackageOptionType, (state, {payload}) => {
+        return {...state, packageOptionType: payload};
     })
 )

@@ -29,7 +29,7 @@ type TOPsCodesListDialogProps = {
     selectedPreviously?: number[];
 } & DialogProps;
 
-export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction, payload, ...props}) => {
+export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction, onSave, selectedPreviously, payload, ...props}) => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();
@@ -60,10 +60,10 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     useEffect(() => {
-        if (props.open && !props.selectedPreviously) {
+        if (props.open && !selectedPreviously) {
             setSelectedCodes([]);
         }
-    }, [props.open, !props.selectedPreviously]);
+    }, [props.open, !selectedPreviously]);
 
     useEffect(() => {
         if (props.open && selectedSC) {
@@ -75,9 +75,9 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
         if (selectedSC) {
             changePage(null, 0);
             dispatch(setNonSelectedPageData({pageIndex: 0}));
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id, Boolean(props.selectedPreviously)));
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id, Boolean(selectedPreviously)));
         }
-    }, [dispatch, selectedSC, props.selectedPreviously]);
+    }, [dispatch, selectedSC, selectedPreviously]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
@@ -98,19 +98,19 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     const preActions = (el: IServiceRequest) => {
         return <Checkbox
             color="primary"
-            checked={selectedCodes.includes(el.id) || props.selectedPreviously?.includes(el.id)}
+            checked={selectedCodes.includes(el.id) || selectedPreviously?.includes(el.id)}
             onChange={handleCheck(el)}
-            disabled={props?.selectedPreviously?.includes(el.id)}
+            disabled={selectedPreviously?.includes(el.id)}
         />
     }
 
-    const handleAdd = async () => {
+    const handleAdd = useCallback(async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
             try {
                 setSaving(true);
-                await props.onSave(selectedCodes, selectedSC.id);
+                await onSave(selectedCodes, selectedSC.id);
                 setSaving(false);
                 showMessage(`Successfully added ${selectedCodes.length} codes`);
                 setSelectedCodes([]);
@@ -119,7 +119,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
                 showError(e);
             }
         }
-    }
+    }, [selectedSC, onSave, selectedCodes])
 
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>Select Service Requests</DialogTitle>

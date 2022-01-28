@@ -13,7 +13,7 @@ export interface IServiceRequest {
     numberOfParts: number;
 }
 export interface IServiceRequestShort {
-    id: 0;
+    id: number;
     code: string;
     description: string;
     priority: IServiceRequestPriority

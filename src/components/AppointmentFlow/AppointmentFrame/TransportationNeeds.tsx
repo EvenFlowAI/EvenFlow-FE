@@ -126,11 +126,12 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const [
         s, ss,
-        individualOps, packageOpt, appointmentDate
+        individualOps, categoriesIds, packageOpt, appointmentDate
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
         state.appointment.selectedSR,
+        state.appointmentFrame.categoriesIds,
         state.appointmentFrame.selectedPackage,
         state.appointment.appointment?.appointmentDate,
     ]);
@@ -146,6 +147,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             serviceRequestIds,
             maintenancePackageOptionId: packageOpt?.id ?? null,
             slot: appointmentDate,
+            serviceCategoryIds: categoriesIds,
         }
         if (appointmentDate) data.slot = appointmentDate;
         Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})

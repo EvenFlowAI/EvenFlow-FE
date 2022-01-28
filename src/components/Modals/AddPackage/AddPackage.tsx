@@ -205,7 +205,7 @@ const initialValues = {
     isApplyBusinessRules: false,
 }
 
-const AddPackage: React.FC<TModalProps> = (props) => {
+const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const { packages, currentPackage } = useSelector((state: RootState) => state.packages);
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const { selectedSC } = useSCs();
@@ -237,12 +237,12 @@ const AddPackage: React.FC<TModalProps> = (props) => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id))
-            props.isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
+            isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
         }
-    }, [dispatch, selectedSC, props.isEditing])
+    }, [dispatch, selectedSC, isEditing])
 
     useEffect(() => {
-        if (props.isEditing && currentPackage) {
+        if (isEditing && currentPackage) {
             setPackageName(currentPackage.name);
             setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
             setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
@@ -265,7 +265,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                 })
             }
         }
-    }, [currentPackage, props.isEditing, allAssignedList])
+    }, [currentPackage, isEditing, allAssignedList])
 
     const onCancel = useCallback(() => {
         setFormIsChecked(false);
@@ -370,9 +370,9 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                         customerCriteria: vehiclesData.customerCriteria,
                     }
                 } else {
-                    if (props.isEditing) data.businessRules = currentPackage?.businessRules;
+                    if (isEditing) data.businessRules = currentPackage?.businessRules;
                 }
-                props.isEditing && currentPackage
+                isEditing && currentPackage
                     ? dispatch(updatePackage(currentPackage.id, data, selectedSC.id, onCancel))
                     : dispatch(createPackage(selectedSC.id, data, onCancel))
             }
@@ -395,7 +395,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
 
     return (
         <BaseModal {...props} width={540} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>{props.isEditing ? 'Edit': 'Add'} Maintenance Package</DialogTitle>
+            <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} Maintenance Package</DialogTitle>
             <DialogContent>
                 <div className={classes.contentWrapper}>
                     <div className={classes.fullWidth}>
@@ -555,7 +555,7 @@ const AddPackage: React.FC<TModalProps> = (props) => {
                 setOptionError={setOptionError}
                 onClose={onAssignOpsCodeClose}
                 selectedCodes={assignedOpsCodes}
-                isEditing={props.isEditing}
+                isEditing={isEditing}
                 setSelectedCodes={setAssignedOpsCodes}/>
             <AddComplimentary
                 title="Add Complimentary"

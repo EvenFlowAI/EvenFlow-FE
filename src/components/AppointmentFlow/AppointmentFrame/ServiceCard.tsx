@@ -3,24 +3,16 @@ import {TCallback} from "../../../types/types";
 import {CardWrapper} from "./styled";
 import {IServiceCategory} from "../../../api/types";
 import {ReactComponent as Icon} from "../../../assets/img/oil-icon.svg";
-import {styled} from "@material-ui/core";
 import axios from "axios";
 import {Loading} from "../../UI/Loading";
-
-// const IconWrapper = styled('span')(({theme}) => ({
-//     [theme.breakpoints.down("sm")]: {
-//         display: "flex",
-//         alignItems: "center",
-//         justifyContent: "center",
-//     }
-// }))
 
 type TSCProps = {
     card: IServiceCategory;
     onSelect: TCallback;
     active: boolean;
+    selected: boolean;
 }
-export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active}) => {
+export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selected}) => {
     const [icon, setIcon] = useState<string>('');
     const [isLoading, setLoading] = useState<boolean>(false)
     useEffect(() => {
@@ -33,7 +25,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active}) => {
                 .finally(() => setLoading(false))
         }
     }, [card])
-    return <CardWrapper onClick={onSelect} active={active}>
+    return <CardWrapper onClick={onSelect} active={active} selected={selected}>
         {isLoading
             ? <Loading/>
             : card.iconPath && icon

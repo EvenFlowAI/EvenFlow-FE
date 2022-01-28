@@ -57,9 +57,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
-    const { title, onClose, editedItem } = props;
-
+const AddServiceManually: React.FC<TAddServiceProps> = ({ title, onClose, editedItem, ...props}) => {
     const [description, setDescription] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [duration, setDuration] = useState<number | string>('');
@@ -83,7 +81,6 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
     }, [])
 
     const onTotalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // const rgx = /^(?:(?:[1-9]+?|[1-9]\d+?)|0)(\.(\d+)|)$/;
         setTotal(+e.target.value);
         setFormIsChecked(false);
     }
@@ -91,7 +88,6 @@ const AddServiceManually: React.FC<TAddServiceProps> = (props) => {
     const onDurationChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setDuration(+e.target.value);
         setFormIsChecked(false);
-        //const rgx = /^(?:(?:[1-9]+?|[1-9]\d+?)|0)(\.(\d+)|)$/;
     }, [])
 
     const onCancel = useCallback((): void => {

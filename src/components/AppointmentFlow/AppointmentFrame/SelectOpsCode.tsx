@@ -67,14 +67,15 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
     const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
 
     const {id} = useParams();
-    const [selectedCode, srList, search, vehicles, vehicle, scProfile, serviceCategories] = useSelector((state: RootState) => [
+    const [selectedCode, srList, search, vehicles, vehicle, scProfile, serviceCategories, subService] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointment.search,
         state.appointment.customerLoadedData?.vehicles,
         state.appointment.customerSelectedVehicle,
         state.appointment.scProfile,
-        state.appointment.serviceCategories
+        state.appointment.serviceCategories,
+        state.appointmentFrame.subService,
     ]);
     const dispatch = useDispatch();
     const isInit = useRef(true);
@@ -137,6 +138,13 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
         }
     }
 
+    const handleBack = () => {
+        if (subService?.type === EServiceCategoryType.IndividualServices) {
+            dispatch(selectSR(null));
+        }
+        onBack();
+    }
+
     return (
         <StepWrapper>
             <Wrapper>
@@ -175,7 +183,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
                     })}
                 </CodesWrapper>
             </Wrapper>
-            <Actions onBack={onBack} nextDisabled={!selectedCode.length} onNext={handleNext} />
+            <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} />
         </StepWrapper>
     );
 };

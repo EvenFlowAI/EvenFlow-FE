@@ -66,7 +66,7 @@ const useInputStyles = makeStyles(() => ({
     }
 }))
 
-const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
+const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => {
     const [selectedCode, setSelectedCode] = useState<number | null>(null);
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
@@ -167,7 +167,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = (props) => {
     return (
         <BaseModal {...props}>
             <DialogTitle onClose={handleClose}>ASSIGN MAINTENANCE PACKAGE OPTIONS OPS CODES </DialogTitle>
-            <div className={classes.subTitle}>{props.packageName}</div>
+            <div className={classes.subTitle}>{packageName}</div>
             <DialogContent>
                 <div className={classes.wrapper}>
                     {currentPackage && <Autocomplete

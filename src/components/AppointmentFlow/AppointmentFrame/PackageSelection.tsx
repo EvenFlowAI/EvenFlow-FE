@@ -6,7 +6,11 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setAdditionalServicesChosen,
+    setPackage,
+    setPackageIsSelected, setSelectedPackageOptionType
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
@@ -20,6 +24,8 @@ import {
 import { ReactComponent as CheckboxCircle } from "../../../assets/img/done_icon_black.svg";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
+import {useConfirm, useModal} from "../../../utils/hooks";
+import ConfirmChangeOption from "../../Modals/ConfirmChangeOption/ConfirmChangeOption";
 
 const border = '1px solid #DADADA';
 
@@ -111,7 +117,7 @@ const Wrapper = styled('div')(({theme}) => ({
             textTransform: "uppercase"
         },
         "&.service": {
-            padding: "6px 8px"
+            padding: "6px 8px",
         },
         "&.green": {
             background: "#E6FCEC"
@@ -181,15 +187,17 @@ const Info = styled("p")({
     marginTop: 18,
 })
 
-export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
+export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddServices}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
-    const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
-    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
-    const maintenanceDetails = useSelector((state: RootState) => state.appointmentFrame.maintenanceDetails);
-    const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+    const {selectedPackage, selectedVehicle, maintenanceDetails, packageIsSelected, service, subService, packageOptionType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
+
     const theme = useTheme();
+    const { isOpen, onOpen, onClose } = useModal();
+    const {askConfirm} = useConfirm();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
@@ -274,7 +282,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                     serviceCenterId: decodeSCID(id),
                     vehicle: {
                         ...selectedVehicle,
-                        mileage: maintenanceDetails.serviceInterval
+                        mileage: selectedVehicle?.serviceInterval ?? maintenanceDetails.serviceInterval
                     }
                 }
             }
@@ -309,17 +317,53 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
         onBack();
     }
 
+    const addServices = () => {
+        dispatch(setAdditionalServicesChosen(true));
+        if (onAddServices) onAddServices();
+    }
+
+    const onSave = async () => {
+        await onClose();
+        await askAdditionalServices();
+    }
+
+    const askAdditionalServices = () => {
+        selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
+        const categoryChosen = service?.type === 0 || subService?.type === 0;
+        if (!categoryChosen || !selectedSR.length) {
+            askConfirm({
+                title: "Would you like to add more services?",
+                confirmContent: "Yes",
+                cancelContent: "No",
+                onConfirm: addServices,
+                onCancel: onNext,
+            })
+        } else {
+            onNext();
+        }
+    }
 
     const handleNext = (): void => {
         if (selectedPackage) {
+            dispatch(setPackageIsSelected(true));
             const packageOptions = ['Good', 'Better', 'Best'];
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: `Selected Package`,
                 label: `With ${packageOptions[selectedPackage.type]} Option`,
             })
+            if (packageIsSelected && packageOptionType !== selectedPackage.type) {
+                onOpen();
+            } else {
+                askAdditionalServices()
+            }
         }
-        onNext();
+    }
+
+    const handleDontChangeOption = () => {
+        const prevPackage = packages.find(p => p.type === packageOptionType);
+        if (prevPackage) dispatch(setPackage(prevPackage));
+        onClose();
     }
 
     return (
@@ -351,7 +395,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                             const isLast = idx + 1 === services.length;
                             const cls = `service${isLast ? ' last' : ''}`;
                             return <React.Fragment key={s.id}>
-                                <div className={cls}>{s.description}</div>
+                                <div className={cls} style={isBmWService ? {fontSize: 18} : {}}>{s.description}</div>
                                 {packages.map(p => {
                                         const clsx = p.lastIdx === idx ? 'service last' : cls;
                                         const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
@@ -365,15 +409,10 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                 )}
                             </React.Fragment>;
                         })}
-                        {/*{isBmWService && <React.Fragment key="maintenance">*/}
-                        {/*    <div className="totalMaintenance">Total Maintenance Value:</div>*/}
-                        {/*    {packages.map(p => <div className={setClasses(p.id, '')}>${p.serviceRequests.reduce((acc, el) => acc + el.price, 0)}</div>)}*/}
-                        {/*</React.Fragment>*/}
-                        {/*}*/}
                         {(isSanfordInfinity || isBmWService) && <React.Fragment key="maintenance">
-                            <div className="totalMaintenance">Total Maintenance Value:</div>
+                            <div className="totalMaintenance" style={isBmWService ? {fontSize: 16} : {}}>Total Maintenance Value:</div>
                             {packages.map(p => <div className={setClasses(p.id, '')}>
-                                <span style={{ fontSize: 20 }}>${p.marketPriceServiceRequests}</span>
+                                <span style={{ fontSize: 20 }}>${p.price}</span>
                             </div>)}
                         </React.Fragment>
                         }
@@ -385,7 +424,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                 className={setClasses(p.id, "green subtitle")}/>
                         )}
                         {complimentary.map(c => <React.Fragment key={c.name}>
-                            <div className="service">{c.name}</div>
+                            <div className="service" style={isBmWService ? {fontSize: 18} : {}}>{c.name}</div>
                             {packages.map(p =>
                                 <div
                                     key={p.id}
@@ -395,7 +434,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                 </div>
                             )}
                         </React.Fragment>)}
-                        <div className="totalComplimentary last">Total Complimentary Value</div>
+                        <div className="totalComplimentary last" style={isBmWService ? {fontSize: 16} : {}}>Total Complimentary Value</div>
                         {isBmWService|| isSanfordInfinity
                             ? packages.map(p => {
                             return <div
@@ -416,8 +455,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                     <span style={{ fontSize: 20 }}>{price ? `$${price}` : ''}</span>
                                 </div>;
                             })}
-                        <div className="total end">
-                            Total <span className="info">(excluding taxes)</span>
+                        <div className="total end" style={isBmWService ? {fontSize: 16} : {}}>
+                            Total <span className="info" >(excluding taxes)</span>
                         </div>
                         {packages.map(p =>
                             <div
@@ -426,7 +465,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                                 key={p.id}>
                                 {(isBmWService || isSanfordInfinity) &&
                                 <div className="before">
-                                    ${p.marketPriceComplimentaryServices + p.marketPriceServiceRequests}
+                                    ${p.marketPriceComplimentaryServices + p.price}
                                 </div>}
                                 <div className="currentWrp">
                                     <div className="triangle"/>
@@ -436,8 +475,10 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                             </div>
                         )}
                         <Info>
-                            Note: The maintenance packages may not be available for all vehicle types. Please speak with
-                            your Service Advisor to understand where restrictions apply.
+                            {isBmWService
+                                ? 'Note: Please ask your service advisor regarding factory covered maintenance services.'
+                                : 'Note: The maintenance packages may not be available for all vehicle types. Please speak with your Service Advisor to understand where restrictions apply.'
+                            }
                         </Info>
                     </Wrapper>
                 }
@@ -446,6 +487,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
                 onBack={handleBack}
                 nextDisabled={!selectedPackage}
                 onNext={handleNext} />
+            <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
         </StepWrapper>
     );
 };

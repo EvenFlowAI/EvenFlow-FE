@@ -1,22 +1,52 @@
 import React from "react";
-import {IPackageOptions, IServiceCategory} from "../../../api/types";
+import {IPackageOptions, IServiceCategoryShort} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
+import {IMaintenanceItem} from "./types";
 
 export const getMaintenanceDescription = (
     srList: ISR[],
-    selectedSR: number[],
+    selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
-    service?: IServiceCategory|null,
-    subService?: IServiceCategory|null) => {
+    allCategories?: IServiceCategoryShort[],
+    selectedCategories?: number[]) => {
+    const services: string[] = [];
+
     if (selectedPackage) {
-        return `${selectedPackage.name} package`;
+        services.push(`${selectedPackage.name} package`)
     }
-    if (selectedSR.length) {
+    if (selectedSR?.length) {
         const filtered = srList.filter(el => selectedSR.includes(el.id)).map(el => el.description);
-        return filtered.length ? filtered.map(el => <><br /><span>{el}</span></>) : "-";
+        filtered.forEach(item => item && services.push(item));
     }
-    if (subService) {
-        return subService.name;
+    if (selectedCategories && allCategories) {
+        const categories = allCategories.filter(category => selectedCategories.includes(category.id))
+        categories.forEach(item => services.push(item.name))
     }
-    return service?.name ?? "-";
+   return services;
+}
+
+export const getMaintenanceList = (
+    srList: ISR[],
+    selectedSR?: number[],
+    selectedPackage?: IPackageOptions|null,
+    allCategories?: IServiceCategoryShort[],
+    selectedCategories?: number[]) => {
+    const services: IMaintenanceItem[] = [];
+
+    if (selectedPackage) {
+        services.push({
+            name: `${selectedPackage.name} package`,
+            id: selectedPackage.id,
+            type: 'package',
+    })
+    }
+    if (selectedSR?.length) {
+        const filtered = srList.filter(el => selectedSR.includes(el.id));
+        filtered.forEach(item => item && services.push({id: item.id, name: item.description ?? item.code, type: 'service'}));
+    }
+    if (selectedCategories && allCategories) {
+        const categories = allCategories.filter(category => selectedCategories.includes(category.id))
+        categories.forEach(item => services.push({id: item.id, name: item.name, type: 'category'}))
+    }
+    return services;
 }

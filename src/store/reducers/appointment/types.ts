@@ -8,7 +8,7 @@ import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
     ILoadedVehicle,
-    IServiceCategory,
+    IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
 
@@ -27,6 +27,7 @@ export interface ISR {
     id: number;
     code: string;
     description?: string;
+    price?: number;
 }
 export type TS1Form = {
     year: string|null;
@@ -48,6 +49,7 @@ export interface IVehicleData {
     driveType: string;
     engineType: string;
 }
+
 export interface IVehicle {
     vin: string;
     make: string;
@@ -57,6 +59,7 @@ export interface IVehicle {
     transmission: string;
     driveType: string;
     engineType: string;
+    serviceInterval: string;
 }
 export type TS3Form = {
     date?: ParsableDate,
@@ -69,7 +72,7 @@ export enum ETransportation {
     PickUpVehicle,
     Rental,
     Shuttle,
-    LoanerCar
+    LoanerCar,
 }
 export const transportations: TEnumMap<ETransportation>[][] = [
     [
@@ -132,7 +135,7 @@ export interface IAppointmentSlotsRequest {
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;
     offerType?: EOfferType;
-    serviceCategoryId?: number,
+    serviceCategoryIds?: number[],
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
     serviceRequestIds: number[];
@@ -143,6 +146,7 @@ export interface IAppointmentSlotsRequest {
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
     date: moment.Moment;
+    serviceRequestPrices?: IServiceRequestPrice[];
     timingType?: number;
     appointmentDate?: string;
 }
@@ -175,6 +179,7 @@ export type TAppointmentState = {
     appointmentSlots: IRemappedAppointmentSlot[];
     appointmentFilters: IAppointmentFilters;
     serviceCategories: IServiceCategory[];
+    allServiceCategories: IServiceCategoryShort[];
 };
 export enum EReminderType {
     Email, Phone, Sms
@@ -186,4 +191,9 @@ export const APPOINTMENT_STATE_SAVED_KEY = "APPOINTMENT_SAVED";
 export interface IMake {
     name: string;
     models: string[];
+}
+
+export interface IServiceRequestPrice {
+    requestName: string;
+    priceValue?: number;
 }

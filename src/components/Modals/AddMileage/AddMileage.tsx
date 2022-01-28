@@ -12,9 +12,7 @@ import {TCreateMileage} from "../../../store/reducers/vehicleDetails/types";
 import {useException, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 
-type TAddMakeModalProps = DialogProps;
-
-const AddMileage: React.FC<TAddMakeModalProps> = (props) => {
+const AddMileage: React.FC<DialogProps> = (props) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [newMileage, setNewMileage] = useState<string>('');
     const [mileages, setMileages] = useState<string[]>([]);
