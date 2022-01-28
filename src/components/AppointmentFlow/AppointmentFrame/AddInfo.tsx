@@ -55,7 +55,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
     const onSubmit = () => {
         if (!selectedPackage || !selectedSR.length) {
             askConfirm({
-                title: "Would you like to add more services?",
+                title: "Would you like to add another service?",
                 confirmContent: "Yes",
                 cancelContent: "No",
                 onConfirm: () => {
