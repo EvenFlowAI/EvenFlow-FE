@@ -24,8 +24,9 @@ import {
 import { ReactComponent as CheckboxCircle } from "../../../assets/img/done_icon_black.svg";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
-import {useConfirm, useModal} from "../../../utils/hooks";
+import {useModal} from "../../../utils/hooks";
 import ConfirmChangeOption from "../../Modals/ConfirmChangeOption/ConfirmChangeOption";
+import AskAddService from "../../Modals/AskAddService/AskAddService";
 
 const border = '1px solid #DADADA';
 
@@ -195,7 +196,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
 
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
-    const {askConfirm} = useConfirm();
+    const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
@@ -331,13 +332,14 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
         const categoryChosen = service?.type === 0 || subService?.type === 0;
         if (!categoryChosen || !selectedSR.length) {
-            askConfirm({
-                title: "Would you like to add another service?",
-                confirmContent: "Yes",
-                cancelContent: "No",
-                onConfirm: addServices,
-                onCancel: onNext,
-            })
+            onAdditionalOpen();
+            // askConfirm({
+            //     title: "Would you like to add another service?",
+            //     confirmContent: "Yes",
+            //     cancelContent: "No",
+            //     onConfirm: addServices,
+            //     onCancel: onNext,
+            // })
         } else {
             onNext();
         }
@@ -364,6 +366,16 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         const prevPackage = packages.find(p => p.type === packageOptionType);
         if (prevPackage) dispatch(setPackage(prevPackage));
         onClose();
+    }
+
+    const handleYes = () => {
+        onAdditionalClose();
+        addServices();
+    }
+
+    const handleNo = () => {
+        onAdditionalClose();
+        onNext();
     }
 
     return (
@@ -488,6 +500,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 nextDisabled={!selectedPackage}
                 onNext={handleNext} />
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
+            <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
         </StepWrapper>
     );
 };

@@ -12,9 +12,10 @@ import {
 import {TArgCallback, TCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../../components/Layout/types";
-import {useConfirm} from "../../../utils/hooks";
+import {useModal} from "../../../utils/hooks";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {selectSR} from "../../../store/reducers/appointment/actions";
+import AskAddService from "../../Modals/AskAddService/AskAddService";
 
 type TProps = {
     onFillCar: TCallback;
@@ -37,7 +38,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
-    const {askConfirm} = useConfirm();
+    const {isOpen, onClose, onOpen} = useModal();
     const screenToReturn = useMemo(() => subService ? 'serviceSelection' : 'serviceNeeds', [subService])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
@@ -52,18 +53,20 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
         }
     }
 
+    const handleYes = () => {
+        onClose();
+        dispatch(setAdditionalServicesChosen(true));
+        onAddServices();
+    }
+
+    const handleNo = () => {
+        onClose();
+        handleNext();
+    }
+
     const onSubmit = () => {
         if (!selectedPackage || !selectedSR.length) {
-            askConfirm({
-                title: "Would you like to add another service?",
-                confirmContent: "Yes",
-                cancelContent: "No",
-                onConfirm: () => {
-                    dispatch(setAdditionalServicesChosen(true));
-                    onAddServices();
-                },
-                onCancel: handleNext,
-            })
+            onOpen()
         } else handleNext()
     }
 
@@ -94,6 +97,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 placeholder="Describe what`s going on"
             />
             <Actions onBack={handleBack} onNext={onSubmit} />
+            <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen}/>
         </StepWrapper>
     );
 };

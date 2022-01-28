@@ -193,7 +193,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             <div>
                 <SelectedDate onChangeSlot={onChangeSlot} />
                 <Vehicle/>
-                <Review />
                 <ServiceRequests/>
                 <SelectedPrice/>
                 <div
@@ -202,6 +201,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     onClick={onFeesOpen}>
                     View itemized fees of services
                 </div>
+                <Review />
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>

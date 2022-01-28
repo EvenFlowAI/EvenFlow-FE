@@ -30,7 +30,7 @@ const ServiceRequests = () => {
     return appointment?.serviceRequestPrices?.length
         ? <div>
             <TitleWrapper>
-                <ConfirmationTitle>Service Requests: </ConfirmationTitle>
+                <ConfirmationTitle>Service Requests</ConfirmationTitle>
             </TitleWrapper>
             <List>
                 {appointment?.serviceRequestPrices.map(item => <li className="service-item">{item.requestName}</li>)}
