@@ -106,6 +106,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
             }
         }
     }
+
     const handleCancel = async () => {
         if (editedItem) {
             try {
