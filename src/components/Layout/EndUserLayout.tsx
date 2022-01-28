@@ -67,19 +67,24 @@ export const EndUserLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
-            if (window.location.ancestorOrigins.length) {
-                createTracker('', window.location.ancestorOrigins[0], trackerCreated);
-            }
-            // window.addEventListener('message', function(event) {
-            //     if (!prodParentLinks.includes(event.origin)) return;
-            //     let originSite = event.origin;
-            //     if (window.location.ancestorOrigins.length) originSite = window.location.ancestorOrigins[0];
-            //     console.log('-------ORIGIN-----------', originSite)
-            //     createTracker(event.data, originSite, trackerCreated);
-            // });
-            // setTimeout(createTracker, 3000);
+            window.addEventListener('message', function(event) {
+                if (!prodParentLinks.includes(event.origin)) return;
+                let originSite = event.origin;
+                if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
+                createTracker(event.data, originSite, trackerCreated);
+            });
         }
-    }, [trackerCreated]);
+    }, [trackerCreated, window.location?.ancestorOrigins]);
+
+    useEffect(() => {
+        if (!trackerCreated) {
+            setTimeout(() => {
+                if (window.location?.ancestorOrigins?.length) {
+                    createTracker('', window.location.ancestorOrigins[0], trackerCreated);
+                }
+            }, 3000);
+        }
+    }, [trackerCreated, window.location?.ancestorOrigins])
 
     useEffect(() => {
         const decoded = decodeSCID(id);
