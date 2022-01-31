@@ -18,7 +18,7 @@ const Wrapper = styled('ul')({
     }
 });
 
-const TRANSPORTATION_SHORT_DESCRIPTION = ["I will take the shuttle", "I would like a loaner vehicle", "I would like a rental car", "I would like to book me a ride", "I would like vehicle pick up / drop off services"]
+const TRANSPORTATION_SHORT_DESCRIPTION = ["I will take the shuttle", "I would like a loaner vehicle", "I would like a rental car", "I would like you to book me a ride", "I would like vehicle pick up / drop off services", "I will drop off my vehicle and have a ride"]
 
 export const Review = () => {
     const [
