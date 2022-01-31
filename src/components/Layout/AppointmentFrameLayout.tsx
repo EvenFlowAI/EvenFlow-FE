@@ -335,7 +335,7 @@ export const AppointmentFrameLayout = () => {
             <Container>
                 {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
                     ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
-                {!['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
+                {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
                 {isXs && currentScreen === 'packageSelection'
                     ? <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 0}}>{getTitle()}</p> : null}
