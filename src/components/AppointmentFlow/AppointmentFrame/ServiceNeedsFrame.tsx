@@ -92,7 +92,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             {!loading ? <CardsWrapper>
                 {serviceCategories.map(card => {
                     return <ServiceCard
-                        selected={categoriesIds.includes(card.id) || (card.type === EServiceCategoryType.MaintenancePackage && Boolean(selectedPackage))}
+                        selected={categoriesIds?.includes(card.id) || (card.type === EServiceCategoryType.MaintenancePackage && Boolean(selectedPackage))}
                         active={selectedService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
