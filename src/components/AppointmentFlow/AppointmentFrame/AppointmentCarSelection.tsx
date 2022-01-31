@@ -80,7 +80,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         if (customerLoadedData && !customerLoadedData.vehicles?.length) {
             onNext();
         }
-        dispatch(setMaintenanceDetails({ serviceInterval: ''}));
+        dispatch(setMaintenanceDetails({ mileage: ''}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customerLoadedData, selectedVehicle]);
 

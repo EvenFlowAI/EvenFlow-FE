@@ -41,7 +41,7 @@ const blankOptions: TOptionsState = {};
 type TVehicleKey = keyof IVehicle;
 
 const requiredFields: TVehicleKey[] = [
-    "make", "year", "model", "serviceInterval"
+    "make", "year", "model", "mileage"
 ];
 
 type TProps = {} & TActionProps;
@@ -69,7 +69,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         {label: "Make", name: "make", options: 'make', noVehicle: true},
         {label: "Year", name: "year", options: yearOptions, noVehicle: true},
         {label: "Model", name: "model", options: "model", noVehicle: true},
-        {label: "Estimated Mileage", name: "serviceInterval", options: mileage.map(item => item.value.toString())},
+        {label: "Estimated Mileage", name: "mileage", options: mileage.map(item => item.value.toString())},
         // {label: "Transmission", name: "transmission"},
         // {label: "Drive Type", name: "driveType"},
         // {label: "Engine Type", name: "engineType"},
