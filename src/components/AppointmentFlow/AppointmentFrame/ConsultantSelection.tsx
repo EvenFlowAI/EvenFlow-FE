@@ -117,11 +117,11 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             dispatch(selectSR(null));
             dispatch(selectSubService(null));
         }
-        if (service && categoriesIds.includes(service.id)) {
+        if (service && categoriesIds?.includes(service.id)) {
             dispatch(selectService(null));
             categories = categories.filter(item => item !== service.id);
         }
-        if (subService && categoriesIds.includes(subService.id)) {
+        if (subService && categoriesIds?.includes(subService.id)) {
             dispatch(selectSubService(null));
             categories = categories.filter(item => item !== subService.id);
         }

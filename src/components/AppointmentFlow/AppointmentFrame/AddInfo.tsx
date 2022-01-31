@@ -72,10 +72,10 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
 
     const handleBack = () => {
         let categories = [...categoriesIds];
-        if (subService && categoriesIds.includes(subService.id)) {
+        if (subService && categoriesIds?.includes(subService.id)) {
             categories = categoriesIds.filter(id => id !== subService?.id)
         } else {
-            if (service && categoriesIds.includes(service.id)) {
+            if (service && categoriesIds?.includes(service.id)) {
                 categories = categoriesIds.filter(id => id !== service?.id)
             }
         }
