@@ -32,8 +32,6 @@ import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
     service: IServiceCategory|null;
-    id?: number;
-    hashKey?: string;
     subService: IServiceCategory|null;
     description: string;
     selectedPackage: IPackageOptions|null;
@@ -56,6 +54,8 @@ type TState = {
     packageIsSelected: boolean;
     packageOptionType: number | null;
     categoriesIds: number[];
+    id?: number;
+    hashKey?: string;
 }
 const initialState: TState = {
     service: null,
