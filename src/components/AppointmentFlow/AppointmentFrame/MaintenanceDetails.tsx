@@ -150,6 +150,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         setErrors(e => e.filter(err => err !== name));
     }
 
+    console.log(selectedVehicle);
+
     const isValid = () => {
         const errorsArray: string [] = [];
         for (let f of requiredFields) {
