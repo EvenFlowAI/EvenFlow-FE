@@ -150,8 +150,6 @@ export const SelectedAppointment = () => {
     const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds),
         [srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
 
-    console.log(selectedServices);
-
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
@@ -207,7 +205,7 @@ export const SelectedAppointment = () => {
                         Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
                     </DateWrapper> : null}
                     <>
-                        {!isSm && Boolean(price) && <div className="price">$ {price}</div>}
+                        {!isSm && Boolean(price) && <div className="price">${price}</div>}
                         <div className="info" style={{ fontSize: isSm ? 14: 28 }}>Save by booking at off peak times!</div>
                     </>
                     </PriceWrapper>
