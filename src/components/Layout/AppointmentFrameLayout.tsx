@@ -325,7 +325,7 @@ export const AppointmentFrameLayout = () => {
             case "opsCode":
                 return "What does your car need?";
             case "packageSelection":
-                return "Please click on the maintenance package for your vehicle"
+                return "Please select your Maintenance Package"
             case "consultantSelection":
                 return "Do you have a preferred advisor?";
             case "appointmentTiming":
@@ -347,10 +347,10 @@ export const AppointmentFrameLayout = () => {
             <Container>
                 {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
                     ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
-                {!['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
+                {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
                 {isXs && currentScreen === 'packageSelection'
-                    ? <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 0}}>{getTitle()}</p> : null}
+                    ? <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 0}}>Please click on the maintenance package for your vehicle</p> : null}
                 {currentScreen === 'maintenanceDetails'
                     ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)

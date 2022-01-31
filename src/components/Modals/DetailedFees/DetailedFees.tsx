@@ -99,7 +99,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                     {appointment?.serviceRequestPrices?.map(item => <li className={classes.item}>
                         <span>{item.requestName}</span>
                         {Object(item).hasOwnProperty('priceValue')
-                            ? <span className={classes.price}>$ {item.priceValue}</span>
+                            ? <span className={classes.price}>${item.priceValue}</span>
                             : <ErrorOutline/>}
                     </li>)}
                 </List>

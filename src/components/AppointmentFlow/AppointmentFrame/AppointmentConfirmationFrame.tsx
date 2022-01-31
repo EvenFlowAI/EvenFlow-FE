@@ -84,15 +84,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         if (!isBmWService) dispatch(setReminders([0, 2]));
     }, [isBmWService])
 
-    // const onCreateClick = () => {
-    //     if (appointment.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-    //         || appointment.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest) {
-    //         appointmentFrame.selectedVehicle?.vin ? handleCreateAppointment() : onOpen();
-    //     } else {
-    //         handleCreateAppointment()
-    //     }
-    // }
-
     const handleCreateAppointment = () => {
         const data = {
             id: appointmentFrame.id,
@@ -193,7 +184,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             <div>
                 <SelectedDate onChangeSlot={onChangeSlot} />
                 <Vehicle/>
-                <Review />
                 <ServiceRequests/>
                 <SelectedPrice/>
                 <div
@@ -202,6 +192,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     onClick={onFeesOpen}>
                     View itemized fees of services
                 </div>
+                <Review />
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>
@@ -211,12 +202,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
         </Wrapper>
         <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
-        {/*<CreateAppointment*/}
-        {/*    open={isOpen}*/}
-        {/*    loading={saving}*/}
-        {/*    onClose={onClose}*/}
-        {/*    handleCreateAppointment={handleCreateAppointment}*/}
-        {/*/>*/}
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
     </StepWrapper>
 };

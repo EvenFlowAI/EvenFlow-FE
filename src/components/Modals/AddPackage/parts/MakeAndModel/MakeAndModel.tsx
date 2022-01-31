@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, Dispatch, SetStateAction, useState} from 'react';
+import React, {ChangeEvent, useCallback, Dispatch, SetStateAction, useState, useEffect} from 'react';
 import {autocompleteRender} from "../../../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
@@ -55,6 +55,11 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const [models, setModels] = useState<string[]>([]);
     const classes = useStyles();
+
+    useEffect(() => {
+        const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+        setModels(getSortedModels(filteredMakes))
+    }, [makesFromDB])
 
     const getSortedMakes = (makesFromDB: IMake[]): string[] => {
         const data: string[] = makesFromDB
