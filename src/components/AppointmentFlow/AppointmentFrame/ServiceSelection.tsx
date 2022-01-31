@@ -63,7 +63,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
             if (subService.type === 0) {
-                const categories = categoriesIds.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
+                const categories = categoriesIds?.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
                 dispatch(selectCategoriesIds(categories));
             }
             dispatch(setAdditionalServicesChosen(false));
@@ -87,7 +87,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             {!loading ? <CardsWrapper>
                 {services.map(card => {
                     return <ServiceCard
-                        selected={categoriesIds.includes(card.id)
+                        selected={categoriesIds?.includes(card.id)
                         || (card.type === EServiceCategoryType.IndividualServices && Boolean(selectedSR?.length))
                         }
                         active={subService?.id === card.id}
