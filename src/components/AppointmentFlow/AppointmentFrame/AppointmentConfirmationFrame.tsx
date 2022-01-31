@@ -109,7 +109,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 vin: appointmentFrame.selectedVehicle?.vin ?? '',
                 year: appointmentFrame?.selectedVehicle?.year
                     ? String(appointmentFrame.selectedVehicle.year) : null,
-                mileage: appointmentFrame.maintenanceDetails?.serviceInterval ?? null,
+                mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
             },
             transportationType: appointmentFrame.transportation?.type,
             slot: appointment.appointment?.id.split("|")[1] || "",

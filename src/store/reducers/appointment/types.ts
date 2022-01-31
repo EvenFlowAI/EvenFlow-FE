@@ -59,7 +59,7 @@ export interface IVehicle {
     transmission: string;
     driveType: string;
     engineType: string;
-    serviceInterval: string;
+    // serviceInterval: string;
 }
 export type TS3Form = {
     date?: ParsableDate,

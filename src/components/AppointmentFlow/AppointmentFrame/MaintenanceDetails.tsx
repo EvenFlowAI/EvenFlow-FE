@@ -46,7 +46,7 @@ const YEARS = 20;
 export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
 const requiredFields: TKey[] = [
-    "model", "year", "make", "serviceInterval"
+    "model", "year", "make", "mileage"
 ];
 
 type TOptionsState = {[s: string]: string[]};
@@ -76,7 +76,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
         // {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
         // {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
-        {label: "Estimated mileage", name:"serviceInterval", options: mileage.map(item => item.value.toString())},
+        {label: "Estimated mileage", name:"mileage", options: mileage.map(item => item.value.toString())},
     ];
 
     const showError = useException();
@@ -91,7 +91,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 make: selectedVehicle.make,
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
-                serviceInterval: selectedVehicle?.mileage?.toString() || selectedVehicle?.serviceInterval?.toString() || "",
+                mileage: selectedVehicle?.mileage?.toString() || "",
             }));
         }
     }, [dispatch, selectedVehicle]);
@@ -124,9 +124,9 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (isXS) e.preventDefault();
         if (option && !skip) {
-            if (["year", "model", "make", "serviceInterval"].includes(name)) {
-                dispatch(setMaintenanceDetails({[name]: option ?? null}));
+            if (["year", "model", "make", "mileage"].includes(name)) {
                 dispatch(updateVehicle({[name]: option}))
+                dispatch(setMaintenanceDetails({[name]: option ?? null}));
             }
             setErrors(e => e.filter(err => err !== name));
             if (name === 'make') {
@@ -150,14 +150,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         setErrors(e => e.filter(err => err !== name));
     }
 
-    // console.log(selectedVehicle);
-
     const isValid = () => {
         const errorsArray: string [] = [];
         for (let f of requiredFields) {
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
-                if (f === "serviceInterval") {
+                if (f === "mileage" && !selectedVehicle?.mileage) {
                     errorsArray.push("estimated Mileage");
                 } else {
                     errorsArray.push(f);
@@ -204,7 +202,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         fullWidth
                         disableClearable
                         autoComplete={true}
-                        disabled={select.name !== 'serviceInterval' && !isNewVehicleView}
+                        disabled={select.name !== 'mileage' && !isNewVehicleView}
                         renderInput={autocompleteRender({
                             label: select.label,
                             placeholder: hasError ? `${select.label} required` : `Select ${select.label}`,
@@ -227,7 +225,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         error={hasError}
                         required={requiredFields.includes(select.name)}
                         fullWidth
-                        disabled={select.name !== 'serviceInterval' && !isNewVehicleView}
+                        disabled={select.name !== 'mileage' && !isNewVehicleView}
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
                         placeholder={hasError
                             ? `${select.label} required`

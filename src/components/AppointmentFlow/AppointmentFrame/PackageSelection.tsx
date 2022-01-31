@@ -283,7 +283,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                     serviceCenterId: decodeSCID(id),
                     vehicle: {
                         ...selectedVehicle,
-                        mileage: selectedVehicle?.serviceInterval ?? maintenanceDetails.serviceInterval
+                        mileage: selectedVehicle?.mileage ?? maintenanceDetails.mileage
                     }
                 }
             }
