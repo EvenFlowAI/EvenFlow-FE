@@ -177,7 +177,7 @@ const DayOfWeekOpsCode = () => {
     const deleteOpsCode = (item: TOpsCode) => {
         if (selectedSC) {
             askConfirm({
-                title: `Are you sure want to remove ops code ${item?.opsCode}?`,
+                title: `Are you sure you want to remove ops code ${item?.opsCode}?`,
                 isRemove: true,
                 onConfirm: () => {
                     dispatch(deleteSRPricingSettings(item.id, selectedSC.id))

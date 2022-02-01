@@ -98,7 +98,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
                     confirmContent: "Cancel appointment",
                     title: "Cancel appointment",
                     content: <span>
-                        Are you sure want to cancel appointment on <br />
+                        Are you sure you want to cancel appointment on <br />
                         {getAppointmentDate(editedItem).format("LLL")}?
                     </span>,
                     onConfirm: handleCancel
