@@ -146,8 +146,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         ]
     }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR]);
 
-    console.log(customer);
-
     const handleAddToCalendar = () => {
         const date = moment.utc(appointment?.date);
         const url = getCalendarUrl({
