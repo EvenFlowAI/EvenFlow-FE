@@ -93,8 +93,9 @@ export interface ICreateAppointmentResp extends IAppointmentByQuery {
 
 export interface ICustomerLoadedData {
     emails: string[];
-    firstName: string;
-    lastName: string;
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
     id: string;
     sessionId?: string;
     phoneNumbers: string[];

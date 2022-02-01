@@ -152,11 +152,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     }
                     if (!d.emails.length) {
                         d.emails = [appointmentFrame.customer.email];
-                        const fNameParts = appointmentFrame.customer.fullName.split(" ");
-                        const firstName = fNameParts[0];
-                        const lastName = fNameParts.slice(1).join(' ');
-                        d.firstName = firstName;
-                        d.lastName = lastName;
+                        d.fullName = data.driver?.fullName;
                         d.id = data.customerId;
                         d.phoneNumbers = [appointmentFrame.customer.phoneNumber];
                     }
