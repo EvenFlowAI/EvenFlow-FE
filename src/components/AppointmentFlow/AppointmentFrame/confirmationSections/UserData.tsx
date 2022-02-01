@@ -22,8 +22,6 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const customer = useSelector((state: RootState) => state.appointmentFrame.customer);
 
-    console.log(customerLoadedData);
-
     useEffect(() => {
         if (customerLoadedData) {
             dispatch(setCustomer({
