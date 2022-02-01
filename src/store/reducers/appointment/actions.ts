@@ -213,9 +213,10 @@ export const getBlankCustomer = (sessionId?: string): ICustomerLoadedData => {
         vehicles: [],
         lastName: "",
         firstName: "",
+        fullName: "",
         emails: [],
         sessionId,
-        phoneNumbers: []
+        phoneNumbers: [],
     };
 }
 export const clearCustomerCache = (): void => {
