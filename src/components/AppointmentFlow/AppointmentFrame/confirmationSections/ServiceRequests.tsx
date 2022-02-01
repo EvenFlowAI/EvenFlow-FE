@@ -33,7 +33,11 @@ const ServiceRequests = () => {
                 <ConfirmationTitle>Service Requests</ConfirmationTitle>
             </TitleWrapper>
             <List>
-                {appointment?.serviceRequestPrices.map(item => <li className="service-item">{item.requestName}</li>)}
+                {appointment?.serviceRequestPrices.map(item => (
+                    <li className="service-item">
+                        {item.requestName.includes("Going") ? "My Description of Needs" : item.requestName}
+                    </li>
+                ))}
             </List>
         </div>
         : null;
