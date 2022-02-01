@@ -62,7 +62,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         dispatch(selectService(card));
     }
 
-    console.log(categoriesIds);
     const handleSubmit = () => {
         if (selectedService) {
             const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');

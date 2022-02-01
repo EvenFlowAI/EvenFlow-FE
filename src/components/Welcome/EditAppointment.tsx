@@ -15,7 +15,7 @@ import {Edit} from "@material-ui/icons";
 import {RootState} from "../../store/rootReducer";
 import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
-import {selectService, setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
@@ -61,17 +61,18 @@ export const EditAppointment = () => {
                     ...data.vehicle,
                     appointmentHashKeys: [data.hashKey]
                 }
-                const parts = data.driver.fullName.split(" ");
-                const fN = parts[0];
-                const lN = parts.slice(1).join(" ");
+                // const parts = data.driver.fullName.split(" ");
+                // const fN = parts[0];
+                // const lN = parts.slice(1).join(" ");
                 const customer: ICustomerLoadedData = {
                     ...data.driver,
                     id: data.customerId,
                     vehicles: [vehicle],
                     phoneNumbers: [data.driver.phoneNumber],
                     emails: [data.driver.email],
-                    firstName: fN,
-                    lastName: lN,
+                    fullName: data.driver.fullName,
+                    // firstName: fN,
+                    // lastName: lN,
                 }
                 dispatch(setCustomerLoadedData(customer));
                 dispatch(setVehicle({...vehicle}));
