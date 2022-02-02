@@ -18,7 +18,7 @@ export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: bo
     maxWidth: 250,
     transition: "all .2s",
     background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
-    color: active ? "#FFFFFF" : "#252733",
+    // color: active ? "#FFFFFF" : "#252733",
     border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
     fontSize: 24,
     textAlign: "center",
