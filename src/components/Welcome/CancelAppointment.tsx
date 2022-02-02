@@ -109,8 +109,8 @@ export const CancelAppointment = () => {
                     <p>You've successfully canceled your appointment.</p>
                     <p><small><em>Please do not forget to update the appointment in your calendar.</em></small></p>
                     <p>
-                        <small>If you want to schedule a different one,
-                            please click a button below</small>
+                        <small>If you want to schedule a different appointment,
+                            please click the button below</small>
                     </p> <br/>
                     <Button
                         onClick={handleCreateNew}

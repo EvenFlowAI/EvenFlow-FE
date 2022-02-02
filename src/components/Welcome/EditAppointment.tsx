@@ -118,8 +118,8 @@ export const EditAppointment = () => {
                 return <div>
                     <p>Appointment time is already passed.</p>
                     <p>
-                        <small>If you want to schedule a different one,
-                            please click a button below</small>
+                        <small>If you want to schedule a different appointment,
+                            please click the button below</small>
                     </p> <br/>
                     <Button
                         onClick={handleCreateNew}
@@ -132,8 +132,8 @@ export const EditAppointment = () => {
                 return <div>
                     <p>Appointment is already cancelled.</p>
                     <p>
-                        <small>If you want to schedule a different one,
-                            please click a button below</small>
+                        <small>If you want to schedule a different appointment,
+                            please click the button below</small>
                     </p> <br/>
                     <Button
                         onClick={handleCreateNew}
