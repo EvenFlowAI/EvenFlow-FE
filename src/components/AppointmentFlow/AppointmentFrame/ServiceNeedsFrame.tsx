@@ -70,7 +70,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
-            if (selectedService.type === 0) {
+            if (selectedService.type === 0 && categoriesIds) {
                 const categories = categoriesIds?.includes(selectedService.id) ? categoriesIds : [...categoriesIds, selectedService.id];
                 dispatch(selectCategoriesIds(categories));
             }
