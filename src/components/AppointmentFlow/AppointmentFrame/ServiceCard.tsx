@@ -29,9 +29,9 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         {isLoading
             ? <Loading/>
             : card.iconPath && icon
-                ? <span  dangerouslySetInnerHTML={{__html: icon}} />
-                 : <span><Icon /></span>
+                ? <span style={{ filter: active ? "invert(100%)" : "unset"}} dangerouslySetInnerHTML={{__html: icon}} />
+                 : <span style={{ filter: active ? "invert(100%)" : "unset"}}><Icon /></span>
         }
-        <span>{card.name}</span>
+        <span style={{color: active ? "#FFFFFF" : "#252733"}}>{card.name}</span>
     </CardWrapper>
 }
