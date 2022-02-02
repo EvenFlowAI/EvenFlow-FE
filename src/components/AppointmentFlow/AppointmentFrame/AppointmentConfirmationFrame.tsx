@@ -154,7 +154,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                         d.emails = [appointmentFrame.customer.email];
                         d.fullName = data.driver?.fullName;
                         d.id = data.customerId;
-                        d.phoneNumbers = [appointmentFrame.customer.phoneNumber];
+                        d.phoneNumbers = [data.driver?.phoneNumber];
                     }
                     dispatch(setCustomerLoadedData(d));
                     saveCustomerCache(d);
