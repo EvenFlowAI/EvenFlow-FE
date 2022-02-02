@@ -156,9 +156,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
             details: [
                 `Contact number: ${scProfile?.phoneNumber}\n`,
-                ...data.slice(0, 4).map(r =>
+                ...data.slice(0, 2).map(r =>
                     `${r.label}: ${r.content}`
-                )].join("\n")
+                ),
+                `Service type: ${servicesList.join(', ')}`,
+                `Selected Price: $${appointment?.price?.value}`
+            ].join("\n"),
         });
         window.open(url);
     }
