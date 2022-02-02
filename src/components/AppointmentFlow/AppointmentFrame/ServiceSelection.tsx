@@ -62,7 +62,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 action: 'Selected Sub Service',
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
-            if (subService.type === 0) {
+            if (subService.type === 0 && categoriesIds) {
                 const categories = categoriesIds?.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
                 dispatch(selectCategoriesIds(categories));
             }
