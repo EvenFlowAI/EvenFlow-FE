@@ -30,6 +30,17 @@ export interface IScheduleForm {
     isRecurring?: boolean;
 }
 
+export interface IScheduleForWeek {
+    serviceCenterId: number;
+    employeeId: string;
+    startAt: ParsableDate;
+    finishAt: ParsableDate;
+    status: EWorkingStatus;
+    fromDate: ParsableDate;
+    toDate: ParsableDate;
+    podId?: number;
+}
+
 export interface IScheduleFilters {
     searchTerm?: string;
     role?: string;

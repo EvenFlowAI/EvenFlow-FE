@@ -148,7 +148,7 @@ type ApiRoutes = {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
-    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
+    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery", TApiRoute>,
@@ -263,7 +263,8 @@ export class Api {
             Retrieve: {route: "/employee-schedules/{id}", method: "get"},
             Update: {route: "/employee-schedules", method: "put"},
             Remove: {route: "/employee-schedules/{id}", method: "delete"},
-            GetAll: {route: "/employee-schedules/by-query", method: "post"}
+            GetAll: {route: "/employee-schedules/by-query", method: "post"},
+            SetForWeek: {route: "/employee-schedules/batch-update", method: "put"},
         },
         MaintenancePackages: {
             Create: {route: "/maintenance-packages", method: "post"},
