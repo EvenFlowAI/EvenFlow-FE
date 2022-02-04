@@ -11,7 +11,6 @@ import {
     addServiceRequestsToPricing,
     deleteSRPricingSettings,
     loadSRPricingSettings,
-    updateSRPricingSettings
 } from "../../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -155,29 +154,10 @@ const DayOfWeekOpsCode = () => {
         }
     }
 
-    const handleSaveChanges = (item: TOpsCode) => {
-        if (selectedSC) {
-            const data: Partial<IRequestPricingSettings> = {
-                serviceCenterId: selectedSC.id,
-                values: [
-                    {
-                        demandCategory: EDemandCategory.Low,
-                        value: slidersState[item.id].low,
-                    },
-                    {
-                        demandCategory: EDemandCategory.High,
-                        value: slidersState[item.id].high,
-                    }
-                ]
-            }
-            dispatch(updateSRPricingSettings(item.id, data))
-        }
-    }
-
     const deleteOpsCode = (item: TOpsCode) => {
         if (selectedSC) {
             askConfirm({
-                title: `Are you sure want to remove ops code ${item?.opsCode}?`,
+                title: `Are you sure you want to remove ops code ${item?.opsCode}?`,
                 isRemove: true,
                 onConfirm: () => {
                     dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
@@ -189,14 +169,6 @@ const DayOfWeekOpsCode = () => {
     const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
         setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
     }, [])
-
-    // const handleChangeCommitted = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
-    //     askConfirm({
-    //         title: `Are you sure want to change the value?`,
-    //         onConfirm: () => handleSaveChanges(id, type, val),
-    //         onCancel: () => setInitialSliders(srPricingSettings),
-    //     });
-    // }, [selectedSC, srPricingSettings])
 
     const handleSelectOpsCode = useCallback((el: IAssignedServiceRequest) => {
         setSelectedCodes(prev => {
