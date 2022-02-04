@@ -92,18 +92,18 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
             <DialogTitle onClose={onClose} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                Selected Price:   ${appointment?.price.value ?? ''}
+                Selected Price:   {appointment?.price?.value && appointment.price.value > 0 ? `$${appointment?.price.value}` : ''}
             </DialogTitle>
             <DialogContent>
                 <List>
                     {appointment?.serviceRequestPrices?.map(item => <li className={classes.item}>
                         <span>{item.requestName.includes("Going") ? "My Description of Needs" : item.requestName}</span>
-                        {Object(item).hasOwnProperty('priceValue')
+                        {Object(item).hasOwnProperty('priceValue') && item.priceValue
                             ? <span className={classes.price}>${item.priceValue}</span>
                             : <ErrorOutline/>}
                     </li>)}
                 </List>
-                {appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined') && <Info>
+                {appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0) && <Info>
                   <ErrorOutline/>
                   <span className="text">Service item will be quoted at dealership</span>
                 </Info>}
