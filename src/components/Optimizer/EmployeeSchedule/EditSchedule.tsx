@@ -112,6 +112,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
 
     const handleSave = (isRecurring: boolean) => async () => {
         setSaving(true);
+        console.log(recursiveId, customId, isRecurring);
         try {
             const data: IScheduleForm = {
                 ...payload,

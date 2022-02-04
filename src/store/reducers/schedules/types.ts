@@ -13,6 +13,7 @@ export interface ISchedule {
     status: EWorkingStatus;
     dayOfWeek?: number;
     podId?: number;
+    isLastSet?: boolean;
 }
 export interface IEmployeeSchedule {
     employee: IEmployee,

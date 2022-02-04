@@ -147,7 +147,7 @@ export const ScheduleCalendar = () => {
     }
 
     const getIds = (date: moment.Moment, schedules: ISchedule[]): TIds => {
-        const data = schedules.filter(s => moment.utc(s.date).isSame(date, "day"));
+        const data = schedules.filter(s => s.dayOfWeek === moment(date).day());
         return {
             customId: data.find(s => !s.isRecurring)?.id,
             recursiveId: data.find(s => s.isRecurring)?.id
