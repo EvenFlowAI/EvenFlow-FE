@@ -1,6 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {SquarePaper} from "../../../UI/Paper";
-import {PaperTitle} from "../UI";
 import {Box, Button, Divider, TableBody, TableCell, TableHead, TableRow, withStyles,} from "@material-ui/core";
 import {useConfirm, useModal, useSCs} from "../../../../utils/hooks";
 import {ValueSlider} from "../../AppointmentValue/UI";
@@ -29,7 +27,7 @@ export enum SliderRange {
     Max = 10
 }
 
-const Slider = withStyles({
+export const Slider = withStyles({
     root: {
         margin: "0 25px",
         width: "calc(100% - 50px)"
@@ -181,9 +179,8 @@ const DayOfWeekOpsCode = () => {
         await onEditOpen();
     }
 
-    return <SquarePaper variant="outlined">
+    return <div>
         <Box display="flex" mr={2} alignItems="center">
-            <PaperTitle>Day of Week Ops Code</PaperTitle>
             <div className="grow" />
             <Button color="primary" onClick={onOpen} variant="contained">
                 Add Ops Code
@@ -220,7 +217,6 @@ const DayOfWeekOpsCode = () => {
                                             <Slider
                                                 min={SliderRange.Min}
                                                 max={SliderRange.Max}
-                                                // onChangeCommitted={handleChangeCommitted(item.id, "low")}
                                                 onChange={handleChange(item.id, "low")}
                                                 disabled
                                                 step={0.01}
@@ -238,7 +234,6 @@ const DayOfWeekOpsCode = () => {
                                                 max={SliderRange.Max}
                                                 step={0.01}
                                                 disabled
-                                                // onChangeCommitted={handleChangeCommitted(item.id, "high")}
                                                 onChange={handleChange(item.id, "high")}
                                                 marks={[
                                                     {value: SliderRange.Min, label: SliderRange.Min},
@@ -284,7 +279,7 @@ const DayOfWeekOpsCode = () => {
             isEligible={true}
             handleSave={handleAddOpsCode}
         />
-    </SquarePaper>;
+    </div>;
 };
 
 export default DayOfWeekOpsCode;
