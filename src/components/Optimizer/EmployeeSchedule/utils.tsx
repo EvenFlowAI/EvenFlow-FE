@@ -25,11 +25,7 @@ export const getFirstLastDaysOfWeek = (date: moment.Moment, isSingle: boolean): 
 
 export const getSchedule = (date: moment.Moment, schedules: ISchedule[]): ISchedule|undefined => {
     const data = schedules.filter(s => s.dayOfWeek === moment(date).day());
-    if (data.length > 1) {
-        // return data.find(d => d.isLastSet) || data.find(d => d.isRecurring) || data[0];
-        return data.find(d => d.isLastSet);
-    }
-    return data[0];
+    return data.find(d => d.isLastSet);
 }
 
 export const findScheduleDates = (date: moment.Moment, schedules: ISchedule[]): JSX.Element|string => {
