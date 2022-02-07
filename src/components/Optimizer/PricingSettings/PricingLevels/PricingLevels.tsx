@@ -12,6 +12,5 @@ export const PricingLevels = () => {
         <PricingDisplay/>
         <Box p={2} />
         <PricingLevelsBy/>
-        {/*<PricingLevelsByOpsCode/>*/}
     </div>
 };
