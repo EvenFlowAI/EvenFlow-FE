@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EDemandCategory,
-    IDayOfWeekSetting, IGetMPListData,
+    IDayOfWeekSetting, IGetMPListData, IPackagePricingLevels,
     IPricingDemand,
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
@@ -257,4 +257,22 @@ export const changeRoundPriceSetting = (id: number, isRoundPrice: boolean): AppT
         .catch(err => {
             console.log('change round price setting error', err)
         })
+}
+
+export const getPackagePricingLevels = createAction<IPackagePricingLevels[]>('PricingSettings/GetPackagePricingSettings');
+export const loadPackagePricingLevels = (id: number): AppThunk => dispatch => {
+
+}
+
+export const updateMPPricingLevels = (serviceRequestId: number, data: Partial<IPackagePricingLevels>, callback = () => {}): AppThunk => dispatch => {
+    // Api.call(Api.endpoints.PricingSettings.ChangeServiceRequestPricingLevels, {urlParams: {id: serviceRequestId}, data })
+    //     .then(result => {
+    //         if (data.serviceCenterId && result) {
+    //             dispatch(loadRequestsPricingLevels(data.serviceCenterId));
+    //             callback();
+    //         }
+    //     })
+    //     .catch(err => {
+    //         console.log('update service request pricing level error', err)
+    //     })
 }

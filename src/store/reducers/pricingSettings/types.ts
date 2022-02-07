@@ -90,3 +90,10 @@ export interface IGetMPListData {
     pageIndex: number;
     pageSize: number;
 }
+
+export interface IPackagePricingLevels {
+    serviceCenterId: number;
+    maintenancePackageId: number;
+    maintenancePackageName: string;
+    values: TValuePricingLevel[];
+}

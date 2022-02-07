@@ -19,7 +19,7 @@ import {defaultPageData} from "../defaultInitials";
 type TState = {
     currentPackage: IPackageById | null;
     isPackageLoading: boolean;
-    packages: IPackageByQuery[] | [];
+    packages: IPackageByQuery[];
     makes: IMake[];
     complimentary: IComplimentaryServiceByQuery[];
     isComplimentaryLoading: boolean;
