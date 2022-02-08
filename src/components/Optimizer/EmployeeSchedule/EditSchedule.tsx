@@ -92,6 +92,11 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
         }
     }, [props.open, payload]);
 
+    const handleClose = () => {
+        setCleared(false);
+        props.onClose();
+    }
+
     const handleUpdate = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
         setForm({...form, [name]: moment(date)});
     }
@@ -129,7 +134,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             await dispatch(setEmployeesSchedule(data, isXS));
             setSaving(false);
             showMessage("Saved");
-            props.onClose();
+            handleClose();
         } catch (e) {
             setSaving(false);
             showError(e);
@@ -155,12 +160,12 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             })
             .finally(() => {
                 setSaving(false);
-                props.onClose();
+                handleClose();
             })
     }
 
-    return <BaseModal {...props} width={750}>
-        <DialogTitle onClose={props.onClose}>Edit employee schedule</DialogTitle>
+    return <BaseModal {...props} width={750} onClose={handleClose}>
+        <DialogTitle onClose={handleClose}>Edit employee schedule</DialogTitle>
         <DialogContent>
             <Grid container alignItems="flex-end" spacing={2}>
                 <Grid item xs={12}>
@@ -241,7 +246,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={handleClose}>Close</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave(false)}
