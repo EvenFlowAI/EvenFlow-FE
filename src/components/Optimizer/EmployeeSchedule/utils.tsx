@@ -24,7 +24,7 @@ export const getFirstLastDaysOfWeek = (date: moment.Moment, isSingle: boolean): 
 }
 
 export const getSchedule = (date: moment.Moment, schedules: ISchedule[]): ISchedule|undefined => {
-    const data = schedules.filter(s => s.dayOfWeek === moment(date).day());
+    const data = schedules.filter(s => moment(s.date).isSame(moment(date), 'day'));
     return data.find(d => d.isLastSet);
 }
 
