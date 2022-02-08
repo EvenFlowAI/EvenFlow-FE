@@ -61,6 +61,7 @@ const getRequestDate = (date: moment.Moment | ParsableDate): {fromDate: Parsable
 export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
+    const [isCleared, setCleared] = useState<boolean>(false);
     const pods = useSelector((state: RootState) => state.pods.shortPodsList);
 
     const {isOpen, onClose, onOpen} = useModal();
@@ -102,6 +103,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
         setSaving(true);
         try {
             await API.employeeSchedules.remove((t === "customId" ? customId : recursiveId) || 0);
+            await setCleared(true);
             onClear(t);
         } catch (e) {
             showError(e);
@@ -112,7 +114,6 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
 
     const handleSave = (isRecurring: boolean) => async () => {
         setSaving(true);
-        console.log(recursiveId, customId, isRecurring);
         try {
             const data: IScheduleForm = {
                 ...payload,
@@ -220,7 +221,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                         Employee Profile
                     </Button>
                 </Grid>
-                {payload
+                {payload && !isCleared
                     ? <Grid item xs={12}>
                     {payload?.isRecurring ? <LoadingButton
                         color="secondary"
