@@ -1,6 +1,6 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
-    IDayOfWeekSetting,
+    IDayOfWeekSetting, IPackagePricingSettings,
     IPricingDemand,
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
@@ -8,7 +8,7 @@ import {
     ITimeWindowEl
 } from "./types";
 import {
-    getDayOfWeekPricing, getMPList,
+    getDayOfWeekPricing, getMPList, getMPPricingSettings,
     getPricingCalculations,
     getPricingDemand,
     getPricingLevels, getRequestsPricingLevels, getRoundPriceSetting,
@@ -29,6 +29,7 @@ type TState = {
     srPricingLevels: IRequestPricingSettings[];
     srPricingSettings: IRequestPricingSettings[];
     mpList: IPackageShort[];
+    mpPricingSettings: IPackagePricingSettings[];
     isLoading: boolean;
     isRoundPriceLoading: boolean;
     roundPrice: boolean;
@@ -44,6 +45,7 @@ const initialState: TState = {
     srPricingLevels: [],
     srPricingSettings: [],
     mpList: [],
+    mpPricingSettings: [],
     isLoading: false,
     isRoundPriceLoading: false,
     roundPrice: false,
@@ -83,9 +85,12 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
         return {...state, mpList: payload};
     })
     .addCase(setRoundPriceLoading, (state, { payload }) => {
-        return {...state, isRoundPriceLoading: payload}
+        return {...state, isRoundPriceLoading: payload};
     })
     .addCase(getRoundPriceSetting, (state, { payload }) => {
-        return {...state, roundPrice: payload}
+        return {...state, roundPrice: payload};
+    })
+    .addCase(getMPPricingSettings, (state, { payload }) => {
+        return {...state, mpPricingSettings: payload};
     })
 );

@@ -3,18 +3,13 @@ import {useConfirm, useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
-    EDemandCategory,
-    IRequestPricingSettings,
+    EDemandCategory, IPackagePricingSettings,
 } from "../../../../store/reducers/pricingSettings/types";
-import {
-    deleteSRPricingSettings,
-    loadSRPricingSettings
-} from "../../../../store/reducers/pricingSettings/actions";
-import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {loadMPPricingSettings} from "../../../../store/reducers/pricingSettings/actions";
+import {Box, Button, Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {Loading} from "../../../UI/Loading";
 import {DenseTable} from "../../AppointmentAllocation/UI";
-import EditDayOfWeekOpsCode from "../../../Modals/EditDayOFWeekOpsCode/EditDayOFWeekOpsCode";
-import {Slider, SliderRange, TOpsCode} from "./DayOfWeekOpsCode";
+import {Slider, SliderRange} from "./DayOfWeekOpsCode";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
@@ -33,24 +28,32 @@ type SliderObject = {
     [key: string]: SliderValues
 }
 
+type TMPackage = {
+    low: number;
+    high: number;
+    id: number;
+    name: string;
+}
+
 const DayOfWeekPackage = () => {
-    const { srPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);
-    const [opsCodes, setOpsCodes] = useState<TOpsCode[]>([]);
+    const { mpPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);
+    const [mPackages, setMPackages] = useState<TMPackage[]>([]);
     const [slidersState, setSlidersState] = useState<SliderObject>({});
-    const [editingItem, setEditingItem] = useState<TOpsCode | null>(null);
+    const [editingItem, setEditingItem] = useState<TMPackage | null>(null);
     const { onOpen: onEditOpen, onClose: onEditClose, isOpen: isEditOpen } = useModal();
+    const { onOpen, onClose, isOpen } = useModal();
     const {askConfirm} = useConfirm();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
 
-    const setInitialSliders = (srPricingSettings: IRequestPricingSettings[]) => {
+    const setInitialSliders = (mpPricingSettings: IPackagePricingSettings[]) => {
         setSlidersState(() => {
             const data: SliderObject = {}
-            srPricingSettings.map(item => {
+            mpPricingSettings.map(item => {
                 const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
                 const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
-                data[item.serviceRequestId] = {
+                data[item.maintenancePackageId] = {
                     low: lowValue ? lowValue.value : 0,
                     high: highValue ? highValue.value : 0,
                 }
@@ -61,13 +64,13 @@ const DayOfWeekPackage = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadSRPricingSettings(selectedSC.id))
+            dispatch(loadMPPricingSettings(selectedSC.id))
         }
     }, [selectedSC])
 
     useEffect(() => {
-        if (srPricingSettings) {
-            setOpsCodes(() => srPricingSettings.map(item => {
+        if (mpPricingSettings) {
+            setMPackages(() => mpPricingSettings.map(item => {
                     let low = 0;
                     let high = 0;
                     const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
@@ -75,25 +78,26 @@ const DayOfWeekPackage = () => {
                     if (lowValue) low = lowValue.value;
                     if (highValue) high = highValue.value;
                     return  {
-                        opsCode: item.serviceRequestCode,
-                        id: item.serviceRequestId,
+                        name: item.maintenancePackageName,
+                        id: item.maintenancePackageId,
                         low,
                         high,
                     }
                 })
                     .sort((a, b) => a.id - b.id)
             )
-            setInitialSliders(srPricingSettings);
+            setInitialSliders(mpPricingSettings);
         }
-    }, [srPricingSettings])
+    }, [mpPricingSettings])
 
-    const deleteOpsCode = (item: TOpsCode) => {
+    const deleteOpsCode = (item: TMPackage) => {
         if (selectedSC) {
             askConfirm({
-                title: `Are you sure you want to remove maintenance package ${item?.opsCode}?`,
+                title: `Are you sure you want to remove maintenance package ${item.name} with ID ${item.id}?`,
                 isRemove: true,
                 onConfirm: () => {
-                    dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
+                    // todo request
+                    // dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
                 }
             });
         }
@@ -103,31 +107,31 @@ const DayOfWeekPackage = () => {
         setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
     }, [])
 
-    const onEditClick = async (item: TOpsCode) => {
+    const onEditClick = async (item: TMPackage) => {
         await setEditingItem(item);
         await onEditOpen();
     }
 
     return <div>
-        {/*<Box display="flex" mr={2} alignItems="center">*/}
-        {/*    <div className="grow" />*/}
-        {/*    <Button color="primary" onClick={onOpen} variant="contained">*/}
-        {/*        Add Ops Code*/}
-        {/*    </Button>*/}
-        {/*</Box>*/}
-        {/*<Divider />*/}
+        <Box display="flex" mr={2} alignItems="center">
+            <div className="grow" />
+            <Button color="primary" onClick={onOpen} variant="contained">
+                Add Maintenance Package
+            </Button>
+        </Box>
+        <Divider />
         <Box display="flex" m={2} alignItems="center">
             {isLoading
                 ? <Loading/>
-                : srPricingSettings.length
+                : mpPricingSettings.length
                     ? <DenseTable>
                         <TableHead>
                             <TableRow>
                                 <TableCell className={classes.headerCell} width="21%">
-                                    Maintenance Package Name
+                                    Name
                                 </TableCell>
                                 <TableCell className={classes.headerCell} width="21%">
-                                    Maintenance Package ID
+                                    ID
                                 </TableCell>
                                 <TableCell className={classes.headerCell} width="21%">
                                     Low
@@ -140,10 +144,13 @@ const DayOfWeekPackage = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {opsCodes.map(item => {
-                                return <TableRow key={item.opsCode}>
-                                    <TableCell key={item.opsCode}>
-                                        {item.opsCode}
+                            {mPackages.map(item => {
+                                return <TableRow key={item.id}>
+                                    <TableCell key={item.name}>
+                                        {item.name}
+                                    </TableCell>
+                                    <TableCell key={item.id}>
+                                        {item.id}
                                     </TableCell>
                                     <TableCell key="low">
                                         <Slider
@@ -200,7 +207,7 @@ const DayOfWeekPackage = () => {
                     : <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>No data</div>
             }
         </Box>
-        <EditDayOfWeekOpsCode open={isEditOpen} editingItem={editingItem} onClose={onEditClose}/>
+        {/*<EditDayOfWeekOpsCode open={isEditOpen} editingItem={editingItem} onClose={onEditClose}/>*/}
     </div>
 };
 
