@@ -160,7 +160,7 @@ type ApiRoutes = {
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
-        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests", TApiRoute>,
+        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -319,6 +319,8 @@ export class Api {
             UpdateServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "put"},
             DeleteServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "delete"},
             AddServiceRequests: {route: "/pricing-settings/service-requests", method: "post"},
+            GetPackagePricingSettings: {route: "/pricing-settings/maintenance-packages/pricing-levels", method: "get"},
+            ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-packages/pricing-levels/{id}", method: "put"},
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},
