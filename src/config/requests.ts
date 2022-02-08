@@ -148,7 +148,7 @@ type ApiRoutes = {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
-    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
+    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery", TApiRoute>,
@@ -160,7 +160,7 @@ type ApiRoutes = {
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
-        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests", TApiRoute>,
+        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -263,7 +263,8 @@ export class Api {
             Retrieve: {route: "/employee-schedules/{id}", method: "get"},
             Update: {route: "/employee-schedules", method: "put"},
             Remove: {route: "/employee-schedules/{id}", method: "delete"},
-            GetAll: {route: "/employee-schedules/by-query", method: "post"}
+            GetAll: {route: "/employee-schedules/by-query", method: "post"},
+            SetForWeek: {route: "/employee-schedules/batch-update", method: "put"},
         },
         MaintenancePackages: {
             Create: {route: "/maintenance-packages", method: "post"},
@@ -318,6 +319,8 @@ export class Api {
             UpdateServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "put"},
             DeleteServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "delete"},
             AddServiceRequests: {route: "/pricing-settings/service-requests", method: "post"},
+            GetPackagePricingSettings: {route: "/pricing-settings/maintenance-packages/pricing-levels", method: "get"},
+            ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-packages/pricing-levels/{id}", method: "put"},
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},

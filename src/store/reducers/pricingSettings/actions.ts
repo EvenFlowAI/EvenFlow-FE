@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EDemandCategory,
-    IDayOfWeekSetting, IGetMPListData,
+    IDayOfWeekSetting, IGetMPListData, IPackagePricingLevels,
     IPricingDemand,
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
@@ -256,5 +256,30 @@ export const changeRoundPriceSetting = (id: number, isRoundPrice: boolean): AppT
         })
         .catch(err => {
             console.log('change round price setting error', err)
+        })
+}
+
+export const getPackagePricingLevels = createAction<IPackagePricingLevels[]>('PricingSettings/GetPackagePricingSettings');
+export const loadPackagePricingLevels = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.GetPackagePricingSettings, {params: {serviceCenterId}})
+        .then(result => {
+            if (result) dispatch(getPackagePricingLevels(result.data));
+            }
+        )
+        .catch(err => {
+            console.log('get package pricing setting error', err)
+        })
+}
+
+export const updateMPPricingLevels = (serviceRequestId: number, data: Partial<IPackagePricingLevels>, callback = () => {}): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.ChangePackagePricingSettings, {urlParams: {id: serviceRequestId}, data })
+        .then(result => {
+            if (data.serviceCenterId && result) {
+                dispatch(loadPackagePricingLevels(data.serviceCenterId));
+                callback();
+            }
+        })
+        .catch(err => {
+            console.log('update package pricing level error', err)
         })
 }

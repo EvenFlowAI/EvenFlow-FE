@@ -2,7 +2,7 @@ import React from 'react';
 import {DemandWindows} from "./DemandsWindows";
 import PricingDisplay from "./PricingDisplay";
 import {Box} from "@material-ui/core";
-import PricingLevelsByOpsCode from "./PricingLevelsByOpsCode";
+import PricingLevelsBy from "./PricingLevelsBy";
 
 
 export const PricingLevels = () => {
@@ -11,6 +11,6 @@ export const PricingLevels = () => {
         <Box p={2} />
         <PricingDisplay/>
         <Box p={2} />
-        <PricingLevelsByOpsCode/>
+        <PricingLevelsBy/>
     </div>
 };

@@ -75,7 +75,7 @@ const PricingDisplay: React.FC = () => {
         if (selectedSC) {
             e.persist();
             askConfirm({
-                title: `Are you sure want to change the option?`,
+                title: `Are you sure you want to change the option?`,
                 onConfirm: () => {
                     setValue(e.target.value);
                     dispatch(changeRoundPriceSetting(selectedSC.id, e.target.value === 'round'))

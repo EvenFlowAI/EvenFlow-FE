@@ -20,7 +20,13 @@ export const getMaintenanceDescription = (
     }
     if (selectedCategories && allCategories) {
         const categories = allCategories.filter(category => selectedCategories.includes(category.id))
-        categories.forEach(item => services.push(item.name))
+        categories.forEach(item => {
+            if (item.name.includes("Going")) {
+                services.push("My Description of Needs")
+            } else {
+                services.push(item.name)
+            }
+        })
     }
    return services;
 }

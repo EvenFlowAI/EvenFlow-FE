@@ -146,6 +146,10 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         ]
     }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR]);
 
+    const getPrice = (): string => {
+        return appointment?.price?.value ? `Selected Price: $${appointment?.price?.value}` : 'Service price will be quoted at dealership'
+    }
+
     const handleAddToCalendar = () => {
         const date = moment.utc(appointment?.date);
         const url = getCalendarUrl({
@@ -159,8 +163,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 ...data.slice(0, 2).map(r =>
                     `${r.label}: ${r.content}`
                 ),
-                `Service type: ${servicesList.join(', ')}`,
-                `Selected Price: $${appointment?.price?.value}`
+                `Service type: ${servicesList.map(item => item.includes('Going') ? 'My Description Of Need' : item).join(', ')}`,
+                getPrice(),
             ].join("\n"),
         });
         window.open(url);

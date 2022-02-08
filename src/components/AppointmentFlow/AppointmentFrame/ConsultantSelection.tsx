@@ -27,8 +27,10 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
     gridGap: "20px",
     width: "100%",
     [theme.breakpoints.down('sm')]: {
-        flexDirection: "column",
-        alignItems: "stretch"
+        gridTemplateColumns: "1fr 1fr",
+    },
+    [theme.breakpoints.down('xs')]: {
+        gridTemplateColumns: "1fr",
     }
 }));
 
