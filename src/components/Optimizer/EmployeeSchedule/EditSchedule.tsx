@@ -61,6 +61,7 @@ const getRequestDate = (date: moment.Moment | ParsableDate): {fromDate: Parsable
 export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
+    const [isCleared, setCleared] = useState<boolean>(false);
     const pods = useSelector((state: RootState) => state.pods.shortPodsList);
 
     const {isOpen, onClose, onOpen} = useModal();
@@ -91,6 +92,11 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
         }
     }, [props.open, payload]);
 
+    const handleClose = () => {
+        setCleared(false);
+        props.onClose();
+    }
+
     const handleUpdate = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
         setForm({...form, [name]: moment(date)});
     }
@@ -102,6 +108,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
         setSaving(true);
         try {
             await API.employeeSchedules.remove((t === "customId" ? customId : recursiveId) || 0);
+            await setCleared(true);
             onClear(t);
         } catch (e) {
             showError(e);
@@ -112,7 +119,6 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
 
     const handleSave = (isRecurring: boolean) => async () => {
         setSaving(true);
-        console.log(recursiveId, customId, isRecurring);
         try {
             const data: IScheduleForm = {
                 ...payload,
@@ -128,7 +134,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             await dispatch(setEmployeesSchedule(data, isXS));
             setSaving(false);
             showMessage("Saved");
-            props.onClose();
+            handleClose();
         } catch (e) {
             setSaving(false);
             showError(e);
@@ -154,12 +160,12 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             })
             .finally(() => {
                 setSaving(false);
-                props.onClose();
+                handleClose();
             })
     }
 
-    return <BaseModal {...props} width={750}>
-        <DialogTitle onClose={props.onClose}>Edit employee schedule</DialogTitle>
+    return <BaseModal {...props} width={750} onClose={handleClose}>
+        <DialogTitle onClose={handleClose}>Edit employee schedule</DialogTitle>
         <DialogContent>
             <Grid container alignItems="flex-end" spacing={2}>
                 <Grid item xs={12}>
@@ -220,7 +226,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                         Employee Profile
                     </Button>
                 </Grid>
-                {payload
+                {payload && !isCleared
                     ? <Grid item xs={12}>
                     {payload?.isRecurring ? <LoadingButton
                         color="secondary"
@@ -240,7 +246,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={handleClose}>Close</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave(false)}

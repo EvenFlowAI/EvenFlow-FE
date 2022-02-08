@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {PaperTitle} from "../UI";
-import {Button, Divider} from "@material-ui/core";
-import {SquarePaper} from "../../../UI/Paper";
+import {Button} from "@material-ui/core";
 import {TableRowDataType} from "../../../UI/types";
 import {Table} from "../../../UI/Table";
 import {makeStyles} from "@material-ui/core/styles";
@@ -107,24 +105,20 @@ const PricingLevelsByOpsCode = () => {
         </Button>
     }
 
-    return <SquarePaper variant="outlined">
-        <PaperTitle>Pricing Levels By Ops Code</PaperTitle>
-        <Divider />
-        <div className={classes.tableWrapper}>
-            <Table
-                data={data}
-                index="id"
-                rowData={RowData}
-                actions={tableActions}
-                isLoading={isLoading}
-                smallHeaderFont
-                hidePagination
-                borderHeader
-                compact
-            />
-        </div>
+    return <div className={classes.tableWrapper}>
+        <Table
+            data={data}
+            index="id"
+            rowData={RowData}
+            actions={tableActions}
+            isLoading={isLoading}
+            smallHeaderFont
+            hidePagination
+            borderHeader
+            compact
+        />
         <EditPricingLevel open={isOpen} prisingLevel={editElement} onClose={onClose}/>
-    </SquarePaper>
+    </div>
 };
 
 export default PricingLevelsByOpsCode;

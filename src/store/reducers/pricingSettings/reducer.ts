@@ -1,6 +1,8 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
-    IDayOfWeekSetting, IPackagePricingSettings,
+    IDayOfWeekSetting,
+    IPackagePricingLevels,
+    IPackagePricingSettings,
     IPricingDemand,
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
@@ -8,7 +10,10 @@ import {
     ITimeWindowEl
 } from "./types";
 import {
-    getDayOfWeekPricing, getMPList, getMPPricingSettings,
+    getMPPricingSettings,
+    getDayOfWeekPricing,
+    getMPList,
+    getPackagePricingLevels,
     getPricingCalculations,
     getPricingDemand,
     getPricingLevels, getRequestsPricingLevels, getRoundPriceSetting,
@@ -33,6 +38,7 @@ type TState = {
     isLoading: boolean;
     isRoundPriceLoading: boolean;
     roundPrice: boolean;
+    mpPricingLevels: IPackagePricingLevels[];
 }
 const initialState: TState = {
     pricingLevels: [],
@@ -49,6 +55,7 @@ const initialState: TState = {
     isLoading: false,
     isRoundPriceLoading: false,
     roundPrice: false,
+    mpPricingLevels: [],
 };
 export const pricingSettingsReducer = createReducer<TState>(initialState, builder => builder
     .addCase(getPricingLevels, (state, {payload}) => {
@@ -92,5 +99,8 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
     })
     .addCase(getMPPricingSettings, (state, { payload }) => {
         return {...state, mpPricingSettings: payload};
+    })
+    .addCase(getPackagePricingLevels, (state, { payload }) => {
+        return {...state, mpPricingLevels: payload}
     })
 );
