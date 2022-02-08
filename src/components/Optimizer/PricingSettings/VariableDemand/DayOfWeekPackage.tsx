@@ -5,12 +5,13 @@ import {RootState} from "../../../../store/rootReducer";
 import {
     EDemandCategory, IPackagePricingSettings,
 } from "../../../../store/reducers/pricingSettings/types";
-import {loadMPPricingSettings} from "../../../../store/reducers/pricingSettings/actions";
+import {deletePackagePricingSettings, loadMPPricingSettings} from "../../../../store/reducers/pricingSettings/actions";
 import {Box, Button, Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {Loading} from "../../../UI/Loading";
 import {DenseTable} from "../../AppointmentAllocation/UI";
 import {Slider, SliderRange} from "./DayOfWeekOpsCode";
 import {makeStyles} from "@material-ui/core/styles";
+import EditDayOFWeekPackage from "../../../Modals/EditDayOFWeekPackage/EditDayOFWeekPackage";
 
 const useStyles = makeStyles(() => ({
     headerCell: {
@@ -28,7 +29,7 @@ type SliderObject = {
     [key: string]: SliderValues
 }
 
-type TMPackage = {
+export type TMPackage = {
     low: number;
     high: number;
     id: number;
@@ -96,8 +97,7 @@ const DayOfWeekPackage = () => {
                 title: `Are you sure you want to remove maintenance package ${item.name} with ID ${item.id}?`,
                 isRemove: true,
                 onConfirm: () => {
-                    // todo request
-                    // dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
+                    dispatch(deletePackagePricingSettings(item.id, selectedSC.id))
                 }
             });
         }
@@ -207,7 +207,7 @@ const DayOfWeekPackage = () => {
                     : <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>No data</div>
             }
         </Box>
-        {/*<EditDayOfWeekOpsCode open={isEditOpen} editingItem={editingItem} onClose={onEditClose}/>*/}
+        <EditDayOFWeekPackage open={isEditOpen} editingItem={editingItem} onClose={onEditClose}/>
     </div>
 };
 

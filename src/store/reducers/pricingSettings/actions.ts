@@ -289,7 +289,7 @@ export const updateMPPricingLevels = (serviceRequestId: number, data: Partial<IP
 
 export const getMPPricingSettings = createAction<IPackagePricingSettings[]>("PricingSettings/GetMPPricingSettings");
 export const loadMPPricingSettings = (serviceCenterId: number): AppThunk => dispatch => {
-    dispatch(setLoading(true));
+    // dispatch(setLoading(true));
     // Api.call(Api.endpoints.PricingSettings.GetServiceRequestsPricingSettings, {params: {serviceCenterId}})
     //     .then(result => {
     //         if (result?.data) {
@@ -303,3 +303,24 @@ export const loadMPPricingSettings = (serviceCenterId: number): AppThunk => disp
     //         dispatch(setLoading(false));
     //     })
 }
+
+export const updatePackagePricingSettings = (maintenancePackageId: number, data: Partial<IPackagePricingSettings>): AppThunk => dispatch => {
+    // Api.call(Api.endpoints.PricingSettings.UpdateServiceRequestPricingSettings, {urlParams: {id: maintenancePackageId}, data})
+    //     .then(result => {
+    //         if (result && data.serviceCenterId) dispatch(loadMPPricingSettings(data.serviceCenterId))
+    //     })
+    //     .catch(err => {
+    //         console.log('update package pricing settings error', err)
+    //     })
+}
+
+export const deletePackagePricingSettings = (id: number, serviceCenterId: number): AppThunk => dispatch => {
+    // Api.call(Api.endpoints.PricingSettings.DeleteServiceRequestPricingSettings, {urlParams: {id}})
+    //     .then(result => {
+    //         if (result) dispatch(loadMPPricingSettings(serviceCenterId))
+    //     })
+    //     .catch(err => {
+    //         console.log('delete service request pricing settings error', err)
+    //     })
+}
+
