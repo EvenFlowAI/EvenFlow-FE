@@ -1,12 +1,15 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EDemandCategory,
-    IDayOfWeekSetting, IGetMPListData, IPackagePricingLevels,
+    IDayOfWeekSetting,
+    IGetMPListData,
+    IPackagePricingSettings,
+    IPackagePricingLevels,
     IPricingDemand,
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
     ITimeOfYearSetting,
-    ITimeWindowEl, TNewRequestsToPricing
+    ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing
 } from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
@@ -261,7 +264,7 @@ export const changeRoundPriceSetting = (id: number, isRoundPrice: boolean): AppT
 
 export const getPackagePricingLevels = createAction<IPackagePricingLevels[]>('PricingSettings/GetPackagePricingSettings');
 export const loadPackagePricingLevels = (serviceCenterId: number): AppThunk => dispatch => {
-    Api.call(Api.endpoints.PricingSettings.GetPackagePricingSettings, {params: {serviceCenterId}})
+    Api.call(Api.endpoints.PricingSettings.GetPackagePricingLevels, {params: {serviceCenterId}})
         .then(result => {
             if (result) dispatch(getPackagePricingLevels(result.data));
             }
@@ -272,7 +275,7 @@ export const loadPackagePricingLevels = (serviceCenterId: number): AppThunk => d
 }
 
 export const updateMPPricingLevels = (serviceRequestId: number, data: Partial<IPackagePricingLevels>, callback = () => {}): AppThunk => dispatch => {
-    Api.call(Api.endpoints.PricingSettings.ChangePackagePricingSettings, {urlParams: {id: serviceRequestId}, data })
+    Api.call(Api.endpoints.PricingSettings.ChangePackagePricingLevels, {urlParams: {id: serviceRequestId}, data })
         .then(result => {
             if (data.serviceCenterId && result) {
                 dispatch(loadPackagePricingLevels(data.serviceCenterId));
@@ -281,5 +284,54 @@ export const updateMPPricingLevels = (serviceRequestId: number, data: Partial<IP
         })
         .catch(err => {
             console.log('update package pricing level error', err)
+        })
+}
+
+export const getMPPricingSettings = createAction<IPackagePricingSettings[]>("PricingSettings/GetMPPricingSettings");
+export const loadMPPricingSettings = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.PricingSettings.GetPackagePricingSettings, {params: {serviceCenterId}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getMPPricingSettings(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('load service requests pricing settings error', err)
+        })
+        .finally(() => {
+            dispatch(setLoading(false));
+        })
+}
+
+export const updatePackagePricingSettings = (maintenancePackageId: number, data: Partial<IPackagePricingSettings>): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.ChangePackagePricingSettings, {urlParams: {id: maintenancePackageId}, data})
+        .then(result => {
+            if (result && data.serviceCenterId) dispatch(loadMPPricingSettings(data.serviceCenterId))
+        })
+        .catch(err => {
+            console.log('update package pricing settings error', err)
+        })
+}
+
+export const deletePackagePricingSettings = (id: number, serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.RemovePackagePricingSettings, {urlParams: {id}})
+        .then(result => {
+            if (result) dispatch(loadMPPricingSettings(serviceCenterId))
+        })
+        .catch(err => {
+            console.log('delete service request pricing settings error', err)
+        })
+}
+
+export const addPackageToPricing = (data: TNewPackagesToPricing): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.AddPackagePricingSettings, {data})
+        .then(result => {
+            if (result) {
+                dispatch(loadMPPricingSettings(data.serviceCenterId))
+            }
+        })
+        .catch(err => {
+            console.log('add packages to pricing settings error', err)
         })
 }

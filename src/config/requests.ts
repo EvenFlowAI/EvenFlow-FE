@@ -160,7 +160,8 @@ type ApiRoutes = {
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
-        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings", TApiRoute>,
+        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings"
+        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings" | "RemovePackagePricingSettings", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -319,8 +320,12 @@ export class Api {
             UpdateServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "put"},
             DeleteServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "delete"},
             AddServiceRequests: {route: "/pricing-settings/service-requests", method: "post"},
-            GetPackagePricingSettings: {route: "/pricing-settings/maintenance-packages/pricing-levels", method: "get"},
-            ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-packages/pricing-levels/{id}", method: "put"},
+            GetPackagePricingLevels: {route: "/pricing-settings/maintenance-packages/pricing-levels", method: "get"},
+            ChangePackagePricingLevels: {route: "/pricing-settings/maintenance-packages/pricing-levels/{id}", method: "put"},
+            ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-packages/{id}", method: "put"},
+            GetPackagePricingSettings: {route: "/pricing-settings/maintenance-packages", method: "get"},
+            AddPackagePricingSettings: {route: "/pricing-settings/maintenance-packages", method: "post"},
+            RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-packages/{id}", method: "delete"}
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},
