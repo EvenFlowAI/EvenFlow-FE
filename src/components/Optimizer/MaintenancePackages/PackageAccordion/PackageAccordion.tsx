@@ -344,7 +344,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     >
         <AccordionSummary id={title}>
             <div className={classes.titleWrapper}>
-                <Typography className={classes.title}>{title}</Typography>
+                <div>
+                    <Typography className={classes.title}>{title}</Typography>
+                    <div style={{ fontSize: 16 }}>Package ID: {id}</div>
+                </div>
                 <div className={classes.iconsWrapper}>
                     <IconButton
                         className={classes.button}
