@@ -9,7 +9,7 @@ import {
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
     ITimeOfYearSetting,
-    ITimeWindowEl, TNewRequestsToPricing
+    ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing
 } from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
@@ -324,3 +324,14 @@ export const deletePackagePricingSettings = (id: number, serviceCenterId: number
     //     })
 }
 
+export const addPackageToPricing = (data: TNewPackagesToPricing): AppThunk => dispatch => {
+    // Api.call(Api.endpoints.PricingSettings.AddServiceRequests, {data})
+    //     .then(result => {
+    //         if (result) {
+    //             dispatch(loadMPPricingSettings(data.serviceCenterId))
+    //         }
+    //     })
+    //     .catch(err => {
+    //         console.log('add packages to pricing settings error', err)
+    //     })
+}

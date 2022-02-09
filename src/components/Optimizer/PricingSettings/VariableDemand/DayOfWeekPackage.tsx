@@ -2,16 +2,19 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useConfirm, useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {EDemandCategory, IPackagePricingSettings} from "../../../../store/reducers/pricingSettings/types";
 import {
-    EDemandCategory, IPackagePricingSettings,
-} from "../../../../store/reducers/pricingSettings/types";
-import {deletePackagePricingSettings, loadMPPricingSettings} from "../../../../store/reducers/pricingSettings/actions";
-import {Box, Button, Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+    deletePackagePricingSettings, loadMPList,
+    loadMPPricingSettings
+} from "../../../../store/reducers/pricingSettings/actions";
+import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {Loading} from "../../../UI/Loading";
 import {DenseTable} from "../../AppointmentAllocation/UI";
 import {Slider, SliderRange} from "./DayOfWeekOpsCode";
 import {makeStyles} from "@material-ui/core/styles";
 import EditDayOFWeekPackage from "../../../Modals/EditDayOFWeekPackage/EditDayOFWeekPackage";
+import {IPackageShort} from "../../../../store/reducers/packages/types";
+import AddPackageToPricingSettings from "../../../Modals/AddPackageToPricingSettings/AddPackageToPricingSettings";
 
 const useStyles = makeStyles(() => ({
     headerCell: {
@@ -66,6 +69,7 @@ const DayOfWeekPackage = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadMPPricingSettings(selectedSC.id))
+            dispatch(loadMPList({serviceCenterId: selectedSC.id, pageIndex: 0, pageSize: 0}));
         }
     }, [selectedSC])
 
@@ -113,13 +117,12 @@ const DayOfWeekPackage = () => {
     }
 
     return <div>
-        <Box display="flex" mr={2} alignItems="center">
+        <Box display="flex" mr={2} mb={2} alignItems="center">
             <div className="grow" />
             <Button color="primary" onClick={onOpen} variant="contained">
                 Add Maintenance Package
             </Button>
         </Box>
-        <Divider />
         <Box display="flex" m={2} alignItems="center">
             {isLoading
                 ? <Loading/>
@@ -208,6 +211,7 @@ const DayOfWeekPackage = () => {
             }
         </Box>
         <EditDayOFWeekPackage open={isEditOpen} editingItem={editingItem} onClose={onEditClose}/>
+        <AddPackageToPricingSettings open={isOpen} onClose={onClose}/>
     </div>
 };
 

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Button, Divider, TableBody, TableCell, TableHead, TableRow, withStyles,} from "@material-ui/core";
+import {Box, Button, TableBody, TableCell, TableHead, TableRow, withStyles,} from "@material-ui/core";
 import {useConfirm, useModal, useSCs} from "../../../../utils/hooks";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
@@ -180,13 +180,12 @@ const DayOfWeekOpsCode = () => {
     }
 
     return <div>
-        <Box display="flex" mr={2} alignItems="center">
+        <Box display="flex" mr={2}  mb={2} alignItems="center">
             <div className="grow" />
             <Button color="primary" onClick={onOpen} variant="contained">
                 Add Ops Code
             </Button>
         </Box>
-        <Divider />
         <Box display="flex" m={2} alignItems="center">
             {isLoading
                 ? <Loading/>
