@@ -21,7 +21,7 @@ import {
     getTimeWindows, setLoading, setRoundPriceLoading
 } from "./actions";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
-import {IPackageShort} from "../packages/types";
+import {IPackageOptionShort, IPackageShort} from "../packages/types";
 
 type TState = {
     pricingLevels: IPricingLevel[];
@@ -35,6 +35,7 @@ type TState = {
     srPricingSettings: IRequestPricingSettings[];
     mpList: IPackageShort[];
     mpPricingSettings: IPackagePricingSettings[];
+    mpOptionsList: IPackageOptionShort[];
     isLoading: boolean;
     isRoundPriceLoading: boolean;
     roundPrice: boolean;
@@ -52,6 +53,7 @@ const initialState: TState = {
     srPricingSettings: [],
     mpList: [],
     mpPricingSettings: [],
+    mpOptionsList: [],
     isLoading: false,
     isRoundPriceLoading: false,
     roundPrice: false,

@@ -97,15 +97,21 @@ const EditPackagePricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLev
         <DialogContent>
             <TextField
                 fullWidth
-                label='Maintenance Package Name'
+                label='Package Name'
                 disabled
                 value={prisingLevel?.maintenancePackageName || ''}/>
             <Box p={1}/>
             <TextField
                 fullWidth
-                label='Maintenance Package ID'
+                label='Package ID'
                 disabled
                 value={prisingLevel?.maintenancePackageId || ''}/>
+            <Box p={1}/>
+            <TextField
+                fullWidth
+                label='Package Level'
+                disabled
+                value={prisingLevel?.maintenancePackageOptionName || ''}/>
             <Box p={1}/>
             <TextField
                 fullWidth

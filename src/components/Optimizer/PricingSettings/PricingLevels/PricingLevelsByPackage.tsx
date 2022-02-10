@@ -19,12 +19,15 @@ export type TPackagePricingLevel = {
     maintenancePackageId: number;
     discount: string | null;
     premium: string | null;
+    maintenancePackageOptionName: string;
+    maintenancePackageOptionId: number;
 };
 
 const RowData: TableRowDataType<TPackagePricingLevel>[] = [
     {val: (el: TPackagePricingLevel, index: number) => `${index + 1}`, header: "#"},
-    {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "MAINTENANCE PACKAGE NAME", width: '45%'},
+    {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "MAINTENANCE PACKAGE NAME", width: '35%'},
     {val: (el: TPackagePricingLevel) => `${el.maintenancePackageId}`, header: "MAINTENANCE PACKAGE ID", align: "center"},
+    {val: (el: TPackagePricingLevel) => el.maintenancePackageOptionName, header: "MAINTENANCE PACKAGE LEVEL", width: '15%'},
     {val: (el: TPackagePricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "DISCOUNT"},
     {val: (el: TPackagePricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "PREMIUM"},
 ];
@@ -41,7 +44,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const PricingLevelsByPackage = () => {
-    const { mpPricingLevels, isLoading, mpList } = useSelector((state: RootState) => state.pricingSettings);
+    const { mpPricingLevels, isLoading, mpList, mpOptionsList } = useSelector((state: RootState) => state.pricingSettings);
     const [editElement, setEditElement] = useState<TPackagePricingLevel | null>(null);
     const [data, setData] = useState<TPackagePricingLevel[]>([]);
 
@@ -70,8 +73,8 @@ const PricingLevelsByPackage = () => {
     useEffect(() => {
         if (mpList && mpPricingLevels) {
             setData(() => {
-                return mpList.map(item => {
-                    const levelsItem = mpPricingLevels.find(el => el.maintenancePackageId === item.id);
+                return mpOptionsList.map(item => {
+                    const levelsItem = mpPricingLevels.find(el => el.maintenancePackageOptionId === item.id);
                     let discount = null;
                     let premium = null;
                     if (levelsItem?.values) {
@@ -82,8 +85,10 @@ const PricingLevelsByPackage = () => {
                     }
                     return {
                         id: item.id,
-                        maintenancePackageId: item.id,
-                        maintenancePackageName: item.name,
+                        maintenancePackageId: item.maintenancePackageId,
+                        maintenancePackageName: item.maintenancePackageName,
+                        maintenancePackageOptionName: item.name,
+                        maintenancePackageOptionId: item.id,
                         discount,
                         premium,
                     }

@@ -53,3 +53,14 @@ export interface IPackageShort {
     valueMarketPrice: number;
     preferredMarketPrice: number;
 }
+
+export interface IPackageOptionShort {
+    id: number;
+    name: string;
+    maintenancePackageId: number;
+    maintenancePackageName: string;
+    isApplyPricingOptimization: boolean;
+    baseMarketPrice: number;
+    valueMarketPrice: number;
+    preferredMarketPrice: number;
+}
