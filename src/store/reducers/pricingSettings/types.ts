@@ -101,6 +101,8 @@ export interface IPackagePricingLevels {
     maintenancePackageId: number;
     maintenancePackageName: string;
     values: TValuePricingLevel[];
+    maintenancePackageOptionId: number;
+    maintenancePackageOptionName: string;
 }
 
 export interface IPackagePricingSettings {

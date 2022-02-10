@@ -15,7 +15,7 @@ import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import moment from "moment";
-import {IPackageShort} from "../packages/types";
+import {IPackageOptionShort, IPackageShort} from "../packages/types";
 
 export const setLoading = createAction<boolean>("PricingSettings/SetLoading");
 
@@ -274,8 +274,8 @@ export const loadPackagePricingLevels = (serviceCenterId: number): AppThunk => d
         })
 }
 
-export const updateMPPricingLevels = (serviceRequestId: number, data: Partial<IPackagePricingLevels>, callback = () => {}): AppThunk => dispatch => {
-    Api.call(Api.endpoints.PricingSettings.ChangePackagePricingLevels, {urlParams: {id: serviceRequestId}, data })
+export const updateMPPricingLevels = (optionId: number, data: Partial<IPackagePricingLevels>, callback = () => {}): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.ChangePackagePricingLevels, {urlParams: {id: optionId}, data })
         .then(result => {
             if (data.serviceCenterId && result) {
                 dispatch(loadPackagePricingLevels(data.serviceCenterId));
@@ -335,3 +335,20 @@ export const addPackageToPricing = (data: TNewPackagesToPricing): AppThunk => di
             console.log('add packages to pricing settings error', err)
         })
 }
+
+export const getPackageOptionsList = createAction<IPackageOptionShort[]>('PricingSettings/GetMPOptionsShort');
+export const loadPackageOptionsList = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setLoading);
+    Api.call(Api.endpoints.MaintenancePackages.GetOptionsByQuery,
+        {data: {serviceCenterId, pageIndex: 0, pageSize: 0, isApplyPricingOptimization: true}})
+        .then(res => {
+            if (res?.data?.result) {
+                dispatch(getPackageOptionsList(res.data.result))
+            }
+        })
+        .catch(err => {
+            console.log('load maintenance packages options list error', err);
+        })
+        .finally(() => dispatch(setLoading(false)));
+}
+
