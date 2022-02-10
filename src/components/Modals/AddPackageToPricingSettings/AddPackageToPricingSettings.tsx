@@ -7,7 +7,7 @@ import {addPackageToPricing} from "../../../store/reducers/pricingSettings/actio
 import {IPackageShort} from "../../../store/reducers/packages/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {DialogProps} from "../types";
 import {TableRowDataType} from "../../UI/types";
 import Checkbox from "../../UI/Checkbox";
@@ -23,6 +23,7 @@ const AddPackageToPricingSettings: React.FC<DialogProps> = (props) => {
     const [filteredPackages, setFilteredPackages] = useState<IPackageShort[]>([]);
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
+    const showError = useException();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -41,7 +42,7 @@ const AddPackageToPricingSettings: React.FC<DialogProps> = (props) => {
                 }
                 dispatch(addPackageToPricing(data))
             } catch (e) {
-                // todo show error
+                showError(e);
             } finally {
                 setIsSaving(false);
             }

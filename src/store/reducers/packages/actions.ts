@@ -67,7 +67,6 @@ export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[])
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.PackageOptions, {urlParams: {id}, data: {items: data}})
         .then(result => {
-            console.log(result);
             if (result) dispatch(loadPackageById(id));
         })
         .catch(err => {

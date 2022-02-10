@@ -37,8 +37,13 @@ const CreateAppointment: React.FC<TCreateAppointmentProps> = (props) => {
     const onSave = async (vin: string) => {
         if (vin.match(/[a-zA-Z0-9]{9}[a-zA-Z0-9-]{2}[0-9]{6}/g)) {
             setError(false)
-            await dispatch(updateVehicle({vin}));
-            await props.handleCreateAppointment(vin)
+            try {
+                await dispatch(updateVehicle({vin}));
+            } catch (e) {
+                showError(e)
+            } finally {
+                await props.handleCreateAppointment(vin)
+            }
         } else {
             setError(true);
             showError('Please enter valid VIN code')

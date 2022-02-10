@@ -289,9 +289,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }, [currentPackage])
 
     const sendRequest = useCallback((data: IPackageById) => {
-        dispatch(updatePackageOptions(data.id, data.options));
-        setIsEdit(false);
-        setEditingOption(null);
+        try {
+            dispatch(updatePackageOptions(data.id, data.options));
+        } catch (e){
+            showError(e)
+        } finally {
+            setIsEdit(false);
+            setEditingOption(null);
+        }
     }, [dispatch])
 
     const handleSave = useCallback((): void => {
