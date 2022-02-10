@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useConfirm, useModal, useSCs} from "../../../../utils/hooks";
+import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EDemandCategory, IPackagePricingSettings} from "../../../../store/reducers/pricingSettings/types";
@@ -13,7 +13,6 @@ import {DenseTable} from "../../AppointmentAllocation/UI";
 import {Slider, SliderRange} from "./DayOfWeekOpsCode";
 import {makeStyles} from "@material-ui/core/styles";
 import EditDayOFWeekPackage from "../../../Modals/EditDayOFWeekPackage/EditDayOFWeekPackage";
-import {IPackageShort} from "../../../../store/reducers/packages/types";
 import AddPackageToPricingSettings from "../../../Modals/AddPackageToPricingSettings/AddPackageToPricingSettings";
 
 const useStyles = makeStyles(() => ({
@@ -47,6 +46,7 @@ const DayOfWeekPackage = () => {
     const { onOpen: onEditOpen, onClose: onEditClose, isOpen: isEditOpen } = useModal();
     const { onOpen, onClose, isOpen } = useModal();
     const {askConfirm} = useConfirm();
+    const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -101,7 +101,11 @@ const DayOfWeekPackage = () => {
                 title: `Are you sure you want to remove maintenance package ${item.name} with ID ${item.id}?`,
                 isRemove: true,
                 onConfirm: () => {
-                    dispatch(deletePackagePricingSettings(item.id, selectedSC.id))
+                    try {
+                        dispatch(deletePackagePricingSettings(item.id, selectedSC.id))
+                    } catch (e) {
+                        showError(e)
+                    }
                 }
             });
         }

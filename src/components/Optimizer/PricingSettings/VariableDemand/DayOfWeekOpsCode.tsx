@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Box, Button, TableBody, TableCell, TableHead, TableRow, withStyles,} from "@material-ui/core";
-import {useConfirm, useModal, useSCs} from "../../../../utils/hooks";
+import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
 import {DenseTable} from "../../AppointmentAllocation/UI";
@@ -78,6 +78,7 @@ const DayOfWeekOpsCode = () => {
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [editingItem, setEditingItem] = useState<TOpsCode | null>(null);
     const {askConfirm} = useConfirm();
+    const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -148,7 +149,11 @@ const DayOfWeekOpsCode = () => {
                     .map(item => item.id)
                     .filter(item => !srPricingSettings.find(el => el.serviceRequestId === item)),
             }
-            dispatch(addServiceRequestsToPricing(data))
+            try {
+                dispatch(addServiceRequestsToPricing(data))
+            } catch (e) {
+                showError(e)
+            }
         }
     }
 
@@ -158,7 +163,11 @@ const DayOfWeekOpsCode = () => {
                 title: `Are you sure you want to remove ops code ${item?.opsCode}?`,
                 isRemove: true,
                 onConfirm: () => {
-                    dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
+                    try {
+                        dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
+                    } catch (e) {
+                        showError(e)
+                    }
                 }
             });
         }
