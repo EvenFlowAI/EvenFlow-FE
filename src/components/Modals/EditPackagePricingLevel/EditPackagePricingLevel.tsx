@@ -76,7 +76,7 @@ const EditPackagePricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLev
                 })
             }
             try {
-                dispatch(updateMPPricingLevels(prisingLevel.id, data, onCancel))
+                dispatch(updateMPPricingLevels(prisingLevel.maintenancePackageOptionId, data, onCancel))
             } catch (e) {
                showError(e)
             }

@@ -6,15 +6,11 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {
-    loadMPList,
-    loadPackagePricingLevels,
-} from "../../../../store/reducers/pricingSettings/actions";
-import {EDemandCategory, IGetMPListData} from "../../../../store/reducers/pricingSettings/types";
+import {loadPackageOptionsList, loadPackagePricingLevels,} from "../../../../store/reducers/pricingSettings/actions";
+import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types";
 import EditPackagePricingLevel from "../../../Modals/EditPackagePricingLevel/EditPackagePricingLevel";
 
 export type TPackagePricingLevel = {
-    id: number;
     maintenancePackageName: string;
     maintenancePackageId: number;
     discount: string | null;
@@ -25,9 +21,9 @@ export type TPackagePricingLevel = {
 
 const RowData: TableRowDataType<TPackagePricingLevel>[] = [
     {val: (el: TPackagePricingLevel, index: number) => `${index + 1}`, header: "#"},
-    {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "MAINTENANCE PACKAGE NAME", width: '35%'},
+    {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "MAINTENANCE PACKAGE NAME", width: '25%'},
     {val: (el: TPackagePricingLevel) => `${el.maintenancePackageId}`, header: "MAINTENANCE PACKAGE ID", align: "center"},
-    {val: (el: TPackagePricingLevel) => el.maintenancePackageOptionName, header: "MAINTENANCE PACKAGE LEVEL", width: '15%'},
+    {val: (el: TPackagePricingLevel) => el.maintenancePackageOptionName, header: "MAINTENANCE PACKAGE LEVEL", width: '20%'},
     {val: (el: TPackagePricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "DISCOUNT"},
     {val: (el: TPackagePricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "PREMIUM"},
 ];
@@ -44,7 +40,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const PricingLevelsByPackage = () => {
-    const { mpPricingLevels, isLoading, mpList, mpOptionsList } = useSelector((state: RootState) => state.pricingSettings);
+    const { mpPricingLevels, isLoading, mpOptionsList } = useSelector((state: RootState) => state.pricingSettings);
     const [editElement, setEditElement] = useState<TPackagePricingLevel | null>(null);
     const [data, setData] = useState<TPackagePricingLevel[]>([]);
 
@@ -60,21 +56,16 @@ const PricingLevelsByPackage = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            const data: IGetMPListData = {
-                serviceCenterId: selectedSC.id,
-                pageIndex: 0,
-                pageSize: 0,
-            }
-            dispatch(loadMPList(data));
+            dispatch(loadPackageOptionsList(selectedSC.id));
             dispatch(loadPackagePricingLevels(selectedSC.id));
         }
     }, [selectedSC])
 
     useEffect(() => {
-        if (mpList && mpPricingLevels) {
+        if (mpOptionsList && mpPricingLevels) {
             setData(() => {
                 return mpOptionsList.map(item => {
-                    const levelsItem = mpPricingLevels.find(el => el.maintenancePackageOptionId === item.id);
+                    const levelsItem = mpPricingLevels.find(el => el.maintenancePackageOptionId === item.maintenancePackageOptionId);
                     let discount = null;
                     let premium = null;
                     if (levelsItem?.values) {
@@ -84,18 +75,17 @@ const PricingLevelsByPackage = () => {
                         if (high) premium = high.value.toString();
                     }
                     return {
-                        id: item.id,
                         maintenancePackageId: item.maintenancePackageId,
                         maintenancePackageName: item.maintenancePackageName,
-                        maintenancePackageOptionName: item.name,
-                        maintenancePackageOptionId: item.id,
+                        maintenancePackageOptionName: item.maintenancePackageOptionName,
+                        maintenancePackageOptionId: item.maintenancePackageOptionId,
                         discount,
                         premium,
                     }
                 })
             })
         }
-    }, [mpList, mpPricingLevels])
+    }, [mpOptionsList, mpPricingLevels])
 
     const tableActions = (el: TPackagePricingLevel) => {
         return <Button
@@ -111,7 +101,7 @@ const PricingLevelsByPackage = () => {
     return <div className={classes.tableWrapper}>
             <Table
                 data={data}
-                index="id"
+                index="maintenancePackageOptionId"
                 rowData={RowData}
                 actions={tableActions}
                 isLoading={isLoading}

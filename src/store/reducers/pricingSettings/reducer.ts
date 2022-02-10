@@ -18,7 +18,7 @@ import {
     getPricingDemand,
     getPricingLevels, getRequestsPricingLevels, getRoundPriceSetting,
     getSrList, getSRPricingSettings, getTimeOfYearPricing,
-    getTimeWindows, setLoading, setRoundPriceLoading
+    getTimeWindows, setLoading, setRoundPriceLoading, getPackageOptionsList
 } from "./actions";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import {IPackageOptionShort, IPackageShort} from "../packages/types";
@@ -104,5 +104,8 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
     })
     .addCase(getPackagePricingLevels, (state, { payload }) => {
         return {...state, mpPricingLevels: payload}
+    })
+    .addCase(getPackageOptionsList, (state, { payload }) => {
+        return {...state, mpOptionsList: payload}
     })
 );

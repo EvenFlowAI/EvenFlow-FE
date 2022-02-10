@@ -1,4 +1,4 @@
-import {IBusinessRule} from "../../../api/types";
+import {EMaintenanceOptionType, IBusinessRule} from "../../../api/types";
 
 export interface IPackageOption {
     serviceRequestPrice: number;
@@ -55,12 +55,9 @@ export interface IPackageShort {
 }
 
 export interface IPackageOptionShort {
-    id: number;
-    name: string;
+    maintenancePackageOptionId: number;
+    maintenancePackageOptionName: string;
     maintenancePackageId: number;
     maintenancePackageName: string;
-    isApplyPricingOptimization: boolean;
-    baseMarketPrice: number;
-    valueMarketPrice: number;
-    preferredMarketPrice: number;
+    type: EMaintenanceOptionType;
 }
