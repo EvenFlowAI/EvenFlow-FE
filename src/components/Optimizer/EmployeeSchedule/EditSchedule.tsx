@@ -49,11 +49,11 @@ type TForm = {
 
 const getRequestDate = (date: moment.Moment | ParsableDate): {fromDate: ParsableDate, toDate: ParsableDate} => {
     const dayOfWeek = moment(date).day();
-    let fromDate = moment(date).startOf('week').add(1, 'day').toISOString();
-    let toDate = moment(date).endOf('week').add(1, 'day').toISOString()
+    let fromDate = moment(date).day("Monday").toISOString();
+    let toDate = moment(date).day("Friday").toISOString();
     if (dayOfWeek === 0) {
         fromDate = moment(date).subtract(1, 'day').startOf('week').add(1, 'day').toISOString()
-        toDate = moment(date).toISOString();
+        toDate = moment(date).subtract(1, 'day').day("Friday").toISOString()
     }
     return {fromDate, toDate};
 }
