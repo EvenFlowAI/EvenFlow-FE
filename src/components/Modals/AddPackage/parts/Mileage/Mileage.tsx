@@ -26,21 +26,21 @@ const Mileage: React.FC<TMileageProps> = ({
     const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
     const classes = useStyles();
 
-    const getOptions = () => {
+    const getOptions = useCallback(() => {
         const options = mileage.map(item => item.value.toString());
         if (options.length) options.unshift('Apply To All')
         return options;
-    }
+    }, [mileage])
 
-    const onMileageChange = (e: ChangeEvent<{}>, value: string[]) => {
+    const onMileageChange = useCallback((e: ChangeEvent<{}>, value: string[]) => {
         if (value.includes('Apply To All')) {
             setSelectedMileages(() => mileage.map(item => item.value.toString()));
         } else {
             setSelectedMileages(value);
         }
-    }
+    }, [mileage])
 
-    const onMileageCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: string) => {
+    const onMileageCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: string) => {
         setFormIsChecked(false);
         if (!e.target.checked) {
             setSelectedMileages(prev => {
@@ -50,7 +50,7 @@ const Mileage: React.FC<TMileageProps> = ({
                     .sort((a, b) => selectedMileages.includes(a) ? selectedMileages.includes(b) ? 0 : -1 : 1)
             })
         }
-    }
+    }, [selectedMileages])
 
     const renderOption = useCallback((option: string) => {
         const allMileagesSelected = mileage.length
