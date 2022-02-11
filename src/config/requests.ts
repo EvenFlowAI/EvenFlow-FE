@@ -323,10 +323,10 @@ export class Api {
             AddServiceRequests: {route: "/pricing-settings/service-requests", method: "post"},
             GetPackagePricingLevels: {route: "/pricing-settings/maintenance-package-options/pricing-levels", method: "get"},
             ChangePackagePricingLevels: {route: "/pricing-settings/maintenance-package-options/pricing-levels/{id}", method: "put"},
-            ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-packages/{id}", method: "put"},
-            GetPackagePricingSettings: {route: "/pricing-settings/maintenance-packages", method: "get"},
-            AddPackagePricingSettings: {route: "/pricing-settings/maintenance-packages", method: "post"},
-            RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-packages/{id}", method: "delete"}
+            ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "put"},
+            GetPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "get"},
+            AddPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "post"},
+            RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "delete"}
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},

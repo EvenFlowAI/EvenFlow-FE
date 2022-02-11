@@ -3,7 +3,7 @@ import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../BaseModal
 import {DialogProps} from "../types";
 import {SliderRange} from "../../Optimizer/PricingSettings/VariableDemand/DayOfWeekOpsCode";
 import {TextField} from "../../UI/TextField";
-import {Button, Divider} from "@material-ui/core";
+import {Box, Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {EDemandCategory, IPackagePricingSettings} from "../../../store/reducers/pricingSettings/types";
 import {updatePackagePricingSettings} from "../../../store/reducers/pricingSettings/actions";
@@ -101,7 +101,7 @@ const EditDayOFWeekPackage: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
                 }
             }
             try {
-                dispatch(updatePackagePricingSettings(editingItem.id, data))
+                dispatch(updatePackagePricingSettings(editingItem.optionId, data))
             } catch (e) {
                 showError(e)
             } finally {
@@ -117,6 +117,24 @@ const EditDayOFWeekPackage: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
     return <BaseModal  {...props} width={440} onClose={onCancel}>
         <DialogTitle onClose={onCancel}>Edit Day Of Week Maintenance Package</DialogTitle>
         <DialogContent>
+            <TextField
+                fullWidth
+                label='Package Name'
+                disabled
+                value={editingItem?.name || ''}/>
+            <Box p={1}/>
+            <TextField
+                fullWidth
+                label='Package ID'
+                disabled
+                value={editingItem?.id || ''}/>
+            <Box p={1}/>
+            <TextField
+                fullWidth
+                label='Package Level'
+                disabled
+                value={editingItem?.optionName || ''}/>
+            <Box p={1}/>
             <TextField type="number"
                        fullWidth
                        label="Low"
