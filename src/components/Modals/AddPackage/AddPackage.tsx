@@ -536,12 +536,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     <div className={classes.buttonsWrapper}>
                         <Button
                             onClick={onCancel}
-                            disabled={isPackageLoading}
                             className={classes.cancelButton}>
                             Cancel
                         </Button>
                         <Button
                             onClick={onSave}
+                            disabled={isPackageLoading}
                             className={classes.saveButton}>
                             Save
                         </Button>

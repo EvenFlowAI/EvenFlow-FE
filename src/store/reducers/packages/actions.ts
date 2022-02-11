@@ -102,6 +102,7 @@ export const loadMakes = (serviceCenterId: number): AppThunk  => async dispatch 
 }
 
 export const createPackage = (id: number, data: INewPackage, callback: () => void): AppThunk => async dispatch => {
+    dispatch(setPackageLoading(true))
     Api.call(Api.endpoints.MaintenancePackages.Create, {urlParams: {id}, data})
         .then(result => {
             if (result) {
@@ -112,6 +113,7 @@ export const createPackage = (id: number, data: INewPackage, callback: () => voi
         .catch(err => {
         console.log(err)
     })
+        .finally(() => dispatch(setPackageLoading(false)))
 }
 
 export const loadAllComplimentary = (serviceCenterId: number): AppThunk => dispatch => {
