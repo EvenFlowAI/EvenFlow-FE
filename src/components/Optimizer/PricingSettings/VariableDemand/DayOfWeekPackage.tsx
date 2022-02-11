@@ -59,7 +59,7 @@ const DayOfWeekPackage = () => {
             mpPricingSettings.map(item => {
                 const lowValue = item.values.find(el => el.demandCategory === EDemandCategory.Low);
                 const highValue = item.values.find(el => el.demandCategory === EDemandCategory.High);
-                data[item.maintenancePackageId] = {
+                data[item.maintenancePackageOptionId] = {
                     low: lowValue ? lowValue.value : 0,
                     high: highValue ? highValue.value : 0,
                 }
@@ -100,7 +100,7 @@ const DayOfWeekPackage = () => {
         }
     }, [mpPricingSettings])
 
-    const deleteOpsCode = (item: TMPackage) => {
+    const deletePackageOption = (item: TMPackage) => {
         if (selectedSC) {
             askConfirm({
                 title: `Are you sure you want to remove maintenance package level ${item.optionName} with Package ID ${item.id}?`,
@@ -139,19 +139,19 @@ const DayOfWeekPackage = () => {
                     ? <DenseTable>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={classes.headerCell} width="21%">
+                                <TableCell className={classes.headerCell} width="19%">
                                    Package Name
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="16%">
+                                <TableCell className={classes.headerCell} width="8%">
                                     Package ID
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="21%">
+                                <TableCell className={classes.headerCell} width="19%">
                                     Package Option Name
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="21%">
+                                <TableCell className={classes.headerCell} width="19%">
                                     Low
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="21%">
+                                <TableCell className={classes.headerCell} width="19%">
                                     High
                                 </TableCell>
                                 <TableCell width="8%"/>
@@ -160,11 +160,11 @@ const DayOfWeekPackage = () => {
                         </TableHead>
                         <TableBody>
                             {mPackages.map(item => {
-                                return <TableRow key={item.id}>
+                                return <TableRow key={item.optionId}>
                                     <TableCell key={item.name}>
                                         {item.name}
                                     </TableCell>
-                                    <TableCell key={item.id}>
+                                    <TableCell key={item.optionId}>
                                         {item.id}
                                     </TableCell>
                                     <TableCell key={item.optionName}>
@@ -174,14 +174,14 @@ const DayOfWeekPackage = () => {
                                         <Slider
                                             min={SliderRange.Min}
                                             max={SliderRange.Max}
-                                            onChange={handleChange(item.id, "low")}
+                                            onChange={handleChange(item.optionId, "low")}
                                             disabled
                                             step={0.01}
                                             marks={[
                                                 {value: SliderRange.Min, label: SliderRange.Min},
                                                 {value: SliderRange.Max, label: SliderRange.Max}
                                             ]}
-                                            value={slidersState[item.id].low}
+                                            value={slidersState[item.optionId].low}
                                             valueLabelDisplay="on"
                                         />
                                     </TableCell>
@@ -191,12 +191,12 @@ const DayOfWeekPackage = () => {
                                             max={SliderRange.Max}
                                             step={0.01}
                                             disabled
-                                            onChange={handleChange(item.id, "high")}
+                                            onChange={handleChange(item.optionId, "high")}
                                             marks={[
                                                 {value: SliderRange.Min, label: SliderRange.Min},
                                                 {value: SliderRange.Max, label: SliderRange.Max}
                                             ]}
-                                            value={slidersState[item.id].high}
+                                            value={slidersState[item.optionId].high}
                                             valueLabelDisplay="on"
                                         />
                                     </TableCell>
@@ -213,7 +213,7 @@ const DayOfWeekPackage = () => {
                                         <Button
                                             variant="text"
                                             style={{textTransform: 'none'}}
-                                            onClick={() => deleteOpsCode(item)}
+                                            onClick={() => deletePackageOption(item)}
                                             color="primary">
                                             Remove
                                         </Button>
