@@ -5,8 +5,9 @@ import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {TPackage} from "./PackageSelection";
 import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {TExtendedComplimentary} from "../../../api/types";
+import {RootState} from "../../../store/rootReducer";
 
 const style = withStyles(() => ({
     root: {
@@ -219,13 +220,18 @@ const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
 
 const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, isBmWService, isSanfordInfinity }) => {
     const [value, setValue] = useState<string>('1');
+    const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const classes = useStyles();
 
     useEffect(() => {
-        const currentPackage = data[+value];
-        currentPackage && dispatch(setPackage(currentPackage));
-    }, [value])
+        if (selectedPackage) {
+            setValue(selectedPackage.type.toString());
+        } else {
+            const currentPackage = data[+value];
+            currentPackage && dispatch(setPackage(currentPackage));
+        }
+    }, [value, data, selectedPackage])
 
     const handleChange = (e: ChangeEvent<{}>, newValue: any): void => {
         setValue(newValue);
