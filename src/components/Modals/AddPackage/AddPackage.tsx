@@ -206,7 +206,7 @@ const initialValues = {
 }
 
 const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
-    const { packages, currentPackage } = useSelector((state: RootState) => state.packages);
+    const { packages, currentPackage, isPackageLoading } = useSelector((state: RootState) => state.packages);
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const { selectedSC } = useSCs();
 
@@ -536,6 +536,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     <div className={classes.buttonsWrapper}>
                         <Button
                             onClick={onCancel}
+                            disabled={isPackageLoading}
                             className={classes.cancelButton}>
                             Cancel
                         </Button>
