@@ -4,8 +4,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EDemandCategory, IPackagePricingSettings} from "../../../../store/reducers/pricingSettings/types";
 import {
-    deletePackagePricingSettings, loadMPList,
-    loadMPPricingSettings
+    deletePackagePricingSettings,
+    loadMPPricingSettings, loadPackageOptionsList
 } from "../../../../store/reducers/pricingSettings/actions";
 import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {Loading} from "../../../UI/Loading";
@@ -36,6 +36,8 @@ export type TMPackage = {
     high: number;
     id: number;
     name: string;
+    optionName: string;
+    optionId: number;
 }
 
 const DayOfWeekPackage = () => {
@@ -69,7 +71,8 @@ const DayOfWeekPackage = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadMPPricingSettings(selectedSC.id))
-            dispatch(loadMPList({serviceCenterId: selectedSC.id, pageIndex: 0, pageSize: 0}));
+            // dispatch(loadMPList({serviceCenterId: selectedSC.id, pageIndex: 0, pageSize: 0}));
+            dispatch(loadPackageOptionsList(selectedSC.id))
         }
     }, [selectedSC])
 
@@ -85,6 +88,8 @@ const DayOfWeekPackage = () => {
                     return  {
                         name: item.maintenancePackageName,
                         id: item.maintenancePackageId,
+                        optionName: item.maintenancePackageOptionName,
+                        optionId: item.maintenancePackageOptionId,
                         low,
                         high,
                     }
@@ -98,11 +103,11 @@ const DayOfWeekPackage = () => {
     const deleteOpsCode = (item: TMPackage) => {
         if (selectedSC) {
             askConfirm({
-                title: `Are you sure you want to remove maintenance package ${item.name} with ID ${item.id}?`,
+                title: `Are you sure you want to remove maintenance package level ${item.optionName} with Package ID ${item.id}?`,
                 isRemove: true,
                 onConfirm: () => {
                     try {
-                        dispatch(deletePackagePricingSettings(item.id, selectedSC.id))
+                        dispatch(deletePackagePricingSettings(item.optionId, selectedSC.id))
                     } catch (e) {
                         showError(e)
                     }
@@ -135,10 +140,13 @@ const DayOfWeekPackage = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell className={classes.headerCell} width="21%">
-                                    Name
+                                   Package Name
+                                </TableCell>
+                                <TableCell className={classes.headerCell} width="16%">
+                                    Package ID
                                 </TableCell>
                                 <TableCell className={classes.headerCell} width="21%">
-                                    ID
+                                    Package Option Name
                                 </TableCell>
                                 <TableCell className={classes.headerCell} width="21%">
                                     Low
@@ -158,6 +166,9 @@ const DayOfWeekPackage = () => {
                                     </TableCell>
                                     <TableCell key={item.id}>
                                         {item.id}
+                                    </TableCell>
+                                    <TableCell key={item.optionName}>
+                                        {item.optionName}
                                     </TableCell>
                                     <TableCell key="low">
                                         <Slider
