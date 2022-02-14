@@ -64,7 +64,14 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
+const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
+    ({ handleSelect,
+         isEligible,
+         disabledIds,
+         handleSave,
+         selectedCodes,
+         setSelectedCodes,
+         ...props}) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -88,7 +95,7 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
 
     useEffect(() => {
         if (props.open && selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id, props.isEligible));
+            dispatch(loadAssignedServiceRequests(selectedSC.id, isEligible));
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex]);
 
@@ -97,25 +104,25 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         props.onClose();
     }, [props.onClose, dispatch])
 
-    const handleSave = useCallback(() => {
-        props.handleSave && props.handleSave();
+    const handleSaveOpsCode = useCallback(() => {
+        handleSave && handleSave();
         handleClose();
-    }, [props.selectedCodes])
+    }, [selectedCodes])
 
     const preActions = useCallback((el: IAssignedServiceRequest) => {
-        const checked = !!props.selectedCodes.find(item => item.id === el.id);
+        const checked = !!selectedCodes.find(item => item.id === el.id);
         return <Checkbox
             color="primary"
-            disabled={props.disabledIds?.includes(el.id)}
+            disabled={disabledIds?.includes(el.id)}
             checked={checked}
-            onChange={() => props.handleSelect(el)} />
-    }, [props.selectedCodes, props.handleSelect, props.disabledIds])
+            onChange={() => handleSelect(el)} />
+    }, [selectedCodes, handleSelect, disabledIds])
 
     const handleSearch = useCallback(async () => {
         if (selectedSC) {
             changePage(null, 0);
             await dispatch(setAssignedPageData({ pageIndex: 0 }));
-            await dispatch(loadAssignedServiceRequests(selectedSC.id, props.isEligible));
+            await dispatch(loadAssignedServiceRequests(selectedSC.id, isEligible));
         }
     }, [dispatch, selectedSC]);
 
@@ -123,15 +130,8 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         dispatch(setAssignedFilter({searchTerm: e.target.value}));
     }, [dispatch])
 
-    const getModalProps = (props: TAssignOpsCodeModalProps) => {
-        const modalProps = {...props};
-        delete modalProps.selectedCodes;
-        delete modalProps.setSelectedCodes;
-        return modalProps;
-    }
-
     return (
-        <BaseModal {...getModalProps(props)} width={1150}>
+        <BaseModal {...props} width={1150} onClose={handleClose}>
             <DialogTitle onClose={handleClose}>Add OPS Codes</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
@@ -157,8 +157,8 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                 <Button onClick={handleClose}>
                     Close
                 </Button>
-                {props.handleSave && (
-                    <Button onClick={handleSave} color="primary" variant="contained">
+                {handleSave && (
+                    <Button onClick={handleSaveOpsCode} color="primary" variant="contained">
                     Save
                 </Button>)
                 }

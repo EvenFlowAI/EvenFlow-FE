@@ -26,7 +26,8 @@ const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
     {header: "DESCRIPTION", val: el => el.name, width: '80%'},
 ]
 
-const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
+const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
+    ({selectedCodes, setSelectedCodes, isComplimentary, title, ...props}) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [
@@ -56,26 +57,18 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     }, [props.onClose])
 
     const handleSelect = useCallback((el: IComplimentaryServiceByQuery) => {
-        props.setSelectedCodes(prev => {
+        setSelectedCodes(prev => {
             return  prev.includes(+el.id) ? prev.filter(item => item !== el.id) : [...prev, el.id]
         });
-    }, [props.setSelectedCodes])
+    }, [setSelectedCodes])
 
     const preActions = useCallback((el: IComplimentaryServiceByQuery) => {
-        return <Checkbox color="primary" checked={props.selectedCodes.includes(+el.id)} onChange={() => handleSelect(el)} />
-    }, [props.selectedCodes, handleSelect])
-
-    const getModalProps = (props: TAssignOpsCodeModalProps) => {
-        const modalProps = {...props};
-        delete modalProps.selectedCodes;
-        delete modalProps.setSelectedCodes;
-        delete modalProps.isComplimentary;
-        return modalProps;
-    }
+        return <Checkbox color="primary" checked={selectedCodes.includes(+el.id)} onChange={() => handleSelect(el)} />
+    }, [selectedCodes, handleSelect])
 
     return (
-        <BaseModal {...getModalProps(props)}>
-            <DialogTitle onClose={handleClose}>{props.title}</DialogTitle>
+        <BaseModal {...props}>
+            <DialogTitle onClose={handleClose}>{title}</DialogTitle>
             <DialogContent>
                 <Table<IComplimentaryServiceByQuery>
                     data={complimentary}

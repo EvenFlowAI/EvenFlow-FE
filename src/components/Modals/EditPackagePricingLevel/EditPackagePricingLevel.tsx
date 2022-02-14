@@ -75,7 +75,11 @@ const EditPackagePricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLev
                     value: Number(premium)
                 })
             }
-            dispatch(updateMPPricingLevels(prisingLevel.id, data, onCancel))
+            try {
+                dispatch(updateMPPricingLevels(prisingLevel.maintenancePackageOptionId, data, onCancel))
+            } catch (e) {
+               showError(e)
+            }
         }
     }, [prisingLevel, onCancel, premium, discount, selectedSC])
 
@@ -93,15 +97,21 @@ const EditPackagePricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLev
         <DialogContent>
             <TextField
                 fullWidth
-                label='Maintenance Package Name'
+                label='Package Name'
                 disabled
                 value={prisingLevel?.maintenancePackageName || ''}/>
             <Box p={1}/>
             <TextField
                 fullWidth
-                label='Maintenance Package ID'
+                label='Package ID'
                 disabled
                 value={prisingLevel?.maintenancePackageId || ''}/>
+            <Box p={1}/>
+            <TextField
+                fullWidth
+                label='Package Level'
+                disabled
+                value={prisingLevel?.maintenancePackageOptionName || ''}/>
             <Box p={1}/>
             <TextField
                 fullWidth

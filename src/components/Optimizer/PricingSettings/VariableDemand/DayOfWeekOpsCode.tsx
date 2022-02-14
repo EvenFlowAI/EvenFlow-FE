@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {SquarePaper} from "../../../UI/Paper";
-import {PaperTitle} from "../UI";
-import {Box, Button, Divider, TableBody, TableCell, TableHead, TableRow, withStyles,} from "@material-ui/core";
-import {useConfirm, useModal, useSCs} from "../../../../utils/hooks";
+import {Box, Button, TableBody, TableCell, TableHead, TableRow, withStyles,} from "@material-ui/core";
+import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {makeStyles} from "@material-ui/core/styles";
 import {DenseTable} from "../../AppointmentAllocation/UI";
@@ -29,7 +27,7 @@ export enum SliderRange {
     Max = 10
 }
 
-const Slider = withStyles({
+export const Slider = withStyles({
     root: {
         margin: "0 25px",
         width: "calc(100% - 50px)"
@@ -80,6 +78,7 @@ const DayOfWeekOpsCode = () => {
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [editingItem, setEditingItem] = useState<TOpsCode | null>(null);
     const {askConfirm} = useConfirm();
+    const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -150,7 +149,11 @@ const DayOfWeekOpsCode = () => {
                     .map(item => item.id)
                     .filter(item => !srPricingSettings.find(el => el.serviceRequestId === item)),
             }
-            dispatch(addServiceRequestsToPricing(data))
+            try {
+                dispatch(addServiceRequestsToPricing(data))
+            } catch (e) {
+                showError(e)
+            }
         }
     }
 
@@ -160,7 +163,11 @@ const DayOfWeekOpsCode = () => {
                 title: `Are you sure you want to remove ops code ${item?.opsCode}?`,
                 isRemove: true,
                 onConfirm: () => {
-                    dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
+                    try {
+                        dispatch(deleteSRPricingSettings(item.id, selectedSC.id))
+                    } catch (e) {
+                        showError(e)
+                    }
                 }
             });
         }
@@ -181,15 +188,13 @@ const DayOfWeekOpsCode = () => {
         await onEditOpen();
     }
 
-    return <SquarePaper variant="outlined">
-        <Box display="flex" mr={2} alignItems="center">
-            <PaperTitle>Day of Week Ops Code</PaperTitle>
+    return <div>
+        <Box display="flex" mr={2}  mb={2} alignItems="center">
             <div className="grow" />
             <Button color="primary" onClick={onOpen} variant="contained">
                 Add Ops Code
             </Button>
         </Box>
-        <Divider />
         <Box display="flex" m={2} alignItems="center">
             {isLoading
                 ? <Loading/>
@@ -220,7 +225,6 @@ const DayOfWeekOpsCode = () => {
                                             <Slider
                                                 min={SliderRange.Min}
                                                 max={SliderRange.Max}
-                                                // onChangeCommitted={handleChangeCommitted(item.id, "low")}
                                                 onChange={handleChange(item.id, "low")}
                                                 disabled
                                                 step={0.01}
@@ -238,7 +242,6 @@ const DayOfWeekOpsCode = () => {
                                                 max={SliderRange.Max}
                                                 step={0.01}
                                                 disabled
-                                                // onChangeCommitted={handleChangeCommitted(item.id, "high")}
                                                 onChange={handleChange(item.id, "high")}
                                                 marks={[
                                                     {value: SliderRange.Min, label: SliderRange.Min},
@@ -284,7 +287,7 @@ const DayOfWeekOpsCode = () => {
             isEligible={true}
             handleSave={handleAddOpsCode}
         />
-    </SquarePaper>;
+    </div>;
 };
 
 export default DayOfWeekOpsCode;

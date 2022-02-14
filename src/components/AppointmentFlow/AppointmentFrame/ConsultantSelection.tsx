@@ -11,7 +11,7 @@ import {
     loadConsultants, selectCategoriesIds,
     selectService, selectSubService,
     setAdvisor,
-    setPackage
+    setPackage, setPackageIsSelected, setSelectedPackageOptionType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -114,6 +114,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
             dispatch(setPackage(null));
             dispatch(selectService(null));
+            dispatch(setSelectedPackageOptionType(null))
+            dispatch(setPackageIsSelected(false));
         }
         if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
             dispatch(selectSR(null));

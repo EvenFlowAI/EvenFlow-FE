@@ -80,7 +80,15 @@ const useInputStyles = makeStyles(() => ({
 }))
 
 
-const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
+const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
+    ({
+         selectedCodes,
+         setSelectedCodes,
+         title,
+         isEditing,
+         optionError,
+         setOptionError,
+         ...props}) => {
     const {selectedSC} = useSCs();
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
     const [
@@ -114,11 +122,11 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex]);
 
     useEffect(() => {
-        if (props.isEditing && currentPackage) {
+        if (isEditing && currentPackage) {
             const firstOption = currentPackage.options[0]
             setSelectedOption({ type: firstOption.type, name: firstOption.name || MaintenanceOptions[firstOption.type]})
         }
-    }, [props.isEditing, currentPackage])
+    }, [isEditing, currentPackage])
 
     const handleClose = useCallback((): void => {
         dispatch(setNonSelectedFilter({searchTerm: ''}));
@@ -127,7 +135,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
 
     const handleSelect = useCallback((el: IServiceRequest) => {
         if (selectedOption) {
-            props.setSelectedCodes(prev => {
+           setSelectedCodes(prev => {
                 const code = prev.find(code => code.type === selectedOption.type);
                 if (code) {
                     return prev.filter(item => item.type !== selectedOption.type).concat([{...code, serviceRequestId: el.id}])
@@ -137,14 +145,14 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
             });
         } else {
             showError('Please select option first');
-            props.setOptionError(true);
+            setOptionError(true);
         }
-    }, [props.setSelectedCodes, selectedOption])
+    }, [setSelectedCodes, selectedOption])
 
     const preActions = useCallback((el: IServiceRequest) => {
-        const checked = !!props.selectedCodes.find(item => item.type === selectedOption?.type && item.serviceRequestId === +el.id)
+        const checked = !!selectedCodes.find(item => item.type === selectedOption?.type && item.serviceRequestId === +el.id)
         return <Radio color="primary" checked={checked} onChange={() => handleSelect(el)} />
-    }, [props.selectedCodes, handleSelect])
+    }, [selectedCodes, handleSelect])
 
     const handleSearch = useCallback(async () => {
         if (selectedSC) {
@@ -158,19 +166,12 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
         dispatch(setNonSelectedFilter({searchTerm: e.target.value}));
     }, [dispatch])
 
-    const getModalProps = (props: TAssignOpsCodeModalProps) => {
-        const modalProps = {...props};
-        delete modalProps.selectedCodes;
-        delete modalProps.setSelectedCodes;
-        return modalProps;
-    }
-
     const onSelectOption = useCallback((e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
-        props.setOptionError(false);
+        setOptionError(false);
         setSelectedOption(value);
-        if (props.isEditing && currentPackage && value) {
+        if (isEditing && currentPackage && value) {
             const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === value.type)
-            if (assignedCode) props.setSelectedCodes(prev => {
+            if (assignedCode) setSelectedCodes(prev => {
                 const request = {type: value.type, serviceRequestId: assignedCode.serviceRequestId};
                 if (prev.find(item => item.type === value.type)) {
                     const data = prev.filter(item => item.type !== value.type);
@@ -204,8 +205,8 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
     }
 
     return (
-        <BaseModal {...getModalProps(props)}>
-            <DialogTitle onClose={handleClose}>{props.title}</DialogTitle>
+        <BaseModal {...props} onClose={handleClose}>
+            <DialogTitle onClose={handleClose}>{title}</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
                    <Autocomplete
@@ -218,10 +219,10 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> = (props) => {
                             label: "Select A Package Option",
                             fullWidth: true,
                             placeholder: 'Select An Option',
-                            error: props.optionError,
+                            error: optionError,
                         })}
                         value={selectedOption}/>
-                    {currentPackage && selectedOption && props.isEditing && <div className={classes.selectedCode}>
+                    {currentPackage && selectedOption && isEditing && <div className={classes.selectedCode}>
                         Selected:  {getSelectedOpsCode(selectedOption)}
                     </div>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
