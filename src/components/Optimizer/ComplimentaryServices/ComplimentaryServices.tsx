@@ -139,9 +139,14 @@ const ComplimentaryServices = () => {
     }
 
     const onAddOpsCode = async (selectedCodes: number[], serviceCenterId: number) => {
-        const newCodes = selectedCodes.filter(item => !selectedOpsCodes.includes(item));
-        await dispatch(addOpsCodeFromList(newCodes, serviceCenterId));
-        await onAddOpsCodeClose();
+        try {
+            const newCodes = selectedCodes.filter(item => !selectedOpsCodes.includes(item));
+            await dispatch(addOpsCodeFromList(newCodes, serviceCenterId));
+        } catch (e) {
+            showError(e);
+        } finally {
+            await onAddOpsCodeClose();
+        }
     }
 
     const handleSort = (d: IOrder<IComplimentaryServiceByQuery>) => async () => {

@@ -364,7 +364,13 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             } else {
                 data.dayOfWeeks = daysOfWeek.map(item => item.value);
             }
-            editingElement.id && dispatch(editTransportationOptionRules(editingElement.id, selectedSC.id, data, onCancel))
+            if (editingElement.id) {
+                try {
+                    dispatch(editTransportationOptionRules(editingElement.id, selectedSC.id, data, onCancel))
+                } catch (e) {
+                    showError(e);
+                }
+            }
         } else {
             showError('Please fill all required fields')
         }

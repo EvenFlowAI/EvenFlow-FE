@@ -60,7 +60,9 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>&TC
     return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
-            {!payload ? <CircularProgress /> : <>
+            {!payload
+                ? <CircularProgress />
+                : <>
                 <List dense>
                     <ListItem>
                         <ListItemIcon><Schedule /></ListItemIcon>
@@ -68,8 +70,7 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>&TC
                             primary={ `${moment(payload.dateInUtc).utc().format("LL")} ${moment(payload.timeSlot, timeSpanString).format(timeString)}`}
                         />
                     </ListItem>
-                    {
-                        payload.maintenancePackageOption
+                    {payload.maintenancePackageOption
                             ? <ListItem key={payload.maintenancePackageOption.name}>
                                 <ListItemIcon><Settings /></ListItemIcon>
                                 <ListItemText
@@ -78,18 +79,23 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>&TC
                             </ListItem>
                             : null
                     }
-                    {payload.serviceRequests ? payload.serviceRequests.map(sr => {
-                        return <ListItem key={sr.id}>
-                            <ListItemIcon><Settings /></ListItemIcon>
-                            <ListItemText primary={sr.code} secondary={sr.description} />
-                        </ListItem>
-                    }) : null}
-                    {payload.serviceCategories ? payload.serviceCategories.map(category => {
-                        return <ListItem key={category.id}>
-                            <ListItemIcon><Settings /></ListItemIcon>
-                            <ListItemText primary={category.name} />
-                        </ListItem>
-                    }) : null}
+                    {payload.serviceRequests
+                        ? payload.serviceRequests.map(sr => {
+                            return <ListItem key={sr.id}>
+                                <ListItemIcon><Settings /></ListItemIcon>
+                                <ListItemText primary={sr.code} secondary={sr.description} />
+                            </ListItem>
+                        })
+                        : null}
+                    {payload.serviceCategories
+                        ? payload.serviceCategories.map(category => {
+                            return <ListItem key={category.id}>
+                                <ListItemIcon><Settings /></ListItemIcon>
+                                <ListItemText primary={category.name} />
+                            </ListItem>
+                        })
+                        : null}
+
                     <Divider />
                     <Info appointment={payload} />
                     <Divider />
