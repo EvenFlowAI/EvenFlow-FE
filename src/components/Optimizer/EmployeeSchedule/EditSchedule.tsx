@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
 import {
@@ -141,7 +141,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
         }
     }
 
-    const handleSetForWeek = () => {
+    const handleSetForWeek = useCallback(() => {
         setSaving(true);
         const data: IScheduleForWeek = {
             serviceCenterId: employee.serviceCenterId,
@@ -165,7 +165,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                 setSaving(false);
                 handleClose();
             })
-    }
+    }, [employee, form, date, getRequestDate, getStartEndDates, selectedDate, isXS, showError, handleClose, setSaving])
 
     return <BaseModal {...props} width={750} onClose={handleClose}>
         <DialogTitle onClose={handleClose}>Edit employee schedule</DialogTitle>
