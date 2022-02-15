@@ -74,6 +74,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 label="Email address"
                 id="email"
                 name="email"
+                placeholder="Type Email"
                 value={props.form.email}
                 onChange={props.onChange}
                 fullWidth
@@ -165,6 +166,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 id="firstName"
                 value={props.form.firstName}
                 onChange={props.onChange}
+                placeholder="Type First name"
                 name="firstName"
                 fullWidth
                 label="First name" />
@@ -175,6 +177,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 fullWidth
                 value={props.form.lastName}
                 onChange={props.onChange}
+                placeholder="Type Last name"
                 name="lastName"
                 label="Last name" />
         </Grid>
@@ -183,6 +186,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 id="email"
                 name="email"
                 fullWidth
+                placeholder="Type Email"
                 value={props.form.email}
                 onChange={props.onChange}
                 label="Email"
@@ -192,10 +196,11 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
             <TextField
                 id="phoneNumber"
                 name="phoneNumber"
+                placeholder="Type Phone Number"
                 fullWidth
                 value={props.form.phoneNumber}
                 onChange={props.onChange}
-                label="Phone number"
+                label="Phone Number"
             />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -207,7 +212,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
                 value={props.form.serviceCenter || null}
-                renderInput={autocompleteRender({label: "Service center", fullWidth: true})}
+                renderInput={autocompleteRender({label: "Service center", fullWidth: true, placeholder: "Select Service Center"})}
             />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -230,6 +235,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                         id="hourlyRate"
                         name="hourlyRate"
                         label="Hourly rate"
+                        placeholder="Enter Rate"
                         type="number"
                         fullWidth
                         onChange={props.onChange}
@@ -241,6 +247,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                         id="overtimeRate"
                         name="overtimeRate"
                         label="Overtime rate"
+                        placeholder="Enter Rate"
                         type="number"
                         fullWidth
                         onChange={props.onChange}
