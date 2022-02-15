@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../../../utils/hooks";
 import {deleteMake, loadMakes, setCurrentMake} from "../../../../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../../../../store/rootReducer";
-import {SearchInput} from "../../../../UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {TableRowDataType} from "../../../../UI/types";
 import {IMake} from "../../../../../api/types";
@@ -26,7 +25,6 @@ const MakesModelsTable = () => {
     const dispatch = useDispatch();
     const {askConfirm} = useConfirm();
     const {onOpen, onClose, isOpen} = useModal();
-    let searchTerm = '';
 
     useEffect(() => {
         if (selectedSC) {
@@ -58,13 +56,6 @@ const MakesModelsTable = () => {
             })
         }
     }, [makes])
-
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
-    }
-
-    const handleSearch = () => {}
-
 
     const openMenu = (el: IMake) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         dispatch(setCurrentMake(el));
@@ -112,7 +103,6 @@ const MakesModelsTable = () => {
     return (
         <div>
             <div style={{display: "flex", alignItems: "center", justifyContent: 'flex-end', marginBottom: 20}}>
-                <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={searchTerm} />
                 <Button
                     style={{marginLeft: 16}}
                     color="primary"

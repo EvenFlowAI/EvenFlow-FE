@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useState} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {Table} from "../UI/Table";
 import {AppointmentStatus, appointmentStatuses, IAppointmentByQuery} from "../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
@@ -59,7 +59,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
         onEditOpen();
     }
 
-    const handleCancel = () => {
+    const handleCancel = useCallback(() => {
         setAnchorEl(null);
         if (viewItem?.appointmentStatus === AppointmentStatus.Cancelled) {
             showError("Appointment is already canceled");
@@ -77,7 +77,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
                 });
             }
         }
-    }
+    }, [viewItem, showError, askConfirm, getAppointmentDate])
 
     const _handleCancel = async () => {
         if (viewItem) {

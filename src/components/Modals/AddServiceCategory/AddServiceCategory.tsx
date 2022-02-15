@@ -131,7 +131,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         }
     }, [editingItem, allAssignedList, categoryOptions, props.open])
 
-    const onCancel = () => {
+    const onCancel = useCallback(() => {
         setFormIsChecked(false);
         setCategoryName('');
         dispatch(setAssignedFilter({searchTerm: ''}));
@@ -140,13 +140,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         setCategoryType(null);
         setOrderIndex('');
         props.onClose();
-    }
+    }, [])
 
-    const onSuccessCreate = (categoryId: number) => {
+    const onSuccessCreate = useCallback((categoryId: number) => {
         if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file));
-    }
+    }, [fileState])
 
-    const onSave = () => {
+    const onSave = useCallback(() => {
         if (selectedSC) {
             setFormIsChecked(true);
             if (categoryName && definedPage && categoryType && orderIndex) {
@@ -175,28 +175,28 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                 onCancel();
             }
         }
-    }
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
         setCategoryName(e.target.value);
     }, [])
 
-    const onDefinedPageChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+    const onDefinedPageChange = useCallback((e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
         setDefinedPage(value);
-    }
+    }, [])
 
-    const onOrderIndexChange = (e: React.ChangeEvent<{}>, value: string): void => {
+    const onOrderIndexChange = useCallback((e: React.ChangeEvent<{}>, value: string): void => {
         setFormIsChecked(false);
         setOrderIndex(value);
-    }
+    }, [])
 
-    const onCategoryTypeChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+    const onCategoryTypeChange = useCallback((e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
         setCategoryType(value);
         setSelectedCodes([]);
-    }
+    }, [])
 
     const handleSearch = useCallback(() => {
         if (selectedSC) {

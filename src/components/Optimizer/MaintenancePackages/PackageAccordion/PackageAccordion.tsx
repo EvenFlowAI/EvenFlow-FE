@@ -260,7 +260,13 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleRemove = (): void => {
         setAnchorEl(null);
-        if (packageData && selectedSC) dispatch(removePackageById(packageData.id, selectedSC.id))
+        if (packageData && selectedSC) {
+            try {
+                dispatch(removePackageById(packageData.id, selectedSC.id))
+            } catch (e) {
+                showError(e);
+            }
+        }
     }
 
     const askRemove = () => {

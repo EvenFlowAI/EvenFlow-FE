@@ -53,7 +53,7 @@ const DayOfWeekPackage = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
-    const setInitialSliders = (mpPricingSettings: IPackagePricingSettings[]) => {
+    const setInitialSliders = useCallback((mpPricingSettings: IPackagePricingSettings[]) => {
         setSlidersState(() => {
             const data: SliderObject = {}
             mpPricingSettings.map(item => {
@@ -66,12 +66,11 @@ const DayOfWeekPackage = () => {
             })
             return data;
         })
-    }
+    }, [])
 
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadMPPricingSettings(selectedSC.id))
-            // dispatch(loadMPList({serviceCenterId: selectedSC.id, pageIndex: 0, pageSize: 0}));
             dispatch(loadPackageOptionsList(selectedSC.id))
         }
     }, [selectedSC])
@@ -100,7 +99,7 @@ const DayOfWeekPackage = () => {
         }
     }, [mpPricingSettings])
 
-    const deletePackageOption = (item: TMPackage) => {
+    const deletePackageOption = useCallback((item: TMPackage) => {
         if (selectedSC) {
             askConfirm({
                 title: `Are you sure you want to remove maintenance package level ${item.optionName} with Package ID ${item.id}?`,
@@ -114,7 +113,7 @@ const DayOfWeekPackage = () => {
                 }
             });
         }
-    }
+    }, [selectedSC, askConfirm, dispatch, showError])
 
     const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
         setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))

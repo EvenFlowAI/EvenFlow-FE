@@ -28,9 +28,9 @@ export const getSchedule = (date: moment.Moment, schedules: ISchedule[]): ISched
     return data.find(d => d.isLastSet);
 }
 
-export const findScheduleDates = (date: moment.Moment, schedules: ISchedule[]): JSX.Element|string => {
+export const findScheduleDates = (date: moment.Moment, schedules: ISchedule[], isWorkingDay: boolean): JSX.Element|string => {
     const schedule = getSchedule(date, schedules);
-    if (schedule) {
+    if (schedule && isWorkingDay) {
         return <>
             <span className="nowrap">{moment(schedule.startAt, timeSpanString).format(timeString)}</span>
             <span> - </span>

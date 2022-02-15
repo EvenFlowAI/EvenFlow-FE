@@ -89,7 +89,7 @@ const DayOfWeekOpsCode = () => {
         await dispatch(setAssignedPageData({ pageSize: 10, pageIndex: 0 }))
     }
 
-    const setInitialSliders = (srPricingSettings: IRequestPricingSettings[]) => {
+    const setInitialSliders = useCallback((srPricingSettings: IRequestPricingSettings[]) => {
         setSlidersState(() => {
             const data: SliderObject = {}
             srPricingSettings.map(item => {
@@ -102,7 +102,7 @@ const DayOfWeekOpsCode = () => {
             })
             return data;
         })
-    }
+    }, [])
 
     useEffect(() => {
         if (selectedSC) {
@@ -141,7 +141,7 @@ const DayOfWeekOpsCode = () => {
         }
     }, [srPricingSettings])
 
-    const handleAddOpsCode = () => {
+    const handleAddOpsCode = useCallback(() => {
         if (selectedSC && selectedCodes.length) {
             const data: TNewRequestsToPricing = {
                 serviceCenterId: selectedSC.id,
@@ -155,9 +155,9 @@ const DayOfWeekOpsCode = () => {
                 showError(e)
             }
         }
-    }
+    }, [selectedSC, selectedCodes, srPricingSettings, showError, dispatch])
 
-    const deleteOpsCode = (item: TOpsCode) => {
+    const deleteOpsCode = useCallback((item: TOpsCode) => {
         if (selectedSC) {
             askConfirm({
                 title: `Are you sure you want to remove ops code ${item?.opsCode}?`,
@@ -171,7 +171,7 @@ const DayOfWeekOpsCode = () => {
                 }
             });
         }
-    }
+    }, [selectedSC, askConfirm, dispatch, showError])
 
     const handleChange = useCallback((id: number, type: "low" | "high") => (e: any, val: number | number[]) => {
         setSlidersState(prev => ({...prev, [id]: {...prev[id], [type]: val}}))
