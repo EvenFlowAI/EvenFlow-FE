@@ -229,7 +229,7 @@ export const ScheduleCalendar = () => {
                                             fontSize: isXS ? 12 : 13,
                                             ...getCellStyle(!isWorkingDay(date))
                                         }}>
-                                        {findScheduleDates(date, schedules)}
+                                        {findScheduleDates(date, schedules, isWorkingDay(date))}
                                     </TableCell>
                                 })}
                             </TableRow>

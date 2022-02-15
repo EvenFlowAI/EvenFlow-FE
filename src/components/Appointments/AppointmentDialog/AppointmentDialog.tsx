@@ -354,13 +354,13 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             } else {
                 await API.appointment.create(data);
             }
-            setLoading(false);
             showMessage("Saved");
             onAction && onAction();
             props.onClose();
         } catch (e) {
-            setLoading(false);
             showError(e);
+        } finally {
+            setLoading(false);
         }
     }
 
