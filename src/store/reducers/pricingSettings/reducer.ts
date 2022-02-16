@@ -1,6 +1,8 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     IDayOfWeekSetting,
+    IPackagePricingLevels,
+    IPackagePricingSettings,
     IPricingDemand,
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
@@ -8,15 +10,18 @@ import {
     ITimeWindowEl
 } from "./types";
 import {
-    getDayOfWeekPricing, getMPList,
+    getMPPricingSettings,
+    getDayOfWeekPricing,
+    getMPList,
+    getPackagePricingLevels,
     getPricingCalculations,
     getPricingDemand,
     getPricingLevels, getRequestsPricingLevels, getRoundPriceSetting,
     getSrList, getSRPricingSettings, getTimeOfYearPricing,
-    getTimeWindows, setLoading, setRoundPriceLoading
+    getTimeWindows, setLoading, setRoundPriceLoading, getPackageOptionsList
 } from "./actions";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
-import {IPackageShort} from "../packages/types";
+import {IPackageOptionShort, IPackageShort} from "../packages/types";
 
 type TState = {
     pricingLevels: IPricingLevel[];
@@ -29,9 +34,12 @@ type TState = {
     srPricingLevels: IRequestPricingSettings[];
     srPricingSettings: IRequestPricingSettings[];
     mpList: IPackageShort[];
+    mpPricingSettings: IPackagePricingSettings[];
+    mpOptionsList: IPackageOptionShort[];
     isLoading: boolean;
     isRoundPriceLoading: boolean;
     roundPrice: boolean;
+    mpPricingLevels: IPackagePricingLevels[];
 }
 const initialState: TState = {
     pricingLevels: [],
@@ -44,9 +52,12 @@ const initialState: TState = {
     srPricingLevels: [],
     srPricingSettings: [],
     mpList: [],
+    mpPricingSettings: [],
+    mpOptionsList: [],
     isLoading: false,
     isRoundPriceLoading: false,
     roundPrice: false,
+    mpPricingLevels: [],
 };
 export const pricingSettingsReducer = createReducer<TState>(initialState, builder => builder
     .addCase(getPricingLevels, (state, {payload}) => {
@@ -83,9 +94,18 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
         return {...state, mpList: payload};
     })
     .addCase(setRoundPriceLoading, (state, { payload }) => {
-        return {...state, isRoundPriceLoading: payload}
+        return {...state, isRoundPriceLoading: payload};
     })
     .addCase(getRoundPriceSetting, (state, { payload }) => {
-        return {...state, roundPrice: payload}
+        return {...state, roundPrice: payload};
+    })
+    .addCase(getMPPricingSettings, (state, { payload }) => {
+        return {...state, mpPricingSettings: payload};
+    })
+    .addCase(getPackagePricingLevels, (state, { payload }) => {
+        return {...state, mpPricingLevels: payload}
+    })
+    .addCase(getPackageOptionsList, (state, { payload }) => {
+        return {...state, mpOptionsList: payload}
     })
 );

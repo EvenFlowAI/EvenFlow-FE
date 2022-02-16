@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {DialogContent, DialogTitle} from "../BaseModal";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -88,22 +88,32 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const {appointment} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
+    const price = useMemo(() => appointment?.price?.value && appointment.price.value > 0
+        ? `$${appointment?.price.value}` :
+        '', [appointment])
+    const noDefinedPriceExists = useMemo(() => appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0),
+        [appointment])
 
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
             <DialogTitle onClose={onClose} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                Selected Price:   ${appointment?.price.value ?? ''}
+                Selected Price:   {price}
             </DialogTitle>
             <DialogContent>
                 <List>
-                    {appointment?.serviceRequestPrices?.map(item => <li className={classes.item}>
-                        <span>{item.requestName}</span>
-                        {Object(item).hasOwnProperty('priceValue')
-                            ? <span className={classes.price}>${item.priceValue}</span>
-                            : <ErrorOutline/>}
-                    </li>)}
+                    {appointment?.serviceRequestPrices?.map(item => (
+                        <li className={classes.item}>
+                            <span>
+                                {item.requestName.includes("Going")
+                                ? "My Description of Needs"
+                                : item.requestName}
+                            </span>
+                            {Object(item).hasOwnProperty('priceValue') && item.priceValue
+                                ? <span className={classes.price}>${item.priceValue}</span>
+                                : <ErrorOutline/>}
+                    </li>))}
                 </List>
-                {appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined') && <Info>
+                {noDefinedPriceExists && <Info>
                   <ErrorOutline/>
                   <span className="text">Service item will be quoted at dealership</span>
                 </Info>}

@@ -71,11 +71,6 @@ const HForm: React.FC<{
                 />
             </Grid>
             <Grid item xs={12} className={classes.spacer} />
-            {/*<Grid item xs={12}>*/}
-            {/*    {props.form.startDate && props.form.endDate ? <div className={classes.preview}>*/}
-            {/*        From {moment(props.form.startDate).format("MMM D, H:mm a")} to {moment(props.form.endDate).format("MMM D, H:mm a")}*/}
-            {/*    </div> : null}*/}
-            {/*</Grid>*/}
         </Grid>
     </div>
 }

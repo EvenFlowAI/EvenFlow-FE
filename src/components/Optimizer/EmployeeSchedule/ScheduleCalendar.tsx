@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {calendarDateFormat, findScheduleDates, getDaysOfWeek, getSchedule, getStartEndDates} from "./utils";
 import {ScheduleTable} from "./UI";
 import {
@@ -11,7 +11,7 @@ import {
     Tooltip,
     useMediaQuery, useTheme
 } from "@material-ui/core";
-import moment from "moment";
+import moment, {Moment} from "moment";
 import {WeekControls} from "./WeekControls";
 import {useModal, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -61,7 +61,7 @@ const Holiday = styled("div")(({theme}) => ({
     textAlign: "center",
     padding: "0 4px",
     maxWidth: "100%",
-    whiteSpace: "nowrap"
+    // whiteSpace: "nowrap"
 }));
 const HeadCell = styled(TableCell)(({theme}) => ({
     width: "12%",
@@ -127,7 +127,7 @@ export const ScheduleCalendar = () => {
         setSelectedDate(date);
     }
 
-    const handleRefresh = (clearId?: keyof TIds) => {
+    const handleRefresh = useCallback((clearId?: keyof TIds) => {
         if (clearId) {
             setIds({...ids, [clearId]: undefined});
         }
@@ -135,7 +135,7 @@ export const ScheduleCalendar = () => {
             const [start, end] = getStartEndDates(selectedDate, isXS);
             dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
         }
-    }
+    }, [setIds, ids, selectedSC, getStartEndDates, selectedDate, isXS, dispatch, loadEmployeesSchedule])
 
     const updateEditedEmployee = async (id: string) => {
         try {
@@ -146,27 +146,27 @@ export const ScheduleCalendar = () => {
         }
     }
 
-    const getIds = (date: moment.Moment, schedules: ISchedule[]): TIds => {
-        const data = schedules.filter(s => moment.utc(s.date).isSame(date, "day"));
+    const getIds = useCallback((date: moment.Moment, schedules: ISchedule[]): TIds => {
+        const data = schedules.filter(s => s.dayOfWeek === moment(date).day());
         return {
             customId: data.find(s => !s.isRecurring)?.id,
             recursiveId: data.find(s => s.isRecurring)?.id
         }
-    }
+    }, [])
 
-    const handleEdit = (employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => async () => {
+    const handleEdit = useCallback((employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => async () => {
         setEditedDate(date);
         setEditedEmployee({...employee, serviceCenter: selectedSC});
         setIds(getIds(date, schedules||[]));
         await updateEditedEmployee(employee.id);
         setEditedSchedule(getSchedule(date, schedules||[]));
         onOpen();
-    }
+    }, [getIds, updateEditedEmployee, getSchedule, onOpen])
 
     const getCellStyle = (nonWorking: boolean) => {
         return nonWorking ? nonWorkingStyle : {};
     }
-    const getHoliday = (date: moment.Moment) => {
+    const getHoliday = useCallback((date: moment.Moment) => {
         const holiday = holidaysList.find(h => {
             const d = moment(h.date).year(date.year());
             return d.isSame(date, "date");
@@ -175,7 +175,12 @@ export const ScheduleCalendar = () => {
             return <Tooltip title={holiday.description}><Holiday>{holiday.description}</Holiday></Tooltip>;
         }
         return null;
-    }
+    }, [holidaysList])
+
+    const isWorkingDay = useCallback((date: Moment): boolean => {
+        return workingDays.includes(date.day() as EDay)
+        && !holidaysList.find(item => moment(item.date).isSame(date, 'date'))
+    }, [workingDays, holidaysList])
 
     return (
         <div>
@@ -218,13 +223,13 @@ export const ScheduleCalendar = () => {
                                 {daysOfWeek.map((date) => {
                                     return <TableCell
                                         key={date.toISOString()}
-                                        onClick={workingDays.includes(date.day() as EDay) ? handleEdit(employee, date, schedules) : noop}
+                                        onClick={isWorkingDay(date) ? handleEdit(employee, date, schedules) : noop}
                                         style={{
                                             cursor: "pointer",
                                             fontSize: isXS ? 12 : 13,
-                                            ...getCellStyle(!workingDays.includes(date.day() as EDay))
+                                            ...getCellStyle(!isWorkingDay(date))
                                         }}>
-                                        {findScheduleDates(date, schedules)}
+                                        {findScheduleDates(date, schedules, isWorkingDay(date))}
                                     </TableCell>
                                 })}
                             </TableRow>

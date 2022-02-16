@@ -148,10 +148,10 @@ type ApiRoutes = {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
-    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove", TApiRoute>,
+    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
-        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery", TApiRoute>,
+        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -160,7 +160,8 @@ type ApiRoutes = {
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
-        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests", TApiRoute>,
+        | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings"
+        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings" | "RemovePackagePricingSettings", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -263,7 +264,8 @@ export class Api {
             Retrieve: {route: "/employee-schedules/{id}", method: "get"},
             Update: {route: "/employee-schedules", method: "put"},
             Remove: {route: "/employee-schedules/{id}", method: "delete"},
-            GetAll: {route: "/employee-schedules/by-query", method: "post"}
+            GetAll: {route: "/employee-schedules/by-query", method: "post"},
+            SetForWeek: {route: "/employee-schedules/batch-update", method: "put"},
         },
         MaintenancePackages: {
             Create: {route: "/maintenance-packages", method: "post"},
@@ -275,6 +277,7 @@ export class Api {
             PackageOptions: {route: "/maintenance-packages/{id}/options", method: "put"},
             ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "post"},
             GetShortByQuery: {route: "/maintenance-packages/short-by-query", method: "post"},
+            GetOptionsByQuery: {route: "/maintenance-packages/options-by-query", method: "post"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
@@ -318,6 +321,12 @@ export class Api {
             UpdateServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "put"},
             DeleteServiceRequestPricingSettings: {route: "/pricing-settings/service-requests/{id}", method: "delete"},
             AddServiceRequests: {route: "/pricing-settings/service-requests", method: "post"},
+            GetPackagePricingLevels: {route: "/pricing-settings/maintenance-package-options/pricing-levels", method: "get"},
+            ChangePackagePricingLevels: {route: "/pricing-settings/maintenance-package-options/pricing-levels/{id}", method: "put"},
+            ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "put"},
+            GetPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "get"},
+            AddPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "post"},
+            RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "delete"}
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},

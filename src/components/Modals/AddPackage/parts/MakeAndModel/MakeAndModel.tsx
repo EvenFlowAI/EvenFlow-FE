@@ -61,24 +61,24 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
         setModels(getSortedModels(filteredMakes))
     }, [makesFromDB])
 
-    const getSortedMakes = (makesFromDB: IMake[]): string[] => {
+    const getSortedMakes = useCallback((makesFromDB: IMake[]): string[] => {
         const data: string[] = makesFromDB
             .map(make => make.name)
             .sort((a, b) => selectedMakes.includes(a) ? selectedMakes.includes(b) ? 0 : -1 : 1);
         if (data.length) data.unshift('Apply To All');
         return data;
-    }
+    }, [makesFromDB, selectedMakes])
 
-    const getSortedModels = (makesFromDB: IMake[]): string[] => {
+    const getSortedModels = useCallback((makesFromDB: IMake[]): string[] => {
         const data: string[] = makesFromDB
             .map(make => make.models)
             .flat(1)
             .sort((a, b) => selectedModels.includes(a) ? selectedModels.includes(b) ? 0 : -1 : 1);
         if (data.length) data.unshift('Apply To All');
         return data;
-    }
+    }, [makesFromDB, selectedModels])
 
-    const onMakeChange = (e: ChangeEvent<{}>, value: string[]) => {
+    const onMakeChange = useCallback((e: ChangeEvent<{}>, value: string[]) => {
         if (value.includes('Apply To All')) {
             setSelectedMakes(() => makesFromDB.map(item => item.name));
             setModels(getSortedModels(makesFromDB));
@@ -88,16 +88,18 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             setModels(getSortedModels(filteredMakes));
             setSelectedModels(prev => prev.filter(item => filteredMakes.find(make => make.models.includes(item))))
         }
-    }
+    }, [makesFromDB, getSortedModels])
 
-    const onModelChange = (e: ChangeEvent<{}>, value: string[]) => {
+    const onModelChange = useCallback((e: ChangeEvent<{}>, value: string[]) => {
         if (value.includes('Apply To All')) {
             const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
-            setSelectedModels(() => filteredMakes.map(item => item.models).flat(1));
+            setSelectedModels(() => filteredMakes
+                .map(item => item.models)
+                .flat(1));
         } else setSelectedModels(value);
-    }
+    }, [makesFromDB, selectedMakes])
 
-    const onMakeCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: string) => {
+    const onMakeCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: string) => {
         setFormIsChecked(false);
         if (!e.target.checked) {
             setSelectedMakes(prev => {
@@ -107,9 +109,9 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     .sort((a, b) => selectedMakes.includes(a) ? selectedMakes.includes(b) ? 0 : -1 : 1)
             })
         }
-    }
+    }, [selectedMakes])
 
-    const onModelCheckboxChange = (e: ChangeEvent<HTMLInputElement>, option: string) => {
+    const onModelCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: string) => {
         setFormIsChecked(false);
         if (!e.target.checked) {
             setSelectedModels(prev => {
@@ -119,7 +121,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     .sort((a, b) => selectedModels.includes(a) ? selectedModels.includes(b) ? 0 : -1 : 1)
             })
         }
-    }
+    }, [selectedModels])
 
     const renderMakeOption = useCallback((option: string) => {
         const checked = selectedMakes.includes(option) || Boolean(!makesFromDB.find(make => !selectedMakes.includes(make.name)));
@@ -138,7 +140,8 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
 
     const renderModelOption = useCallback((option: string) => {
         const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
-        const allModelsSelected = filteredMakes.length ? Boolean(!filteredMakes
+        const allModelsSelected = filteredMakes.length
+            ? Boolean(!filteredMakes
             .map(item => item.models)
             .flat(1)
             .find(model => !selectedModels.includes(model)))
@@ -155,7 +158,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             />
             {option}
         </React.Fragment>
-    }, [makesFromDB, selectedModels]);
+    }, [makesFromDB, selectedModels, selectedMakes, onModelCheckboxChange]);
 
     return (
             <div>

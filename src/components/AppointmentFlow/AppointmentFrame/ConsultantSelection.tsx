@@ -11,7 +11,7 @@ import {
     loadConsultants, selectCategoriesIds,
     selectService, selectSubService,
     setAdvisor,
-    setPackage
+    setPackage, setPackageIsSelected, setSelectedPackageOptionType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -27,8 +27,10 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
     gridGap: "20px",
     width: "100%",
     [theme.breakpoints.down('sm')]: {
-        flexDirection: "column",
-        alignItems: "stretch"
+        gridTemplateColumns: "1fr 1fr",
+    },
+    [theme.breakpoints.down('xs')]: {
+        gridTemplateColumns: "1fr",
     }
 }));
 
@@ -112,6 +114,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
             dispatch(setPackage(null));
             dispatch(selectService(null));
+            dispatch(setSelectedPackageOptionType(null))
+            dispatch(setPackageIsSelected(false));
         }
         if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
             dispatch(selectSR(null));

@@ -135,7 +135,7 @@ const useStyles = makeStyles(theme => ({
 // TODO: Advisor|consultant
 export const SelectedAppointment = () => {
     const { selectedPackage, advisor, consultants, categoriesIds } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, allServiceCategories } = useSelector((state: RootState) => state.appointment);
+    const { scProfile, allServiceCategories, appointmentSlots } = useSelector((state: RootState) => state.appointment);
     const appointment = useSelector((state: RootState) => state.appointment.appointment);
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
@@ -151,6 +151,7 @@ export const SelectedAppointment = () => {
         [srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
 
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
+    const isRequestWithPrice = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => Boolean(item.priceValue)) : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
@@ -206,7 +207,11 @@ export const SelectedAppointment = () => {
                     </DateWrapper> : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">${price}</div>}
-                        <div className="info" style={{ fontSize: isSm ? 14: 28 }}>Save by booking at off peak times!</div>
+                        {isRequestWithPrice && (
+                            <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
+                          Save by booking at off peak times!
+                        </div>
+                        )}
                     </>
                     </PriceWrapper>
             </Wrapper>

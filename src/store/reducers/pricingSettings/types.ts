@@ -84,9 +84,32 @@ export type TNewRequestsToPricing = {
     serviceRequestIds: number[];
 }
 
+export type TNewPackagesToPricing = {
+    serviceCenterId: number;
+    maintenancePackageOptionIds: number[];
+}
+
 export interface IGetMPListData {
     serviceCenterId: number;
     podId?: number;
     pageIndex: number;
     pageSize: number;
+}
+
+export interface IPackagePricingLevels {
+    serviceCenterId: number;
+    maintenancePackageId: number;
+    maintenancePackageName: string;
+    values: TValuePricingLevel[];
+    maintenancePackageOptionId: number;
+    maintenancePackageOptionName: string;
+}
+
+export interface IPackagePricingSettings {
+    serviceCenterId: number;
+    maintenancePackageId: number;
+    maintenancePackageName: string;
+    maintenancePackageOptionId: number;
+    maintenancePackageOptionName: string;
+    values: TValuePricingLevel[];
 }

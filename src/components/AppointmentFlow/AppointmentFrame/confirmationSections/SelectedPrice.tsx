@@ -17,7 +17,10 @@ export const SelectedPrice = () => {
         <div>
             <ConfirmationTitle>Selected Price</ConfirmationTitle>
             <Price>
-                <span>${appointment?.price.value ?? 0}</span>
+                {appointment?.price.value ?
+                    <span>${appointment.price.value}</span>
+                    : 'Service items will be quoted at dealership'
+                }
             </Price>
         </div>
     );

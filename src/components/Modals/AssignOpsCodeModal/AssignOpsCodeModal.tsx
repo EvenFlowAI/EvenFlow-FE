@@ -134,14 +134,19 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
     }, [dispatch])
 
     const handleAssign = async () => {
-        if (currentPackage && selectedOption && selectedCode) {
-            let options = [...currentPackage.options];
-            let optionToChange = options.find(item => item.type === selectedOption.type);
-            if (optionToChange) {
-                optionToChange = {...optionToChange, serviceRequestAssignedId: selectedCode};
-                options = options.filter(item => item.type !== selectedOption.type).concat(optionToChange)
-                dispatch(updatePackageOptions(currentPackage.id, options))
+        try {
+            if (currentPackage && selectedOption && selectedCode) {
+                let options = [...currentPackage.options];
+                let optionToChange = options.find(item => item.type === selectedOption.type);
+                if (optionToChange) {
+                    optionToChange = {...optionToChange, serviceRequestAssignedId: selectedCode};
+                    options = options.filter(item => item.type !== selectedOption.type).concat(optionToChange)
+                    dispatch(updatePackageOptions(currentPackage.id, options))
+                }
             }
+        } catch (e) {
+            showError(e);
+        } finally {
             await setSaving(false);
             await handleClose();
         }

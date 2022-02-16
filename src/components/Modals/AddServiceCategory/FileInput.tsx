@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler, createRef, Dispatch, SetStateAction} from 'react';
+import React, {ChangeEventHandler, createRef, Dispatch, SetStateAction, useCallback} from 'react';
 import {useException, useMessage} from "../../../utils/hooks";
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -48,7 +48,7 @@ const FileInput: React.FC<TFileInputProps> = ({ setState }) => {
     const showMessage = useMessage();
     const classes = useStyles();
 
-    const handleFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const handleFileChange: ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
         if (event.target.files) {
             const file = event.target.files[0];
             const reader = new FileReader();
@@ -70,7 +70,8 @@ const FileInput: React.FC<TFileInputProps> = ({ setState }) => {
                 ref.current.value = "";
             }
         }
-    }
+    }, [ref])
+
     return (
         <div className={classes.buttonWrapper}>
             <label htmlFor="fileInput" className={classes.fileLabel}>

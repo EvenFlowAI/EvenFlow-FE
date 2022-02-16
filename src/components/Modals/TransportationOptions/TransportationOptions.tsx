@@ -15,7 +15,7 @@ import {
     loadTransportationOptions,
     updateTransportationOption
 } from "../../../store/reducers/transportationNeeds/actions";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useException, useModal, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import EditTransportationOptionDialog from "./EditTransportationOptionDialog";
 
@@ -61,6 +61,7 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
     const { isOpen, onOpen, onClose } = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const showError = useException();
 
     useEffect(() => {
         if (selectedSC) {
@@ -87,11 +88,15 @@ export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
 
     const handleSwitch = (type: number) => async (e: any, value: boolean) => {
         if (selectedSC) {
-            dispatch(updateTransportationOption({
-                type,
-                state: value ? 1 : 0,
-                serviceCenterId: selectedSC.id
-            }))
+            try {
+                dispatch(updateTransportationOption({
+                    type,
+                    state: value ? 1 : 0,
+                    serviceCenterId: selectedSC.id
+                }))
+            } catch (e) {
+                showError(e);
+            }
         }
     }
 

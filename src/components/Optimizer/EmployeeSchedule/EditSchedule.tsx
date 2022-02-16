@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
 import {
@@ -14,7 +14,7 @@ import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
 import moment from "moment";
 import {IEmployee} from "../../../store/reducers/employees/types";
-import {ISchedule, IScheduleForm} from "../../../store/reducers/schedules/types";
+import {ISchedule, IScheduleForm, IScheduleForWeek} from "../../../store/reducers/schedules/types";
 import {TimePicker} from "../../UI/DateTimePickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../config/constants";
@@ -47,27 +47,22 @@ type TForm = {
     podId?: number;
 }
 
-const getRequestDate = (i: number, date: moment.Moment | ParsableDate): ParsableDate => {
-    let requestDate = moment(date).day(i).toISOString();
-    if (i === 0) {
-        requestDate = moment(date).day() > 0 ?
-            moment(date).add(1, 'weeks').day(i).toISOString()
-            : moment(date).toISOString()
-    } else {
-        if (moment(date).day() === 0) {
-            requestDate = moment(date).subtract(1, 'weeks').day(i).toISOString()
-        }
+const getRequestDate = (date: moment.Moment | ParsableDate): {fromDate: ParsableDate, toDate: ParsableDate} => {
+    const dayOfWeek = moment(date).day();
+    let fromDate = moment(date).day("Monday").toISOString();
+    let toDate = moment(date).day("Friday").toISOString();
+    if (dayOfWeek === 0) {
+        fromDate = moment(date).subtract(1, 'day').startOf('week').add(1, 'day').toISOString()
+        toDate = moment(date).subtract(1, 'day').day("Friday").toISOString()
     }
-    return requestDate;
+    return {fromDate, toDate};
 }
 
 export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
+    const [isCleared, setCleared] = useState<boolean>(false);
     const pods = useSelector((state: RootState) => state.pods.shortPodsList);
-    const { employeesList } = useSelector((state: RootState) => state.employeesSchedule);
-    const { workingDays } = useSelector((state: RootState) => state.serviceCenters);
-    const { weeklyHolidaysList } = useSelector((state: RootState) => state.holidays);
 
     const {isOpen, onClose, onOpen} = useModal();
     const showMessage = useMessage();
@@ -97,6 +92,11 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
         }
     }, [props.open, payload]);
 
+    const handleClose = () => {
+        setCleared(false);
+        props.onClose();
+    }
+
     const handleUpdate = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
         setForm({...form, [name]: moment(date)});
     }
@@ -108,6 +108,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
         setSaving(true);
         try {
             await API.employeeSchedules.remove((t === "customId" ? customId : recursiveId) || 0);
+            await setCleared(true);
             onClear(t);
         } catch (e) {
             showError(e);
@@ -133,63 +134,41 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
             await dispatch(setEmployeesSchedule(data, isXS));
             setSaving(false);
             showMessage("Saved");
-            props.onClose();
+            handleClose();
         } catch (e) {
             setSaving(false);
             showError(e);
         }
     }
 
-    const handleSetForWeek = async () => {
+    const handleSetForWeek = useCallback(() => {
         setSaving(true);
-        const schedules = employeesList.find(item => item.employee.id === employee.id)?.schedules;
-
-        for (let i = 0; i < 7; i++) {
-            const initialData: IScheduleForm = {
-                date: getRequestDate(i, date),
-                employeeId: employee.id,
-                startAt: form.timeStart?.format(timeSpanString),
-                finishAt: form.timeEnd?.format(timeSpanString),
-                serviceCenterId: employee.serviceCenterId,
-                podId: form.podId,
-                isRecurring: false,
-            }
-
-            const schedule = schedules?.find(item => item.dayOfWeek === i);
-            const changeIsPossible: boolean = workingDays.includes(i)
-                && !weeklyHolidaysList.find(day => moment(day.date).day() === i)
-                && (moment(i === 0? moment(date).add(1, 'week'): date).day(i).isSameOrAfter(moment().startOf('day')));
-
-            if (changeIsPossible) {
-                try {
-                    if (schedule) {
-                        const data: IScheduleForm = {
-                            ...schedule,
-                            ...initialData,
-                            date: getRequestDate(i, schedule.date),
-                            id: schedule.id,
-                        }
-                        Api.call(Api.endpoints.EmployeeSchedule.Update, {data, urlParams: {id: data.id}})
-                            .then(() => {})
-                            .finally(() => setSaving(false))
-                    } else {
-                        Api.call(Api.endpoints.EmployeeSchedule.Create, {data: initialData})
-                            .then(() => {})
-                            .finally(() => setSaving(false))
-                    }
-                } catch (e) {
-                    showError(e);
-                }
-            }
+        const data: IScheduleForWeek = {
+            serviceCenterId: employee.serviceCenterId,
+            employeeId: employee.id,
+            startAt: form.timeStart?.format(timeSpanString),
+            finishAt: form.timeEnd?.format(timeSpanString),
+            podId: form.podId,
+            status: 0,
+            ...getRequestDate(date),
         }
-        const [start, end] = getStartEndDates(selectedDate, isXS);
-        await dispatch(loadEmployeesSchedule(start, end, employee.serviceCenterId));
-        setSaving(false);
-        props.onClose();
-    }
 
-    return <BaseModal {...props} width={750}>
-        <DialogTitle onClose={props.onClose}>Edit employee schedule</DialogTitle>
+        Api.call(Api.endpoints.EmployeeSchedule.SetForWeek, {data})
+            .then(() => {
+                const [start, end] = getStartEndDates(selectedDate, isXS);
+                dispatch(loadEmployeesSchedule(start, end, employee.serviceCenterId));
+            })
+            .catch(err => {
+                showError(err);
+            })
+            .finally(() => {
+                setSaving(false);
+                handleClose();
+            })
+    }, [employee, form, date, getRequestDate, getStartEndDates, selectedDate, isXS, showError, handleClose, setSaving])
+
+    return <BaseModal {...props} width={750} onClose={handleClose}>
+        <DialogTitle onClose={handleClose}>Edit employee schedule</DialogTitle>
         <DialogContent>
             <Grid container alignItems="flex-end" spacing={2}>
                 <Grid item xs={12}>
@@ -250,26 +229,27 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                         Employee Profile
                     </Button>
                 </Grid>
-                {(customId || recursiveId) ? <Grid item xs={12}>
-                    {customId ? <LoadingButton
-                        onClick={handleClear("customId")}
-                        startIcon={<Close />}
-                        variant="text"
-                        color="secondary">
-                        Clear schedule for {date.format("MMM D, YYYY")}
-                    </LoadingButton> : null}
-                    {recursiveId ? <LoadingButton
+                {payload && !isCleared
+                    ? <Grid item xs={12}>
+                    {payload?.isRecurring ? <LoadingButton
                         color="secondary"
-                        variant="text"
+                        variant="outlined"
                         onClick={handleClear("recursiveId")}
                         startIcon={<Close />}>
                         Clear schedule for {date.format("dddd")}
-                    </LoadingButton> : null}
-                </Grid> : null}
+                    </LoadingButton> : <LoadingButton
+                        onClick={handleClear("customId")}
+                        startIcon={<Close />}
+                        variant="outlined"
+                        color="secondary">
+                        Clear schedule for {date.format("MMM D, YYYY")}
+                    </LoadingButton>}
+                </Grid>
+                    : null}
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={handleClose}>Close</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave(false)}

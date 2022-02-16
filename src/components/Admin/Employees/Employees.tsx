@@ -85,7 +85,7 @@ export const Employees = () => {
         } else {
             askConfirm({
                 isRemove: true,
-                title: `Are you sure want to remove ${editedItem?.fullName}?`,
+                title: `Are you sure you want to remove ${editedItem?.fullName}?`,
                 onConfirm: handleRemove
             });
         }

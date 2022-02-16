@@ -58,7 +58,7 @@ export const DealershipGroups = () => {
     const handleRemoveAction = () => {
         setAnchorEl(null);
         askConfirm({
-            title: `Are you sure want to remove dealership group ${editedItem?.name}?`,
+            title: `Are you sure you want to remove dealership group ${editedItem?.name}?`,
             isRemove: true,
             onConfirm: async () => {
                 await handleRemove();

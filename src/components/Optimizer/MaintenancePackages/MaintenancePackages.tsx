@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, makeStyles} from "@material-ui/core";
-import {SearchInput} from "../../UI/SearchInput";
 import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
@@ -16,7 +15,7 @@ type TExpandedState = {
     isOpen?: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     titleWrapper: {
         marginBottom: 16,
     },
@@ -56,16 +55,6 @@ export const MaintenancePackages = () => {
         if (allPackages.length) setExpanded({ id: allPackages[0].id, isOpen: true})
     }, [allPackages])
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
-    }
-
-    let search = '';
-
-    const handleSearch = () => {
-
-    };
-
     const handleAddPackage = () => {
         onOpen();
     };
@@ -88,11 +77,6 @@ export const MaintenancePackages = () => {
         <div className={classes.topLineWrapper}>
             <LaborRate/>
             <div style={{display: "flex", alignItems: "center"}}>
-                <SearchInput
-                    onChange={handleSearchChange}
-                    value={search}
-                    onSearch={handleSearch}
-                />
                 <Button
                     style={{marginLeft: 16}}
                     color="primary"

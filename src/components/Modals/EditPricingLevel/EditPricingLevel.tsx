@@ -24,7 +24,7 @@ type TUpdatedSettings = {
     values: TValue[];
 }
 
-const useStyles = makeStyles(() => ({
+export const useEditPricingLevelStyles = makeStyles(() => ({
     wrapper: {
         display: 'flex',
         justifyContent: 'flex-end',
@@ -61,7 +61,7 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLevel, ...
     const dispatch = useDispatch();
     const showError = useException();
     const {selectedSC} = useSCs();
-    const classes = useStyles();
+    const classes = useEditPricingLevelStyles();
 
     useEffect(() => {
         if (prisingLevel && props.open) {
@@ -109,7 +109,11 @@ const EditPricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLevel, ...
                     value: Number(premium)
                 })
             }
-            dispatch(updateSRPricingLevels(prisingLevel.id, data, onCancel))
+            try {
+                dispatch(updateSRPricingLevels(prisingLevel.id, data, onCancel))
+            } catch (e) {
+                showError(e)
+            }
         }
     }, [prisingLevel, onCancel, premium, discount, selectedSC])
 

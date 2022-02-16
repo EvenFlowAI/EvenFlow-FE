@@ -99,8 +99,13 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
                     });
                 }
             }
-            dispatch(updateSRPricingSettings(editingItem.id, data))
-            onCancel();
+            try {
+                dispatch(updateSRPricingSettings(editingItem.id, data))
+            } catch (e) {
+                showError(e)
+            } finally {
+                onCancel();
+            }
         }
     }, [selectedSC, editingItem, onCancel, values, showError])
 

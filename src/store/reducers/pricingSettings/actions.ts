@@ -1,18 +1,21 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EDemandCategory,
-    IDayOfWeekSetting, IGetMPListData,
+    IDayOfWeekSetting,
+    IGetMPListData,
+    IPackagePricingSettings,
+    IPackagePricingLevels,
     IPricingDemand,
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
     ITimeOfYearSetting,
-    ITimeWindowEl, TNewRequestsToPricing
+    ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing
 } from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import moment from "moment";
-import {IPackageShort} from "../packages/types";
+import {IPackageOptionShort, IPackageShort} from "../packages/types";
 
 export const setLoading = createAction<boolean>("PricingSettings/SetLoading");
 
@@ -258,3 +261,94 @@ export const changeRoundPriceSetting = (id: number, isRoundPrice: boolean): AppT
             console.log('change round price setting error', err)
         })
 }
+
+export const getPackagePricingLevels = createAction<IPackagePricingLevels[]>('PricingSettings/GetPackagePricingSettings');
+export const loadPackagePricingLevels = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.GetPackagePricingLevels, {params: {serviceCenterId}})
+        .then(result => {
+            if (result) dispatch(getPackagePricingLevels(result.data));
+            }
+        )
+        .catch(err => {
+            console.log('get package pricing setting error', err)
+        })
+}
+
+export const updateMPPricingLevels = (optionId: number, data: Partial<IPackagePricingLevels>, callback = () => {}): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.ChangePackagePricingLevels, {urlParams: {id: optionId}, data })
+        .then(result => {
+            if (data.serviceCenterId && result) {
+                dispatch(loadPackagePricingLevels(data.serviceCenterId));
+                callback();
+            }
+        })
+        .catch(err => {
+            console.log('update package pricing level error', err)
+        })
+}
+
+export const getMPPricingSettings = createAction<IPackagePricingSettings[]>("PricingSettings/GetMPPricingSettings");
+export const loadMPPricingSettings = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.PricingSettings.GetPackagePricingSettings, {params: {serviceCenterId}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getMPPricingSettings(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('load service requests pricing settings error', err)
+        })
+        .finally(() => {
+            dispatch(setLoading(false));
+        })
+}
+
+export const updatePackagePricingSettings = (maintenancePackageId: number, data: Partial<IPackagePricingSettings>): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.ChangePackagePricingSettings, {urlParams: {id: maintenancePackageId}, data})
+        .then(result => {
+            if (result && data.serviceCenterId) dispatch(loadMPPricingSettings(data.serviceCenterId))
+        })
+        .catch(err => {
+            console.log('update package pricing settings error', err)
+        })
+}
+
+export const deletePackagePricingSettings = (id: number, serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.RemovePackagePricingSettings, {urlParams: {id}})
+        .then(result => {
+            if (result) dispatch(loadMPPricingSettings(serviceCenterId))
+        })
+        .catch(err => {
+            console.log('delete service request pricing settings error', err)
+        })
+}
+
+export const addPackageToPricing = (data: TNewPackagesToPricing): AppThunk => dispatch => {
+    Api.call(Api.endpoints.PricingSettings.AddPackagePricingSettings, {data})
+        .then(result => {
+            if (result) {
+                dispatch(loadMPPricingSettings(data.serviceCenterId))
+            }
+        })
+        .catch(err => {
+            console.log('add packages to pricing settings error', err)
+        })
+}
+
+export const getPackageOptionsList = createAction<IPackageOptionShort[]>('PricingSettings/GetMPOptionsShort');
+export const loadPackageOptionsList = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setLoading);
+    Api.call(Api.endpoints.MaintenancePackages.GetOptionsByQuery,
+        {data: {serviceCenterId, pageIndex: 0, pageSize: 0, isApplyPricingOptimization: true}})
+        .then(res => {
+            if (res?.data?.result) {
+                dispatch(getPackageOptionsList(res.data.result))
+            }
+        })
+        .catch(err => {
+            console.log('load maintenance packages options list error', err);
+        })
+        .finally(() => dispatch(setLoading(false)));
+}
+

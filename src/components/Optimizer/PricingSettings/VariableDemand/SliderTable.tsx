@@ -117,7 +117,7 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
         if (val <= -4 || val >= 4) {
             await askConfirm({
                 isRemove: true,
-                title: "Are you sure want to save this value?",
+                title: "Are you sure you want to save this value?",
                 onConfirm: () => handleSave(t),
                 onCancel: handleEdit(null),
                 confirmContent: "Confirm"

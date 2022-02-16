@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 import {Grid, MenuItem, Select} from "@material-ui/core";
 import {Api} from "../../../../config/requests";
 import {IAppointmentByQuery, ITransportation} from "../../../../api/types";
@@ -49,14 +49,13 @@ const Transportation: React.FC<TTransportationProps> = ({ payload, form , setFor
         }
     }, [transportations, payload])
 
-    const handleChangeTransportationNeeds = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
-        debugger;
+    const handleChangeTransportationNeeds = useCallback(({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
         const option = transportations.find(el => el.name === value)
         setForm({
             ...form,
             transportationOption: option ?? null
         });
-    }
+    }, [transportations, form, setForm])
 
     return (
         <Grid item xs={12}>

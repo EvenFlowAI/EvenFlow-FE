@@ -84,6 +84,35 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         if (!isBmWService) dispatch(setReminders([0, 2]));
     }, [isBmWService])
 
+    const handleResponse = (data: ICreateAppointmentResp, endpoint: {route: string; method: string}) => {
+        dispatch(setAppointmentId({
+            id: data.id,
+            hashKey: data.hashKey,
+        }));
+        if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
+            const d = {
+                ...appointment.customerLoadedData
+            };
+            const vehicle = d.vehicles.find(
+                c => c.vin === data.vehicle.vin
+            );
+            if (vehicle) {
+                vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
+            } else {
+                d.vehicles = [...d.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
+            }
+            if (!d.emails.length) {
+                d.emails = [appointmentFrame.customer.email];
+                d.fullName = data.driver?.fullName;
+                d.id = data.customerId;
+                d.phoneNumbers = [data.driver?.phoneNumber];
+            }
+            dispatch(setCustomerLoadedData(d));
+            saveCustomerCache(d);
+        }
+        onNext();
+    }
+
     const handleCreateAppointment = () => {
         const data = {
             id: appointmentFrame.id,
@@ -134,32 +163,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             endpoint, { data, urlParams: {id: data.hashKey} }
         )
             .then(({data}) => {
-                dispatch(setAppointmentId({
-                    id: data.id,
-                    hashKey: data.hashKey,
-                }));
-                if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
-                    const d = {
-                        ...appointment.customerLoadedData
-                    };
-                    const vehicle = d.vehicles.find(
-                        c => c.vin === data.vehicle.vin
-                    );
-                    if (vehicle) {
-                        vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
-                    } else {
-                        d.vehicles = [...d.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
-                    }
-                    if (!d.emails.length) {
-                        d.emails = [appointmentFrame.customer.email];
-                        d.fullName = data.driver?.fullName;
-                        d.id = data.customerId;
-                        d.phoneNumbers = [data.driver?.phoneNumber];
-                    }
-                    dispatch(setCustomerLoadedData(d));
-                    saveCustomerCache(d);
-                }
-                onNext();
+                handleResponse(data, endpoint);
             })
             .catch(e => {
                 showError(e);

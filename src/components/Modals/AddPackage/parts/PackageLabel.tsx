@@ -33,7 +33,8 @@ const useStyles = makeStyles(() => ({
 const PackageLabel: React.FC<TPackageLabel> = ({ onDelete, pack }) => {
     const classes = useStyles();
     return <div className={classes.wrapper}>{pack.name}
-        <CloseOutlined onClick={() => onDelete(pack)} className={classes.icon}/></div>
+        <CloseOutlined onClick={() => onDelete(pack)} className={classes.icon}/>
+    </div>
 }
 
 export default PackageLabel;

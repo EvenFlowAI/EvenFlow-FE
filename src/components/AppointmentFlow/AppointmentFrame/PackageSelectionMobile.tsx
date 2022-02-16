@@ -5,10 +5,11 @@ import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {TPackage} from "./PackageSelection";
 import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {TExtendedComplimentary} from "../../../api/types";
+import {RootState} from "../../../store/rootReducer";
 
-const style = withStyles(theme => ({
+const style = withStyles(() => ({
     root: {
         padding: 0,
         borderBottom: `none`,
@@ -32,7 +33,7 @@ const style = withStyles(theme => ({
     }
 }));
 
-const styled = withStyles(theme => ({
+const styled = withStyles(() => ({
     root: {
         padding: 0,
     }
@@ -219,13 +220,18 @@ const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
 
 const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, isBmWService, isSanfordInfinity }) => {
     const [value, setValue] = useState<string>('1');
+    const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const classes = useStyles();
 
     useEffect(() => {
-        const currentPackage = data[+value];
-        currentPackage && dispatch(setPackage(currentPackage));
-    }, [value])
+        if (selectedPackage) {
+            setValue(selectedPackage.type.toString());
+        } else {
+            const currentPackage = data[+value];
+            currentPackage && dispatch(setPackage(currentPackage));
+        }
+    }, [value, data, selectedPackage])
 
     const handleChange = (e: ChangeEvent<{}>, newValue: any): void => {
         setValue(newValue);
@@ -247,17 +253,18 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                     variant="fullWidth"
                     aria-label="icon tabs example">
                     {data.map((item, index) => (
-                        <Tab
-                            style={isBmWService ? {fontSize: 16} : {}}
+                        <Tab style={isBmWService ? {fontSize: 16} : {}}
                         className={index === +value ? classes.selectedTab : classes.tabWrapper}
                         value={`${index}`}
                         label={<TabLabel text={item.name} isSelected={index === +value}/>}/>)
                     )}
                 </Tabs>
+
                 {data.map((item, index) => (
                     <TabPanel value={`${index}`}>
                         <div className={classes.contentWrapper}>
                             <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
+
                             <div className={classes.serviceRequests}>
                                 {item.serviceRequests.map(item => (
                                     <p className={classes.serviceRequest}
@@ -266,22 +273,34 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                                     </p>
                                 ))}
                             </div>
+
                             { (isBmWService || isSanfordInfinity) && <div className={classes.totalMaintenance}>
-                                <span style={isBmWService ? {fontSize: 16} : {}}>Total Maintenance Value:</span>
+                                <span style={isBmWService ? {fontSize: 16} : {}}>
+                                  Total Maintenance Value:
+                                </span>
                                 <span style={{ fontSize: 20 }}>${item.price}</span>
                             </div>
                             }
+
                             <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>Complimentary</div>
+
                             <div className={classes.complimentaryServices}>
                                 {item.complimentaryServices.map(item => (
                                     <p className={classes.serviceRequest} style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
                                 ))}
                             </div>
+
                             <div className={classes.complimentaryTotal}>
-                                <span style={isBmWService ? {fontSize: 16} : {}}>Total Complimentary Value:</span>
+                                <span style={isBmWService ? {fontSize: 16} : {}}>
+                                    Total Complimentary Value:
+                                </span>
                                 {isBmWService || isSanfordInfinity
-                                    ? <span style={{ fontSize: 20 }}>{item.marketPriceComplimentaryServices ? `$${item.marketPriceComplimentaryServices}` : ''}</span>
-                                    :<span style={{ fontSize: 20 }}>{getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}</span>
+                                    ? <span style={{ fontSize: 20 }}>
+                                        {item.marketPriceComplimentaryServices ? `$${item.marketPriceComplimentaryServices}` : ''}
+                                </span>
+                                    : <span style={{ fontSize: 20 }}>
+                                        {getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}
+                                    </span>
                                 }
                             </div>
                             <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
@@ -289,10 +308,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                                 <div className={classes.prevPrice}>
                                     ${item.price + item.marketPriceComplimentaryServices}
                                 </div>}
+
                                 <div className={classes.currentWrp}>
                                     <div className={classes.triangle}/>
-                                    <div
-                                        className={classes.current}>${item.price}</div>
+                                    <div className={classes.current}>${item.price}</div>
                                 </div>
                             </div>
                         </div>

@@ -13,6 +13,7 @@ export interface ISchedule {
     status: EWorkingStatus;
     dayOfWeek?: number;
     podId?: number;
+    isLastSet?: boolean;
 }
 export interface IEmployeeSchedule {
     employee: IEmployee,
@@ -28,6 +29,17 @@ export interface IScheduleForm {
     serviceCenterId: number;
     podId?: number;
     isRecurring?: boolean;
+}
+
+export interface IScheduleForWeek {
+    serviceCenterId: number;
+    employeeId: string;
+    startAt: ParsableDate;
+    finishAt: ParsableDate;
+    status: EWorkingStatus;
+    fromDate: ParsableDate;
+    toDate: ParsableDate;
+    podId?: number;
 }
 
 export interface IScheduleFilters {

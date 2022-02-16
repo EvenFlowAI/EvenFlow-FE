@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../UI/Loading";
 import {changeRoundPriceSetting, loadRoundPriceSetting} from "../../../../store/reducers/pricingSettings/actions";
-import {useConfirm, useSCs} from "../../../../utils/hooks";
+import {useConfirm, useException, useSCs} from "../../../../utils/hooks";
 
 type TLabelProps = {
     title: string;
@@ -59,6 +59,7 @@ const PricingDisplay: React.FC = () => {
     const { isRoundPriceLoading, roundPrice } = useSelector((state: RootState) => state.pricingSettings);
     const [value, setValue] = useState<string>('decimal');
     const {askConfirm} = useConfirm();
+    const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -75,10 +76,14 @@ const PricingDisplay: React.FC = () => {
         if (selectedSC) {
             e.persist();
             askConfirm({
-                title: `Are you sure want to change the option?`,
+                title: `Are you sure you want to change the option?`,
                 onConfirm: () => {
-                    setValue(e.target.value);
-                    dispatch(changeRoundPriceSetting(selectedSC.id, e.target.value === 'round'))
+                    try {
+                        setValue(e.target.value);
+                        dispatch(changeRoundPriceSetting(selectedSC.id, e.target.value === 'round'))
+                    } catch (e) {
+                        showError(e);
+                    }
                 }
             });
         }

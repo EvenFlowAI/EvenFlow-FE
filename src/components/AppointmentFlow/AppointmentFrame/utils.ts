@@ -1,5 +1,6 @@
 import moment from "moment";
-import {ILoadedVehicle, IPackageOptions, IServiceCategory} from "../../../api/types";
+import {ILoadedVehicle, IPackage, IPackageOptions, IServiceCategory} from "../../../api/types";
+import {TComplimentary, TPackage, TService} from "./PackageSelection";
 
 export const getAppointmentDate = (date: moment.Moment, d: number) => {
     return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
@@ -9,21 +10,9 @@ export const collectServiceRequestIds = (
     s: IServiceCategory|null, sub: IServiceCategory|null, selectedPackage?: IPackageOptions|null
 , individualOpsCodes?: number[]): number[] => {
     let ids = [];
-    //TODO change logic after
 
-    // if (s) {
-    //     for (let i=0; i<s.serviceRequests.length; i++) {
-    //         ids.push(s.serviceRequests[i].id);
-    //     }
-    // }
-    // if (sub) {
-    //     for (let i=0; i < sub.serviceRequests.length; i++) {
-    //         ids.push(sub.serviceRequests[i].id);
-    //     }
-    // }
     if (selectedPackage) {
-        // DO not send any ops codes
-        // selectedPackage.
+
     }
     if (individualOpsCodes?.length) {
         for (let c of individualOpsCodes) {
@@ -46,4 +35,70 @@ export const checkSelectedCar = (vehicle: ILoadedVehicle|null, vehicles?: ILoade
             && vehicle.make === v.make
             && vehicle.model === v.model;
     }))
+}
+
+export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TService[], TComplimentary[]] => {
+    if (loadedPackages.length) {
+        const loadedPackage = loadedPackages[0];
+        const services: TService[] = [];
+        const packages: TPackage[] = [];
+        const complimentary: TComplimentary[] = [];
+
+        for (let option of loadedPackage.options.sort((a, b) => a.type - b.type)) {
+            packages.push({
+                ...option,
+                moreIdx: []
+            })
+            for (let service of option.serviceRequests) {
+                const pushedService = services.find(s => s.id === service.id);
+                if (!pushedService) {
+                    services.push({
+                        ...service, packages: [option.id]
+                    })
+                } else if (!pushedService.packages.includes(option.id)) {
+                    pushedService.packages = [...pushedService.packages, option.id];
+                }
+            }
+            for (let comp of option.complimentaryServices) {
+                const present = complimentary.find(c => c.id === comp.id);
+                if (!present) {
+                    complimentary.push({
+                        ...comp,
+                        packages: [option.id]
+                    })
+                } else if (!present.packages.includes(option.id)) {
+                    present.packages = [...present.packages, option.id];
+                }
+            }
+            services.reduce((acc, s, idx) => {
+                if (acc.pck.length > s.packages.length) {
+                    const lastPackageId = acc.pck[0];
+                    const p = packages.find(p => p.id === lastPackageId);
+                    if (p) {
+                        p.lastIdx = idx - 1;
+                        if (acc.moreIdx) {
+                            const np = packages.find(el => el.id === acc.moreIdx);
+                            if (np) {
+                                np.moreIdx = [...acc.more];
+                            }
+                        }
+                        acc.moreIdx = s.packages[0];
+                        acc.more = [idx];
+                    }
+                } else if (acc.more.length) {
+                    acc.more.push(idx);
+                }
+                if (idx === (services.length - 1) && acc.moreIdx) {
+                    const np = packages.find(el => el.id === acc.moreIdx);
+                    if (np) {
+                        np.moreIdx = [...acc.more];
+                    }
+                }
+                return {...acc, pck: s.packages};
+            }, {pck: [], more: [], moreIdx: 0} as { pck: number[], more: number[], moreIdx: number });
+        }
+
+        return [packages, services, complimentary];
+    }
+    return [[], [], []];
 }

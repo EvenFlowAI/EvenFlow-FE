@@ -260,7 +260,13 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const handleRemove = (): void => {
         setAnchorEl(null);
-        if (packageData && selectedSC) dispatch(removePackageById(packageData.id, selectedSC.id))
+        if (packageData && selectedSC) {
+            try {
+                dispatch(removePackageById(packageData.id, selectedSC.id))
+            } catch (e) {
+                showError(e);
+            }
+        }
     }
 
     const askRemove = () => {
@@ -289,9 +295,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }, [currentPackage])
 
     const sendRequest = useCallback((data: IPackageById) => {
-        dispatch(updatePackageOptions(data.id, data.options));
-        setIsEdit(false);
-        setEditingOption(null);
+        try {
+            dispatch(updatePackageOptions(data.id, data.options));
+        } catch (e){
+            showError(e)
+        } finally {
+            setIsEdit(false);
+            setEditingOption(null);
+        }
     }, [dispatch])
 
     const handleSave = useCallback((): void => {
@@ -344,7 +355,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     >
         <AccordionSummary id={title}>
             <div className={classes.titleWrapper}>
-                <Typography className={classes.title}>{title}</Typography>
+                <div>
+                    <Typography className={classes.title}>{title}</Typography>
+                    <div style={{ fontSize: 16 }}>Package ID: {id}</div>
+                </div>
                 <div className={classes.iconsWrapper}>
                     <IconButton
                         className={classes.button}

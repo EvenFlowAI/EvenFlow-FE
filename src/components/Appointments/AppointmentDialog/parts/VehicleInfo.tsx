@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
+import React, {useEffect, useState, Dispatch, SetStateAction, useCallback} from 'react';
 import {Grid} from "@material-ui/core";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../UI/AutocompleteRender";
@@ -59,7 +59,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, erro
         if (selectedSC && isDataValid) getPackage();
     }, [selectedSC, isDataValid, form.vehicleMake, form.vehicleModel, form.vehicleYear, form.vehicleMileage])
 
-    const handleSelectChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
+    const handleSelectChange = useCallback((name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
             setErrors(e => e.filter(err => err !== name));
             if (name === 'vehicleMake') {
@@ -75,9 +75,9 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, erro
             setForm(prev => ({...prev, [name]: option}));
             onVehicleDetailsChange();
         }
-    }
+    }, [makes, onVehicleDetailsChange])
 
-    const getPackage = () => {
+    const getPackage = useCallback(() => {
         if (selectedSC && isDataValid) {
             dispatch(loadPackageByVehicle({
                 serviceCenterId: selectedSC.id,
@@ -90,7 +90,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, erro
                 }
             }))
         }
-    }
+    }, [selectedSC, isDataValid, dispatch, form])
 
     return (
         <React.Fragment>

@@ -8,8 +8,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadMPList, setPricingOptimization} from "../../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {Caption} from "../../../UI/Caption";
-import {TextLink} from "../../../UI/TextLink";
-import {Routes} from "../../../../config/routes";
 
 const headCellStyles = {
     fontSize: 12,
