@@ -108,7 +108,7 @@ const blankRow: TBreak = {
 const initialBreaks: TBreak[] = moment.weekdays().map((day, dayOfWeek) => ({
     ...blankRow, dayOfWeek
 }));
-export const Break: React.FC<DialogProps&TViewMode> = props => {
+export const Break: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TBreak[]>(initialBreaks);
     const [wd, setWD] = useState<number[]>([]);
@@ -174,22 +174,23 @@ export const Break: React.FC<DialogProps&TViewMode> = props => {
                 await Api.call(
                     Api.endpoints.ServiceCenters.SetBreaks,
                     {urlParams: {id: selectedSC.id}, data}
-                )
-                setSaving(false);
-                showMessage("Breaks updated.");
+                ).then(res => {
+                    if (res) showMessage("Breaks updated.");
+                })
                 props.onClose();
             } catch (e) {
-                setSaving(false);
                 showError(e);
+            } finally {
+                setSaving(false);
             }
         }
     }
 
     return <BaseModal {...props} width={780}>
-        <DialogTitle onClose={props.onClose}>{props.viewMode ? "View" : "Edit"} Breaks</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{viewMode ? "View" : "Edit"} Breaks</DialogTitle>
         <DialogContent>
             <BForm
-                viewMode={props.viewMode}
+                viewMode={viewMode}
                 workDays={wd}
                 onChange={handleChange}
                 onCheck={handleCheck}
@@ -197,7 +198,7 @@ export const Break: React.FC<DialogProps&TViewMode> = props => {
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Close</Button>
-            {!props.viewMode ? <LoadingButton
+            {!viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"
                 color="primary"

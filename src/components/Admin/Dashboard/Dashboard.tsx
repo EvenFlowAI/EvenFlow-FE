@@ -272,6 +272,6 @@ export const AdminDashboard: React.FC = () => {
         <Technicians open={isTechOpen} onClose={onCloseTech} />
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
         <DashPodsModal viewMode={isCCRView} open={isOpenPods} onClose={onClosePods} />
-        <TransportationOptions viewMode={isCCRView} open={isOpenTransOptions} onClose={onCloseTransOptions}/>
+        <TransportationOptions open={isOpenTransOptions} onClose={onCloseTransOptions}/>
     </div>
 }

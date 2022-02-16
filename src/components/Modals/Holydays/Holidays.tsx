@@ -34,7 +34,7 @@ const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
-export const Holidays: React.FC<DialogProps&TViewMode> = props => {
+export const Holidays: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const [
         holidays,
         isLoading,
@@ -75,8 +75,9 @@ export const Holidays: React.FC<DialogProps&TViewMode> = props => {
                 await Api.call(
                     Api.endpoints.Holidays.Remove,
                     {urlParams: {id: editedItem.id}}
-                )
-                showMessage("Holiday removed");
+                ).then(res => {
+                    if (res) showMessage("Holiday removed");
+                })
             } catch (e) {
                 showError(e);
             }
@@ -117,13 +118,13 @@ export const Holidays: React.FC<DialogProps&TViewMode> = props => {
     const classes = useStyles();
     return <BaseModal {...props} width={720}>
         <DialogTitle onClose={props.onClose}>Holidays</DialogTitle>
-        {!props.viewMode && currentUser?.role !== Roles.Manager ? <div className={classes.addHoliday}>
+        {!viewMode && currentUser?.role !== Roles.Manager ? <div className={classes.addHoliday}>
             <Button variant="contained" color="primary" onClick={handleOpenCreate}>Add Holiday</Button>
         </div> : null}
         <Table<IHoliday>
             onChangePage={changePage}
             page={pageIndex}
-            viewMode={props.viewMode}
+            viewMode={viewMode}
             rowsPerPage={pageSize}
             onChangeRowsPerPage={changeRowsPerPage}
             compact
