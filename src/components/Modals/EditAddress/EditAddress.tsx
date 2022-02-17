@@ -13,12 +13,13 @@ import {Api} from "../../../config/requests";
 import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
 import {LoadingButton} from "../../UI/Button";
 
+type TEditFormProps = TViewMode & {
+    onChange: React.ChangeEventHandler<HTMLInputElement>;
+    onSelect: TSelectChange;
+    form: IAddress;
+}
 
-const EditForm: React.FC<{
-    onChange: React.ChangeEventHandler<HTMLInputElement>,
-    onSelect: TSelectChange,
-    form: IAddress,
-}&TViewMode> = ({viewMode, ...props}) => {
+const EditForm: React.FC<TEditFormProps> = ({viewMode, ...props}) => {
     return <Grid container spacing={3}>
         <Grid item xs={12}>
             <TextField
@@ -72,7 +73,7 @@ const initialAddress: IAddress = {
     zipCode: ""
 }
 
-export const EditAddress: React.FC<DialogProps&TViewMode> = props => {
+export const EditAddress: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const [form, setForm] = useState<IAddress>(initialAddress);
     const [saving, setSave] = useState<boolean>(false);
     const showError = useException();
@@ -118,14 +119,14 @@ export const EditAddress: React.FC<DialogProps&TViewMode> = props => {
 
     return <BaseModal {...props} maxWidth="sm">
         <DialogTitle onClose={props.onClose}>
-            {props.viewMode ? "View" : "Edit"} Address
+            {viewMode ? "View" : "Edit"} Address
         </DialogTitle>
         <DialogContent>
-            <EditForm viewMode={props.viewMode} onChange={handleChange} onSelect={handleSelectState} form={form} />
+            <EditForm viewMode={viewMode} onChange={handleChange} onSelect={handleSelectState} form={form} />
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Close</Button>
-            {!props.viewMode ? <LoadingButton
+            {!viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"
                 color="primary"

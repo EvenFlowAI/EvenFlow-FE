@@ -44,12 +44,21 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const WSForm: React.FC<{
+type TWSFormProps = TViewMode & {
     form: TWeeklySchedule[];
     workingDays: number[];
     onCheck: (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
     onChange: (day: number) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-}&TViewMode> = props => {
+}
+
+type TWeeklySchedule = {
+    dayOfWeek: number;
+    averageLevelThreeTechnicians: string;
+    averageTechnicians: string;
+    checked: boolean;
+}
+
+const WSForm: React.FC<TWSFormProps> = ({viewMode, ...props}) => {
     const classes = useStyles();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
@@ -75,15 +84,15 @@ const WSForm: React.FC<{
             const data = props.form.find(el => el.dayOfWeek === dayOfWeek) || {...blankRow, dayOfWeek};
             return <Grid container className={classes.container} alignItems="flex-end" key={`l-${day}`}>
                 <Grid item xs={2} hidden={isXS}>
-                    <Switch checked={data.checked} disabled={disabledByWD(dayOfWeek) || props.viewMode} onChange={props.onCheck(dayOfWeek)} color="primary"/>
+                    <Switch checked={data.checked} disabled={disabledByWD(dayOfWeek) || viewMode} onChange={props.onCheck(dayOfWeek)} color="primary"/>
                 </Grid>
                 <Grid item className="border" xs={6} sm={5}>
                     {isXS ? <Box ml={-1.5}>
-                        <Switch checked={data.checked} disabled={disabledByWD(dayOfWeek) || props.viewMode} onChange={props.onCheck(dayOfWeek)} color="primary"/>
+                        <Switch checked={data.checked} disabled={disabledByWD(dayOfWeek) || viewMode} onChange={props.onCheck(dayOfWeek)} color="primary"/>
                     </Box> : null }
                     <TextField
                         id={`${dayOfWeek}-averageTechnicians`}
-                        disabled={!data.checked || disabledByWD(dayOfWeek) || props.viewMode}
+                        disabled={!data.checked || disabledByWD(dayOfWeek) || viewMode}
                         name="averageTechnicians"
                         onChange={props.onChange(dayOfWeek)}
                         value={data.averageTechnicians}
@@ -94,7 +103,7 @@ const WSForm: React.FC<{
                 <Grid item xs={6} sm={5}>
                     <TextField
                         value={data.averageLevelThreeTechnicians}
-                        disabled={!data.checked || disabledByWD(dayOfWeek) || props.viewMode}
+                        disabled={!data.checked || disabledByWD(dayOfWeek) || viewMode}
                         type="number"
                         id={`${dayOfWeek}-averageLevelThreeTechnicians`}
                         name="averageLevelThreeTechnicians"
@@ -108,14 +117,12 @@ const WSForm: React.FC<{
     </div>
 }
 
-type TWeeklySchedule = {
-    dayOfWeek: number; averageLevelThreeTechnicians: string; averageTechnicians: string; checked: boolean;
-}
 const blankRow = {dayOfWeek: 0, checked: false, averageLevelThreeTechnicians: "", averageTechnicians: ""};
 const initialIWeeklySchedule: TWeeklySchedule[] = moment.weekdays().map((day, dayOfWeek) => ({
    ...blankRow, dayOfWeek
 }));
-export const WeeklySchedule: React.FC<DialogProps&TViewMode> = (props) => {
+
+export const WeeklySchedule: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const [form, setForm] = useState<TWeeklySchedule[]>(initialIWeeklySchedule);
     const [saving, setSaving] = useState<boolean>(false);
     const [wd, setWD] = useState<number[]>([]);
@@ -170,25 +177,27 @@ export const WeeklySchedule: React.FC<DialogProps&TViewMode> = (props) => {
                         return el.checked && wd.includes(el.dayOfWeek);
                     })
                 };
-                await Api.call(Api.endpoints.ServiceCenters.SetWS, {urlParams: {id: selectedSC.id}, data});
-                showMessage("Weekly schedule updated.")
-                setSaving(false);
+                await Api.call(Api.endpoints.ServiceCenters.SetWS, {urlParams: {id: selectedSC.id}, data})
+                    .then(res => {
+                    if (res) showMessage("Weekly schedule updated.")
+                });
                 props.onClose();
             } catch (e) {
                 showError(e);
+            } finally {
                 setSaving(false);
             }
         }
     }
 
     return <BaseModal {...props} maxWidth="sm">
-        <DialogTitle onClose={props.onClose}>{props.viewMode ? "View" : "Edit"} Weekly Schedule</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{viewMode ? "View" : "Edit"} Weekly Schedule</DialogTitle>
         <DialogContent>
-            <WSForm viewMode={props.viewMode} form={form} workingDays={wd} onCheck={handleCheck} onChange={handleChange} />
+            <WSForm viewMode={viewMode} form={form} workingDays={wd} onCheck={handleCheck} onChange={handleChange} />
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose}>Close</Button>
-            {!props.viewMode ? <LoadingButton
+            {!viewMode ? <LoadingButton
                 loading={saving}
                 color="primary"
                 variant="contained"

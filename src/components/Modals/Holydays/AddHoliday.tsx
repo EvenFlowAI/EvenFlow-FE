@@ -122,18 +122,22 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
                     await Api.call(
                         Api.endpoints.Holidays.Update,
                         {data, urlParams: {id: data?.id}}
-                    )
+                    ).then(res => {
+                        if (res) showMessage("Holiday saved");
+                    })
                 } else {
-                    await Api.call(Api.endpoints.Holidays.Create, {data});
+                    await Api.call(Api.endpoints.Holidays.Create, {data})
+                        .then(res => {
+                            if (res) showMessage("Holiday saved");
+                        })
                 }
-                setSaving(false);
-                showMessage("Holiday saved");
                 if (onAction) {
                     onAction();
                 }
                 props.onClose();
             } catch (e) {
                 showError(e);
+            } finally {
                 setSaving(false);
             }
         }
