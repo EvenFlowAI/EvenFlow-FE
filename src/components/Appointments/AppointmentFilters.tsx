@@ -9,7 +9,7 @@ import moment from "moment";
 
 type TAppointmentFilterProps = {
     handleSelectStatus: (e: React.ChangeEvent<{value: unknown}>) => void;
-    status: EAppointmentStatus | null | unknown;
+    status: EAppointmentStatus | '' | unknown;
     selectedDate: moment.Moment | null;
     onChange: (date: moment.Moment | null) => void;
 }
@@ -61,7 +61,7 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({ handleSelectSta
                             <TextField label='Status'/>
                         }
                     >
-                        <MenuItem value={undefined}>-</MenuItem>
+                        <MenuItem value=''>-</MenuItem>
                         {Object.keys(EAppointmentStatus).filter(item => Number.isNaN(+item)).map(status => {
                             return <MenuItem key={status} value={status}>{status}</MenuItem>
                         })}

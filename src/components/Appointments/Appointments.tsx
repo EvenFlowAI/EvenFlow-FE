@@ -22,7 +22,7 @@ export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IAppointmentByQuery|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [status, setStatus] = useState<EAppointmentStatus | null | unknown>(null);
+    const [status, setStatus] = useState<EAppointmentStatus | '' | unknown>('');
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<TView>("list");
@@ -77,7 +77,7 @@ export const Appointments = () => {
         if (type === "calendar") {
             setFiltersOpen(false);
             setDate(null);
-            setStatus(null);
+            setStatus('');
         }
         setSelectedView(type);
     }
