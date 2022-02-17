@@ -130,7 +130,7 @@ const getOptions = (optionsArray: string[]) => {
 
 const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOptionDialogProps> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
-    const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
+    const [customerSegment, setCustomerSegment] = useState<TOption | undefined>(undefined);
     const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
     const [segmentOptions, setSegmentOptions] = useState<TOption[]>([]);
     const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
@@ -174,7 +174,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }, [selectedSC])
 
     useEffect(() => {
-        if (editingElement) {
+        if (editingElement && props.open) {
             const {rules} = editingElement;
             if (rules) {
                 let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.includes(item.value));
@@ -211,9 +211,9 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 }));
             }
         }
-    }, [editingElement, segmentOptions, dayOFWeekOptions, allAssignedList])
+    }, [editingElement, segmentOptions, dayOFWeekOptions, allAssignedList, props.open])
 
-    const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+    const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | undefined): void => {
         setFormIsChecked(false);
         setCustomerSegment(value)
     }
@@ -328,7 +328,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
 
     const onCancel = () => {
         setFormIsChecked(false);
-        setCustomerSegment(null);
+        setCustomerSegment(undefined);
         setDuration(null);
         setTimeOfDay(null);
         setServiceRequests([]);
@@ -389,7 +389,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     options={segmentOptions}
                     disableClearable
                     getOptionSelected={(option, value) => option.name === ECustomerSegment[+value]}
-                    value={customerSegment || undefined}
+                    value={customerSegment}
                     onChange={onCustomerSegmentChange}
                     renderInput={autocompleteRender({
                         label: 'Applicable Customer Segment',

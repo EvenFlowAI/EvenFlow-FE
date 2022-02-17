@@ -132,7 +132,6 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-// TODO: Advisor|consultant
 export const SelectedAppointment = () => {
     const { selectedPackage, advisor, consultants, categoriesIds } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, allServiceCategories, appointmentSlots } = useSelector((state: RootState) => state.appointment);
@@ -176,7 +175,10 @@ export const SelectedAppointment = () => {
                         <div className="service-list">
                             {selectedServices.map(item => <div>{item}</div>)}
                         </div>
-                        {isSm && Boolean(price) && <div className="price">${price}</div>}
+                        { isSm && Boolean(price) &&
+                        <div className="price">
+                          ${Number.isInteger(price) ? price : price.toFixed(2)}
+                        </div> }
                     </li>
                         <li>
                             <div className={classes.selectWrapper}>

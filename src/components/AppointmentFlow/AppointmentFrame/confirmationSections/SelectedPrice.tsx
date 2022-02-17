@@ -18,7 +18,10 @@ export const SelectedPrice = () => {
             <ConfirmationTitle>Selected Price</ConfirmationTitle>
             <Price>
                 {appointment?.price.value ?
-                    <span>${appointment.price.value}</span>
+                    <span>${Number.isInteger(appointment.price.value)
+                        ? appointment.price.value
+                        : appointment.price.value.toFixed(2)}
+                    </span>
                     : 'Service items will be quoted at dealership'
                 }
             </Price>

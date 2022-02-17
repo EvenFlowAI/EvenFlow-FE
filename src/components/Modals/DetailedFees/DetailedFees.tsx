@@ -89,8 +89,11 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const price = useMemo(() => appointment?.price?.value && appointment.price.value > 0
-        ? `$${appointment?.price.value}` :
-        '', [appointment])
+        ? `$${Number.isInteger(appointment.price.value) 
+            ? appointment.price.value 
+            : appointment.price.value.toFixed(2)}`
+        : '',
+        [appointment])
     const noDefinedPriceExists = useMemo(() => appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0),
         [appointment])
 
