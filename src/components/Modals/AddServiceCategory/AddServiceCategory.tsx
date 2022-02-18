@@ -224,11 +224,10 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                             value={categoryName}/>
                     </div>
                     <Autocomplete
-                        disableClearable
                         options={pageOptions}
                         getOptionSelected={(option) => option.value === definedPage?.value}
                         getOptionLabel={option => option.name}
-                        value={definedPage || undefined}
+                        value={definedPage}
                         onChange={onDefinedPageChange}
                         renderInput={autocompleteRender({
                             label: 'Define Page',
@@ -241,11 +240,10 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                         <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={assignedFilter.searchTerm} />
                     </div>
                     <Autocomplete
-                        disableClearable
                         options={categoryOptions}
                         getOptionSelected={(option) => option.value === categoryType?.value}
                         getOptionLabel={getOptionLabel}
-                        value={categoryType || undefined}
+                        value={categoryType}
                         onChange={onCategoryTypeChange}
                         renderInput={autocompleteRender({
                             label: 'Link for Booking Flow',
