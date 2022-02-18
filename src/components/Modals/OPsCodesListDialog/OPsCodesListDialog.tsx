@@ -85,9 +85,9 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
 
     const handleCheck = (el: IServiceRequest) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         if (checked) {
-            setSelectedCodes([...selectedCodes, el.id]);
+            setSelectedCodes(prev => [...prev, el.id]);
         } else {
-            setSelectedCodes(selectedCodes.filter(i => i !== el.id));
+            setSelectedCodes(prev => prev.filter(i => i !== el.id));
         }
     }
 
@@ -98,7 +98,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     const preActions = (el: IServiceRequest) => {
         return <Checkbox
             color="primary"
-            checked={selectedCodes.includes(el.id) || selectedPreviously?.includes(el.id)}
+            checked={selectedCodes.includes(el.id) || selectedPreviously?.includes(el.id) || false}
             onChange={handleCheck(el)}
             disabled={selectedPreviously?.includes(el.id)}
         />

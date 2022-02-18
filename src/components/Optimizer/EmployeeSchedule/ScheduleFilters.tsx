@@ -33,12 +33,12 @@ export const ScheduleFilters: React.FC<TProps> = () => {
                     <Select
                         fullWidth
                         onChange={handleSelect("podId")}
-                        value={filters.podId || null}
+                        value={filters.podId || ''}
                         input={
                             <TextField label="Pod" />
                         }
                     >
-                        <MenuItem value={undefined}>-</MenuItem>
+                        <MenuItem value={''}>-</MenuItem>
                         {podList.map(pod => {
                             return <MenuItem key={pod.id} value={pod.id}>{pod.name}</MenuItem>
                         })}
@@ -48,10 +48,10 @@ export const ScheduleFilters: React.FC<TProps> = () => {
                     <Select
                         fullWidth
                         onChange={handleEmployeeFilter}
-                        value={filters.skillLevel ? filters.skillLevel : filters.role ? 0 : null}
+                        value={filters.skillLevel ? filters.skillLevel : filters.role ? 0 : ''}
                         input={<TextField label="Employee Position" />}
                     >
-                        <MenuItem value={undefined}>-</MenuItem>
+                        <MenuItem value={''}>-</MenuItem>
                         <MenuItem value={0}>Advisor</MenuItem>
                         {[1,2,3].map(n => {
                             return <MenuItem key={n} value={n}>{`Level ${n}`}</MenuItem>
