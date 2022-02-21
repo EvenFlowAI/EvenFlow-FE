@@ -141,7 +141,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
 
     const handleBack = () => {
         // todo change the Diagnosis to enum from back
-        if (subService?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnosis) {
+        if (subService?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose) {
             dispatch(selectSR(null));
         }
         onBack();
