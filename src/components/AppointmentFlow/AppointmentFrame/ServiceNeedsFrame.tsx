@@ -78,6 +78,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             switch (selectedService?.type) {
                 case 2:
                     return onSelect('opsCode');
+                case 4:
+                    return onSelect('opsCode');
                 case 1:
                     return onSelect('maintenanceDetails');
                 case 3:

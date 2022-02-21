@@ -8,11 +8,9 @@ import {useDebounce} from "../../../utils/hooks";
 import {
     handleSearch,
     loadServiceCategories,
-    loadSRs,
     selectAppointment,
     selectSR
 } from "../../../store/reducers/appointment/actions";
-import {decodeSCID} from "../../../utils/utils";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {InputLoading, TextField} from "../UI";
 import {Search} from "@material-ui/icons";
@@ -67,7 +65,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
     const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
 
     const {id} = useParams();
-    const [selectedCode, srList, search, vehicles, vehicle, scProfile, serviceCategories, subService] = useSelector((state: RootState) => [
+    const [selectedCode, srList, search, vehicles, vehicle, scProfile, serviceCategories, subService, service] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointment.search,
@@ -76,6 +74,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
         state.appointment.scProfile,
         state.appointment.serviceCategories,
         state.appointmentFrame.subService,
+        state.appointmentFrame.service,
     ]);
     const dispatch = useDispatch();
     const isInit = useRef(true);
@@ -93,17 +92,19 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
     }, [search]);
     useEffect(() => {isInit.current = false}, []);
 
-    useEffect(() => {
-        async function fetchData() {
-            setLoading(true);
-            try {
-                await dispatch(loadSRs(decodeSCID(id)));
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchData().finally();
-    }, [id, dispatch, search]);
+    // todo change search request logic if needed
+
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         setLoading(true);
+    //         try {
+    //             await dispatch(loadSRs(decodeSCID(id)));
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     }
+    //     fetchData().finally();
+    // }, [id, dispatch, search]);
 
     useEffect(() => {
         if (scProfile) dispatch(loadServiceCategories(scProfile.id, 1))
@@ -139,7 +140,8 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
     }
 
     const handleBack = () => {
-        if (subService?.type === EServiceCategoryType.IndividualServices) {
+        // todo change the Diagnosis to enum from back
+        if (subService?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnosis) {
             dispatch(selectSR(null));
         }
         onBack();
