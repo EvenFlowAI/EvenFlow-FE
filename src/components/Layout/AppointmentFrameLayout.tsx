@@ -259,6 +259,7 @@ export const AppointmentFrameLayout = () => {
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             opsCode: <SelectOpsCode
+                onAddServices={handleChangeScreen('serviceNeeds')}
                 onBack={handleChangeScreen(service?.type === EServiceCategoryType.Diagnose ? 'serviceNeeds' : 'serviceSelection')}
                 onNext={handleSetScreen}
             />,

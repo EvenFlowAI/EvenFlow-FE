@@ -21,7 +21,7 @@ import {
     getSRs,
     handleSearch,
     selectAppointment,
-    selectSR,
+    selectSR, selectSRMultiple,
     setAppointmentFilters,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
@@ -236,5 +236,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(getAllServiceCategories, (state, { payload }) => {
         return {...state, allServiceCategories: payload};
+    })
+    .addCase(selectSRMultiple, (state, {payload}) => {
+        return {...state, selectedSR: payload};
     })
 );

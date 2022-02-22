@@ -67,7 +67,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
 
     useEffect(() => {
         if (props.open && selectedSC) {
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id));
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
     }, [props.open, dispatch, selectedSC, pageSize, pageIndex, order]);
 
