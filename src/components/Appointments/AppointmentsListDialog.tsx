@@ -21,39 +21,47 @@ type TDialogProps = DialogProps & {
     setViewItem?: Dispatch<SetStateAction<IAppointmentByQuery|undefined>>
 }
 
-const AppointmentsListDialog: React.FC<TDialogProps> = (props) => {
+const AppointmentsListDialog: React.FC<TDialogProps> = ({
+                                                            date,
+                                                            refresh,
+                                                            order,
+                                                            setOrder,
+                                                            onEditOpen,
+                                                            viewItem,
+                                                            setViewItem,
+                                                            ...props}) => {
     const { isModalLoading } = useSelector((state: RootState) => state.appointments);
     const {selectedSC}= useSCs();
     const dispatch = useDispatch();
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
 
     useEffect(() => {
-        if (selectedSC && props.open && props.date) {
+        if (selectedSC && props.open && date) {
             const data: IAppointmentsRequest = {
                 pageIndex: 0,
                 pageSize: 0,
-                date: moment(props.date).add(moment(props.date).utcOffset(), 'minute'),
+                date: moment(date).add(moment(date).utcOffset(), 'minute'),
                 serviceCenterId: selectedSC.id,
             }
             dispatch(loadAppointmentsForModal(data))
         }
-    }, [selectedSC, props.date, props.open])
+    }, [selectedSC, date, props.open])
 
     return (
         <BaseModal {...props} width={850} onClose={props.onClose} onExit={props.onClose}>
-            <DialogTitle onClose={props.onClose}>Appointments for {props.date ? moment(props.date).format('YYYY-MM-DD') : ''}</DialogTitle>
+            <DialogTitle onClose={props.onClose}>Appointments for {date ? moment(date).format('YYYY-MM-DD') : ''}</DialogTitle>
             <DialogContent style={{ overflowY: 'auto' }}>
                 <AppointmentsTable
-                    viewItem={props.viewItem}
+                    viewItem={viewItem}
                     isLoading={isModalLoading}
-                    refresh={props.refresh}
-                    order={props.order}
+                    refresh={refresh}
+                    order={order}
                     pageData={pageData}
-                    setOrder={props.setOrder}
+                    setOrder={setOrder}
                     onChangePage={onChangePage}
                     onChangeRowsPerPage={onChangeRowsPerPage}
-                    onEditOpen={props.onEditOpen}
-                    setViewItem={props.setViewItem}
+                    onEditOpen={onEditOpen}
+                    setViewItem={setViewItem}
                 />
             </DialogContent>
         </BaseModal>

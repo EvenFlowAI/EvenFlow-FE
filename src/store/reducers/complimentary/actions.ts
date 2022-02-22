@@ -34,10 +34,11 @@ export const editComplimentary = (id: number, data: TComplimentary, callback: ()
         })
 }
 
-export const addOpsCodeFromList = (serviceRequests: number[], serviceCenterId: number, errorCallback = (err: string) => {}): AppThunk => dispatch => {
+export const addOpsCodeFromList = (serviceRequests: number[], serviceCenterId: number, errorCallback = (err: string) => {}, successCallback = () => {}): AppThunk => dispatch => {
     Api.call(Api.endpoints.ComplimentaryServices.AddFromList, {data: { serviceCenterId, serviceRequests }})
         .then(result => {
             if (result) {
+                successCallback();
                 dispatch(loadComplimentary(serviceCenterId));
             }
         }).catch(err => {

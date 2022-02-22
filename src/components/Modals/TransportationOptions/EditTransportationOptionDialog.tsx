@@ -130,7 +130,7 @@ const getOptions = (optionsArray: string[]) => {
 
 const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOptionDialogProps> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
-    const [customerSegment, setCustomerSegment] = useState<TOption | undefined>(undefined);
+    const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
     const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
     const [segmentOptions, setSegmentOptions] = useState<TOption[]>([]);
     const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
@@ -213,7 +213,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         }
     }, [editingElement, segmentOptions, dayOFWeekOptions, allAssignedList, props.open])
 
-    const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | undefined): void => {
+    const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
         setCustomerSegment(value)
     }
@@ -328,7 +328,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
 
     const onCancel = () => {
         setFormIsChecked(false);
-        setCustomerSegment(undefined);
+        setCustomerSegment(null);
         setDuration(null);
         setTimeOfDay(null);
         setServiceRequests([]);
@@ -387,7 +387,6 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     style={{ marginBottom: 20 }}
                     getOptionLabel={option => option.name}
                     options={segmentOptions}
-                    disableClearable
                     getOptionSelected={(option, value) => option.name === ECustomerSegment[+value]}
                     value={customerSegment}
                     onChange={onCustomerSegmentChange}
