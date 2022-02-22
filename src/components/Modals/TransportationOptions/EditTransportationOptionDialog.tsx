@@ -174,7 +174,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }, [selectedSC])
 
     useEffect(() => {
-        if (editingElement) {
+        if (editingElement && props.open) {
             const {rules} = editingElement;
             if (rules) {
                 let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.includes(item.value));
@@ -211,7 +211,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 }));
             }
         }
-    }, [editingElement, segmentOptions, dayOFWeekOptions, allAssignedList])
+    }, [editingElement, segmentOptions, dayOFWeekOptions, allAssignedList, props.open])
 
     const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
         setFormIsChecked(false);
@@ -387,9 +387,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     style={{ marginBottom: 20 }}
                     getOptionLabel={option => option.name}
                     options={segmentOptions}
-                    disableClearable
                     getOptionSelected={(option, value) => option.name === ECustomerSegment[+value]}
-                    value={customerSegment || undefined}
+                    value={customerSegment}
                     onChange={onCustomerSegmentChange}
                     renderInput={autocompleteRender({
                         label: 'Applicable Customer Segment',

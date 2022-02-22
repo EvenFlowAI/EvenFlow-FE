@@ -30,7 +30,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {service: selectedService, categoriesIds, selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
-    const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {id} = useParams();
     const dispatch = useDispatch();
@@ -56,7 +55,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 setServiceCategories(data);
             })
             .finally(() => {setLoading(false)});
-    }, [id, scProfile]);
+    }, [id]);
 
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectService(card));

@@ -129,7 +129,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 getOptionLabel={i => i.name}
                 getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
-                value={props.form?.dmsId ? props.dmsConsultants.find(item => item.id.toString() === props.form?.dmsId) : null}
+                value={props.form?.dmsId ? props.dmsConsultants.find(item => item.id.toString() === props.form.dmsId) : null}
                 renderInput={autocompleteRender({label: "Assign Advisor from DMS", fullWidth: true, placeholder: "Select Advisor"})}
             />
         </Grid>
@@ -256,11 +256,5 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 </Grid>
             </Grid>
         </Grid>
-        {/*<Grid item xs={6}>*/}
-        {/*    <Autocomplete*/}
-        {/*        renderInput={autocompleteRender({label: "Certificate"})}*/}
-        {/*        options={[]}*/}
-        {/*    />*/}
-        {/*</Grid>*/}
     </Grid>
 }

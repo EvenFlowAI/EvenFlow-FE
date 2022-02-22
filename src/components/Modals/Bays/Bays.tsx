@@ -4,11 +4,11 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {Button} from "@material-ui/core";
 import {RequiredEquipment} from "../../Optimizer/CapacitySettings/RequiredEquipment";
 
-export const Bays: React.FC<DialogProps&TViewMode> = props => {
+export const Bays: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     return <BaseModal {...props} width={700}>
         <DialogTitle onClose={props.onClose}>Bays</DialogTitle>
         <DialogContent>
-            <RequiredEquipment viewMode={props.viewMode} />
+            <RequiredEquipment viewMode={viewMode} />
         </DialogContent>
         <DialogActions>
             <Button color="primary" onClick={props.onClose}>Close</Button>

@@ -118,7 +118,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, erro
                             />
                         </Grid>
                     } else {
-                        return <Grid item xs={12}>
+                        return <Grid item xs={12} key={select.name}>
                             <TextField
                                 label="VIN"
                                 value={form.vehicleVin}

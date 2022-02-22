@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, styled, Switch, TableBody, TableHead} from "@material-ui/core";
-import {DialogProps, TViewMode} from "../types";
+import {DialogProps} from "../types";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {DemandTable, TableCell, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
@@ -54,7 +54,7 @@ const getOptionString = (option: string) => {
     return array.join('');
 }
 
-export const TransportationOptions: React.FC<DialogProps&TViewMode> = props => {
+export const TransportationOptions: React.FC<DialogProps> = props => {
     const [editingElement, setEditingElement] = useState<ITransportationOptionFull | null>(null);
     const { options, isLoading } = useSelector((state: RootState) => state.transportation);
     const [initialOptions, setInitialOptions] = useState<ITransportationOptionFull[]>([]);

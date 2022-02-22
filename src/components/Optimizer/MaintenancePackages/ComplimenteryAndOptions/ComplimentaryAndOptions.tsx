@@ -52,12 +52,23 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
             <TableBody>
                 {props.packageData?.complimentaryServices.map((request, rowIndex) => {
                     return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.name}>
-                        <TableCell className={classes.requestCell} key={request.name}>{request.name}</TableCell>
-                        <TableCell className={classes.requestCell} key={request.name} width={100}>{request.durationInHours}</TableCell>
-                        <TableCell className={classes.requestCell} key={request.name} width={100}>${request.price}</TableCell>
-                        <TableCell className={classes.requestCell} key={request.name} width={100}>${request.partsAmount}</TableCell>
-                        <TableCell className={classes.requestCell} key={request.name} width={100}>${request.price}</TableCell>
+                        <TableCell className={classes.requestCell} key={`${request.name}_nameCell`}>
+                            {request.name}
+                        </TableCell>
+                        <TableCell className={classes.requestCell} key={`${request.name}_durationInHours`} width={100}>
+                            {request.durationInHours}
+                        </TableCell>
+                        <TableCell className={classes.requestCell} key={`${request.name}_total`} width={100}>
+                            ${request.price}
+                        </TableCell>
+                        <TableCell className={classes.requestCell} key={`${request.name}_partsAmount`} width={100}>
+                            ${request.partsAmount}
+                        </TableCell>
+                        <TableCell className={classes.requestCell} key={`${request.name}_price`} width={100}>
+                            ${request.price}
+                        </TableCell>
                         <TableCell className={classes.emptyCell} width={16} key="empty"/>
+
                         {props.data.find(item => item.requestId === request.id)?.cellData
                             .sort((a, b) => a.optionType - b.optionType)
                             .map((item: TCellData, cellIndex) => {

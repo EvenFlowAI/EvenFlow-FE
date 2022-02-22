@@ -8,7 +8,7 @@ import {
     loadNonSelectedServiceRequests, setNonSelectedFilter, setNonSelectedOrder,
     setNonSelectedPageData
 } from "../../../store/reducers/serviceRequests/actions";
-import {useException, useMessage, usePagination, useSCs} from "../../../utils/hooks";
+import {useException, usePagination, useSCs} from "../../../utils/hooks";
 import {TableRowDataType} from "../../UI/types";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
@@ -33,7 +33,6 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();
-    const showMessage = useMessage();
     const [
         serviceList,
         isLoading,
@@ -85,9 +84,9 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
 
     const handleCheck = (el: IServiceRequest) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         if (checked) {
-            setSelectedCodes([...selectedCodes, el.id]);
+            setSelectedCodes(prev => [...prev, el.id]);
         } else {
-            setSelectedCodes(selectedCodes.filter(i => i !== el.id));
+            setSelectedCodes(prev => prev.filter(i => i !== el.id));
         }
     }
 
@@ -98,7 +97,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     const preActions = (el: IServiceRequest) => {
         return <Checkbox
             color="primary"
-            checked={selectedCodes.includes(el.id) || selectedPreviously?.includes(el.id)}
+            checked={selectedCodes.includes(el.id) || selectedPreviously?.includes(el.id) || false}
             onChange={handleCheck(el)}
             disabled={selectedPreviously?.includes(el.id)}
         />
@@ -112,7 +111,6 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
                 setSaving(true);
                 await onSave(selectedCodes, selectedSC.id);
                 setSaving(false);
-                showMessage(`Successfully added ${selectedCodes.length} codes`);
                 setSelectedCodes([]);
             } catch (e) {
                 setSaving(false);

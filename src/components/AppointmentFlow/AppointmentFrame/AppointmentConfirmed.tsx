@@ -147,7 +147,10 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR]);
 
     const getPrice = (): string => {
-        return appointment?.price?.value ? `Selected Price: $${appointment?.price?.value}` : 'Service price will be quoted at dealership'
+        const price = appointment?.price?.value;
+        return price
+            ? `Selected Price: $${Number.isInteger(price) ? price : price.toFixed(2)}`
+            : 'Service price will be quoted at dealership';
     }
 
     const handleAddToCalendar = () => {

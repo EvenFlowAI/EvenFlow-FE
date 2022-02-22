@@ -24,11 +24,11 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
 
     useEffect(() => {
         if (customerLoadedData) {
-            // dispatch(setCustomer({
-            //     fullName: customerLoadedData?.fullName ?? "",
-            //     email: customerLoadedData?.emails[0] ?? "",
-            //     phoneNumber: customerLoadedData?.phoneNumbers[0] ?? "",
-            // }));
+            dispatch(setCustomer({
+                fullName: customerLoadedData?.fullName ?? "",
+                email: customerLoadedData?.emails[0] ?? "",
+                phoneNumber: customerLoadedData?.phoneNumbers[0] ?? "",
+            }));
         }
     }, [customerLoadedData, dispatch]);
 
