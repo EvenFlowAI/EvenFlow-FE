@@ -43,6 +43,7 @@ import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
+import {EServiceCategoryType} from "../../store/reducers/categories/types";
 
 const Container = styled('div')({
     display: "flex",
@@ -103,7 +104,7 @@ export const AppointmentFrameLayout = () => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
-    const {selectedVehicle, trackerCreated, isAdditionalServices} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, trackerCreated, isAdditionalServices, service} = useSelector((state: RootState) => state.appointmentFrame);
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -258,7 +259,8 @@ export const AppointmentFrameLayout = () => {
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             opsCode: <SelectOpsCode
-                onBack={handleChangeScreen('serviceSelection')}
+                onAddServices={handleChangeScreen('serviceNeeds')}
+                onBack={handleChangeScreen(service?.type === EServiceCategoryType.Diagnose ? 'serviceNeeds' : 'serviceSelection')}
                 onNext={handleSetScreen}
             />,
             vehicleData: <VehicleData

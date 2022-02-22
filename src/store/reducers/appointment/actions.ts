@@ -52,6 +52,7 @@ export const loadSRs = (serviceCenterId: number): AppThunk => async (dispatch, g
     dispatch(getSRs(result));
 }
 export const selectSR = createAction<number|null>("Appointment/SelectSR");
+export const selectSRMultiple = createAction<number[]>("Appointment/SelectSRMultiple")
 export const changeS1Form = createAction<Partial<TS1Form>>("Appointment/ChangeS1Form");
 export const handleSearch = createAction<string>("Appointment/Search");
 export const changeS3Form = createAction<Partial<TS3Form>>("Appointment/ChangeS3Form");
@@ -239,7 +240,6 @@ export const loadServiceCategories = (serviceCenterId: number, page: number): Ap
         Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId, page}}
     )
         .then(({data}) => {
-            console.log(data)
             if (data) dispatch(getServiceCategories(data))
         })
         .catch(err => {
