@@ -191,10 +191,11 @@ export const OPsCodesPage = () => {
                 await Api.call(
                     Api.endpoints.ServiceRequests.RemoveOverride,
                     {urlParams: {id: editedItem.id}}
-                )
+                ).then(res => {
+                    if (res) showMessage("Service request removed.")
+                })
                 setEditedItem(undefined);
                 dispatch(loadAssignedServiceRequests(selectedSC.id));
-                showMessage("Service request removed.")
             } catch (e) {
                 showError(e);
             }
@@ -202,11 +203,13 @@ export const OPsCodesPage = () => {
             showError(SC_UNDEFINED);
         }
     }
-    const onSuccessAssign = (selectedCodes: number[]) => showMessage(`Successfully added ${selectedCodes.length} codes`);
+    const onSuccessAssign = useCallback((selectedCodes: number[]) => {
+        showMessage(`Successfully added ${selectedCodes.length} codes`)
+    }, [])
 
-    const onRequestAssign = (selectedCodes: number[], serviceCenterId: number) => {
+    const onRequestAssign = useCallback((selectedCodes: number[], serviceCenterId: number) => {
         dispatch(assignServiceRequests(selectedCodes, serviceCenterId, showError, onSuccessAssign));
-    }
+    }, [dispatch, showError, onSuccessAssign])
 
     return <>
         <TitleContainer

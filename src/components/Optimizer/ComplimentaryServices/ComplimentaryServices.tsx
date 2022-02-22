@@ -117,10 +117,11 @@ const ComplimentaryServices = () => {
                 await Api.call(
                     Api.endpoints.ComplimentaryServices.Remove,
                     {urlParams: {id: editedItem.id}}
-                )
+                ).then(res => {
+                    if (res) showMessage("Complimentary Service removed.");
+                })
                 setEditedItem(undefined);
                 dispatch(loadComplimentary(selectedSC.id))
-                showMessage("Complimentary Service removed.")
             } catch (e) {
                 showError(e);
             }
@@ -141,7 +142,12 @@ const ComplimentaryServices = () => {
     const onAddOpsCode = async (selectedCodes: number[], serviceCenterId: number) => {
         try {
             const newCodes = selectedCodes.filter(item => !selectedOpsCodes.includes(item));
-            await dispatch(addOpsCodeFromList(newCodes, serviceCenterId));
+            await dispatch(addOpsCodeFromList(
+                newCodes,
+                serviceCenterId,
+                (e) => showError(e),
+                () => showMessage(`Successfully added ${newCodes.length} codes`)
+            ));
         } catch (e) {
             showError(e);
         } finally {
