@@ -21,7 +21,11 @@ import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
-import {setAdditionalServicesChosen} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    selectCategoriesIds,
+    selectService,
+    setAdditionalServicesChosen
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 
 const Wrapper = styled('div')({
@@ -69,7 +73,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
 
     const {id} = useParams();
-    const [selectedCode, srList, search, vehicles, vehicle, scProfile, subService, service, allCategories, selectedPackage] = useSelector((state: RootState) => [
+    const [selectedCode, srList, search, vehicles, vehicle, scProfile, subService, service, allCategories, selectedPackage, categoriesIds] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointment.search,
@@ -80,6 +84,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
         state.appointmentFrame.service,
         state.categories.allCategories,
         state.appointmentFrame.selectedPackage,
+        state.appointmentFrame.categoriesIds,
     ]);
     const dispatch = useDispatch();
     const isInit = useRef(true);
@@ -144,19 +149,23 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     const handleBack = () => {
         let codes: number[] = [];
         if (subService?.type === EServiceCategoryType.IndividualServices && service?.type === EServiceCategoryType.LinkToPage2) {
-            const diagnoseCategoryRequestsIds: number[] = allCategories
-                .find(item => item.type === EServiceCategoryType.Diagnose)
-                ?.serviceRequests.map(item => item.id) || [];
-            codes = selectedCode
-                .filter(item => !subService.serviceRequests.find(el => item === el.id) || diagnoseCategoryRequestsIds.includes(item))
+            const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+            const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
+            codes = selectedCode.filter(item => {
+                return !subService.serviceRequests.find(el => item === el.id)
+                || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
+            })
         } else if (service?.type === EServiceCategoryType.Diagnose) {
-            const individualRequestsIds: number[] = allCategories
-                .find(item => item.type === EServiceCategoryType.IndividualServices)
-                ?.serviceRequests.map(item => item.id) || [];
-            codes = selectedCode
-                .filter(item => !service.serviceRequests.find(el => item === el.id) || individualRequestsIds.includes(item))
+            const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+            const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
+            codes = selectedCode.filter(code => {
+                return !service.serviceRequests.find(request => code === request.id)
+                 || (individualRequestsIds.includes(code) && individualCategory && categoriesIds.includes(individualCategory?.id))
+            })
+            dispatch(selectService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
         }
-       dispatch(selectSRMultiple(codes));
+        dispatch(selectSRMultiple(codes));
         onBack();
     }
 

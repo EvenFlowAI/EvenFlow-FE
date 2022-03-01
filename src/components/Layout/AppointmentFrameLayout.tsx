@@ -104,7 +104,7 @@ export const AppointmentFrameLayout = () => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
-    const {selectedVehicle, trackerCreated, isAdditionalServices, service} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService} = useSelector((state: RootState) => state.appointmentFrame);
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -292,7 +292,9 @@ export const AppointmentFrameLayout = () => {
                 onModify={handleChangeScreen("serviceNeeds")}
             />,
             carDetails: <CarDetails
-                onBack={handleChangeScreen('describeMore')}
+                onBack={handleChangeScreen(
+                    service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+                    ? 'opsCode' : 'describeMore')}
                 onNext={handleChangeScreen('consultantSelection')}
             />
         }
