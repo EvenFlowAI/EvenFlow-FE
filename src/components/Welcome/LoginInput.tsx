@@ -124,9 +124,13 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 action: 'Enters Page',
                 label: `As Returning Customer`,
             });
-        } catch {
+        } catch (err) {
             dispatch(setSessionId(""));
-            showError("We can't find your vehicle data, you can proceed as a new customer");
+            if (err.message) {
+                showError(err)
+            } else {
+                showError("We are sorry but we could not find your vehicle in our system. Please schedule appointment as a new customer");
+            }
             onReturn();
         } finally {
             setLoading(false);
