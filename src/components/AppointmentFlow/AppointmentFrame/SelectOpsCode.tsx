@@ -160,7 +160,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
             const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
             codes = selectedCode.filter(code => {
                 return !service.serviceRequests.find(request => code === request.id)
-                || (individualRequestsIds.includes(code) && individualCategory && categoriesIds.includes(individualCategory.id))
+                 || (individualRequestsIds.includes(code) && individualCategory && categoriesIds.includes(individualCategory?.id))
             })
             dispatch(selectService(null));
             dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));

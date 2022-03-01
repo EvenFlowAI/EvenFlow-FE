@@ -81,22 +81,29 @@ const CartTable = () => {
         scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
 
+    const deleteIndService = (item: IMaintenanceItem) => {
+        dispatch(selectSR(item.id));
+        const services = selectedSR.filter(sr => sr !== item.id);
+        const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
+        const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
+        let categories = [...categoriesIds];
+
+        if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
+            if (subService?.type === indServiceCategory?.type) dispatch(selectSubService(null))
+            categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
+            dispatch(selectCategoriesIds(categories));
+        }
+        if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
+            if (service?.type === diagnoseCategory?.type) dispatch(selectService(null))
+            categories = categories.filter(id => id !== diagnoseCategory?.id)
+            dispatch(selectCategoriesIds(categories));
+        }
+    }
+
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
             case 'service':
-                dispatch(selectSR(item.id));
-                const services = selectedSR.filter(sr => sr !== item.id);
-                const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
-                const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
-
-                if (indServiceCategory && !indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
-                    if (subService?.type === indServiceCategory.type) dispatch(selectSubService(null))
-                    dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== indServiceCategory.id)));
-                }
-                if (diagnoseCategory && !diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
-                    if (service?.type === diagnoseCategory.type) dispatch(selectService(null))
-                    dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== diagnoseCategory.id)));
-                }
+                deleteIndService(item);
                 return;
             case 'package':
                 if (service?.type === 1) dispatch(selectService(null));
