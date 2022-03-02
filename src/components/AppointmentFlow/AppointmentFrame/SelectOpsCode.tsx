@@ -23,7 +23,7 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {
     selectCategoriesIds,
-    selectService,
+    selectService, selectSubService,
     setAdditionalServicesChosen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
@@ -149,18 +149,20 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     const handleBack = () => {
         let codes: number[] = [];
         if (subService?.type === EServiceCategoryType.IndividualServices && service?.type === EServiceCategoryType.LinkToPage2) {
-            const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+            const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
             const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
             codes = selectedCode.filter(item => {
                 return !subService.serviceRequests.find(el => item === el.id)
                 || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
             })
+            dispatch(selectSubService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
         } else if (service?.type === EServiceCategoryType.Diagnose) {
             const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
             const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
             codes = selectedCode.filter(code => {
                 return !service.serviceRequests.find(request => code === request.id)
-                 || (individualRequestsIds.includes(code) && individualCategory && categoriesIds.includes(individualCategory?.id))
+                 || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
             })
             dispatch(selectService(null));
             dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
