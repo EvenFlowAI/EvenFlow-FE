@@ -51,7 +51,9 @@ export const TimeSlotCard: React.FC<TProps> =
             return "Not Available";
         }
         if (slot.price.amountOfSavingMoney) {
-            return `Save $${Math.abs(slot.price.amountOfSavingMoney)}`;
+            return `Save $${Number.isInteger(slot.price.amountOfSavingMoney) 
+                ? slot.price.amountOfSavingMoney 
+                : slot.price.amountOfSavingMoney.toFixed(2)}`;
         }
         return "Available";
     }
