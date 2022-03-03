@@ -9,7 +9,6 @@ import bg from "../../assets/img/confirmationBg.png";
 import { ConfirmationContent } from './ConfirmationContent';
 import {decodeSCID} from "../../utils/utils";
 
-
 const Wrapper = styled(Container)({
     background: `#F2F3F7 url(${bg}) top center no-repeat`,
     backgroundSize: "cover",

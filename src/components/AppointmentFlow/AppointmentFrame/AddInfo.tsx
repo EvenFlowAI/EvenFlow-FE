@@ -14,7 +14,7 @@ import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../../components/Layout/types";
 import {useModal} from "../../../utils/hooks";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {selectSR} from "../../../store/reducers/appointment/actions";
+import {selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 
 type TProps = {
@@ -27,7 +27,7 @@ type TProps = {
     onAddServices: () => void;
 };
 export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServices}) => {
-    const [subService, vehicle, vehicles, selectedPackage, selectedSR, service, categoriesIds] = useSelector(({appointmentFrame, appointment}: RootState) => [
+    const [subService, vehicle, vehicles, selectedPackage, selectedSR, service, categoriesIds, allCategories] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
         appointment.customerLoadedData?.vehicles,
@@ -35,6 +35,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
         appointment.selectedSR,
         appointmentFrame.service,
         appointmentFrame.categoriesIds,
+        categories.allCategories,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -80,7 +81,12 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
             }
         }
         if (subService?.type === EServiceCategoryType.IndividualServices) {
-            dispatch(selectSR(null));
+            const diagnoseCategoryRequestsIds: number[] = allCategories
+                .find(item => item.type === EServiceCategoryType.Diagnose)
+                ?.serviceRequests.map(item => item.id) || [];
+            const codes = selectedSR
+                .filter(item => !subService.serviceRequests.find(el => item === el.id) || diagnoseCategoryRequestsIds.includes(item))
+            dispatch(selectSRMultiple(codes));
         }
         dispatch(selectCategoriesIds(categories))
         onBack(screenToReturn);

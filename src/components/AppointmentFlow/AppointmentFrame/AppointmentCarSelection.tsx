@@ -12,7 +12,6 @@ import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
 import {setMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/actions";
 
-
 const CarsWrapper = styled('div')({
     display: "flex",
     alignItems: "center",

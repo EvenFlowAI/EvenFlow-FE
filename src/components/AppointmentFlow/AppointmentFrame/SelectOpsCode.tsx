@@ -4,15 +4,12 @@ import {StepWrapper} from "./StepWrapper";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useDebounce} from "../../../utils/hooks";
+import {useDebounce, useModal} from "../../../utils/hooks";
 import {
     handleSearch,
-    loadServiceCategories,
-    loadSRs,
     selectAppointment,
-    selectSR
+    selectSR, selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
-import {decodeSCID} from "../../../utils/utils";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {InputLoading, TextField} from "../UI";
 import {Search} from "@material-ui/icons";
@@ -22,6 +19,13 @@ import {checkSelectedCar} from "./utils";
 import ReactGA from "react-ga";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
+import AskAddService from "../../Modals/AskAddService/AskAddService";
+import {
+    selectCategoriesIds,
+    selectService, selectSubService,
+    setAdditionalServicesChosen
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 
 const Wrapper = styled('div')({
@@ -58,24 +62,29 @@ const Code = styled(FormControlLabel)({
 type TProps = {
     onNext: TArgCallback<TScreen>;
     onBack: TCallback;
+    onAddServices?: () => void;
 }
 
-export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
+export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices}) => {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [searchInput, setSearch] = useState<string>("");
     const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
+    const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
 
     const {id} = useParams();
-    const [selectedCode, srList, search, vehicles, vehicle, scProfile, serviceCategories, subService] = useSelector((state: RootState) => [
+    const [selectedCode, srList, search, vehicles, vehicle, scProfile, subService, service, allCategories, selectedPackage, categoriesIds] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointment.search,
         state.appointment.customerLoadedData?.vehicles,
         state.appointment.customerSelectedVehicle,
         state.appointment.scProfile,
-        state.appointment.serviceCategories,
         state.appointmentFrame.subService,
+        state.appointmentFrame.service,
+        state.categories.allCategories,
+        state.appointmentFrame.selectedPackage,
+        state.appointmentFrame.categoriesIds,
     ]);
     const dispatch = useDispatch();
     const isInit = useRef(true);
@@ -93,36 +102,49 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
     }, [search]);
     useEffect(() => {isInit.current = false}, []);
 
-    useEffect(() => {
-        async function fetchData() {
-            setLoading(true);
-            try {
-                await dispatch(loadSRs(decodeSCID(id)));
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchData().finally();
-    }, [id, dispatch, search]);
+    // todo change search request logic if needed
 
     useEffect(() => {
-        if (scProfile) dispatch(loadServiceCategories(scProfile.id, 1))
+        if (scProfile) dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
 
     useEffect(() => {
-        const indServicesCategory = serviceCategories.find(item => item.type === +EServiceCategoryType.IndividualServices)
-        if (indServicesCategory) {
-            setOpsCodesList(indServicesCategory.serviceRequests);
+        if (subService?.type === EServiceCategoryType.IndividualServices && service?.type === EServiceCategoryType.LinkToPage2) {
+            setOpsCodesList(() => subService.serviceRequests);
+        } else if (service?.type === EServiceCategoryType.Diagnose) {
+            setOpsCodesList(() => service.serviceRequests);
         }
-    }, [serviceCategories])
+    }, [subService, service])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
     }
 
     const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+        const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
+        const diagnoseCategoryRequestsIds = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
+        const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+        const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
+        let categories = [...categoriesIds];
+        if (Number(value) && selectedCode.includes(Number(value))) {
+            if (!selectedCode.filter(id => id !== Number(value)).find(code => diagnoseCategoryRequestsIds.includes(code))) {
+                categories = categories.filter(id => id !== diagnoseCategory?.id);
+            }
+            if (!selectedCode.filter(id => id !== Number(value)).find(code => individualRequestsIds.includes(code))) {
+                categories = categories.filter(id => id !== individualCategory?.id);
+            }
+            dispatch(selectCategoriesIds(categories))
+        }
         dispatch(selectSR(value ? Number(value) : null));
         dispatch(selectAppointment(null));
+    }
+
+    const goNext = () => {
+        if (!checkSelectedCar(vehicle, vehicles)) {
+            onNext("carDetails");
+        } else {
+            onNext("consultantSelection");
+        }
     }
 
     const handleNext = () => {
@@ -131,18 +153,51 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
             action: 'Selected Individual Service Requests',
             label: `With Codes ${srList.filter(item => selectedCode.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         })
-        if (!checkSelectedCar(vehicle, vehicles)) {
-            onNext("carDetails");
-        } else {
-            onNext("consultantSelection");
+        const categoryChosen = service?.type === 0 || subService?.type === 0;
+        if (service?.type === EServiceCategoryType.Diagnose && (!selectedPackage || !categoryChosen)) {
+            return onAdditionalOpen();
         }
+        goNext();
     }
 
     const handleBack = () => {
-        if (subService?.type === EServiceCategoryType.IndividualServices) {
-            dispatch(selectSR(null));
+        let codes: number[] = [];
+        if (subService?.type === EServiceCategoryType.IndividualServices && service?.type === EServiceCategoryType.LinkToPage2) {
+            const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
+            const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
+            codes = selectedCode.filter(item => {
+                return !subService.serviceRequests.find(el => item === el.id)
+                || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
+            })
+            dispatch(selectSubService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
+        } else if (service?.type === EServiceCategoryType.Diagnose) {
+            const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+            const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
+            codes = selectedCode.filter(code => {
+                return !service.serviceRequests.find(request => code === request.id)
+                 || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
+            })
+            dispatch(selectService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
         }
+        dispatch(selectSRMultiple(codes));
         onBack();
+    }
+
+    const addServices = () => {
+        dispatch(setAdditionalServicesChosen(true));
+        if (onAddServices) onAddServices();
+    }
+
+    const handleYes = () => {
+        onAdditionalClose();
+        addServices();
+    }
+
+    const handleNo = () => {
+        onAdditionalClose();
+        goNext();
     }
 
     return (
@@ -183,6 +238,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack}) => {
                     })}
                 </CodesWrapper>
             </Wrapper>
+            <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
             <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} />
         </StepWrapper>
     );
