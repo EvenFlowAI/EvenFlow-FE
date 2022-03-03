@@ -121,6 +121,20 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     }
 
     const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+        const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
+        const diagnoseCategoryRequestsIds = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
+        const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+        const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
+        let categories = [...categoriesIds];
+        if (Number(value) && selectedCode.includes(Number(value))) {
+            if (!selectedCode.filter(id => id !== Number(value)).find(code => diagnoseCategoryRequestsIds.includes(code))) {
+                categories = categories.filter(id => id !== diagnoseCategory?.id);
+            }
+            if (!selectedCode.filter(id => id !== Number(value)).find(code => individualRequestsIds.includes(code))) {
+                categories = categories.filter(id => id !== individualCategory?.id);
+            }
+            dispatch(selectCategoriesIds(categories))
+        }
         dispatch(selectSR(value ? Number(value) : null));
         dispatch(selectAppointment(null));
     }
