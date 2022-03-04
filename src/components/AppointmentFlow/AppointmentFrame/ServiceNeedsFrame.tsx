@@ -69,7 +69,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
-            if (selectedService.type === 0 && categoriesIds) {
+            if (categoriesIds && selectedService.type !== EServiceCategoryType.LinkToPage2) {
                 const categories = categoriesIds?.includes(selectedService.id) ? categoriesIds : [...categoriesIds, selectedService.id];
                 dispatch(selectCategoriesIds(categories));
             }
@@ -77,6 +77,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
 
             switch (selectedService?.type) {
                 case 2:
+                    return onSelect('opsCode');
+                case 4:
                     return onSelect('opsCode');
                 case 1:
                     return onSelect('maintenanceDetails');
@@ -87,12 +89,18 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             }
         }
     }
+
+    const getCardState = (card: IServiceCategory): boolean => {
+        if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage);
+        return categoriesIds?.includes(card.id)
+    }
+
     return (
         <StepWrapper>
             {!loading ? <CardsWrapper>
                 {serviceCategories.map(card => {
                     return <ServiceCard
-                        selected={categoriesIds?.includes(card.id) || (card.type === EServiceCategoryType.MaintenancePackage && Boolean(selectedPackage))}
+                        selected={getCardState(card)}
                         active={selectedService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}

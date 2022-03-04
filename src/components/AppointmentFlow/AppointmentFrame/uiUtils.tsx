@@ -2,6 +2,7 @@ import React from "react";
 import {IPackageOptions, IServiceCategoryShort} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 import {IMaintenanceItem} from "./types";
+import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 
 export const getMaintenanceDescription = (
     srList: ISR[],
@@ -35,7 +36,7 @@ export const getMaintenanceList = (
     srList: ISR[],
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
-    allCategories?: IServiceCategoryShort[],
+    allCategories?: ICategory[],
     selectedCategories?: number[]) => {
     const services: IMaintenanceItem[] = [];
 
@@ -51,7 +52,7 @@ export const getMaintenanceList = (
         filtered.forEach(item => item && services.push({id: item.id, name: item.description ?? item.code, type: 'service'}));
     }
     if (selectedCategories && allCategories) {
-        const categories = allCategories.filter(category => selectedCategories.includes(category.id))
+        const categories = allCategories.filter(category => selectedCategories.includes(category.id) && category.type === EServiceCategoryType.GeneralCategory)
         categories.forEach(item => services.push({id: item.id, name: item.name, type: 'category'}))
     }
     return services;

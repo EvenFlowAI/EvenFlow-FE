@@ -208,7 +208,9 @@ export const SelectedAppointment = () => {
                         Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
                     </DateWrapper> : null}
                     <>
-                        {!isSm && Boolean(price) && <div className="price">${price}</div>}
+                        {!isSm && Boolean(price) && <div className="price">
+                          ${Number.isInteger(price) ? price : price.toFixed(2)}
+                        </div>}
                         {isRequestWithPrice && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
                           Save by booking at off peak times!

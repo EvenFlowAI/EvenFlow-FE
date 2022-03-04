@@ -125,13 +125,25 @@ export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAp
                 appointments[idx].lowestPrice = appointment.priceWithOffer?.value || appointment.price.value;
             }
         } else {
+            const lowestPrice = appointment.priceWithOffer?.value
+                ? Number.isInteger(appointment.priceWithOffer?.value)
+                    ? appointment.priceWithOffer?.value
+                    : +appointment.priceWithOffer?.value.toFixed(2)
+                : Number.isInteger(appointment.price.value)
+                    ? appointment.price.value
+                    : +appointment.price.value.toFixed(2);
+            const amountOfSavingMoney = appointment?.price?.amountOfSavingMoney
+                ? Number.isInteger(+appointment.price.amountOfSavingMoney)
+                    ? appointment.price.amountOfSavingMoney
+                    : Number(appointment.price.amountOfSavingMoney.toFixed(2))
+                : undefined;
             appointments[idx] = {
                 date,
                 idx,
-                lowestPrice: appointment.priceWithOffer?.value || appointment.price.value,
+                lowestPrice,
                 appointments: [appointment],
                 offers: Boolean(appointment.offer),
-                amountOfSavingMoney: appointment.price.amountOfSavingMoney,
+                amountOfSavingMoney: amountOfSavingMoney,
             };
         }
     }

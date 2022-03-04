@@ -16,7 +16,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
-import {selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
@@ -91,6 +91,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const [loading, setLoading] = useState<boolean>(false);
     const {advisor: selectedConsultant, consultants, selectedPackage, service, subService, categoriesIds}= useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {allCategories} = useSelector((state: RootState) => state.categories);
     const {id} = useParams();
     const dispatch = useDispatch();
 
@@ -111,6 +112,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleBack = () => {
         let categories = [...categoriesIds];
+        let codes: number[] = [];
         if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
             dispatch(setPackage(null));
             dispatch(selectService(null));
@@ -118,8 +120,25 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             dispatch(setPackageIsSelected(false));
         }
         if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
-            dispatch(selectSR(null));
+            const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
+            const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
+            codes = selectedSR.filter(item => {
+                return !subService.serviceRequests.find(el => item === el.id)
+                    || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
+            })
             dispatch(selectSubService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
+            dispatch(selectSRMultiple(codes));
+        } else if (service?.type === EServiceCategoryType.Diagnose) {
+            const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+            const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
+            codes = selectedSR.filter(code => {
+                return !service.serviceRequests.find(request => code === request.id)
+                    || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
+            })
+            dispatch(selectService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
+            dispatch(selectSRMultiple(codes));
         }
         if (service && categoriesIds?.includes(service.id)) {
             dispatch(selectService(null));

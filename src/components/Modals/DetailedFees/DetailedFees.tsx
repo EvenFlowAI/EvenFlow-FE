@@ -112,7 +112,11 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                                 : item.requestName}
                             </span>
                             {Object(item).hasOwnProperty('priceValue') && item.priceValue
-                                ? <span className={classes.price}>${item.priceValue}</span>
+                                ? <span className={classes.price}>
+                                    ${Number.isInteger(item.priceValue)
+                                    ? item.priceValue
+                                    : item.priceValue.toFixed(2)}
+                            </span>
                                 : <ErrorOutline/>}
                     </li>))}
                 </List>

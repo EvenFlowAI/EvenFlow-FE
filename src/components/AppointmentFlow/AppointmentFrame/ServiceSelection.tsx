@@ -27,7 +27,7 @@ type TProps = {
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
     const {subService, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
-    const {scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
     const [loading, setLoading] = useState<boolean>(false);
@@ -62,7 +62,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
                 action: 'Selected Sub Service',
                 label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
             })
-            if (subService.type === 0 && categoriesIds) {
+            if (categoriesIds && subService.type !== EServiceCategoryType.LinkToPage2) {
                 const categories = categoriesIds?.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
                 dispatch(selectCategoriesIds(categories));
             }
@@ -87,9 +87,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             {!loading ? <CardsWrapper>
                 {services.map(card => {
                     return <ServiceCard
-                        selected={categoriesIds?.includes(card.id)
-                        || (card.type === EServiceCategoryType.IndividualServices && Boolean(selectedSR?.length))
-                        }
+                        selected={categoriesIds?.includes(card.id)}
                         active={subService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}

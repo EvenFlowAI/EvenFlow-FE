@@ -5,9 +5,9 @@ import {getMaintenanceList} from "./uiUtils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
-import {loadAllServiceCategories, selectSR} from "../../../store/reducers/appointment/actions";
+import {selectSR} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
-import {ExpandMore, ExpandLess} from '@material-ui/icons';
+import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
     selectCategoriesIds,
     selectService,
@@ -15,6 +15,8 @@ import {
     setPackage
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useConfirm} from "../../../utils/hooks";
+import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -64,10 +66,11 @@ const CartItem: React.FC<TCartItemProps> = ({ item, onClick}) => {
 
 const CartTable = () => {
     const { selectedPackage, categoriesIds, subService, service } = useSelector((state: RootState) => state.appointmentFrame);
-    const { allServiceCategories, scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
+    const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
+    const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
-    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedSR, selectedPackage, allServiceCategories, categoriesIds),
-        [serviceRequests, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
+    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds),
+        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds])
     const dispatch = useDispatch();
     const {askConfirm, closeConfirm} = useConfirm();
     const theme = useTheme();
@@ -75,15 +78,32 @@ const CartTable = () => {
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     useEffect(() => {
-        scProfile && dispatch(loadAllServiceCategories(scProfile.id))
+        scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
+
+    const deleteIndService = (item: IMaintenanceItem) => {
+        dispatch(selectSR(item.id));
+        const services = selectedSR.filter(sr => sr !== item.id);
+        const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
+        const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
+        let categories = [...categoriesIds];
+
+        if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
+            if (subService?.type === indServiceCategory?.type) dispatch(selectSubService(null))
+            categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
+            dispatch(selectCategoriesIds(categories));
+        }
+        if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
+            if (service?.type === diagnoseCategory?.type) dispatch(selectService(null))
+            categories = categories.filter(id => id !== diagnoseCategory?.id)
+            dispatch(selectCategoriesIds(categories));
+        }
+    }
 
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
             case 'service':
-                const services = selectedSR.filter(sr => sr !== item.id);
-                dispatch(selectSR(item.id));
-                if (!services.length && subService?.type === 2) dispatch(selectSubService(null));
+                deleteIndService(item);
                 return;
             case 'package':
                 if (service?.type === 1) dispatch(selectService(null));

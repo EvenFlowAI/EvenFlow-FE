@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
@@ -17,6 +17,7 @@ import {TView} from "./types";
 import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
+import {EServiceCenterName} from "../../api/types";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -92,6 +93,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
     const sessionId = useSelector((state: RootState) => state.appointment.sessionId);
     const serviceCenter = useSelector((state: RootState) => state.appointment.scProfile)
+    const isRiverviewFord = useMemo(() => serviceCenter?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [serviceCenter])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
@@ -124,9 +126,13 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 action: 'Enters Page',
                 label: `As Returning Customer`,
             });
-        } catch {
+        } catch (err) {
             dispatch(setSessionId(""));
-            showError("We can't find your vehicle data, you can proceed as a new customer");
+            if (err.message) {
+                showError(err)
+            } else {
+                showError("We are sorry but we could not find your vehicle in our system. Please schedule appointment as a new customer");
+            }
             onReturn();
         } finally {
             setLoading(false);
@@ -163,7 +169,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
 
     return <Paper variant="outlined" className={classes.paper}>
         {view === "search" ? <>
-            <h3 className={classes.title}>Enter your Email or Phone</h3>
+            <h3 className={classes.title}>Enter your {!isRiverviewFord ? 'Email or ' : ''}Phone</h3>
             <TextField
                 placeholder="Type Here"
                 InputProps={{disableUnderline: true}}
