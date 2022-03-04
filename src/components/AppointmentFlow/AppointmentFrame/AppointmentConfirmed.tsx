@@ -149,7 +149,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const getPrice = (): string => {
         const price = appointment?.price?.value;
         return price
-            ? `Selected Price: $${Number.isInteger(price) ? price : price.toFixed(2)}`
+            ? `Selected Price: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
             : 'Service price will be quoted at dealership';
     }
 
