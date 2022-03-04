@@ -6,8 +6,13 @@ import {TArgCallback} from "../../../types/types";
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {TGroupedAppointments} from "../../../utils/types";
 import {getAppointmentDate} from "./utils";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
+import {useModal} from "../../../utils/hooks";
+import PromptNewSearchRange from "../../Modals/PromptNewSearchRange/PromptNewSearchRange";
+import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 const DaySelectorWrapper = styled('div')(({ theme }) => ({
     marginTop: 20,
@@ -48,6 +53,8 @@ type TProps = {
 export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const theme = useTheme();
+    const dispatch = useDispatch();
+    const {onOpen, isOpen, onClose} = useModal();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
     const isMds = useMediaQuery(theme.breakpoints.down("mds"));
@@ -55,9 +62,8 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
     
-    const selectedPackage = useSelector((state: RootState) => state.appointmentFrame.selectedPackage);
-    const searchedDateRange = useSelector((state: RootState) => state.appointment.searchedDateRange);
-    const appointment = useSelector((state: RootState) => state.appointment.appointment);
+    const {selectedPackage, selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
+    const {searchedDateRange, appointment} = useSelector((state: RootState) => state.appointment);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
         let daysInMonth: number = date.daysInMonth();
@@ -128,6 +134,8 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
                 const nS = prevIndex + (daysPerScreen * 2);
                 return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
             });
+        } else {
+            onOpen();
         }
     }
     const handlePrev = () => {
@@ -136,7 +144,16 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
                 const pS = s - daysPerScreen;
                 return pS >= 0 ? pS : 0
             })
+        } else {
+            if (selectedTiming === EAppointmentTimingType.PreferredDate) {
+                onOpen();
+            }
         }
+    }
+
+    const handleYes = () => {
+        dispatch(setCurrentFrameScreen('appointmentTiming'));
+        dispatch(selectAppointment(null));
     }
 
     return <DaySelectorWrapper>
@@ -159,5 +176,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         <Arrow onClick={handleNext} disabled={!nextAvailable()}>
             <ChevronRight />
         </Arrow>
+        <PromptNewSearchRange onClose={onClose} open={isOpen} onSave={handleYes}/>
     </DaySelectorWrapper>
 }

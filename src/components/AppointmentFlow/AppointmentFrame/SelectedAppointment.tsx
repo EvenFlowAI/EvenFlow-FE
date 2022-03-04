@@ -177,7 +177,7 @@ export const SelectedAppointment = () => {
                         </div>
                         { isSm && Boolean(price) &&
                         <div className="price">
-                          ${Number.isInteger(price) ? price : price.toFixed(2)}
+                          ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div> }
                     </li>
                         <li>
@@ -209,7 +209,7 @@ export const SelectedAppointment = () => {
                     </DateWrapper> : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
-                          ${Number.isInteger(price) ? price : price.toFixed(2)}
+                          ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div>}
                         {isRequestWithPrice && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
