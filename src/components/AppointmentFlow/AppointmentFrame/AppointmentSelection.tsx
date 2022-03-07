@@ -16,6 +16,7 @@ import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions"
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 
 const Wrapper = styled('div')(({ theme }) => ({
@@ -58,6 +59,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         appointment,
         consultant,
         categoriesIds,
+        allCategories,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -71,6 +73,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointment.appointment,
         state.appointmentFrame.advisor,
         state.appointmentFrame.categoriesIds,
+        state.categories.allCategories,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
@@ -138,6 +141,14 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         initRef.current = v;
     }, []);
 
+    const getCategories = (): number[] => {
+        return allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
+            })
+            .map(item => item.id)
+    }
+
     useEffect(() => {
         async function loadData () {
             if (id) {
@@ -155,7 +166,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                         serviceRequestIds: collectServiceRequestIds(
                             service, subService, selectedPackage, selectedOpsCodes
                         ),
-                        serviceCategoryIds: categoriesIds,
+                        serviceCategoryIds: getCategories(),
                         countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration

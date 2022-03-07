@@ -28,6 +28,7 @@ import {
 import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -64,9 +65,10 @@ type TProps = {
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
-    const [appointment, appointmentFrame] = useSelector((state: RootState) => [
+    const [appointment, appointmentFrame, categories] = useSelector((state: RootState) => [
         state.appointment,
-        state.appointmentFrame
+        state.appointmentFrame,
+        state.categories,
     ]);
 
     const {id} = useParams();
@@ -113,6 +115,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         onNext();
     }
 
+    const getCategories = (): number[] => {
+        return categories.allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && appointmentFrame.categoriesIds.includes(category.id)
+            })
+            .map(item => item.id)
+    }
+
     const handleCreateAppointment = () => {
         const data = {
             id: appointmentFrame.id,
@@ -149,7 +159,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointment.selectedSR
             ),
             date: appointment.appointment?.id.split("|")[0] || "",
-            serviceCategoryIds: appointmentFrame.categoriesIds,
+            serviceCategoryIds: getCategories(),
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
         };
 
