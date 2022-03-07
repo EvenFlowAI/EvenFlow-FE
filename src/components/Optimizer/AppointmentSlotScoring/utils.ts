@@ -32,10 +32,10 @@ export const generateSlots = (gap: ETimeSlotType,
         org = gap;
     }
     // TODO change form hardcode when time slots will be tied to desirability on the back and front
-    // const start = moment(startTime ?? "8:00:00", inpFormat);
-    // const end = moment(endTime ?? "18:00:00", inpFormat);
-    const start = moment("8:00:00", inpFormat);
-    const end = moment("18:00:00", inpFormat);
+    const start = moment(startTime ?? "8:00:00", inpFormat);
+    const end = moment(endTime ?? "18:00:00", inpFormat);
+    // const start = moment("8:00:00", inpFormat);
+    // const end = moment("18:00:00", inpFormat);
     const gapMinutes: number = gapToMin(gap);
     const gapOrg: number = gapToMin(org);
     const mappedItems = items.reduce((acc, i) => {
