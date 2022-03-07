@@ -85,11 +85,11 @@ const useDialogStyles = makeStyles({
 });
 
 const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
-    const {appointment} = useSelector((state: RootState) => state.appointment);
+    const {appointment, scProfile} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const price = useMemo(() => appointment?.price?.value && appointment.price.value > 0
-        ? `$${Number.isInteger(appointment.price.value) 
+        ? `$${scProfile?.isRoundPrice
             ? appointment.price.value 
             : appointment.price.value.toFixed(2)}`
         : '',
@@ -113,7 +113,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                             </span>
                             {Object(item).hasOwnProperty('priceValue') && item.priceValue
                                 ? <span className={classes.price}>
-                                    ${Number.isInteger(item.priceValue)
+                                    ${scProfile?.isRoundPrice
                                     ? item.priceValue
                                     : item.priceValue.toFixed(2)}
                             </span>
