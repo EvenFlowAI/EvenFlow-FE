@@ -19,6 +19,7 @@ import {SC_UNDEFINED, timeString} from "../../../config/constants";
 import {
     loadDesirability,
     loadHorsOfOperations,
+    loadRange,
     saveDesirability
 } from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -207,6 +208,7 @@ export const AppointmentSlotsDesirability = () => {
         if (selectedSC) {
             dispatch(loadDesirability(selectedSC.id, selectedPod?.id));
             dispatch(loadHorsOfOperations(selectedSC.id));
+            dispatch(loadRange(selectedSC.id))
         }
     }, [dispatch, selectedSC, selectedPod]);
 
