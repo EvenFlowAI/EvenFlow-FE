@@ -36,6 +36,8 @@ export interface IDesirability {
     timeSlotType: ETimeSlotType;
     podId?: number;
     index: number;
+    start: string;
+    end: string;
 }
 export interface IDesirabilityItem {
     id?: number;
