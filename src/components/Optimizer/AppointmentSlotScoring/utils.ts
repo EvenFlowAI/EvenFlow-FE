@@ -27,22 +27,19 @@ export const generateSlots = (gap: ETimeSlotType,
                               org?: ETimeSlotType,
                               startTime?: string,
                               endTime?: string,
+                              createNewSlots?: boolean,
                               ): TSlot[] => {
     if (org === undefined) {
         org = gap;
     }
-    // TODO change form hardcode when time slots will be tied to desirability on the back and front
     const start = moment(startTime ?? "8:00:00", inpFormat);
     const end = moment(endTime ?? "18:00:00", inpFormat);
-    // const start = moment("8:00:00", inpFormat);
-    // const end = moment("18:00:00", inpFormat);
     const gapMinutes: number = gapToMin(gap);
     const gapOrg: number = gapToMin(org);
     const mappedItems = items.reduce((acc, i) => {
         acc[i.index] = i;
         return acc;
     }, [] as IDesirability[]);
-
     const slotsCount = end.diff(start, 'minutes') / gapMinutes;
     const orgSlotsCount = end.diff(start, "minutes") / gapOrg;
 
@@ -58,8 +55,8 @@ export const generateSlots = (gap: ETimeSlotType,
             id: idxMod === 1 ? mappedItems[idxToLook]?.id : undefined,
             desirability: mappedItems[idxToLook]
                 ? items[idxToLook].desirability : EDesirabilityState.Neutral,
-            start: moment(st),
-            end: moment(nd)
+            start: items[idx]?.start && !createNewSlots ? moment(items[idx].start, 'HH:mm:SS') : moment(st),
+            end: items[idx]?.end && !createNewSlots ? moment(items[idx].end, 'HH:mm:SS') : moment(nd)
         });
         st = st.add(gapMinutes, "minutes");
         nd = nd.add(gapMinutes, "minutes");
