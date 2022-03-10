@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -9,7 +9,7 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {EServiceCenterName, ICreateAppointmentResp} from "../../../api/types";
+import {ICreateAppointmentResp} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
@@ -75,16 +75,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
-    const isBmWService = useMemo(() => appointment?.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || appointment?.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [appointment.scProfile]);
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
     }, [appointment.scProfile])
 
     useEffect(() => {
-        if (!isBmWService) dispatch(setReminders([0, 2]));
-    }, [isBmWService])
+        dispatch(setReminders([0, 2]));
+    }, [])
 
     const handleResponse = (data: ICreateAppointmentResp, endpoint: {route: string; method: string}) => {
         dispatch(setAppointmentId({
@@ -206,7 +204,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>
-                {!isBmWService && <Reminders/>}
+                <Reminders/>
                 <Info>By using this service you accept the terms of our Visitor Agreement.</Info>
             </div>
 
