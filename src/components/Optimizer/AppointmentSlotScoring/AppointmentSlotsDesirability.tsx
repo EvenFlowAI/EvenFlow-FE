@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {
+    Box,
     Button,
     Checkbox,
     CircularProgress,
@@ -206,7 +207,7 @@ export const AppointmentSlotsDesirability = () => {
     ]);
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadDesirability(selectedSC.id, selectedPod?.id));
+            dispatch(loadDesirability(selectedSC.id, selectedPod?.id, (e) => showError(e)));
             dispatch(loadRange(selectedSC.id))
         }
     }, [dispatch, selectedSC, selectedPod]);
@@ -340,20 +341,22 @@ export const AppointmentSlotsDesirability = () => {
         </div>
         {isLoading
             ? <Loading/>
-            : <Grid className={classes.gridContainer} container spacing={4} alignItems="stretch">
-                <Grid className={classes.row} item xs={12} sm={6}>
-                    <TitleRow />
-                    {slots1.map((slot) =>
-                        <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
-                    )}
+            : slots1.length ? <Grid className={classes.gridContainer} container spacing={4} alignItems="stretch">
+                    <Grid className={classes.row} item xs={12} sm={6}>
+                        <TitleRow />
+                        {slots1.map((slot) =>
+                            <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
+                        )}
+                    </Grid>
+                    <Grid item xs={12} sm={6} style={{marginTop: isXS ? -theme.spacing(4) : undefined}}>
+                        {!isXS ? <TitleRow/> : null}
+                        {slots2.map((slot) =>
+                            <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
+                        )}
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} sm={6} style={{marginTop: isXS ? -theme.spacing(4) : undefined}}>
-                    {!isXS ? <TitleRow/> : null}
-                    {slots2.map((slot) =>
-                        <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
-                    )}
-                </Grid>
-            </Grid>}
+                : <Box p={2} textAlign="center">No items...</Box>
+        }
         <Caption title="e.g. 30 min slots will show open slots at 8:00, 8:30, 9:00 etc" />
     </Paper>
 }

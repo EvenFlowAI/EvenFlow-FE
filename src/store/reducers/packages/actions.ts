@@ -75,7 +75,7 @@ export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[])
         .finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updatePackage = (id: number, data: IUpdatedPackage, serviceCenterId: number, callback?: () => void): AppThunk => async dispatch => {
+export const updatePackage = (id: number, data: IUpdatedPackage, serviceCenterId: number, callback?: () => void, errCallback?: (err: {errorCode: number; message: string}) => void): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.Update, {urlParams: {id}, data})
         .then(result => {
@@ -87,6 +87,7 @@ export const updatePackage = (id: number, data: IUpdatedPackage, serviceCenterId
         })
         .catch(err => {
             console.log(err)
+            errCallback && errCallback(err);
         })
         .finally(() => dispatch(setPackageLoading(false)))
 }
@@ -101,7 +102,7 @@ export const loadMakes = (serviceCenterId: number): AppThunk  => async dispatch 
         })
 }
 
-export const createPackage = (id: number, data: INewPackage, callback: () => void): AppThunk => async dispatch => {
+export const createPackage = (id: number, data: INewPackage, callback: () => void, errCallback?: (err: {errorCode: number; message: string}) => void): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true))
     Api.call(Api.endpoints.MaintenancePackages.Create, {urlParams: {id}, data})
         .then(result => {
@@ -112,6 +113,7 @@ export const createPackage = (id: number, data: INewPackage, callback: () => voi
         })
         .catch(err => {
         console.log(err)
+            errCallback && errCallback(err)
     })
         .finally(() => dispatch(setPackageLoading(false)))
 }

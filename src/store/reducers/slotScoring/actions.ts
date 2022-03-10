@@ -31,7 +31,7 @@ export const createProximity = (data: IProximity): AppThunk => async dispatch =>
 }
 
 export const getDesirability = createAction<IDesirability[]>("SlotScoring/GetDesirability");
-export const loadDesirability = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+export const loadDesirability = (serviceCenterId: number, podId?: number, errorCallback?: (err: {errorCode: number; message: string}) => void): AppThunk => async dispatch => {
     dispatch(setLoading(true))
     Api.call<IDesirability[]>(
         Api.endpoints.SlotScoring.GetDesirability,
@@ -40,6 +40,7 @@ export const loadDesirability = (serviceCenterId: number, podId?: number): AppTh
         dispatch(getDesirability(data));
     }).catch(err => {
         console.log('err load desirability', err)
+        errorCallback && errorCallback(err);
     }).finally(() => {
         dispatch(setLoading(false));
     })
