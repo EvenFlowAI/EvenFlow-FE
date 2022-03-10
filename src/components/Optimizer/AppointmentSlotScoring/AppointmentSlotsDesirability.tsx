@@ -280,9 +280,9 @@ export const AppointmentSlotsDesirability = () => {
                             end: moment(i.end).format('HH:mm:SS')
                         }
                         )),
-                    form.timeSlotType, selectedSC.id, selectedPod?.id
-                ));
-                showMessage("Saved");
+                    form.timeSlotType, selectedSC.id, selectedPod?.id,
+                    () => showMessage("Saved"),
+                    (e) => showError(e)));
                 setEdit(false);
                 setSaving(false);
             } catch (e) {
