@@ -3,8 +3,6 @@ import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/type
 import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
 
 const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, offPeak?: boolean}>(({theme, available, offPeak, selected}) => ({
     display: "flex",
@@ -39,7 +37,6 @@ type TProps = {
 }
 export const TimeSlotCard: React.FC<TProps> =
     ({timeSlot, slot, onSelect, selected}) => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [timePassed, setTimePassed] = useState<boolean>(false);
 
     useEffect(() => {
@@ -54,9 +51,7 @@ export const TimeSlotCard: React.FC<TProps> =
             return "Not Available";
         }
         if (slot.price.amountOfSavingMoney) {
-            return `Save $${scProfile?.isRoundPrice 
-                ? slot.price.amountOfSavingMoney 
-                : slot.price.amountOfSavingMoney.toFixed(2)}`;
+            return `Save $${slot.price.amountOfSavingMoney}`;
         }
         return "Available";
     }
