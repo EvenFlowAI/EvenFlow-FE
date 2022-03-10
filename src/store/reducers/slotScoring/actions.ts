@@ -45,12 +45,27 @@ export const loadDesirability = (serviceCenterId: number, podId?: number, errorC
         dispatch(setLoading(false));
     })
 }
-export const saveDesirability = (items: IDesirabilityItem[], type: ETimeSlotType, serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+export const saveDesirability = (
+    items: IDesirabilityItem[],
+    type: ETimeSlotType,
+    serviceCenterId: number,
+    podId?: number,
+    callback?: () => void,
+    errCallback?: (err: {errorCode: number; message: string}) => void,
+): AppThunk => dispatch => {
     const data: IDesirabilityForm = {
         podId, serviceCenterId, timeSlotType: type, items
     };
-    await Api.call(Api.endpoints.SlotScoring.SetDesirability, {data});
-    dispatch(loadDesirability(serviceCenterId, podId));
+   Api.call(Api.endpoints.SlotScoring.SetDesirability, {data})
+       .then(() => {
+           callback && callback()
+           dispatch(loadDesirability(serviceCenterId, podId));
+           }
+       )
+       .catch(err => {
+           console.log(err)
+           errCallback && errCallback(err)
+   })
 }
 
 export const getOptimizationSettings = createAction<IOptimizationSetting[]>("SlotScoring/GetOptimizationSettings");
