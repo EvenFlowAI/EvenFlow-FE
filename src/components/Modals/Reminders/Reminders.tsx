@@ -1,0 +1,114 @@
+import React, {useState} from 'react';
+import {DialogProps} from "../types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {Button, Divider, Switch} from "@material-ui/core";
+import {useException, useSCs} from "../../../utils/hooks";
+import {useDispatch} from "react-redux";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+    switchWrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    subtitle: {
+        fontSize: 18,
+        marginBottom: 20,
+    },
+    actionsWrapper: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        paddingTop: 14,
+    },
+    buttonsWrapper: {
+        display: 'flex',
+        justifyContent: "space-between",
+        alignItems: 'center',
+    },
+    cancelButton: {
+        color: '#9FA2B4',
+        marginRight: 20,
+        border: 'none',
+        outline: 'none',
+    },
+    saveButton: {
+        background: '#7898FF',
+        color: 'white',
+        border: '1px solid #7898FF',
+        outline: 'none',
+        '&:hover': {
+            color: '#7898FF'
+        }
+    },
+}))
+
+const Reminders: React.FC<DialogProps> = (props) => {
+    const [isRemindersOn, setRemindersOn] = useState<boolean>(false);
+    const showError = useException();
+    const dispatch = useDispatch();
+    const classes = useStyles();
+    const {selectedSC} = useSCs();
+
+    const handleSwitch = (e: any, value: boolean) => {
+        if (selectedSC) {
+            try {
+                // todo request;
+                setRemindersOn(value)
+            } catch (e) {
+                showError(e);
+            }
+        }
+    }
+    const onCancel = () => {
+        // todo change state to initial from BE
+        setRemindersOn(false)
+    }
+
+    const onSave = () => {
+        // todo request
+    }
+
+    return (
+        <BaseModal {...props} width={700}>
+            <DialogTitle onClose={props.onClose}>Appointment Reminders Configuration</DialogTitle>
+            <DialogContent>
+                <p className={classes.subtitle}>
+                    By switching off, the EvenFlow app will no longer send appointment reminder email and text notifications
+                </p>
+                <div className={classes.switchWrapper}>
+                    <p className={classes.text}>Email & Text Appointment Reminders</p>
+                    <Switch
+                        // disabled={isLoading}
+                        onChange={handleSwitch}
+                        checked={isRemindersOn}
+                        color="primary"
+                    />
+                </div>
+            </DialogContent>
+            <Divider style={{margin: 0}}/>
+            <DialogActions>
+                <div className={classes.actionsWrapper}>
+                    <div className={classes.buttonsWrapper}>
+                        <Button
+                            onClick={onCancel}
+                            className={classes.cancelButton}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={onSave}
+                            className={classes.saveButton}>
+                            Save
+                        </Button>
+                    </div>
+                </div>
+            </DialogActions>
+        </BaseModal>
+    );
+};
+
+export default Reminders;
