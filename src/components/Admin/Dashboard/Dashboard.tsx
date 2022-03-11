@@ -29,6 +29,8 @@ import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as ServiceCodes} from "../../../assets/img/serviceOpsCodes.svg";
 import {ReactComponent as Transportation} from "../../../assets/img/transportation_options.svg";
 import {ReactComponent as Vehicle} from "../../../assets/img/vehicleDetails.svg";
+import {ReactComponent as Calendar} from "../../../assets/img/date_1_grey.svg";
+import Reminders from "../../Modals/Reminders/Reminders";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -201,6 +203,11 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenTransOptions,
         isOpen: isOpenTransOptions,
     } = useModal();
+    const {
+        onClose: onCloseReminders,
+        onOpen: onOpenReminders,
+        isOpen: isOpenReminders,
+    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -229,6 +236,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Transportation Options", icon: <Transportation />, action: onOpenTransOptions},
         {label: "Service Ops Codes Mapping", icon: <ServiceCodes />, action: onOpenServicesOps},
         {label: "Vehicle Detail Options", icon: <Vehicle />, action: onOpenVehicle},
+        {label: "Appointment Reminders", icon: <Calendar />, action: onOpenReminders},
     ];
 
     const classes = useStyles();
@@ -273,5 +281,6 @@ export const AdminDashboard: React.FC = () => {
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
         <DashPodsModal viewMode={isCCRView} open={isOpenPods} onClose={onClosePods} />
         <TransportationOptions open={isOpenTransOptions} onClose={onCloseTransOptions}/>
+        <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
     </div>
 }
