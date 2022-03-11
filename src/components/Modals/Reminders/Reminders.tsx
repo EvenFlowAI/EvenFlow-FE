@@ -67,10 +67,12 @@ const Reminders: React.FC<DialogProps> = (props) => {
     const onCancel = () => {
         // todo change state to initial from BE
         setRemindersOn(false)
+        props.onClose();
     }
 
     const onSave = () => {
         // todo request
+        props.onClose();
     }
 
     return (
