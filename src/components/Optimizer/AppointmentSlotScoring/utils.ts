@@ -46,20 +46,23 @@ export const generateSlots = (gap: ETimeSlotType,
     const idxMod = orgSlotsCount / (slotsCount ? slotsCount : 1);
     const slots: TSlot[] = [];
     let st = moment(start);
+
     let nd = moment(st).add(gapMinutes, "minutes");
-    for (let i=1; i <= slotsCount; i++) {
-        const idx = i-1;
-        const idxToLook = Math.floor(idx * idxMod);
-        slots.push({
-            idx,
-            id: idxMod === 1 ? mappedItems[idxToLook]?.id : undefined,
-            desirability: mappedItems[idxToLook]
-                ? items[idxToLook].desirability : EDesirabilityState.Neutral,
-            start: items[idx]?.start && !createNewSlots ? moment(items[idx].start, 'HH:mm:SS') : moment(st),
-            end: items[idx]?.end && !createNewSlots ? moment(items[idx].end, 'HH:mm:SS') : moment(nd)
-        });
-        st = st.add(gapMinutes, "minutes");
-        nd = nd.add(gapMinutes, "minutes");
+    if (startTime && endTime && items.length) {
+        for (let i=1; i <= slotsCount; i++) {
+            const idx = i-1;
+            const idxToLook = Math.floor(idx * idxMod);
+            slots.push({
+                idx,
+                id: idxMod === 1 ? mappedItems[idxToLook]?.id : undefined,
+                desirability: mappedItems[idxToLook]
+                    ? items[idxToLook].desirability : EDesirabilityState.Neutral,
+                start: items[idx]?.start && !createNewSlots ? moment(items[idx].start, 'HH:mm:SS') : moment(st),
+                end: items[idx]?.end && !createNewSlots ? moment(items[idx].end, 'HH:mm:SS') : moment(nd)
+            });
+            st = st.add(gapMinutes, "minutes");
+            nd = nd.add(gapMinutes, "minutes");
+        }
     }
     return slots;
 }

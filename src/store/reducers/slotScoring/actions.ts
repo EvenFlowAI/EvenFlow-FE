@@ -40,6 +40,7 @@ export const loadDesirability = (serviceCenterId: number, podId?: number, errorC
         dispatch(getDesirability(data));
     }).catch(err => {
         console.log('err load desirability', err)
+        dispatch(getDesirability([]));
         errorCallback && errorCallback(err);
     }).finally(() => {
         dispatch(setLoading(false));

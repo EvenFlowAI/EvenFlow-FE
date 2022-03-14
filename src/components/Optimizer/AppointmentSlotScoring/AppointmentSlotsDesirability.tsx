@@ -208,20 +208,18 @@ export const AppointmentSlotsDesirability = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadDesirability(selectedSC.id, selectedPod?.id, (e) => showError(e)));
-            dispatch(loadRange(selectedSC.id))
+            dispatch(loadRange(selectedSC.id, selectedPod?.id))
         }
     }, [dispatch, selectedSC, selectedPod]);
 
     useEffect(() => {
-        if (slotRange && desirabilityItems?.length) {
-            const t = desirabilityItems[0]
-                ? desirabilityItems[0].timeSlotType
-                : ETimeSlotType.ThirtyMinutes;
-            setForm({
-                timeSlotType: t,
-                items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange.start, slotRange.end)
-            });
-        }
+        const t = desirabilityItems[0]
+            ? desirabilityItems[0].timeSlotType
+            : ETimeSlotType.ThirtyMinutes;
+        setForm({
+            timeSlotType: t,
+            items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end)
+        });
     }, [desirabilityItems, slotRange]);
 
     const [slots1, slots2]: [TSlot[], TSlot[]] = useMemo(() => {
