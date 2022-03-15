@@ -253,7 +253,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                             }
                             >
                             </Code>
-                            <Price style={ isSm ? {width: '20%'} : {}}>${s.price}</Price>
+                            {/*<Price style={ isSm ? {width: '20%'} : {}}>${s.price}</Price>*/}
                         </CodeWrapper>
                     })}
                 </CodesWrapper>
