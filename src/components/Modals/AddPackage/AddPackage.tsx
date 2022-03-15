@@ -372,9 +372,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                 } else {
                     if (isEditing) data.businessRules = currentPackage?.businessRules;
                 }
-                isEditing && currentPackage
-                    ? dispatch(updatePackage(currentPackage.id, data, selectedSC.id, onCancel))
-                    : dispatch(createPackage(selectedSC.id, data, onCancel))
+                try {
+                    isEditing && currentPackage
+                        ? dispatch(updatePackage(currentPackage.id, data, selectedSC.id, onCancel, (e) => showError(e)))
+                        : dispatch(createPackage(selectedSC.id, data, onCancel, (e) => showError(e)))
+                } catch (e) {
+                }
             }
         } else setFormIsChecked(true);
     }

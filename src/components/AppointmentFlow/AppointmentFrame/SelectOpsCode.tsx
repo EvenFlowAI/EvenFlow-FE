@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
-import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useModal} from "../../../utils/hooks";
@@ -10,7 +9,7 @@ import {
     selectAppointment,
     selectSR, selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
-import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
+import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {InputLoading, TextField} from "../UI";
 import {Search} from "@material-ui/icons";
 import {TArgCallback, TCallback} from "../../../types/types";
@@ -45,12 +44,28 @@ const CodesWrapper = styled('div')({
     marginTop: 20
 });
 
+const CodeWrapper = styled('div')({
+    border: "1px solid #DADADA",
+    display: "flex",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+})
+
+const Price = styled('span')({
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    fontSize: 14,
+    fontWeight: "bold",
+    paddingRight: 8,
+})
+
 const Code = styled(FormControlLabel)({
     width: "100%",
     padding: 0,
     margin: 0,
-    border: "1px solid #DADADA",
     textTransform: "uppercase",
+    display: 'flex',
     "& span": {
         fontSize: 12,
         "&:last-child": {
@@ -71,8 +86,9 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     const [searchInput, setSearch] = useState<string>("");
     const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const {id} = useParams();
     const [selectedCode, srList, search, vehicles, vehicle, scProfile, subService, service, allCategories, selectedPackage, categoriesIds] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
@@ -220,7 +236,8 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                 />
                 <CodesWrapper>
                     {opsCodesList.map(s => {
-                        return <Code
+                        return <CodeWrapper>
+                            <Code
                             key={s.id}
                             label={s?.description ?? s.code}
                             labelPlacement={"end"}
@@ -234,7 +251,10 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                                     color="primary"
                                 />
                             }
-                        />
+                            >
+                            </Code>
+                            {/*<Price style={ isSm ? {width: '20%'} : {}}>${s.price}</Price>*/}
+                        </CodeWrapper>
                     })}
                 </CodesWrapper>
             </Wrapper>

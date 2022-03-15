@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -9,7 +9,7 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {EServiceCenterName, ICreateAppointmentResp} from "../../../api/types";
+import {ICreateAppointmentResp} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
@@ -28,6 +28,7 @@ import {
 import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -64,25 +65,24 @@ type TProps = {
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
-    const [appointment, appointmentFrame] = useSelector((state: RootState) => [
+    const [appointment, appointmentFrame, categories] = useSelector((state: RootState) => [
         state.appointment,
-        state.appointmentFrame
+        state.appointmentFrame,
+        state.categories,
     ]);
 
     const {id} = useParams();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
-    const isBmWService = useMemo(() => appointment?.scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || appointment?.scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [appointment.scProfile]);
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
     }, [appointment.scProfile])
 
     useEffect(() => {
-        if (!isBmWService) dispatch(setReminders([0, 2]));
-    }, [isBmWService])
+        dispatch(setReminders([0, 2]));
+    }, [])
 
     const handleResponse = (data: ICreateAppointmentResp, endpoint: {route: string; method: string}) => {
         dispatch(setAppointmentId({
@@ -111,6 +111,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             saveCustomerCache(d);
         }
         onNext();
+    }
+
+    const getCategories = (): number[] => {
+        return categories.allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && appointmentFrame.categoriesIds.includes(category.id)
+            })
+            .map(item => item.id)
     }
 
     const handleCreateAppointment = () => {
@@ -149,7 +157,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointment.selectedSR
             ),
             date: appointment.appointment?.id.split("|")[0] || "",
-            serviceCategoryIds: appointmentFrame.categoriesIds,
+            serviceCategoryIds: getCategories(),
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
         };
 
@@ -196,7 +204,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>
-                {!isBmWService && <Reminders/>}
+                <Reminders/>
                 <Info>By using this service you accept the terms of our Visitor Agreement.</Info>
             </div>
 

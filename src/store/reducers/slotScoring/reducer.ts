@@ -1,14 +1,16 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {IDesirability, IOptimizationSetting, IProximity, ISlotRange} from "./types";
-import {getDesirability, getOptimizationSettings, getProximity, getRange} from "./actions";
+import {getDesirability, getOptimizationSettings, getProximity, getRange, setLoading} from "./actions";
 
 type TState = {
+    isLoading: boolean;
     proximity: IProximity[];
     desirability: IDesirability[];
     optimizationSettings: IOptimizationSetting[];
     slotRange: ISlotRange | null;
 }
 const initialState: TState = {
+    isLoading: false,
     proximity: [],
     desirability: [],
     optimizationSettings: [],
@@ -27,5 +29,8 @@ export const slotScoringReducer = createReducer(initialState, builder => builder
     })
     .addCase(getRange, (state, { payload }) => {
         return {...state, slotRange: payload};
+    })
+    .addCase(setLoading, (state, { payload }) => {
+        return {...state, isLoading: payload};
     })
 );
