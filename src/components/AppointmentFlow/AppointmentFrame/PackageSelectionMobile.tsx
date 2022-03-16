@@ -221,6 +221,7 @@ const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
 const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, isBmWService, isSanfordInfinity }) => {
     const [value, setValue] = useState<string>('1');
     const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const classes = useStyles();
 
@@ -278,7 +279,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
                                   Total Maintenance Value:
                                 </span>
-                                <span style={{ fontSize: 20 }}>${item.price}</span>
+                                <span style={{ fontSize: 20 }}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
                             </div>
                             }
 
@@ -296,22 +297,34 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, i
                                 </span>
                                 {isBmWService || isSanfordInfinity
                                     ? <span style={{ fontSize: 20 }}>
-                                        {item.marketPriceComplimentaryServices ? `$${item.marketPriceComplimentaryServices}` : ''}
+                                        {item.marketPriceComplimentaryServices
+                                            ? `$${scProfile?.isRoundPrice 
+                                                ? item.marketPriceComplimentaryServices
+                                                : item.marketPriceComplimentaryServices.toFixed(2)}`
+                                            : ''}
                                 </span>
                                     : <span style={{ fontSize: 20 }}>
-                                        {getPrice(item.complimentaryServices) ? `$${getPrice(item.complimentaryServices)}` : ''}
+                                        {getPrice(item.complimentaryServices)
+                                            ? `$${scProfile?.isRoundPrice 
+                                                ? getPrice(item.complimentaryServices) 
+                                                : getPrice(item.complimentaryServices).toFixed(2)}`
+                                            : ''}
                                     </span>
                                 }
                             </div>
                             <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
                                 {(isBmWService || isSanfordInfinity) &&
                                 <div className={classes.prevPrice}>
-                                    ${item.price + item.marketPriceComplimentaryServices}
+                                  ${scProfile?.isRoundPrice
+                                    ? item.price + item.marketPriceComplimentaryServices
+                                    : (item.price + item.marketPriceComplimentaryServices).toFixed(2)}
                                 </div>}
 
                                 <div className={classes.currentWrp}>
                                     <div className={classes.triangle}/>
-                                    <div className={classes.current}>${item.price}</div>
+                                    <div className={classes.current}>
+                                        ${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}
+                                    </div>
                                 </div>
                             </div>
                         </div>
