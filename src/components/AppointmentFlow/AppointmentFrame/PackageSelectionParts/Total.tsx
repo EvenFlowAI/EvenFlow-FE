@@ -1,6 +1,8 @@
 import React from 'react';
 import {TPackage} from "../PackageSelection";
 import {IPackageOptions} from "../../../../api/types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
 
 type TTotalProps = {
     packages: TPackage[];
@@ -11,25 +13,28 @@ type TTotalProps = {
 }
 
 const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isSanfordInfinity, setClasses }) => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     return <React.Fragment>
         <div className="total end" style={isBmWService ? {fontSize: 16} : {}}>
             Total <span className="info" >(excluding taxes)</span>
         </div>
 
-        {packages.map(p =>
-            <div
-                onClick={handleClick(p)}
-                className={setClasses(p.id, `total ${isBmWService || isSanfordInfinity ? 'priceWithBefore' : 'price'} end`)}
-                key={p.id}>
-                {(isBmWService || isSanfordInfinity) &&
-                <div className="before">
-                  ${p.marketPriceComplimentaryServices + p.price}
-                </div>}
-                <div className="currentWrp">
-                    <div className="triangle"/>
-                    <div className="current">${p.price}</div>
+        {packages.map(p => {
+            const priceBefore = p.marketPriceComplimentaryServices + p.price;
+                return <div
+                    onClick={handleClick(p)}
+                    className={setClasses(p.id, `total ${isBmWService || isSanfordInfinity ? 'priceWithBefore' : 'price'} end`)}
+                    key={p.id}>
+                    {(isBmWService || isSanfordInfinity) &&
+                    <div className="before">
+                      ${scProfile?.isRoundPrice ? priceBefore : priceBefore.toFixed(2)}
+                    </div>}
+                    <div className="currentWrp">
+                        <div className="triangle"/>
+                        <div className="current">${scProfile?.isRoundPrice ? p.price : p.price.toFixed(2)}</div>
+                    </div>
                 </div>
-            </div>
+            }
         )}
     </React.Fragment>;
 };
