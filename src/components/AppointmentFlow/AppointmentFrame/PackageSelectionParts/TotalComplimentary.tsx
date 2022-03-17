@@ -1,6 +1,8 @@
 import React from 'react';
 import {TPackage} from "../PackageSelection";
 import {IPackageOptions} from "../../../../api/types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
 
 type TTotalComplimentaryProps = {
     packages: TPackage[];
@@ -11,6 +13,8 @@ type TTotalComplimentaryProps = {
 }
 
 const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, isSanfordInfinity, packages, handleClick, setClasses}) => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
+
     return <React.Fragment>
         <div className="totalComplimentary last" style={isBmWService ? {fontSize: 16} : {}}>Total Complimentary Value</div>
         {isBmWService|| isSanfordInfinity
@@ -20,7 +24,11 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, i
                     className={setClasses(p.id, "totalComplimentary last")}
                     key={p.id}>
                     <span style={{ fontSize: 20 }}>
-                        {p.marketPriceComplimentaryServices ? `$${p.marketPriceComplimentaryServices}` : ''}
+                        {p.marketPriceComplimentaryServices
+                            ? `$${scProfile?.isRoundPrice 
+                                ? p.marketPriceComplimentaryServices 
+                                : p.marketPriceComplimentaryServices.toFixed(2)}`
+                            : ''}
                     </span>
                 </div>;
             })
@@ -32,7 +40,9 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, i
                     onClick={handleClick(p)}
                     className={setClasses(p.id, "totalComplimentary last")}
                     key={p.id}>
-                    <span style={{ fontSize: 20 }}>{price ? `$${price}` : ''}</span>
+                    <span style={{ fontSize: 20 }}>
+                        {price ? `$${scProfile?.isRoundPrice ? price : price.toFixed(2)}` : ''}
+                    </span>
                 </div>;
             })}
     </React.Fragment>
