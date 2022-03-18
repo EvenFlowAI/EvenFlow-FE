@@ -1,5 +1,7 @@
 import React from 'react';
 import {TPackage} from "../PackageSelection";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
 
 type TTotalMaintenanceProps = {
     isBmWService: boolean;
@@ -8,6 +10,8 @@ type TTotalMaintenanceProps = {
 }
 
 const TotalMaintenance: React.FC<TTotalMaintenanceProps> = ({ packages, isBmWService, setClasses }) => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
+
     return (
         <React.Fragment key="maintenance">
             <div className="totalMaintenance"
@@ -16,7 +20,7 @@ const TotalMaintenance: React.FC<TTotalMaintenanceProps> = ({ packages, isBmWSer
             </div>
             {packages.map(p => (
                 <div className={setClasses(p.id, '')}>
-                <span style={{ fontSize: 20 }}>${p.price}</span>
+                <span style={{ fontSize: 20 }}>${scProfile?.isRoundPrice ? p.price : p.price.toFixed(2)}</span>
             </div>
             ))}
         </React.Fragment>
