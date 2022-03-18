@@ -35,7 +35,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         }
     }, [card])
 
-    return <CardWrapper onClick={onSelect} active={active} selected={selected} price={Boolean(price)}>
+    return <CardWrapper onClick={onSelect} active={active} selected={selected}>
         {isLoading
             ? <Loading/>
             : card.iconPath && icon
