@@ -490,30 +490,30 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         }}
                     />
                 </div>
-                <div className={classes.smallWrapper}>
-                    <div style={{marginRight: 20}}>
-                        <TextField
-                            fullWidth
-                            type="number"
-                            inputProps={{min: 0, step: 1}}
-                            label='Number per day'
-                            placeholder='Type Number'
-                            // error={Boolean(numberPerHour) && !Number.isInteger(numberPerHour)}
-                            onChange={onNumberPerDayChange}
-                            value={numberPerDay ?? ''}/>
-                    </div>
-                    <div>
-                        <TextField
-                            fullWidth
-                            type="number"
-                            inputProps={{min: 0, step: 1}}
-                            label='Number per hour'
-                            placeholder='Type Number'
-                            // error={Boolean(numberPerHour) && !Number.isInteger(numberPerHour)}
-                            onChange={onNumberPerHourChange}
-                            value={numberPerHour ?? ''}/>
-                    </div>
-                </div>
+                {/*<div className={classes.smallWrapper}>*/}
+                {/*    <div style={{marginRight: 20}}>*/}
+                {/*        <TextField*/}
+                {/*            fullWidth*/}
+                {/*            type="number"*/}
+                {/*            inputProps={{min: 0, step: 1}}*/}
+                {/*            label='Number per day'*/}
+                {/*            placeholder='Type Number'*/}
+                {/*            // error={Boolean(numberPerHour) && !Number.isInteger(numberPerHour)}*/}
+                {/*            onChange={onNumberPerDayChange}*/}
+                {/*            value={numberPerDay ?? ''}/>*/}
+                {/*    </div>*/}
+                {/*    <div>*/}
+                {/*        <TextField*/}
+                {/*            fullWidth*/}
+                {/*            type="number"*/}
+                {/*            inputProps={{min: 0, step: 1}}*/}
+                {/*            label='Number per hour'*/}
+                {/*            placeholder='Type Number'*/}
+                {/*            // error={Boolean(numberPerHour) && !Number.isInteger(numberPerHour)}*/}
+                {/*            onChange={onNumberPerHourChange}*/}
+                {/*            value={numberPerHour ?? ''}/>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </div>
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
