@@ -73,6 +73,7 @@ export const DaySelectCard: React.FC<TProps> = ({
             && state.appointmentFrame.selectedTiming !== EAppointmentTimingType.SpecialOffers
         );
     })
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
 
     const getLabel = () => {
         if (isXs) {
@@ -86,7 +87,7 @@ export const DaySelectCard: React.FC<TProps> = ({
             }
         }
         if (appointment && isPackage) {
-            return `$${appointment.lowestPrice}`;
+            return `$${scProfile?.isRoundPrice ? appointment.lowestPrice : appointment.lowestPrice.toFixed(2)}`;
         }
         if (appointment) {
             return "Available";

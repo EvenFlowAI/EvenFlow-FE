@@ -22,6 +22,7 @@ import Checkbox from "../../UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {Button, Divider} from "@material-ui/core";
 import {editTransportationOptionRules} from "../../../store/reducers/transportationNeeds/actions";
+import {TextField} from "../../UI/TextField";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
@@ -138,6 +139,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const [duration, setDuration] = useState<TTimeObject | null>(null);
     const [serviceRequests, setServiceRequests] = useState<TOption[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+    const [numberPerHour, setNumberPerHour] = useState<string>('');
+    const [numberPerDay, setNumberPerDay] = useState<string>('');
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -377,6 +380,14 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }, [selectedSC, editingElement, isValid, allRequestsSelected, duration, timeOfDay, customerSegment,
         serviceRequests, daysOfWeek, dayOFWeekOptions, onCancel])
 
+    const onNumberPerHourChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setNumberPerHour(e.target.value);
+    }
+
+    const onNumberPerDayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setNumberPerDay(e.target.value);
+    }
+
     return <BaseModal {...props} width={500} onClose={onCancel}>
         <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
         <DialogContent>
@@ -479,6 +490,30 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         }}
                     />
                 </div>
+                {/*<div className={classes.smallWrapper}>*/}
+                {/*    <div style={{marginRight: 20}}>*/}
+                {/*        <TextField*/}
+                {/*            fullWidth*/}
+                {/*            type="number"*/}
+                {/*            inputProps={{min: 0, step: 1}}*/}
+                {/*            label='Number per day'*/}
+                {/*            placeholder='Type Number'*/}
+                {/*            // error={Boolean(numberPerHour) && !Number.isInteger(numberPerHour)}*/}
+                {/*            onChange={onNumberPerDayChange}*/}
+                {/*            value={numberPerDay ?? ''}/>*/}
+                {/*    </div>*/}
+                {/*    <div>*/}
+                {/*        <TextField*/}
+                {/*            fullWidth*/}
+                {/*            type="number"*/}
+                {/*            inputProps={{min: 0, step: 1}}*/}
+                {/*            label='Number per hour'*/}
+                {/*            placeholder='Type Number'*/}
+                {/*            // error={Boolean(numberPerHour) && !Number.isInteger(numberPerHour)}*/}
+                {/*            onChange={onNumberPerHourChange}*/}
+                {/*            value={numberPerHour ?? ''}/>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </div>
         </DialogContent>
         <Divider style={{ margin: 0 }}/>

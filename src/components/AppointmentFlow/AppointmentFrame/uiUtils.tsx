@@ -1,5 +1,5 @@
 import React from "react";
-import {IPackageOptions, IServiceCategoryShort} from "../../../api/types";
+import {IPackageOptions} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 import {IMaintenanceItem} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
@@ -8,7 +8,7 @@ export const getMaintenanceDescription = (
     srList: ISR[],
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
-    allCategories?: IServiceCategoryShort[],
+    allCategories?: ICategory[],
     selectedCategories?: number[]) => {
     const services: string[] = [];
 
@@ -25,7 +25,7 @@ export const getMaintenanceDescription = (
             if (item.name.includes("Going")) {
                 services.push("My Description of Needs")
             } else {
-                services.push(item.name)
+                if (item.type === EServiceCategoryType.GeneralCategory) services.push(item.name)
             }
         })
     }
@@ -53,7 +53,15 @@ export const getMaintenanceList = (
     }
     if (selectedCategories && allCategories) {
         const categories = allCategories.filter(category => selectedCategories.includes(category.id) && category.type === EServiceCategoryType.GeneralCategory)
-        categories.forEach(item => services.push({id: item.id, name: item.name, type: 'category'}))
+        categories.forEach(item => {
+            if (item.type === EServiceCategoryType.GeneralCategory) {
+                services.push({
+                    id: item.id,
+                    name: item.name,
+                    type: 'category'
+                })
+            }
+        })
     }
     return services;
 }

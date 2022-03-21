@@ -223,7 +223,7 @@ export class Api {
             GetUnplanned: {route: "/appointment-allocations/unplanned-demand-segments", method: "get"},
         },
         AppointmentSlots: {
-            GetSlots: {route: "/appointment-slots/by-query", method: "post"}
+            GetSlots: {route: "/appointment-slots/by-query", method: "post"},
         },
         Authentications: {
             Request: {route: "/authentications", method: "post"},

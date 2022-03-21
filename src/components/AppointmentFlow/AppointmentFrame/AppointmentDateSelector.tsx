@@ -27,8 +27,6 @@ const MonthSelectorWrapper = styled('div')({
     }
 });
 
-
-
 type TMonthProps = {
     date: moment.Moment,
     loading: boolean;

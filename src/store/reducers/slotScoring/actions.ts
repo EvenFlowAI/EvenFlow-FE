@@ -12,6 +12,8 @@ import {Api} from "../../../config/requests";
 import {IHOODataForm} from "../serviceCenters/types";
 import moment from "moment";
 
+export const setLoading = createAction<boolean>("SlotScoring/SetLoading");
+
 export const getProximity = createAction<IProximity[]>("SlotScoring/GetProximity");
 export const loadProximity = (serviceCenterId?: number, podId?: number): AppThunk => async dispatch => {
     const {data} = await Api.call<IProximity[]>(
@@ -29,19 +31,42 @@ export const createProximity = (data: IProximity): AppThunk => async dispatch =>
 }
 
 export const getDesirability = createAction<IDesirability[]>("SlotScoring/GetDesirability");
-export const loadDesirability = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<IDesirability[]>(
+export const loadDesirability = (serviceCenterId: number, podId?: number, errorCallback?: (err: {errorCode: number; message: string}) => void): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
+    Api.call<IDesirability[]>(
         Api.endpoints.SlotScoring.GetDesirability,
         {params: {serviceCenterId, podId}}
-    );
-    dispatch(getDesirability(data));
+    ).then(({data}) => {
+        dispatch(getDesirability(data));
+    }).catch(err => {
+        console.log('err load desirability', err)
+        dispatch(getDesirability([]));
+        errorCallback && errorCallback(err);
+    }).finally(() => {
+        dispatch(setLoading(false));
+    })
 }
-export const saveDesirability = (items: IDesirabilityItem[], type: ETimeSlotType, serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+export const saveDesirability = (
+    items: IDesirabilityItem[],
+    type: ETimeSlotType,
+    serviceCenterId: number,
+    podId?: number,
+    callback?: () => void,
+    errCallback?: (err: {errorCode: number; message: string}) => void,
+): AppThunk => dispatch => {
     const data: IDesirabilityForm = {
         podId, serviceCenterId, timeSlotType: type, items
     };
-    await Api.call(Api.endpoints.SlotScoring.SetDesirability, {data});
-    dispatch(loadDesirability(serviceCenterId, podId));
+   Api.call(Api.endpoints.SlotScoring.SetDesirability, {data})
+       .then(() => {
+           callback && callback()
+           dispatch(loadDesirability(serviceCenterId, podId));
+           }
+       )
+       .catch(err => {
+           console.log(err)
+           errCallback && errCallback(err)
+   })
 }
 
 export const getOptimizationSettings = createAction<IOptimizationSetting[]>("SlotScoring/GetOptimizationSettings");
@@ -65,6 +90,7 @@ export const setSettingValues = (data: IOptimizationSettingValueForm, serviceCen
 
 export const getRange = createAction<ISlotRange>("SlotScoring/GetRange");
 export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => dispatch => {
+    dispatch(setLoading(true))
     const data = {serviceCenterId, podId}
     Api.call(Api.endpoints.SlotScoring.GetRange, {params: data})
         .then(result => {
@@ -75,6 +101,7 @@ export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => 
         .catch(err => {
             console.log('load slot range error', err)
         })
+        .finally(() => dispatch(setLoading(false)))
 }
 
 export const loadHorsOfOperations = (id: number): AppThunk => dispatch => {

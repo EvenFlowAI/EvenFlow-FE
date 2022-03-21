@@ -6,7 +6,8 @@ import {getMaintenanceDescription} from "./uiUtils";
 import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
-import {loadAllServiceCategories, selectAppointment} from "../../../store/reducers/appointment/actions";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -134,8 +135,8 @@ const useStyles = makeStyles(theme => ({
 
 export const SelectedAppointment = () => {
     const { selectedPackage, advisor, consultants, categoriesIds } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, allServiceCategories, appointmentSlots } = useSelector((state: RootState) => state.appointment);
-    const appointment = useSelector((state: RootState) => state.appointment.appointment);
+    const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
+    const { allCategories } = useSelector((state: RootState) => state.categories);
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests
@@ -146,8 +147,8 @@ export const SelectedAppointment = () => {
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds),
-        [srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
+    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds])
 
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
     const isRequestWithPrice = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => Boolean(item.priceValue)) : false;
@@ -163,7 +164,7 @@ export const SelectedAppointment = () => {
     }
 
     useEffect(() => {
-        scProfile && dispatch(loadAllServiceCategories(scProfile.id))
+        scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
 
     return (
@@ -177,7 +178,7 @@ export const SelectedAppointment = () => {
                         </div>
                         { isSm && Boolean(price) &&
                         <div className="price">
-                          ${Number.isInteger(price) ? price : price.toFixed(2)}
+                          ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div> }
                     </li>
                         <li>
@@ -209,7 +210,7 @@ export const SelectedAppointment = () => {
                     </DateWrapper> : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
-                          ${Number.isInteger(price) ? price : price.toFixed(2)}
+                          ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div>}
                         {isRequestWithPrice && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>

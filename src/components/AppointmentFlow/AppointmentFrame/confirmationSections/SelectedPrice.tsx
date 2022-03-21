@@ -12,13 +12,13 @@ const Price = styled('div')({
 })
 
 export const SelectedPrice = () => {
-    const appointment = useSelector((state: RootState) => state.appointment.appointment);
+    const {appointment, scProfile} = useSelector((state: RootState) => state.appointment);
     return (
         <div>
             <ConfirmationTitle>Selected Price</ConfirmationTitle>
             <Price>
                 {appointment?.price.value ?
-                    <span>${Number.isInteger(appointment.price.value)
+                    <span>${scProfile?.isRoundPrice
                         ? appointment.price.value
                         : appointment.price.value.toFixed(2)}
                     </span>

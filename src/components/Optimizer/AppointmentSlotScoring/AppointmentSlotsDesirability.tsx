@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {
+    Box,
     Button,
     Checkbox,
     CircularProgress,
@@ -18,12 +19,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {SC_UNDEFINED, timeString} from "../../../config/constants";
 import {
     loadDesirability,
-    loadHorsOfOperations,
+    loadRange,
     saveDesirability
 } from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {Caption} from "../../UI/Caption";
+import moment from "moment";
+import {Loading} from "../../UI/Loading";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -189,7 +192,7 @@ export const AppointmentSlotsDesirability = () => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const {slotRange} = useSelector((state: RootState) => state.slotScoring);
+    const {slotRange, isLoading} = useSelector((state: RootState) => state.slotScoring);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
@@ -202,11 +205,10 @@ export const AppointmentSlotsDesirability = () => {
     const [desirabilityItems] = useSelector((state: RootState) => [
         state.slotScoring.desirability
     ]);
-
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadDesirability(selectedSC.id, selectedPod?.id));
-            dispatch(loadHorsOfOperations(selectedSC.id));
+            dispatch(loadDesirability(selectedSC.id, selectedPod?.id, (e) => showError(e)));
+            dispatch(loadRange(selectedSC.id, selectedPod?.id))
         }
     }, [dispatch, selectedSC, selectedPod]);
 
@@ -256,7 +258,7 @@ export const AppointmentSlotsDesirability = () => {
         if (isEdit) {
             setForm({
                 timeSlotType: g,
-                items: generateSlots(g, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end)
+                items: generateSlots(g, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end, true)
             });
         }
     }
@@ -268,10 +270,17 @@ export const AppointmentSlotsDesirability = () => {
             setSaving(true);
             try {
                 await dispatch(saveDesirability(
-                    form.items.map(i => ({...i, index: i.idx})),
-                    form.timeSlotType, selectedSC.id, selectedPod?.id
-                ));
-                showMessage("Saved");
+                    form.items.map(i => (
+                        {
+                            ...i,
+                            index: i.idx,
+                            start: moment(i.start).format('HH:mm:SS'),
+                            end: moment(i.end).format('HH:mm:SS')
+                        }
+                        )),
+                    form.timeSlotType, selectedSC.id, selectedPod?.id,
+                    () => showMessage("Saved"),
+                    (e) => showError(e)));
                 setEdit(false);
                 setSaving(false);
             } catch (e) {
@@ -328,20 +337,24 @@ export const AppointmentSlotsDesirability = () => {
                 />
             })}
         </div>
-        <Grid className={classes.gridContainer} container spacing={4} alignItems="stretch">
-            <Grid className={classes.row} item xs={12} sm={6}>
-                <TitleRow />
-                {slots1.map((slot) =>
-                    <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
-                )}
-            </Grid>
-            <Grid item xs={12} sm={6} style={{marginTop: isXS ? -theme.spacing(4) : undefined}}>
-                {!isXS ? <TitleRow/> : null}
-                {slots2.map((slot) =>
-                    <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
-                )}
-            </Grid>
-        </Grid>
+        {isLoading
+            ? <Loading/>
+            : slots1.length ? <Grid className={classes.gridContainer} container spacing={4} alignItems="stretch">
+                    <Grid className={classes.row} item xs={12} sm={6}>
+                        <TitleRow />
+                        {slots1.map((slot) =>
+                            <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
+                        )}
+                    </Grid>
+                    <Grid item xs={12} sm={6} style={{marginTop: isXS ? -theme.spacing(4) : undefined}}>
+                        {!isXS ? <TitleRow/> : null}
+                        {slots2.map((slot) =>
+                            <ButtonRow slot={slot} key={slot.idx} onClick={handleClick(slot.idx)} />
+                        )}
+                    </Grid>
+                </Grid>
+                : <Box p={2} textAlign="center">No items...</Box>
+        }
         <Caption title="e.g. 30 min slots will show open slots at 8:00, 8:30, 9:00 etc" />
     </Paper>
 }

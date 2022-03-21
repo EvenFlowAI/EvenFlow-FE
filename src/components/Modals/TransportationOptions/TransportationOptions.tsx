@@ -86,6 +86,7 @@ export const TransportationOptions: React.FC<DialogProps> = props => {
         }
     }, [selectedSC, options])
 
+    
     const handleSwitch = (type: number) => async (e: any, value: boolean) => {
         if (selectedSC) {
             try {

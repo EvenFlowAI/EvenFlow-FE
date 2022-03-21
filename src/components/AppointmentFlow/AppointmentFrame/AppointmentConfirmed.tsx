@@ -81,7 +81,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         selectedPackage,
         customer,
         vehicle,
-        allServiceCategories,
+        allCategories,
         categoriesIds,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
@@ -93,12 +93,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.selectedPackage,
         state.appointmentFrame.customer,
         state.appointmentFrame.selectedVehicle,
-        state.appointment.allServiceCategories,
+        state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
     ]);
 
-    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds),
-        [srList, selectedSR, selectedPackage, allServiceCategories, categoriesIds])
+    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds])
 
     useEffect(() => {
         ReactGA.event({
@@ -125,7 +125,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             },
             {
                 label: "Selected Price",
-                content: `$${appointment?.price?.value}`
+                content: `$${scProfile?.isRoundPrice 
+                    ? appointment?.price?.value 
+                    : appointment?.price?.value.toFixed(2)}`
             },
             {
                 label: "Name",
@@ -149,7 +151,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const getPrice = (): string => {
         const price = appointment?.price?.value;
         return price
-            ? `Selected Price: $${Number.isInteger(price) ? price : price.toFixed(2)}`
+            ? `Selected Price: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
             : 'Service price will be quoted at dealership';
     }
 
