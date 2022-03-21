@@ -281,6 +281,6 @@ export const AdminDashboard: React.FC = () => {
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
         <DashPodsModal viewMode={isCCRView} open={isOpenPods} onClose={onClosePods} />
         <TransportationOptions open={isOpenTransOptions} onClose={onCloseTransOptions}/>
-        {/*<Reminders open={isOpenReminders} onClose={onCloseReminders}/>*/}
+        <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
     </div>
 }
