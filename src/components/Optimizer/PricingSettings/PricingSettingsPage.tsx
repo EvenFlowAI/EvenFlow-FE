@@ -8,9 +8,12 @@ import { PricingLevels } from './PricingLevels/PricingLevels';
 import {Eligibility} from "./Eligibility/Eligibility";
 import {PricingOptimization} from "./PricingOptimization";
 import {VariableDemand} from "./VariableDemand";
-import {useException, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {LoadingButton} from "../../UI/Button";
+import {RootState} from "../../../store/rootReducer";
+import {updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
 
 
 const ControlLabel = styled(FormControlLabel)({
@@ -19,6 +22,14 @@ const ControlLabel = styled(FormControlLabel)({
         fontWeight: "bold"
     }
 })
+
+const ButtonsWrapper = styled('div')({
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+    alignItems: "flex-end"
+})
+
 type Tab = {
     id: string;
     label: string;
@@ -34,8 +45,10 @@ export const PricingSettingsPage = () => {
     const [selectedTab, selectTab] = useState<string>("0");
     const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
+    const { isLoading } = useSelector((state: RootState) => state.pricingSettings);
     const dispatch = useDispatch();
     const showError = useException();
+    const showMessage = useMessage();
 
     const handleTabChange = (e: any, value: string) => {
         selectTab(value);
@@ -53,8 +66,21 @@ export const PricingSettingsPage = () => {
         }
     }
 
+    const onSuccessUpdate = () => {
+        showMessage('Max Price Updated Successfully!')
+    }
+
+    const onErrorUpdate = (err: string) => {
+        showError(err);
+    }
+
+    const onUpdateMaxPriceClick = () => {
+        selectedSC && dispatch(updateMaxPrice(selectedSC.id, onSuccessUpdate, onErrorUpdate))
+    }
+
     return <TabContext value={selectedTab}>
         <TitleContainer title="Pricing Settings" pad parent={optimizerRoot} actions={
+            <ButtonsWrapper>
             <ControlLabel labelPlacement="start" control={
                 <Switch
                     color="primary"
@@ -63,6 +89,10 @@ export const PricingSettingsPage = () => {
                     onChange={handlePricingOptChange}
                 />
             } label={"Pricing optimization"} />
+                <LoadingButton loading={isLoading} onClick={onUpdateMaxPriceClick}>
+                    Update Max Price
+                </LoadingButton>
+            </ButtonsWrapper>
         } />
         <TabList
             variant="scrollable"
