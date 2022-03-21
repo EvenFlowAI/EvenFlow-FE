@@ -58,7 +58,12 @@ const optContent: TOptContent = {
         helperText: "Set the hour that the last appointment will be accepted",
         label: "pm",
         title: "Appointment Cutoff"
-    }
+    },
+    [EOptimizationWindowType.MaxPriceDateRange]: {
+        helperText: "Set the date range for which the Max Price will be calculated",
+        label: "Days",
+        title: "Max Price Date Range",
+    },
 }
 
 
