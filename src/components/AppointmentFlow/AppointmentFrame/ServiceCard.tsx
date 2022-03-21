@@ -5,6 +5,9 @@ import {IServiceCategory} from "../../../api/types";
 import {ReactComponent as Icon} from "../../../assets/img/oil-icon.svg";
 import axios from "axios";
 import {Loading} from "../../UI/Loading";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 type TSCProps = {
     card: IServiceCategory;
@@ -14,7 +17,13 @@ type TSCProps = {
 }
 export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selected}) => {
     const [icon, setIcon] = useState<string>('');
-    const [isLoading, setLoading] = useState<boolean>(false)
+    const [isLoading, setLoading] = useState<boolean>(false);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
+
+    const price = card.type === EServiceCategoryType.GeneralCategory
+        ? card.serviceRequests.reduce((a, b) => a + +b.price, 0)
+        : undefined;
+
     useEffect(() => {
         if (card.iconPath) {
             setLoading(true);
@@ -25,6 +34,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
                 .finally(() => setLoading(false))
         }
     }, [card])
+
     return <CardWrapper onClick={onSelect} active={active} selected={selected}>
         {isLoading
             ? <Loading/>
@@ -33,5 +43,11 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
                  : <span style={{ filter: active ? "invert(100%)" : "unset"}}><Icon /></span>
         }
         <span style={{color: active ? "#FFFFFF" : "#252733"}}>{card.name}</span>
+        <div className="priceWrapper">
+            {price && <>
+                <span className="text">Starting At</span>
+                <span className="price">${scProfile?.isRoundPrice ? price : price.toFixed(2)}</span>
+            </>}
+        </div>
     </CardWrapper>
 }

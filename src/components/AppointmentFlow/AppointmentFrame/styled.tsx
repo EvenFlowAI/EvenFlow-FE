@@ -10,10 +10,10 @@ export const CardsWrapper = styled("div")(({theme}) => ({
     }
 }));
 
-export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: boolean}>(({theme, active, selected}) => ({
+export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: boolean,}>(({theme, active, selected}) => ({
     display: "grid",
     gridTemplateColumns: "1fr",
-    gridTemplateRows: "1fr 1fr",
+    gridTemplateRows: "3fr 2fr 1fr",
     width: "100%",
     maxWidth: 250,
     transition: "all .2s",
@@ -25,6 +25,25 @@ export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: bo
     alignItems: "center",
     padding: 10,
     cursor: "pointer",
+    "& .priceWrapper": {
+        height: 30,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: "0 12px",
+    },
+    "& .price": {
+        color: "#27AE60",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    "& .text": {
+        color: "#727273",
+        fontSize: 11,
+        fontWeight: "bold",
+        fontFamily: "Proxima Nova",
+        textTransform: "uppercase",
+    },
     [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: "1fr 3fr",
         gridTemplateRows: "1fr",

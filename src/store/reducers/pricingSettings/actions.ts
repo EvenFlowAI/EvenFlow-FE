@@ -338,7 +338,7 @@ export const addPackageToPricing = (data: TNewPackagesToPricing): AppThunk => di
 
 export const getPackageOptionsList = createAction<IPackageOptionShort[]>('PricingSettings/GetMPOptionsShort');
 export const loadPackageOptionsList = (serviceCenterId: number): AppThunk => dispatch => {
-    dispatch(setLoading);
+    dispatch(setLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.GetOptionsByQuery,
         {data: {serviceCenterId, pageIndex: 0, pageSize: 0, isApplyPricingOptimization: true}})
         .then(res => {
@@ -352,3 +352,15 @@ export const loadPackageOptionsList = (serviceCenterId: number): AppThunk => dis
         .finally(() => dispatch(setLoading(false)));
 }
 
+export const updateMaxPrice = (id: number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.PricingSettings.UpdateMaxPrice, {urlParams: {id}})
+        .then(() => {
+            onSuccess();
+        })
+        .catch(err => {
+            onError(err);
+            console.log(err)
+        })
+        .finally(() => dispatch(setLoading(false)))
+}

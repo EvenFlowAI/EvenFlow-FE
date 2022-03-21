@@ -161,7 +161,7 @@ type ApiRoutes = {
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
         | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings"
-        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings" | "RemovePackagePricingSettings", TApiRoute>,
+        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings" | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -326,7 +326,8 @@ export class Api {
             ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "put"},
             GetPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "get"},
             AddPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "post"},
-            RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "delete"}
+            RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "delete"},
+            UpdateMaxPrice: {route: "/price/max-price/{id}", method: "put"},
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},
