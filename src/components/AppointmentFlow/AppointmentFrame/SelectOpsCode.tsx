@@ -11,7 +11,7 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {InputLoading, TextField} from "../UI";
-import {Search} from "@material-ui/icons";
+import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {checkSelectedCar} from "./utils";
@@ -25,6 +25,7 @@ import {
     selectService, selectSubService,
     setAdditionalServicesChosen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
+import {Caption} from "../../UI/Caption";
 
 
 const Wrapper = styled('div')({
@@ -253,10 +254,13 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                             }
                             >
                             </Code>
-                            <Price style={ isSm ? {width: '20%'} : {}}>${s.price}</Price>
+                            {Boolean(s.price)
+                                ? <Price style={isSm ? {width: '20%'} : {}}>${s.price}</Price>
+                                : <InfoOutlined style={{paddingRight: 8, fontSize: '2rem'}}/>}
                         </CodeWrapper>
                     })}
                 </CodesWrapper>
+                <Caption title="The price for the service will be quoted at the dealership"/>
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
             <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} />
