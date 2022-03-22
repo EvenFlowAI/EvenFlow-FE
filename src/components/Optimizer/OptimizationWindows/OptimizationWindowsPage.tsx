@@ -8,7 +8,7 @@ import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadDemandSegments} from "../../../store/reducers/demandSegments/actions";
-import {loadOptimizationWindows} from "../../../store/reducers/optimizationWindows/actions";
+import {loadMaxPriceDateRange, loadOptimizationWindows} from "../../../store/reducers/optimizationWindows/actions";
 import {
     EOptimizationWindowType,
     IOptimizationWindow,
@@ -21,6 +21,7 @@ import {AppointmentCutoffDialog} from "./AppointmentCutoffDialog";
 import moment from "moment";
 import {timeSpanString} from "../../../config/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
+import {MaxPriceDateRangeDialog} from "./MaxPriceDateRangeDialog";
 
 type TOptParam = {
     [k in EOptimizationWindowType]: IOptimizationWindow;
@@ -78,9 +79,11 @@ export const OptimizationWindowsPage = () => {
     const {isOpen: isOverbookingOpen, onClose: onOverbookingClose, onOpen: onOverbookingOpen} = useModal();
     const {isOpen: isCutoffOpen, onClose: onCutoffClose, onOpen: onCutoffOpen} = useModal();
     const {isOpen: isOptOpen, onClose: onOptClose, onOpen: onOptOpen} = useModal();
+    const {isOpen: isMaxPriceOpen, onClose: onMaxPriceClose, onOpen: onMaxPriceOpen} = useModal();
     const optParams = useSelector((state: RootState) =>
         state.optimizationWindows.dataList
     );
+    const {maxPriceDateRange} = useSelector((state: RootState) => state.optimizationWindows);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
@@ -104,6 +107,8 @@ export const OptimizationWindowsPage = () => {
                 return onOverbookingOpen;
             case EOptimizationWindowType.AppointmentCutoff:
                 return onCutoffOpen;
+            case EOptimizationWindowType.MaxPriceDateRange:
+                return onMaxPriceOpen;
             default:
                 return handleEdit(k);
         }
@@ -117,6 +122,7 @@ export const OptimizationWindowsPage = () => {
             }
             dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
             dispatch(loadWorkingDays(selectedSC.id));
+            dispatch(loadMaxPriceDateRange(selectedSC.id))
         }
     }, [dispatch, selectedSC, selectedPod, isDemandOpen]);
 
@@ -134,7 +140,11 @@ export const OptimizationWindowsPage = () => {
                                     ? optMapped[k].value
                                         ? moment(optMapped[k].value, timeSpanString).format("h:mm")
                                         : "-"
-                                    : optMapped[k].value
+                                    : k === EOptimizationWindowType.MaxPriceDateRange
+                                        ? maxPriceDateRange
+                                            ? maxPriceDateRange
+                                            : "-"
+                                        : optMapped[k].value
                             }
                             label={k === EOptimizationWindowType.AppointmentCutoff
                                 ? optMapped[k].value
@@ -157,6 +167,7 @@ export const OptimizationWindowsPage = () => {
             <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
             <OverbookingFactorDialog open={isOverbookingOpen} onClose={onOverbookingClose} />
             <AppointmentCutoffDialog open={isCutoffOpen} onClose={onCutoffClose} />
+            <MaxPriceDateRangeDialog open={isMaxPriceOpen} onClose={onMaxPriceClose}/>
         </Grid>
     </>
 }

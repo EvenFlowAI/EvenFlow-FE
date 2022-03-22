@@ -166,7 +166,8 @@ type ApiRoutes = {
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
-        | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice", TApiRoute>,
+        | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
+        | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -359,7 +360,9 @@ export class Api {
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
             Analytics: {route: "/service-centers/{id}/analytics", method: "get"},
             GetRoundPrice: {route: "/service-centers/{id}/round-price", method: "get"},
-            ChangeRoundPrice: {route: "/service-centers/{id}/round-price", method: "patch"}
+            ChangeRoundPrice: {route: "/service-centers/{id}/round-price", method: "patch"},
+            GetMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "get"},
+            UpdateMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "patch"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},
