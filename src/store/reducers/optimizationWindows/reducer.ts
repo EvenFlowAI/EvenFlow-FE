@@ -1,17 +1,19 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {IAppointmentCutoff, IOptimizationWindow, IOverbookingFactor} from "./types";
-import {getAppointmentCutoff, getOptimizationWindows, getOverbookingFactor} from "./actions";
+import {getAppointmentCutoff, getMaxPriceDateRange, getOptimizationWindows, getOverbookingFactor} from "./actions";
 
 type TState = {
     dataList: IOptimizationWindow[],
     overbookingFactor: IOverbookingFactor[],
-    appointmentCutoff: IAppointmentCutoff[]
+    appointmentCutoff: IAppointmentCutoff[],
+    maxPriceDateRange: number | undefined,
 }
 
 const initialState: TState = {
     dataList: [],
     overbookingFactor: [],
-    appointmentCutoff: []
+    appointmentCutoff: [],
+    maxPriceDateRange: undefined,
 }
 export const optimizationWindowsReducer = createReducer(initialState, builder => builder
     .addCase(getOptimizationWindows, (state, {payload}) => {
@@ -22,5 +24,8 @@ export const optimizationWindowsReducer = createReducer(initialState, builder =>
     })
     .addCase(getAppointmentCutoff, (state, {payload}) => {
         return {...state, appointmentCutoff: payload};
+    })
+    .addCase(getMaxPriceDateRange, (state, {payload}) => {
+        return {...state, maxPriceDateRange: payload};
     })
 );
