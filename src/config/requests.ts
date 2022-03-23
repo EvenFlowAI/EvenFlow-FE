@@ -363,8 +363,8 @@ export class Api {
             ChangeRoundPrice: {route: "/service-centers/{id}/round-price", method: "patch"},
             GetMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "get"},
             UpdateMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "patch"},
-            GetReminders: {route: "", method: "get"},
-            UpdateReminders: {route: "", method: "put"},
+            GetReminders: {route: "/service-centers/{id}/send-reminders", method: "get"},
+            UpdateReminders: {route: "/service-centers/{id}/send-reminders", method: "patch"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

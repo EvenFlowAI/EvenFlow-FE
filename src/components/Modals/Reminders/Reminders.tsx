@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, Switch} from "@material-ui/core";
-import {useException, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {RootState} from "../../../store/rootReducer";
@@ -53,6 +53,7 @@ const Reminders: React.FC<DialogProps> = (props) => {
     const [isRemindersOn, setRemindersOn] = useState<boolean>(false);
     const { reminders, remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const showError = useException();
+    const showMessage = useMessage();
     const dispatch = useDispatch();
     const classes = useStyles();
     const {selectedSC} = useSCs();
@@ -70,9 +71,17 @@ const Reminders: React.FC<DialogProps> = (props) => {
         props.onClose();
     }
 
+    const onSuccess = () => {
+        showMessage('Reminders Settings Updated')
+    }
+
+    const onError = (err: string) => {
+        showError(err)
+    }
+
     const onSave = () => {
         if (selectedSC) {
-            dispatch(updateReminders(selectedSC.id, isRemindersOn, err => showError(err)))
+            dispatch(updateReminders(selectedSC.id, isRemindersOn, onError, onSuccess))
             props.onClose();
         }
     }

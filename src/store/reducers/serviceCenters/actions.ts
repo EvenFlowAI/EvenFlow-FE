@@ -221,11 +221,14 @@ export const loadReminders = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setRemindersLoading(false)))
 }
 
-export const updateReminders = (id: number, value: boolean, onError: (err: string) => void): AppThunk => dispatch => {
+export const updateReminders = (id: number, isSendReminders: boolean, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
     dispatch(setRemindersLoading(true));
-    Api.call(Api.endpoints.ServiceCenters.UpdateReminders, {urlParams: {id}, data: {value}})
+    Api.call(Api.endpoints.ServiceCenters.UpdateReminders, {urlParams: {id}, data: {isSendReminders}})
         .then(result => {
-            if (result) dispatch(loadReminders(id))
+            if (result) {
+                dispatch(loadReminders(id))
+                onSuccess();
+            }
         })
         .catch(err => {
             onError(err);
