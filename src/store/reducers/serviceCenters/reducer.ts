@@ -28,6 +28,8 @@ type TServiceCenterState = {
     workingDays: EDay[],
     analytics: ISCAnalytics,
     dealershipId: number | undefined,
+    reminders: boolean,
+    remindersLoading: boolean,
 };
 
 const initialState: TServiceCenterState = {
@@ -47,6 +49,8 @@ const initialState: TServiceCenterState = {
     workingDays: [],
     analytics: blankAnalytics,
     dealershipId: undefined,
+    reminders: false,
+    remindersLoading: false,
 };
 
 export const serviceCenterReducer = (state=initialState, action: TServiceCenterActions): TServiceCenterState => {
@@ -79,6 +83,10 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, selectedSC: action.payload};
         case "ServiceCenters/SetDealershipId":
             return {...state, dealershipId: action.payload};
+        case "ServiceCenters/SetReminders":
+            return {...state, reminders: action.payload};
+        case "ServiceCenters/SetRemindersLoading":
+            return {...state, remindersLoading: action.payload};
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
                 return {...state, workingDays: action.payload};

@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, Switch} from "@material-ui/core";
 import {useException, useSCs} from "../../../utils/hooks";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
+import {RootState} from "../../../store/rootReducer";
+import {updateReminders} from "../../../store/reducers/serviceCenters/actions";
 
 const useStyles = makeStyles(() => ({
     switchWrapper: {
@@ -49,30 +51,30 @@ const useStyles = makeStyles(() => ({
 
 const Reminders: React.FC<DialogProps> = (props) => {
     const [isRemindersOn, setRemindersOn] = useState<boolean>(false);
+    const { reminders, remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const showError = useException();
     const dispatch = useDispatch();
     const classes = useStyles();
     const {selectedSC} = useSCs();
 
+    useEffect(() => {
+        setRemindersOn(reminders);
+    }, [reminders])
+
     const handleSwitch = (e: any, value: boolean) => {
-        if (selectedSC) {
-            try {
-                // todo request;
-                setRemindersOn(value)
-            } catch (e) {
-                showError(e);
-            }
-        }
+        setRemindersOn(value);
     }
+
     const onCancel = () => {
-        // todo change state to initial from BE
-        setRemindersOn(false)
+        setRemindersOn(reminders)
         props.onClose();
     }
 
     const onSave = () => {
-        // todo request
-        props.onClose();
+        if (selectedSC) {
+            dispatch(updateReminders(selectedSC.id, isRemindersOn, err => showError(err)))
+            props.onClose();
+        }
     }
 
     return (
@@ -85,7 +87,7 @@ const Reminders: React.FC<DialogProps> = (props) => {
                 <div className={classes.switchWrapper}>
                     <p className={classes.text}>Email & Text Appointment Reminders</p>
                     <Switch
-                        // disabled={isLoading}
+                        disabled={remindersLoading}
                         onChange={handleSwitch}
                         checked={isRemindersOn}
                         color="primary"
@@ -97,12 +99,14 @@ const Reminders: React.FC<DialogProps> = (props) => {
                 <div className={classes.actionsWrapper}>
                     <div className={classes.buttonsWrapper}>
                         <Button
+                            disabled={remindersLoading}
                             onClick={onCancel}
                             className={classes.cancelButton}>
                             Cancel
                         </Button>
                         <Button
                             onClick={onSave}
+                            disabled={remindersLoading}
                             className={classes.saveButton}>
                             Save
                         </Button>

@@ -167,7 +167,7 @@ type ApiRoutes = {
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
-        | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange", TApiRoute>,
+        | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -363,6 +363,8 @@ export class Api {
             ChangeRoundPrice: {route: "/service-centers/{id}/round-price", method: "patch"},
             GetMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "get"},
             UpdateMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "patch"},
+            GetReminders: {route: "", method: "get"},
+            UpdateReminders: {route: "", method: "put"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},
