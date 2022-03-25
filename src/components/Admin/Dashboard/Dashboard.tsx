@@ -290,6 +290,6 @@ export const AdminDashboard: React.FC = () => {
         <DashPodsModal viewMode={isCCRView} open={isOpenPods} onClose={onClosePods} />
         <TransportationOptions open={isOpenTransOptions} onClose={onCloseTransOptions}/>
         <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
-        <CustomerVerification open={isOpenVerification} onClose={onCloseVerification}/>
+        {/*<CustomerVerification open={isOpenVerification} onClose={onCloseVerification}/>*/}
     </div>
 }
