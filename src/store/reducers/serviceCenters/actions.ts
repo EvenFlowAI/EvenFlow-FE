@@ -236,3 +236,17 @@ export const updateReminders = (id: number, isSendReminders: boolean, onError: (
         })
         .finally(() => dispatch(setRemindersLoading(false)))
 }
+
+export const updateAuth = (id: number, isAuthRequired: boolean, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setRemindersLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateAuth, {urlParams: {id}, data: {isAuthRequired}})
+        .then(result => {
+            if (result) {
+                onSuccess();
+            }
+        }).catch(err => {
+        onError(err)
+        console.log('update auth error', err)
+    }).finally(() => dispatch(setRemindersLoading(false)))
+
+}

@@ -11,6 +11,7 @@ export interface IServiceCenter {
     avatarPath?: string;
     timeZoneId: string;
     laborRatePerHour: number;
+    isAuthRequired: boolean;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
