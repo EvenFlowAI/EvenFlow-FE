@@ -87,8 +87,8 @@ const Reminders: React.FC<DialogProps> = (props) => {
     }
 
     return (
-        <BaseModal {...props} width={700}>
-            <DialogTitle onClose={props.onClose}>Appointment Reminders Configuration</DialogTitle>
+        <BaseModal {...props} width={700} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>Appointment Reminders Configuration</DialogTitle>
             <DialogContent>
                 <p className={classes.subtitle}>
                     By switching off, the EvenFlow app will no longer send appointment reminder email and text notifications
