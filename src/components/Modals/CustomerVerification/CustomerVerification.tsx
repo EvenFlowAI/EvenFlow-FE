@@ -12,11 +12,12 @@ const useStyles = makeStyles(() => ({
     switchWrapper: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
     },
     text: {
-        fontSize: 20,
+        fontSize: 14,
         fontWeight: 'bold',
+        marginRight: 20,
     },
     actionsWrapper: {
         display: 'flex',
@@ -85,11 +86,11 @@ const CustomerVerification: React.FC<DialogProps> = (props) => {
     }
 
     return (
-        <BaseModal {...props} width={700} onClose={onCancel}>
+        <BaseModal {...props} width={400} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Customer Verification</DialogTitle>
             <DialogContent>
                 <div className={classes.switchWrapper}>
-                    <p className={classes.text}> Require customer verification</p>
+                    <p className={classes.text}>Require customer verification</p>
                     <Switch
                         disabled={remindersLoading}
                         onChange={handleSwitch}

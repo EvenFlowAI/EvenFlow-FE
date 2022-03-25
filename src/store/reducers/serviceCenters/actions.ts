@@ -242,6 +242,7 @@ export const updateAuth = (id: number, isAuthRequired: boolean, onError: (err: s
     Api.call(Api.endpoints.ServiceCenters.UpdateAuth, {urlParams: {id}, data: {isAuthRequired}})
         .then(result => {
             if (result) {
+                dispatch(loadAllSCs());
                 onSuccess();
             }
         }).catch(err => {
