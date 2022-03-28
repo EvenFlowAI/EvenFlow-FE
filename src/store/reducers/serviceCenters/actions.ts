@@ -205,3 +205,49 @@ export const changePricingOpt = (id: number, applyPricingOptimization: boolean):
     await Api.call(Api.endpoints.ServiceCenters.ChangePricingOpt, {urlParams: {id}, data: {applyPricingOptimization}});
     await dispatch(setPricingOpt({id, checked: applyPricingOptimization}));
 }
+
+export const setReminders = createAction<boolean>("ServiceCenters/SetReminders");
+export const setRemindersLoading = createAction<boolean>("ServiceCenters/RemindersLoading");
+
+export const loadReminders = (id: number): AppThunk => dispatch => {
+    dispatch(setRemindersLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.GetReminders, {urlParams: {id}})
+        .then(result => {
+            dispatch(setReminders(result.data))
+        })
+        .catch(err => {
+            console.log("get reminders error", err)
+        })
+        .finally(() => dispatch(setRemindersLoading(false)))
+}
+
+export const updateReminders = (id: number, isSendReminders: boolean, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setRemindersLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateReminders, {urlParams: {id}, data: {isSendReminders}})
+        .then(result => {
+            if (result) {
+                dispatch(loadReminders(id))
+                onSuccess();
+            }
+        })
+        .catch(err => {
+            onError(err);
+            console.log('update reminders error', err)
+        })
+        .finally(() => dispatch(setRemindersLoading(false)))
+}
+
+export const updateAuth = (id: number, isAuthRequired: boolean, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setRemindersLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateAuth, {urlParams: {id}, data: {isAuthRequired}})
+        .then(result => {
+            if (result) {
+                dispatch(loadAllSCs());
+                onSuccess();
+            }
+        }).catch(err => {
+        onError(err)
+        console.log('update auth error', err)
+    }).finally(() => dispatch(setRemindersLoading(false)))
+
+}

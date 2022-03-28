@@ -30,7 +30,9 @@ import {ReactComponent as ServiceCodes} from "../../../assets/img/serviceOpsCode
 import {ReactComponent as Transportation} from "../../../assets/img/transportation_options.svg";
 import {ReactComponent as Vehicle} from "../../../assets/img/vehicleDetails.svg";
 import {ReactComponent as Calendar} from "../../../assets/img/date_1_grey.svg";
+import {ReactComponent as Customer} from "../../../assets/img/customerVerification.svg";
 import Reminders from "../../Modals/Reminders/Reminders";
+import CustomerVerification from "../../Modals/CustomerVerification/CustomerVerification";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -208,6 +210,11 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenReminders,
         isOpen: isOpenReminders,
     } = useModal();
+    const {
+        onClose: onCloseVerification,
+        onOpen: onOpenVerification,
+        isOpen: isOpenVerification,
+    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -237,6 +244,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Service Ops Codes Mapping", icon: <ServiceCodes />, action: onOpenServicesOps},
         {label: "Vehicle Detail Options", icon: <Vehicle />, action: onOpenVehicle},
         {label: "Appointment Reminders", icon: <Calendar />, action: onOpenReminders},
+        {label: "Customer Verification", icon: <Customer/>, action: onOpenVerification},
     ];
 
     const classes = useStyles();
@@ -281,6 +289,7 @@ export const AdminDashboard: React.FC = () => {
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
         <DashPodsModal viewMode={isCCRView} open={isOpenPods} onClose={onClosePods} />
         <TransportationOptions open={isOpenTransOptions} onClose={onCloseTransOptions}/>
-        {/*<Reminders open={isOpenReminders} onClose={onCloseReminders}/>*/}
+        <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
+        {/*<CustomerVerification open={isOpenVerification} onClose={onCloseVerification}/>*/}
     </div>
 }

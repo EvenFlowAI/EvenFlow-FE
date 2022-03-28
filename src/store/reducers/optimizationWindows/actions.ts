@@ -65,3 +65,24 @@ export const setAppointmentCutoff = (data: IAppointmentCutoff[], serviceCenterId
     )
     dispatch(loadOptimizationWindows(serviceCenterId, podId));
 }
+
+export const getMaxPriceDateRange = createAction<number>("OptimizationWindows/GetMaxPriceDateRange");
+export const loadMaxPriceDateRange = (id: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.GetMaxPriceDateRange, {urlParams: {id}})
+        .then(result => {
+            dispatch(getMaxPriceDateRange(result.data))
+        })
+        .catch(err => {
+            console.log('get max price date range error', err)
+        })
+}
+
+export const updateMaxPriceDateRange = (id: number, daysCount: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.UpdateMaxPriceDateRange, {urlParams: {id}, data: {daysCount}})
+        .then(result => {
+            if (result) dispatch(loadMaxPriceDateRange(id))
+        })
+        .catch(err => {
+            console.log('update max price date range error', err)
+        })
+}

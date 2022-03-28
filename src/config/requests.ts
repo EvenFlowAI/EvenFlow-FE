@@ -161,12 +161,13 @@ type ApiRoutes = {
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
         | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings"
-        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings" | "RemovePackagePricingSettings", TApiRoute>,
+        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings" | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
-        | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice", TApiRoute>,
+        | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
+        | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -326,7 +327,8 @@ export class Api {
             ChangePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "put"},
             GetPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "get"},
             AddPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "post"},
-            RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "delete"}
+            RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "delete"},
+            UpdateMaxPrice: {route: "/price/max-price/{id}", method: "put"},
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},
@@ -358,7 +360,12 @@ export class Api {
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
             Analytics: {route: "/service-centers/{id}/analytics", method: "get"},
             GetRoundPrice: {route: "/service-centers/{id}/round-price", method: "get"},
-            ChangeRoundPrice: {route: "/service-centers/{id}/round-price", method: "patch"}
+            ChangeRoundPrice: {route: "/service-centers/{id}/round-price", method: "patch"},
+            GetMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "get"},
+            UpdateMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "patch"},
+            GetReminders: {route: "/service-centers/{id}/send-reminders", method: "get"},
+            UpdateReminders: {route: "/service-centers/{id}/send-reminders", method: "patch"},
+            UpdateAuth: {route: "/service-centers/{id}/auth", method: "patch"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

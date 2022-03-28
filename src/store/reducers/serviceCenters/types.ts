@@ -11,6 +11,7 @@ export interface IServiceCenter {
     avatarPath?: string;
     timeZoneId: string;
     laborRatePerHour: number;
+    isAuthRequired: boolean;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
@@ -84,6 +85,8 @@ export type TChangePageData = TChangePageDataGeneric<"ServiceCenters/ChangePageD
 export type TChangePaging = TChangePagingGeneric<"ServiceCenters/ChangePaging">;
 export type TChangeDealershipPaging = TChangePagingGeneric<"ServiceCenters/ChangeDealershipPaging">;
 export type TSetDealerShipId = {type: "ServiceCenters/SetDealershipId", payload: number | undefined};
+export type TSetReminders = {type: "ServiceCenters/SetReminders", payload: boolean};
+export type TSetRemindersLoading = {type: "ServiceCenters/SetRemindersLoading", payload: boolean};
 
 export type TServiceCenterActions =
     | TCreate
@@ -99,4 +102,6 @@ export type TServiceCenterActions =
     | TGetShort
     | TShortLoading
     | TSetDealerShipId
-    | TGetAll;
+    | TGetAll
+    | TSetReminders
+    | TSetRemindersLoading;
