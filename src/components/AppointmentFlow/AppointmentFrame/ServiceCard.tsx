@@ -19,7 +19,6 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
     const [icon, setIcon] = useState<string>('');
     const [isLoading, setLoading] = useState<boolean>(false);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    console.log(card)
 
     const price = card.type === EServiceCategoryType.GeneralCategory
         ? card.serviceRequests.reduce((a, b) => a + +b.price, 0)
