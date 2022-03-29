@@ -63,6 +63,11 @@ const useStyles = makeStyles(() => ({
         fontSize: 12,
         marginBottom: 5,
     },
+    bigLabel: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginBottom: 5,
+    },
     actionsWrapper: {
         display: 'flex',
         justifyContent: 'flex-end',
@@ -497,6 +502,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         }}
                     />
                 </div>
+                <div className={classes.bigLabel}>CONSTRAINTS</div>
+                <Divider style={{ margin: '0 0 10px 0' }}/>
                 <TextField
                     fullWidth
                     type="number"
@@ -511,7 +518,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     fullWidth
                     type="number"
                     inputProps={{min: 0, step: 1}}
-                    label='Number per appointment slots'
+                    label='Per appointment slots'
                     placeholder='Type Number'
                     error={Boolean(slotsCount) && !Number.isInteger(+slotsCount)}
                     onChange={onSlotsCountChange}
