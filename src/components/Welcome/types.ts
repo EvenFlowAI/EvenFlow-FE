@@ -1,1 +1,1 @@
-export type TView = "select" | "search" | "confirm";
+export type TView = "select" | "search" | "confirm" | "serviceSelect";

@@ -51,3 +51,8 @@ export interface IFrameScreens {
     opsCode: "opsCode";
     vehicleData: 'vehicleData';
 }
+
+export enum EUserType {
+    New,
+    Existing
+}

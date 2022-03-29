@@ -8,15 +8,17 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {useDispatch} from "react-redux";
-import {setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setUserType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
+import {EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {TView} from "./types";
 
-const mh400 = "@media (max-height: 400px)";
-const mh600 = "@media (max-height: 600px)";
+export const mh400 = "@media (max-height: 400px)";
+export const mh600 = "@media (max-height: 600px)";
 
-const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles(theme => ({
     buttonsContainer: {
         marginTop: "5%",
         [mh600]: {
@@ -59,9 +61,10 @@ const useStyles = makeStyles(theme => ({
 type TProps = {
     onLogin: () => void;
     onComplete: () => void;
+    setView: (view: TView) => void;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
+export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete, setView}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -74,20 +77,24 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
     }, [])
 
     const handleExisting = (): void => {
-        onLogin();
+        setView('serviceSelect')
+        dispatch(setUserType(EUserType.Existing));
+        // onLogin();
     }
 
     const handleNew = () => {
-        const c = getBlankCustomer();
-        dispatch(setCustomerLoadedData(c));
-        dispatch(setVehicle(getBlankVehicle()));
-        saveCustomerCache(c);
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: 'Enters Page',
-            label: `As New User`,
-        });
-        onComplete();
+        setView('serviceSelect')
+        dispatch(setUserType(EUserType.New));
+        // const c = getBlankCustomer();
+        // dispatch(setCustomerLoadedData(c));
+        // dispatch(setVehicle(getBlankVehicle()));
+        // saveCustomerCache(c);
+        // ReactGA.event({
+        //     category: 'EvenFlow User',
+        //     action: 'Enters Page',
+        //     label: `As New User`,
+        // });
+        // onComplete();
     }
 
     return <Grid className={classes.buttonsContainer}

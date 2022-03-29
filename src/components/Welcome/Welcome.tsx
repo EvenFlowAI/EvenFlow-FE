@@ -14,9 +14,10 @@ import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
-import {setCurrentFrameScreen} from "../../store/reducers/appointmentFrameReducer/actions";
+import {selectService, setCurrentFrameScreen} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
+import ServiceTypeSelect from "./ServiceTypeSelect";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
@@ -46,6 +47,7 @@ export const Welcome = () => {
     }, [id]);
 
     const onComplete = () => {
+        setView('serviceSelect');
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         dispatch(setCurrentFrameScreen("carSelection"));
         history.push(
@@ -63,21 +65,30 @@ export const Welcome = () => {
                     onConfirm={() => setView("confirm")}
                     onReturn={() => setView("select")}
                 />;
+            case "serviceSelect":
+                return <ServiceTypeSelect
+                    onComplete={onComplete}
+                    onLogin={() => setView("search")}
+                />;
             case "select":
             default:
                 return <CustomerSelect
                     onComplete={onComplete}
+                    setView={setView}
                     onLogin={() => setView("search")}
                 />;
         }
     }
+
+    const getTitle = (view: TView) => view === 'serviceSelect' ? "Do you want to bring your car in" : "Welcome!";
+    const getSubTitle = (view: TView) => view === 'serviceSelect' ? "Or use uor mobile service?" : "Schedule Your Service:";
 
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
                 <FrameWelcomeLayout>
                     {getComponent()}
                 </FrameWelcomeLayout>
             </MuiThemeProvider> :
-            <WelcomeLayout title="Welcome!" subtitle="Schedule Your Service:">
+            <WelcomeLayout title={getTitle(view)} subtitle={getSubTitle(view)}>
                 {getComponent()}
             </WelcomeLayout>
     );

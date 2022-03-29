@@ -14,7 +14,7 @@ import {
     setTime,
     setTiming, setTrackerCreated,
     setTransportation,
-    setUpdateAppointment,
+    setUpdateAppointment, setUserType,
     setVehicle, updateVehicle
 } from "./actions";
 import {
@@ -27,7 +27,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {TMaintenanceDetails} from "./types";
+import {EUserType, TMaintenanceDetails} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -56,6 +56,7 @@ type TState = {
     categoriesIds: number[];
     id?: number;
     hashKey?: string;
+    userType: EUserType | undefined;
 }
 const initialState: TState = {
     service: null,
@@ -85,6 +86,7 @@ const initialState: TState = {
     packageIsSelected: false,
     categoriesIds: [],
     packageOptionType: null,
+    userType: undefined,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -189,5 +191,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSelectedPackageOptionType, (state, {payload}) => {
         return {...state, packageOptionType: payload};
+    })
+    .addCase(setUserType, (state, {payload}) => {
+        return {...state, userType: payload}
     })
 )
