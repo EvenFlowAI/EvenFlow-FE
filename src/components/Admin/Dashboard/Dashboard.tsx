@@ -244,7 +244,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Service Ops Codes Mapping", icon: <ServiceCodes />, action: onOpenServicesOps},
         {label: "Vehicle Detail Options", icon: <Vehicle />, action: onOpenVehicle},
         {label: "Appointment Reminders", icon: <Calendar />, action: onOpenReminders},
-        {label: "Customer Verification", icon: <Customer/>, action: onOpenVerification},
+        // {label: "Customer Verification", icon: <Customer/>, action: onOpenVerification},
     ];
 
     const classes = useStyles();
