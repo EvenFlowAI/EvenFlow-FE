@@ -79,7 +79,7 @@ export const TransportationOptions: React.FC<DialogProps> = props => {
                     return option || {
                         type,
                         state: 0,
-                        serviceCenterId: selectedSC.id
+                        serviceCenterId: selectedSC.id,
                     } as INewTransportationOption
                 })
             })

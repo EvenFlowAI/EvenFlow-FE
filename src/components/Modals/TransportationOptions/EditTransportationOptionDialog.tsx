@@ -139,8 +139,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     const [duration, setDuration] = useState<TTimeObject | null>(null);
     const [serviceRequests, setServiceRequests] = useState<TOption[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-    const [numberPerHour, setNumberPerHour] = useState<string>('');
-    const [numberPerDay, setNumberPerDay] = useState<string>('');
+    const [capacity, setCapacity] = useState<string>('');
+    const [slotsCount, setSlotsCount] = useState<string>('');
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -194,6 +194,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 } else {
                     setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
                 }
+                if (rules.capacity) setCapacity(rules.capacity.toString())
+                if (rules.slotsCount) setSlotsCount(rules.slotsCount.toString());
 
                 const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
                 const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
@@ -336,6 +338,8 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setTimeOfDay(null);
         setServiceRequests([]);
         setDaysOfWeek([]);
+        setSlotsCount('');
+        setCapacity('');
         props.onClose();
     }
 
@@ -367,6 +371,9 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             } else {
                 data.dayOfWeeks = daysOfWeek.map(item => item.value);
             }
+            if (capacity) data.capacity = Number(capacity);
+            if (slotsCount) data.slotsCount = Number(slotsCount);
+
             if (editingElement.id) {
                 try {
                     dispatch(editTransportationOptionRules(editingElement.id, selectedSC.id, data, onCancel))
@@ -380,12 +387,12 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
     }, [selectedSC, editingElement, isValid, allRequestsSelected, duration, timeOfDay, customerSegment,
         serviceRequests, daysOfWeek, dayOFWeekOptions, onCancel])
 
-    const onNumberPerHourChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setNumberPerHour(e.target.value);
+    const onCapacityChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setCapacity(e.target.value);
     }
 
-    const onNumberPerDayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setNumberPerDay(e.target.value);
+    const onSlotsCountChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setSlotsCount(e.target.value);
     }
 
     return <BaseModal {...props} width={500} onClose={onCancel}>
@@ -490,30 +497,25 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         }}
                     />
                 </div>
-                {/*<div className={classes.smallWrapper}>*/}
-                {/*    <div style={{marginRight: 20}}>*/}
-                {/*        <TextField*/}
-                {/*            fullWidth*/}
-                {/*            type="number"*/}
-                {/*            inputProps={{min: 0, step: 1}}*/}
-                {/*            label='Number per day'*/}
-                {/*            placeholder='Type Number'*/}
-                {/*            // error={Boolean(numberPerHour) && !Number.isInteger(numberPerHour)}*/}
-                {/*            onChange={onNumberPerDayChange}*/}
-                {/*            value={numberPerDay ?? ''}/>*/}
-                {/*    </div>*/}
-                {/*    <div>*/}
-                {/*        <TextField*/}
-                {/*            fullWidth*/}
-                {/*            type="number"*/}
-                {/*            inputProps={{min: 0, step: 1}}*/}
-                {/*            label='Number per hour'*/}
-                {/*            placeholder='Type Number'*/}
-                {/*            // error={Boolean(numberPerHour) && !Number.isInteger(numberPerHour)}*/}
-                {/*            onChange={onNumberPerHourChange}*/}
-                {/*            value={numberPerHour ?? ''}/>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+                <TextField
+                    fullWidth
+                    type="number"
+                    inputProps={{min: 0, step: 1}}
+                    label='Capacity'
+                    style={{ marginBottom: 20}}
+                    placeholder='Type Number'
+                    error={Boolean(capacity) && !Number.isInteger(+capacity)}
+                    onChange={onCapacityChange}
+                    value={capacity ?? ''}/>
+                <TextField
+                    fullWidth
+                    type="number"
+                    inputProps={{min: 0, step: 1}}
+                    label='Number per appointment slots'
+                    placeholder='Type Number'
+                    error={Boolean(slotsCount) && !Number.isInteger(+slotsCount)}
+                    onChange={onSlotsCountChange}
+                    value={slotsCount ?? ''}/>
             </div>
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
