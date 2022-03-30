@@ -108,20 +108,19 @@ export const ScheduleCalendar = () => {
     const {isOpen, onOpen, onClose} = useModal();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-    const [start, end] = useMemo(() => getStartEndDates(selectedDate, isXS), [selectedDate, isXS])
-
-    const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS]);
+    const [start, end] = useMemo(() => getStartEndDates(selectedDate, isXS), [selectedDate, isXS, selectedSC])
+    const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS, selectedSC]);
 
     useEffect(() => {
         if (selectedSC) {
             if (start && end) dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
             dispatch(loadWorkingDays(selectedSC.id));
         }
-    }, [dispatch, selectedSC, selectedDate, filters, isXS]);
+    }, [dispatch, selectedSC, selectedDate, filters, isXS, start, end]);
 
     useEffect(() => {
         dispatch(loadWeeklyHolidaysList(daysOfWeek[0].toISOString(), daysOfWeek[daysOfWeek.length-1].toISOString()));
-    }, [daysOfWeek, dispatch]);
+    }, [daysOfWeek]);
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
