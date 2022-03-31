@@ -162,13 +162,12 @@ export const ScheduleCalendar = () => {
         onOpen();
     }, [getIds, updateEditedEmployee, getSchedule, onOpen])
 
-    const getCellStyle = (nonWorking: boolean) => {
-        return nonWorking ? nonWorkingStyle : {};
-    }
+    const getCellStyle = (nonWorking: boolean) => nonWorking ? nonWorkingStyle : {};
+
     const getHoliday = useCallback((date: moment.Moment) => {
         const holiday = holidaysList.find(h => {
-            const d = moment(h.date).year(date.year());
-            return d.isSame(date, "date");
+            const d = moment.utc(h.date).year(date.year()).startOf('day');
+            return d.isSame(moment.utc(date), "date");
         });
         if (holiday) {
             return <Tooltip title={holiday.description}><Holiday>{holiday.description}</Holiday></Tooltip>;
@@ -177,8 +176,8 @@ export const ScheduleCalendar = () => {
     }, [holidaysList])
 
     const isWorkingDay = useCallback((date: Moment): boolean => {
-        return workingDays.includes(date.day() as EDay)
-        && !holidaysList.find(item => moment(item.date).isSame(date, 'date'))
+        return workingDays.includes(moment.utc(date).day() as EDay)
+        && !holidaysList.find(item => moment.utc(item.date).isSame(date, 'date'))
     }, [workingDays, holidaysList])
 
     return (
