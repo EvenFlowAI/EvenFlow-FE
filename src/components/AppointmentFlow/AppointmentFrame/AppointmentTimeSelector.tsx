@@ -68,10 +68,22 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         }, [scProfile])
 
     const slots: TSlot[] = useMemo(() => {
+        const unavailableSlots = [];
         const sl = appointments?.appointments.map(appointment => ({
             date: moment.utc(appointment.date), label: moment(appointment.time, "HH:mm:SS").format("HH:mm")
         }))
-        return sl || [];
+        if (!sl?.length) {
+            let start = moment().hour(8).minute(0);
+            const end = moment().hour(20).minute(0);
+            while (moment(start).hour() < moment(end).hour()) {
+                unavailableSlots.push({
+                    date: moment.utc(),
+                    label: moment(start, "HH:mm:SS").format("HH:mm")
+                })
+                start = moment(start).add(30, 'minute');
+            }
+        }
+        return sl?.length ? sl : unavailableSlots;
     }, [date, appointments]);
 
     const handleSelect = (a: IRemappedAppointmentSlot|null) => {
