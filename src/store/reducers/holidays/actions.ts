@@ -28,7 +28,6 @@ export const loadAllHolidays = (serviceCenterId: number): AppThunk => async (dis
 }
 export const getWeeklyHolidaysList = createAction<IHoliday[]>("Holidays/GetFullList");
 export const loadWeeklyHolidaysList = (start: ParsableDate, end: ParsableDate): AppThunk => async dispatch => {
-    console.log(start, end)
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IHoliday>>(
         Api.endpoints.Holidays.GetAll,
         {data: {start, end}}
