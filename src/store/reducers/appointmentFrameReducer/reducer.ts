@@ -1,7 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getMakes,
-    getModels, selectCategoriesIds,
+    getModels, getSlotsGap, selectCategoriesIds,
     selectService,
     selectSubService, setAdditionalServicesChosen,
     setAdvisor,
@@ -56,6 +56,7 @@ type TState = {
     categoriesIds: number[];
     id?: number;
     hashKey?: string;
+    gap: number | undefined;
 }
 const initialState: TState = {
     service: null,
@@ -85,6 +86,7 @@ const initialState: TState = {
     packageIsSelected: false,
     categoriesIds: [],
     packageOptionType: null,
+    gap: undefined,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -189,5 +191,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSelectedPackageOptionType, (state, {payload}) => {
         return {...state, packageOptionType: payload};
+    })
+    .addCase(getSlotsGap, (state, {payload}) => {
+        return {...state, gap: payload};
     })
 )
