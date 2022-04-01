@@ -108,20 +108,19 @@ export const ScheduleCalendar = () => {
     const {isOpen, onOpen, onClose} = useModal();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-    const [start, end] = useMemo(() => getStartEndDates(selectedDate, isXS), [selectedDate, isXS])
-
-    const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS]);
+    const [start, end] = useMemo(() => getStartEndDates(selectedDate, isXS), [selectedDate, isXS, selectedSC])
+    const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS, selectedSC]);
 
     useEffect(() => {
         if (selectedSC) {
             if (start && end) dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
             dispatch(loadWorkingDays(selectedSC.id));
         }
-    }, [dispatch, selectedSC, selectedDate, filters, isXS]);
+    }, [dispatch, selectedSC, selectedDate, filters, isXS, start, end]);
 
     useEffect(() => {
         dispatch(loadWeeklyHolidaysList(daysOfWeek[0].toISOString(), daysOfWeek[daysOfWeek.length-1].toISOString()));
-    }, [daysOfWeek, dispatch]);
+    }, [daysOfWeek, selectedSC]);
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
@@ -163,13 +162,12 @@ export const ScheduleCalendar = () => {
         onOpen();
     }, [getIds, updateEditedEmployee, getSchedule, onOpen])
 
-    const getCellStyle = (nonWorking: boolean) => {
-        return nonWorking ? nonWorkingStyle : {};
-    }
+    const getCellStyle = (nonWorking: boolean) => nonWorking ? nonWorkingStyle : {};
+
     const getHoliday = useCallback((date: moment.Moment) => {
         const holiday = holidaysList.find(h => {
-            const d = moment(h.date).year(date.year());
-            return d.isSame(date, "date");
+            const d = moment.utc(h.date).year(date.year()).startOf('day');
+            return d.isSame(moment.utc(date), "date");
         });
         if (holiday) {
             return <Tooltip title={holiday.description}><Holiday>{holiday.description}</Holiday></Tooltip>;
@@ -178,8 +176,11 @@ export const ScheduleCalendar = () => {
     }, [holidaysList])
 
     const isWorkingDay = useCallback((date: Moment): boolean => {
-        return workingDays.includes(date.day() as EDay)
-        && !holidaysList.find(item => moment(item.date).isSame(date, 'date'))
+        const holiday = holidaysList.find(h => {
+            const d = moment.utc(h.date).year(date.year()).startOf('day');
+            return d.isSame(moment.utc(date), "date");
+        });
+        return workingDays.includes(moment.utc(date).day() as EDay) && !holiday;
     }, [workingDays, holidaysList])
 
     return (
