@@ -98,7 +98,11 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             if (appointment?.date) {
                 setDate(moment.utc(appointment.date).startOf('day'))
             } else {
-                if (selectedTime) setDate(moment.utc(selectedTime).startOf('day'));
+                if (selectedTime) {
+                    setDate(moment.utc(selectedTime).startOf('day'));
+                } else {
+                    if (slots?.length) setDate(moment(slots[0].date).startOf('day'))
+                }
             }
             isMount.current = false;
         }

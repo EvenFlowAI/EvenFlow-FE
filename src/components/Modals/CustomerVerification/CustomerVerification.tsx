@@ -6,21 +6,18 @@ import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {RootState} from "../../../store/rootReducer";
-import {loadReminders, updateReminders} from "../../../store/reducers/serviceCenters/actions";
+import {updateAuth} from "../../../store/reducers/serviceCenters/actions";
 
 const useStyles = makeStyles(() => ({
     switchWrapper: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
     },
     text: {
-        fontSize: 20,
+        fontSize: 14,
         fontWeight: 'bold',
-    },
-    subtitle: {
-        fontSize: 18,
-        marginBottom: 20,
+        marginRight: 20,
     },
     actionsWrapper: {
         display: 'flex',
@@ -49,34 +46,32 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const Reminders: React.FC<DialogProps> = (props) => {
-    const [isRemindersOn, setRemindersOn] = useState<boolean>(false);
-    const { reminders, remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
+const CustomerVerification: React.FC<DialogProps> = (props) => {
+    const [isVerificationOn, setVerificationOn] = useState<boolean>(false);
+    const { remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
+    const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
     const classes = useStyles();
-    const {selectedSC} = useSCs();
 
     useEffect(() => {
-        selectedSC && dispatch(loadReminders(selectedSC.id))
+        selectedSC && setVerificationOn(selectedSC.isAuthRequired);
     }, [selectedSC])
 
-    useEffect(() => {
-        setRemindersOn(reminders);
-    }, [reminders])
-
     const handleSwitch = (e: any, value: boolean) => {
-        setRemindersOn(value);
+        setVerificationOn(value);
     }
 
     const onCancel = () => {
-        setRemindersOn(reminders)
-        props.onClose();
+        if (selectedSC) {
+            setVerificationOn(selectedSC.isAuthRequired)
+            props.onClose();
+        }
     }
 
     const onSuccess = () => {
-        showMessage('Reminders Settings Updated')
+        showMessage('Customer Verification Updated')
     }
 
     const onError = (err: string) => {
@@ -85,24 +80,21 @@ const Reminders: React.FC<DialogProps> = (props) => {
 
     const onSave = () => {
         if (selectedSC) {
-            dispatch(updateReminders(selectedSC.id, isRemindersOn, onError, onSuccess))
+            dispatch(updateAuth(selectedSC.id, isVerificationOn, onError, onSuccess))
             props.onClose();
         }
     }
 
     return (
-        <BaseModal {...props} width={700} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Appointment Reminders Configuration</DialogTitle>
+        <BaseModal {...props} width={400} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>Customer Verification</DialogTitle>
             <DialogContent>
-                <p className={classes.subtitle}>
-                    By switching off, the EvenFlow app will no longer send appointment reminder email and text notifications
-                </p>
                 <div className={classes.switchWrapper}>
-                    <p className={classes.text}>Email & Text Appointment Reminders</p>
+                    <p className={classes.text}>Require customer verification</p>
                     <Switch
                         disabled={remindersLoading}
                         onChange={handleSwitch}
-                        checked={isRemindersOn}
+                        checked={isVerificationOn}
                         color="primary"
                     />
                 </div>
@@ -130,4 +122,4 @@ const Reminders: React.FC<DialogProps> = (props) => {
     );
 };
 
-export default Reminders;
+export default CustomerVerification;

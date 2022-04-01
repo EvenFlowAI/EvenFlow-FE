@@ -17,6 +17,8 @@ export interface ITransportationOptionRules {
     customerSegments?: ECustomerSegment[];
     dayOfWeeks?: number[];
     serviceRequests?: number[];
+    capacity?: number;
+    slotsCount?: number;
 }
 
 export interface ITrOptionServiceTRequest {
@@ -42,6 +44,8 @@ export interface ITransportationOptionRule {
     dayOfWeeks: number[];
     isAllServiceRequestsIncluded?: boolean;
     serviceRequests: ITrOptionServiceTRequest[];
+    capacity?: number;
+    slotsCount?: number;
 }
 
 export interface INewTransportationOption {
@@ -50,9 +54,9 @@ export interface INewTransportationOption {
     serviceCenterId: number;
 }
 
-export interface ITransportationOptionFull extends INewTransportationOption{
+export interface ITransportationOptionFull extends INewTransportationOption {
     id?: number;
-    rules?: ITransportationOptionRule,
+    rules?: ITransportationOptionRule;
 }
 
 export enum ECustomerSegment {

@@ -2,7 +2,7 @@ import {EDay} from "../demandSegments/types";
 
 export enum EOptimizationWindowType {
     FirstAvailable, SpecificDate, DemandSegments,
-    OverbookingFactor, AppointmentsPerSlot, AppointmentCutoff
+    OverbookingFactor, AppointmentsPerSlot, AppointmentCutoff, MaxPriceDateRange
 }
 export interface IOptimizationWindow {
     type: EOptimizationWindowType;
@@ -18,6 +18,7 @@ export const optimizationWindowsList: EOptimizationWindowType[] = [
     EOptimizationWindowType.OverbookingFactor,
     EOptimizationWindowType.AppointmentsPerSlot,
     EOptimizationWindowType.AppointmentCutoff,
+    EOptimizationWindowType.MaxPriceDateRange,
 ];
 export type TOptContentData = {
         helperText: string;

@@ -23,6 +23,7 @@ export interface IServiceCenterProfile {
     dealershipId: number;
     serviceCenterFlag: number;
     isRoundPrice: boolean;
+    isAuthRequired: boolean;
 }
 export interface ISR {
     id: number;
