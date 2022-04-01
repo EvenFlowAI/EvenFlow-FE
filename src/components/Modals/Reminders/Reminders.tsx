@@ -6,7 +6,7 @@ import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {RootState} from "../../../store/rootReducer";
-import {updateReminders} from "../../../store/reducers/serviceCenters/actions";
+import {loadReminders, updateReminders} from "../../../store/reducers/serviceCenters/actions";
 
 const useStyles = makeStyles(() => ({
     switchWrapper: {
@@ -57,6 +57,10 @@ const Reminders: React.FC<DialogProps> = (props) => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const {selectedSC} = useSCs();
+
+    useEffect(() => {
+        selectedSC && dispatch(loadReminders(selectedSC.id))
+    }, [selectedSC])
 
     useEffect(() => {
         setRemindersOn(reminders);
