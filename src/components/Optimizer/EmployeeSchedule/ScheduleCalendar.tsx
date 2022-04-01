@@ -120,7 +120,7 @@ export const ScheduleCalendar = () => {
 
     useEffect(() => {
         dispatch(loadWeeklyHolidaysList(daysOfWeek[0].toISOString(), daysOfWeek[daysOfWeek.length-1].toISOString()));
-    }, [daysOfWeek]);
+    }, [daysOfWeek, selectedSC]);
 
     const handleChange = (date: moment.Moment) => {
         setSelectedDate(date);
@@ -176,8 +176,11 @@ export const ScheduleCalendar = () => {
     }, [holidaysList])
 
     const isWorkingDay = useCallback((date: Moment): boolean => {
-        return workingDays.includes(moment.utc(date).day() as EDay)
-        && !holidaysList.find(item => moment.utc(item.date).isSame(date, 'date'))
+        const holiday = holidaysList.find(h => {
+            const d = moment.utc(h.date).year(date.year()).startOf('day');
+            return d.isSame(moment.utc(date), "date");
+        });
+        return workingDays.includes(moment.utc(date).day() as EDay) && !holiday;
     }, [workingDays, holidaysList])
 
     return (
