@@ -42,6 +42,7 @@ export const setAdditionalServicesChosen = createAction<boolean>('fAppointment/S
 export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPackageIsSelected');
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
+export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('sAppointment/SetUserType');
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
@@ -94,4 +95,14 @@ export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch =
         .catch(err => {
         console.log('get Makes error', err)
     })
+}
+
+export const loadSlotsGap = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.SlotScoring.GetSlotsGap, {params: {serviceCenterId}})
+        .then(result => {
+            if (result?.data) dispatch(getSlotsGap(result.data))
+        })
+        .catch(err => {
+            console.log('load slots gap err', err)
+        })
 }
