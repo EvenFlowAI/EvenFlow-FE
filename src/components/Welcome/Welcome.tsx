@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {CustomerSelect} from "./CustomerSelect";
-import { LoginInput } from './LoginInput';
+import {LoginInput} from './LoginInput';
 import {useHistory, useParams} from 'react-router-dom';
 import {Routes} from "../../config/routes";
 import {useDispatch, useSelector} from "react-redux";
@@ -14,10 +14,11 @@ import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
-import {selectService, setCurrentFrameScreen} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setCurrentFrameScreen} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
+import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
@@ -46,10 +47,10 @@ export const Welcome = () => {
         }
     }, [id]);
 
-    const onComplete = () => {
-        setView('serviceSelect');
+    const onComplete = (serviceType: EServiceType) => {
+        setView("serviceSelect");
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
-        dispatch(setCurrentFrameScreen("carSelection"));
+        dispatch(setCurrentFrameScreen(serviceType === EServiceType.VisitCenter ? "carSelection" : "location"));
         history.push(
             route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );
@@ -72,11 +73,7 @@ export const Welcome = () => {
                 />;
             case "select":
             default:
-                return <CustomerSelect
-                    onComplete={onComplete}
-                    setView={setView}
-                    onLogin={() => setView("search")}
-                />;
+                return <CustomerSelect setView={setView}/>;
         }
     }
 

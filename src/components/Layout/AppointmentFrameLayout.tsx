@@ -7,11 +7,11 @@ import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeed
 import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
 import {MaintenanceDetails} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import { ConsultantSelection } from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
-import { AppointmentTiming } from '../AppointmentFlow/AppointmentFrame/AppointmentTiming';
-import { AppointmentSelection } from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
-import { TransportationNeeds } from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
-import { AppointmentConfirmationFrame } from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
+import {ConsultantSelection} from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
+import {AppointmentTiming} from '../AppointmentFlow/AppointmentFrame/AppointmentTiming';
+import {AppointmentSelection} from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
+import {TransportationNeeds} from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
+import {AppointmentConfirmationFrame} from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
 import {AddInfo} from "../AppointmentFlow/AppointmentFrame/AddInfo";
 import {ServiceSelection} from "../AppointmentFlow/AppointmentFrame/ServiceSelection";
 import {PackageSelection} from "../AppointmentFlow/AppointmentFrame/PackageSelection";
@@ -21,9 +21,12 @@ import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
-    clearCustomerCache, getBlankVehicle,
+    clearCustomerCache,
+    getBlankVehicle,
     getCustomerCache,
-    loadSCProfile, loadSRs, selectSR,
+    loadSCProfile,
+    loadSRs,
+    selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, getTracker} from "../../utils/utils";
@@ -32,7 +35,9 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    setCurrentFrameScreen, setPackage, setTrackerCreated,
+    setCurrentFrameScreen,
+    setPackage,
+    setTrackerCreated,
     setUpdateAppointment,
     setVehicle
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -44,6 +49,7 @@ import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
+import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
 
 const Container = styled('div')({
     display: "flex",
@@ -82,7 +88,8 @@ const SCREENS = {
     appointmentTiming: 'Appointment Timing',
     transportationNeeds: 'Transportation Needs',
     opsCode: "opsCode",
-    vehicleData: 'vehicleData',
+    vehicleData: "vehicleData",
+    location: "Your Location"
 }
 
 // todo add new parent links while go live with new dealerships
@@ -308,7 +315,9 @@ export const AppointmentFrameLayout = () => {
                     service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
                     ? 'opsCode' : 'describeMore')}
                 onNext={handleChangeScreen('consultantSelection')}
-            />
+            />,
+            location: <YourLocation
+            />,
         }
         return carSelections[currentScreen];
     }, [
@@ -341,7 +350,9 @@ export const AppointmentFrameLayout = () => {
             case "appointmentConfirmation":
                 return "Appointment Confirmation";
             case "carDetails":
-                return "Please tell us about your vehicle"
+                return "Please tell us about your vehicle";
+            case "location":
+                return "Where are you located?";
             default:
                 return null;
         }

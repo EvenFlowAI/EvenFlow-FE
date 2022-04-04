@@ -10,7 +10,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
-import {EUserType, IAppointmentId, TMaintenanceDetails} from "./types";
+import {EServiceType, EUserType, IAppointmentId, TMaintenanceDetails} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
@@ -44,6 +44,7 @@ export const setSelectedPackageOptionType = createAction<number | null>('fAppoin
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('sAppointment/SetUserType');
+export const setServiceType = createAction<EServiceType>('sAppointment/SetServiceType');
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(

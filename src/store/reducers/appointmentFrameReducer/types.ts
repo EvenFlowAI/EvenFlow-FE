@@ -56,3 +56,8 @@ export enum EUserType {
     New,
     Existing
 }
+
+export enum EServiceType {
+    VisitCenter,
+    Mobile
+}

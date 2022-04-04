@@ -14,3 +14,4 @@ export type TScreen =
     | "transportationNeeds"
     | "appointmentConfirmation"
     | "appointmentConfirmed"
+    | "location"

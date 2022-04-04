@@ -1,25 +1,39 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getMakes,
-    getModels, getSlotsGap, selectCategoriesIds,
+    getModels,
+    getSlotsGap,
+    selectCategoriesIds,
     selectService,
-    selectSubService, setAdditionalServicesChosen,
+    selectSubService,
+    setAdditionalServicesChosen,
     setAdvisor,
-    setAppointmentId, setConsultants, setCurrentFrameScreen,
+    setAppointmentId,
+    setConsultants,
+    setCurrentFrameScreen,
     setCustomer,
-    setFrameDescription, setLoadingPackages,
+    setFrameDescription,
+    setLoadingPackages,
     setMaintenanceDetails,
-    setPackage, setPackageIsSelected, setPackages,
-    setReminders, setSelectedPackageOptionType,
+    setPackage,
+    setPackageIsSelected,
+    setPackages,
+    setReminders,
+    setSelectedPackageOptionType, setServiceType,
     setTime,
-    setTiming, setTrackerCreated,
+    setTiming,
+    setTrackerCreated,
     setTransportation,
-    setUpdateAppointment, setUserType,
-    setVehicle, updateVehicle
+    setUpdateAppointment,
+    setUserType,
+    setVehicle,
+    updateVehicle
 } from "./actions";
 import {
     ICustomer,
-    ILoadedVehicle, IMake, IPackage,
+    ILoadedVehicle,
+    IMake,
+    IPackage,
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
@@ -27,7 +41,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {EUserType, TMaintenanceDetails} from "./types";
+import {EServiceType, EUserType, TMaintenanceDetails} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -58,6 +72,7 @@ type TState = {
     hashKey?: string;
     gap: number | undefined;
     userType: EUserType | undefined;
+    serviceType: EServiceType;
 }
 const initialState: TState = {
     service: null,
@@ -89,6 +104,7 @@ const initialState: TState = {
     packageOptionType: null,
     gap: undefined,
     userType: undefined,
+    serviceType: EServiceType.VisitCenter,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -198,6 +214,9 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, gap: payload};
     })
     .addCase(setUserType, (state, {payload}) => {
-        return {...state, userType: payload}
+        return {...state, userType: payload};
+    })
+    .addCase(setServiceType, (state, { payload }) => {
+        return {...state, serviceType: payload};
     })
 )

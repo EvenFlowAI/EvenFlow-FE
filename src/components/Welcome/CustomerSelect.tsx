@@ -7,13 +7,14 @@ import {
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setUserType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
-import {EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {TView} from "./types";
+import {RootState} from "../../store/rootReducer";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -59,14 +60,15 @@ export const useStyles = makeStyles(theme => ({
     }
 }))
 type TProps = {
-    onLogin: () => void;
-    onComplete: () => void;
+    // onLogin: () => void;
+    // onComplete: (serviceType: EServiceType) => void;
     setView: (view: TView) => void;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete, setView}) => {
+export const CustomerSelect: React.FC<TProps> = ({setView}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
 
     useEffect(() => {
         const uid = uuidv4();
@@ -94,7 +96,7 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete, setView})
         //     action: 'Enters Page',
         //     label: `As New User`,
         // });
-        // onComplete();
+        // onComplete(serviceType);
     }
 
     return <Grid className={classes.buttonsContainer}

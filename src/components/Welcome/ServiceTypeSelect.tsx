@@ -3,19 +3,19 @@ import {Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {useStyles} from "./CustomerSelect";
 import {RootState} from "../../store/rootReducer";
-import {EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {
     getBlankCustomer,
     getBlankVehicle,
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setCurrentFrameScreen, setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
 
 type TProps = {
     onLogin: () => void;
-    onComplete: () => void;
+    onComplete: (serviceType: EServiceType) => void;
 };
 
 const ServiceTypeSelect: React.FC<TProps> = ({ onLogin, onComplete }) => {
@@ -23,9 +23,9 @@ const ServiceTypeSelect: React.FC<TProps> = ({ onLogin, onComplete }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const handleVisit = () => {
+    const handleUser = (serviceType: EServiceType) => {
         if (userType === EUserType.Existing) {
-            onLogin();
+            return onLogin();
         }
         if (userType === EUserType.New) {
             const c = getBlankCustomer();
@@ -37,12 +37,19 @@ const ServiceTypeSelect: React.FC<TProps> = ({ onLogin, onComplete }) => {
                 action: 'Enters Page',
                 label: `As New User`,
             });
-            onComplete();
+            onComplete(serviceType);
         }
     }
 
+    const handleVisit = () => {
+        dispatch(setServiceType(EServiceType.VisitCenter))
+        handleUser(EServiceType.VisitCenter);
+    }
+
     const handleMobile = () => {
-        // todo logic
+        dispatch(setServiceType(EServiceType.Mobile));
+        dispatch(setCurrentFrameScreen("location"));
+        handleUser(EServiceType.Mobile);
     }
 
     return (

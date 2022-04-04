@@ -3,7 +3,9 @@ import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TScreen} from "../../Layout/types";
 import {ProgressStepper} from "../ProgressStepper";
 import {setAdditionalServicesChosen} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -41,7 +43,8 @@ const stepsMap: {[K in TScreen]: number} = {
     appointmentSelection: 3,
     transportationNeeds: 4,
     appointmentConfirmation: 5,
-    appointmentConfirmed: 5
+    appointmentConfirmed: 5,
+    location: 1,
 }
 const Index = styled('span')({
     fontSize: 32,
@@ -54,7 +57,6 @@ const MobileWrapper = styled('div')({
 
 });
 
-// TODO: Advisor|consultant
 const menuItems: string[] = [
     "Service Needs",
     "Advisor Selection",
@@ -69,6 +71,20 @@ const stepScreens: TScreen[] = [
     "appointmentTiming",
     "transportationNeeds",
     "appointmentConfirmation",
+]
+
+const mobileServiceScreens: TScreen[] = [
+    "location",
+    "serviceNeeds",
+    "appointmentTiming",
+    "appointmentConfirmation",
+];
+
+const mobileMenuItems: string[] = [
+    "Your Location",
+    "Service Needs",
+    "Appointment Selection",
+    "Appointment Confirmation"
 ]
 
 type TStepProps = {
@@ -94,6 +110,7 @@ type TProps = {
 }
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const [passed, setPassed] = useState<TScreen[]>(["serviceNeeds"]);
+    const {serviceType} =  useSelector((state: RootState) => state.appointmentFrame);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -103,7 +120,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
 
     const onClick = (idx: number) => {
         if (idx === 0) dispatch(setAdditionalServicesChosen(true));
-        handleSetScreen(stepScreens[idx])
+        handleSetScreen(serviceType === EServiceType.VisitCenter ? stepScreens[idx] : mobileServiceScreens[idx])
     }
 
     useEffect(() => {
@@ -116,18 +133,32 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
 
     return (
         <Wrapper>
-            {!isSm ? menuItems.map((item, idx) => {
-                return <li key={item}>
-                    <Button
-                        fullWidth
-                        disabled={getButtonState(idx)}
-                        onClick={() => onClick(idx)}
-                        color="primary"
-                        variant={isActive(idx+1) ? "contained" : "outlined"}>
-                        <Index>{idx + 1}</Index> {item}
-                    </Button>
-                </li>
-            }) : <MobileSteps
+            {!isSm
+                ? serviceType === EServiceType.VisitCenter
+                    ? menuItems.map((item, idx) => {
+                        return <li key={item}>
+                            <Button
+                                fullWidth
+                                disabled={getButtonState(idx)}
+                                onClick={() => onClick(idx)}
+                                color="primary"
+                                variant={isActive(idx+1) ? "contained" : "outlined"}>
+                                <Index>{idx + 1}</Index> {item}
+                            </Button>
+                        </li>
+                    }) : mobileMenuItems.map((item, idx) => {
+                        return <li key={item}>
+                            <Button
+                                fullWidth
+                                disabled={getButtonState(idx)}
+                                onClick={() => onClick(idx)}
+                                color="primary"
+                                variant={isActive(idx+1) ? "contained" : "outlined"}>
+                                <Index>{idx + 1}</Index> {item}
+                            </Button>
+                        </li>
+                    })
+                : <MobileSteps
                 active={stepsMap[screen]}
                 steps={menuItems.length}
                 currentLabel={menuItems[stepsMap[screen]-1]}

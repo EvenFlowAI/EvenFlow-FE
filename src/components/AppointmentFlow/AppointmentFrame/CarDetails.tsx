@@ -17,7 +17,7 @@ import {useParams} from "react-router-dom";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {yearOptions} from "./MaintenanceDetails";
 
-const SelectWrapper = styled('div')(({theme}) => ({
+export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "20px",
