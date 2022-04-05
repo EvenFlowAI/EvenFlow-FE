@@ -50,6 +50,7 @@ import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
 import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
+import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 
 const Container = styled('div')({
     display: "flex",
@@ -111,7 +112,7 @@ export const AppointmentFrameLayout = () => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
-    const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -182,9 +183,6 @@ export const AppointmentFrameLayout = () => {
     }, [customerLoadedData, dispatch, handleLogin]);
 
     useEffect(() => {
-        if (currentFrameScreen) {
-            setCurrentScreen(currentFrameScreen);
-        }
         if (currentFrameScreen === currentScreen) {
             window.onbeforeunload = () => {
                 ReactGA.event({
@@ -193,6 +191,13 @@ export const AppointmentFrameLayout = () => {
                     label: `From Page ${SCREENS[currentScreen]}`,
                     nonInteraction: true
                 })
+            }
+        } else {
+            if (serviceType === EServiceType.Mobile) {
+                dispatch(setCurrentFrameScreen("location"))
+                setCurrentScreen("location");
+            } else {
+                currentFrameScreen && setCurrentScreen(currentFrameScreen);
             }
         }
     }, [currentScreen, currentFrameScreen])
@@ -317,6 +322,8 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('consultantSelection')}
             />,
             location: <YourLocation
+                onBack={handleChangeScreen('carSelection')}
+                onNext={handleChangeScreen('serviceNeeds')}
             />,
         }
         return carSelections[currentScreen];

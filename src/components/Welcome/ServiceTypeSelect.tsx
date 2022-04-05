@@ -18,7 +18,7 @@ type TProps = {
     onComplete: (serviceType: EServiceType) => void;
 };
 
-const ServiceTypeSelect: React.FC<TProps> = ({ onLogin, onComplete }) => {
+const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
     const {userType} = useSelector((state: RootState) => state.appointmentFrame);
     const classes = useStyles();
     const dispatch = useDispatch();

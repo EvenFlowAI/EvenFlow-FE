@@ -27,7 +27,6 @@ const Wrapper = styled('ul')(({theme}) => ({
     }
 }));
 
-
 const stepsMap: {[K in TScreen]: number} = {
     carSelection: 0,
     serviceNeeds: 1,
@@ -46,6 +45,7 @@ const stepsMap: {[K in TScreen]: number} = {
     appointmentConfirmed: 5,
     location: 1,
 }
+
 const Index = styled('span')({
     fontSize: 32,
     display: "inline-block",
@@ -93,6 +93,7 @@ type TStepProps = {
     currentLabel: string;
     nextLabel?: string;
 }
+
 const MobileSteps: React.FC<TStepProps> = ({active, steps, currentLabel, nextLabel}) => {
     return <MobileWrapper>
         <ProgressStepper
@@ -108,6 +109,7 @@ type TProps = {
     screen: TScreen;
     handleSetScreen: (screen: TScreen) => void;
 }
+
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const [passed, setPassed] = useState<TScreen[]>(["serviceNeeds"]);
     const {serviceType} =  useSelector((state: RootState) => state.appointmentFrame);
