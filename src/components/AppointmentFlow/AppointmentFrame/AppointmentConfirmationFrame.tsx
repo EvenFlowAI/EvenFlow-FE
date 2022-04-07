@@ -29,6 +29,7 @@ import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -187,6 +188,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             })
     }
 
+    // todo show address in review in case of mobile service
+
     return <StepWrapper>
         <Wrapper>
             <div>
@@ -200,7 +203,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     onClick={onFeesOpen}>
                     View itemized fees of services
                 </div>
-                <Review />
+                {appointmentFrame.serviceType === EServiceType.VisitCenter ? <Review/> : null}
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>

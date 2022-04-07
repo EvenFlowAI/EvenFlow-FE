@@ -10,7 +10,7 @@ import {
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {setCurrentFrameScreen, setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
 
 type TProps = {
@@ -48,7 +48,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
 
     const handleMobile = () => {
         dispatch(setServiceType(EServiceType.Mobile));
-        dispatch(setCurrentFrameScreen("location"));
         handleUser(EServiceType.Mobile);
     }
 

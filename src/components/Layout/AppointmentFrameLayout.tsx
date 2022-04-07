@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
 import {frameTheme} from "../../theme/theme";
-import {TScreen} from "./types";
+import {TMobileScreen, TScreen} from "./types";
 import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeedsFrame";
 import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
@@ -98,7 +98,7 @@ const SCREENS = {
 export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
 
 export const AppointmentFrameLayout = () => {
-    const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
+    const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
 
     const theme = useTheme();
@@ -193,14 +193,16 @@ export const AppointmentFrameLayout = () => {
                 })
             }
         } else {
-            if (serviceType === EServiceType.Mobile) {
-                dispatch(setCurrentFrameScreen("location"))
-                setCurrentScreen("location");
-            } else {
-                currentFrameScreen && setCurrentScreen(currentFrameScreen);
-            }
+            currentFrameScreen && setCurrentScreen(currentFrameScreen);
         }
     }, [currentScreen, currentFrameScreen])
+
+    useEffect(() => {
+        if (serviceType === EServiceType.Mobile && !customerLoadedData?.vehicles?.length) {
+            dispatch(setCurrentFrameScreen("location"))
+            setCurrentScreen("location");
+        }
+    }, [serviceType, customerLoadedData])
 
     useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
@@ -246,10 +248,9 @@ export const AppointmentFrameLayout = () => {
 
         } else {
             //TODO: clear slots data clearSelected();
-            handleSetScreen('serviceNeeds');
+            handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
         }
     }, [handleSetScreen, selectedVehicle, showError, dispatch]);
-
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
@@ -273,12 +274,12 @@ export const AppointmentFrameLayout = () => {
             />,
             packageSelection: <PackageSelection
                 onBack={handleChangeScreen('maintenanceDetails')}
-                onNext={handleChangeScreen('consultantSelection')}
+                onNext={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'consultantSelection' : 'appointmentTiming')}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             describeMore: <AddInfo
                 onBack={handleSetScreen}
-                onNext={handleChangeScreen('consultantSelection')}
+                onNext={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'consultantSelection' : 'appointmentTiming')}
                 onFillCar={handleChangeScreen(isAdditionalServices ? 'consultantSelection' : 'carDetails')}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
@@ -289,26 +290,26 @@ export const AppointmentFrameLayout = () => {
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
-                onNext={handleChangeScreen('consultantSelection')}
+                onNext={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'consultantSelection' : 'appointmentTiming')}
             />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('appointmentTiming')}
             />,
             appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen('consultantSelection')}
+                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'consultantSelection' : 'carDetails')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection
                 onBack={handleChangeScreen('appointmentTiming')}
-                onNext={handleChangeScreen('transportationNeeds')}
+                onNext={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'transportationNeeds' : 'appointmentConfirmation')}
             />,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,
             appointmentConfirmation: <AppointmentConfirmationFrame
-                onBack={handleChangeScreen('transportationNeeds')}
+                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'transportationNeeds' : 'appointmentSelection')}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
@@ -319,11 +320,12 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen(
                     service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
                     ? 'opsCode' : 'describeMore')}
-                onNext={handleChangeScreen('consultantSelection')}
+                onNext={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'consultantSelection' : 'appointmentTiming')}
             />,
             location: <YourLocation
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
+                onLogin={handleLogin}
             />,
         }
         return carSelections[currentScreen];

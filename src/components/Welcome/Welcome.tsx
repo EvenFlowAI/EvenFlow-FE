@@ -50,7 +50,7 @@ export const Welcome = () => {
     const onComplete = (serviceType: EServiceType) => {
         setView("serviceSelect");
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
-        dispatch(setCurrentFrameScreen(serviceType === EServiceType.VisitCenter ? "carSelection" : "location"));
+        dispatch(setCurrentFrameScreen("carSelection"));
         history.push(
             route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );

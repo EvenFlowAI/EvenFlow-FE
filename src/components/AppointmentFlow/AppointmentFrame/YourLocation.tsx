@@ -5,6 +5,8 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {Actions} from "./Actions";
 import {TActionProps} from "./types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 type TOption = {
     value: string;
     name: string;
@@ -14,12 +16,17 @@ const mockState = [{value: 'Address1', name: "Address1"}]
 const mockCity = [{value: 'Address1', name: "Address1"}]
 const mockZip = [{value: 'Address1', name: "Address1"}]
 
-const YourLocation: React.FC<TActionProps> = ({onBack, onNext}) => {
+type TYourLocationProps = TActionProps & {
+    onLogin: () => void
+}
+
+const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
     const [address, setAddress] = useState<TOption | null>(null);
     const [state, setState] = useState<TOption | null>(null);
     const [city, setCity] = useState<TOption | null>(null);
     const [zipCode, setZipCode] = useState<TOption | null>(null);
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
+    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
 
     const handleChangeAddress = (e: React.ChangeEvent<{}>, option: TOption | null) => {
         setFormChecked(false);
@@ -39,7 +46,11 @@ const YourLocation: React.FC<TActionProps> = ({onBack, onNext}) => {
     }
 
     const handleBack = () => {
-        onBack()
+        if (!customerLoadedData?.id) {
+            onLogin();
+        } else {
+            onBack();
+        }
     }
 
     const handleNext = () => {

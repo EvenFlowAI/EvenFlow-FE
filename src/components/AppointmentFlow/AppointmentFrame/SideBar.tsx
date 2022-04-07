@@ -46,6 +46,25 @@ const stepsMap: {[K in TScreen]: number} = {
     location: 1,
 }
 
+const mobileStepsMap: {[K in TScreen]: number} = {
+    carSelection: 0,
+    serviceNeeds: 2,
+    maintenanceDetails: 2,
+    serviceSelection: 2,
+    packageSelection: 2,
+    describeMore: 2,
+    opsCode: 2,
+    vehicleData: 2,
+    carDetails: 2,
+    appointmentTiming: 3,
+    appointmentSelection: 3,
+    appointmentConfirmation: 4,
+    appointmentConfirmed: 4,
+    location: 1,
+    transportationNeeds: -1,
+    consultantSelection: -1,
+}
+
 const Index = styled('span')({
     fontSize: 32,
     display: "inline-block",
@@ -111,13 +130,15 @@ type TProps = {
 }
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const [passed, setPassed] = useState<TScreen[]>(["serviceNeeds"]);
+    const [passed, setPassed] = useState<TScreen[]>([]);
     const {serviceType} =  useSelector((state: RootState) => state.appointmentFrame);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isActive = (idx: number): boolean => {
-        return stepsMap[screen] === idx;
+        return serviceType === EServiceType.Mobile
+            ? mobileStepsMap[screen] === idx
+            : stepsMap[screen] === idx;
     }
 
     const onClick = (idx: number) => {
@@ -130,7 +151,9 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }, [screen])
 
     const getButtonState = (index: number) => {
-        return stepsMap[screen] < index + 1 && stepsMap[passed[passed.length - 1]] < index + 1;
+        return serviceType === EServiceType.Mobile
+            ? mobileStepsMap[screen] < index + 1 && mobileStepsMap[passed[passed.length - 1]] < index + 1
+            : stepsMap[screen] < index + 1 && stepsMap[passed[passed.length - 1]] < index + 1;
     }
 
     return (
