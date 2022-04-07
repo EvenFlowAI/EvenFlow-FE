@@ -147,7 +147,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             serviceRequestIds,
             maintenancePackageOptionId: packageOpt?.id ?? null,
             slot: appointmentDate,
-            serviceCategoryIds: categoriesIds,
+            serviceCategoryIds: packageOpt?.id || serviceRequestIds.length ? [] : categoriesIds,
         }
         if (appointmentDate) data.slot = appointmentDate;
         Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
