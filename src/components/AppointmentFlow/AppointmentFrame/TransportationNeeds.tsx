@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {TActionProps} from "./types";
+import {TActionProps, TTransportationData} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import { Actions } from './Actions';
 import {styled, Theme} from "@material-ui/core";
@@ -126,7 +126,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const [
         s, ss,
-        individualOps, categoriesIds, packageOpt, appointmentDate
+        individualOps, categoriesIds, packageOpt, appointmentDate,
+        hashKey
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -134,6 +135,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.categoriesIds,
         state.appointmentFrame.selectedPackage,
         state.appointment.appointment?.appointmentDate,
+        state.appointmentFrame.hashKey,
     ]);
 
     const serviceRequestIds = useMemo(() => {
@@ -142,7 +144,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         setLoading(true);
-        const data = {
+        const data: TTransportationData = {
             serviceCenterId: decodeSCID(id),
             serviceRequestIds,
             maintenancePackageOptionId: packageOpt?.id ?? null,
@@ -150,6 +152,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             serviceCategoryIds: packageOpt?.id || serviceRequestIds.length ? [] : categoriesIds,
         }
         if (appointmentDate) data.slot = appointmentDate;
+        if (hashKey) data.hashKey = hashKey;
+
         Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
             .then(({data}) => {
             setTransportations(data);
