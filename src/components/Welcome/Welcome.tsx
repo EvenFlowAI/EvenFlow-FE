@@ -78,7 +78,7 @@ export const Welcome = () => {
     }
 
     const getTitle = (view: TView) => view === 'serviceSelect' ? "Do you want to bring your car in" : "Welcome!";
-    const getSubTitle = (view: TView) => view === 'serviceSelect' ? "Or use uor mobile service?" : "Schedule Your Service:";
+    const getSubTitle = (view: TView) => view === 'serviceSelect' ? "Or use our mobile service?" : "Schedule Your Service:";
 
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
                 <FrameWelcomeLayout>

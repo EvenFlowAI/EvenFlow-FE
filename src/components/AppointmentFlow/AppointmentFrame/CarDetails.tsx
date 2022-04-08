@@ -22,6 +22,21 @@ export const SelectWrapper = styled('div')(({theme}) => ({
     gridTemplateColumns: "1fr 1fr",
     gap: "20px",
     width: "100%",
+    "& .label": {
+        fontWeight: 700,
+        margin: '0 0 4px 0',
+        textTransform: 'uppercase',
+        fontSize: 12,
+    },
+    '& > div > div > div': {
+        borderRadius: 0,
+        backgroundColor: '#F7F8FB',
+        padding: 2,
+        border: "1px solid #DADADA",
+        '& > div > div': {
+            fontSize: '1rem',
+        }
+    },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
     }
