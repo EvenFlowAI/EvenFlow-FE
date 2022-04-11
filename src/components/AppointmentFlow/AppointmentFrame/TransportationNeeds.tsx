@@ -152,7 +152,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             serviceCategoryIds: packageOpt?.id || serviceRequestIds.length ? [] : categoriesIds,
         }
         if (appointmentDate) data.slot = appointmentDate;
-        if (hashKey) data.hashKey = hashKey;
+        if (hashKey) data.appointmentHashKey = hashKey;
 
         Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
             .then(({data}) => {

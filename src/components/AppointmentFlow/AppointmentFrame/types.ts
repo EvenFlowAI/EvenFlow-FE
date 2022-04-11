@@ -23,5 +23,5 @@ export type TTransportationData = {
     maintenancePackageOptionId: number | null;
     slot: ParsableDate;
     serviceCategoryIds: number[];
-    hashKey?: string;
+    appointmentHashKey?: string;
 }
