@@ -6,7 +6,7 @@ import {
     selectCategoriesIds,
     selectService,
     selectSubService,
-    setAdditionalServicesChosen,
+    setAdditionalServicesChosen, setAddress,
     setAdvisor,
     setAppointmentId,
     setConsultants,
@@ -26,7 +26,7 @@ import {
     setTransportation,
     setUpdateAppointment,
     setUserType,
-    setVehicle,
+    setVehicle, setZipCode,
     updateVehicle
 } from "./actions";
 import {
@@ -73,6 +73,8 @@ type TState = {
     gap: number | undefined;
     userType: EUserType | undefined;
     serviceType: EServiceType;
+    address: string | null;
+    zipCode: string | null;
 }
 const initialState: TState = {
     service: null,
@@ -105,6 +107,8 @@ const initialState: TState = {
     gap: undefined,
     userType: undefined,
     serviceType: EServiceType.VisitCenter,
+    address: null,
+    zipCode: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -218,5 +222,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setServiceType, (state, { payload }) => {
         return {...state, serviceType: payload};
+    })
+    .addCase(setAddress, (state, { payload }) => {
+        return {...state, address: payload};
+    })
+    .addCase(setZipCode, (state, { payload }) => {
+        return {...state, zipCode: payload};
     })
 )

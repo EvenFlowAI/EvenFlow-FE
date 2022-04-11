@@ -30,6 +30,7 @@ import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import Address from "./confirmationSections/Address";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -196,6 +197,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 <SelectedDate onChangeSlot={onChangeSlot} />
                 <Vehicle/>
                 <ServiceRequests/>
+                <Address/>
                 <SelectedPrice/>
                 <div
                     role="presentation"

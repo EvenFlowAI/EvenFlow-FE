@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {SelectWrapper} from "./CarDetails";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {Actions} from "./Actions";
 import {TActionProps} from "./types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import {Label} from "@material-ui/icons";
+import {setAddress, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 type TOption = {
     value: string;
@@ -19,35 +19,51 @@ type TYourLocationProps = TActionProps & {
     onLogin: () => void
 }
 
-const mockAddress = [{value: 'Address1', name: "Address1"}]
-const mockState = [{value: 'Address1', name: "Address1"}]
-const mockCity = [{value: 'Address1', name: "Address1"}]
-const mockZip = [{value: 'Address1', name: "Address1"}]
+// const mockAddress = [{value: 'Address1', name: "Address1"}]
+// const mockState = [{value: 'Address1', name: "Address1"}]
+// const mockCity = [{value: 'Address1', name: "Address1"}]
+const mockZip = [{value: '123456', name: "123456"}]
 
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
-    const [value, setValue] = useState<string|null>(null);
-    const [address, setAddress] = useState<TOption | null>(null);
+    const [addressValue, setAddressValue] = useState<string|null>(null);
     const [state, setState] = useState<TOption | null>(null);
     const [city, setCity] = useState<TOption | null>(null);
-    const [zipCode, setZipCode] = useState<TOption | null>(null);
+    const [zip, setZip] = useState<TOption | null>(null);
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const {zipCode: zipCodeValue, address} = useSelector((state: RootState) => state.appointmentFrame);
+    const dispatch = useDispatch();
 
-    const handleChangeAddress = (e: React.ChangeEvent<{}>, option: TOption | null) => {
+    useEffect(() => {
+        if (zipCodeValue) {
+            const selectedZip = mockZip.find(item => item.value === zipCodeValue);
+            selectedZip && setZip(selectedZip)
+        }
+    }, [zipCodeValue, mockZip])
+
+    useEffect(() => {
+        if (address) {
+          setAddressValue(address)
+        }
+    }, [address])
+
+    const handleChangeAddress = (e: any, option: string | null) => {
         setFormChecked(false);
-        setAddress(option);
+        setAddressValue(e.label);
+        dispatch(setAddress(e.label));
     }
-    const handleChangeState = (e: React.ChangeEvent<{}>, option: TOption | null) => {
-        setFormChecked(false);
-        setState(option)
-    }
-    const handleChangeCity = (e: React.ChangeEvent<{}>, option: TOption | null) => {
-        setFormChecked(false);
-        setCity(option)
-    }
+    // const handleChangeState = (e: React.ChangeEvent<{}>, option: TOption | null) => {
+    //     setFormChecked(false);
+    //     setState(option)
+    // }
+    // const handleChangeCity = (e: React.ChangeEvent<{}>, option: TOption | null) => {
+    //     setFormChecked(false);
+    //     setCity(option)
+    // }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: TOption | null) => {
         setFormChecked(false);
-        setZipCode(option)
+        setZip(option);
+        option ? dispatch(setZipCode(option?.value)) : dispatch(setZipCode(null));
     }
 
     const handleBack = () => {
@@ -61,7 +77,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const handleNext = () => {
         setFormChecked(true);
         onNext()
-        if (address && state && city && zipCode) {
+        if (address && state && city && zip) {
             // todo checking request
 
         }
@@ -81,8 +97,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             }
                         }}
                         selectProps={{
-                            value,
-                            onChange: setValue,
+                            addressValue,
+                            onChange: handleChangeAddress,
                             placeholder: 'Start To Type'
                         }}
                     />
@@ -126,11 +142,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     getOptionLabel={(option) => option.name}
                     renderInput={autocompleteRender({
                         label: 'Your ZIP',
-                        placeholder: isFormChecked && !zipCode ? `ZIP required` : `Your ZIP`,
-                        error: isFormChecked && !zipCode,
+                        placeholder: isFormChecked && !zip ? `ZIP required` : `Your ZIP`,
+                        error: isFormChecked && !zip,
                         required: true
                     })}
-                    value={zipCode || undefined}
+                    value={zip || undefined}
                 />
                 {/*<Autocomplete*/}
                 {/*    key="address"*/}

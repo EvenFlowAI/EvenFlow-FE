@@ -43,8 +43,10 @@ export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPacka
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
-export const setUserType = createAction<EUserType>('sAppointment/SetUserType');
-export const setServiceType = createAction<EServiceType>('sAppointment/SetServiceType');
+export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
+export const setServiceType = createAction<EServiceType>('fAppointment/SetServiceType');
+export const setZipCode = createAction<string | null>('fAppointment/SetZipCode');
+export const setAddress = createAction<string | null>('fAppointment/SetAddress');
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(
