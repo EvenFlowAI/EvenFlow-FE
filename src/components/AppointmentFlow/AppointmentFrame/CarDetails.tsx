@@ -28,15 +28,15 @@ export const SelectWrapper = styled('div')(({theme}) => ({
         textTransform: 'uppercase',
         fontSize: 12,
     },
-    '& > div > div > div': {
-        borderRadius: 0,
-        backgroundColor: '#F7F8FB',
-        padding: 2,
-        border: "1px solid #DADADA",
-        '& > div > div': {
-            fontSize: '1rem',
-        }
-    },
+    // '& > div > div > div': {
+    //     borderRadius: 0,
+    //     backgroundColor: '#F7F8FB',
+    //     padding: 2,
+    //     border: "1px solid #DADADA",
+    //     '& > div > div': {
+    //         fontSize: '1rem',
+    //     }
+    // },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
     }

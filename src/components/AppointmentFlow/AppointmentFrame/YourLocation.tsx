@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import {setAddress, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {makeStyles} from "@material-ui/core/styles";
 
 type TOption = {
     value: string;
@@ -18,6 +19,20 @@ type TOption = {
 type TYourLocationProps = TActionProps & {
     onLogin: () => void
 }
+
+const useStyles = makeStyles(() => ({
+    select: {
+        '& > div': {
+            borderRadius: 0,
+            backgroundColor: '#F7F8FB',
+            padding: 2,
+            border: "1px solid #DADADA",
+            '& > div > div': {
+                fontSize: '1rem',
+            }
+        }
+    }
+}))
 
 // const mockAddress = [{value: 'Address1', name: "Address1"}]
 // const mockState = [{value: 'Address1', name: "Address1"}]
@@ -33,6 +48,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {zipCode: zipCodeValue, address} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
+    const classes = useStyles();
 
     useEffect(() => {
         if (zipCodeValue) {
@@ -98,6 +114,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                         }}
                         selectProps={{
                             addressValue,
+                            className: classes.select,
                             onChange: handleChangeAddress,
                             placeholder: 'Start To Type'
                         }}
