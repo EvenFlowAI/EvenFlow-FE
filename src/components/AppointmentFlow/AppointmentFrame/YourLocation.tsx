@@ -65,8 +65,13 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
 
     const handleChangeAddress = (e: any, option: string | null) => {
         setFormChecked(false);
-        setAddressValue(e.label);
-        dispatch(setAddress(e.label));
+        if (e?.label) {
+            setAddressValue(e.label);
+            dispatch(setAddress(e.label));
+        } else {
+            setAddressValue(null);
+            dispatch(setAddress(null));
+        }
     }
     // const handleChangeState = (e: React.ChangeEvent<{}>, option: TOption | null) => {
     //     setFormChecked(false);
@@ -116,7 +121,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             addressValue,
                             className: classes.select,
                             onChange: handleChangeAddress,
-                            placeholder: 'Start To Type'
+                            placeholder: 'Start To Type',
+                            isClearable: true,
+                            isSearchable: true,
                         }}
                     />
                 </div>
