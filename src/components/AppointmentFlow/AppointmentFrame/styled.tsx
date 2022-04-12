@@ -30,6 +30,7 @@ export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: bo
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        flexWrap: 'wrap',
         padding: "0 12px",
     },
     "& .price": {

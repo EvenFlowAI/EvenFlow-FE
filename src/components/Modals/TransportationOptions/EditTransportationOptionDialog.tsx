@@ -380,11 +380,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
             if (slotsCount) data.slotsCount = Number(slotsCount);
 
             if (editingElement.id) {
-                try {
-                    dispatch(editTransportationOptionRules(editingElement.id, selectedSC.id, data, onCancel))
-                } catch (e) {
-                    showError(e);
-                }
+                dispatch(editTransportationOptionRules(editingElement.id, selectedSC.id, data, onCancel, showError))
             }
         } else {
             showError('Please fill all required fields')
@@ -507,7 +503,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 <TextField
                     fullWidth
                     type="number"
-                    inputProps={{min: 0, step: 1}}
+                    inputProps={{min: 1, step: 1}}
                     label='Capacity'
                     style={{ marginBottom: 20}}
                     placeholder='Type Number'
@@ -517,7 +513,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                 <TextField
                     fullWidth
                     type="number"
-                    inputProps={{min: 0, step: 1}}
+                    inputProps={{min: 1, step: 1}}
                     label='Per appointment slots'
                     placeholder='Type Number'
                     error={Boolean(slotsCount) && !Number.isInteger(+slotsCount)}
