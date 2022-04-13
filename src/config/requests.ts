@@ -151,7 +151,7 @@ type ApiRoutes = {
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek", TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
-        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery", TApiRoute>,
+        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -173,7 +173,7 @@ type ApiRoutes = {
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
-        | "Eligibility"
+        | "Eligibility" | "ChangePricingDisplayType"
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
@@ -279,6 +279,7 @@ export class Api {
             ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "post"},
             GetShortByQuery: {route: "/maintenance-packages/short-by-query", method: "post"},
             GetOptionsByQuery: {route: "/maintenance-packages/options-by-query", method: "post"},
+            ChangePricingDisplayType: {route: "/maintenance-packages/{id}/pricing-display-type", method: "patch"}
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
@@ -392,6 +393,7 @@ export class Api {
             EditSkills: {route: "/service-requests/required-skills", method: "patch"},
             Eligibility: {route: "/service-requests/eligibility", method: "patch"},
             Prioritize: {route: "/service-requests/prioritize", method: "patch"},
+            ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"}
         },
         SlotScoring: {
             SetProximity: {route: "/slot-scoring/proximity", method: "put"},
