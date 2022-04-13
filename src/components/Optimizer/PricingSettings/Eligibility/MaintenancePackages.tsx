@@ -1,13 +1,17 @@
 import React, {useEffect} from 'react';
 import {NoItemsLoading} from "../../../UI/NoItemsLoading";
 import {DemandTable, TableCell, TableRow} from "../../AppointmentAllocation/UI";
-import {Box, styled, Switch, TableBody, TableHead} from "@material-ui/core";
+import {Box, FormControlLabel, Radio, RadioGroup, styled, TableBody, TableHead} from "@material-ui/core";
 import {TableContainer} from "../UI";
-import {useSCs} from "../../../../utils/hooks";
+import {useException, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadMPList, setPricingOptimization} from "../../../../store/reducers/pricingSettings/actions";
+import {
+    changeMPPrisingDisplayType,
+    loadMPList,
+} from "../../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {Caption} from "../../../UI/Caption";
+import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
 
 const headCellStyles = {
     fontSize: 12,
@@ -34,6 +38,7 @@ const TableWrapper = styled("div")(({theme}) => ({
 const MaintenancePackages = () => {
     const {isLoading, mpList} = useSelector((state: RootState) => state.pricingSettings);
     const {selectedSC} = useSCs();
+    const showError = useException();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -47,14 +52,9 @@ const MaintenancePackages = () => {
         }
     }, [selectedSC])
 
-    const handleSwitch = (id: number) => async (e: any, value: boolean) => {
-        if (selectedSC) {
-            const data = {
-                serviceCenterId: selectedSC.id,
-                pageIndex: 0,
-                pageSize: 0,
-            }
-            dispatch(setPricingOptimization(id, value, data))
+    const handlePricingDisplayType = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value && selectedSC) {
+            dispatch(changeMPPrisingDisplayType(id, +e.target.value, selectedSC.id, e => showError(e)))
         }
     }
 
@@ -92,12 +92,24 @@ const MaintenancePackages = () => {
                                     </TableCell>
 
                                     <TableCell>
-                                        <Switch
-                                            disabled={isLoading}
-                                            onChange={handleSwitch(el.id)}
-                                            checked={el.isApplyPricingOptimization}
-                                            color="primary"
-                                        />
+                                        <RadioGroup
+                                            value={el.pricingDisplayType}
+                                            onChange={handlePricingDisplayType(el.id)}
+                                            aria-labelledby="demo-controlled-radio-buttons-group"
+                                            name="controlled-radio-buttons-group">
+                                            <FormControlLabel
+                                                value={EPricingDisplayType.Suppressed}
+                                                control={<Radio color="primary" size="small"/>}
+                                                label="Suppressed" />
+                                            <FormControlLabel
+                                                value={EPricingDisplayType.Static}
+                                                control={<Radio color="primary" size="small"/>}
+                                                label="Static" />
+                                            <FormControlLabel
+                                                value={EPricingDisplayType.Dynamic}
+                                                control={<Radio color="primary" size="small"/>}
+                                                label="Dynamic" />
+                                        </RadioGroup>
                                     </TableCell>
                                 </TableRow>
                             })}
