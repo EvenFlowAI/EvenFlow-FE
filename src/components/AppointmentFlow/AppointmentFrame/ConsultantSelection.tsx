@@ -3,7 +3,8 @@ import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
 import {styled, Theme} from "@material-ui/core";
-import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/any-consultant.svg';
+import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/advisor_black.svg';
+import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey.svg';
 import {useParams} from "react-router-dom";
 import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
@@ -80,7 +81,10 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
     return <ConsultantWrapper active={active} onClick={onClick}>
         {blank
             ? <div className={"icon-wrapper"}><AnyConsultantIcon /></div>
-            : <Avatar src={advisor?.iconPath}/>}
+            : advisor?.iconPath
+                ? <Avatar src={advisor?.iconPath}/>
+                : <ConsultantIcon/>
+            }
         <div>
             {blank ? "Any available advisor" : advisor?.name ?? "-"}
         </div>
