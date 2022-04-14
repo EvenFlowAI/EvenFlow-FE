@@ -51,3 +51,9 @@ export interface IFrameScreens {
     opsCode: "opsCode";
     vehicleData: 'vehicleData';
 }
+
+export interface IValueService {
+    year?: string;
+    model?: string;
+    series?: string;
+}

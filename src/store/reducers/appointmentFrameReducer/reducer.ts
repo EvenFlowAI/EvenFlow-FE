@@ -14,7 +14,7 @@ import {
     setTime,
     setTiming, setTrackerCreated,
     setTransportation,
-    setUpdateAppointment,
+    setUpdateAppointment, setValueService,
     setVehicle, updateVehicle
 } from "./actions";
 import {
@@ -27,7 +27,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {TMaintenanceDetails} from "./types";
+import {IValueService, TMaintenanceDetails} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -57,6 +57,7 @@ type TState = {
     id?: number;
     hashKey?: string;
     gap: number | undefined;
+    valueService: IValueService;
 }
 const initialState: TState = {
     service: null,
@@ -87,6 +88,11 @@ const initialState: TState = {
     categoriesIds: [],
     packageOptionType: null,
     gap: undefined,
+    valueService: {
+        year: "",
+        model: "",
+        series: "",
+    }
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -194,5 +200,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(getSlotsGap, (state, {payload}) => {
         return {...state, gap: payload};
+    })
+    .addCase(setValueService, (state, {payload}) => {
+        return {...state, valueService: {...state.valueService, ...payload}}
     })
 )

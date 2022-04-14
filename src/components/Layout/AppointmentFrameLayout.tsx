@@ -44,6 +44,7 @@ import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
+import {YearModel} from "../AppointmentFlow/AppointmentFrame/ValueService/YearModel";
 
 const Container = styled('div')({
     display: "flex",
@@ -255,7 +256,11 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleSetScreen}
             />,
-            maintenanceDetails: <MaintenanceDetails
+            // maintenanceDetails: <MaintenanceDetails
+            //     onBack={handleChangeScreen('serviceNeeds')}
+            //     onNext={handleChangeScreen('packageSelection')}
+            // />,
+            maintenanceDetails: <YearModel
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('packageSelection')}
             />,
