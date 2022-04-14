@@ -1,3 +1,5 @@
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+
 export type TActionProps = {
     onBack: () => void;
     onNext: () => void;
@@ -13,4 +15,13 @@ export type IMaintenanceItem = {
     id: number;
     name: string;
     type: EMaintenanceItemType;
+}
+
+export type TTransportationData = {
+    serviceCenterId: number;
+    serviceRequestIds: number[];
+    maintenancePackageOptionId: number | null;
+    slot: ParsableDate;
+    serviceCategoryIds: number[];
+    appointmentHashKey?: string;
 }
