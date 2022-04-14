@@ -9,7 +9,7 @@ import {
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
     ITimeOfYearSetting,
-    ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing
+    ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing, EPricingDisplayType
 } from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
@@ -340,7 +340,7 @@ export const getPackageOptionsList = createAction<IPackageOptionShort[]>('Pricin
 export const loadPackageOptionsList = (serviceCenterId: number): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.GetOptionsByQuery,
-        {data: {serviceCenterId, pageIndex: 0, pageSize: 0, isApplyPricingOptimization: true}})
+        {data: {serviceCenterId, pageIndex: 0, pageSize: 0, pricingDisplayType: EPricingDisplayType.Dynamic}})
         .then(res => {
             if (res?.data?.result) {
                 dispatch(getPackageOptionsList(res.data.result))
