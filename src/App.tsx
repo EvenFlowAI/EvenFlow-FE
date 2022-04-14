@@ -13,6 +13,7 @@ import {EndUserLayout} from "./components/Layout/EndUserLayout";
 import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
+import ValueService from "./components/AppointmentFlow/AppointmentFrame/ValueService/ValueService";
 
 const App = () => {
     const notificationsRef = useRef<ProviderContext>();
@@ -44,6 +45,7 @@ const App = () => {
                     <Route path={Routes.EndUser.CancelAppointment} component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} component={EndUserLayout} />
+                    <Route path={Routes.EndUser.ValueService} component={ValueService} />
                     <PrivateRoute path="/" component={Layout}/>
                 </Switch>
             </Container>

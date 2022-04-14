@@ -13,6 +13,7 @@ import {loadMakes, setValueService,} from "../../../../store/reducers/appointmen
 import {RootState} from "../../../../store/rootReducer";
 import {useException} from "../../../../utils/hooks";
 import {decodeSCID} from "../../../../utils/utils";
+import {makeStyles} from "@material-ui/core/styles";
 
 const mockSeries = ['2x', '3x', '4x'];
 
@@ -23,7 +24,14 @@ const SelectsTitle = styled('div')(({theme}) => ({
     alignItems: "center",
     gap: "20px",
     fontSize: 20,
+    fontWeight: "bold",
     color: "#FFFFFF",
+    backgroundColor: "#828282",
+    padding: '20px 20px 0 20px',
+}));
+
+const ScreenWrapper = styled('div')(() => ({
+    width: "100%",
     backgroundColor: "#828282",
     padding: 20,
 }));
@@ -38,13 +46,18 @@ const SelectWrapper = styled('div')(({theme}) => ({
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
     },
-    '& > input': {
-        backgroundColor: "#FFFFFF",
-    },
-    '& > label': {
-        color: "#FFFFFF !important",
-    }
 }));
+
+const useStyles = makeStyles(() => ({
+    input: {
+        '& > label': {
+            color: '#FFFFFF'
+        },
+        '& > input': {
+            backgroundColor: "#FFFFFF",
+        },
+    }
+}))
 
 let year = moment.utc().year()
 if (moment().month() > 9) year = moment.utc().add(1, 'year').year();
@@ -60,6 +73,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const showError = useException();
     const {id} = useParams();
     const theme = useTheme();
+    const classes = useStyles();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
     useEffect(() => {
@@ -89,6 +103,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     }
 
     return (<StepWrapper>
+        <ScreenWrapper>
         <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
         <SelectWrapper>
             <Autocomplete
@@ -96,6 +111,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 options={yearOptions}
                 onChange={handleChange("year")}
                 fullWidth
+                className={classes.input}
                 disableClearable
                 autoComplete={true}
                 renderInput={autocompleteRender({
@@ -112,6 +128,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 fullWidth
                 disableClearable
                 autoComplete={true}
+                className={classes.input}
                 renderInput={autocompleteRender({
                     label: "Series",
                     placeholder: "Select Series",
@@ -126,6 +143,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 fullWidth
                 disableClearable
                 autoComplete={true}
+                className={classes.input}
                 renderInput={autocompleteRender({
                     label: "Model",
                     placeholder: "Select Model",
@@ -140,5 +158,6 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
             nextLabel="View Price"
             nextDisabled={!valueService.year || !valueService.model || !valueService.series}
         />
+        </ScreenWrapper>
     </StepWrapper>);
 };
