@@ -86,7 +86,7 @@ export const loadAssignedServiceRequests = (serviceCenterId: number, isEligible?
     async (dispatch, getState) => {
     const {assignedPageData, assignedFilter, assignedOrdering} = getState().serviceRequests;
     dispatch(setAssignedLoading(true));
-    const pricingDisplayType = isEligible ? EPricingDisplayType.Dynamic : EPricingDisplayType.Static;
+    const pricingDisplayType = isEligible ? EPricingDisplayType.Dynamic : null;
     const params = {...assignedPageData, ...assignedFilter, ...assignedOrdering, serviceCenterId, pricingDisplayType};
 
     try {
