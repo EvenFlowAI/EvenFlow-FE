@@ -13,7 +13,7 @@ import {TScreen} from "../../Layout/types";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
 import {Api} from "../../../config/requests";
-import {decodeSCID, encodeSCID} from "../../../utils/utils";
+import {decodeSCID} from "../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import {Loading} from '../../UI/Loading';
@@ -31,11 +31,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {service: selectedService, categoriesIds, selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
-    const encoded = encodeSCID(scProfile?.id??0);
 
     const handleBack = () => {
         if (!customerLoadedData?.id) {
@@ -80,11 +79,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
 
             switch (selectedService?.type) {
                 case 2:
-                    // return history.push(`${Routes.EndUser.AppointmentFrameBase}/${encoded}/valueService`)
-                   return onSelect('opsCode');
+                    return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
+                   // return onSelect('opsCode');
                 case 4:
-                    // return history.push(`${Routes.EndUser.AppointmentFrameBase}/${encoded}/valueService`)
-                    return onSelect('opsCode');
+                    return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
+                    // return onSelect('opsCode');
                 case 1:
                     return onSelect('maintenanceDetails');
                 case 3:

@@ -2,6 +2,10 @@ import React, {useState, useMemo} from 'react';
 import {MuiThemeProvider, styled} from "@material-ui/core";
 import {frameTheme} from "../../../../theme/theme";
 import {YearModel} from "./YearModel";
+import {setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {useDispatch} from "react-redux";
+import {useHistory, useParams} from "react-router-dom";
+import ServiceSelection from "./ServiceSelection";
 
 const Container = styled('div')({
     display: "flex",
@@ -18,14 +22,23 @@ type TScreen = "vehicleDetails" | "serviceSelection" | "serviceDetails";
 
 const ValueService: React.FC = () => {
     const [screen, setScreen] = useState<TScreen>("vehicleDetails");
+    const dispatch = useDispatch();
+    const {id} = useParams();
+    const history = useHistory();
 
-    const onBack = () => {};
-    const onNext = () => {};
+    const onBack = async () => {
+        await dispatch(setCurrentFrameScreen("serviceNeeds"));
+        history.push( "/f/appointment/" + id);
+    };
+    const onNext = async () => {
+        await dispatch(setCurrentFrameScreen("consultantSelection"));
+        history.push( "/f/appointment/" + id);
+    };
 
     const component = useMemo(() => {
         const screens: {[k in TScreen]: JSX.Element} = {
             vehicleDetails: <YearModel onBack={onBack} onNext={() => setScreen("serviceSelection")}/>,
-            serviceSelection: <YearModel onBack={() => setScreen("vehicleDetails")} onNext={() => setScreen("serviceDetails")}/>,
+            serviceSelection: <ServiceSelection onNext={() => setScreen("serviceDetails")} onBack={() => setScreen("vehicleDetails")}/>,
             serviceDetails: <YearModel onBack={() => setScreen("serviceSelection")} onNext={onNext}/>,
         }
         return screens[screen];
