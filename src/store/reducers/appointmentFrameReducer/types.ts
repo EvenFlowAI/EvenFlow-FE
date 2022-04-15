@@ -52,8 +52,16 @@ export interface IFrameScreens {
     vehicleData: 'vehicleData';
 }
 
+export type TValueService = {
+    name: string;
+    price: number;
+    description: string;
+    imageLink: string;
+}
+
 export interface IValueService {
     year?: string;
     model?: string;
     series?: string;
+    selectedService: TValueService | null;
 }

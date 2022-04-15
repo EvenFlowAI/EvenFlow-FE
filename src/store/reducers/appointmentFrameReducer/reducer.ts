@@ -92,6 +92,7 @@ const initialState: TState = {
         year: "",
         model: "",
         series: "",
+        selectedService: null,
     }
 };
 

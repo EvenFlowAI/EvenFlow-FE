@@ -6,6 +6,7 @@ import {setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrame
 import {useDispatch} from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
 import ServiceSelection from "./ServiceSelection";
+import ServiceDetails from "./ServiceDetails";
 
 const Container = styled('div')({
     display: "flex",
@@ -38,11 +39,19 @@ const ValueService: React.FC = () => {
     const component = useMemo(() => {
         const screens: {[k in TScreen]: JSX.Element} = {
             vehicleDetails: <YearModel onBack={onBack} onNext={() => setScreen("serviceSelection")}/>,
-            serviceSelection: <ServiceSelection onNext={() => setScreen("serviceDetails")} onBack={() => setScreen("vehicleDetails")}/>,
-            serviceDetails: <YearModel onBack={() => setScreen("serviceSelection")} onNext={onNext}/>,
+            serviceSelection: <ServiceSelection
+                onNext={() => setScreen("serviceDetails")}
+                onBack={() => setScreen("vehicleDetails")}
+            />,
+            serviceDetails: <ServiceDetails
+                onBack={() => setScreen("serviceSelection")}
+                onNext={onNext}
+                onChangeVehicle={() => setScreen("vehicleDetails")}
+            />,
         }
         return screens[screen];
     }, [screen])
+
     return (
         <MuiThemeProvider theme={frameTheme}>
             <Container>
