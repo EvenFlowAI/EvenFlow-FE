@@ -9,7 +9,7 @@ export type TActionProps = {
     onAddServices?: () => void;
 };
 
-export type EMaintenanceItemType = 'category' | 'package' | 'service'
+export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService'
 
 export type IMaintenanceItem = {
     id: number;

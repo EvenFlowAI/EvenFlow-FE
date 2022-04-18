@@ -57,7 +57,7 @@ type TState = {
     id?: number;
     hashKey?: string;
     gap: number | undefined;
-    valueService: IValueService;
+    valueService: IValueService | null;
 }
 const initialState: TState = {
     service: null,
@@ -203,6 +203,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, gap: payload};
     })
     .addCase(setValueService, (state, {payload}) => {
-        return {...state, valueService: {...state.valueService, ...payload}}
+        return {...state, valueService: payload && state.valueService ? {...state.valueService, ...payload} : null};
     })
 )

@@ -3,6 +3,7 @@ import {IPackageOptions} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 import {IMaintenanceItem} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
+import {IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
 
 export const getMaintenanceDescription = (
     srList: ISR[],
@@ -37,7 +38,9 @@ export const getMaintenanceList = (
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
     allCategories?: ICategory[],
-    selectedCategories?: number[]) => {
+    selectedCategories?: number[],
+    valueService?: IValueService | null,
+    ) => {
     const services: IMaintenanceItem[] = [];
 
     if (selectedPackage) {
@@ -61,6 +64,13 @@ export const getMaintenanceList = (
                     type: 'category'
                 })
             }
+        })
+    }
+    if (valueService?.selectedService) {
+        services.push({
+            id: valueService.selectedService.id,
+            name: valueService.selectedService.name,
+            type: 'valueService'
         })
     }
     return services;

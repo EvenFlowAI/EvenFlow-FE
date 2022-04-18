@@ -28,7 +28,7 @@ const Price = styled('div')(() => ({
 const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onNext}) => {
     const {valueService} = useSelector((state: RootState) => state.appointmentFrame);
 
-    return valueService.selectedService ? (
+    return valueService?.selectedService ? (
         <PageWrapper>
             <CarName>{valueService.year?.year} {valueService.series?.name} {valueService.model}</CarName>
             <ChangeButton onClick={onChangeVehicle} variant="text">Change Vehicle</ChangeButton>

@@ -103,10 +103,10 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const yearOptions = useMemo(() => mockData.map(item => item.year.toString()), [mockData]);
 
     useEffect(() => {
-        if (valueService.year) {
+        if (valueService?.year) {
             setCurrentSeries(valueService.year.series);
         }
-        if (valueService.series) {
+        if (valueService?.series) {
             setCurrentModels(valueService.series.models)
         }
     }, [valueService])
@@ -153,9 +153,9 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                     placeholder: "Select Year",
                     required: true
                 })}
-                value={valueService.year?.year || undefined}
+                value={valueService?.year?.year || undefined}
             />
-            {valueService.year ? <Autocomplete
+            {valueService?.year ? <Autocomplete
                 key="series"
                 options={currentSeries}
                 onChange={onSeriesChange}
@@ -171,7 +171,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 })}
                 value={valueService.series || undefined}
             /> : null}
-            {valueService.year && valueService.series ? <Autocomplete
+            {valueService?.year && valueService?.series ? <Autocomplete
                 key="model"
                 options={currentModels}
                 onChange={onModelChange}
@@ -191,7 +191,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
             onBack={handleBack}
             onNext={handleNext}
             nextLabel="View Price"
-            nextDisabled={!valueService.year || !valueService.series || !valueService.model}
+            nextDisabled={!valueService?.year || !valueService?.series || !valueService?.model}
         />
         </ScreenWrapper>
     </StepWrapper>);

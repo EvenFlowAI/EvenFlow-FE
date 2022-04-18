@@ -12,7 +12,7 @@ import {
     selectCategoriesIds,
     selectService,
     selectSubService,
-    setPackage
+    setPackage, setValueService
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useConfirm} from "../../../utils/hooks";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
@@ -65,12 +65,12 @@ const CartItem: React.FC<TCartItemProps> = ({ item, onClick}) => {
 }
 
 const CartTable = () => {
-    const { selectedPackage, categoriesIds, subService, service } = useSelector((state: RootState) => state.appointmentFrame);
+    const { selectedPackage, categoriesIds, subService, service, valueService } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
-    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds),
-        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds])
+    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
     const dispatch = useDispatch();
     const {askConfirm, closeConfirm} = useConfirm();
     const theme = useTheme();
@@ -108,6 +108,8 @@ const CartTable = () => {
             case 'package':
                 if (service?.type === 1) dispatch(selectService(null));
                 return dispatch(setPackage(null));
+            case 'valueService':
+               return dispatch(setValueService(null));
             default:
                 if (service?.id === item.id) dispatch(selectService(null));
                 if (subService?.id === item.id) dispatch(selectSubService(null));

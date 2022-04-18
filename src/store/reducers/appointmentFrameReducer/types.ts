@@ -57,6 +57,7 @@ export type TValueService = {
     price: number;
     description: string;
     imageLink: string;
+    id: number;
 }
 export type TSeries = {
     name: string;

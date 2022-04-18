@@ -7,7 +7,6 @@ import {useDispatch} from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
 import ServiceSelection from "./ServiceSelection";
 import ServiceDetails from "./ServiceDetails";
-import {IValueService} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 const Container = styled('div')({
     display: "flex",
@@ -22,13 +21,6 @@ const Container = styled('div')({
 
 type TScreen = "vehicleDetails" | "serviceSelection" | "serviceDetails";
 
-const emptyService: IValueService = {
-    year: null,
-    series: null,
-    model: null,
-    selectedService: null,
-}
-
 const ValueService: React.FC = () => {
     const [screen, setScreen] = useState<TScreen>("vehicleDetails");
     const dispatch = useDispatch();
@@ -36,7 +28,7 @@ const ValueService: React.FC = () => {
     const history = useHistory();
 
     const onBack = async () => {
-        await dispatch(setValueService(emptyService));
+        await dispatch(setValueService(null));
         await dispatch(setCurrentFrameScreen("serviceNeeds"));
         history.push( "/f/appointment/" + id);
     };

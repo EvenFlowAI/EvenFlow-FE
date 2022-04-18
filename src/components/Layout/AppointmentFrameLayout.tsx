@@ -233,7 +233,7 @@ export const AppointmentFrameLayout = () => {
             }
 
         } else {
-            valueService.selectedService ? handleSetScreen('consultantSelection') : handleSetScreen('serviceNeeds');
+            valueService?.selectedService ? handleSetScreen('consultantSelection') : handleSetScreen('serviceNeeds');
         }
     }, [handleSetScreen, selectedVehicle, showError, dispatch]);
 
