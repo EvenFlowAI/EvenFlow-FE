@@ -23,7 +23,7 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "1fr 1fr 1fr 1fr",
-    alignItems: "center",
+    alignItems: "stretch",
     justifyContent: "flex-start",
     gridGap: "20px",
     width: "100%",
