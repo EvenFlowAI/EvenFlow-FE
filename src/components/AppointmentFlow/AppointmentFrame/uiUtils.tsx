@@ -10,7 +10,8 @@ export const getMaintenanceDescription = (
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
     allCategories?: ICategory[],
-    selectedCategories?: number[]) => {
+    selectedCategories?: number[],
+    valueService?: IValueService | null) => {
     const services: string[] = [];
 
     if (selectedPackage) {
@@ -30,6 +31,7 @@ export const getMaintenanceDescription = (
             }
         })
     }
+    if (valueService?.selectedService?.name) services.push(valueService.selectedService.name)
    return services;
 }
 
