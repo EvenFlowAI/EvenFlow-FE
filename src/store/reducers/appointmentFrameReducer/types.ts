@@ -58,10 +58,18 @@ export type TValueService = {
     description: string;
     imageLink: string;
 }
+export type TSeries = {
+    name: string;
+    models: string[];
+}
 
+export type TYear = {
+    year: string;
+    series: TSeries[];
+}
 export interface IValueService {
-    year?: string;
-    model?: string;
-    series?: string;
+    year: TYear | null;
+    model: string | null;
+    series: TSeries | null;
     selectedService: TValueService | null;
 }

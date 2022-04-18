@@ -89,9 +89,9 @@ const initialState: TState = {
     packageOptionType: null,
     gap: undefined,
     valueService: {
-        year: "",
-        model: "",
-        series: "",
+        year: null,
+        model: null,
+        series: null,
         selectedService: null,
     }
 };

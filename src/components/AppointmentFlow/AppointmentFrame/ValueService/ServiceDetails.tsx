@@ -30,7 +30,7 @@ const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onN
 
     return valueService.selectedService ? (
         <PageWrapper>
-            <CarName>{valueService.year} {valueService.series} {valueService.model}</CarName>
+            <CarName>{valueService.year?.year} {valueService.series?.name} {valueService.model}</CarName>
             <ChangeButton onClick={onChangeVehicle} variant="text">Change Vehicle</ChangeButton>
             <SubTitle>{valueService.selectedService?.name}</SubTitle>
             <Price>${valueService.selectedService?.price}</Price>

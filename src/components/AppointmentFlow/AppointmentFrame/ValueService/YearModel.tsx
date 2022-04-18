@@ -1,23 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
-import {styled, useMediaQuery, useTheme} from "@material-ui/core";
+import {styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {useParams} from "react-router-dom";
-import moment from "moment";
 import {autocompleteRender} from "../../../UI/AutocompleteRender";
 import {StepWrapper} from "../StepWrapper";
 import {Actions} from "../Actions";
 import {TActionProps} from "../types";
-import {IValueService} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {loadMakes, setValueService,} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setValueService,} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {useException} from "../../../../utils/hooks";
-import {decodeSCID} from "../../../../utils/utils";
 import {makeStyles} from "@material-ui/core/styles";
+import {TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
 
-const mockSeries = ['2x', '3x', '4x'];
-
-const SelectsTitle = styled('div')(({theme}) => ({
+const SelectsTitle = styled('div')(() => ({
     width: "100%",
     display: "flex",
     justifyContent: "center",
@@ -59,40 +53,63 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-let year = moment.utc().year()
-if (moment().month() > 9) year = moment.utc().add(1, 'year').year();
-const YEARS = 20;
-export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
-
-type TKey = keyof IValueService;
+const mockData = [
+    {
+        year: "2020",
+        series: [
+            {
+                name: "3 Series",
+                models: [
+                    "330i xDrive Gran Turismo",
+                    "335i xDrive Gran Turismo",
+                ]
+            },
+            {
+                name: "4 Series",
+                models: [
+                    "430i xDrive Gran Turismo",
+                    "440i xDrive Gran Turismo",
+                ]
+            },
+        ]
+},
+    {
+        year: "2015",
+        series: [
+            {
+                name: "2 Series",
+                models: [
+                    "230i xDrive Gran Turismo",
+                    "225i xDrive Gran Turismo",
+                ]
+            },
+            {
+                name: "1 Series",
+                models: [
+                    "130i xDrive Gran Turismo",
+                    "140i xDrive Gran Turismo",
+                ]
+            },
+        ]
+    },
+]
 
 export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {valueService, makes}= useSelector((state: RootState) => state.appointmentFrame);
-    const [currentModels, setCurrentModels] = useState<string[] | []>([]);
+    const {valueService}= useSelector((state: RootState) => state.appointmentFrame);
+    const [currentModels, setCurrentModels] = useState<string[]>([]);
+    const [currentSeries, setCurrentSeries] = useState<TSeries[]>([]);
     const dispatch = useDispatch();
-    const showError = useException();
-    const {id} = useParams();
-    const theme = useTheme();
     const classes = useStyles();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const yearOptions = useMemo(() => mockData.map(item => item.year.toString()), [mockData]);
 
     useEffect(() => {
-        if (makes.length) {
-            const models = makes.find(item => item.name === 'BMW')?.models ?? [];
-            setCurrentModels(() => models);
+        if (valueService.year) {
+            setCurrentSeries(valueService.year.series);
         }
-    }, [makes])
-
-    useEffect(() => {
-        dispatch(loadMakes(decodeSCID(id)));
-    }, [id]);
-
-    const handleChange = (name: TKey) => (e: React.ChangeEvent<{}>, option: string|null) => {
-        if (isXS) e.preventDefault();
-        if (option) {
-           dispatch(setValueService({[name]: option}));
+        if (valueService.series) {
+            setCurrentModels(valueService.series.models)
         }
-    }
+    }, [valueService])
 
     const handleNext = () => {
         onNext();
@@ -102,6 +119,23 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         onBack();
     }
 
+    const onYearChange = (e: React.ChangeEvent<{}>, option: string|null) => {
+        const year = mockData.find(item => item.year === option);
+        dispatch(setValueService({year: year}))
+        if (year) {
+            setCurrentSeries(year.series);
+        }
+    }
+
+    const onSeriesChange = (e: React.ChangeEvent<{}>, option: TSeries|null) => {
+        dispatch(setValueService({series: option}))
+        setCurrentModels(option?.models ?? [])
+    }
+
+    const onModelChange = (e: React.ChangeEvent<{}>, option: string|null) => {
+        dispatch(setValueService({model: option}))
+    }
+
     return (<StepWrapper>
         <ScreenWrapper>
         <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
@@ -109,7 +143,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
             <Autocomplete
                 key="year"
                 options={yearOptions}
-                onChange={handleChange("year")}
+                onChange={onYearChange}
                 fullWidth
                 className={classes.input}
                 disableClearable
@@ -119,13 +153,14 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                     placeholder: "Select Year",
                     required: true
                 })}
-                value={valueService.year}
+                value={valueService.year?.year || undefined}
             />
-            {valueService?.year ? <Autocomplete
+            {valueService.year ? <Autocomplete
                 key="series"
-                options={mockSeries}
-                onChange={handleChange("series")}
+                options={currentSeries}
+                onChange={onSeriesChange}
                 fullWidth
+                getOptionLabel={option => option.name}
                 disableClearable
                 autoComplete={true}
                 className={classes.input}
@@ -134,12 +169,12 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                     placeholder: "Select Series",
                     required: true
                 })}
-                value={valueService.series}
+                value={valueService.series || undefined}
             /> : null}
-            {valueService?.year && valueService?.series ? <Autocomplete
+            {valueService.year && valueService.series ? <Autocomplete
                 key="model"
                 options={currentModels}
-                onChange={handleChange("model")}
+                onChange={onModelChange}
                 fullWidth
                 disableClearable
                 autoComplete={true}
@@ -149,14 +184,14 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                     placeholder: "Select Model",
                     required: true
                 })}
-                value={valueService.model}
+                value={valueService.model || undefined}
             /> : null}
         </SelectWrapper>
         <Actions
             onBack={handleBack}
             onNext={handleNext}
             nextLabel="View Price"
-            nextDisabled={!valueService.year || !valueService.model || !valueService.series}
+            nextDisabled={!valueService.year || !valueService.series || !valueService.model}
         />
         </ScreenWrapper>
     </StepWrapper>);

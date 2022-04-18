@@ -80,7 +80,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             switch (selectedService?.type) {
                 case 2:
                 case 4:
-                    return onSelect('opsCode');
+                    return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
+                    // return onSelect('opsCode');
                 case 1:
                     return onSelect('maintenanceDetails');
                 case 3:

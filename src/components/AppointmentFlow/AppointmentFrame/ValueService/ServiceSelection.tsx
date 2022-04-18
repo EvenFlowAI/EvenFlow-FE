@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, styled, useTheme} from "@material-ui/core";
+import {Button, styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TValueService} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -173,7 +173,7 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
 
     return (
         <PageWrapper>
-            <CarName>{valueService.year} {valueService.series} {valueService.model}</CarName>
+            <CarName>{valueService.year?.year} {valueService.series?.name} {valueService.model}</CarName>
             <ChangeButton onClick={onBack} variant="text">Change Vehicle</ChangeButton>
             <SubTitle>Select Service</SubTitle>
             <Container>
