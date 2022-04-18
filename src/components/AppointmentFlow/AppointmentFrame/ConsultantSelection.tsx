@@ -60,8 +60,8 @@ const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>(({theme, acti
 }));
 
 const Avatar = styled('div')<Theme, {src?: string, contain?: boolean}>({
-    width: 50,
-    height: 50,
+    width: 36,
+    height: 36,
     borderRadius: "50%",
     backgroundColor: "#FFFFFF",
     backgroundSize: ({contain}) => contain ? "contain" : "cover",
