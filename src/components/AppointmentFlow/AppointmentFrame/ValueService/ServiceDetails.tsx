@@ -15,6 +15,10 @@ type TServiceDetails = {
 const Description = styled('div')(() => ({
     padding: 10,
     marginBottom: 20,
+    "& > p": {
+        fontWeight: 600,
+        color: "#828282",
+    }
 }))
 
 const Price = styled('div')(() => ({

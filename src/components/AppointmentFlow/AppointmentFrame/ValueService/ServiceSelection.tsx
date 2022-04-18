@@ -1,27 +1,38 @@
 import React from 'react';
-import {Button, styled} from "@material-ui/core";
+import {Button, styled, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TValueService} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {setValueService} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
-export const PageWrapper = styled('div')(() => ({
+export const PageWrapper = styled('div')(({theme}) => ({
     maxWidth: '80vw',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     padding: 40,
-    border: '1px solid #DADADA'
+    border: '1px solid #DADADA',
+    [theme.breakpoints.down("md")]: {
+        padding: 30,
+    },
+    [theme.breakpoints.down("sm")]: {
+        padding: 20,
+    }
 }))
 
-const Container = styled('div')(() => ({
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+const Container = styled('div')(({theme}) => ({
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr',
     gap: 10,
+    [theme.breakpoints.down("md")]: {
+        gridTemplateColumns: '1fr 1fr',
+    },
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateColumns: '1fr',
+    }
 }))
 
-const CardWrapper= styled('div')(() => ({
+const CardWrapper= styled('div')(({theme}) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: 24,
@@ -36,6 +47,9 @@ const CardWrapper= styled('div')(() => ({
     "& > .image": {
         objectFit: 'contain',
         width: 300,
+        [theme.breakpoints.down("sm")]: {
+            width: 200,
+        }
     }
 }))
 
@@ -71,7 +85,7 @@ export const CarName = styled('div')(() => ({
     fontSize: 24,
 }))
 
-export const ChangeButton = styled(Button)(() => ({
+export const ChangeButton = styled(Button)(({theme}) => ({
     width: 'fit-content',
     justifyContent: 'flex-start',
     padding: 8,
@@ -80,6 +94,12 @@ export const ChangeButton = styled(Button)(() => ({
     textTransform: 'unset',
     textDecoration: 'underline',
     fontWeight: 'normal',
+    [theme.breakpoints.down("md")]: {
+        marginBottom: 30,
+    },
+    [theme.breakpoints.down("sm")]: {
+        marginBottom: 20,
+    }
 }))
 
 const mockServices = [
