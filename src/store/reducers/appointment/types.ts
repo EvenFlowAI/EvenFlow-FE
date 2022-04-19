@@ -31,6 +31,7 @@ export interface ISR {
     description?: string;
     price?: number;
 }
+
 export type TS1Form = {
     year: string|null;
     mileage: string|null;

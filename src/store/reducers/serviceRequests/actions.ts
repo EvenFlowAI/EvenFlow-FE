@@ -16,6 +16,7 @@ import {
 } from "./types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
+import {EPricingDisplayType} from "../pricingSettings/types";
 
 export const getNonSelectedServiceRequests = createAction<IServiceRequest[]>("ServiceRequests/getNonSelected");
 export const setLoadingNonSelected = createAction<boolean>("ServiceRequests/loadingNonSelected");
@@ -85,7 +86,8 @@ export const loadAssignedServiceRequests = (serviceCenterId: number, isEligible?
     async (dispatch, getState) => {
     const {assignedPageData, assignedFilter, assignedOrdering} = getState().serviceRequests;
     dispatch(setAssignedLoading(true));
-    const params = {...assignedPageData, ...assignedFilter, ...assignedOrdering, serviceCenterId, isEligible};
+    const pricingDisplayType = isEligible ? EPricingDisplayType.Dynamic : null;
+    const params = {...assignedPageData, ...assignedFilter, ...assignedOrdering, serviceCenterId, pricingDisplayType};
 
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequest>>(
@@ -199,7 +201,7 @@ export const getSCRequestsShort = createAction<IAssignedServiceRequestShort[]>("
 export const loadSCRequestsShort = (serviceCenterId: number): AppThunk => async dispatch => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
         Api.endpoints.ServiceRequests.GetShort,
-        {params: {serviceCenterId, pageSize: 0, isEligible: true}}
+        {params: {serviceCenterId, pageSize: 0, pricingDisplayType: EPricingDisplayType.Dynamic}}
     );
     dispatch(getSCRequestsShort(result));
 }

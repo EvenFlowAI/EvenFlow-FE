@@ -1,4 +1,5 @@
 import {EMaintenanceOptionType, IBusinessRule} from "../../../api/types";
+import {EPricingDisplayType} from "../pricingSettings/types";
 
 export interface IPackageOption {
     serviceRequestPrice: number;
@@ -52,6 +53,7 @@ export interface IPackageShort {
     baseMarketPrice: number;
     valueMarketPrice: number;
     preferredMarketPrice: number;
+    pricingDisplayType: EPricingDisplayType;
 }
 
 export interface IPackageOptionShort {

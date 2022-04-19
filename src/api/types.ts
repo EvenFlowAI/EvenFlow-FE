@@ -239,6 +239,7 @@ export interface IServiceCategory extends IServiceCategoryShort {
     loadedIcon?: JSX.Element | string;
     serviceRequests: IServiceRequest[];
     type: EServiceCategoryType;
+    price: number;
 }
 
 export interface IServiceConsultant {

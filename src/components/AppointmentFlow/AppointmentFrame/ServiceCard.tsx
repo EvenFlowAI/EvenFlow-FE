@@ -20,9 +20,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
     const [isLoading, setLoading] = useState<boolean>(false);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
 
-    const price = card.type === EServiceCategoryType.GeneralCategory
-        ? card.serviceRequests.reduce((a, b) => a + +b.price, 0)
-        : undefined;
+    const price = card.type === EServiceCategoryType.GeneralCategory ? card.price : undefined;
 
     useEffect(() => {
         if (card.iconPath) {
