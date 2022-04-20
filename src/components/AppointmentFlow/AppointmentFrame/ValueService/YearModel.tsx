@@ -6,7 +6,7 @@ import {autocompleteRender} from "../../../UI/AutocompleteRender";
 import {StepWrapper} from "../StepWrapper";
 import {Actions} from "../Actions";
 import {TActionProps} from "../types";
-import {setValueService,} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
 import {TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -95,7 +95,7 @@ const mockData = [
 ]
 
 export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {valueService}= useSelector((state: RootState) => state.appointmentFrame);
+    const {valueService, selectedVehicle}= useSelector((state: RootState) => state.appointmentFrame);
     const [currentModels, setCurrentModels] = useState<string[]>([]);
     const [currentSeries, setCurrentSeries] = useState<TSeries[]>([]);
     const dispatch = useDispatch();
@@ -103,13 +103,28 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const yearOptions = useMemo(() => mockData.map(item => item.year.toString()), [mockData]);
 
     useEffect(() => {
-        if (valueService?.year) {
-            setCurrentSeries(valueService.year.series);
+        if (valueService) {
+            if (valueService.year) {
+                setCurrentSeries(valueService.year.series);
+            }
+            if (valueService.series) {
+                setCurrentModels(valueService.series.models)
+            }
+        } else {
+            if (selectedVehicle) {
+                if (selectedVehicle?.year) {
+                    const year = mockData.find(item => item.year === selectedVehicle?.year?.toString());
+                    if (year) {
+                        dispatch(setValueServicePartial({year: year}));
+                        if (selectedVehicle?.model) {
+                            const series = year.series?.find(item => item.name === selectedVehicle?.model);
+                            series && dispatch(setValueServicePartial({series}))
+                        }
+                    }
+                }
+            }
         }
-        if (valueService?.series) {
-            setCurrentModels(valueService.series.models)
-        }
-    }, [valueService])
+    }, [valueService, selectedVehicle, yearOptions, mockData])
 
     const handleNext = () => {
         onNext();
@@ -121,21 +136,22 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
 
     const onYearChange = (e: React.ChangeEvent<{}>, option: string|null) => {
         const year = mockData.find(item => item.year === option);
-        dispatch(setValueService({year: year}))
+        dispatch(setValueServicePartial({year: year}))
         if (year) {
             setCurrentSeries(year.series);
         }
     }
 
     const onSeriesChange = (e: React.ChangeEvent<{}>, option: TSeries|null) => {
-        dispatch(setValueService({series: option}))
+        dispatch(setValueServicePartial({series: option}))
         setCurrentModels(option?.models ?? [])
     }
 
     const onModelChange = (e: React.ChangeEvent<{}>, option: string|null) => {
-        dispatch(setValueService({model: option}))
+        dispatch(setValueServicePartial({model: option}))
     }
 
+    // todo debug year value
     return (<StepWrapper>
         <ScreenWrapper>
         <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
@@ -153,7 +169,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                     placeholder: "Select Year",
                     required: true
                 })}
-                value={valueService?.year?.year || undefined}
+                value={valueService?.year?.year}
             />
             {valueService?.year ? <Autocomplete
                 key="series"

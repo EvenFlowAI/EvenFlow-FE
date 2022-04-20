@@ -88,12 +88,7 @@ const initialState: TState = {
     categoriesIds: [],
     packageOptionType: null,
     gap: undefined,
-    valueService: {
-        year: null,
-        model: null,
-        series: null,
-        selectedService: null,
-    }
+    valueService: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -203,6 +198,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, gap: payload};
     })
     .addCase(setValueService, (state, {payload}) => {
-        return {...state, valueService: payload && state.valueService ? {...state.valueService, ...payload} : null};
+        return {...state, valueService: payload};
     })
 )

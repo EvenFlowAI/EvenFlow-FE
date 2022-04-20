@@ -43,7 +43,22 @@ export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPacka
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
-export const setValueService = createAction<Partial<IValueService>|null>('fAppointment/SetValueService');
+export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
+
+export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
+    const service = getState().appointmentFrame.valueService;
+    const emptyService = {
+        year: null,
+        model: null,
+        series: null,
+        selectedService: null,
+    }
+    if (service) {
+        dispatch(setValueService({...service, ...data}));
+    } else {
+        dispatch(setValueService({...emptyService, ...data}));
+    }
+}
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(

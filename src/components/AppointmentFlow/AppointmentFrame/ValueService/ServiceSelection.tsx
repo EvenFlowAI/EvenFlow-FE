@@ -3,7 +3,7 @@ import {Button, styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TValueService} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {setValueService} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 export const PageWrapper = styled('div')(({theme}) => ({
     maxWidth: '80vw',
@@ -178,7 +178,7 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
     const dispatch = useDispatch();
 
     const onSelectClick = (item: TValueService) => async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        await dispatch(setValueService({selectedService: item}));
+        await dispatch(setValueServicePartial({selectedService: item}));
         onNext();
     };
 

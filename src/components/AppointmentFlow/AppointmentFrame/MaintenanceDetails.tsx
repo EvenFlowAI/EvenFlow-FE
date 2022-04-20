@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     loadMakes, selectService,
-    setMaintenanceDetails, setPackage,
+    setMaintenanceDetails, setPackage, setVehicle,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -55,7 +55,7 @@ const blankOptions: TOptionsState = {};
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
@@ -93,8 +93,36 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
             }));
+        } else {
+            if (valueService && isBmWService) {
+                const vehicle: ILoadedVehicle = {
+                    vin: '',
+                    make: "",
+                    model: "",
+                    year: null,
+                    mileage: null,
+                    appointmentHashKeys: [],
+                };
+                const bmwMake = makes.find(item => item.name === "BMW");
+                if (bmwMake) {
+                    dispatch(setMaintenanceDetails({make: bmwMake.name}));
+                    vehicle.make = bmwMake.name;
+
+                    if (valueService?.year?.year && yearOptions.find(option => option === valueService?.year?.year)) {
+                        dispatch(setMaintenanceDetails({year: valueService.year.year}));
+                        vehicle.year = Number(valueService.year.year)
+                    }
+
+                    const model = bmwMake.models.find(model => model === valueService.series?.name);
+                    if (model) {
+                        dispatch(setMaintenanceDetails({model}));
+                        vehicle.model = model;
+                    }
+                    dispatch(setVehicle(vehicle));
+                }
+            }
         }
-    }, [dispatch, selectedVehicle]);
+    }, [dispatch, selectedVehicle, valueService, makes]);
 
     useEffect(() => {
         if (currentModels.length) {
