@@ -8,6 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
+import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -151,7 +152,7 @@ export const SelectedAppointment = () => {
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
 
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
-    const isRequestWithPrice = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => Boolean(item.priceValue)) : false;
+    const isDynamicPricing = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic) : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
@@ -212,7 +213,7 @@ export const SelectedAppointment = () => {
                         {!isSm && Boolean(price) && <div className="price">
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div>}
-                        {isRequestWithPrice && (
+                        {isDynamicPricing && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
                           Save by booking at off peak times!
                         </div>

@@ -1,7 +1,7 @@
 import {IAddress} from "../dealershipGroups/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TEnumMap} from "../utils";
-import {EDemandCategory} from "../pricingSettings/types";
+import {EDemandCategory, EPricingDisplayType} from "../pricingSettings/types";
 import {EOfferType, IOffer} from "../offers/types";
 import moment from "moment";
 import {
@@ -198,5 +198,6 @@ export interface IMake {
 
 export interface IServiceRequestPrice {
     requestName: string;
+    pricingDisplayType: EPricingDisplayType;
     priceValue?: number;
 }
