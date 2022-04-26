@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {
@@ -108,6 +108,9 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
+    const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
+        || categoryType?.value === EServiceCategoryType.LinkToPage2
+        || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
 
     const classes = useStyles();
     const { selectedSC } = useSCs();
@@ -277,8 +280,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                 <OpsCodesTable
                     selectedCodes={selectedCodes}
                     setSelectedCodes={setSelectedCodes}
-                    disabled={categoryType?.value === EServiceCategoryType.MaintenancePackage
-                    || categoryType?.value === EServiceCategoryType.LinkToPage2}/>
+                    disabled={disabledOpsCodes}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} className={classes.cancelButton}>
