@@ -10,6 +10,7 @@ import {setValueServicePartial} from "../../../../store/reducers/appointmentFram
 import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
 import {TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {useException} from "../../../../utils/hooks";
 
 const SelectsTitle = styled('div')(() => ({
     width: "100%",
@@ -101,6 +102,12 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const yearOptions = useMemo(() => mockData.map(item => item.year.toString()), [mockData]);
+    const isError = useMemo(() => Boolean(selectedVehicle && selectedVehicle?.make === "Other"), [selectedVehicle]);
+    const showError = useException();
+
+    useEffect(() => {
+        dispatch(setValueServicePartial({year: undefined}))
+    }, [])
 
     useEffect(() => {
         if (valueService) {
@@ -111,7 +118,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 setCurrentModels(valueService.series.models)
             }
         } else {
-            if (selectedVehicle) {
+            if (selectedVehicle && !isError) {
                 if (selectedVehicle?.year) {
                     const year = mockData.find(item => item.year === selectedVehicle?.year?.toString());
                     if (year) {
@@ -124,7 +131,13 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 }
             }
         }
-    }, [valueService, selectedVehicle, yearOptions, mockData])
+    }, [valueService, selectedVehicle, yearOptions, mockData, isError])
+
+    useEffect(() => {
+        if (isError) {
+            showError('Sorry, but only BMW models are eligible for Value Service')
+        }
+    }, [isError, showError])
 
     const handleNext = () => {
         onNext();
@@ -156,25 +169,27 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         <ScreenWrapper>
         <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
         <SelectWrapper>
-            <Autocomplete
+            {valueService && <Autocomplete
                 key="year"
                 options={yearOptions}
                 onChange={onYearChange}
                 fullWidth
+                disabled={isError}
                 className={classes.input}
                 disableClearable
-                autoComplete={true}
+                // autoComplete={true}
                 renderInput={autocompleteRender({
                     label: "Year",
                     placeholder: "Select Year",
                     required: true
                 })}
-                value={valueService?.year?.year}
-            />
+                value={valueService.year?.year || undefined}
+            />}
             {valueService?.year ? <Autocomplete
                 key="series"
                 options={currentSeries}
                 onChange={onSeriesChange}
+                disabled={isError}
                 fullWidth
                 getOptionLabel={option => option.name}
                 disableClearable
@@ -191,6 +206,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 key="model"
                 options={currentModels}
                 onChange={onModelChange}
+                disabled={isError}
                 fullWidth
                 disableClearable
                 autoComplete={true}
@@ -207,7 +223,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
             onBack={handleBack}
             onNext={handleNext}
             nextLabel="View Price"
-            nextDisabled={!valueService?.year || !valueService?.series || !valueService?.model}
+            nextDisabled={!valueService?.year || !valueService?.series || !valueService?.model || isError}
         />
         </ScreenWrapper>
     </StepWrapper>);

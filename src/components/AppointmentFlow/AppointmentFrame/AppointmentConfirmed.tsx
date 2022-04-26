@@ -83,6 +83,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         vehicle,
         allCategories,
         categoriesIds,
+        valueService,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceRequests,
@@ -95,10 +96,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.selectedVehicle,
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
+        state.appointmentFrame.valueService,
     ]);
 
-    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds])
+    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
 
     useEffect(() => {
         ReactGA.event({

@@ -93,36 +93,38 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
             }));
-        } else {
-            if (valueService && isBmWService) {
-                const vehicle: ILoadedVehicle = {
-                    vin: '',
-                    make: "",
-                    model: "",
-                    year: null,
-                    mileage: null,
-                    appointmentHashKeys: [],
-                };
-                const bmwMake = makes.find(item => item.name === "BMW");
-                if (bmwMake) {
-                    dispatch(setMaintenanceDetails({make: bmwMake.name}));
-                    vehicle.make = bmwMake.name;
+        }
+    }, [dispatch, selectedVehicle]);
 
-                    if (valueService?.year?.year && yearOptions.find(option => option === valueService?.year?.year)) {
-                        dispatch(setMaintenanceDetails({year: valueService.year.year}));
-                        vehicle.year = Number(valueService.year.year)
-                    }
+    useEffect(() => {
+        if (valueService && isBmWService) {
+            const vehicle: ILoadedVehicle = {
+                vin: '',
+                make: "",
+                model: "",
+                year: null,
+                mileage: null,
+                appointmentHashKeys: [],
+            };
+            const bmwMake = makes.find(item => item.name === "BMW");
+            if (bmwMake) {
+                dispatch(setMaintenanceDetails({make: bmwMake.name}));
+                vehicle.make = bmwMake.name;
 
-                    const model = bmwMake.models.find(model => model === valueService.series?.name);
-                    if (model) {
-                        dispatch(setMaintenanceDetails({model}));
-                        vehicle.model = model;
-                    }
-                    dispatch(setVehicle(vehicle));
+                if (valueService?.year?.year && yearOptions.find(option => option === valueService?.year?.year)) {
+                    dispatch(setMaintenanceDetails({year: valueService.year.year}));
+                    vehicle.year = Number(valueService.year.year)
                 }
+
+                const model = bmwMake.models.find(model => model === valueService.series?.name);
+                if (model) {
+                    dispatch(setMaintenanceDetails({model}));
+                    vehicle.model = model;
+                }
+                dispatch(setVehicle(vehicle));
             }
         }
-    }, [dispatch, selectedVehicle, valueService, makes]);
+    }, [valueService, makes, isBmWService])
 
     useEffect(() => {
         if (currentModels.length) {

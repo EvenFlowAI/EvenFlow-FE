@@ -89,6 +89,9 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                 mileage: selectedVehicle?.mileage?.toString() || "",
             }));
         }
+    }, [dispatch, selectedVehicle]);
+
+    useEffect(() => {
         if (valueService && isBmWService) {
             const vehicle: ILoadedVehicle = {
                 vin: '',
@@ -116,7 +119,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                 dispatch(setVehicle(vehicle));
             }
         }
-    }, [dispatch, selectedVehicle, valueService, makes]);
+    }, [valueService, makes, isBmWService])
 
 
     useEffect(() => {
