@@ -170,7 +170,9 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                     serviceRequests: [],
                     orderIndex: Number(orderIndex),
                 }
-                if (categoryType.value !== EServiceCategoryType.MaintenancePackage && categoryType.value !== EServiceCategoryType.LinkToPage2) {
+                if (categoryType.value !== EServiceCategoryType.MaintenancePackage
+                    && categoryType.value !== EServiceCategoryType.LinkToPage2
+                    && categoryType.value !== EServiceCategoryType.ValueService) {
                     if (selectedCodes.length) {
                         data.serviceRequests = selectedCodes.map(item => item.id);
                     } else {
