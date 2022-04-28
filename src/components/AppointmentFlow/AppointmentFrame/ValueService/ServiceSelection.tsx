@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {TValueService} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {IServiceOffer} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {loadServiceOffers, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {Loading} from "../../../UI/Loading";
 
 export const PageWrapper = styled('div')(({theme}) => ({
     maxWidth: '80vw',
+    minWidth: '50vw',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -46,7 +48,7 @@ const CardWrapper= styled('div')(({theme}) => ({
     },
     "& > .image": {
         objectFit: 'contain',
-        width: 300,
+        width: 350,
         [theme.breakpoints.down("sm")]: {
             width: 200,
         }
@@ -102,82 +104,23 @@ export const ChangeButton = styled(Button)(({theme}) => ({
     }
 }))
 
-const mockServices = [
-    {
-        id: 1,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-    {
-        id: 2,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-    {
-        id: 3,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-    {
-        id: 4,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-    {
-        id: 5,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-    {
-        id: 6,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-    {
-        id: 7,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-    {
-        id: 8,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-    {
-        id: 9,
-        name: 'Oil change',
-        imageLink: 'https://bmwusaservice.com/content/images/valueservice/bmw/bmw-oil-change.jpg',
-        price: 99.99,
-        description: "<p>Replacing an engine air filter does more than just increase airflow to the engine, it also increases fuel economy and reduces your vehicle\u2019s overall emissions. Engine air filters prevent abrasive materials from entering the engine\u2019s cylinders, where they would cause mechanical wear and contaminate your oil. In turn, a clean air filter promotes increased gas mileage and reduced emissions over time.</p><p>Work performed in this service:</p><ul><li>Removal and reinstallation of the air filter housing.</li><li>Replacement of used engine air filter and replacement with new BMW engine air filter.</li><li>Multi-point check, including brakes, power steering and air conditioning belts, air filter, and tires for wear and alignment.</li><li>Security check, including condition of safety belts and function of automatic-locking retractors, belt locks and belt buckles.</li><li>Coolant levels are checked.</li><li>Fluid level and antifreeze additive in windshield washer fluid reservoir are checked and topped off, if needed.</li><li>Check brake fluid level and the corresponding interval indicator (recommend replacement every two years, at the latest).</li></ul><p>This engine air filter replacement service is performed by BMW Trained Technicians at your local BMW Center.</p><p class=\"disclaimer\">Prices include parts and labor. Taxes and additional costs may apply. Service availability and pricing may vary for non-standard options, including M Sport options and equipment. Ask your BMW Center for further details.</p>",
-    },
-]
-
 type TServiceSelectionProps = {
     onNext: () => void;
     onBack: () => void;
 }
 
 const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) => {
-    const {valueService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {valueService, serviceOffers, offersLoading} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
 
-    const onSelectClick = (item: TValueService) => async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    useEffect(() => {
+        const year = valueService?.year?.year;
+        const seriesId = valueService?.series?.id;
+        const modelId = valueService?.model?.id;
+        if (year && seriesId && modelId) dispatch(loadServiceOffers(+year, seriesId, modelId));
+    }, [valueService])
+
+    const onSelectClick = (item: IServiceOffer) => async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         await dispatch(setValueServicePartial({selectedService: item}));
         onNext();
     };
@@ -188,10 +131,12 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
             <ChangeButton onClick={onBack} variant="text">Change Vehicle</ChangeButton>
             <SubTitle>Select Service</SubTitle>
             <Container>
-                {mockServices.map(service => {
+                {offersLoading
+                    ? <Loading/>
+                    : serviceOffers.map(service => {
                     return <CardWrapper>
                         <Title>{service.name}</Title>
-                        <img className="image" src={service.imageLink} alt="service picture"/>
+                        <img className="image" src={service.imagePath} alt="service picture"/>
                         <div className="buttonsWrapper">
                             <SelectButton onClick={onSelectClick(service)}>Select</SelectButton>
                             <Price>$ {service.price}</Price>

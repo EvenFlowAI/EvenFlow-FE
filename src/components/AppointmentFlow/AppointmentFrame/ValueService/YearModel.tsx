@@ -165,7 +165,6 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         dispatch(setValueServicePartial({model: option}))
     }
 
-    // todo debug year value
     return (<StepWrapper>
         <ScreenWrapper>
         <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
@@ -178,7 +177,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 disabled={isError}
                 className={classes.input}
                 disableClearable
-                // autoComplete={true}
+                autoComplete={true}
                 renderInput={autocompleteRender({
                     label: "Year",
                     placeholder: "Select Year",

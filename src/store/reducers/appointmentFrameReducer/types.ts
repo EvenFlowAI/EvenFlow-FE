@@ -79,7 +79,7 @@ export interface IValueService {
     year: TYear | null;
     model: TModel | null;
     series: TSeries | null;
-    selectedService: TValueService | null;
+    selectedService: IServiceOffer | null;
 }
 
 export interface IServiceOffer  {

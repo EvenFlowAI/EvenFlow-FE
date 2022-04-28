@@ -8,7 +8,7 @@ import {
     setAppointmentId, setConsultants, setCurrentFrameScreen,
     setCustomer,
     setFrameDescription, setLoadingPackages,
-    setMaintenanceDetails,
+    setMaintenanceDetails, setOffersLoading,
     setPackage, setPackageIsSelected, setPackages,
     setReminders, setSelectedPackageOptionType,
     setTime,
@@ -59,6 +59,7 @@ type TState = {
     gap: number | undefined;
     valueService: IValueService | null;
     seriesModels: TYear[];
+    offersLoading: boolean;
     serviceOffers: IServiceOffer[];
 }
 const initialState: TState = {
@@ -92,6 +93,7 @@ const initialState: TState = {
     gap: undefined,
     valueService: null,
     seriesModels: [],
+    offersLoading: false,
     serviceOffers: [],
 };
 
@@ -209,5 +211,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(getValueServiceOffers, (state, {payload}) => {
         return {...state, serviceOffers: payload}
+    })
+    .addCase(setOffersLoading, (state, {payload}) => {
+        return {...state, offersLoading: payload}
     })
 )

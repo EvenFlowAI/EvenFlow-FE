@@ -145,6 +145,7 @@ export interface IAppointmentSlotsRequest {
     customerId?: string;
     warrantyExpiration?: ParsableDate;
     consultantId?: string | null;
+    valueServiceOfferIds?: number[];
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;

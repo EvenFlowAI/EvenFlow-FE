@@ -46,6 +46,7 @@ export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
 export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesModels');
 export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
+export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoading');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -135,6 +136,7 @@ export const loadSeriesModels = (): AppThunk => dispatch => {
 }
 
 export const loadServiceOffers = (year: number, seriesId: number, modelId: number): AppThunk => dispatch => {
+    dispatch(setOffersLoading(true))
     Api.call(Api.endpoints.ValueService.GetValueServiceOffers, {params: {year, seriesId, modelId}})
         .then(result => {
             if (result?.data) dispatch(getValueServiceOffers(result.data))
@@ -142,4 +144,5 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
         .catch(err => {
             console.log('get value service offers error', err)
         })
+        .finally(() => dispatch(setOffersLoading(false)))
 }
