@@ -59,9 +59,16 @@ export type TValueService = {
     imageLink: string;
     id: number;
 }
+
+export type TModel = {
+    id: number;
+    name: string;
+}
+
 export type TSeries = {
     name: string;
-    models: string[];
+    models: TModel[];
+    id: number;
 }
 
 export type TYear = {
@@ -70,7 +77,16 @@ export type TYear = {
 }
 export interface IValueService {
     year: TYear | null;
-    model: string | null;
+    model: TModel | null;
     series: TSeries | null;
     selectedService: TValueService | null;
+}
+
+export interface IServiceOffer  {
+    id: number;
+    name: string;
+    price: number;
+    imagePath: string;
+    description: string;
+    serviceRequestId: number;
 }

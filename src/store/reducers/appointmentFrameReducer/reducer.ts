@@ -1,7 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getMakes,
-    getModels, getSlotsGap, selectCategoriesIds,
+    getModels, getSeriesModels, getSlotsGap, getValueServiceOffers, selectCategoriesIds,
     selectService,
     selectSubService, setAdditionalServicesChosen,
     setAdvisor,
@@ -27,7 +27,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {IValueService, TMaintenanceDetails} from "./types";
+import {IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -58,6 +58,8 @@ type TState = {
     hashKey?: string;
     gap: number | undefined;
     valueService: IValueService | null;
+    seriesModels: TYear[];
+    serviceOffers: IServiceOffer[];
 }
 const initialState: TState = {
     service: null,
@@ -89,6 +91,8 @@ const initialState: TState = {
     packageOptionType: null,
     gap: undefined,
     valueService: null,
+    seriesModels: [],
+    serviceOffers: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -199,5 +203,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setValueService, (state, {payload}) => {
         return {...state, valueService: payload};
+    })
+    .addCase(getSeriesModels, (state, {payload}) => {
+        return {...state, seriesModels: payload}
+    })
+    .addCase(getValueServiceOffers, (state, {payload}) => {
+        return {...state, serviceOffers: payload}
     })
 )

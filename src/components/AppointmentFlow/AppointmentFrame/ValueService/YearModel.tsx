@@ -6,10 +6,10 @@ import {autocompleteRender} from "../../../UI/AutocompleteRender";
 import {StepWrapper} from "../StepWrapper";
 import {Actions} from "../Actions";
 import {TActionProps} from "../types";
-import {setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {loadSeriesModels, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
-import {TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {TModel, TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useException} from "../../../../utils/hooks";
 
 const SelectsTitle = styled('div')(() => ({
@@ -96,18 +96,19 @@ const mockData = [
 ]
 
 export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {valueService, selectedVehicle}= useSelector((state: RootState) => state.appointmentFrame);
-    const [currentModels, setCurrentModels] = useState<string[]>([]);
+    const {valueService, selectedVehicle, seriesModels}= useSelector((state: RootState) => state.appointmentFrame);
+    const [currentModels, setCurrentModels] = useState<TModel[]>([]);
     const [currentSeries, setCurrentSeries] = useState<TSeries[]>([]);
     const dispatch = useDispatch();
     const classes = useStyles();
-    const yearOptions = useMemo(() => mockData.map(item => item.year.toString()), [mockData]);
+    const yearOptions = useMemo(() => seriesModels.map(item => item.year.toString()), [seriesModels]);
     const isError = useMemo(() => Boolean(selectedVehicle && selectedVehicle?.make === "Other"), [selectedVehicle]);
     const showError = useException();
 
     useEffect(() => {
         dispatch(setValueServicePartial({year: undefined}))
-    }, [])
+        dispatch(loadSeriesModels());
+    }, [dispatch])
 
     useEffect(() => {
         if (valueService) {
@@ -120,7 +121,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         } else {
             if (selectedVehicle && !isError) {
                 if (selectedVehicle?.year) {
-                    const year = mockData.find(item => item.year === selectedVehicle?.year?.toString());
+                    const year = seriesModels.find(item => item.year === selectedVehicle?.year?.toString());
                     if (year) {
                         dispatch(setValueServicePartial({year: year}));
                         if (selectedVehicle?.model) {
@@ -131,7 +132,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 }
             }
         }
-    }, [valueService, selectedVehicle, yearOptions, mockData, isError])
+    }, [valueService, selectedVehicle, seriesModels, mockData, isError])
 
     useEffect(() => {
         if (isError) {
@@ -148,7 +149,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     }
 
     const onYearChange = (e: React.ChangeEvent<{}>, option: string|null) => {
-        const year = mockData.find(item => item.year === option);
+        const year = seriesModels.find(item => item.year.toString() === option);
         dispatch(setValueServicePartial({year: year}))
         if (year) {
             setCurrentSeries(year.series);
@@ -160,7 +161,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         setCurrentModels(option?.models ?? [])
     }
 
-    const onModelChange = (e: React.ChangeEvent<{}>, option: string|null) => {
+    const onModelChange = (e: React.ChangeEvent<{}>, option: TModel|null) => {
         dispatch(setValueServicePartial({model: option}))
     }
 
@@ -209,6 +210,8 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 disabled={isError}
                 fullWidth
                 disableClearable
+                getOptionLabel={option => option.name}
+                getOptionSelected={option => option.name === valueService?.model?.name}
                 autoComplete={true}
                 className={classes.input}
                 renderInput={autocompleteRender({

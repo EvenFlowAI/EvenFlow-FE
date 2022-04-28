@@ -184,7 +184,7 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
 
     return (
         <PageWrapper>
-            <CarName>{valueService?.year?.year} {valueService?.series?.name} {valueService?.model}</CarName>
+            <CarName>{valueService?.year?.year} {valueService?.series?.name} {valueService?.model?.name}</CarName>
             <ChangeButton onClick={onBack} variant="text">Change Vehicle</ChangeButton>
             <SubTitle>Select Service</SubTitle>
             <Container>
