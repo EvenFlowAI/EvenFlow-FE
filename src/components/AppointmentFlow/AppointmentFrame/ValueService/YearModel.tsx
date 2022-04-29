@@ -106,7 +106,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const showError = useException();
 
     useEffect(() => {
-        dispatch(setValueServicePartial({year: undefined}))
+        // dispatch(setValueServicePartial({year: undefined}))
         dispatch(loadSeriesModels());
     }, [dispatch])
 
@@ -169,7 +169,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         <ScreenWrapper>
         <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
         <SelectWrapper>
-            {valueService && <Autocomplete
+            {seriesModels?.length && <Autocomplete
                 key="year"
                 options={yearOptions}
                 onChange={onYearChange}
@@ -177,13 +177,12 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 disabled={isError}
                 className={classes.input}
                 disableClearable
-                autoComplete={true}
                 renderInput={autocompleteRender({
                     label: "Year",
                     placeholder: "Select Year",
                     required: true
                 })}
-                value={valueService.year?.year || undefined}
+                value={valueService?.year?.year}
             />}
             {valueService?.year ? <Autocomplete
                 key="series"
