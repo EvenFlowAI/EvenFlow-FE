@@ -106,7 +106,6 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const showError = useException();
 
     useEffect(() => {
-        // dispatch(setValueServicePartial({year: undefined}))
         dispatch(loadSeriesModels());
     }, [dispatch])
 
@@ -182,7 +181,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                     placeholder: "Select Year",
                     required: true
                 })}
-                value={valueService?.year?.year}
+                value={valueService?.year?.year.toString() ?? ""}
             />}
             {valueService?.year ? <Autocomplete
                 key="series"

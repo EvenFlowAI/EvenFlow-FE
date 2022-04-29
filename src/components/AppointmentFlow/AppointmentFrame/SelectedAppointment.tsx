@@ -173,16 +173,16 @@ export const SelectedAppointment = () => {
             {!isSm && <h4>Your selections</h4>}
             <Wrapper>
                 <List>
-                    <li className={"service-item"}>
+                    <li className={"service-item"} key="service-item">
                         <div className="service-list">
-                            {selectedServices.map(item => <div>{item}</div>)}
+                            {selectedServices.map(item => <div key={item}>{item}</div>)}
                         </div>
                         { isSm && Boolean(price) &&
                         <div className="price">
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div> }
                     </li>
-                        <li>
+                        <li key="advisor">
                             <div className={classes.selectWrapper}>
                                 Advisor: {isSm ? <br/> : null}
                                     <Select
