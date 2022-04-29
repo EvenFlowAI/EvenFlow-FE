@@ -28,7 +28,8 @@ export enum EServiceCategoryType {
     MaintenancePackage,
     IndividualServices,
     LinkToPage2,
-    Diagnose
+    Diagnose,
+    ValueService
 }
 
 export type TSuccessCallback = (id: number) => void;

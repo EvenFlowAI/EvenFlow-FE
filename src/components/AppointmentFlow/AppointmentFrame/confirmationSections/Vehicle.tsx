@@ -12,13 +12,17 @@ const TitleWrapper = styled('div')({
 })
 
 const Vehicle = () => {
-    const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, valueService} = useSelector((state: RootState) => state.appointmentFrame);
     return (
         <div>
             <TitleWrapper>
                 <ConfirmationTitle>Vehicle</ConfirmationTitle>
             </TitleWrapper>
-            {selectedVehicle?.year} <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model}
+            {valueService ? <>
+                {valueService?.year?.year} <span style={{textTransform: 'uppercase'}}>{valueService?.series?.name}</span> {valueService?.model?.name}
+            </> : <>
+                {selectedVehicle?.year} <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model}
+            </>}
         </div>
     );
 };

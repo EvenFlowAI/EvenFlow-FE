@@ -51,3 +51,42 @@ export interface IFrameScreens {
     opsCode: "opsCode";
     vehicleData: 'vehicleData';
 }
+
+export type TValueService = {
+    name: string;
+    price: number;
+    description: string;
+    imageLink: string;
+    id: number;
+}
+
+export type TModel = {
+    id: number;
+    name: string;
+}
+
+export type TSeries = {
+    name: string;
+    models: TModel[];
+    id: number;
+}
+
+export type TYear = {
+    year: string;
+    series: TSeries[];
+}
+export interface IValueService {
+    year: TYear | null;
+    model: TModel | null;
+    series: TSeries | null;
+    selectedService: IServiceOffer | null;
+}
+
+export interface IServiceOffer  {
+    id: number;
+    name: string;
+    price: number;
+    imagePath: string;
+    description: string;
+    serviceRequestId: number;
+}

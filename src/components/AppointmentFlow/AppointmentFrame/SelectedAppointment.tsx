@@ -135,7 +135,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const SelectedAppointment = () => {
-    const { selectedPackage, advisor, consultants, categoriesIds } = useSelector((state: RootState) => state.appointmentFrame);
+    const { selectedPackage, advisor, consultants, categoriesIds, valueService } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [selectedSR, srList] = useSelector((state: RootState) => [
@@ -148,8 +148,8 @@ export const SelectedAppointment = () => {
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds])
+    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
 
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
     const isDynamicPricing = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic) : false;

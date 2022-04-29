@@ -122,6 +122,16 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     }
 
     const handleCreateAppointment = () => {
+        const make = appointmentFrame?.selectedVehicle?.make?.length
+                ? appointmentFrame?.selectedVehicle?.make
+                : appointmentFrame?.valueService
+                    ? "BMW"
+                    : null;
+        const model = appointmentFrame?.selectedVehicle?.model?.length
+            ? appointmentFrame?.selectedVehicle?.model
+            : appointmentFrame?.valueService?.series?.name
+                ? appointmentFrame.valueService.series.name
+                : null;
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
@@ -139,13 +149,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 dmsId: null,
                 driveType: "",
                 engineType: "",
-                make: "",
-                model: "",
-                transmission: "",
                 ...(appointmentFrame.selectedVehicle ?? {}),
+                model,
+                make,
+                transmission: "",
                 vin: appointmentFrame.selectedVehicle?.vin ?? '',
                 year: appointmentFrame?.selectedVehicle?.year
-                    ? String(appointmentFrame.selectedVehicle.year) : null,
+                    ? String(appointmentFrame.selectedVehicle.year) : appointmentFrame?.valueService?.year?.year
+                        ? String(appointmentFrame.valueService.year.year) : null,
                 mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
             },
             transportationType: appointmentFrame.transportation?.type,
@@ -158,7 +169,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             ),
             date: appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
-            maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null
+            maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
+            valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
         };
 
         const endpoint = data?.hashKey

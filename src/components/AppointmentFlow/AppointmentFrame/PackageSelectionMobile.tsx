@@ -218,7 +218,7 @@ const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
     return <div className={classes.iconWrapper}>{isSelected && <Done  className={classes.icon} htmlColor={'white'}/>} {text}</div>
 }
 
-const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data, isBmWService, isSanfordInfinity }) => {
+const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,isBmWService, isSanfordInfinity }) => {
     const [value, setValue] = useState<string>('1');
     const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);

@@ -104,7 +104,7 @@ export const AppointmentFrameLayout = () => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
-    const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService, valueService} = useSelector((state: RootState) => state.appointmentFrame);
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -233,8 +233,7 @@ export const AppointmentFrameLayout = () => {
             }
 
         } else {
-            //TODO: clear slots data clearSelected();
-            handleSetScreen('serviceNeeds');
+            valueService?.selectedService ? handleSetScreen('consultantSelection') : handleSetScreen('serviceNeeds');
         }
     }, [handleSetScreen, selectedVehicle, showError, dispatch]);
 

@@ -183,6 +183,7 @@ type ApiRoutes = {
         | "GetWS" | "SetWS", TApiRoute>,
     Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "RemoveMake" | "UpdateMake" | "CreateMake"
         | "GetMileage" | "RemoveMileage" | "CreateMileage", TApiRoute>,
+    ValueService: Record<"GetSeriesModels" | "GetValueServiceOffers", TApiRoute>
 }
 
 type TOptions = {
@@ -450,6 +451,10 @@ export class Api {
             GetMileage: {route: "/vehicles/mileage", method: "get"},
             RemoveMileage: {route: "/vehicles/mileage/{id}", method: "delete"},
             CreateMileage: {route: "/vehicles/mileage", method: "post"},
+        },
+        ValueService: {
+            GetSeriesModels: {route: "/value-service-offers/vehicle-models", method: "get"},
+            GetValueServiceOffers: {route: "/value-service-offers", method: "get"},
         }
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {

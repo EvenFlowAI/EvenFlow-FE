@@ -10,7 +10,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
-import {IAppointmentId, TMaintenanceDetails} from "./types";
+import {IAppointmentId, IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
@@ -43,6 +43,25 @@ export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPacka
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
+export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
+export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesModels');
+export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
+export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoading');
+
+export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
+    const service = getState().appointmentFrame.valueService;
+    const emptyService = {
+        year: null,
+        model: null,
+        series: null,
+        selectedService: null,
+    }
+    if (service) {
+        dispatch(setValueService({...service, ...data}));
+    } else {
+        dispatch(setValueService({...emptyService, ...data}));
+    }
+}
 
 export const loadConsultants = (id: string): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(
@@ -104,4 +123,26 @@ export const loadSlotsGap = (serviceCenterId: number): AppThunk => dispatch => {
         .catch(err => {
             console.log('load slots gap err', err)
         })
+}
+
+export const loadSeriesModels = (): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ValueService.GetSeriesModels)
+        .then(result => {
+            if (result?.data) dispatch(getSeriesModels(result.data))
+        })
+        .catch(err => {
+            console.log('get series models data for value service error', err)
+        })
+}
+
+export const loadServiceOffers = (year: number, seriesId: number, modelId: number): AppThunk => dispatch => {
+    dispatch(setOffersLoading(true))
+    Api.call(Api.endpoints.ValueService.GetValueServiceOffers, {params: {year, seriesId, modelId}})
+        .then(result => {
+            if (result?.data) dispatch(getValueServiceOffers(result.data))
+        })
+        .catch(err => {
+            console.log('get value service offers error', err)
+        })
+        .finally(() => dispatch(setOffersLoading(false)))
 }

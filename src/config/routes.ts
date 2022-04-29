@@ -47,7 +47,8 @@ enum EndUser {
     AppointmentFrameBase = "/f/appointment",
     AppointmentBase = "/appointment",
     Confirmation = "/confirmation/:id",
-    ConfirmationBase = "/confirmation"
+    ConfirmationBase = "/confirmation",
+    ValueService = "/f/appointment/:id/valueService",
 }
 
 export const Routes = {

@@ -14,12 +14,13 @@ import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import {Loading} from '../../UI/Loading';
 import ReactGA from "react-ga";
 import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {Routes} from "../../../config/routes";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -30,9 +31,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {service: selectedService, categoriesIds, selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const handleBack = () => {
         if (!customerLoadedData?.id) {
@@ -77,13 +79,14 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
 
             switch (selectedService?.type) {
                 case 2:
-                    return onSelect('opsCode');
                 case 4:
                     return onSelect('opsCode');
                 case 1:
                     return onSelect('maintenanceDetails');
                 case 3:
-                    return onSelect('serviceSelection')
+                    return onSelect('serviceSelection');
+                case 5:
+                    return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
                 default:
                     return onSelect('describeMore');
             }
