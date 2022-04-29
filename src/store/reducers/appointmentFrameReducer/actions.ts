@@ -125,8 +125,8 @@ export const loadSlotsGap = (serviceCenterId: number): AppThunk => dispatch => {
         })
 }
 
-export const loadSeriesModels = (): AppThunk => dispatch => {
-    Api.call(Api.endpoints.ValueService.GetSeriesModels)
+export const loadSeriesModels = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ValueService.GetSeriesModels, {params: {serviceCenterId}})
         .then(result => {
             if (result?.data) dispatch(getSeriesModels(result.data))
         })
@@ -135,9 +135,9 @@ export const loadSeriesModels = (): AppThunk => dispatch => {
         })
 }
 
-export const loadServiceOffers = (year: number, seriesId: number, modelId: number): AppThunk => dispatch => {
+export const loadServiceOffers = (year: number, seriesId: number, modelId: number, serviceCenterId: number): AppThunk => dispatch => {
     dispatch(setOffersLoading(true))
-    Api.call(Api.endpoints.ValueService.GetValueServiceOffers, {params: {year, seriesId, modelId}})
+    Api.call(Api.endpoints.ValueService.GetValueServiceOffers, {params: {year, seriesId, modelId, serviceCenterId}})
         .then(result => {
             if (result?.data) dispatch(getValueServiceOffers(result.data))
         })

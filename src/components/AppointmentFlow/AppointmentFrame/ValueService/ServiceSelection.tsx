@@ -7,7 +7,7 @@ import {loadServiceOffers, setValueServicePartial} from "../../../../store/reduc
 import {Loading} from "../../../UI/Loading";
 
 export const PageWrapper = styled('div')(({theme}) => ({
-    maxWidth: '80vw',
+    // maxWidth: '80vw',
     minWidth: '50vw',
     display: 'flex',
     flexDirection: 'column',
@@ -50,7 +50,7 @@ const CardWrapper= styled('div')(({theme}) => ({
         objectFit: 'contain',
         width: 350,
         [theme.breakpoints.down("sm")]: {
-            width: 200,
+            width: 280,
         }
     }
 }))
@@ -111,13 +111,14 @@ type TServiceSelectionProps = {
 
 const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) => {
     const {valueService, serviceOffers, offersLoading} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
 
     useEffect(() => {
         const year = valueService?.year?.year;
         const seriesId = valueService?.series?.id;
         const modelId = valueService?.model?.id;
-        if (year && seriesId && modelId) dispatch(loadServiceOffers(+year, seriesId, modelId));
+        if (year && seriesId && modelId && scProfile) dispatch(loadServiceOffers(+year, seriesId, modelId, scProfile.id));
     }, [valueService])
 
     const onSelectClick = (item: IServiceOffer) => async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

@@ -97,6 +97,7 @@ const mockData = [
 
 export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {valueService, selectedVehicle, seriesModels}= useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile}= useSelector((state: RootState) => state.appointment);
     const [currentModels, setCurrentModels] = useState<TModel[]>([]);
     const [currentSeries, setCurrentSeries] = useState<TSeries[]>([]);
     const dispatch = useDispatch();
@@ -106,7 +107,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const showError = useException();
 
     useEffect(() => {
-        dispatch(loadSeriesModels());
+        scProfile && dispatch(loadSeriesModels(scProfile.id));
     }, [dispatch])
 
     useEffect(() => {
