@@ -97,6 +97,7 @@ const mockData = [
 
 export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {valueService, selectedVehicle, seriesModels}= useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile}= useSelector((state: RootState) => state.appointment);
     const [currentModels, setCurrentModels] = useState<TModel[]>([]);
     const [currentSeries, setCurrentSeries] = useState<TSeries[]>([]);
     const dispatch = useDispatch();
@@ -106,8 +107,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const showError = useException();
 
     useEffect(() => {
-        // dispatch(setValueServicePartial({year: undefined}))
-        dispatch(loadSeriesModels());
+        scProfile && dispatch(loadSeriesModels(scProfile.id));
     }, [dispatch])
 
     useEffect(() => {
@@ -182,7 +182,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                     placeholder: "Select Year",
                     required: true
                 })}
-                value={valueService?.year?.year}
+                value={valueService?.year?.year.toString() ?? ""}
             />}
             {valueService?.year ? <Autocomplete
                 key="series"

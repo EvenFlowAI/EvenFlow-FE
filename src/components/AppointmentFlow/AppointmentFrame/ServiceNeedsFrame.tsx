@@ -30,7 +30,7 @@ type TProps = {
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
-    const {service: selectedService, categoriesIds, selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
+    const {service: selectedService, categoriesIds, selectedPackage, valueService} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
@@ -95,6 +95,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
 
     const getCardState = (card: IServiceCategory): boolean => {
         if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage);
+        if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
         return categoriesIds?.includes(card.id)
     }
 
