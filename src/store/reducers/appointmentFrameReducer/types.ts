@@ -72,7 +72,7 @@ export type TSeries = {
 }
 
 export type TYear = {
-    year: string;
+    year: number;
     series: TSeries[];
 }
 export interface IValueService {

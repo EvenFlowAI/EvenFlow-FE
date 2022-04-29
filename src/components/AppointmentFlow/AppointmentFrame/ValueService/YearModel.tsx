@@ -121,7 +121,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         } else {
             if (selectedVehicle && !isError) {
                 if (selectedVehicle?.year) {
-                    const year = seriesModels.find(item => item.year === selectedVehicle?.year?.toString());
+                    const year = seriesModels.find(item => item.year === selectedVehicle?.year);
                     if (year) {
                         dispatch(setValueServicePartial({year: year}));
                         if (selectedVehicle?.model) {
