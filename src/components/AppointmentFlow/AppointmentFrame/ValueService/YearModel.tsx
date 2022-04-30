@@ -127,12 +127,16 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                         if (selectedVehicle?.model) {
                             const series = year.series?.find(item => item.name === selectedVehicle?.model);
                             series && dispatch(setValueServicePartial({series}))
+                            if (selectedVehicle?.modelDetails && series) {
+                                const model = series.models.find(el => el.name === selectedVehicle.modelDetails);
+                                model && dispatch(setValueServicePartial({model}))
+                            }
                         }
                     }
                 }
             }
         }
-    }, [valueService, selectedVehicle, seriesModels, mockData, isError])
+    }, [valueService, selectedVehicle, seriesModels, isError])
 
     useEffect(() => {
         if (isError) {
