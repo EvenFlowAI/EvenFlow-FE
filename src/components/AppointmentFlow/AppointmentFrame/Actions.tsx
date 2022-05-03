@@ -26,7 +26,7 @@ export const Actions: React.FC<TActionProps> = ({onBack, onNext, nextDisabled, n
     return (
         <ButtonsRow>
             {!loading ? <>
-                <Button onClick={onBack} color={'primary'} variant='outlined'>Back</Button>
+                <Button onClick={onBack} color={'primary'} variant='outlined' style={{backgroundColor: '#F7F8FB'}}>Back</Button>
                 <Button
                 disabled={nextDisabled}
                 onClick={onNext}

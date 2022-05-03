@@ -37,6 +37,7 @@ const Container = styled('div')(({theme}) => ({
 const CardWrapper= styled('div')(({theme}) => ({
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
     padding: 24,
     margin: 16,
     backgroundColor: "#DADADA",
@@ -47,11 +48,11 @@ const CardWrapper= styled('div')(({theme}) => ({
         marginTop: 16,
     },
     "& > .image": {
-        objectFit: 'contain',
-        width: 350,
-        [theme.breakpoints.down("sm")]: {
-            width: 280,
-        }
+        backgroundPosition: "50% 50%",
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        height: 100,
+        width: '100%'
     }
 }))
 
@@ -137,7 +138,7 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
                     : serviceOffers.map(service => {
                     return <CardWrapper>
                         <Title>{service.name}</Title>
-                        <img className="image" src={service.imagePath} alt="service picture"/>
+                        <div  className="image" style={{backgroundImage: `url(${service.imagePath})`}}/>
                         <div className="buttonsWrapper">
                             <SelectButton onClick={onSelectClick(service)}>Select</SelectButton>
                             <Price>$ {service.price}</Price>
