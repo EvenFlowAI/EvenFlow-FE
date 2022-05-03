@@ -178,7 +178,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 : null}
             {valueService?.year && valueService?.series
                 ? <Autocomplete
-                key="model"
+                key={valueService?.model?.name || "model"}
                 options={currentModels}
                 onChange={onModelChange}
                 disabled={isError}
