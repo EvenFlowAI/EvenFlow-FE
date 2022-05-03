@@ -78,7 +78,7 @@ export type TYear = {
 export interface IValueService {
     year: TYear | null;
     model: TModel | null;
-    series: TSeries | null;
+    series: TSeries | undefined;
     selectedService: IServiceOffer | null;
 }
 

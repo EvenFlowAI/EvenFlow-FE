@@ -53,7 +53,7 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     const emptyService = {
         year: null,
         model: null,
-        series: null,
+        series: undefined,
         selectedService: null,
     }
     if (service) {
