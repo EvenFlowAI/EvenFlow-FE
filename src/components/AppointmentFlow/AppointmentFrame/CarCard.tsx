@@ -161,7 +161,7 @@ export const CarCard: React.FC<TProps> = ({
             style={{border: `2px solid ${selected ? '#DADADA' : 'transparent'}`}}>
             <img src={carImage} alt="Car"/>
             <CarInfo>
-                <li>{car.year} {car.make} {car.model}</li>
+                <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
                 <li>VIN: <span>{car.vin}</span></li>
             </CarInfo>
             <Action onAddNewAppointment={onAddNewAppointment} selected={selected} car={car} />
