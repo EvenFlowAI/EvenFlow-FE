@@ -56,8 +56,8 @@ const ValueService: React.FC = () => {
                 dispatch(setMaintenanceDetails({make: bmwMake.name}));
                 vehicle.make = bmwMake.name;
 
-                if (valueService?.year?.year && yearOptions.find(option => option === valueService?.year?.year)) {
-                    dispatch(setMaintenanceDetails({year: valueService.year.year}));
+                if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
+                    dispatch(setMaintenanceDetails({year: valueService.year.year.toString()}));
                     vehicle.year = Number(valueService.year.year)
                 }
 

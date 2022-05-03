@@ -72,13 +72,13 @@ export type TSeries = {
 }
 
 export type TYear = {
-    year: string;
+    year: number;
     series: TSeries[];
 }
 export interface IValueService {
     year: TYear | null;
     model: TModel | null;
-    series: TSeries | null;
+    series: TSeries | undefined;
     selectedService: IServiceOffer | null;
 }
 

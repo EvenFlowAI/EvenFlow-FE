@@ -109,6 +109,7 @@ export interface IVehicle {
     year: number|null;
     mileage: number|null;
     serviceInterval?: string;
+    modelDetails?: string;
 }
 
 export interface ILoadedVehicle  extends IVehicle {
