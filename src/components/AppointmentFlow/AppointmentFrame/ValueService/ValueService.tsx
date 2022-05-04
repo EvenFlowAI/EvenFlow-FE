@@ -30,7 +30,7 @@ type TScreen = "vehicleDetails" | "serviceSelection" | "serviceDetails";
 
 const ValueService: React.FC = () => {
     const [screen, setScreen] = useState<TScreen>("vehicleDetails");
-    const {makes, valueService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {makes, valueService, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams();
     const history = useHistory();
@@ -44,11 +44,11 @@ const ValueService: React.FC = () => {
     const setSelectedVehicle = () => {
         if (valueService) {
             const vehicle: ILoadedVehicle = {
-                vin: '',
+                vin: "",
                 make: "",
                 model: "",
                 year: null,
-                mileage: null,
+                mileage: selectedVehicle?.mileage ?? null,
                 appointmentHashKeys: [],
             };
             const bmwMake = makes.find(item => item.name === "BMW");
