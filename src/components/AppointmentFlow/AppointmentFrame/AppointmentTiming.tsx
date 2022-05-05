@@ -167,7 +167,6 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.appointmentFrame.selectedTiming,
             state.appointmentFrame.selectedTime,
             state.appointment.appointment,
-            // state.appointmentFrame.selectedPackage
         ]
     );
 
