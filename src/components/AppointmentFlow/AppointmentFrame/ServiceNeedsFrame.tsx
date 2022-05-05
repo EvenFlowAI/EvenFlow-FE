@@ -63,7 +63,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
         dispatch(selectService(card));
     }
 
-    const handleSubmit = () => {
+    const handleGA = () => {
         if (selectedService) {
             const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
             ReactGA.event({
@@ -71,10 +71,24 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                 action: 'Selected Service',
                 label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
             })
+        }
+    }
+
+    const handleCategoryHighlight = () => {
+        if (selectedService) {
             if (categoriesIds && selectedService.type !== EServiceCategoryType.LinkToPage2) {
-                const categories = categoriesIds?.includes(selectedService.id) ? categoriesIds : [...categoriesIds, selectedService.id];
+                const categories = categoriesIds?.includes(selectedService.id)
+                    ? categoriesIds
+                    : [...categoriesIds, selectedService.id];
                 dispatch(selectCategoriesIds(categories));
             }
+        }
+    }
+
+    const handleSubmit = () => {
+        if (selectedService) {
+            handleGA();
+            handleCategoryHighlight();
             dispatch(setAdditionalServicesChosen(false));
 
             switch (selectedService?.type) {

@@ -54,7 +54,6 @@ const MobileWrapper = styled('div')({
 
 });
 
-// TODO: Advisor|consultant
 const menuItems: string[] = [
     "Service Needs",
     "Advisor Selection",

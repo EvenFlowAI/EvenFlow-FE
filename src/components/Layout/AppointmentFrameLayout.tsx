@@ -256,7 +256,8 @@ export const AppointmentFrameLayout = () => {
             />,
             maintenanceDetails: <MaintenanceDetails
                 onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleChangeScreen('packageSelection')}
+                onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
+                    ? 'packageSelection' : 'consultantSelection')}
             />,
             packageSelection: <PackageSelection
                 onBack={handleChangeScreen('maintenanceDetails')}
@@ -266,7 +267,7 @@ export const AppointmentFrameLayout = () => {
             describeMore: <AddInfo
                 onBack={handleSetScreen}
                 onNext={handleChangeScreen('consultantSelection')}
-                onFillCar={handleChangeScreen(isAdditionalServices ? 'consultantSelection' : 'carDetails')}
+                onFillCar={handleChangeScreen(isAdditionalServices ? 'consultantSelection' : 'maintenanceDetails')}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             opsCode: <SelectOpsCode

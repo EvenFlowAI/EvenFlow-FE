@@ -51,17 +51,18 @@ const requiredFields: TVehicleKey[] = [
 
 type TProps = {} & TActionProps;
 export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
-    const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
-    const [errors, setErrors] = useState<TVehicleKey[]>([]);
-    const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const {selectedVehicle, makes, valueService}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile}= useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
+    const [errors, setErrors] = useState<TVehicleKey[]>([]);
+    const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const {id} = useParams();
     const dispatch = useDispatch();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const showError = useException();
+
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
@@ -75,9 +76,6 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         {label: "Year", name: "year", options: yearOptions, noVehicle: true},
         {label: "Model", name: "model", options: "model", noVehicle: true},
         {label: "Estimated Mileage", name: "mileage", options: mileage.map(item => item.value.toString())},
-        // {label: "Transmission", name: "transmission"},
-        // {label: "Drive Type", name: "driveType"},
-        // {label: "Engine Type", name: "engineType"},
     ];
 
     useEffect(() => {
