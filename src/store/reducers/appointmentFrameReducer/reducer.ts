@@ -46,8 +46,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {EServiceType, EUserType, TMaintenanceDetails} from "./types";
-import {IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
+import {IServiceOffer, IValueService, TMaintenanceDetails, TYear, EServiceType, EUserType} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
