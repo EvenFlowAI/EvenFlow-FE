@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {
@@ -25,6 +25,7 @@ import {
 } from "../../../store/reducers/categories/actions";
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
+import {EServiceCenterName} from "../../../api/types";
 
 type TAddServiceCategoryProps = DialogProps & {
     isEditing?: boolean;
@@ -107,11 +108,23 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
+    const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
+        || categoryType?.value === EServiceCategoryType.LinkToPage2
+        || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
 
     const classes = useStyles();
     const { selectedSC } = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
+
+    const getCategoryOptions = () => {
+        if (selectedSC &&
+            (selectedSC.serviceCenterFlag === EServiceCenterName.BMWSchererville
+                || selectedSC.serviceCenterFlag === EServiceCenterName.DealertrackTest)) {
+            return categoryOptions;
+        }
+       return categoryOptions.slice(0, categoryOptions.length - 1);
+    }
 
     useEffect(() => {
         props.open && selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
@@ -157,7 +170,9 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                     serviceRequests: [],
                     orderIndex: Number(orderIndex),
                 }
-                if (categoryType.value !== EServiceCategoryType.MaintenancePackage && categoryType.value !== EServiceCategoryType.LinkToPage2) {
+                if (categoryType.value !== EServiceCategoryType.MaintenancePackage
+                    && categoryType.value !== EServiceCategoryType.LinkToPage2
+                    && categoryType.value !== EServiceCategoryType.ValueService) {
                     if (selectedCodes.length) {
                         data.serviceRequests = selectedCodes.map(item => item.id);
                     } else {
@@ -240,7 +255,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                         <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={assignedFilter.searchTerm} />
                     </div>
                     <Autocomplete
-                        options={categoryOptions}
+                        options={getCategoryOptions()}
                         getOptionSelected={(option) => option.value === categoryType?.value}
                         getOptionLabel={getOptionLabel}
                         value={categoryType}
@@ -267,8 +282,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                 <OpsCodesTable
                     selectedCodes={selectedCodes}
                     setSelectedCodes={setSelectedCodes}
-                    disabled={categoryType?.value === EServiceCategoryType.MaintenancePackage
-                    || categoryType?.value === EServiceCategoryType.LinkToPage2}/>
+                    disabled={disabledOpsCodes}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} className={classes.cancelButton}>

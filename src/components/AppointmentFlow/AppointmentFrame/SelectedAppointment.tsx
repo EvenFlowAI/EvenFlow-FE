@@ -9,6 +9,7 @@ import {EServiceCenterName} from "../../../api/types";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -135,7 +136,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const SelectedAppointment = () => {
-    const { selectedPackage, advisor, consultants, categoriesIds, serviceType, address, zipCode } = useSelector((state: RootState) => state.appointmentFrame);
+    const { selectedPackage, advisor, consultants, categoriesIds, serviceType, address, zipCode, valueService } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [selectedSR, srList] = useSelector((state: RootState) => [
@@ -148,11 +149,11 @@ export const SelectedAppointment = () => {
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds])
+    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
 
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
-    const isRequestWithPrice = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => Boolean(item.priceValue)) : false;
+    const isDynamicPricing = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic) : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
@@ -173,18 +174,19 @@ export const SelectedAppointment = () => {
             {!isSm && <h4>Your selections</h4>}
             <Wrapper>
                 <List>
-                    <li className={"service-item"}>
+                    <li className={"service-item"} key="service-item">
                         <div className="service-list">
-                            {selectedServices.map(item => <div>{item}</div>)}
+                            {selectedServices.map(item => <div key={item}>{item}</div>)}
                         </div>
                         { isSm && Boolean(price) &&
                         <div className="price">
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div> }
                     </li>
-                    <li>
+                    <li key="advisor">
                         {serviceType === EServiceType.VisitCenter
                             ? <div className={classes.selectWrapper}>
+                            <div className={classes.selectWrapper}>
                                 Advisor: {isSm ? <br/> : null}
                                 <Select
                                     value={advisor?.id || "Any"}
@@ -199,6 +201,7 @@ export const SelectedAppointment = () => {
                                         </MenuItem>
                                     }
                                 </Select>
+                            </div>
                             </div>
                             : <div className="service-list">
                                 <h4> YOUR ADDRESS: </h4>
@@ -218,7 +221,7 @@ export const SelectedAppointment = () => {
                         {!isSm && Boolean(price) && <div className="price">
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div>}
-                        {isRequestWithPrice && (
+                        {isDynamicPricing && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
                           Save by booking at off peak times!
                         </div>

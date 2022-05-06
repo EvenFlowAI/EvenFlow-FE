@@ -9,7 +9,7 @@ import {
     IPricingLevel,
     IPricingSetting, IRequestPricingSettings,
     ITimeOfYearSetting,
-    ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing
+    ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing, EPricingDisplayType
 } from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
@@ -340,7 +340,7 @@ export const getPackageOptionsList = createAction<IPackageOptionShort[]>('Pricin
 export const loadPackageOptionsList = (serviceCenterId: number): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.GetOptionsByQuery,
-        {data: {serviceCenterId, pageIndex: 0, pageSize: 0, isApplyPricingOptimization: true}})
+        {data: {serviceCenterId, pageIndex: 0, pageSize: 0, pricingDisplayType: EPricingDisplayType.Dynamic}})
         .then(res => {
             if (res?.data?.result) {
                 dispatch(getPackageOptionsList(res.data.result))
@@ -363,4 +363,31 @@ export const updateMaxPrice = (id: number, onSuccess: () => void, onError: (err:
             console.log(err)
         })
         .finally(() => dispatch(setLoading(false)))
+}
+
+export const changeSRPrisingDisplayType = (id: number, type: number, serviceCenterId: number, errorCallback: (err: string) => void): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceRequests.ChangePricingDisplayType, {urlParams: {id}, data: {type}})
+        .then(result => {
+            if (result) dispatch(loadSrList(serviceCenterId));
+        })
+        .catch(err => {
+            errorCallback(err);
+            console.log('change service request pricing display type err', err)
+        })
+}
+
+export const changeMPPrisingDisplayType = (id: number, type: number, serviceCenterId: number, errorCallback: (err: string) => void): AppThunk => dispatch => {
+    Api.call(Api.endpoints.MaintenancePackages.ChangePricingDisplayType, {urlParams: {id}, data: {type}})
+        .then(result => {
+            const data = {
+                serviceCenterId,
+                pageIndex: 0,
+                pageSize: 0,
+            }
+            if (result) dispatch(loadMPList(data));
+        })
+        .catch(err => {
+            errorCallback(err);
+            console.log('change maintenance package pricing display type err', err)
+        })
 }

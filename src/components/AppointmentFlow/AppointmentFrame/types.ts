@@ -9,7 +9,7 @@ export type TActionProps = {
     onAddServices?: () => void;
 };
 
-export type EMaintenanceItemType = 'category' | 'package' | 'service'
+export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService'
 
 export type IMaintenanceItem = {
     id: number;
@@ -23,5 +23,5 @@ export type TTransportationData = {
     maintenancePackageOptionId: number | null;
     slot: ParsableDate;
     serviceCategoryIds: number[];
-    hashKey?: string;
+    appointmentHashKey?: string;
 }

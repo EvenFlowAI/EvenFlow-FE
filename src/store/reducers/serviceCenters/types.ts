@@ -12,6 +12,7 @@ export interface IServiceCenter {
     timeZoneId: string;
     laborRatePerHour: number;
     isAuthRequired: boolean;
+    serviceCenterFlag?: number;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;

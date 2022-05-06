@@ -1,3 +1,5 @@
+import {EPricingDisplayType} from "../pricingSettings/types";
+
 export interface IServiceRequest {
     id: number;
     code: string;
@@ -64,6 +66,7 @@ export interface IAssignedServiceRequest {
     isEligibility: boolean;
     serviceRequestOverride?: Partial<IServiceRequestOverride>;
     priority: IServiceRequestPriority;
+    pricingDisplayType: EPricingDisplayType;
     requiredSkill?: IRequiredSkill;
 }
 export interface IAssignedServiceRequestShort {

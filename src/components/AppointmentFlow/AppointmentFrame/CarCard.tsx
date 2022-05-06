@@ -11,7 +11,7 @@ import {
     styled,
     Theme
 } from "@material-ui/core";
-import carImage from '../../../assets/img/blank-car.svg';
+import carImage from '../../../assets/img/car_icon.svg';
 import {ILoadedVehicle} from "../../../api/types";
 import {useDispatch} from "react-redux";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -32,7 +32,7 @@ const Wrapper = styled('div')<Theme, {active?: boolean}>(({theme}) => ({
     gap: "12px",
     justifyContent: "center",
     transition: 'all .2s',
-    border: ({active}) => `1px solid ${active ? '#000000' : '#DADADA'}`,
+    border: ({active}) => `1px solid ${active ? '#DADADA' : '#000000'}`,
     '& img': {
         maxWidth: '90%',
         maxHeight: "200px",
@@ -151,11 +151,17 @@ export const CarCard: React.FC<TProps> = ({
     selected,
     onAddNewAppointment
 }) => {
+    const dispatch = useDispatch();
+    const onClick = () => dispatch(setVehicle(car));
     return (
-        <Wrapper active={selected}>
+        <Wrapper
+            active={selected}
+            role="presentation"
+            onClick={onClick}
+            style={{border: `2px solid ${selected ? '#DADADA' : 'transparent'}`}}>
             <img src={carImage} alt="Car"/>
             <CarInfo>
-                <li>{car.year} {car.make} {car.model}</li>
+                <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
                 <li>VIN: <span>{car.vin}</span></li>
             </CarInfo>
             <Action onAddNewAppointment={onAddNewAppointment} selected={selected} car={car} />

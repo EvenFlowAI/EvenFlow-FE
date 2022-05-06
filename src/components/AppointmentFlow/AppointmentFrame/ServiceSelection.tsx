@@ -15,11 +15,12 @@ import {ServiceCard} from "./ServiceCard";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
 import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {Routes} from "../../../config/routes";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
@@ -28,10 +29,11 @@ type TProps = {
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
     const {subService, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const dispatch = useDispatch();
-    const {id} = useParams();
     const [loading, setLoading] = useState<boolean>(false);
     const [services, setServices] = useState<IServiceCategory[]>([]);
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const {id} = useParams();
 
     useEffect(() => {
         setLoading(true);
@@ -71,6 +73,8 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
             switch (subService.type) {
                 case 2:
                     return onNext('opsCode');
+                case 5:
+                    return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
                 default:
                     return onNext('describeMore');
             }

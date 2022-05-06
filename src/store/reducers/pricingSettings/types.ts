@@ -113,3 +113,9 @@ export interface IPackagePricingSettings {
     maintenancePackageOptionName: string;
     values: TValuePricingLevel[];
 }
+
+export enum EPricingDisplayType {
+    Suppressed,
+    Static,
+    Dynamic
+}

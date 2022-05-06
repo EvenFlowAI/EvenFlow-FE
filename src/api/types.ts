@@ -109,6 +109,7 @@ export interface IVehicle {
     year: number|null;
     mileage: number|null;
     serviceInterval?: string;
+    modelDetails?: string;
 }
 
 export interface ILoadedVehicle  extends IVehicle {
@@ -239,6 +240,7 @@ export interface IServiceCategory extends IServiceCategoryShort {
     loadedIcon?: JSX.Element | string;
     serviceRequests: IServiceRequest[];
     type: EServiceCategoryType;
+    price: number;
 }
 
 export interface IServiceConsultant {

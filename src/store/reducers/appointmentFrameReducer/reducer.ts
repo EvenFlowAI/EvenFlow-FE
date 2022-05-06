@@ -4,9 +4,12 @@ import {
     getModels,
     getSlotsGap,
     selectCategoriesIds,
+    getSeriesModels,
+    getValueServiceOffers,
     selectService,
     selectSubService,
-    setAdditionalServicesChosen, setAddress,
+    setAdditionalServicesChosen,
+    setAddress,
     setAdvisor,
     setAppointmentId,
     setConsultants,
@@ -19,21 +22,23 @@ import {
     setPackageIsSelected,
     setPackages,
     setReminders,
-    setSelectedPackageOptionType, setServiceType,
+    setSelectedPackageOptionType,
+    setServiceType,
+    setOffersLoading,
     setTime,
     setTiming,
     setTrackerCreated,
     setTransportation,
     setUpdateAppointment,
     setUserType,
-    setVehicle, setZipCode,
-    updateVehicle
+    setVehicle,
+    setZipCode,
+    updateVehicle,
+    setValueService,
 } from "./actions";
 import {
     ICustomer,
-    ILoadedVehicle,
-    IMake,
-    IPackage,
+    ILoadedVehicle, IMake, IPackage,
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
@@ -42,6 +47,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {EServiceType, EUserType, TMaintenanceDetails} from "./types";
+import {IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -75,6 +81,10 @@ type TState = {
     serviceType: EServiceType;
     address: string | null;
     zipCode: string | null;
+    valueService: IValueService | null;
+    seriesModels: TYear[];
+    offersLoading: boolean;
+    serviceOffers: IServiceOffer[];
 }
 const initialState: TState = {
     service: null,
@@ -109,6 +119,10 @@ const initialState: TState = {
     serviceType: EServiceType.VisitCenter,
     address: null,
     zipCode: null,
+    valueService: null,
+    seriesModels: [],
+    offersLoading: false,
+    serviceOffers: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -228,5 +242,17 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setZipCode, (state, { payload }) => {
         return {...state, zipCode: payload};
+    })
+    .addCase(setValueService, (state, {payload}) => {
+        return {...state, valueService: payload};
+    })
+    .addCase(getSeriesModels, (state, {payload}) => {
+        return {...state, seriesModels: payload}
+    })
+    .addCase(getValueServiceOffers, (state, {payload}) => {
+        return {...state, serviceOffers: payload}
+    })
+    .addCase(setOffersLoading, (state, {payload}) => {
+        return {...state, offersLoading: payload}
     })
 )

@@ -3,10 +3,15 @@ import {TableContainer} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
-import {loadSrList, setEligibleRequest} from "../../../../store/reducers/pricingSettings/actions";
+import {
+    changeSRPrisingDisplayType,
+    loadSrList,
+} from "../../../../store/reducers/pricingSettings/actions";
 import {NoItemsLoading} from "../../../UI/NoItemsLoading";
-import {styled, Switch, TableBody, TableHead} from "@material-ui/core";
+import {styled, TableBody, TableHead, Radio, RadioGroup, FormControlLabel} from "@material-ui/core";
 import {DemandTable, TableCell, TableRow} from "../../AppointmentAllocation/UI";
+import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
+
 
 const headCellStyles = {
     fontSize: 12,
@@ -29,7 +34,6 @@ const TableWrapper = styled("div")(({theme}) => ({
 }))
 
 export const ServiceCodes = () => {
-    const [saving, setSaving] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const srList = useSelector((state: RootState) => state.pricingSettings.srList);
 
@@ -48,16 +52,9 @@ export const ServiceCodes = () => {
         }
     }, [dispatch, selectedSC]);
 
-    const handleSwitch = (id: number) => async (e: any, value: boolean) => {
-        if (selectedSC) {
-            try {
-                setSaving(true);
-                await dispatch(setEligibleRequest(id, value, selectedSC.id));
-            }catch (e) {
-                showError(e);
-            } finally {
-                setSaving(false);
-            }
+    const handlePricingDisplayType = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value && selectedSC) {
+            dispatch(changeSRPrisingDisplayType(id, +e.target.value, selectedSC.id, e => showError(e)))
         }
     }
 
@@ -79,7 +76,7 @@ export const ServiceCodes = () => {
                             <TableCell style={headCellStyles}>Duration (hours)</TableCell>
                             <TableCell style={headCellStyles}>Number of technicians</TableCell>
                             <TableCell style={headCellStyles}>Skill level of technicians</TableCell>
-                            <TableCell style={headCellStyles}>Pricing optimization status (Off/ON)</TableCell>
+                            <TableCell style={headCellStyles}>Pricing optimization status</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -104,12 +101,24 @@ export const ServiceCodes = () => {
                                 </TableCell>
 
                                 <TableCell>
-                                    <Switch
-                                        disabled={saving}
-                                        onChange={handleSwitch(el.id)}
-                                        checked={el.isEligibility}
-                                        color="primary"
-                                    />
+                                    <RadioGroup
+                                        value={el.pricingDisplayType}
+                                        onChange={handlePricingDisplayType(el.id)}
+                                        aria-labelledby="demo-controlled-radio-buttons-group"
+                                        name="controlled-radio-buttons-group">
+                                        <FormControlLabel
+                                            value={EPricingDisplayType.Suppressed}
+                                            control={<Radio color="primary" size="small"/>}
+                                            label="Suppressed" />
+                                        <FormControlLabel
+                                            value={EPricingDisplayType.Static}
+                                            control={<Radio color="primary" size="small"/>}
+                                            label="Static" />
+                                        <FormControlLabel
+                                            value={EPricingDisplayType.Dynamic}
+                                            control={<Radio color="primary" size="small"/>}
+                                            label="Dynamic" />
+                                    </RadioGroup>
                                 </TableCell>
                             </TableRow>
                         })}

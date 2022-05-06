@@ -9,14 +9,20 @@ import {selectSR} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
+    loadMakes,
     selectCategoriesIds,
     selectService,
     selectSubService,
-    setPackage
+    setMaintenanceDetails,
+    setPackage,
+    setValueService,
+    setVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useConfirm} from "../../../utils/hooks";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
+import {yearOptions} from "./MaintenanceDetails";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -65,21 +71,27 @@ const CartItem: React.FC<TCartItemProps> = ({ item, onClick}) => {
 }
 
 const CartTable = () => {
-    const { selectedPackage, categoriesIds, subService, service } = useSelector((state: RootState) => state.appointmentFrame);
+    const { selectedPackage, categoriesIds, subService, service, valueService, makes } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
-    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds),
-        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds])
+    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const dispatch = useDispatch();
     const {askConfirm, closeConfirm} = useConfirm();
     const theme = useTheme();
     const classes = useStyles(theme);
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
+
     useEffect(() => {
-        scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
-    }, [scProfile])
+        if (scProfile) {
+            dispatch(loadCategoriesByQuery(scProfile.id))
+            dispatch(loadMakes(scProfile.id))
+        }
+    }, [scProfile, dispatch])
 
     const deleteIndService = (item: IMaintenanceItem) => {
         dispatch(selectSR(item.id));
@@ -100,6 +112,39 @@ const CartTable = () => {
         }
     }
 
+    const deleteValueService = () => {
+        if (valueService && isBmWService) {
+            const vehicle: ILoadedVehicle = {
+                vin: '',
+                make: "",
+                model: "",
+                year: null,
+                mileage: null,
+                appointmentHashKeys: [],
+            };
+            const bmwMake = makes.find(item => item.name === "BMW");
+            if (bmwMake) {
+                dispatch(setMaintenanceDetails({make: bmwMake.name}));
+                vehicle.make = bmwMake.name;
+
+                if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
+                    dispatch(setMaintenanceDetails({year: valueService.year.year.toString()}));
+                    vehicle.year = Number(valueService.year.year)
+                }
+
+                const model = bmwMake.models.find(model => model === valueService.series?.name);
+                if (model) {
+                    dispatch(setMaintenanceDetails({model}));
+                    vehicle.model = model;
+                }
+                dispatch(setVehicle(vehicle));
+            }
+            dispatch(setValueService(null));
+            if (service?.type === EServiceCategoryType.ValueService) dispatch(selectService(null));
+            if (subService?.type === EServiceCategoryType.ValueService) dispatch(selectSubService(null));
+        }
+    }
+
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
             case 'service':
@@ -108,6 +153,9 @@ const CartTable = () => {
             case 'package':
                 if (service?.type === 1) dispatch(selectService(null));
                 return dispatch(setPackage(null));
+            case 'valueService':
+                deleteValueService();
+               return;
             default:
                 if (service?.id === item.id) dispatch(selectService(null));
                 if (subService?.id === item.id) dispatch(selectSubService(null));

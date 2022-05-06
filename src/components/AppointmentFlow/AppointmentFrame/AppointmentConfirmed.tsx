@@ -87,6 +87,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         serviceType,
         address,
         zipCode,
+        valueService,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceRequests,
@@ -102,10 +103,16 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.serviceType,
         state.appointmentFrame.address,
         state.appointmentFrame.zipCode,
+        state.appointmentFrame.valueService,
     ]);
 
-    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds])
+    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const vehicleData = vehicle?.year
+        ? `${vehicle.year} ${vehicle.make} ${vehicle.model}`
+        : valueService?.year
+            ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
+            : ''
 
     useEffect(() => {
         ReactGA.event({
@@ -146,7 +153,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             },
             {
                 label: "Vehicle",
-                content: `${vehicle?.year} ${vehicle?.make} ${vehicle?.model}`
+                content: vehicleData,
             },
             {
                 label: "Phone number",
