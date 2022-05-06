@@ -132,6 +132,10 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             : appointmentFrame?.valueService?.series?.name
                 ? appointmentFrame.valueService.series.name
                 : null;
+
+        const year = appointmentFrame?.selectedVehicle?.year
+                ? String(appointmentFrame.selectedVehicle.year) : appointmentFrame?.valueService?.year?.year
+                    ? String(appointmentFrame.valueService.year.year) : null;
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
@@ -154,9 +158,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 make,
                 transmission: "",
                 vin: appointmentFrame.selectedVehicle?.vin ?? '',
-                year: appointmentFrame?.selectedVehicle?.year
-                    ? String(appointmentFrame.selectedVehicle.year) : appointmentFrame?.valueService?.year?.year
-                        ? String(appointmentFrame.valueService.year.year) : null,
+                year,
                 mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
                 modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
             },
