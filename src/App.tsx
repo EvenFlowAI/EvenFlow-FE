@@ -1,8 +1,8 @@
-import React, {useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
-import {Switch, Route} from 'react-router-dom';
+import {Switch, Route, useHistory, useParams} from 'react-router-dom';
 import {Layout} from "./components/Layout/Layout";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
@@ -15,14 +15,26 @@ import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentC
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ValueService from "./components/AppointmentFlow/AppointmentFrame/ValueService/ValueService";
 import {EServiceCenterName} from "./api/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
+import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
+import {TScreen} from "./components/Layout/types";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
+    const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const {id} = useParams();
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
+
+    useEffect(() => {
+        // todo setValueServiceNextScreen for mobile and pick up - drop off services
+        // todo setValueServicePreviousScreen for mobile and pick up - drop off services
+    }, [])
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
@@ -31,6 +43,12 @@ const App = () => {
         return <IconButton size="small" onClick={handleClose(key)}><Close htmlColor="#fff" /></IconButton>;
     }
     const isWin = window.navigator.appVersion.indexOf('Win') !== -1;
+
+    const onValueServiceBack = async () => {
+        await dispatch(setValueService(null));
+        await dispatch(setCurrentFrameScreen(valueServicePreviousScreen));
+        history.push( "/f/appointment/" + id);
+    }
 
     return (
         <SnackbarProvider
@@ -51,7 +69,12 @@ const App = () => {
                     <Route path={Routes.EndUser.CancelAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
-                    {isBmWService ? <Route path={Routes.EndUser.ValueService} exact component={ValueService}/> : null}
+                    {isBmWService
+                        ? <Route
+                            path={Routes.EndUser.ValueService}
+                            exact
+                            render={() => <ValueService onBack={onValueServiceBack} nextScreen={valueServiceNextScreen}/>}/>
+                        : null}
                     <PrivateRoute path="/" component={Layout}/>
                 </Switch>
             </Container>

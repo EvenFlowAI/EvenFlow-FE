@@ -5,7 +5,7 @@ import {YearModel} from "./YearModel";
 import {
     setCurrentFrameScreen,
     setMaintenanceDetails,
-    setValueService, setVehicle
+    setVehicle
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
@@ -14,6 +14,7 @@ import ServiceDetails from "./ServiceDetails";
 import {ILoadedVehicle} from "../../../../api/types";
 import {yearOptions} from "../MaintenanceDetails";
 import {RootState} from "../../../../store/rootReducer";
+import {TScreen} from "../../../Layout/types";
 
 const Container = styled('div')({
     display: "flex",
@@ -26,20 +27,19 @@ const Container = styled('div')({
     margin: "auto"
 });
 
-type TScreen = "vehicleDetails" | "serviceSelection" | "serviceDetails";
+type TValueServiceScreen = "vehicleDetails" | "serviceSelection" | "serviceDetails";
 
-const ValueService: React.FC = () => {
-    const [screen, setScreen] = useState<TScreen>("vehicleDetails");
+type TValueServiceProps = {
+    onBack: () => void;
+    nextScreen: TScreen;
+}
+
+const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
+    const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
     const {makes, valueService, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams();
     const history = useHistory();
-
-    const onBack = async () => {
-        await dispatch(setValueService(null));
-        await dispatch(setCurrentFrameScreen("serviceNeeds"));
-        history.push( "/f/appointment/" + id);
-    };
 
     const setSelectedVehicle = () => {
         if (valueService) {
@@ -73,12 +73,12 @@ const ValueService: React.FC = () => {
 
     const onNext = async () => {
         await setSelectedVehicle();
-        await dispatch(setCurrentFrameScreen("consultantSelection"));
+        await dispatch(setCurrentFrameScreen(nextScreen));
         history.push( "/f/appointment/" + id);
     };
 
     const component = useMemo(() => {
-        const screens: {[k in TScreen]: JSX.Element} = {
+        const screens: {[k in TValueServiceScreen]: JSX.Element} = {
             vehicleDetails: <YearModel onBack={onBack} onNext={() => setScreen("serviceSelection")}/>,
             serviceSelection: <ServiceSelection
                 onNext={() => setScreen("serviceDetails")}
