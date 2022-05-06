@@ -88,5 +88,4 @@ export interface IServiceOffer  {
     price: number;
     imagePath: string;
     description: string;
-    serviceRequestId: number;
 }
