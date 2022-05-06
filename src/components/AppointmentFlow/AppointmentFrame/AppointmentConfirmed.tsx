@@ -9,6 +9,7 @@ import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
 import {TCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -83,6 +84,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         vehicle,
         allCategories,
         categoriesIds,
+        serviceType,
+        address,
+        zipCode,
         valueService,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
@@ -96,6 +100,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.selectedVehicle,
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
+        state.appointmentFrame.serviceType,
+        state.appointmentFrame.address,
+        state.appointmentFrame.zipCode,
         state.appointmentFrame.valueService,
     ]);
 
@@ -124,7 +131,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             },
             {
                 label: "Address",
-                content: scProfile?.address ? concatAddress(scProfile?.address) : ""
+                content: serviceType === EServiceType.VisitCenter
+                    ? scProfile?.address
+                        ? concatAddress(scProfile?.address)
+                        : ""
+                    : `${address} ${zipCode}`
             },
             {
                 label: servicesList?.length > 1 ? "Services type" : "Service type",

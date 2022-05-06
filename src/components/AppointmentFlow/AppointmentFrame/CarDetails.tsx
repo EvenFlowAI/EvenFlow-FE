@@ -22,11 +22,26 @@ import {useParams} from "react-router-dom";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {yearOptions} from "./MaintenanceDetails";
 
-const SelectWrapper = styled('div')(({theme}) => ({
+export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "20px",
     width: "100%",
+    "& .label": {
+        fontWeight: 700,
+        margin: '0 0 4px 0',
+        textTransform: 'uppercase',
+        fontSize: 12,
+    },
+    // '& > div > div > div': {
+    //     borderRadius: 0,
+    //     backgroundColor: '#F7F8FB',
+    //     padding: 2,
+    //     border: "1px solid #DADADA",
+    //     '& > div > div': {
+    //         fontSize: '1rem',
+    //     }
+    // },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
     }

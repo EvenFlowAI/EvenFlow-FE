@@ -10,7 +10,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
-import {IAppointmentId, IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
+import {EServiceType, EUserType, IAppointmentId, IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
@@ -43,6 +43,10 @@ export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPacka
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
+export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
+export const setServiceType = createAction<EServiceType>('fAppointment/SetServiceType');
+export const setZipCode = createAction<string | null>('fAppointment/SetZipCode');
+export const setAddress = createAction<string | null>('fAppointment/SetAddress');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
 export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesModels');
 export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
