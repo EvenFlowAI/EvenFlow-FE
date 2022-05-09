@@ -2,11 +2,11 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
-import {Switch, Route, useHistory, useParams} from 'react-router-dom';
+import {Route, Switch, useHistory, useParams} from 'react-router-dom';
 import {Layout} from "./components/Layout/Layout";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
-import { ConfirmDialog } from './components/UI/ConfirmDialog';
+import {ConfirmDialog} from './components/UI/ConfirmDialog';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {EndUserLayout} from "./components/Layout/EndUserLayout";
@@ -19,9 +19,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
 import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "./components/Layout/types";
+import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
@@ -32,9 +34,13 @@ const App = () => {
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     useEffect(() => {
-        // todo setValueServiceNextScreen for mobile and pick up - drop off services
-        // todo setValueServicePreviousScreen for mobile and pick up - drop off services
-    }, [])
+        if (serviceType === EServiceType.Mobile) {
+            setValueServiceNextScreen("appointmentTiming");
+            setValueServicePreviousScreen("location");
+        }
+        // todo setValueServiceNextScreen for pick up - drop off service
+        // todo setValueServicePreviousScreen for pick up - drop off service
+    }, [serviceType])
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);

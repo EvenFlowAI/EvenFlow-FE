@@ -198,7 +198,7 @@ export const AppointmentFrameLayout = () => {
     }, [currentScreen, currentFrameScreen])
 
     useEffect(() => {
-        if (serviceType === EServiceType.Mobile && !customerLoadedData?.vehicles?.length) {
+        if (serviceType === EServiceType.Mobile && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
             dispatch(setCurrentFrameScreen("location"))
             setCurrentScreen("location");
         }
@@ -249,7 +249,11 @@ export const AppointmentFrameLayout = () => {
         } else {
             //TODO: clear slots data clearSelected();
             handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
-            valueService?.selectedService ? handleSetScreen('consultantSelection') : handleSetScreen('serviceNeeds');
+            valueService?.selectedService
+                ? serviceType !== EServiceType.Mobile
+                    ? handleSetScreen('consultantSelection')
+                    : handleSetScreen('appointmentTiming')
+                : handleSetScreen('serviceNeeds');
         }
     }, [handleSetScreen, selectedVehicle, showError, dispatch]);
 
