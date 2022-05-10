@@ -68,7 +68,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
 
     useEffect(() => {
         scProfile && dispatch(loadSeriesModels(scProfile.id));
-    }, [dispatch])
+    }, [dispatch, scProfile])
 
     useEffect(() => {
         if (valueService) {
@@ -139,9 +139,9 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         <ScreenWrapper>
         <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
         <SelectWrapper>
-            {seriesModels?.length
+            {seriesModels?.length > 0
                 ? <Autocomplete
-                key={valueService?.year?.year || "year"}
+                key={valueService?.year?.year || seriesModels[0].year}
                 options={yearOptions}
                 onChange={onYearChange}
                 fullWidth

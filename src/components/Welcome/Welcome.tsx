@@ -49,12 +49,6 @@ export const Welcome = () => {
         }
     }, [id]);
 
-    useEffect(() => {
-        // todo condition
-        if (isBmWService && id && !valueService) {
-            history.push(`/f/appointment/${id}/valueService`)
-        }
-    }, [isBmWService, id, valueService])
 
     const onComplete = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
@@ -63,6 +57,15 @@ export const Welcome = () => {
             route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );
     }
+
+    useEffect(() => {
+        // todo condition
+        if (isBmWService && id) {
+            if (!valueService) {
+                history.push(`/f/appointment/${id}/valueService`)
+            }
+        }
+    }, [isBmWService, id, valueService])
 
     const getComponent = () => {
         switch (view) {
