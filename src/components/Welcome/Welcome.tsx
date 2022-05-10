@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {CustomerSelect} from "./CustomerSelect";
 import { LoginInput } from './LoginInput';
@@ -17,14 +17,18 @@ import {frameTheme} from "../../theme/theme";
 import {setCurrentFrameScreen} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
+import {EServiceCenterName} from "../../api/types";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
     const history = useHistory();
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+    const {valueService} = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
+    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
@@ -44,6 +48,13 @@ export const Welcome = () => {
             window.location.href = "/";
         }
     }, [id]);
+
+    useEffect(() => {
+        // todo condition
+        if (isBmWService && id && !valueService) {
+            history.push(`/f/appointment/${id}/valueService`)
+        }
+    }, [isBmWService, id, valueService])
 
     const onComplete = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
