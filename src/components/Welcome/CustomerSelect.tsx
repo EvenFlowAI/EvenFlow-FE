@@ -1,20 +1,20 @@
 import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {setUserType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {LocalTokens} from "../../types/types";
+import {v4 as uuidv4} from 'uuid';
+import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {TView} from "./types";
+import {RootState} from "../../store/rootReducer";
 import {
     getBlankCustomer,
     getBlankVehicle,
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {setUserType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
-import {LocalTokens} from "../../types/types";
-import {v4 as uuidv4} from 'uuid';
-import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
-import {TView} from "./types";
-import {RootState} from "../../store/rootReducer";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -60,15 +60,15 @@ export const useStyles = makeStyles(theme => ({
     }
 }))
 type TProps = {
-    // onLogin: () => void;
-    // onComplete: (serviceType: EServiceType) => void;
+    onLogin: () => void;
+    onComplete: (serviceType: EServiceType) => void;
     setView: (view: TView) => void;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({setView}) => {
+export const CustomerSelect: React.FC<TProps> = ({setView, onLogin, onComplete}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isMobileServiceOn, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
 
     useEffect(() => {
         const uid = uuidv4();
@@ -79,24 +79,30 @@ export const CustomerSelect: React.FC<TProps> = ({setView}) => {
     }, [])
 
     const handleExisting = (): void => {
-        setView('serviceSelect')
+        if (isMobileServiceOn) {
+            setView('serviceSelect')
+        } else {
+            onLogin()
+        }
         dispatch(setUserType(EUserType.Existing));
-        // onLogin();
     }
 
     const handleNew = () => {
-        setView('serviceSelect')
+        if (isMobileServiceOn) {
+            setView('serviceSelect')
+        } else {
+            const c = getBlankCustomer();
+            dispatch(setCustomerLoadedData(c));
+            dispatch(setVehicle(getBlankVehicle()));
+            saveCustomerCache(c);
+            ReactGA.event({
+                category: 'EvenFlow User',
+                action: 'Enters Page',
+                label: `As New User`,
+            });
+            onComplete(serviceType);
+        }
         dispatch(setUserType(EUserType.New));
-        // const c = getBlankCustomer();
-        // dispatch(setCustomerLoadedData(c));
-        // dispatch(setVehicle(getBlankVehicle()));
-        // saveCustomerCache(c);
-        // ReactGA.event({
-        //     category: 'EvenFlow User',
-        //     action: 'Enters Page',
-        //     label: `As New User`,
-        // });
-        // onComplete(serviceType);
     }
 
     return <Grid className={classes.buttonsContainer}

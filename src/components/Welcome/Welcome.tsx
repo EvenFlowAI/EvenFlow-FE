@@ -23,7 +23,8 @@ import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
     const history = useHistory();
-    const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {isMobileServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
@@ -47,8 +48,12 @@ export const Welcome = () => {
         }
     }, [id]);
 
+    const handleMobileService = () => {
+        if (isMobileServiceOn) setView("serviceSelect")
+    };
+
     const onComplete = (serviceType: EServiceType) => {
-        setView("serviceSelect");
+        handleMobileService();
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         dispatch(setCurrentFrameScreen("carSelection"));
         history.push(
@@ -73,7 +78,11 @@ export const Welcome = () => {
                 />;
             case "select":
             default:
-                return <CustomerSelect setView={setView}/>;
+                return <CustomerSelect
+                    setView={setView}
+                    onLogin={() => setView("search")}
+                    onComplete={onComplete}
+                />;
         }
     }
 
