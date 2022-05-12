@@ -78,7 +78,7 @@ type TState = {
     gap: number | undefined;
     userType: EUserType | undefined;
     serviceType: EServiceType;
-    address: string | null;
+    address: any;
     zipCode: string | null;
     valueService: IValueService | null;
     seriesModels: TYear[];

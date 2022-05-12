@@ -28,14 +28,14 @@ const List = styled('ul')({
 
 const Address = () => {
     const {address, zipCode, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
-    return address && serviceType === EServiceType.Mobile
+    return address && serviceType === EServiceType.Mobile || serviceType === EServiceType.PikUpDropOff
         ? <div>
             <TitleWrapper>
                 <ConfirmationTitle>Address</ConfirmationTitle>
             </TitleWrapper>
             <List>
                 <li className="service-item">
-                    {address}
+                    {address?.label || ""}
                 </li>
                 <li className="service-item">
                     ZIP: {zipCode}

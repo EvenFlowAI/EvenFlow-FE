@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
 const mockZip = [{value: '123456', name: "123456"}]
 
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
-    const [addressValue, setAddressValue] = useState<string|null>(null);
+    const [addressValue, setAddressValue] = useState<any>(null);
     const [zip, setZip] = useState<TOption | null>(null);
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
@@ -50,19 +50,16 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
             const selectedZip = mockZip.find(item => item.value === zipCodeValue);
             selectedZip && setZip(selectedZip)
         }
-    }, [zipCodeValue, mockZip])
-
-    useEffect(() => {
         if (address) {
-          setAddressValue(address)
+            setAddressValue(address)
         }
-    }, [address])
+    }, [zipCodeValue, mockZip, address])
 
-    const handleChangeAddress = (e: any, option: string | null) => {
+    const handleChangeAddress = (e: any) => {
         setFormChecked(false);
         if (e?.label) {
-            setAddressValue(e.label);
-            dispatch(setAddress(e.label));
+            setAddressValue(e);
+            dispatch(setAddress(e));
         } else {
             setAddressValue(null);
             dispatch(setAddress(null));
@@ -97,6 +94,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 <div>
                     <p className="label">Your Address</p>
                     <GooglePlacesAutocomplete
+                        key={address?.label || 'label'}
                         apiKey="AIzaSyBV1Ejz4kegeZemo5HVJhNG1qEDtiJWGVk"
                         apiOptions={{ language: 'en', region: 'us' }}
                         autocompletionRequest={{
@@ -105,18 +103,19 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             }
                         }}
                         selectProps={{
-                            addressValue,
+                            addressValue: addressValue?.value || '',
                             className: classes.select,
                             onChange: handleChangeAddress,
                             placeholder: 'Start To Type',
                             isClearable: true,
                             isSearchable: true,
+                            defaultInputValue: addressValue?.label || "",
                         }}
                     />
                 </div>
 
                 <Autocomplete
-                    key="code"
+                    key={zip?.name || "zipcode"}
                     options={mockZip}
                     onChange={handleChangeZip}
                     fullWidth

@@ -205,7 +205,7 @@ export const SelectedAppointment = () => {
                             </div>
                             : <div className="service-list">
                                 <h4> YOUR ADDRESS: </h4>
-                                <div>{address}, {zipCode}</div>
+                                <div>{address?.label || ""}, {zipCode}</div>
                             </div>}
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
