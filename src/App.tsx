@@ -38,8 +38,9 @@ const App = () => {
             setValueServiceNextScreen("appointmentTiming");
             setValueServicePreviousScreen("location");
         }
-        // todo setValueServiceNextScreen for pick up - drop off service
-        // todo setValueServicePreviousScreen for pick up - drop off service
+        if (serviceType === EServiceType.PikUpDropOff) {
+            setValueServicePreviousScreen("location");
+        }
     }, [serviceType])
 
     const handleClose = (key: React.ReactText) => () => {

@@ -68,7 +68,7 @@ type TProps = {
 export const CustomerSelect: React.FC<TProps> = ({setView, onLogin, onComplete}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {isMobileServiceOn, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isMobileServiceOn, serviceType, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
 
     useEffect(() => {
         const uid = uuidv4();
@@ -78,31 +78,40 @@ export const CustomerSelect: React.FC<TProps> = ({setView, onLogin, onComplete})
         })
     }, [])
 
+    const createBlankCar = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+    }
+
+    const handleReactGA = (userType: string) => {
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Enters Page',
+            label: `As ${userType} Customer`,
+        });
+    }
+
     const handleExisting = (): void => {
-        if (isMobileServiceOn) {
+        dispatch(setUserType(EUserType.Existing));
+        handleReactGA('An Existing');
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
             setView('serviceSelect')
         } else {
             onLogin()
         }
-        dispatch(setUserType(EUserType.Existing));
     }
 
     const handleNew = () => {
-        if (isMobileServiceOn) {
+        dispatch(setUserType(EUserType.New));
+        handleReactGA('A New');
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
             setView('serviceSelect')
         } else {
-            const c = getBlankCustomer();
-            dispatch(setCustomerLoadedData(c));
-            dispatch(setVehicle(getBlankVehicle()));
-            saveCustomerCache(c);
-            ReactGA.event({
-                category: 'EvenFlow User',
-                action: 'Enters Page',
-                label: `As New User`,
-            });
+            createBlankCar()
             onComplete(serviceType);
         }
-        dispatch(setUserType(EUserType.New));
     }
 
     return <Grid className={classes.buttonsContainer}

@@ -24,7 +24,7 @@ export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
     const history = useHistory();
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
@@ -49,7 +49,7 @@ export const Welcome = () => {
     }, [id]);
 
     const handleMobileService = () => {
-        if (isMobileServiceOn) setView("serviceSelect")
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) setView("serviceSelect")
     };
 
     const onComplete = (serviceType: EServiceType) => {

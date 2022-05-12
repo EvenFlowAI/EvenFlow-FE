@@ -19,7 +19,7 @@ type TProps = {
 };
 
 const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
-    const {userType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {userType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -41,14 +41,9 @@ const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
         }
     }
 
-    const handleVisit = () => {
-        dispatch(setServiceType(EServiceType.VisitCenter))
-        handleUser(EServiceType.VisitCenter);
-    }
-
-    const handleMobile = () => {
-        dispatch(setServiceType(EServiceType.Mobile));
-        handleUser(EServiceType.Mobile);
+    const handleSelect = (service: EServiceType) => {
+        dispatch(setServiceType(service))
+        handleUser(service);
     }
 
     return (
@@ -56,16 +51,25 @@ const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
               alignItems="stretch"
               container
               spacing={4}>
-            <Grid item xs={12} sm={12} md={6}>
-                <div onClick={handleVisit} className={classes.button}>
+            <Grid item xs={12} sm={12} md={isMobileServiceOn && isPickUpDropOffServiceOn ? 4 : 6}>
+                <div onClick={() => handleSelect(EServiceType.VisitCenter)} className={classes.button}>
                     <span>Visit Center</span>
                 </div>
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-                <div onClick={handleMobile} className={classes.button}>
+            {isMobileServiceOn
+                ? <Grid item xs={12} sm={12} md={isPickUpDropOffServiceOn ? 4 : 6}>
+                <div onClick={() => handleSelect(EServiceType.Mobile)} className={classes.button}>
                     <span>Mobile</span>
                 </div>
             </Grid>
+                : null}
+            {isPickUpDropOffServiceOn
+                ? <Grid item xs={12} sm={12} md={isMobileServiceOn ? 4 : 6}>
+                <div onClick={() => handleSelect(EServiceType.PikUpDropOff)} className={classes.button}>
+                    <span>Pick Up / Drop Off Service</span>
+                </div>
+            </Grid>
+                : null}
         </Grid>
     );
 };

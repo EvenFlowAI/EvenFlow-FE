@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
@@ -101,7 +101,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }
     }, [dispatch, selectedVehicle]);
 
-    useEffect(() => {
+    const setDataFromValueService = useCallback(() => {
         if (valueService && isBmWService) {
             const bmwMake = makes.find(item => item.name === "BMW");
             if (bmwMake) {
@@ -121,6 +121,10 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 dispatch(setVehicle(vehicle));
             }
         }
+    }, [valueService, makes, isBmWService])
+
+    useEffect(() => {
+        setDataFromValueService();
     }, [valueService, makes, isBmWService])
 
     useEffect(() => {

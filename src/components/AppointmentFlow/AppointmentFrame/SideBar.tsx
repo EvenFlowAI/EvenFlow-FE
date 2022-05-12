@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TScreen} from "../../Layout/types";
 import {ProgressStepper} from "../ProgressStepper";
@@ -65,6 +65,25 @@ const mobileStepsMap: {[K in TScreen]: number} = {
     consultantSelection: -1,
 }
 
+const pickUpDropOffStepsMap: {[K in TScreen]: number} = {
+    carSelection: 0,
+    serviceNeeds: 2,
+    maintenanceDetails: 2,
+    serviceSelection: 2,
+    packageSelection: 2,
+    describeMore: 2,
+    opsCode: 2,
+    vehicleData: 2,
+    carDetails: 2,
+    consultantSelection: 3,
+    appointmentTiming: 4,
+    appointmentSelection: 4,
+    appointmentConfirmation: 5,
+    appointmentConfirmed: 5,
+    location: 1,
+    transportationNeeds: -1,
+}
+
 const Index = styled('span')({
     fontSize: 32,
     display: "inline-block",
@@ -99,9 +118,25 @@ const mobileServiceScreens: TScreen[] = [
     "appointmentConfirmation",
 ];
 
+const pickUpDropOffScreens: TScreen[] = [
+    "location",
+    "serviceNeeds",
+    "consultantSelection",
+    "appointmentTiming",
+    "appointmentConfirmation",
+]
+
 const mobileMenuItems: string[] = [
     "Your Location",
     "Service Needs",
+    "Appointment Selection",
+    "Appointment Confirmation"
+]
+
+const pickUpDropOffMenuItems: string[] = [
+    "Your Location",
+    "Service Needs",
+    "Advisor Selection",
     "Appointment Selection",
     "Appointment Confirmation"
 ]
@@ -135,15 +170,39 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-    const isActive = (idx: number): boolean => {
+
+    const currentMenu = useMemo(() => {
+        return serviceType === EServiceType.VisitCenter
+            ? menuItems
+            : serviceType === EServiceType.PikUpDropOff
+                ? pickUpDropOffMenuItems
+                : mobileMenuItems;
+    }, [serviceType]);
+
+    const currentSteps = useMemo(() => {
+        return serviceType === EServiceType.VisitCenter
+            ? stepsMap
+            : serviceType === EServiceType.PikUpDropOff
+                ? pickUpDropOffStepsMap
+                : mobileStepsMap;
+    }, [serviceType]);
+
+    const getStepsState = useCallback((idx: number): boolean => {
         return serviceType === EServiceType.Mobile
             ? mobileStepsMap[screen] === idx
-            : stepsMap[screen] === idx;
-    }
+            : serviceType === EServiceType.PikUpDropOff
+                ? pickUpDropOffStepsMap[screen] === idx
+                : stepsMap[screen] === idx;
+    }, [serviceType, screen])
 
     const onClick = (idx: number) => {
         if (idx === 0) dispatch(setAdditionalServicesChosen(true));
-        handleSetScreen(serviceType === EServiceType.VisitCenter ? stepScreens[idx] : mobileServiceScreens[idx])
+        const screen = serviceType === EServiceType.VisitCenter
+            ? stepScreens[idx]
+            : serviceType === EServiceType.Mobile
+                ? mobileServiceScreens[idx]
+                : pickUpDropOffScreens[idx];
+        handleSetScreen(screen)
     }
 
     useEffect(() => {
@@ -153,41 +212,31 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const getButtonState = (index: number) => {
         return serviceType === EServiceType.Mobile
             ? mobileStepsMap[screen] < index + 1 && mobileStepsMap[passed[passed.length - 1]] < index + 1
-            : stepsMap[screen] < index + 1 && stepsMap[passed[passed.length - 1]] < index + 1;
+            : serviceType === EServiceType.PikUpDropOff
+                ? pickUpDropOffStepsMap[screen] < index + 1 && pickUpDropOffStepsMap[passed[passed.length - 1]] < index + 1
+                : stepsMap[screen] < index + 1 && stepsMap[passed[passed.length - 1]] < index + 1;
     }
 
     return (
         <Wrapper>
             {!isSm
-                ? serviceType === EServiceType.VisitCenter
-                    ? menuItems.map((item, idx) => {
-                        return <li key={item}>
-                            <Button
-                                fullWidth
-                                disabled={getButtonState(idx)}
-                                onClick={() => onClick(idx)}
-                                color="primary"
-                                variant={isActive(idx+1) ? "contained" : "outlined"}>
-                                <Index>{idx + 1}</Index> {item}
-                            </Button>
-                        </li>
-                    }) : mobileMenuItems.map((item, idx) => {
-                        return <li key={item}>
-                            <Button
-                                fullWidth
-                                disabled={getButtonState(idx)}
-                                onClick={() => onClick(idx)}
-                                color="primary"
-                                variant={isActive(idx+1) ? "contained" : "outlined"}>
-                                <Index>{idx + 1}</Index> {item}
-                            </Button>
-                        </li>
-                    })
+                ? currentMenu.map((item, idx) => {
+                    return <li key={item}>
+                        <Button
+                            fullWidth
+                            disabled={getButtonState(idx)}
+                            onClick={() => onClick(idx)}
+                            color="primary"
+                            variant={getStepsState(idx+1) ? "contained" : "outlined"}>
+                            <Index>{idx + 1}</Index> {item}
+                        </Button>
+                    </li>
+                })
                 : <MobileSteps
-                active={stepsMap[screen]}
-                steps={menuItems.length}
-                currentLabel={menuItems[stepsMap[screen]-1]}
-                nextLabel={menuItems[stepsMap[screen]]}
+                active={currentSteps[screen]}
+                steps={currentMenu.length}
+                currentLabel={currentMenu[currentSteps[screen]-1]}
+                nextLabel={currentMenu[currentSteps[screen]]}
             />}
         </Wrapper>
     );

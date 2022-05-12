@@ -122,7 +122,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const clearIndOpsCodes = () => {
-        let codes: number[] = [];
+        let codes: number[];
         const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
         const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
         codes = selectedSR.filter(item => {
@@ -135,7 +135,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const clearDiagnoseCodes = () => {
-        let codes: number[] = [];
+        let codes: number[];
         const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
         const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
         codes = selectedSR.filter(code => {

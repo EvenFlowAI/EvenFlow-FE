@@ -136,8 +136,10 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 : null;
 
         const year = appointmentFrame?.selectedVehicle?.year
-                ? String(appointmentFrame.selectedVehicle.year) : appointmentFrame?.valueService?.year?.year
-                    ? String(appointmentFrame.valueService.year.year) : null;
+                ? String(appointmentFrame.selectedVehicle.year)
+            : appointmentFrame?.valueService?.year?.year
+                ? String(appointmentFrame.valueService.year.year)
+                : null;
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
@@ -203,8 +205,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 setSaving(false);
             })
     }
-
-    // todo show address in review in case of mobile service
 
     return <StepWrapper>
         <Wrapper>

@@ -179,7 +179,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     }
 
     const getIndCodes = (): number[] => {
-        let codes: number[] = [];
+        let codes: number[];
         const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
         const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
         codes = selectedCode.filter(item => {
@@ -190,7 +190,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     }
 
     const getDiagnoseCodes = (): number[] => {
-        let codes: number[] = [];
+        let codes: number[];
         const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
         const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
         codes = selectedCode.filter(code => {
