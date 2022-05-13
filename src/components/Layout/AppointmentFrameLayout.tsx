@@ -177,7 +177,7 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setCustomerLoadedData(data));
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
-                handleLogin();
+                if (!valueService) handleLogin();
             }
         }
     }, [customerLoadedData, dispatch, handleLogin]);
