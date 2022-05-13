@@ -85,7 +85,6 @@ type TState = {
     offersLoading: boolean;
     serviceOffers: IServiceOffer[];
     isMobileServiceOn: boolean;
-    isValueServiceOn: boolean;
     isPickUpDropOffServiceOn: boolean;
 }
 const initialState: TState = {
@@ -126,7 +125,6 @@ const initialState: TState = {
     offersLoading: false,
     serviceOffers: [],
     isMobileServiceOn: true,
-    isValueServiceOn: true,
     isPickUpDropOffServiceOn: true,
 };
 

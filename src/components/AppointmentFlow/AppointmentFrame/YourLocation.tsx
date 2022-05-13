@@ -7,7 +7,7 @@ import {Actions} from "./Actions";
 import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
 import {setAddress, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -51,7 +51,10 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         setAddressValue(address);
     }, [zipCodeValue, mockZip, address])
 
-    const handleChangeAddress = (e: any) => {
+    const handleChangeAddress = async (e: any) => {
+        console.log(e?.value?.place_id)
+        const geoCode = await geocodeByPlaceId(e.value.place_id)
+        console.log(geoCode)
         setFormChecked(false);
         if (e?.label) {
             setAddressValue(e);
@@ -96,7 +99,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 <div>
                     <p className="label">Your Address</p>
                     <GooglePlacesAutocomplete
-                        key={address?.label || 'label'}
                         apiKey="AIzaSyBV1Ejz4kegeZemo5HVJhNG1qEDtiJWGVk"
                         apiOptions={{ language: 'en', region: 'us' }}
                         autocompletionRequest={{
@@ -105,19 +107,19 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             }
                         }}
                         selectProps={{
-                            addressValue: addressValue?.value || '',
+                            addressValue: address?.label ?? '',
                             className: classes.select,
                             onChange: handleChangeAddress,
-                            placeholder: 'Start To Type',
+                            placeholder: address?.label ?? 'Start To Type',
                             isClearable: true,
                             isSearchable: true,
                             defaultInputValue: addressValue?.label || "",
+                            key: address?.label || 'label'
                         }}
                     />
                 </div>
 
                 <Autocomplete
-                    key={zip?.name || "zipcode"}
                     options={mockZip}
                     onChange={handleChangeZip}
                     fullWidth
@@ -127,7 +129,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                         label: 'Your ZIP',
                         placeholder: isFormChecked && !zip ? `ZIP required` : `Your ZIP`,
                         error: isFormChecked && !zip,
-                        required: true
+                        required: true,
+                        key: zipCodeValue || "zipcode",
                     })}
                     value={zip}
                 />
