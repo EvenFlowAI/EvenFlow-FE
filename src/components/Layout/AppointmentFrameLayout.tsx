@@ -272,7 +272,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
-                onBack={handleChangeScreen('carSelection')}
+                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
                 onBack={handleChangeScreen('serviceNeeds')}

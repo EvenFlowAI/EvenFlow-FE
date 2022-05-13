@@ -7,7 +7,7 @@ import {RootState} from "../../../store/rootReducer";
 import {
     selectCategoriesIds,
     selectService,
-    setAdditionalServicesChosen
+    setAdditionalServicesChosen,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
 import {CardsWrapper} from "./styled";
@@ -21,6 +21,7 @@ import ReactGA from "react-ga";
 import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -30,14 +31,20 @@ type TProps = {
 export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
-    const {service: selectedService, categoriesIds, selectedPackage, valueService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        service: selectedService,
+        categoriesIds,
+        selectedPackage,
+        valueService,
+        serviceType
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
 
     const handleBack = () => {
-        if (!customerLoadedData?.id) {
+        if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
         } else {
             onBack();

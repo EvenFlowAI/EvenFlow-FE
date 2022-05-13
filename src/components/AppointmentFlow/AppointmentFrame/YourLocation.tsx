@@ -46,13 +46,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const classes = useStyles();
 
     useEffect(() => {
-        if (zipCodeValue) {
-            const selectedZip = mockZip.find(item => item.value === zipCodeValue);
-            selectedZip && setZip(selectedZip)
-        }
-        if (address) {
-            setAddressValue(address)
-        }
+        const selectedZip = mockZip.find(item => item.value === zipCodeValue);
+        setZip(selectedZip ?? null);
+        setAddressValue(address);
     }, [zipCodeValue, mockZip, address])
 
     const handleChangeAddress = (e: any) => {
@@ -71,7 +67,13 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         option ? dispatch(setZipCode(option?.value)) : dispatch(setZipCode(null));
     }
 
+    const clearAddress = () => {
+        dispatch(setAddress(null));
+        dispatch(setZipCode(null));
+    }
+
     const handleBack = () => {
+        clearAddress();
         if (!customerLoadedData?.id) {
             onLogin();
         } else {
@@ -127,7 +129,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                         error: isFormChecked && !zip,
                         required: true
                     })}
-                    value={zip || undefined}
+                    value={zip}
                 />
 
             </SelectWrapper>
