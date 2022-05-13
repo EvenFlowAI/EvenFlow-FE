@@ -55,7 +55,7 @@ export const Welcome = () => {
     }
 
     useEffect(() => {
-        if (window.location.origin.toString().includes('bmw-schererville.evenflow') && id) {
+        if (window.parent.location.origin.toString().includes('bmw-schererville.evenflow') && id) {
             if (!valueService) {
                 history.push(`/f/appointment/${id}/valueService`)
             }
