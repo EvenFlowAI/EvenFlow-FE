@@ -8,7 +8,6 @@ import {AppointmentFlow} from "../AppointmentFlow/AppointmentFlow";
 import {useDispatch} from "react-redux";
 import {loadSCProfile} from "../../store/reducers/appointment/actions";
 import {decodeSCID} from "../../utils/utils";
-import ValueService from "../AppointmentFlow/AppointmentFrame/ValueService/ValueService";
 
 export const AppointmentLayout = () => {
     const {id} = useParams();

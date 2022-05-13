@@ -20,9 +20,10 @@ import {v4 as uuidv4} from "uuid";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
-    const history = useHistory();
     const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
+    const {valueService} = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
+    const history = useHistory();
     const isFrame = useLayout();
     const dispatch = useDispatch();
 
@@ -52,6 +53,14 @@ export const Welcome = () => {
             route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );
     }
+
+    useEffect(() => {
+        if (window.location.origin.toString().includes('bmw-schererville.evenflow') && id) {
+            if (!valueService) {
+                history.push(`/f/appointment/${id}/valueService`)
+            }
+        }
+    }, [id, valueService])
 
     const getComponent = () => {
         switch (view) {
