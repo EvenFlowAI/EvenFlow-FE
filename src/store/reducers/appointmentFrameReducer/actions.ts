@@ -15,6 +15,7 @@ import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
+import {selectAppointment, selectSR} from "../appointment/actions";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -150,4 +151,17 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
             console.log('get value service offers error', err)
         })
         .finally(() => dispatch(setOffersLoading(false)))
+}
+
+export const clearAppointmentData = (): AppThunk => (dispatch) => {
+    dispatch(setPackage(null));
+    dispatch(selectService(null));
+    dispatch(selectSubService(null));
+    dispatch(selectAppointment(null));
+    dispatch(setValueService(null));
+    dispatch(selectCategoriesIds([]));
+    dispatch(selectSR(null));
+    dispatch(setTiming(null));
+    dispatch(setAdvisor(null));
+    dispatch(setTransportation(null));
 }

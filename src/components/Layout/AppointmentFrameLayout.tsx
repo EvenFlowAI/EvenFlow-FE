@@ -257,7 +257,6 @@ export const AppointmentFrameLayout = () => {
             }
 
         } else {
-            //TODO: clear slots data clearSelected();
             handleSetScreen(getNextScreen());
         }
     }, [handleSetScreen, selectedVehicle, showError, dispatch]);

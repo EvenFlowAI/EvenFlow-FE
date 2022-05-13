@@ -10,7 +10,7 @@ import {
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {clearAppointmentData, setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
 
 type TProps = {
@@ -42,7 +42,8 @@ const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
     }
 
     const handleSelect = (service: EServiceType) => {
-        dispatch(setServiceType(service))
+        dispatch(clearAppointmentData());
+        dispatch(setServiceType(service));
         handleUser(service);
     }
 

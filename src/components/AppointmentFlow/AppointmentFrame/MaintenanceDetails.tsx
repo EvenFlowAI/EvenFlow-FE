@@ -54,15 +54,6 @@ const blankOptions: TOptionsState = {};
 
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
-const vehicle: ILoadedVehicle = {
-    vin: '',
-    make: "",
-    model: "",
-    year: null,
-    mileage: null,
-    appointmentHashKeys: [],
-};
-
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {maintenanceDetails, selectedVehicle, makes, service, valueService}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -102,6 +93,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }, [dispatch, selectedVehicle]);
 
     const setDataFromValueService = useCallback(() => {
+        const vehicle: ILoadedVehicle = {
+            vin: '',
+            make: "",
+            model: "",
+            year: null,
+            mileage: null,
+            appointmentHashKeys: [],
+        };
         if (valueService && isBmWService) {
             const bmwMake = makes.find(item => item.name === "BMW");
             if (bmwMake) {
