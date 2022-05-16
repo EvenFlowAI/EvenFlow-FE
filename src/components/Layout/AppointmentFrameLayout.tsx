@@ -169,7 +169,6 @@ export const AppointmentFrameLayout = () => {
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        console.log(window.location.ancestorOrigins[0])
         if (!window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow')) {
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         }
