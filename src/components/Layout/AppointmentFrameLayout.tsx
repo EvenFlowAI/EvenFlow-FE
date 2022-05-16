@@ -137,15 +137,15 @@ export const AppointmentFrameLayout = () => {
         }
     }, [trackerCreated, window.location?.ancestorOrigins]);
 
-    useEffect(() => {
-        window.addEventListener('message', function(event) {
-            if (event.origin.includes('https://dev.evenflow.ai')) {
-                if (!valueService) {
-                    history.push(`/f/appointment/${id}/valueService`)
-                }
-            }
-        });
-    }, [id, valueService])
+    // useEffect(() => {
+    //     window.addEventListener('message', function(event) {
+    //         if (event.origin.includes('https://dev.evenflow.ai')) {
+    //             if (!valueService) {
+    //                 history.push(`/f/appointment/${id}/valueService`)
+    //             }
+    //         }
+    //     });
+    // }, [id, valueService])
 
     useEffect(() => {
         if (!trackerCreated) {
