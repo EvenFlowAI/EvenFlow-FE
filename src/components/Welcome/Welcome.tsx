@@ -56,6 +56,7 @@ export const Welcome = () => {
 
     useEffect(() => {
         window.addEventListener('message', function(event) {
+            console.log(event);
             if (event.origin.includes('bmw-schererville.evenflow')) {
                 if (!valueService) {
                     history.push(`/f/appointment/${id}/valueService`)
