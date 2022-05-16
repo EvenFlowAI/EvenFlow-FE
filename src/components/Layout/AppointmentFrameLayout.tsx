@@ -181,7 +181,7 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setCustomerLoadedData(data));
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
-                if (!valueService) handleLogin();
+                if (!valueService && !window.parent.origin.includes('bmw-schererville.evenflow')) handleLogin();
             }
         }
     }, [customerLoadedData, dispatch, handleLogin]);
