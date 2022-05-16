@@ -56,14 +56,13 @@ export const Welcome = () => {
 
     useEffect(() => {
         window.addEventListener('message', function(event) {
-            console.log(event);
-            if (event.origin.includes('bmw-schererville.evenflow')) {
+            if (event.origin.includes('https://dev.evenflow.ai')) {
                 if (!valueService) {
                     history.push(`/f/appointment/${id}/valueService`)
                 }
             }
         });
-    }, [id, valueService, window.location?.ancestorOrigins])
+    }, [id, valueService])
 
     const getComponent = () => {
         switch (view) {
