@@ -127,8 +127,6 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                // todo delete
-
                 if (!prodParentLinks.includes(event.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
@@ -171,7 +169,10 @@ export const AppointmentFrameLayout = () => {
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        console.log(window.location.ancestorOrigins[0])
+        if (!window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow')) {
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        }
     }, [id, history, dispatch]);
 
     useEffect(() => {
@@ -181,7 +182,7 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setCustomerLoadedData(data));
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
-                if (!valueService && !window.parent.origin.includes('bmw-schererville.evenflow')) handleLogin();
+                if (!valueService) handleLogin();
             }
         }
     }, [customerLoadedData, dispatch, handleLogin]);
