@@ -63,7 +63,7 @@ export const Welcome = () => {
                 }
             }
         });
-    }, [id, valueService])
+    }, [id, valueService, window.location?.ancestorOrigins])
 
     const getComponent = () => {
         switch (view) {

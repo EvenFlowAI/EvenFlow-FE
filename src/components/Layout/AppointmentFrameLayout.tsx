@@ -127,8 +127,6 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                // todo delete
-                console.log(event)
                 if (!prodParentLinks.includes(event.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
