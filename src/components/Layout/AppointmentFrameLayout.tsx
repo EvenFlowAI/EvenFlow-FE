@@ -169,7 +169,8 @@ export const AppointmentFrameLayout = () => {
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        if (!window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow')) {
+        const isBMWPromotionalPage = window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
+        if (!isBMWPromotionalPage) {
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         }
     }, [id, history, dispatch]);
