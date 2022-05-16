@@ -87,7 +87,7 @@ const SCREENS = {
 
 // todo add new parent links while go live with new dealerships
 
-export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
+export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/", "https://bmw-schererville.evenflow.services"];
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
@@ -112,7 +112,7 @@ export const AppointmentFrameLayout = () => {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
-                debug: false,
+                debug: true,
                 titleCase: false,
                 gaOptions: options,
             });
