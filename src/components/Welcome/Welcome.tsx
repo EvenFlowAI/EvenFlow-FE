@@ -55,11 +55,13 @@ export const Welcome = () => {
     }
 
     useEffect(() => {
-        if (window.parent.location.origin.toString().includes('bmw-schererville.evenflow') && id) {
-            if (!valueService) {
-                history.push(`/f/appointment/${id}/valueService`)
+        window.addEventListener('message', function(event) {
+            if (event.origin.includes('bmw-schererville.evenflow')) {
+                if (!valueService) {
+                    history.push(`/f/appointment/${id}/valueService`)
+                }
             }
-        }
+        });
     }, [id, valueService])
 
     const getComponent = () => {
