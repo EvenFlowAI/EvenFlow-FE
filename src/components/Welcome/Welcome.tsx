@@ -54,15 +54,15 @@ export const Welcome = () => {
         );
     }
 
-    useEffect(() => {
-        window.addEventListener('message', function(event) {
-            if (event.origin.includes('https://dev.evenflow.ai')) {
-                if (!valueService) {
-                    history.push(`/f/appointment/${id}/valueService`)
-                }
-            }
-        });
-    }, [id, valueService])
+    // useEffect(() => {
+    //     window.addEventListener('message', function(event) {
+    //         if (event.origin.includes('https://dev.evenflow.ai')) {
+    //             if (!valueService) {
+    //                 history.push(`/f/appointment/${id}/valueService`)
+    //             }
+    //         }
+    //     });
+    // }, [id, valueService])
 
     const getComponent = () => {
         switch (view) {
