@@ -127,6 +127,8 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
+                // todo delete
+
                 if (!prodParentLinks.includes(event.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
@@ -134,6 +136,16 @@ export const AppointmentFrameLayout = () => {
             });
         }
     }, [trackerCreated, window.location?.ancestorOrigins]);
+
+    useEffect(() => {
+        window.addEventListener('message', function(event) {
+            if (event.origin.includes('https://dev.evenflow.ai')) {
+                if (!valueService) {
+                    history.push(`/f/appointment/${id}/valueService`)
+                }
+            }
+        });
+    }, [id, valueService])
 
     useEffect(() => {
         if (!trackerCreated) {
