@@ -6,7 +6,12 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {IVehicle} from "../../../store/reducers/appointment/types";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {loadMakes, updateVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    loadMakes,
+    setMaintenanceDetails,
+    setVehicle,
+    updateVehicle
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TextField} from "../../UI/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -49,7 +54,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
-    const {selectedVehicle, makes}= useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, makes, valueService}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile}= useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {id} = useParams();
@@ -74,6 +79,47 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         // {label: "Drive Type", name: "driveType"},
         // {label: "Engine Type", name: "engineType"},
     ];
+
+    useEffect(() => {
+        if (selectedVehicle) {
+            dispatch(setMaintenanceDetails({
+                make: selectedVehicle.make,
+                model: selectedVehicle.model,
+                year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
+                mileage: selectedVehicle?.mileage?.toString() || "",
+            }));
+        }
+    }, [dispatch, selectedVehicle]);
+
+    useEffect(() => {
+        if (valueService && isBmWService) {
+            const vehicle: ILoadedVehicle = {
+                vin: '',
+                make: "",
+                model: "",
+                year: null,
+                mileage: null,
+                appointmentHashKeys: [],
+            };
+            const bmwMake = makes.find(item => item.name === "BMW");
+            if (bmwMake) {
+                dispatch(setMaintenanceDetails({make: bmwMake.name}));
+                vehicle.make = bmwMake.name;
+
+                if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
+                    dispatch(setMaintenanceDetails({year: valueService.year.year.toString()}));
+                    vehicle.year = Number(valueService.year.year)
+                }
+
+                const model = bmwMake.models.find(model => model === valueService.series?.name);
+                if (model) {
+                    dispatch(setMaintenanceDetails({model}));
+                    vehicle.model = model;
+                }
+                dispatch(setVehicle(vehicle));
+            }
+        }
+    }, [valueService, makes, isBmWService])
 
 
     useEffect(() => {

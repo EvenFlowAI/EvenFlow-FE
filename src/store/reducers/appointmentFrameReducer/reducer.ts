@@ -1,20 +1,20 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getMakes,
-    getModels, getSlotsGap, selectCategoriesIds,
+    getModels, getSeriesModels, getSlotsGap, getValueServiceOffers, selectCategoriesIds,
     selectService,
     selectSubService, setAdditionalServicesChosen,
     setAdvisor,
     setAppointmentId, setConsultants, setCurrentFrameScreen,
     setCustomer,
     setFrameDescription, setLoadingPackages,
-    setMaintenanceDetails,
+    setMaintenanceDetails, setOffersLoading,
     setPackage, setPackageIsSelected, setPackages,
     setReminders, setSelectedPackageOptionType,
     setTime,
     setTiming, setTrackerCreated,
     setTransportation,
-    setUpdateAppointment,
+    setUpdateAppointment, setValueService,
     setVehicle, updateVehicle
 } from "./actions";
 import {
@@ -27,7 +27,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {TMaintenanceDetails} from "./types";
+import {IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -57,6 +57,10 @@ type TState = {
     id?: number;
     hashKey?: string;
     gap: number | undefined;
+    valueService: IValueService | null;
+    seriesModels: TYear[];
+    offersLoading: boolean;
+    serviceOffers: IServiceOffer[];
 }
 const initialState: TState = {
     service: null,
@@ -87,6 +91,10 @@ const initialState: TState = {
     categoriesIds: [],
     packageOptionType: null,
     gap: undefined,
+    valueService: null,
+    seriesModels: [],
+    offersLoading: false,
+    serviceOffers: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -194,5 +202,17 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(getSlotsGap, (state, {payload}) => {
         return {...state, gap: payload};
+    })
+    .addCase(setValueService, (state, {payload}) => {
+        return {...state, valueService: payload};
+    })
+    .addCase(getSeriesModels, (state, {payload}) => {
+        return {...state, seriesModels: payload}
+    })
+    .addCase(getValueServiceOffers, (state, {payload}) => {
+        return {...state, serviceOffers: payload}
+    })
+    .addCase(setOffersLoading, (state, {payload}) => {
+        return {...state, offersLoading: payload}
     })
 )
