@@ -21,9 +21,9 @@ import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
-    clearCustomerCache, getBlankVehicle,
+    clearCustomerCache, getBlankCustomer, getBlankVehicle,
     getCustomerCache,
-    loadSCProfile, loadSRs, selectSR,
+    loadSCProfile, loadSRs, saveCustomerCache, selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, getTracker} from "../../utils/utils";
@@ -166,6 +166,13 @@ export const AppointmentFrameLayout = () => {
         })
     }, [sessionStorage])
 
+    const handleNewCustomer = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+    }
+
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
@@ -174,6 +181,7 @@ export const AppointmentFrameLayout = () => {
         if (!isBMWPromotionalPage) {
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
+            handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         }
     }, [id, history, dispatch]);
