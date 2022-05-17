@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {MuiThemeProvider, styled} from "@material-ui/core";
 import {frameTheme} from "../../../../theme/theme";
 import {YearModel} from "./YearModel";
@@ -14,6 +14,8 @@ import ServiceDetails from "./ServiceDetails";
 import {ILoadedVehicle} from "../../../../api/types";
 import {yearOptions} from "../MaintenanceDetails";
 import {RootState} from "../../../../store/rootReducer";
+import {loadSCProfile} from "../../../../store/reducers/appointment/actions";
+import {decodeSCID} from "../../../../utils/utils";
 
 const Container = styled('div')({
     display: "flex",
@@ -34,6 +36,10 @@ const ValueService: React.FC = () => {
     const dispatch = useDispatch();
     const {id} = useParams();
     const history = useHistory();
+
+    useEffect(() => {
+        dispatch(loadSCProfile(decodeSCID(id)));
+    }, [id])
 
     const onBack = async () => {
         await dispatch(setValueService(null));
@@ -74,7 +80,7 @@ const ValueService: React.FC = () => {
     const onNext = async () => {
         await setSelectedVehicle();
         await dispatch(setCurrentFrameScreen("consultantSelection"));
-        history.push( "/f/appointment/" + id);
+        history.push( `/f/appointment/${id}`);
     };
 
     const component = useMemo(() => {

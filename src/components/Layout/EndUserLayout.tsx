@@ -53,7 +53,7 @@ export const EndUserLayout = () => {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
-                debug: false,
+                debug: true,
                 titleCase: false,
                 gaOptions: options,
             });

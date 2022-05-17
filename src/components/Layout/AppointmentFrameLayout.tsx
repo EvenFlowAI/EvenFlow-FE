@@ -21,9 +21,9 @@ import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
-    clearCustomerCache, getBlankVehicle,
+    clearCustomerCache, getBlankCustomer, getBlankVehicle,
     getCustomerCache,
-    loadSCProfile, loadSRs, selectSR,
+    loadSCProfile, loadSRs, saveCustomerCache, selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, getTracker} from "../../utils/utils";
@@ -87,7 +87,7 @@ const SCREENS = {
 
 // todo add new parent links while go live with new dealerships
 
-export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
+export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/", "https://bmw-schererville.evenflow.services"];
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
@@ -112,7 +112,7 @@ export const AppointmentFrameLayout = () => {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
-                debug: false,
+                debug: true,
                 titleCase: false,
                 gaOptions: options,
             });
@@ -135,6 +135,16 @@ export const AppointmentFrameLayout = () => {
         }
     }, [trackerCreated, window.location?.ancestorOrigins]);
 
+    // useEffect(() => {
+    //     window.addEventListener('message', function(event) {
+    //         if (event.origin.includes('https://dev.evenflow.ai')) {
+    //             if (!valueService) {
+    //                 history.push(`/f/appointment/${id}/valueService`)
+    //             }
+    //         }
+    //     });
+    // }, [id, valueService])
+
     useEffect(() => {
         if (!trackerCreated) {
             setTimeout(() => {
@@ -156,10 +166,24 @@ export const AppointmentFrameLayout = () => {
         })
     }, [sessionStorage])
 
+    const handleNewCustomer = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+    }
+
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
+            && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
+        if (!isBMWPromotionalPage) {
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        } else {
+            handleNewCustomer();
+            dispatch(setCurrentFrameScreen("serviceNeeds"));
+        }
     }, [id, history, dispatch]);
 
     useEffect(() => {
@@ -169,7 +193,7 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setCustomerLoadedData(data));
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
-                handleLogin();
+                if (!valueService) handleLogin();
             }
         }
     }, [customerLoadedData, dispatch, handleLogin]);
