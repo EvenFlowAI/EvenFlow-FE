@@ -98,7 +98,7 @@ export const AppointmentFrameLayout = () => {
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
 
-    const {id, view} = useParams();
+    const {id} = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
     const showError = useException();
@@ -167,14 +167,14 @@ export const AppointmentFrameLayout = () => {
         saveCustomerCache(c);
     }
 
-    console.log(view)
+    console.log(history.location.pathname)
 
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
         // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
         //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
-        if (view === 'unique') {
+        if (history.location.pathname.includes('unique')) {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
