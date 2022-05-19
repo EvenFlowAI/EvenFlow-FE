@@ -172,7 +172,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCustomerLoadedData(null));
         // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
         //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
-        if (history.location.search.includes('value=unique')) {
+        if (history.location.search.includes('view=unique')) {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
