@@ -167,12 +167,14 @@ export const AppointmentFrameLayout = () => {
         saveCustomerCache(c);
     }
 
+    console.log(view)
+
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
         // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
         //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
-        if (view === 'unique' || origin.includes("bmw-schererville.evenflow")) {
+        if (view === 'unique') {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
