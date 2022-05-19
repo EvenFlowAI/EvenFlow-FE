@@ -22,11 +22,18 @@ const ButtonsRow = styled('div')(({theme}) => ({
         }
     }
 }));
-export const Actions: React.FC<TActionProps> = ({onBack, onNext, nextDisabled, nextLabel, loading}) => {
+export const Actions: React.FC<TActionProps> = ({onBack, onNext, nextDisabled, nextLabel, loading, prevDisabled}) => {
     return (
         <ButtonsRow>
             {!loading ? <>
-                <Button onClick={onBack} color={'primary'} variant='outlined' style={{backgroundColor: '#F7F8FB'}}>Back</Button>
+                <Button
+                    onClick={onBack}
+                    color={'primary'}
+                    variant='outlined'
+                    disabled={prevDisabled}
+                    style={{backgroundColor: '#F7F8FB'}}>
+                    Back
+                </Button>
                 <Button
                 disabled={nextDisabled}
                 onClick={onNext}
