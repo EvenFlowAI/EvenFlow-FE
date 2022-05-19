@@ -106,6 +106,7 @@ export const AppointmentFrameLayout = () => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
     const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService, valueService} = useSelector((state: RootState) => state.appointmentFrame);
+    const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -172,7 +173,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCustomerLoadedData(null));
         // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
         //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
-        if (history.location.search.includes('view=unique')) {
+        if (isPromotionPage) {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
@@ -266,7 +267,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
-                onBack={handleChangeScreen('carSelection')}
+                onBack={isPromotionPage ? () => {} : handleChangeScreen('carSelection')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
                 onBack={handleChangeScreen('serviceNeeds')}
