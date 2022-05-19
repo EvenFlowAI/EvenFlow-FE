@@ -92,6 +92,7 @@ export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverv
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
+    const [origin, setOrigin] = useState<string>('');
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -130,20 +131,13 @@ export const AppointmentFrameLayout = () => {
                 if (!prodParentLinks.includes(event.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-                if (originSite) createTracker(event.data, originSite, trackerCreated);
+                if (originSite) {
+                    createTracker(event.data, originSite, trackerCreated);
+                    setOrigin(originSite);
+                }
             });
         }
     }, [trackerCreated, window.location?.ancestorOrigins]);
-
-    // useEffect(() => {
-    //     window.addEventListener('message', function(event) {
-    //         if (event.origin.includes('https://dev.evenflow.ai')) {
-    //             if (!valueService) {
-    //                 history.push(`/f/appointment/${id}/valueService`)
-    //             }
-    //         }
-    //     });
-    // }, [id, valueService])
 
     useEffect(() => {
         if (!trackerCreated) {
@@ -178,13 +172,13 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCustomerLoadedData(null));
         // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
         //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
-        if (view === 'unique') {
+        if (view === 'unique' || origin.includes("bmw-schererville.evenflow")) {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         }
-    }, [id, history, dispatch]);
+    }, [id, history, dispatch, origin]);
 
     useEffect(() => {
         if (!customerLoadedData) {
@@ -196,7 +190,7 @@ export const AppointmentFrameLayout = () => {
                 if (!valueService) handleLogin();
             }
         }
-    }, [customerLoadedData, dispatch, handleLogin]);
+    }, [customerLoadedData, dispatch, handleLogin, origin]);
 
     useEffect(() => {
         if (currentFrameScreen) {
