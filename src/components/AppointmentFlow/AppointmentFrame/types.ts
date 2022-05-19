@@ -7,6 +7,7 @@ export type TActionProps = {
     nextLabel?: string;
     loading?: boolean;
     onAddServices?: () => void;
+    prevDisabled?: boolean;
 };
 
 export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService'
