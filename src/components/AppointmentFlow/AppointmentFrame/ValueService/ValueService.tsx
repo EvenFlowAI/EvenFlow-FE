@@ -17,7 +17,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {loadSCProfile} from "../../../../store/reducers/appointment/actions";
 import {decodeSCID} from "../../../../utils/utils";
 
-const Container = styled('div')({
+const Container = styled('div')(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -25,8 +25,11 @@ const Container = styled('div')({
     minHeight: "100%",
     padding: 20,
     maxWidth: 1280,
-    margin: "auto"
-});
+    margin: "auto",
+    [theme.breakpoints.down("sm")]: {
+        padding: 0,
+    },
+}));
 
 type TScreen = "vehicleDetails" | "serviceSelection" | "serviceDetails";
 
