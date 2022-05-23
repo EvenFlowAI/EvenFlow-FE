@@ -113,6 +113,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
             </CardsWrapper> : <Loading />}
             <CartTable/>
             <Actions
+                prevDisabled={history?.location?.search?.includes('view=unique')}
                 nextDisabled={!selectedService}
                 onNext={handleSubmit}
                 onBack={handleBack} />

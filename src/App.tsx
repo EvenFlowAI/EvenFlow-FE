@@ -1,4 +1,4 @@
-import React, {useMemo, useRef} from 'react';
+import React, {useRef} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
@@ -14,15 +14,9 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ValueService from "./components/AppointmentFlow/AppointmentFrame/ValueService/ValueService";
-import {EServiceCenterName} from "./api/types";
-import {useSelector} from "react-redux";
-import {RootState} from "./store/rootReducer";
 
 const App = () => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const notificationsRef = useRef<ProviderContext>();
-    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
@@ -51,7 +45,7 @@ const App = () => {
                     <Route path={Routes.EndUser.CancelAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
-                    {isBmWService ? <Route path={Routes.EndUser.ValueService} exact component={ValueService}/> : null}
+                    <Route path={Routes.EndUser.ValueService} exact component={ValueService}/>
                     <PrivateRoute path="/" component={Layout}/>
                 </Switch>
             </Container>

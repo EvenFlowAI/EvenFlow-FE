@@ -21,9 +21,9 @@ import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
-    clearCustomerCache, getBlankVehicle,
+    clearCustomerCache, getBlankCustomer, getBlankVehicle,
     getCustomerCache,
-    loadSCProfile, loadSRs, selectSR,
+    loadSCProfile, loadSRs, saveCustomerCache, selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, getTracker} from "../../utils/utils";
@@ -87,11 +87,12 @@ const SCREENS = {
 
 // todo add new parent links while go live with new dealerships
 
-export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
+export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/", "https://bmw-schererville.evenflow.services"];
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
+    const [origin, setOrigin] = useState<string>('');
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -105,6 +106,7 @@ export const AppointmentFrameLayout = () => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
     const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService, valueService} = useSelector((state: RootState) => state.appointmentFrame);
+    const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -112,7 +114,7 @@ export const AppointmentFrameLayout = () => {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
-                debug: false,
+                debug: true,
                 titleCase: false,
                 gaOptions: options,
             });
@@ -130,7 +132,10 @@ export const AppointmentFrameLayout = () => {
                 if (!prodParentLinks.includes(event.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-                if (originSite) createTracker(event.data, originSite, trackerCreated);
+                if (originSite) {
+                    createTracker(event.data, originSite, trackerCreated);
+                    setOrigin(originSite);
+                }
             });
         }
     }, [trackerCreated, window.location?.ancestorOrigins]);
@@ -156,11 +161,25 @@ export const AppointmentFrameLayout = () => {
         })
     }, [sessionStorage])
 
+    const handleNewCustomer = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+    }
+
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-    }, [id, history, dispatch]);
+        // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
+        //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
+        if (isPromotionPage) {
+            handleNewCustomer();
+            dispatch(setCurrentFrameScreen("serviceNeeds"));
+        } else {
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        }
+    }, [id, history, dispatch, origin]);
 
     useEffect(() => {
         if (!customerLoadedData) {
@@ -169,10 +188,10 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setCustomerLoadedData(data));
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
-                handleLogin();
+                if (!valueService) handleLogin();
             }
         }
-    }, [customerLoadedData, dispatch, handleLogin]);
+    }, [customerLoadedData, dispatch, handleLogin, origin]);
 
     useEffect(() => {
         if (currentFrameScreen) {
@@ -248,7 +267,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
-                onBack={handleChangeScreen('carSelection')}
+                onBack={isPromotionPage ? () => {} : handleChangeScreen('carSelection')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
                 onBack={handleChangeScreen('serviceNeeds')}
