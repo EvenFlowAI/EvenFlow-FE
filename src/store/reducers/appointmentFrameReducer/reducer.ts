@@ -124,8 +124,8 @@ const initialState: TState = {
     seriesModels: [],
     offersLoading: false,
     serviceOffers: [],
-    isMobileServiceOn: false,
-    isPickUpDropOffServiceOn: false,
+    isMobileServiceOn: true,
+    isPickUpDropOffServiceOn: true,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder

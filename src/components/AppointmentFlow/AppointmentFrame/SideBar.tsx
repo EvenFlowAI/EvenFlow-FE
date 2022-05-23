@@ -202,7 +202,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
             : serviceType === EServiceType.Mobile
                 ? mobileServiceScreens[idx]
                 : pickUpDropOffScreens[idx];
-        handleSetScreen(screen)
+        handleSetScreen(screen);
     }
 
     useEffect(() => {

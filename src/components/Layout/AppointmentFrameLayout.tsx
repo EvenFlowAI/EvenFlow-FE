@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
 import {frameTheme} from "../../theme/theme";
-import {TScreen} from "./types";
+import {TMobileScreen, TScreen} from "./types";
 import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeedsFrame";
 import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
@@ -181,8 +181,6 @@ export const AppointmentFrameLayout = () => {
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
-        //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
         if (isPromotionPage) {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
@@ -292,8 +290,9 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
-                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
-                onBack={isPromotionPage ? () => {} : handleChangeScreen('carSelection')}
+                onBack={isPromotionPage
+                    ? () => {}
+                    : handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
                 onBack={handleChangeScreen('serviceNeeds')}

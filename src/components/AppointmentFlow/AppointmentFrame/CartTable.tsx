@@ -113,6 +113,7 @@ const CartTable = () => {
     }
 
     const deleteValueService = () => {
+        // todo add possibility 'user value service with other dealerships if needed
         if (valueService && isBmWService) {
             const vehicle: ILoadedVehicle = {
                 vin: '',
@@ -140,8 +141,15 @@ const CartTable = () => {
                 dispatch(setVehicle(vehicle));
             }
             dispatch(setValueService(null));
-            if (service?.type === EServiceCategoryType.ValueService) dispatch(selectService(null));
-            if (subService?.type === EServiceCategoryType.ValueService) dispatch(selectSubService(null));
+            if (service?.type === EServiceCategoryType.ValueService) {
+                dispatch(selectService(null));
+                dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
+            }
+            if (subService?.type === EServiceCategoryType.ValueService) {
+                dispatch(selectSubService(null));
+                dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
+            }
+
         }
     }
 
