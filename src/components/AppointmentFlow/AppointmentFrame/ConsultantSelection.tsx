@@ -76,7 +76,7 @@ type TCardProps = {
     active?: boolean;
     onClick: TCallback;
 }
-// TODO: Advisor|consultant
+
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
     return <ConsultantWrapper active={active} onClick={onClick}>
         {blank
@@ -114,36 +114,41 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(setAdvisor(c));
     }
 
-    const handleBack = () => {
+    const clearPackage = () => {
+        dispatch(setPackage(null));
+        dispatch(selectService(null));
+        dispatch(setSelectedPackageOptionType(null))
+        dispatch(setPackageIsSelected(false));
+    }
+
+    const clearIndOpsCodes = () => {
+        let codes: number[];
+        const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
+        const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
+        codes = selectedSR.filter(item => {
+            return !subService?.serviceRequests.find(el => item === el.id)
+                || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
+        })
+        dispatch(selectSubService(null));
+        dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
+        dispatch(selectSRMultiple(codes));
+    }
+
+    const clearDiagnoseCodes = () => {
+        let codes: number[];
+        const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+        const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
+        codes = selectedSR.filter(code => {
+            return !service?.serviceRequests.find(request => code === request.id)
+                || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
+        })
+        dispatch(selectService(null));
+        dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
+        dispatch(selectSRMultiple(codes));
+    }
+
+    const clearCategories = () => {
         let categories = [...categoriesIds];
-        let codes: number[] = [];
-        if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
-            dispatch(setPackage(null));
-            dispatch(selectService(null));
-            dispatch(setSelectedPackageOptionType(null))
-            dispatch(setPackageIsSelected(false));
-        }
-        if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
-            const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
-            const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
-            codes = selectedSR.filter(item => {
-                return !subService.serviceRequests.find(el => item === el.id)
-                    || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
-            })
-            dispatch(selectSubService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
-            dispatch(selectSRMultiple(codes));
-        } else if (service?.type === EServiceCategoryType.Diagnose) {
-            const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
-            const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
-            codes = selectedSR.filter(code => {
-                return !service.serviceRequests.find(request => code === request.id)
-                    || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
-            })
-            dispatch(selectService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
-            dispatch(selectSRMultiple(codes));
-        }
         if (service && categoriesIds?.includes(service.id)) {
             dispatch(selectService(null));
             categories = categories.filter(item => item !== service.id);
@@ -153,6 +158,18 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             categories = categories.filter(item => item !== subService.id);
         }
         dispatch(selectCategoriesIds(categories));
+    }
+
+    const handleBack = () => {
+        if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
+            clearPackage();
+        }
+        if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
+            clearIndOpsCodes();
+        } else if (service?.type === EServiceCategoryType.Diagnose) {
+            clearDiagnoseCodes()
+        }
+        clearCategories();
         onBack();
     }
 

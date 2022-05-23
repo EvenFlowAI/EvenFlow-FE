@@ -112,18 +112,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const transportation = useSelector((state: RootState) => state.appointmentFrame.transportation);
-
-    const [tOptions, customOption]: [ITransportation[], ITransportation|null] = useMemo(() => {
-        if (transportations.length) {
-            const last = transportations[transportations.length - 1];
-            const rest = transportations.slice(0, transportations.length - 1);
-            return [rest, last];
-        }
-        return [[], null];
-    }, [transportations]);
-
-    const dispatch = useDispatch();
-
     const [
         s, ss,
         individualOps, categoriesIds, packageOpt, appointmentDate,
@@ -138,9 +126,18 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.hashKey,
     ]);
 
+    const [tOptions, customOption]: [ITransportation[], ITransportation|null] = useMemo(() => {
+        if (transportations.length) {
+            const last = transportations[transportations.length - 1];
+            const rest = transportations.slice(0, transportations.length - 1);
+            return [rest, last];
+        }
+        return [[], null];
+    }, [transportations]);
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setLoading(true);

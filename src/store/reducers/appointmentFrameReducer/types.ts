@@ -52,6 +52,17 @@ export interface IFrameScreens {
     vehicleData: 'vehicleData';
 }
 
+export enum EUserType {
+    New,
+    Existing
+}
+
+export enum EServiceType {
+    VisitCenter,
+    Mobile,
+    PikUpDropOff
+}
+
 export type TValueService = {
     name: string;
     price: number;

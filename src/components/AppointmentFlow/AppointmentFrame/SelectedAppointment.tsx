@@ -8,6 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 
 
@@ -19,7 +20,6 @@ const Wrapper = styled('div')(({theme}) => ({
         flexDirection: "column"
     }
 }))
-
 
 const List = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -135,7 +135,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const SelectedAppointment = () => {
-    const { selectedPackage, advisor, consultants, categoriesIds, valueService } = useSelector((state: RootState) => state.appointmentFrame);
+    const { selectedPackage, advisor, consultants, categoriesIds, serviceType, address, zipCode, valueService } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [selectedSR, srList] = useSelector((state: RootState) => [
@@ -182,27 +182,34 @@ export const SelectedAppointment = () => {
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div> }
                     </li>
-                        <li key="advisor">
+                    <li key="advisor">
+                        {serviceType === EServiceType.VisitCenter
+                            ? <div className={classes.selectWrapper}>
                             <div className={classes.selectWrapper}>
                                 Advisor: {isSm ? <br/> : null}
-                                    <Select
-                                        value={advisor?.id || "Any"}
-                                        className={classes.select}
-                                        onChange={handleConsultantChange}>
-                                        {isBmWService
-                                            ? consultants
-                                                .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
-                                                .concat([<MenuItem value="Any">Any Available</MenuItem>])
-                                            : <MenuItem value={advisor ? advisor.id : "Any"}>
-                                                {advisor ? advisor.name : 'Any Available'}
-                                              </MenuItem>
-                                        }
-                                    </Select>
+                                <Select
+                                    value={advisor?.id || "Any"}
+                                    className={classes.select}
+                                    onChange={handleConsultantChange}>
+                                    {isBmWService
+                                        ? consultants
+                                            .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
+                                            .concat([<MenuItem value="Any">Any Available</MenuItem>])
+                                        : <MenuItem value={advisor ? advisor.id : "Any"}>
+                                            {advisor ? advisor.name : 'Any Available'}
+                                        </MenuItem>
+                                    }
+                                </Select>
                             </div>
-                            {appointment && isSm ? <DateWrapper>
-                               {appointment.date.format('MMMM D, h:mm A')}
-                            </DateWrapper> : null}
-                        </li>
+                            </div>
+                            : <div className="service-list">
+                                <h4> YOUR ADDRESS: </h4>
+                                <div>{address?.label || ""}, {zipCode}</div>
+                            </div>}
+                        {appointment && isSm ? <DateWrapper>
+                            {appointment.date.format('MMMM D, h:mm A')}
+                        </DateWrapper> : null}
+                    </li>
 
                 </List>
                 <PriceWrapper>

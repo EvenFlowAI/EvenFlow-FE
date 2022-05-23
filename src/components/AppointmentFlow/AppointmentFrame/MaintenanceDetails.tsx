@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
@@ -62,28 +62,24 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const showError = useException();
     const theme = useTheme();
+    const {id} = useParams();
+
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
+    const isNewVehicleView = useMemo(() => {
+        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
+    }, [selectedVehicle, customerLoadedData]);
 
     const selects: TSelect[] = [
         {label: "VIN", name: "vin", noVehicle: true},
         {label: "Make", name: "make", options: 'make'},
         {label: "Year", name: "year", options: yearOptions},
         {label: "Model", name: "model", options: "model",},
-        // {label: "Trim", name: "trim", options: ["All"], allOverride: true},
-        // {label: "Powertrain", name: "powertrain", options: ["All"], allOverride: true},
-        // {label: "Oil Type", name:"oilType", options: ["All"], allOverride: true},
         {label: "Estimated mileage", name:"mileage", options: mileage.map(item => item.value.toString())},
     ];
-
-    const showError = useException();
-
-    const isNewVehicleView = useMemo(() => {
-        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
-    }, [selectedVehicle, customerLoadedData]);
 
     useEffect(() => {
         if (selectedVehicle) {
@@ -96,16 +92,16 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }
     }, [dispatch, selectedVehicle]);
 
-    useEffect(() => {
+    const setDataFromValueService = useCallback(() => {
+        const vehicle: ILoadedVehicle = {
+            vin: '',
+            make: "",
+            model: "",
+            year: null,
+            mileage: null,
+            appointmentHashKeys: [],
+        };
         if (valueService && isBmWService) {
-            const vehicle: ILoadedVehicle = {
-                vin: '',
-                make: "",
-                model: "",
-                year: null,
-                mileage: null,
-                appointmentHashKeys: [],
-            };
             const bmwMake = makes.find(item => item.name === "BMW");
             if (bmwMake) {
                 dispatch(setMaintenanceDetails({make: bmwMake.name}));
@@ -124,6 +120,10 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 dispatch(setVehicle(vehicle));
             }
         }
+    }, [valueService, makes, isBmWService])
+
+    useEffect(() => {
+        setDataFromValueService();
     }, [valueService, makes, isBmWService])
 
     useEffect(() => {
