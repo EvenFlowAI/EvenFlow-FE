@@ -2,16 +2,16 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
 import {frameTheme} from "../../theme/theme";
-import {TMobileScreen, TScreen} from "./types";
+import {TScreen} from "./types";
 import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeedsFrame";
 import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
 import {MaintenanceDetails} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import {ConsultantSelection} from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
-import {AppointmentTiming} from '../AppointmentFlow/AppointmentFrame/AppointmentTiming';
-import {AppointmentSelection} from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
-import {TransportationNeeds} from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
-import {AppointmentConfirmationFrame} from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
+import { ConsultantSelection } from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
+import { AppointmentTiming } from '../AppointmentFlow/AppointmentFrame/AppointmentTiming';
+import { AppointmentSelection } from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
+import { TransportationNeeds } from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
+import { AppointmentConfirmationFrame } from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
 import {AddInfo} from "../AppointmentFlow/AppointmentFrame/AddInfo";
 import {ServiceSelection} from "../AppointmentFlow/AppointmentFrame/ServiceSelection";
 import {PackageSelection} from "../AppointmentFlow/AppointmentFrame/PackageSelection";
@@ -22,8 +22,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
     clearCustomerCache,
+    getBlankCustomer,
     getBlankVehicle,
     getCustomerCache,
+    saveCustomerCache,
     loadSCProfile,
     loadSRs,
     selectSR,
@@ -95,11 +97,12 @@ const SCREENS = {
 
 // todo add new parent links while go live with new dealerships
 
-export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
+export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/", "https://bmw-schererville.evenflow.services"];
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
+    const [origin, setOrigin] = useState<string>('');
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -113,6 +116,7 @@ export const AppointmentFrameLayout = () => {
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
     const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService, valueService, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -138,7 +142,10 @@ export const AppointmentFrameLayout = () => {
                 if (!prodParentLinks.includes(event.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-                if (originSite) createTracker(event.data, originSite, trackerCreated);
+                if (originSite) {
+                    createTracker(event.data, originSite, trackerCreated);
+                    setOrigin(originSite);
+                }
             });
         }
     }, [trackerCreated, window.location?.ancestorOrigins]);
@@ -164,11 +171,25 @@ export const AppointmentFrameLayout = () => {
         })
     }, [sessionStorage])
 
+    const handleNewCustomer = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+    }
+
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-    }, [id, history, dispatch]);
+        // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
+        //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
+        if (isPromotionPage) {
+            handleNewCustomer();
+            dispatch(setCurrentFrameScreen("serviceNeeds"));
+        } else {
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        }
+    }, [id, history, dispatch, origin]);
 
     useEffect(() => {
         if (!customerLoadedData) {
@@ -180,7 +201,7 @@ export const AppointmentFrameLayout = () => {
                 if (!valueService) handleLogin();
             }
         }
-    }, [customerLoadedData, dispatch, handleLogin]);
+    }, [customerLoadedData, dispatch, handleLogin, origin]);
 
     useEffect(() => {
         if (currentFrameScreen === currentScreen) {
@@ -272,6 +293,7 @@ export const AppointmentFrameLayout = () => {
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
+                onBack={isPromotionPage ? () => {} : handleChangeScreen('carSelection')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
                 onBack={handleChangeScreen('serviceNeeds')}
