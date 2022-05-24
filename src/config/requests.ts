@@ -167,7 +167,7 @@ type ApiRoutes = {
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
-        | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth", TApiRoute>,
+        | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth" | "UpdateAdvisor", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -368,6 +368,7 @@ export class Api {
             GetReminders: {route: "/service-centers/{id}/send-reminders", method: "get"},
             UpdateReminders: {route: "/service-centers/{id}/send-reminders", method: "patch"},
             UpdateAuth: {route: "/service-centers/{id}/auth", method: "patch"},
+            UpdateAdvisor: {route: "/service-centers/{id}/update-appointments-advisor", method: "patch"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

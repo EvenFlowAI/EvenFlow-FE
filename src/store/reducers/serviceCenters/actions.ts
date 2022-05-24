@@ -249,5 +249,14 @@ export const updateAuth = (id: number, isAuthRequired: boolean, onError: (err: s
         onError(err)
         console.log('update auth error', err)
     }).finally(() => dispatch(setRemindersLoading(false)))
+}
 
+export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.UpdateAdvisor, {urlParams: {id}, data: {isUpdateAdvisorInAppointments}})
+        .then(res => {
+            // todo get results
+        })
+        .catch(err => {
+            console.log('update appointments advisor', err)
+        })
 }
