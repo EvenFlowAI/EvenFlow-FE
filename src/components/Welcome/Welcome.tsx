@@ -14,7 +14,7 @@ import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
-import {setCurrentFrameScreen} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setCurrentFrameScreen, setSideBarSteps} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
@@ -24,7 +24,7 @@ export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
     const history = useHistory();
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn, valueService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
@@ -54,6 +54,7 @@ export const Welcome = () => {
 
     const onComplete = (serviceType: EServiceType) => {
         handleMobileService();
+        dispatch(setSideBarSteps([]));
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         dispatch(setCurrentFrameScreen("carSelection"));
         history.push(

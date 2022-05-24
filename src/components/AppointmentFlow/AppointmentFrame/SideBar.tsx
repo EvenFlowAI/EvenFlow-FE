@@ -1,8 +1,8 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TScreen} from "../../Layout/types";
 import {ProgressStepper} from "../ProgressStepper";
-import {setAdditionalServicesChosen} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAdditionalServicesChosen, setSideBarSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
@@ -165,8 +165,7 @@ type TProps = {
 }
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const [passed, setPassed] = useState<TScreen[]>([]);
-    const {serviceType} =  useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, sideBarSteps} =  useSelector((state: RootState) => state.appointmentFrame);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -196,25 +195,27 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }, [serviceType, screen])
 
     const onClick = (idx: number) => {
-        if (idx === 0) dispatch(setAdditionalServicesChosen(true));
         const screen = serviceType === EServiceType.VisitCenter
             ? stepScreens[idx]
             : serviceType === EServiceType.Mobile
                 ? mobileServiceScreens[idx]
                 : pickUpDropOffScreens[idx];
+        if (idx === 0) {
+            dispatch(setAdditionalServicesChosen(true));
+        }
         handleSetScreen(screen);
     }
 
     useEffect(() => {
-        setPassed(prev => Array.from(new Set([...prev, screen])))
-    }, [screen])
+        dispatch(setSideBarSteps(Array.from(new Set([...sideBarSteps, screen]))));
+    }, [screen, dispatch, setSideBarSteps])
 
     const getButtonState = (index: number) => {
         return serviceType === EServiceType.Mobile
-            ? mobileStepsMap[screen] < index + 1 && mobileStepsMap[passed[passed.length - 1]] < index + 1
+            ? mobileStepsMap[screen] < index + 1 && mobileStepsMap[sideBarSteps[sideBarSteps.length - 1]] < index + 1
             : serviceType === EServiceType.PikUpDropOff
-                ? pickUpDropOffStepsMap[screen] < index + 1 && pickUpDropOffStepsMap[passed[passed.length - 1]] < index + 1
-                : stepsMap[screen] < index + 1 && stepsMap[passed[passed.length - 1]] < index + 1;
+                ? pickUpDropOffStepsMap[screen] < index + 1 && pickUpDropOffStepsMap[sideBarSteps[sideBarSteps.length - 1]] < index + 1
+                : stepsMap[screen] < index + 1 && stepsMap[sideBarSteps[sideBarSteps.length - 1]] < index + 1;
     }
 
     return (

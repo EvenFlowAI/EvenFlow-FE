@@ -52,6 +52,7 @@ export const setValueService = createAction<IValueService | null>('fAppointment/
 export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesModels');
 export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
 export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoading');
+export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
