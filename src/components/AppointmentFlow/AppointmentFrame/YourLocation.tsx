@@ -8,8 +8,10 @@ import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
-import {setAddress, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAddress, setSideBarSteps, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TOption = {
     value: string;
@@ -41,7 +43,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const [zip, setZip] = useState<TOption | null>(null);
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
-    const {zipCode: zipCodeValue, address} = useSelector((state: RootState) => state.appointmentFrame);
+    const {zipCode: zipCodeValue, address, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const classes = useStyles();
 
@@ -51,7 +53,18 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         setAddressValue(address);
     }, [zipCodeValue, mockZip, address])
 
+    const clearSelectedData = () => {
+        dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
+        dispatch(selectAppointment(null));
+    }
+
+    const clearAddress = () => {
+        dispatch(setAddress(null));
+        dispatch(setZipCode(null));
+    }
+
     const handleChangeAddress = async (e: any) => {
+        clearSelectedData();
         console.log(e?.value?.place_id)
         const geoCode = await geocodeByPlaceId(e.value.place_id)
         console.log(geoCode)
@@ -65,18 +78,15 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         }
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: TOption | null) => {
+        clearSelectedData();
         setFormChecked(false);
         setZip(option);
         option ? dispatch(setZipCode(option?.value)) : dispatch(setZipCode(null));
     }
 
-    const clearAddress = () => {
-        dispatch(setAddress(null));
-        dispatch(setZipCode(null));
-    }
-
     const handleBack = () => {
         clearAddress();
+        clearSelectedData();
         if (!customerLoadedData?.id) {
             onLogin();
         } else {
