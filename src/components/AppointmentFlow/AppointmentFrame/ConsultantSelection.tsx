@@ -37,7 +37,8 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
 
 const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
     display: "flex",
-    gap: "16px",
+    rowGap: 16,
+    columnGap: 16,
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     color: active ? "#FFFFFF" : theme.palette.text.primary,
     background: active ? "#000000" : "transparent",

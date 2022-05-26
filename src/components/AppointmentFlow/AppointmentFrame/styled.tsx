@@ -32,6 +32,9 @@ export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: bo
         alignItems: 'center',
         flexWrap: 'wrap',
         padding: "0 12px",
+        [theme.breakpoints.down('sm')]: {
+            gridColumn: "1/3",
+        }
     },
     "& .price": {
         color: "#27AE60",

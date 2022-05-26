@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
-import {Route, Switch, useHistory, useParams} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import {Layout} from "./components/Layout/Layout";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
@@ -28,8 +28,6 @@ const App = () => {
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
     const dispatch = useDispatch();
-    const history = useHistory();
-    const {id} = useParams();
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
@@ -54,7 +52,6 @@ const App = () => {
     const onValueServiceBack = async () => {
         await dispatch(setValueService(null));
         await dispatch(setCurrentFrameScreen(valueServicePreviousScreen));
-        history.push( "/f/appointment/" + id);
     }
 
     return (

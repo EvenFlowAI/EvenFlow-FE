@@ -44,6 +44,7 @@ const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
     const {makes, valueService, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams();
+
     const history = useHistory();
 
     useEffect(() => {
@@ -86,9 +87,14 @@ const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
         history.push( "/f/appointment/" + id);
     };
 
+    const onBackClick = () => {
+        if (id) history.push( "/f/appointment/" + id);
+        onBack();
+    }
+
     const component = useMemo(() => {
         const screens: {[k in TValueServiceScreen]: JSX.Element} = {
-            vehicleDetails: <YearModel onBack={onBack} onNext={() => setScreen("serviceSelection")}/>,
+            vehicleDetails: <YearModel onBack={onBackClick} onNext={() => setScreen("serviceSelection")}/>,
             serviceSelection: <ServiceSelection
                 onNext={() => setScreen("serviceDetails")}
                 onBack={() => setScreen("vehicleDetails")}
