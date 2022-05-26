@@ -251,12 +251,18 @@ export const updateAuth = (id: number, isAuthRequired: boolean, onError: (err: s
     }).finally(() => dispatch(setRemindersLoading(false)))
 }
 
-export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean): AppThunk => dispatch => {
+export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setRemindersLoading(true));
     Api.call(Api.endpoints.ServiceCenters.UpdateAdvisor, {urlParams: {id}, data: {isUpdateAdvisorInAppointments}})
         .then(res => {
-            // todo get results
+            if (res) {
+                onSuccess();
+                dispatch(loadAllSCs());
+            }
         })
         .catch(err => {
             console.log('update appointments advisor', err)
+            onError(err);
         })
+        .finally(() => dispatch(setRemindersLoading(false)));
 }
