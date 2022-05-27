@@ -10,11 +10,12 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
-import {IAppointmentId, IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
+import {EServiceType, EUserType, IAppointmentId, IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
+import {selectAppointment, selectSR} from "../appointment/actions";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -43,10 +44,15 @@ export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPacka
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
+export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
+export const setServiceType = createAction<EServiceType>('fAppointment/SetServiceType');
+export const setZipCode = createAction<string | null>('fAppointment/SetZipCode');
+export const setAddress = createAction<any>('fAppointment/SetAddress');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
 export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesModels');
 export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
 export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoading');
+export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -146,4 +152,17 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
             console.log('get value service offers error', err)
         })
         .finally(() => dispatch(setOffersLoading(false)))
+}
+
+export const clearAppointmentData = (): AppThunk => (dispatch) => {
+    dispatch(setPackage(null));
+    dispatch(selectService(null));
+    dispatch(selectSubService(null));
+    dispatch(selectAppointment(null));
+    dispatch(setValueService(null));
+    dispatch(selectCategoriesIds([]));
+    dispatch(selectSR(null));
+    dispatch(setTiming(null));
+    dispatch(setAdvisor(null));
+    dispatch(setTransportation(null));
 }

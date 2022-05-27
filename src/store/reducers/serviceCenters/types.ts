@@ -13,6 +13,7 @@ export interface IServiceCenter {
     laborRatePerHour: number;
     isAuthRequired: boolean;
     serviceCenterFlag?: number;
+    isUpdateAdvisorInAppointments?: boolean;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;

@@ -5,7 +5,7 @@ import {getMaintenanceList} from "./uiUtils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
-import {selectSR} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
@@ -15,6 +15,7 @@ import {
     selectSubService,
     setMaintenanceDetails,
     setPackage,
+    setSideBarSteps,
     setValueService,
     setVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -23,6 +24,7 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import {yearOptions} from "./MaintenanceDetails";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -71,7 +73,7 @@ const CartItem: React.FC<TCartItemProps> = ({ item, onClick}) => {
 }
 
 const CartTable = () => {
-    const { selectedPackage, categoriesIds, subService, service, valueService, makes } = useSelector((state: RootState) => state.appointmentFrame);
+    const { selectedPackage, categoriesIds, subService, service, valueService, makes, sideBarSteps, serviceType } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
@@ -95,6 +97,7 @@ const CartTable = () => {
 
     const deleteIndService = (item: IMaintenanceItem) => {
         dispatch(selectSR(item.id));
+        dispatch(selectAppointment(null));
         const services = selectedSR.filter(sr => sr !== item.id);
         const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
         const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
@@ -113,6 +116,7 @@ const CartTable = () => {
     }
 
     const deleteValueService = () => {
+        // todo add possibility to use value service with other dealerships if needed
         if (valueService && isBmWService) {
             const vehicle: ILoadedVehicle = {
                 vin: '',
@@ -140,8 +144,21 @@ const CartTable = () => {
                 dispatch(setVehicle(vehicle));
             }
             dispatch(setValueService(null));
-            if (service?.type === EServiceCategoryType.ValueService) dispatch(selectService(null));
-            if (subService?.type === EServiceCategoryType.ValueService) dispatch(selectSubService(null));
+            if (service?.type === EServiceCategoryType.ValueService) {
+                dispatch(selectService(null));
+                dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
+            }
+            if (subService?.type === EServiceCategoryType.ValueService) {
+                dispatch(selectSubService(null));
+                dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
+            }
+            dispatch(selectAppointment(null));
+        }
+    }
+
+    const handleSideBarSteps = () => {
+        if (sideBarSteps?.length) {
+            dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location", "serviceNeeds"]));
         }
     }
 
@@ -149,16 +166,22 @@ const CartTable = () => {
         switch (item.type) {
             case 'service':
                 deleteIndService(item);
+                handleSideBarSteps()
                 return;
             case 'package':
                 if (service?.type === 1) dispatch(selectService(null));
+                dispatch(selectAppointment(null));
+                handleSideBarSteps();
                 return dispatch(setPackage(null));
             case 'valueService':
+                handleSideBarSteps();
                 deleteValueService();
                return;
             default:
                 if (service?.id === item.id) dispatch(selectService(null));
                 if (subService?.id === item.id) dispatch(selectSubService(null));
+                dispatch(selectAppointment(null));
+                handleSideBarSteps();
                 return dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
         }
     }

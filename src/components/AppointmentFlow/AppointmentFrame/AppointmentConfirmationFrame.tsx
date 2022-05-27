@@ -29,6 +29,8 @@ import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import Address from "./confirmationSections/Address";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -132,6 +134,12 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             : appointmentFrame?.valueService?.series?.name
                 ? appointmentFrame.valueService.series.name
                 : null;
+
+        const year = appointmentFrame?.selectedVehicle?.year
+                ? String(appointmentFrame.selectedVehicle.year)
+            : appointmentFrame?.valueService?.year?.year
+                ? String(appointmentFrame.valueService.year.year)
+                : null;
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
@@ -154,9 +162,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 make,
                 transmission: "",
                 vin: appointmentFrame.selectedVehicle?.vin ?? '',
-                year: appointmentFrame?.selectedVehicle?.year
-                    ? String(appointmentFrame.selectedVehicle.year) : appointmentFrame?.valueService?.year?.year
-                        ? String(appointmentFrame.valueService.year.year) : null,
+                year,
                 mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
                 modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
             },
@@ -206,6 +212,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 <SelectedDate onChangeSlot={onChangeSlot} />
                 <Vehicle/>
                 <ServiceRequests/>
+                <Address/>
                 <SelectedPrice/>
                 <div
                     role="presentation"
@@ -213,7 +220,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     onClick={onFeesOpen}>
                     View itemized fees of services
                 </div>
-                <Review />
+                {appointmentFrame.serviceType === EServiceType.VisitCenter ? <Review/> : null}
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>

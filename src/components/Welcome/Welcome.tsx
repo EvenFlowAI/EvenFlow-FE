@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {CustomerSelect} from "./CustomerSelect";
-import { LoginInput } from './LoginInput';
+import {LoginInput} from './LoginInput';
 import {useHistory, useParams} from 'react-router-dom';
 import {Routes} from "../../config/routes";
 import {useDispatch, useSelector} from "react-redux";
@@ -14,16 +14,18 @@ import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
-import {setCurrentFrameScreen} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setCurrentFrameScreen, setSideBarSteps} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
+import ServiceTypeSelect from "./ServiceTypeSelect";
+import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
-    const scProfile = useSelector((state: RootState) => state.appointment.scProfile);
-    const {valueService} = useSelector((state: RootState) => state.appointmentFrame);
-    const {id} = useParams();
     const history = useHistory();
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
 
@@ -46,7 +48,13 @@ export const Welcome = () => {
         }
     }, [id]);
 
-    const onComplete = () => {
+    const handleMobileService = () => {
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) setView("serviceSelect")
+    };
+
+    const onComplete = (serviceType: EServiceType) => {
+        handleMobileService();
+        dispatch(setSideBarSteps([]));
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         dispatch(setCurrentFrameScreen("carSelection"));
         history.push(
@@ -74,21 +82,30 @@ export const Welcome = () => {
                     onConfirm={() => setView("confirm")}
                     onReturn={() => setView("select")}
                 />;
-            case "select":
-            default:
-                return <CustomerSelect
+            case "serviceSelect":
+                return <ServiceTypeSelect
                     onComplete={onComplete}
                     onLogin={() => setView("search")}
                 />;
+            case "select":
+            default:
+                return <CustomerSelect
+                    setView={setView}
+                    onLogin={() => setView("search")}
+                    onComplete={onComplete}
+                />;
         }
     }
+
+    const getTitle = (view: TView) => view === 'serviceSelect' ? "Do you want to bring your car in" : "Welcome!";
+    const getSubTitle = (view: TView) => view === 'serviceSelect' ? "Or use our mobile service?" : "Schedule Your Service:";
 
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
                 <FrameWelcomeLayout>
                     {getComponent()}
                 </FrameWelcomeLayout>
             </MuiThemeProvider> :
-            <WelcomeLayout title="Welcome!" subtitle="Schedule Your Service:">
+            <WelcomeLayout title={getTitle(view)} subtitle={getSubTitle(view)}>
                 {getComponent()}
             </WelcomeLayout>
     );
