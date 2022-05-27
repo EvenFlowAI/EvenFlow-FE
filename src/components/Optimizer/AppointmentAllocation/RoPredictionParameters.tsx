@@ -3,14 +3,10 @@ import {DemandTable, SaveEditBlock, TableCell, TableRow} from "./UI";
 import {TableBody, TableHead} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
-import {InfoOutlined} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {useException} from "../../../utils/hooks";
-import LaborRate from "../MaintenancePackages/LaborRate/LaborRate";
 import {RootState} from "../../../store/rootReducer";
-import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRequests/actions";
 import {useHistory} from "react-router-dom";
-import {Routes} from "../../../config/routes";
 
 const useStyles = makeStyles(() => ({
     laborPerHour: {
@@ -48,7 +44,6 @@ const RoPredictionParameters = () => {
     const [heavyRepairLaborHour, setHeavyRepairLaborHour] = useState<number>(0);
     const [otherRepairLaborHour, setOtherRepairLaborHour] = useState<number>(0);
     const [defaultRepairLaborHour, setDefaultRepairLaborHour] = useState<number>(0);
-    const history = useHistory();
 
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -80,23 +75,11 @@ const RoPredictionParameters = () => {
 
     const handleSave = () => {}
 
-    const onMaintenancePackageClick = async () => {
-        await dispatch(setServiceRequestsPageActiveTab("1"));
-        await history.push(Routes.Optimizer.ServiceRequests);
-    }
-
     return (
         <div>
             <div className={classes.laborPerHour}>
                 Labor Rate Per Hour: ${selectedSC?.laborRatePerHour}
             </div>
-            {/*<div className={classes.note}>*/}
-            {/*    <InfoOutlined/>*/}
-            {/*    <span className={classes.text}>*/}
-            {/*        Note: To adjust the Labor Rate value, see*/}
-            {/*        <span role="presentation" onClick={onMaintenancePackageClick} className={classes.link}>Maintenance Package Page</span>*/}
-            {/*    </span>*/}
-            {/*</div>*/}
             <DemandTable>
                 <TableHead>
                     <TableRow>
@@ -173,6 +156,26 @@ const RoPredictionParameters = () => {
                         </TableCell>
                         <TableCell/>
                     </TableRow>
+                    {/*<TableRow>*/}
+                    {/*    <TableCell>*/}
+                    {/*        OtherRepairLaborHour*/}
+                    {/*    </TableCell>*/}
+                    {/*    <TableCell>*/}
+                    {/*        {!isEdit*/}
+                    {/*            ? otherRepairLaborHour*/}
+                    {/*            : <TextField*/}
+                    {/*                type="number"*/}
+                    {/*                inputProps={{*/}
+                    {/*                    min: 0,*/}
+                    {/*                    step: 1,*/}
+                    {/*                }}*/}
+                    {/*                value={otherRepairLaborHour}*/}
+                    {/*                onChange={handleChangeOther}*/}
+                    {/*            />*/}
+                    {/*        }*/}
+                    {/*    </TableCell>*/}
+                    {/*    <TableCell/>*/}
+                    {/*</TableRow>*/}
                 </TableBody>
             </DemandTable>
         </div>

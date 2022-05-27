@@ -107,3 +107,10 @@ export type TServiceCenterActions =
     | TGetAll
     | TSetReminders
     | TSetRemindersLoading;
+
+export interface IPredictionParams {
+    heavyRepairLaborHours: number;
+    otherRepairLaborHours: number;
+    defaultLaborHours: number;
+    laborRatePerHour: number;
+}

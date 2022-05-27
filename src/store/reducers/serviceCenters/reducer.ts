@@ -1,4 +1,4 @@
-import {ISCAnalytics, IServiceCenter, IServiceCenterExtended, TServiceCenterActions} from "./types";
+import {IPredictionParams, ISCAnalytics, IServiceCenter, IServiceCenterExtended, TServiceCenterActions} from "./types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {EDay} from "../demandSegments/types";
@@ -30,6 +30,7 @@ type TServiceCenterState = {
     dealershipId: number | undefined,
     reminders: boolean,
     remindersLoading: boolean,
+    predictionParams: IPredictionParams,
 };
 
 const initialState: TServiceCenterState = {
@@ -51,6 +52,12 @@ const initialState: TServiceCenterState = {
     dealershipId: undefined,
     reminders: false,
     remindersLoading: false,
+    predictionParams: {
+        heavyRepairLaborHours: 0,
+        otherRepairLaborHours: 0,
+        defaultLaborHours: 0,
+        laborRatePerHour: 0,
+    }
 };
 
 export const serviceCenterReducer = (state=initialState, action: TServiceCenterActions): TServiceCenterState => {
