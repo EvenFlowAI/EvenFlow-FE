@@ -90,13 +90,13 @@ const RoPredictionParameters = () => {
             <div className={classes.laborPerHour}>
                 Labor Rate Per Hour: ${selectedSC?.laborRatePerHour}
             </div>
-            <div className={classes.note}>
-                <InfoOutlined/>
-                <span className={classes.text}>
-                    Note: To adjust the Labor Rate value, see
-                    <span role="presentation" onClick={onMaintenancePackageClick} className={classes.link}>Maintenance Package Page</span>
-                </span>
-            </div>
+            {/*<div className={classes.note}>*/}
+            {/*    <InfoOutlined/>*/}
+            {/*    <span className={classes.text}>*/}
+            {/*        Note: To adjust the Labor Rate value, see*/}
+            {/*        <span role="presentation" onClick={onMaintenancePackageClick} className={classes.link}>Maintenance Package Page</span>*/}
+            {/*    </span>*/}
+            {/*</div>*/}
             <DemandTable>
                 <TableHead>
                     <TableRow>
@@ -114,6 +114,26 @@ const RoPredictionParameters = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
+                    <TableRow>
+                        <TableCell>
+                            DefaultLaborHours
+                        </TableCell>
+                        <TableCell>
+                            {!isEdit
+                                ? defaultRepairLaborHour
+                                : <TextField
+                                    type="number"
+                                    inputProps={{
+                                        min: 0,
+                                        step: 1,
+                                    }}
+                                    value={defaultRepairLaborHour}
+                                    onChange={handleChangeDefault}
+                                />
+                            }
+                        </TableCell>
+                        <TableCell/>
+                    </TableRow>
                     <TableRow>
                         <TableCell>
                             HeavyRepairLaborHour
@@ -148,25 +168,6 @@ const RoPredictionParameters = () => {
                                     }}
                                     value={otherRepairLaborHour}
                                     onChange={handleChangeOther}
-                                />
-                            }
-                        </TableCell>
-                        <TableCell/>
-                    </TableRow><TableRow>
-                        <TableCell>
-                            DefaultLaborHours
-                        </TableCell>
-                        <TableCell>
-                            {!isEdit
-                                ? defaultRepairLaborHour
-                                : <TextField
-                                    type="number"
-                                    inputProps={{
-                                        min: 0,
-                                        step: 1,
-                                    }}
-                                    value={defaultRepairLaborHour}
-                                    onChange={handleChangeDefault}
                                 />
                             }
                         </TableCell>
