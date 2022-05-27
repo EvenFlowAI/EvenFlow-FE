@@ -57,6 +57,7 @@ const initialState: TServiceCenterState = {
         otherRepairLaborHours: 0,
         defaultLaborHours: 0,
         laborRatePerHour: 0,
+        warrantyLaborRatePerHour: 0,
     }
 };
 

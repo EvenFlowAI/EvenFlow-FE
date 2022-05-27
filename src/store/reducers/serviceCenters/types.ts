@@ -113,4 +113,5 @@ export interface IPredictionParams {
     otherRepairLaborHours: number;
     defaultLaborHours: number;
     laborRatePerHour: number;
+    warrantyLaborRatePerHour: number;
 }
