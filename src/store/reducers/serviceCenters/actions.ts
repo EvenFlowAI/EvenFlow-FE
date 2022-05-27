@@ -1,4 +1,11 @@
-import {ISCAnalytics, IServiceCenter, IServiceCenterExtended, IServiceCenterForm, TServiceCenterActions} from "./types";
+import {
+    IPredictionParams,
+    ISCAnalytics,
+    IServiceCenter,
+    IServiceCenterExtended,
+    IServiceCenterForm,
+    TServiceCenterActions
+} from "./types";
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
@@ -265,4 +272,13 @@ export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean
             onError(err);
         })
         .finally(() => dispatch(setRemindersLoading(false)));
+}
+
+export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters?PredictionParams")
+export const loadPredictionParams = (id: number): AppThunk => dispatch => {
+
+}
+
+export const updatePredictionParams = (id: number, data: IPredictionParams): AppThunk => dispatch => {
+
 }

@@ -95,6 +95,8 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, reminders: action.payload};
         case "ServiceCenters/SetRemindersLoading":
             return {...state, remindersLoading: action.payload};
+        case "ServiceCenters/PredictionParams":
+            return {...state, predictionParams: action.payload};
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
                 return {...state, workingDays: action.payload};
