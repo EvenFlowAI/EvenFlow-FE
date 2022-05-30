@@ -39,6 +39,7 @@ type TServiceCenterState = {
     remindersLoading: boolean,
     predictionParams: IPredictionParams,
     laborRate: ILaborRate,
+    predictionParamsLoading: boolean,
 };
 
 const initialState: TServiceCenterState = {
@@ -64,13 +65,13 @@ const initialState: TServiceCenterState = {
         heavyRepairLaborHours: 0,
         otherRepairLaborHours: 0,
         defaultLaborHours: 0,
-        laborRatePerHour: 0,
     },
     laborRate: {
-        laborRatePerHour: 0,
+        customerPay: 0,
         warranty: 0,
         internal: 0,
-    }
+    },
+    predictionParamsLoading: false,
 };
 
 export const serviceCenterReducer = (state=initialState, action: TServiceCenterActions): TServiceCenterState => {
@@ -111,6 +112,9 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, predictionParams: action.payload};
         case "ServiceCenters/SetLaborRate":
             return {...state, laborRate: action.payload};
+        case "ServiceCenters/SetParamsLoading":
+            return {...state, predictionParamsLoading: action.payload};
+
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
                 return {...state, workingDays: action.payload};

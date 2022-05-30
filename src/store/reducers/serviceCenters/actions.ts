@@ -274,21 +274,62 @@ export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean
         })
         .finally(() => dispatch(setRemindersLoading(false)));
 }
-
-export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters?PredictionParams")
+export const setParamsLoading = createAction<boolean>("ServiceCenters/SetParamsLoading");
+export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters/PredictionParams")
 export const loadPredictionParams = (id: number): AppThunk => dispatch => {
-    // todo request
+    dispatch(setParamsLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.GetPredictionParams, {urlParams: {id}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(setPredictionParams(result.data));
+            }
+        })
+        .catch(err => {
+            console.log("load RO prediction parameters error", err)
+        })
+        .finally(() => dispatch(setParamsLoading(false)));
 }
 
 export const updatePredictionParams = (id: number, data: IPredictionParams, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
-    // todo request
+    dispatch(setParamsLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdatePredictionParams, {urlParams: {id}, data})
+        .then(result => {
+            if (result?.data) {
+                dispatch(loadPredictionParams(id));
+                onSuccess();
+            }
+        })
+        .catch(err => {
+            console.log("load RO prediction parameters error", err)
+            onError(err)
+        })
+        .finally(() => dispatch(setParamsLoading(false)));
 }
 
 export const setLaborRate = createAction<ILaborRate>("ServiceCenters?PredictionParams")
 export const loadLaborRate = (id: number): AppThunk => dispatch => {
-    // todo request
+    dispatch(setParamsLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.GetLaborRate, {urlParams: {id}})
+        .then(result => {
+            if (result?.data) dispatch(setLaborRate(result.data));
+        })
+        .catch(err => {
+            console.log('load labor rate error', err)
+        })
+        .finally(() => dispatch(setParamsLoading(false)));
 }
 
 export const updateLaborRate = (id: number, data: ILaborRate, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
-    // todo request
+    dispatch(setParamsLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateLaborRate, {urlParams: {id}, data})
+        .then(result => {
+            if (result) {
+                dispatch(loadLaborRate(id));
+                onSuccess();
+            }
+        })
+        .catch(err => {
+            console.log('update labor rate err', err)
+            onError(err)
+        })
 }

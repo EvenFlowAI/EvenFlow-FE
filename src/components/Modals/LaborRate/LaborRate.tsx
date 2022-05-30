@@ -10,6 +10,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useException, useMessage} from "../../../utils/hooks";
 import {loadLaborRate, updateLaborRate} from "../../../store/reducers/serviceCenters/actions";
 import {ILaborRate} from "../../../store/reducers/serviceCenters/types";
+import {Loading} from "../../UI/Loading";
 
 const useStyles = makeStyles(() => ({
     actionsWrapper: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles(() => ({
 
 
 const LaborRate: React.FC<DialogProps> = (props) => {
-    const {laborRate, selectedSC} = useSelector((state: RootState) => state.serviceCenters);
+    const {laborRate, selectedSC, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [customerPay, setCustomerPay] = useState<number>(0);
     const [warranty, setWarranty] = useState<number>(0);
     const [internal, setInternal] = useState<number>(0);
@@ -56,13 +57,13 @@ const LaborRate: React.FC<DialogProps> = (props) => {
     }, [selectedSC])
 
     useEffect(() => {
-        setCustomerPay(laborRate.laborRatePerHour);
+        setCustomerPay(laborRate.customerPay);
         setWarranty(laborRate.warranty);
         setInternal(laborRate.internal);
     }, [laborRate])
 
     const onCancel = () => {
-        setCustomerPay(laborRate.laborRatePerHour);
+        setCustomerPay(laborRate.customerPay);
         setWarranty(laborRate.warranty);
         setInternal(laborRate.internal);
         props.onClose();
@@ -79,7 +80,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
 
     const onSave = () => {
         const data: ILaborRate = {
-            laborRatePerHour: customerPay,
+            customerPay,
             warranty,
             internal,
         }
@@ -102,68 +103,71 @@ const LaborRate: React.FC<DialogProps> = (props) => {
         <BaseModal {...props} width={600} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Service Center Labor Rates</DialogTitle>
             <DialogContent>
-                <DemandTable>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Job Type</TableCell>
-                            <TableCell>Labor Rate, $</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>Customer Pay</TableCell>
-                            <TableCell>
-                                <TextField
-                                    type="number"
-                                    inputProps={{
-                                        min: 0,
-                                    }}
-                                    value={customerPay}
-                                    onChange={handleChangeCustomerPay}
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Warranty</TableCell>
-                            <TableCell>
-                                <TextField
-                                    type="number"
-                                    inputProps={{
-                                        min: 0,
-                                    }}
-                                    value={warranty}
-                                    onChange={handleChangeWarranty}
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Internal</TableCell>
-                            <TableCell>
-                                <TextField
-                                    type="number"
-                                    inputProps={{
-                                        min: 0,
-                                    }}
-                                    value={internal}
-                                    onChange={handleChangeInternal}
-                                />
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </DemandTable>
+                {predictionParamsLoading
+                    ? <Loading/>
+                    : <DemandTable>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Job Type</TableCell>
+                                <TableCell>Labor Rate, $</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Customer Pay</TableCell>
+                                <TableCell>
+                                    <TextField
+                                        type="number"
+                                        inputProps={{
+                                            min: 0,
+                                        }}
+                                        value={customerPay}
+                                        onChange={handleChangeCustomerPay}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Warranty</TableCell>
+                                <TableCell>
+                                    <TextField
+                                        type="number"
+                                        inputProps={{
+                                            min: 0,
+                                        }}
+                                        value={warranty}
+                                        onChange={handleChangeWarranty}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Internal</TableCell>
+                                <TableCell>
+                                    <TextField
+                                        type="number"
+                                        inputProps={{
+                                            min: 0,
+                                        }}
+                                        value={internal}
+                                        onChange={handleChangeInternal}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </DemandTable>
+                }
             </DialogContent>
             <DialogActions>
                 <div className={classes.actionsWrapper}>
                     <div className={classes.buttonsWrapper}>
                         <Button
-                            // disabled={remindersLoading}
+                            disabled={predictionParamsLoading}
                             onClick={onCancel}
                             className={classes.cancelButton}>
                             Cancel
                         </Button>
                         <Button
                             onClick={onSave}
-                            // disabled={remindersLoading}
+                            disabled={predictionParamsLoading}
                             className={classes.saveButton}>
                             Save
                         </Button>
