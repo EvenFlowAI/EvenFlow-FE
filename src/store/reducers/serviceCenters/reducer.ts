@@ -1,4 +1,11 @@
-import {IPredictionParams, ISCAnalytics, IServiceCenter, IServiceCenterExtended, TServiceCenterActions} from "./types";
+import {
+    ILaborRate,
+    IPredictionParams,
+    ISCAnalytics,
+    IServiceCenter,
+    IServiceCenterExtended,
+    TServiceCenterActions
+} from "./types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {EDay} from "../demandSegments/types";
@@ -31,6 +38,7 @@ type TServiceCenterState = {
     reminders: boolean,
     remindersLoading: boolean,
     predictionParams: IPredictionParams,
+    laborRate: ILaborRate,
 };
 
 const initialState: TServiceCenterState = {
@@ -57,6 +65,11 @@ const initialState: TServiceCenterState = {
         otherRepairLaborHours: 0,
         defaultLaborHours: 0,
         laborRatePerHour: 0,
+    },
+    laborRate: {
+        laborRatePerHour: 0,
+        warranty: 0,
+        internal: 0,
     }
 };
 
@@ -96,6 +109,8 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, remindersLoading: action.payload};
         case "ServiceCenters/SetPredictionParams":
             return {...state, predictionParams: action.payload};
+        case "ServiceCenters/SetLaborRate":
+            return {...state, laborRate: action.payload};
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
                 return {...state, workingDays: action.payload};

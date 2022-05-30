@@ -90,6 +90,7 @@ export type TSetDealerShipId = {type: "ServiceCenters/SetDealershipId", payload:
 export type TSetReminders = {type: "ServiceCenters/SetReminders", payload: boolean};
 export type TSetRemindersLoading = {type: "ServiceCenters/SetRemindersLoading", payload: boolean};
 export type TSetPredictionParams = {type: "ServiceCenters/SetPredictionParams", payload: IPredictionParams};
+export type TSetLaborRate = {type: "ServiceCenters/SetLaborRate", payload: ILaborRate};
 
 export type TServiceCenterActions =
     | TCreate
@@ -108,11 +109,18 @@ export type TServiceCenterActions =
     | TGetAll
     | TSetReminders
     | TSetRemindersLoading
-    | TSetPredictionParams;
+    | TSetPredictionParams
+    | TSetLaborRate;
 
 export interface IPredictionParams {
     heavyRepairLaborHours: number;
     otherRepairLaborHours: number;
     defaultLaborHours: number;
+    laborRatePerHour?: number;
+}
+
+export interface ILaborRate {
     laborRatePerHour: number;
+    warranty: number;
+    internal: number;
 }

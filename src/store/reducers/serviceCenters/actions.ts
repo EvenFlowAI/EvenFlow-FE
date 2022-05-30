@@ -1,4 +1,5 @@
 import {
+    ILaborRate,
     IPredictionParams,
     ISCAnalytics,
     IServiceCenter,
@@ -276,9 +277,18 @@ export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean
 
 export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters?PredictionParams")
 export const loadPredictionParams = (id: number): AppThunk => dispatch => {
-
+    // todo request
 }
 
-export const updatePredictionParams = (id: number, data: IPredictionParams): AppThunk => dispatch => {
+export const updatePredictionParams = (id: number, data: IPredictionParams, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    // todo request
+}
 
+export const setLaborRate = createAction<ILaborRate>("ServiceCenters?PredictionParams")
+export const loadLaborRate = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const updateLaborRate = (id: number, data: ILaborRate, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    // todo request
 }

@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {DemandTable, SaveEditBlock, TableCell, TableRow} from "./UI";
 import {TableBody, TableHead} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
-import {useException} from "../../../utils/hooks";
+import {useException, useMessage} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
+import {loadPredictionParams, updatePredictionParams} from "../../../store/reducers/serviceCenters/actions";
+import {IPredictionParams} from "../../../store/reducers/serviceCenters/types";
 
 const useStyles = makeStyles(() => ({
     laborPerHour: {
@@ -36,44 +38,66 @@ const useStyles = makeStyles(() => ({
 }))
 
 const RoPredictionParameters = () => {
-    const {selectedSC} = useSelector((state: RootState) => state.serviceCenters);
+    const {selectedSC, predictionParams} = useSelector((state: RootState) => state.serviceCenters);
 
     const [isEdit, setEdit] = useState<boolean>(false);
     const [isSaving, setSaving] = useState<boolean>(false);
-    const [heavyRepairLaborHour, setHeavyRepairLaborHour] = useState<number>(0);
-    const [otherRepairLaborHour, setOtherRepairLaborHour] = useState<number>(0);
-    const [defaultRepairLaborHour, setDefaultRepairLaborHour] = useState<number>(0);
+    const [heavyRepairLaborHours, setHeavyRepairLaborHours] = useState<number>(0);
+    const [otherRepairLaborHours, setOtherRepairLaborHours] = useState<number>(0);
+    const [defaultLaborHours, setDefaultLaborHours] = useState<number>(0);
 
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
+    const showMessage = useMessage();
+
+    const setInitialData = useCallback(() => {
+        setHeavyRepairLaborHours(predictionParams.heavyRepairLaborHours);
+        setOtherRepairLaborHours(predictionParams.otherRepairLaborHours);
+        setDefaultLaborHours(predictionParams.defaultLaborHours);
+    }, [predictionParams])
+
+    useEffect(() => {
+        setInitialData()
+    }, [predictionParams])
+
+    useEffect(() => {
+        if (selectedSC) dispatch(loadPredictionParams(selectedSC.id))
+    }, [selectedSC])
 
     const handleChangeHeavy = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setHeavyRepairLaborHour(Number(e.target.value))
+        setHeavyRepairLaborHours(Number(e.target.value))
     }
 
     const handleChangeOther = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOtherRepairLaborHour(Number(e.target.value))
+        setOtherRepairLaborHours(Number(e.target.value))
     }
 
     const handleChangeDefault = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDefaultRepairLaborHour(Number(e.target.value))
+        setDefaultLaborHours(Number(e.target.value))
     }
 
     const onSuccess = () => {
       setEdit(false);
+      showMessage('RO Prediction Params Updated Successfully')
     }
 
     const onError = (err: string) => {
         showError(err);
     }
 
-    const handleCancel = () => {
+    const handleCancel = useCallback(() => {
         setEdit(false);
-    }
+        setInitialData();
+    }, [])
 
     const handleSave = () => {
-        // todo request
+        const data: IPredictionParams = {
+            heavyRepairLaborHours,
+            otherRepairLaborHours,
+            defaultLaborHours,
+        }
+        if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess))
     }
 
     return (
@@ -108,13 +132,13 @@ const RoPredictionParameters = () => {
                         </TableCell>
                         <TableCell>
                             {!isEdit
-                                ? heavyRepairLaborHour
+                                ? heavyRepairLaborHours
                                 : <TextField
                                     type="number"
                                     inputProps={{
                                         min: 0,
                                     }}
-                                    value={heavyRepairLaborHour}
+                                    value={heavyRepairLaborHours}
                                     onChange={handleChangeHeavy}
                                 />
                             }
@@ -130,14 +154,14 @@ const RoPredictionParameters = () => {
                         </TableCell>
                         <TableCell>
                             {!isEdit
-                                ? otherRepairLaborHour
+                                ? otherRepairLaborHours
                                 : <TextField
                                     type="number"
                                     inputProps={{
                                         min: 0,
                                         step: 1,
                                     }}
-                                    value={otherRepairLaborHour}
+                                    value={otherRepairLaborHours}
                                     onChange={handleChangeOther}
                                 />
                             }
@@ -154,14 +178,14 @@ const RoPredictionParameters = () => {
                         </TableCell>
                         <TableCell>
                             {!isEdit
-                                ? defaultRepairLaborHour
+                                ? defaultLaborHours
                                 : <TextField
                                     type="number"
                                     inputProps={{
                                         min: 0,
                                         step: 1,
                                     }}
-                                    value={defaultRepairLaborHour}
+                                    value={defaultLaborHours}
                                     onChange={handleChangeDefault}
                                 />
                             }
