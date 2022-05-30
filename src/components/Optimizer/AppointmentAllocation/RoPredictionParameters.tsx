@@ -6,7 +6,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {useException} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
-import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
     laborPerHour: {
@@ -73,7 +72,9 @@ const RoPredictionParameters = () => {
         setEdit(false);
     }
 
-    const handleSave = () => {}
+    const handleSave = () => {
+        // todo request
+    }
 
     return (
         <div>
@@ -83,9 +84,10 @@ const RoPredictionParameters = () => {
             <DemandTable>
                 <TableHead>
                     <TableRow>
-                        <TableCell width='40%'>Model Parameter</TableCell>
-                        <TableCell width='40%'>Value</TableCell>
-                        <TableCell width='20%' style={{textAlign: "right"}}>
+                        <TableCell width='20%' align="left">Model Parameter</TableCell>
+                        <TableCell width='45%' align="left">Desciption</TableCell>
+                        <TableCell width='20%'>Value</TableCell>
+                        <TableCell width='15%' style={{textAlign: "right"}}>
                             <SaveEditBlock
                                 onSave={handleSave}
                                 onEdit={() => setEdit(true)}
@@ -98,28 +100,11 @@ const RoPredictionParameters = () => {
                 </TableHead>
                 <TableBody>
                     <TableRow>
-                        <TableCell>
-                            DefaultLaborHours
-                        </TableCell>
-                        <TableCell>
-                            {!isEdit
-                                ? defaultRepairLaborHour
-                                : <TextField
-                                    type="number"
-                                    inputProps={{
-                                        min: 0,
-                                        step: 1,
-                                    }}
-                                    value={defaultRepairLaborHour}
-                                    onChange={handleChangeDefault}
-                                />
-                            }
-                        </TableCell>
-                        <TableCell/>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>
+                        <TableCell align="left">
                             HeavyRepairLaborHour
+                        </TableCell>
+                        <TableCell align="left">
+                            The number of incremental hours added to the appointment if the appointment predicted as Heavy Repair
                         </TableCell>
                         <TableCell>
                             {!isEdit
@@ -137,8 +122,11 @@ const RoPredictionParameters = () => {
                         <TableCell/>
                     </TableRow>
                     <TableRow>
-                        <TableCell>
+                        <TableCell align="left">
                             OtherRepairLaborHour
+                        </TableCell>
+                        <TableCell align="left">
+                            The number of incremental hours added to the appointment if the appointment is <span style={{textDecoration: 'underline'}}>not</span> predicted as Heavy Repair
                         </TableCell>
                         <TableCell>
                             {!isEdit
@@ -156,26 +144,30 @@ const RoPredictionParameters = () => {
                         </TableCell>
                         <TableCell/>
                     </TableRow>
-                    {/*<TableRow>*/}
-                    {/*    <TableCell>*/}
-                    {/*        OtherRepairLaborHour*/}
-                    {/*    </TableCell>*/}
-                    {/*    <TableCell>*/}
-                    {/*        {!isEdit*/}
-                    {/*            ? otherRepairLaborHour*/}
-                    {/*            : <TextField*/}
-                    {/*                type="number"*/}
-                    {/*                inputProps={{*/}
-                    {/*                    min: 0,*/}
-                    {/*                    step: 1,*/}
-                    {/*                }}*/}
-                    {/*                value={otherRepairLaborHour}*/}
-                    {/*                onChange={handleChangeOther}*/}
-                    {/*            />*/}
-                    {/*        }*/}
-                    {/*    </TableCell>*/}
-                    {/*    <TableCell/>*/}
-                    {/*</TableRow>*/}
+                    <TableRow>
+                        <TableCell align="left">
+                            DefaultLaborHours
+                        </TableCell>
+                        <TableCell align="left">
+                            When an Open RO or an appointment booked outside of EvenFlow app uses ops codes that are not
+                            in the Service Request Page and the Labor Hour value can not be found in the DMS
+                        </TableCell>
+                        <TableCell>
+                            {!isEdit
+                                ? defaultRepairLaborHour
+                                : <TextField
+                                    type="number"
+                                    inputProps={{
+                                        min: 0,
+                                        step: 1,
+                                    }}
+                                    value={defaultRepairLaborHour}
+                                    onChange={handleChangeDefault}
+                                />
+                            }
+                        </TableCell>
+                        <TableCell/>
+                    </TableRow>
                 </TableBody>
             </DemandTable>
         </div>

@@ -57,7 +57,6 @@ const initialState: TServiceCenterState = {
         otherRepairLaborHours: 0,
         defaultLaborHours: 0,
         laborRatePerHour: 0,
-        warrantyLaborRatePerHour: 0,
     }
 };
 
@@ -95,7 +94,7 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, reminders: action.payload};
         case "ServiceCenters/SetRemindersLoading":
             return {...state, remindersLoading: action.payload};
-        case "ServiceCenters/PredictionParams":
+        case "ServiceCenters/SetPredictionParams":
             return {...state, predictionParams: action.payload};
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
