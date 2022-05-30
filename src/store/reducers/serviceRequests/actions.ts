@@ -24,6 +24,7 @@ export const setNonSelectedPaging = createAction<IPagingResponse>("ServiceReques
 export const setNonSelectedOrder = createAction<IOrder<IServiceRequest>>("ServiceRequests/NonSelectedOrder");
 export const setNonSelectedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/NonSelectedPageData");
 export const setNonSelectedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/NonSelectedFilter");
+export const setServiceRequestsPageActiveTab = createAction<string>("ServiceRequests/SetServiceRequestsPageActiveTab");
 
 export const loadNonSelectedServiceRequests = (serviceCenterId: number, isAssigned?: boolean): AppThunk =>
     async (dispatch, getState) => {

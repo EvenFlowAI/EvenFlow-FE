@@ -89,6 +89,7 @@ export type TChangeDealershipPaging = TChangePagingGeneric<"ServiceCenters/Chang
 export type TSetDealerShipId = {type: "ServiceCenters/SetDealershipId", payload: number | undefined};
 export type TSetReminders = {type: "ServiceCenters/SetReminders", payload: boolean};
 export type TSetRemindersLoading = {type: "ServiceCenters/SetRemindersLoading", payload: boolean};
+export type TSetPredictionParams = {type: "ServiceCenters/SetPredictionParams", payload: IPredictionParams};
 
 export type TServiceCenterActions =
     | TCreate
@@ -106,4 +107,12 @@ export type TServiceCenterActions =
     | TSetDealerShipId
     | TGetAll
     | TSetReminders
-    | TSetRemindersLoading;
+    | TSetRemindersLoading
+    | TSetPredictionParams;
+
+export interface IPredictionParams {
+    heavyRepairLaborHours: number;
+    otherRepairLaborHours: number;
+    defaultLaborHours: number;
+    laborRatePerHour: number;
+}
