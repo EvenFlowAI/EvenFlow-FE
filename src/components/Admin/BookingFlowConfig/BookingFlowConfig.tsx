@@ -6,10 +6,11 @@ import {Box, Button, Divider, Switch, TableBody, TableCell, TableHead, TableRow}
 import {DenseTable} from "../../Optimizer/AppointmentAllocation/UI";
 import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {IBookingFlowConfig, TServiceSettings} from "../../../store/reducers/bookingFlowConfig/types";
+import {EServiceTypeBookingFlow, TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
 import {loadBookingFlowConfig, updateBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
+import {Loading} from "../../UI/Loading";
 
 const useStyles = makeStyles(theme => ({
     switchCell: {
@@ -61,29 +62,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const initialData: IBookingFlowConfig = {
-    visitCenter: {
-        available: true,
-        valueService: true,
-        productPageForValueService: false,
-        advisorSelection: true,
-    },
-    mobileService: {
-        available: true,
-        valueService: true,
-        productPageForValueService: false,
-        advisorSelection: false,
-    },
-    pickUpDropOff: {
-        available: true,
-        valueService: true,
-        productPageForValueService: false,
-        advisorSelection: true,
-    }
-}
+
 
 const BookingFlowConfig = () => {
-    const [configuration, setConfiguration] = useState<IBookingFlowConfig>(initialData);
+    const [configuration, setConfiguration] = useState<TServiceTypeSettings[]>([]);
     const {config, isLoading} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {selectedSC} = useSCs();
     const showError = useException();
@@ -96,10 +78,19 @@ const BookingFlowConfig = () => {
         }
     }, [dispatch, selectedSC]);
 
-    const onCheck = (serviceType: keyof IBookingFlowConfig, optionType: keyof TServiceSettings) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        setConfiguration(prev => {
-            return {...prev, [serviceType]: {...prev[serviceType], [optionType]: checked}}
-        })
+    useEffect(() => {
+        setConfiguration(config)
+    }, [config])
+
+    const onCheck = (serviceType: EServiceTypeBookingFlow, optionType: keyof TServiceTypeSettings) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        const currentServiceType = configuration.find(item => item.serviceType === serviceType);
+        if (currentServiceType) {
+            const updated = {...currentServiceType, [optionType]: checked};
+            setConfiguration(prev => {
+                const filtered = prev.filter(el =>el.serviceType !== serviceType);
+                return [...filtered, updated]
+            })
+        }
     }
 
     const onCancel = () => {
@@ -117,7 +108,9 @@ const BookingFlowConfig = () => {
         <Divider />
         <TableContainer>
             <div className={classes.tableWrapper}>
-                <DenseTable>
+                {!configuration?.length
+                    ? <Loading/>
+                    : <DenseTable>
                     <TableHead>
                         <TableRow>
                             <TableCell className={classes.headerCell} width={200}>Service Option</TableCell>
@@ -136,28 +129,28 @@ const BookingFlowConfig = () => {
                             <TableCell className={classes.serviceTypeCell}>Visit Center</TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('visitCenter', 'available')}
+                                    onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'available')}
                                     disabled={true}
                                     checked
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('visitCenter', 'valueService')}
-                                    checked={configuration.visitCenter.valueService}
+                                    onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'valueService')}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.valueService}
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('visitCenter', 'productPageForValueService')}
-                                    disabled={!configuration.visitCenter.valueService}
-                                    checked={configuration.visitCenter.productPageForValueService}
+                                    onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'productPageForValueService')}
+                                    disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.valueService}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.productPageForValueService}
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('visitCenter', 'advisorSelection')}
-                                    checked={configuration.visitCenter.advisorSelection}
+                                    onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'advisorSelection')}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.advisorSelection}
                                     color="primary"/>
                             </TableCell>
                         </TableRow>
@@ -165,27 +158,27 @@ const BookingFlowConfig = () => {
                             <TableCell className={classes.serviceTypeCell}>Mobile Service</TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('mobileService', 'available')}
-                                    checked={configuration.mobileService.available}
+                                    onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'available')}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.available}
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('mobileService', 'valueService')}
-                                    checked={configuration.mobileService.valueService}
+                                    onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'valueService')}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.valueService}
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('mobileService', 'productPageForValueService')}
-                                    disabled={!configuration.mobileService.valueService}
-                                    checked={configuration.mobileService.productPageForValueService}
+                                    onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'productPageForValueService')}
+                                    disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.valueService}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.productPageForValueService}
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('mobileService', 'advisorSelection')}
-                                    checked={configuration.mobileService.advisorSelection}
+                                    onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'advisorSelection')}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.advisorSelection}
                                     disabled={true}
                                     color="primary"/>
                             </TableCell>
@@ -194,32 +187,32 @@ const BookingFlowConfig = () => {
                             <TableCell className={classes.serviceTypeCell}>Pick Up / Drop Off</TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('pickUpDropOff', 'available')}
-                                    checked={configuration.pickUpDropOff.available}
+                                    onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'available')}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.available}
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('pickUpDropOff', 'valueService')}
-                                    checked={configuration.pickUpDropOff.valueService}
+                                    onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'valueService')}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.valueService}
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('pickUpDropOff', 'productPageForValueService')}
-                                    disabled={!configuration.pickUpDropOff.valueService}
-                                    checked={configuration.pickUpDropOff.productPageForValueService}
+                                    onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'productPageForValueService')}
+                                    disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.valueService}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.productPageForValueService}
                                     color="primary"/>
                             </TableCell>
                             <TableCell align="center">
                                 <Switch
-                                    onChange={onCheck('pickUpDropOff', 'advisorSelection')}
-                                    checked={configuration.pickUpDropOff.advisorSelection}
+                                    onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'advisorSelection')}
+                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.advisorSelection}
                                     color="primary"/>
                             </TableCell>
                         </TableRow>
                     </TableBody>
-                </DenseTable>
+                </DenseTable>}
             </div>
             <Box mt={2}>
                 <div className={classes.wrapper}>

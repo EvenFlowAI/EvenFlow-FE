@@ -243,8 +243,8 @@ export class Api {
         },
         BookingFlowConfig: {
             // todo change to real routes
-            Get: {route: "/bookingFlowConfig/{id}", method: "get"},
-            Update: {route: "/bookingFlowConfig/{id}", method: "post"},
+            Get: {route: "/booking-flow/{id}/settings", method: "get"},
+            Update: {route: "/booking-flow/{id}/settings", method: "put"},
         },
         ComplimentaryServices: {
             GetByQuery: {route: "/complimentary-services/by-query", method: "post"},

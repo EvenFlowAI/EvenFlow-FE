@@ -1,30 +1,33 @@
-import {IBookingFlowConfig} from "./types";
+import {EServiceTypeBookingFlow, TServiceTypeSettings} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {setBookingFlowConfig, setBookingFlowConfigLoading} from "./actions";
 
-const initialData: IBookingFlowConfig = {
-    visitCenter: {
+export const initialData: TServiceTypeSettings[] = [
+    {
         available: true,
-        valueService: false,
+        valueService: true,
         productPageForValueService: false,
         advisorSelection: true,
+        serviceType: EServiceTypeBookingFlow.VisitCenter
     },
-    mobileService: {
-        available: false,
-        valueService: false,
+    {
+        available: true,
+        valueService: true,
         productPageForValueService: false,
-        advisorSelection: false,
+        advisorSelection: true,
+        serviceType: EServiceTypeBookingFlow.MobileService
     },
-    pickUpDropOff: {
-        available: false,
-        valueService: false,
+    {
+        available: true,
+        valueService: true,
         productPageForValueService: false,
-        advisorSelection: false,
-    }
-}
+        advisorSelection: true,
+        serviceType: EServiceTypeBookingFlow.PickUpDropOff
+    },
+]
 
 interface InitialState {
-    config: IBookingFlowConfig,
+    config: TServiceTypeSettings[],
     isLoading: boolean;
 }
 

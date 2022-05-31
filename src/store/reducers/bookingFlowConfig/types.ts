@@ -1,12 +1,17 @@
-export type TServiceSettings = {
+export enum EServiceTypeBookingFlow {
+    VisitCenter, MobileService, PickUpDropOff
+}
+
+export type TServiceTypeSettings = {
     available: boolean;
     valueService: boolean;
     productPageForValueService: boolean;
     advisorSelection: boolean;
+    serviceType: EServiceTypeBookingFlow;
 }
 
 export interface IBookingFlowConfig {
-    visitCenter: TServiceSettings;
-    mobileService: TServiceSettings;
-    pickUpDropOff: TServiceSettings;
+    visitCenter: TServiceTypeSettings;
+    mobileService: TServiceTypeSettings;
+    pickUpDropOff: TServiceTypeSettings;
 }
