@@ -30,8 +30,10 @@ import {ReactComponent as ServiceCodes} from "../../../assets/img/serviceOpsCode
 import {ReactComponent as Transportation} from "../../../assets/img/transportation_options.svg";
 import {ReactComponent as Vehicle} from "../../../assets/img/vehicleDetails.svg";
 import {ReactComponent as Calendar} from "../../../assets/img/date_1_grey.svg";
+import {ReactComponent as OffFlag} from "../../../assets/img/Off_Flag_Appointments.svg";
 import Reminders from "../../Modals/Reminders/Reminders";
 import ManageAppointments from "../../Modals/ManageAppointments/ManageAppointments";
+import LaborRate from "../../Modals/LaborRate/LaborRate";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -214,6 +216,11 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenManageAppointments,
         isOpen: isOpenManageAppointments,
     } = useModal();
+    const {
+        onClose: onCloseLaborRate,
+        onOpen: onOpenLaborRate,
+        isOpen: isOpenLaborRate,
+    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -243,7 +250,8 @@ export const AdminDashboard: React.FC = () => {
         {label: "Service Ops Codes Mapping", icon: <ServiceCodes />, action: onOpenServicesOps},
         {label: "Vehicle Detail Options", icon: <Vehicle />, action: onOpenVehicle},
         {label: "Appointment Reminders", icon: <Calendar />, action: onOpenReminders},
-        {label: "Manage Ex EvenFlow Appointments", icon: <Calendar/>, action: onOpenManageAppointments},
+        {label: "Manage Ex EvenFlow Appointments", icon: <OffFlag/>, action: onOpenManageAppointments},
+        {label: "Labor Rate", icon: <OffFlag/>, action: onOpenLaborRate},
         // {label: "Customer Verification", icon: <Customer/>, action: onOpenVerification},
     ];
 
@@ -291,6 +299,7 @@ export const AdminDashboard: React.FC = () => {
         <TransportationOptions open={isOpenTransOptions} onClose={onCloseTransOptions}/>
         <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
         <ManageAppointments open={isOpenManageAppointments} onClose={onCloseManageAppointments}/>
+        <LaborRate open={isOpenLaborRate} onClose={onCloseLaborRate}/>
         {/*<CustomerVerification open={isOpenVerification} onClose={onCloseVerification}/>*/}
     </div>
 }
