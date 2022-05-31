@@ -32,7 +32,7 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-    config: initialData,
+    config: [],
     isLoading: false,
 }
 

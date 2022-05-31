@@ -4,7 +4,7 @@ import {SquarePaper} from "../../UI/Paper";
 import {PaperTitle, TableContainer} from "../../Optimizer/PricingSettings/UI";
 import {Box, Button, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {DenseTable} from "../../Optimizer/AppointmentAllocation/UI";
-import {useException, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {EServiceTypeBookingFlow, TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {RootState} from "../../../store/rootReducer";
@@ -69,6 +69,7 @@ const BookingFlowConfig = () => {
     const {config, isLoading} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {selectedSC} = useSCs();
     const showError = useException();
+    const showMessage = useMessage();
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -97,9 +98,13 @@ const BookingFlowConfig = () => {
         setConfiguration(config);
     }
 
+    const onSuccess = () => showMessage('Updated Booking Flow Configuration')
+
+    const onError = (err: string) => showError(err);
+
     const onSave = () => {
         if (selectedSC) {
-            dispatch(updateBookingFlowConfig(selectedSC.id, configuration))
+            dispatch(updateBookingFlowConfig(selectedSC.id, configuration, onSuccess, onError))
         }
     }
 
@@ -108,8 +113,8 @@ const BookingFlowConfig = () => {
         <Divider />
         <TableContainer>
             <div className={classes.tableWrapper}>
-                {!configuration?.length
-                    ? <Loading/>
+                {isLoading
+                    ? <div style={{width: '80vw', height: "40vh"}}><Loading/></div>
                     : <DenseTable>
                     <TableHead>
                         <TableRow>
