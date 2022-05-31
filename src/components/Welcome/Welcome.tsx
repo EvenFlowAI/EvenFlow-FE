@@ -19,6 +19,7 @@ import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
+import {loadBookingFlowConfig} from "../../store/reducers/bookingFlowConfig/actions";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
@@ -47,6 +48,10 @@ export const Welcome = () => {
             window.location.href = "/";
         }
     }, [id]);
+
+    useEffect(() => {
+        if (id) dispatch(loadBookingFlowConfig(decodeSCID(id)))
+    }, [id])
 
     const handleMobileService = () => {
         if (isMobileServiceOn || isPickUpDropOffServiceOn) setView("serviceSelect")
