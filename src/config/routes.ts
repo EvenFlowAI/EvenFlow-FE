@@ -8,6 +8,7 @@ enum AdminRoutes {
     ServiceRequests = "/admin/service-requests",
     VehicleDetails = "/admin/vehicle-details",
     ServiceOpsCodesMapping = "/admin/service-codes-mapping",
+    BookingFlowConfig = "/admin/booking-flow-config",
 }
 
 enum AdminLogin {

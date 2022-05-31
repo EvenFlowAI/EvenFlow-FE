@@ -15,6 +15,7 @@ import {ServiceRequests} from "./ServiceRequets/ServiceRequets";
 import {VehicleDetails} from "./VehicleDetails/VehicleDetails";
 import {Appointments} from "../Appointments/Appointments";
 import ServiceOpsCodesMapping from "./ServiceOpsCodesMapping/ServiceOpsCodesMapping";
+import BookingFlowConfig from "./BookingFlowConfig/BookingFlowConfig";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
@@ -46,6 +47,9 @@ export const AdminPage = () => {
                 : null}
             {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Admin.ServiceOpsCodesMapping} exact component={ServiceOpsCodesMapping}/>
+                : null}
+            {!currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.BookingFlowConfig} exact component={BookingFlowConfig}/>
                 : null}
             {currentUser.role === Roles.Owner
                 ? <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
