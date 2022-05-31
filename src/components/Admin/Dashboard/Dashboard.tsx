@@ -31,6 +31,7 @@ import {ReactComponent as Transportation} from "../../../assets/img/transportati
 import {ReactComponent as Vehicle} from "../../../assets/img/vehicleDetails.svg";
 import {ReactComponent as Calendar} from "../../../assets/img/date_1_grey.svg";
 import {ReactComponent as OffFlag} from "../../../assets/img/Off_Flag_Appointments.svg";
+import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.svg";
 import Reminders from "../../Modals/Reminders/Reminders";
 import ManageAppointments from "../../Modals/ManageAppointments/ManageAppointments";
 import LaborRate from "../../Modals/LaborRate/LaborRate";
@@ -251,7 +252,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Vehicle Detail Options", icon: <Vehicle />, action: onOpenVehicle},
         {label: "Appointment Reminders", icon: <Calendar />, action: onOpenReminders},
         {label: "Manage Ex EvenFlow Appointments", icon: <OffFlag/>, action: onOpenManageAppointments},
-        {label: "Labor Rate", icon: <OffFlag/>, action: onOpenLaborRate},
+        {label: "Labor Rate", icon: <LaborRateIcon/>, action: onOpenLaborRate},
         // {label: "Customer Verification", icon: <Customer/>, action: onOpenVerification},
     ];
 
