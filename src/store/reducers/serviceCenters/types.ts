@@ -14,6 +14,7 @@ export interface IServiceCenter {
     isAuthRequired: boolean;
     serviceCenterFlag?: number;
     isUpdateAdvisorInAppointments?: boolean;
+    isValueServiceAvailable?: boolean;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;

@@ -84,13 +84,33 @@ const BookingFlowConfig = () => {
     }, [config])
 
     const onCheck = (serviceType: EServiceTypeBookingFlow, optionType: keyof TServiceTypeSettings) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        if (!selectedSC?.isValueServiceAvailable && optionType === 'valueService') {
+            return showError('No Service Offers are available for current Service Center')
+        }
+
         const currentServiceType = configuration.find(item => item.serviceType === serviceType);
+        let analogServiceType: TServiceTypeSettings|undefined = undefined;
         if (currentServiceType) {
             const updated = {...currentServiceType, [optionType]: checked};
             setConfiguration(prev => {
-                const filtered = prev.filter(el =>el.serviceType !== serviceType);
+                const filtered = prev.filter(el => el.serviceType !== serviceType);
                 return [...filtered, updated]
             })
+
+            if (currentServiceType?.serviceType === EServiceTypeBookingFlow.VisitCenter
+                && (optionType === 'valueService' || optionType === 'productPageForValueService')) {
+                analogServiceType = configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff);
+            } else if (currentServiceType.serviceType === EServiceTypeBookingFlow.PickUpDropOff
+                && (optionType === 'valueService' || optionType === 'productPageForValueService')) {
+                analogServiceType = configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter);
+            }
+            if (analogServiceType) {
+                const updatedAnalog = {...analogServiceType, [optionType]: checked};
+                setConfiguration(prev => {
+                    const filtered = prev.filter(el => el.serviceType !== analogServiceType?.serviceType);
+                    return [...filtered, updatedAnalog]
+                })
+            }
         }
     }
 
@@ -237,7 +257,6 @@ const BookingFlowConfig = () => {
                 </div>
             </Box>
         </TableContainer>
-        }
     </SquarePaper>
 };
 
