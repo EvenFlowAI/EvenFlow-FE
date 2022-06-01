@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {SquarePaper} from "../../UI/Paper";
-import {PaperTitle, TableContainer} from "../../Optimizer/PricingSettings/UI";
-import {Box, Button, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {TableContainer} from "../../Optimizer/PricingSettings/UI";
+import {Box, Button, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {DenseTable} from "../../Optimizer/AppointmentAllocation/UI";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +11,7 @@ import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
 import {loadBookingFlowConfig, updateBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {Loading} from "../../UI/Loading";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 
 const useStyles = makeStyles(theme => ({
     switchCell: {
@@ -84,13 +85,33 @@ const BookingFlowConfig = () => {
     }, [config])
 
     const onCheck = (serviceType: EServiceTypeBookingFlow, optionType: keyof TServiceTypeSettings) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        if (!selectedSC?.isValueServiceAvailable && optionType === 'valueService') {
+            return showError('No Service Offers are available for current Service Center')
+        }
+
         const currentServiceType = configuration.find(item => item.serviceType === serviceType);
+        let analogServiceType: TServiceTypeSettings|undefined = undefined;
         if (currentServiceType) {
             const updated = {...currentServiceType, [optionType]: checked};
             setConfiguration(prev => {
-                const filtered = prev.filter(el =>el.serviceType !== serviceType);
+                const filtered = prev.filter(el => el.serviceType !== serviceType);
                 return [...filtered, updated]
             })
+
+            if (currentServiceType?.serviceType === EServiceTypeBookingFlow.VisitCenter
+                && (optionType === 'valueService' || optionType === 'productPageForValueService')) {
+                analogServiceType = configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff);
+            } else if (currentServiceType.serviceType === EServiceTypeBookingFlow.PickUpDropOff
+                && (optionType === 'valueService' || optionType === 'productPageForValueService')) {
+                analogServiceType = configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter);
+            }
+            if (analogServiceType) {
+                const updatedAnalog = {...analogServiceType, [optionType]: checked};
+                setConfiguration(prev => {
+                    const filtered = prev.filter(el => el.serviceType !== analogServiceType?.serviceType);
+                    return [...filtered, updatedAnalog]
+                })
+            }
         }
     }
 
@@ -108,137 +129,137 @@ const BookingFlowConfig = () => {
         }
     }
 
-    return <SquarePaper variant="outlined">
-        <PaperTitle>Booking Flow Configuration</PaperTitle>
-        <Divider />
-        <TableContainer>
-            <div className={classes.tableWrapper}>
-                {isLoading
-                    ? <div style={{width: '80vw', height: "40vh"}}><Loading/></div>
-                    : <DenseTable>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell className={classes.headerCell} width={200}>Service Option</TableCell>
-                            <TableCell className={classes.headerCell} align="center"
-                                       width={200}>Available</TableCell>
-                            <TableCell className={classes.headerCell} align="center" width={200}>Value
-                                Service</TableCell>
-                            <TableCell className={classes.headerCell} align="center" width={200}>Product Page
-                                for Value Service</TableCell>
-                            <TableCell className={classes.headerCell} align="center" width={200}>Select Advisor
-                                Page</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell className={classes.serviceTypeCell}>Visit Center</TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'available')}
-                                    disabled={true}
-                                    checked
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'valueService')}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.valueService}
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'productPageForValueService')}
-                                    disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.valueService}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.productPageForValueService}
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'advisorSelection')}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.advisorSelection}
-                                    color="primary"/>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.serviceTypeCell}>Mobile Service</TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'available')}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.available}
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'valueService')}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.valueService}
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'productPageForValueService')}
-                                    disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.valueService}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.productPageForValueService}
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'advisorSelection')}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.advisorSelection}
-                                    disabled={true}
-                                    color="primary"/>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.serviceTypeCell}>Pick Up / Drop Off</TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'available')}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.available}
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'valueService')}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.valueService}
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'productPageForValueService')}
-                                    disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.valueService}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.productPageForValueService}
-                                    color="primary"/>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Switch
-                                    onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'advisorSelection')}
-                                    checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.advisorSelection}
-                                    color="primary"/>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </DenseTable>}
-            </div>
-            <Box mt={2}>
-                <div className={classes.wrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <Button
-                            onClick={onCancel}
-                            className={classes.cancelButton}>
-                            Cancel
-                        </Button>
-                        <LoadingButton
-                            loading={isLoading}
-                            onClick={onSave}
-                            className={classes.saveButton}>
-                            Save
-                        </LoadingButton>
-                    </div>
+    return <div>
+        <TitleContainer title="Booking Flow Configuration" pad={true}/>
+        <SquarePaper variant="outlined">
+            <TableContainer>
+                <div className={classes.tableWrapper}>
+                    {isLoading
+                        ? <div style={{width: '80vw', height: "40vh"}}><Loading/></div>
+                        : <DenseTable>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.headerCell} width={200}>Service Option</TableCell>
+                                    <TableCell className={classes.headerCell} align="center"
+                                               width={200}>Available</TableCell>
+                                    <TableCell className={classes.headerCell} align="center" width={200}>Value
+                                        Service</TableCell>
+                                    <TableCell className={classes.headerCell} align="center" width={200}>Product Page
+                                        for Value Service</TableCell>
+                                    <TableCell className={classes.headerCell} align="center" width={200}>Select Advisor
+                                        Page</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Visit Center</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'available')}
+                                            disabled={true}
+                                            checked
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'valueService')}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.valueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'productPageForValueService')}
+                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.valueService}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.productPageForValueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'advisorSelection')}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.advisorSelection}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Mobile Service</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'available')}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.available}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'valueService')}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.valueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'productPageForValueService')}
+                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.valueService}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.productPageForValueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'advisorSelection')}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.advisorSelection}
+                                            disabled={true}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Pick Up / Drop Off</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'available')}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.available}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'valueService')}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.valueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'productPageForValueService')}
+                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.valueService}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.productPageForValueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'advisorSelection')}
+                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.advisorSelection}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </DenseTable>}
                 </div>
-            </Box>
-        </TableContainer>
-        }
-    </SquarePaper>
+                <Box mt={2}>
+                    <div className={classes.wrapper}>
+                        <div className={classes.buttonsWrapper}>
+                            <Button
+                                onClick={onCancel}
+                                className={classes.cancelButton}>
+                                Cancel
+                            </Button>
+                            <LoadingButton
+                                loading={isLoading}
+                                onClick={onSave}
+                                className={classes.saveButton}>
+                                Save
+                            </LoadingButton>
+                        </div>
+                    </div>
+                </Box>
+            </TableContainer>
+        </SquarePaper>
+    </div>
 };
 
 export default BookingFlowConfig;
