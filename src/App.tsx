@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
@@ -14,25 +14,23 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ValueService from "./components/AppointmentFlow/AppointmentFrame/ValueService/ValueService";
-import {EServiceCenterName} from "./api/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
 import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "./components/Layout/types";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
+import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, isValueServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
     const dispatch = useDispatch();
-    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     useEffect(() => {
-        if (serviceType === EServiceType.Mobile) {
+        if (serviceType === EServiceType.MobileService) {
             setValueServiceNextScreen("appointmentTiming");
             setValueServicePreviousScreen("location");
         }
@@ -40,6 +38,10 @@ const App = () => {
             setValueServicePreviousScreen("location");
         }
     }, [serviceType])
+
+    useEffect(() => {
+        if (scProfile) dispatch(loadBookingFlowConfig(scProfile.id))
+    }, [scProfile])
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
@@ -73,7 +75,7 @@ const App = () => {
                     <Route path={Routes.EndUser.CancelAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
-                    {isBmWService
+                    {isValueServiceOn
                         ? <Route
                             path={Routes.EndUser.ValueService}
                             exact

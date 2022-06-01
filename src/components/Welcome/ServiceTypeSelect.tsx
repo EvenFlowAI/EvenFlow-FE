@@ -59,7 +59,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
             </Grid>
             {isMobileServiceOn
                 ? <Grid item xs={12} sm={12} md={isPickUpDropOffServiceOn ? 4 : 6}>
-                <div onClick={() => handleSelect(EServiceType.Mobile)} className={classes.button}>
+                <div onClick={() => handleSelect(EServiceType.MobileService)} className={classes.button}>
                     <span>Mobile</span>
                 </div>
             </Grid>

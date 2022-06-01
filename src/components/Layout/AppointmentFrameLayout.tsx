@@ -217,7 +217,7 @@ export const AppointmentFrameLayout = () => {
     }, [currentScreen, currentFrameScreen])
 
     useEffect(() => {
-        if (serviceType === EServiceType.Mobile && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
+        if (serviceType === EServiceType.MobileService && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
             dispatch(setCurrentFrameScreen("location"))
             setCurrentScreen("location");
         }
@@ -250,7 +250,7 @@ export const AppointmentFrameLayout = () => {
     const getNextScreen = (): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         if (valueService?.selectedService) {
-            nextScreen = serviceType === EServiceType.Mobile
+            nextScreen = serviceType === EServiceType.MobileService
                 ? 'appointmentTiming'
                 : 'consultantSelection'
         }
@@ -302,21 +302,21 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
                     ? 'packageSelection'
-                    : serviceType === EServiceType.Mobile
+                    : serviceType === EServiceType.MobileService
                         ? 'appointmentTiming'
                         : 'consultantSelection')
                 }
             />,
             packageSelection: <PackageSelection
                 onBack={handleChangeScreen('maintenanceDetails')}
-                onNext={handleChangeScreen(serviceType === EServiceType.Mobile ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleChangeScreen(serviceType === EServiceType.MobileService ? 'appointmentTiming' : 'consultantSelection')}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             describeMore: <AddInfo
                 onBack={handleSetScreen}
-                onNext={handleChangeScreen(serviceType === EServiceType.Mobile ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleChangeScreen(serviceType === EServiceType.MobileService ? 'appointmentTiming' : 'consultantSelection')}
                 onFillCar={handleChangeScreen(isAdditionalServices
-                    ? serviceType === EServiceType.Mobile
+                    ? serviceType === EServiceType.MobileService
                         ? 'appointmentTiming'
                         : 'consultantSelection'
                     : 'maintenanceDetails')}
@@ -329,14 +329,14 @@ export const AppointmentFrameLayout = () => {
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
-                onNext={handleChangeScreen(serviceType === EServiceType.Mobile ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleChangeScreen(serviceType === EServiceType.MobileService ? 'appointmentTiming' : 'consultantSelection')}
             />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('appointmentTiming')}
             />,
             appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen(serviceType === EServiceType.Mobile ? 'carDetails' : 'consultantSelection')}
+                onBack={handleChangeScreen(serviceType === EServiceType.MobileService ? 'carDetails' : 'consultantSelection')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection
@@ -359,7 +359,7 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen(
                     service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
                     ? 'opsCode' : 'describeMore')}
-                onNext={handleChangeScreen(serviceType === EServiceType.Mobile ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleChangeScreen(serviceType === EServiceType.MobileService ? 'appointmentTiming' : 'consultantSelection')}
             />,
             location: <YourLocation
                 onBack={handleChangeScreen('carSelection')}
