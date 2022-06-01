@@ -125,8 +125,8 @@ const initialState: TState = {
     seriesModels: [],
     offersLoading: false,
     serviceOffers: [],
-    isMobileServiceOn: true,
-    isPickUpDropOffServiceOn: false,
+    isMobileServiceOn: false,
+    isPickUpDropOffServiceOn: true,
     sideBarSteps: [],
 };
 
