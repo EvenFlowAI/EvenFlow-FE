@@ -23,6 +23,7 @@ import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions"
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {serviceType, isValueServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
@@ -31,11 +32,14 @@ const App = () => {
 
     useEffect(() => {
         if (serviceType === EServiceType.MobileService) {
-            setValueServiceNextScreen("appointmentTiming");
             setValueServicePreviousScreen("location");
         }
         if (serviceType === EServiceType.PikUpDropOff) {
             setValueServicePreviousScreen("location");
+        }
+        if (!config.find(item => item.serviceType.toString() === serviceType.toString())?.advisorSelection
+            || serviceType === EServiceType.MobileService) {
+            setValueServiceNextScreen("appointmentTiming");
         }
     }, [serviceType])
 
