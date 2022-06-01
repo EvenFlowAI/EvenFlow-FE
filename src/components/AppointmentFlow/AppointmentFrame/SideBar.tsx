@@ -187,7 +187,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }, [serviceType]);
 
     const getStepsState = useCallback((idx: number): boolean => {
-        return serviceType === EServiceType.Mobile
+        return serviceType === EServiceType.MobileService
             ? mobileStepsMap[screen] === idx
             : serviceType === EServiceType.PikUpDropOff
                 ? pickUpDropOffStepsMap[screen] === idx
@@ -197,7 +197,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const onClick = (idx: number) => {
         const screen = serviceType === EServiceType.VisitCenter
             ? stepScreens[idx]
-            : serviceType === EServiceType.Mobile
+            : serviceType === EServiceType.MobileService
                 ? mobileServiceScreens[idx]
                 : pickUpDropOffScreens[idx];
         if (idx === 0) {
@@ -211,7 +211,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }, [screen, dispatch, setSideBarSteps])
 
     const getButtonState = (index: number) => {
-        return serviceType === EServiceType.Mobile
+        return serviceType === EServiceType.MobileService
             ? mobileStepsMap[screen] < index + 1 && mobileStepsMap[sideBarSteps[sideBarSteps.length - 1]] < index + 1
             : serviceType === EServiceType.PikUpDropOff
                 ? pickUpDropOffStepsMap[screen] < index + 1 && pickUpDropOffStepsMap[sideBarSteps[sideBarSteps.length - 1]] < index + 1

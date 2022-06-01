@@ -14,18 +14,23 @@ import {useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
-import {setCurrentFrameScreen, setSideBarSteps} from "../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setCurrentFrameScreen,
+    setMobileServiceAvailability, setPickUpDropOffAvailability,
+    setSideBarSteps, setValueServiceAvailability
+} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
-import {loadBookingFlowConfig} from "../../store/reducers/bookingFlowConfig/actions";
+import {EServiceTypeBookingFlow} from "../../store/reducers/bookingFlowConfig/types";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
     const history = useHistory();
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
@@ -50,18 +55,24 @@ export const Welcome = () => {
     }, [id]);
 
     useEffect(() => {
-        if (id) dispatch(loadBookingFlowConfig(decodeSCID(id)))
-    }, [id])
+        const mobileServiceIsAvailable = config.find(item => item.serviceType == EServiceTypeBookingFlow.MobileService && item.available);
+        const pickUpDropOffIsAvailable = config.find(item => item.serviceType == EServiceTypeBookingFlow.PickUpDropOff && item.available);
+        dispatch(setMobileServiceAvailability(Boolean(mobileServiceIsAvailable)));
+        dispatch(setPickUpDropOffAvailability(Boolean(pickUpDropOffIsAvailable)));
+    }, [config, dispatch])
 
     const handleMobileService = () => {
         if (isMobileServiceOn || isPickUpDropOffServiceOn) setView("serviceSelect")
     };
 
     const onComplete = (serviceType: EServiceType) => {
+        const selectedServiceConfig = config.find(item => item.serviceType.toString() === serviceType.toString());
+        if (selectedServiceConfig) dispatch(setValueServiceAvailability(selectedServiceConfig.valueService));
         handleMobileService();
         dispatch(setSideBarSteps([]));
-        const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         dispatch(setCurrentFrameScreen("carSelection"));
+
+        const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         history.push(
             route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
         );

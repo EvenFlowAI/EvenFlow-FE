@@ -104,6 +104,19 @@ export const AppointmentFrameLayout = () => {
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
     const [origin, setOrigin] = useState<string>('');
 
+    const {
+        selectedVehicle,
+        trackerCreated,
+        isAdditionalServices,
+        service,
+        subService,
+        valueService,
+        serviceType,
+        currentScreen: currentFrameScreen,
+    } = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
@@ -113,10 +126,10 @@ export const AppointmentFrameLayout = () => {
     const dispatch = useDispatch();
     const showError = useException();
 
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
-    const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
-    const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService, valueService, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType])
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -217,7 +230,7 @@ export const AppointmentFrameLayout = () => {
     }, [currentScreen, currentFrameScreen])
 
     useEffect(() => {
-        if (serviceType === EServiceType.Mobile && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
+        if (serviceType === EServiceType.MobileService && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
             dispatch(setCurrentFrameScreen("location"))
             setCurrentScreen("location");
         }
@@ -250,9 +263,9 @@ export const AppointmentFrameLayout = () => {
     const getNextScreen = (): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         if (valueService?.selectedService) {
-            nextScreen = serviceType === EServiceType.Mobile
-                ? 'appointmentTiming'
-                : 'consultantSelection'
+            nextScreen = currentConfig?.advisorSelection
+                ? 'consultantSelection'
+                : 'appointmentTiming'
         }
         return nextScreen;
     }
@@ -302,21 +315,21 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
                     ? 'packageSelection'
-                    : serviceType === EServiceType.Mobile
+                    : !currentConfig?.advisorSelection
                         ? 'appointmentTiming'
                         : 'consultantSelection')
                 }
             />,
             packageSelection: <PackageSelection
                 onBack={handleChangeScreen('maintenanceDetails')}
-                onNext={handleChangeScreen(serviceType === EServiceType.Mobile ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             describeMore: <AddInfo
                 onBack={handleSetScreen}
-                onNext={handleChangeScreen(serviceType === EServiceType.Mobile ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
                 onFillCar={handleChangeScreen(isAdditionalServices
-                    ? serviceType === EServiceType.Mobile
+                    ? !currentConfig?.advisorSelection
                         ? 'appointmentTiming'
                         : 'consultantSelection'
                     : 'maintenanceDetails')}
@@ -329,14 +342,14 @@ export const AppointmentFrameLayout = () => {
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
-                onNext={handleChangeScreen(serviceType === EServiceType.Mobile ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
             />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('appointmentTiming')}
             />,
             appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen(serviceType === EServiceType.Mobile ? 'carDetails' : 'consultantSelection')}
+                onBack={handleChangeScreen(!currentConfig?.advisorSelection ? 'carDetails' : 'consultantSelection')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection
@@ -359,7 +372,7 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen(
                     service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
                     ? 'opsCode' : 'describeMore')}
-                onNext={handleChangeScreen(serviceType === EServiceType.Mobile ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
             />,
             location: <YourLocation
                 onBack={handleChangeScreen('carSelection')}

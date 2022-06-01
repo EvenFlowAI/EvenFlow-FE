@@ -84,7 +84,21 @@ type TProps = {
 export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices}) => {
     const [searchInput, setSearch] = useState<string>("");
     const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
-    const [selectedCode, srList, search, vehicles, vehicle, scProfile, subService, service, allCategories, selectedPackage, categoriesIds] = useSelector((state: RootState) => [
+    const [
+        selectedCode,
+        srList,
+        search,
+        vehicles,
+        vehicle,
+        scProfile,
+        subService,
+        service,
+        allCategories,
+        selectedPackage,
+        categoriesIds,
+        serviceType,
+        config,
+    ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointment.search,
@@ -96,6 +110,8 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
         state.categories.allCategories,
         state.appointmentFrame.selectedPackage,
         state.appointmentFrame.categoriesIds,
+        state.appointmentFrame.serviceType,
+        state.bookingFlowConfig.config,
     ]);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -161,7 +177,10 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
         if (!checkSelectedCar(vehicle, vehicles)) {
             onNext("maintenanceDetails");
         } else {
-            onNext("consultantSelection");
+            const nextScreen: TScreen = config.find(item => item.serviceType.toString() === serviceType.toString())?.advisorSelection
+                ? "consultantSelection"
+                : "appointmentTiming";
+            onNext(nextScreen);
         }
     }
 

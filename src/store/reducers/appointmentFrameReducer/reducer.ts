@@ -34,7 +34,11 @@ import {
     setVehicle,
     setZipCode,
     updateVehicle,
-    setValueService, setSideBarSteps,
+    setValueService,
+    setSideBarSteps,
+    setMobileServiceAvailability,
+    setPickUpDropOffAvailability,
+    setValueServiceAvailability,
 } from "./actions";
 import {
     ICustomer,
@@ -86,6 +90,7 @@ type TState = {
     serviceOffers: IServiceOffer[];
     isMobileServiceOn: boolean;
     isPickUpDropOffServiceOn: boolean;
+    isValueServiceOn: boolean;
     sideBarSteps: TScreen[];
 }
 const initialState: TState = {
@@ -125,8 +130,9 @@ const initialState: TState = {
     seriesModels: [],
     offersLoading: false,
     serviceOffers: [],
-    isMobileServiceOn: true,
-    isPickUpDropOffServiceOn: true,
+    isMobileServiceOn: false,
+    isPickUpDropOffServiceOn: false,
+    isValueServiceOn: false,
     sideBarSteps: [],
 };
 
@@ -262,5 +268,14 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSideBarSteps, (state, {payload}) => {
         return {...state, sideBarSteps: payload}
+    })
+    .addCase(setMobileServiceAvailability, (state, {payload}) => {
+        return {...state, isMobileServiceOn: payload}
+    })
+    .addCase(setPickUpDropOffAvailability, (state, {payload}) => {
+        return {...state, isPickUpDropOffServiceOn: payload}
+    })
+    .addCase(setValueServiceAvailability, (state, {payload}) => {
+        return {...state, isValueServiceOn: payload}
     })
 )

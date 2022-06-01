@@ -41,9 +41,13 @@ type TValueServiceProps = {
 
 const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
     const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
-    const {makes, valueService, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+    const {makes, valueService, selectedVehicle, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
+    const isServiceDetailsPageOn = useMemo(() => {
+        return Boolean(config.find(item => item.serviceType.toString() === serviceType.toString())?.productPageForValueService)
+    }, [config, serviceType])
 
     const history = useHistory();
 
@@ -96,7 +100,7 @@ const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
         const screens: {[k in TValueServiceScreen]: JSX.Element} = {
             vehicleDetails: <YearModel onBack={onBackClick} onNext={() => setScreen("serviceSelection")}/>,
             serviceSelection: <ServiceSelection
-                onNext={() => setScreen("serviceDetails")}
+                onNext={() => isServiceDetailsPageOn ? setScreen("serviceDetails") : onNext()}
                 onBack={() => setScreen("vehicleDetails")}
             />,
             serviceDetails: <ServiceDetails

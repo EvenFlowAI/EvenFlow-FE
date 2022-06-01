@@ -53,6 +53,9 @@ export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesMode
 export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
 export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoading');
 export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
+export const setMobileServiceAvailability = createAction<boolean>('fAppointment/SetMobileServiceState');
+export const setPickUpDropOffAvailability = createAction<boolean>('fAppointment/SetPickUpDropOffAvailability');
+export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability')
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
