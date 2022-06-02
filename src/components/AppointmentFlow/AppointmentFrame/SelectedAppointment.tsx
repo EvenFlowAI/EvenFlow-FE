@@ -202,10 +202,13 @@ export const SelectedAppointment = () => {
                                 </Select>
                             </div>
                             </div>
-                            : <div className="service-list">
-                                <h4> YOUR ADDRESS: </h4>
-                                <div>{`${address?.label}, ` || ""}{zipCode}</div>
-                            </div>}
+                            : address
+                                ? <div className="service-list">
+                                    <h4> YOUR ADDRESS: </h4>
+                                    <div>{`${address?.label}, ` || ""}{zipCode}</div>
+                                </div>
+                                : null
+                            }
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper> : null}
