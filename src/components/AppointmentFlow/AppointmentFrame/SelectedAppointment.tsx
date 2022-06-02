@@ -31,7 +31,7 @@ const List = styled('ul')(({theme}) => ({
     gap: "18px",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         alignSelf: "flex-start",
         gap: "10px",
         width: "100%",
@@ -55,7 +55,7 @@ const List = styled('ul')(({theme}) => ({
             display: 'block',
             maxHeight: 120,
             overflow: "auto",
-            padding: 8,
+            padding: '8px 8px 8px 0',
         }
     },
     "& ul": {
@@ -77,7 +77,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     flexDirection: "column",
     alignItems: "flex-end",
     textAlign: "right",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         alignItems: "flex-start",
     },
     "& .price": {
@@ -89,7 +89,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     },
     "& .info": {
         color: "#27AE60",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             marginTop: 5
         }
     }
@@ -100,7 +100,7 @@ const DateWrapper = styled('div')(({theme}) => ({
     textAlign: "right",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         marginTop: 8,
         textAlign: "left",
     }
@@ -113,7 +113,7 @@ const useStyles = makeStyles(theme => ({
         '& > span': {
             marginLeft: 5,
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             '& > div > div': {
                 padding: 5
             }
