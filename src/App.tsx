@@ -24,7 +24,7 @@ import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions"
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const {serviceType, isValueServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
@@ -79,12 +79,10 @@ const App = () => {
                     <Route path={Routes.EndUser.CancelAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
-                    {isValueServiceOn
-                        ? <Route
-                            path={Routes.EndUser.ValueService}
-                            exact
-                            render={() => <ValueService onBack={onValueServiceBack} nextScreen={valueServiceNextScreen}/>}/>
-                        : null}
+                    <Route
+                        path={Routes.EndUser.ValueService}
+                        exact
+                        render={() => <ValueService onBack={onValueServiceBack} nextScreen={valueServiceNextScreen}/>}/>
                     <PrivateRoute path="/" component={Layout}/>
                 </Switch>
             </Container>
