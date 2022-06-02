@@ -137,7 +137,6 @@ export const loadSlotsGap = (serviceCenterId: number): AppThunk => dispatch => {
 export const loadSeriesModels = (serviceCenterId: number): AppThunk => dispatch => {
     Api.call(Api.endpoints.ValueService.GetSeriesModels, {params: {serviceCenterId}})
         .then(result => {
-            console.log(result);
             if (result?.data) dispatch(getSeriesModels(result.data))
         })
         .catch(err => {
