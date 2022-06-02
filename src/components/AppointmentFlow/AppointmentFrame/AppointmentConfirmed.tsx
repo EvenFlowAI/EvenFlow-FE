@@ -135,7 +135,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                     ? scProfile?.address
                         ? concatAddress(scProfile?.address)
                         : ""
-                    : `${address?.label ?? ""} ${zipCode}`
+                    : address ? `${address?.label ?? ""} ${zipCode}` : "",
             },
             {
                 label: servicesList?.length > 1 ? "Services type" : "Service type",
