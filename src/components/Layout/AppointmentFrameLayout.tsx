@@ -349,7 +349,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('appointmentTiming')}
             />,
             appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen(!currentConfig?.advisorSelection ? 'carDetails' : 'consultantSelection')}
+                onBack={handleChangeScreen(!currentConfig?.advisorSelection ? 'serviceNeeds' : 'consultantSelection')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection
