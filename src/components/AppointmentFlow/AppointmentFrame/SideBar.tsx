@@ -166,9 +166,13 @@ type TProps = {
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const {serviceType, sideBarSteps} =  useSelector((state: RootState) => state.appointmentFrame);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType])
 
     const currentMenu = useMemo(() => {
         return serviceType === EServiceType.VisitCenter
@@ -211,6 +215,9 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }, [screen, dispatch, setSideBarSteps])
 
     const getButtonState = (index: number) => {
+        if (index === currentSteps["consultantSelection"] - 1 && currentConfig && !currentConfig?.advisorSelection) {
+            if (serviceType === EServiceType.VisitCenter || serviceType === EServiceType.PikUpDropOff) return true;
+        }
         return serviceType === EServiceType.MobileService
             ? mobileStepsMap[screen] < index + 1 && mobileStepsMap[sideBarSteps[sideBarSteps.length - 1]] < index + 1
             : serviceType === EServiceType.PikUpDropOff

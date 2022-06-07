@@ -255,6 +255,7 @@ const BookingFlowConfig = () => {
                             <LoadingButton
                                 loading={isLoading}
                                 onClick={onSave}
+                                disabled={!configuration?.length}
                                 className={classes.saveButton}>
                                 Save
                             </LoadingButton>
