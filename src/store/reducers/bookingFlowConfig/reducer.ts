@@ -14,7 +14,7 @@ export const initialData: TServiceTypeSettings[] = [
         available: true,
         valueService: true,
         productPageForValueService: false,
-        advisorSelection: true,
+        advisorSelection: false,
         serviceType: EServiceTypeBookingFlow.MobileService
     },
     {
