@@ -138,6 +138,7 @@ export const SelectedAppointment = () => {
     const { selectedPackage, advisor, consultants, categoriesIds, serviceType, address, zipCode, valueService } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests
@@ -150,6 +151,9 @@ export const SelectedAppointment = () => {
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType])
 
     const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
     const isDynamicPricing = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic) : false;
@@ -190,6 +194,7 @@ export const SelectedAppointment = () => {
                                 <Select
                                     value={advisor?.id || "Any"}
                                     className={classes.select}
+                                    disabled={currentConfig && !currentConfig?.advisorSelection}
                                     onChange={handleConsultantChange}>
                                     {isBmWService
                                         ? consultants
