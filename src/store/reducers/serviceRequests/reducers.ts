@@ -33,7 +33,11 @@ import {
     setLoadingAdmin,
     setAdminPaging,
     setAdminPageData,
-    setAdminFilter, setAssignedOrdering, setNonSelectedOrder, getAllAssignedServiceRequests,
+    setAdminFilter,
+    setAssignedOrdering,
+    setNonSelectedOrder,
+    getAllAssignedServiceRequests,
+    setServiceRequestsPageActiveTab,
 } from "./actions";
 import {defaultOrder} from "../../../config/config";
 
@@ -65,6 +69,7 @@ type TState = {
     nonUrgentPaging: IPagingResponse;
     nonUrgentPageData: IPageRequest;
     scRequestsShort: IAssignedServiceRequestShort[];
+    srPageActiveTab: string;
 }
 const initialState: TState = {
     adminList: [],
@@ -93,7 +98,8 @@ const initialState: TState = {
     nonUrgentLoading: false,
     nonUrgentPaging: {...defaultPaging},
     nonUrgentPageData: {...defaultPageData},
-    scRequestsShort: []
+    scRequestsShort: [],
+    srPageActiveTab: "0",
 };
 
 export const serviceRequestsReducer = createReducer(
@@ -178,5 +184,8 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(setAssignedOrdering, (state, {payload}) => {
             return {...state, assignedOrdering: payload, assignedPageData: {...state.assignedPageData, pageIndex: 0}};
+        })
+        .addCase(setServiceRequestsPageActiveTab, (state, {payload}) => {
+            return {...state, srPageActiveTab: payload};
         })
 )

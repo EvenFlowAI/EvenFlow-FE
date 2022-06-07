@@ -25,7 +25,6 @@ import {
 } from "../../../store/reducers/categories/actions";
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
-import {EServiceCenterName} from "../../../api/types";
 
 type TAddServiceCategoryProps = DialogProps & {
     isEditing?: boolean;
@@ -118,9 +117,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const showError = useException();
 
     const getCategoryOptions = () => {
-        if (selectedSC &&
-            (selectedSC.serviceCenterFlag === EServiceCenterName.BMWSchererville
-                || selectedSC.serviceCenterFlag === EServiceCenterName.DealertrackTest)) {
+        if (selectedSC?.isValueServiceAvailable) {
             return categoryOptions;
         }
        return categoryOptions.slice(0, categoryOptions.length - 1);

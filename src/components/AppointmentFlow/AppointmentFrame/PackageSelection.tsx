@@ -196,8 +196,16 @@ const Info = styled("p")({
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddServices}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
-    const {selectedPackage, selectedVehicle, maintenanceDetails, packageIsSelected, service, subService, packageOptionType} = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {
+        selectedPackage,
+        selectedVehicle,
+        maintenanceDetails,
+        packageIsSelected,
+        service,
+        subService,
+        packageOptionType
+    } = useSelector((state: RootState) => state.appointmentFrame);
 
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
@@ -279,15 +287,21 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         }
     }
 
-    const handleNext = (): void => {
+    const handleGA = () => {
         if (selectedPackage) {
-            dispatch(setPackageIsSelected(true));
             const packageOptions = ['Good', 'Better', 'Best'];
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: `Selected Package`,
                 label: `With ${packageOptions[selectedPackage.type]} Option`,
             })
+        }
+    }
+
+    const handleNext = (): void => {
+        if (selectedPackage) {
+            dispatch(setPackageIsSelected(true));
+            handleGA();
             if (packageIsSelected && packageOptionType && packageOptionType !== selectedPackage.type) {
                 onOpen();
             } else {
@@ -340,7 +354,11 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                         />
 
                         {(isSanfordInfinity || isBmWService)
-                        && <TotalMaintenance isBmWService={isBmWService} setClasses={setClasses} packages={packages}/>}
+                        && <TotalMaintenance
+                          isBmWService={isBmWService}
+                          setClasses={setClasses}
+                          packages={packages}/>
+                        }
 
                         <Complimentary
                             packages={packages}

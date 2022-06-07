@@ -7,15 +7,19 @@ import {optimizerRoot} from "../../Optimizer/utils";
 import {OPsCodesPage} from "../../Optimizer/OPsCodes/OPsCodesPage";
 import {MaintenancePackages} from "../../Optimizer/MaintenancePackages/MaintenancePackages";
 import ComplimentaryServices from "../ComplimentaryServices/ComplimentaryServices";
+import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRequests/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 export const ServiceRequests = () => {
-    const [selectedTab, setTab] = useState<string>("0");
+    const {srPageActiveTab} = useSelector((state: RootState) => state.serviceRequests);
+    const dispatch = useDispatch();
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
-        setTab(tab);
+        dispatch(setServiceRequestsPageActiveTab(tab))
     }
 
-    return <TabContext value={selectedTab}>
+    return <TabContext value={srPageActiveTab}>
         <TitleContainer title="Service Requests" pad parent={optimizerRoot}/>
         <TabList
             onChange={handleTabChange}

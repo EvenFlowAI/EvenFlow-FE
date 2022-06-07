@@ -1,12 +1,12 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
-import {Switch, Route} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import {Layout} from "./components/Layout/Layout";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
-import { ConfirmDialog } from './components/UI/ConfirmDialog';
+import {ConfirmDialog} from './components/UI/ConfirmDialog';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {EndUserLayout} from "./components/Layout/EndUserLayout";
@@ -14,9 +14,38 @@ import {AppointmentLayout} from "./components/Layout/AppointmentLayout";
 import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ValueService from "./components/AppointmentFlow/AppointmentFrame/ValueService/ValueService";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "./store/rootReducer";
+import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
+import {TScreen} from "./components/Layout/types";
+import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
+import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions";
 
 const App = () => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
+    const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (serviceType === EServiceType.MobileService) {
+            setValueServicePreviousScreen("location");
+        }
+        if (serviceType === EServiceType.PikUpDropOff) {
+            setValueServicePreviousScreen("location");
+        }
+        if (!config.find(item => item.serviceType.toString() === serviceType.toString())?.advisorSelection
+            || serviceType === EServiceType.MobileService) {
+            setValueServiceNextScreen("appointmentTiming");
+        }
+    }, [serviceType])
+
+    useEffect(() => {
+        if (scProfile) dispatch(loadBookingFlowConfig(scProfile.id))
+    }, [scProfile])
 
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
@@ -25,6 +54,11 @@ const App = () => {
         return <IconButton size="small" onClick={handleClose(key)}><Close htmlColor="#fff" /></IconButton>;
     }
     const isWin = window.navigator.appVersion.indexOf('Win') !== -1;
+
+    const onValueServiceBack = async () => {
+        await dispatch(setValueService(null));
+        await dispatch(setCurrentFrameScreen(valueServicePreviousScreen));
+    }
 
     return (
         <SnackbarProvider
@@ -45,7 +79,10 @@ const App = () => {
                     <Route path={Routes.EndUser.CancelAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
-                    <Route path={Routes.EndUser.ValueService} exact component={ValueService}/>
+                    <Route
+                        path={Routes.EndUser.ValueService}
+                        exact
+                        render={() => <ValueService onBack={onValueServiceBack} nextScreen={valueServiceNextScreen}/>}/>
                     <PrivateRoute path="/" component={Layout}/>
                 </Switch>
             </Container>

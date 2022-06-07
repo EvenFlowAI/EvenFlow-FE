@@ -10,7 +10,7 @@ import {
     selectSR, selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {InputLoading, TextField} from "../UI";
+import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
@@ -82,15 +82,23 @@ type TProps = {
 }
 
 export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices}) => {
-    const [loading, setLoading] = useState<boolean>(false);
-
     const [searchInput, setSearch] = useState<string>("");
     const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
-    const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
-    const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const [selectedCode, srList, search, vehicles, vehicle, scProfile, subService, service, allCategories, selectedPackage, categoriesIds] = useSelector((state: RootState) => [
+    const [
+        selectedCode,
+        srList,
+        search,
+        vehicles,
+        vehicle,
+        scProfile,
+        subService,
+        service,
+        allCategories,
+        selectedPackage,
+        categoriesIds,
+        serviceType,
+        config,
+    ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointment.search,
@@ -102,10 +110,15 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
         state.categories.allCategories,
         state.appointmentFrame.selectedPackage,
         state.appointmentFrame.categoriesIds,
+        state.appointmentFrame.serviceType,
+        state.bookingFlowConfig.config,
     ]);
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const isInit = useRef(true);
     const debouncedSearch = useDebounce(searchInput);
+    const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
 
     useEffect(() => {
         if (!isInit.current) {
@@ -137,7 +150,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
         setSearch(e.target.value);
     }
 
-    const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCategories = (value: string) => {
         const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
         const diagnoseCategoryRequestsIds = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
         const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
@@ -152,15 +165,22 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
             }
             dispatch(selectCategoriesIds(categories))
         }
+    }
+
+    const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+        handleCategories(value);
         dispatch(selectSR(value ? Number(value) : null));
         dispatch(selectAppointment(null));
     }
 
     const goNext = () => {
         if (!checkSelectedCar(vehicle, vehicles)) {
-            onNext("carDetails");
+            onNext("maintenanceDetails");
         } else {
-            onNext("consultantSelection");
+            const nextScreen: TScreen = config.find(item => item.serviceType.toString() === serviceType.toString())?.advisorSelection
+                ? "consultantSelection"
+                : "appointmentTiming";
+            onNext(nextScreen);
         }
     }
 
@@ -177,24 +197,37 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
         goNext();
     }
 
+    const getIndCodes = (): number[] => {
+        let codes: number[];
+        const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
+        const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
+        codes = selectedCode.filter(item => {
+            return !subService?.serviceRequests.find(el => item === el.id)
+                || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
+        })
+        return codes;
+    }
+
+    const getDiagnoseCodes = (): number[] => {
+        let codes: number[];
+        const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+        const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
+        codes = selectedCode.filter(code => {
+            return !service?.serviceRequests.find(request => code === request.id)
+                || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
+        })
+        return codes;
+    }
+
+
     const handleBack = () => {
         let codes: number[] = [];
         if (subService?.type === EServiceCategoryType.IndividualServices && service?.type === EServiceCategoryType.LinkToPage2) {
-            const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
-            const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
-            codes = selectedCode.filter(item => {
-                return !subService.serviceRequests.find(el => item === el.id)
-                || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
-            })
+            codes = getIndCodes();
             dispatch(selectSubService(null));
             dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
         } else if (service?.type === EServiceCategoryType.Diagnose) {
-            const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
-            const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
-            codes = selectedCode.filter(code => {
-                return !service.serviceRequests.find(request => code === request.id)
-                 || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
-            })
+            codes = getDiagnoseCodes();
             dispatch(selectService(null));
             dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
         }
@@ -230,9 +263,6 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                             size="small">
                             <Search />
                         </IconButton>,
-                        endAdornment: loading ?
-                            <InputLoading />
-                            : undefined
                     }}
                 />
                 <CodesWrapper>

@@ -8,6 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 
 
@@ -20,7 +21,6 @@ const Wrapper = styled('div')(({theme}) => ({
     }
 }))
 
-
 const List = styled('ul')(({theme}) => ({
     listStyle: "none",
     margin: 0,
@@ -31,7 +31,7 @@ const List = styled('ul')(({theme}) => ({
     gap: "18px",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         alignSelf: "flex-start",
         gap: "10px",
         width: "100%",
@@ -55,7 +55,7 @@ const List = styled('ul')(({theme}) => ({
             display: 'block',
             maxHeight: 120,
             overflow: "auto",
-            padding: 8,
+            padding: '8px 8px 8px 0',
         }
     },
     "& ul": {
@@ -77,7 +77,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     flexDirection: "column",
     alignItems: "flex-end",
     textAlign: "right",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         alignItems: "flex-start",
     },
     "& .price": {
@@ -89,7 +89,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     },
     "& .info": {
         color: "#27AE60",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             marginTop: 5
         }
     }
@@ -100,7 +100,7 @@ const DateWrapper = styled('div')(({theme}) => ({
     textAlign: "right",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         marginTop: 8,
         textAlign: "left",
     }
@@ -113,7 +113,7 @@ const useStyles = makeStyles(theme => ({
         '& > span': {
             marginLeft: 5,
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             '& > div > div': {
                 padding: 5
             }
@@ -135,7 +135,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const SelectedAppointment = () => {
-    const { selectedPackage, advisor, consultants, categoriesIds, valueService } = useSelector((state: RootState) => state.appointmentFrame);
+    const { selectedPackage, advisor, consultants, categoriesIds, serviceType, address, zipCode, valueService } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [selectedSR, srList] = useSelector((state: RootState) => [
@@ -182,27 +182,37 @@ export const SelectedAppointment = () => {
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div> }
                     </li>
-                        <li key="advisor">
+                    <li key="advisor">
+                        {serviceType === EServiceType.VisitCenter
+                            ? <div className={classes.selectWrapper}>
                             <div className={classes.selectWrapper}>
                                 Advisor: {isSm ? <br/> : null}
-                                    <Select
-                                        value={advisor?.id || "Any"}
-                                        className={classes.select}
-                                        onChange={handleConsultantChange}>
-                                        {isBmWService
-                                            ? consultants
-                                                .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
-                                                .concat([<MenuItem value="Any">Any Available</MenuItem>])
-                                            : <MenuItem value={advisor ? advisor.id : "Any"}>
-                                                {advisor ? advisor.name : 'Any Available'}
-                                              </MenuItem>
-                                        }
-                                    </Select>
+                                <Select
+                                    value={advisor?.id || "Any"}
+                                    className={classes.select}
+                                    onChange={handleConsultantChange}>
+                                    {isBmWService
+                                        ? consultants
+                                            .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
+                                            .concat([<MenuItem value="Any">Any Available</MenuItem>])
+                                        : <MenuItem value={advisor ? advisor.id : "Any"}>
+                                            {advisor ? advisor.name : 'Any Available'}
+                                        </MenuItem>
+                                    }
+                                </Select>
                             </div>
-                            {appointment && isSm ? <DateWrapper>
-                               {appointment.date.format('MMMM D, h:mm A')}
-                            </DateWrapper> : null}
-                        </li>
+                            </div>
+                            : address
+                                ? <div className="service-list">
+                                    <h4> YOUR ADDRESS: </h4>
+                                    <div>{`${address?.label}, ` || ""}{zipCode}</div>
+                                </div>
+                                : null
+                            }
+                        {appointment && isSm ? <DateWrapper>
+                            {appointment.date.format('MMMM D, h:mm A')}
+                        </DateWrapper> : null}
+                    </li>
 
                 </List>
                 <PriceWrapper>

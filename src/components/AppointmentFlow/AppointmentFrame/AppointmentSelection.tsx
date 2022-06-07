@@ -175,10 +175,20 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                         serviceCategoryIds: getCategories(),
                         countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
-                        warrantyExpiration: selectedVehicle?.warrantyExpiration
+                        warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     }
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
+                    }
+                    if (selectedVehicle) {
+                        // todo uncomment for RO prediction
+                        // dd.vehicle = {
+                        //     vin: selectedVehicle.vin,
+                        //     year: selectedVehicle.year,
+                        //     make: selectedVehicle.make,
+                        //     model: selectedVehicle.model,
+                        //     mileage: selectedVehicle.mileage,
+                        // }
                     }
                     await dispatch(loadAppointmentSlots(
                         dd,

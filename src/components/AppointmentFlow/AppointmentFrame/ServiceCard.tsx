@@ -41,11 +41,9 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
                  : <span style={{ filter: active ? "invert(100%)" : "unset"}}><Icon /></span>
         }
         <span style={{color: active ? "#FFFFFF" : "#252733"}}>{card.name}</span>
-        <div className="priceWrapper">
-            {!!price ? <>
+            {!!price ? <div className="priceWrapper">
                 <span className="text">Starting At</span>
                 <span className="price">${scProfile?.isRoundPrice ? price : price.toFixed(2)}</span>
-            </> : null}
-        </div>
+            </div> : null}
     </CardWrapper>
 }
