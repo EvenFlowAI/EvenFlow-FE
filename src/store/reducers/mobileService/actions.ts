@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {TZone} from "./types";
+import {TZone, TZoneNew} from "./types";
 import {AppThunk} from "../../../types/types";
 
 export const setCurrentZone = createAction<any>('MobileService/SetCurrentZone');
@@ -10,7 +10,7 @@ export const loadZones = (id: number): AppThunk => dispatch => {
 // todo request
 }
 
-export const addZone = (id: number): AppThunk => dispatch => {
+export const addZone = (id: number, data: TZoneNew): AppThunk => dispatch => {
 // todo request
 }
 
@@ -18,6 +18,6 @@ export const removeZone = (id: number, zoneId: number): AppThunk => dispatch => 
 // todo request
 }
 
-export const updateZone = (id: number, zoneId: number): AppThunk => dispatch => {
+export const updateZone = (id: number, zoneId: number, data: TZone): AppThunk => dispatch => {
 // todo request
 }

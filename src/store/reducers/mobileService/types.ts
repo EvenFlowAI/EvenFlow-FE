@@ -3,6 +3,11 @@ export type TZipCode = {
     id: number;
 }
 
+export type TZoneNew = {
+    name: string;
+    zipCodes: TZipCode[];
+}
+
 export type TZone = {
     name: string;
     id: number;

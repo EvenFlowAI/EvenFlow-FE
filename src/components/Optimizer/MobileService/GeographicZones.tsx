@@ -5,6 +5,7 @@ import Zones from "./Zones/Zones";
 import {useModal} from "../../../utils/hooks";
 import RemoveGeographicZone from "../../Modals/RemoveGeographicZone/RemoveGeographicZone";
 import {TZone} from "../../../store/reducers/mobileService/types";
+import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
 
 const TabHeaderWrapper = styled('div')({
     display: 'flex',
@@ -62,6 +63,8 @@ const GeographicZones = () => {
                 <Zones currentZone={currentZone} setCurrentZone={setCurrentZone}/>
             </ZonesWrapper>
             <RemoveGeographicZone open={isRemoveOpen} zone={currentZone} onClose={onRemoveClose}/>
+            <AddEditGeographicZone open={isEditZoneOpen} onClose={onEditZoneClose} isEdit zone={currentZone}/>
+            <AddEditGeographicZone open={isAddZoneOpen} onClose={onAddZoneClose} isEdit={false}/>
         </div>
     );
 };
