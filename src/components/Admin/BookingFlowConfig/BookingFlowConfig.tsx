@@ -63,8 +63,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
-
 const BookingFlowConfig = () => {
     const [configuration, setConfiguration] = useState<TServiceTypeSettings[]>([]);
     const {config, isLoading} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -255,7 +253,6 @@ const BookingFlowConfig = () => {
                             <LoadingButton
                                 loading={isLoading}
                                 onClick={onSave}
-                                disabled={!configuration?.length}
                                 className={classes.saveButton}>
                                 Save
                             </LoadingButton>

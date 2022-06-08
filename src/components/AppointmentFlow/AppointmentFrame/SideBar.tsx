@@ -215,7 +215,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }, [screen, dispatch, setSideBarSteps])
 
     const getButtonState = (index: number) => {
-        if (index === currentSteps["consultantSelection"] - 1 && !currentConfig?.advisorSelection) {
+        if (index === currentSteps["consultantSelection"] - 1 && currentConfig && !currentConfig?.advisorSelection) {
             if (serviceType === EServiceType.VisitCenter || serviceType === EServiceType.PikUpDropOff) return true;
         }
         return serviceType === EServiceType.MobileService
