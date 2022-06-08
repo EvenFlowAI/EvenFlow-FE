@@ -6,21 +6,21 @@ export const initialData: TServiceTypeSettings[] = [
     {
         available: true,
         valueService: true,
-        productPageForValueService: false,
+        productPageForValueService: true,
         advisorSelection: true,
         serviceType: EServiceTypeBookingFlow.VisitCenter
     },
     {
-        available: true,
+        available: false,
         valueService: true,
-        productPageForValueService: false,
+        productPageForValueService: true,
         advisorSelection: false,
         serviceType: EServiceTypeBookingFlow.MobileService
     },
     {
-        available: true,
+        available: false,
         valueService: true,
-        productPageForValueService: false,
+        productPageForValueService: true,
         advisorSelection: true,
         serviceType: EServiceTypeBookingFlow.PickUpDropOff
     },
@@ -38,7 +38,7 @@ const initialState: InitialState = {
 
 export const bookingFlowConfigReducer = createReducer(initialState, builder => builder
     .addCase(setBookingFlowConfig, (state, {payload}) => {
-        return {...state, config: payload};
+        return {...state, config: payload?.length ? payload : initialData};
     })
     .addCase(setBookingFlowConfigLoading, (state, {payload}) => {
         return {...state, isLoading: payload};
