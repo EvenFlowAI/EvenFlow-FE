@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import Zone from "./Zone";
 import {TZone} from "../../../../store/reducers/mobileService/types";
 
@@ -34,17 +34,21 @@ const zones = [
     }
 ]
 
-const Zones = () => {
-    const [selectedZone, setSelectedZone] = useState<TZone | null>(null);
+type TZonesProps = {
+    currentZone: TZone|null;
+    setCurrentZone: Dispatch<SetStateAction<TZone|null>>;
+}
+
+const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone}) => {
     const setSelected = (zone: TZone) => {
-        setSelectedZone(zone);
+        setCurrentZone(zone);
     }
     return (
         <div>
             {zones.map(item => <Zone
                 zone={item}
                 zipCodes={item.zipCodes}
-                isSelected={selectedZone?.id === item.id}
+                isSelected={currentZone?.id === item.id}
                 setSelected={setSelected}/>
             )}
         </div>
