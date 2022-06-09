@@ -11,7 +11,6 @@ import {TCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
-
 const Wrapper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
     padding: 20,
@@ -130,7 +129,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                     ?? moment.utc().format('ddd, MMM D, h:mm A'),
             },
             {
-                label: "Address",
+                label: serviceType === EServiceType.VisitCenter || address ? "Address" : '',
                 content: serviceType === EServiceType.VisitCenter
                     ? scProfile?.address
                         ? concatAddress(scProfile?.address)
