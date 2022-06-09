@@ -65,7 +65,12 @@ const GeographicZones = () => {
                 <div style={{width: '30%'}}>
                     <EligibleCustomerSegment/>
                 </div>
-                <Zones currentZone={currentZone} setCurrentZone={setCurrentZone}/>
+                <Zones
+                    currentZone={currentZone}
+                    setCurrentZone={setCurrentZone}
+                    onRemoveZip={onRemoveZipOpen}
+                    setCurrentZip={setCurrentZip}
+                />
             </ZonesWrapper>
             <RemoveGeographicZone open={isRemoveZoneOpen} zone={currentZone} onClose={onRemoveZoneClose}/>
             <AddEditGeographicZone

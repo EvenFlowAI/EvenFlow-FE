@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
 import {makeStyles} from "@material-ui/core/styles";
 import Checkbox from "../../../UI/Checkbox";
@@ -10,6 +10,8 @@ type TZoneProps = {
     zipCodes: TZipCode[];
     isSelected: boolean;
     setSelected: (zone: TZone) => void;
+    onRemoveZip: () => void;
+    setCurrentZip: Dispatch<SetStateAction<string>>;
 }
 
 type TStyleProps = {
@@ -69,14 +71,15 @@ const ZipCode = styled('div')({
     color: '#FFFFFF',
 })
 
-const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setSelected}) => {
+const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setSelected, setCurrentZip, onRemoveZip}) => {
     const classes = useStyles({isSelected});
 
     const onChange = (zone: TZone) => (e: React.ChangeEvent<{}>) => {
         setSelected(zone)
     }
-    const deleteZipCode = (id: number) => (e: React.MouseEvent<{}>) => {
-
+    const deleteZipCode = (item: TZipCode) => (e: React.MouseEvent<{}>) => {
+        setCurrentZip(item.code);
+        onRemoveZip();
     }
 
     return (
@@ -88,7 +91,7 @@ const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setSelected}) =
             <div className={classes.codesContainer}>
                 {zipCodes.map(item => <ZipCode key={item.id}>
                     <div>{item.code}</div>
-                    <CloseOutlined className={classes.icon} onClick={deleteZipCode(item.id)}/>
+                    <CloseOutlined className={classes.icon} onClick={deleteZipCode(item)}/>
                 </ZipCode>)}
             </div>
         </div>

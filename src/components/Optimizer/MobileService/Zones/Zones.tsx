@@ -104,9 +104,11 @@ const useStyles = makeStyles(() => ({
 type TZonesProps = {
     currentZone: TZone|null;
     setCurrentZone: Dispatch<SetStateAction<TZone|null>>;
+    onRemoveZip: () => void;
+    setCurrentZip: Dispatch<SetStateAction<string>>;
 }
 
-const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone}) => {
+const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone, setCurrentZip, onRemoveZip }) => {
     const classes = useStyles();
 
     const setSelected = (zone: TZone) => {
@@ -117,6 +119,8 @@ const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone}) => {
         <div className={classes.wrapper}>
             {mockZones.map(item => <Zone
                 zone={item}
+                setCurrentZip={setCurrentZip}
+                onRemoveZip={onRemoveZip}
                 zipCodes={item.zipCodes}
                 isSelected={currentZone?.id === item.id}
                 setSelected={setSelected}/>

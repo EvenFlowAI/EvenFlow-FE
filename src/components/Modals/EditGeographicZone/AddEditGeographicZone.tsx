@@ -110,11 +110,11 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
     const showError = useException();
 
     useEffect(() => {
-        if (props.zone) {
+        if (props.zone && props.open) {
             setZoneName(props.zone?.name);
             setZipList(props.zone.zipCodes.map(item => item.code));
         }
-    }, [props.zone])
+    }, [props.zone, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
@@ -213,7 +213,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
                         </AddBtn>
                     </div>
                     <div className={classes.zipsWrapper}>
-                        {zipList.map(code => <div className={classes.zip}>
+                        {zipList.map(code => <div className={classes.zip} key={code}>
                             <div className={classes.zipCode}>{code}</div>
                             <div className={classes.zipActions}>
                                 { props.isEdit
