@@ -11,11 +11,22 @@ const TableCell = withStyles({
 })(TC);
 
 const HeaderTableCell = withStyles({
+    '.MuiTableCell-head': {
+        textTransform: "none",
+    },
     root: {
         color: '#9FA2B4',
         textTransform: "none",
     }
 })(TableCell)
+
+const EligibleSegmentTable = withStyles({
+    root: {
+        "& .MuiTableCell-head": {
+            textTransform: "none",
+        }
+    }
+})(DemandTable)
 
 enum ECustomerSegmentMobileService {
     New, Lost, Existing, HighValue, MediumValue, LowValue, EndOfWarranty, PostWarranty
@@ -99,11 +110,11 @@ const EligibleCustomerSegment = () => {
     }
 
     return (
-        <DemandTable>
+        <EligibleSegmentTable>
             <TableHead>
                 <TableRow>
                     <HeaderTableCell align="left">
-                        Customer Segment
+                        Customer (Segment)
                     </HeaderTableCell>
                     <HeaderTableCell>
                         OFF/ON
@@ -122,7 +133,7 @@ const EligibleCustomerSegment = () => {
                     </TableRow>
                 })}
             </TableBody>
-        </DemandTable>
+        </EligibleSegmentTable>
     );
 };
 

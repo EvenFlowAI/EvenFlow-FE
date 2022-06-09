@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {Button, Divider, IconButton} from "@material-ui/core";
+import {Button, Divider, IconButton, styled} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {TZone, TZoneNew} from "../../../store/reducers/mobileService/types";
 import {TextField} from "../../UI/TextField";
 import {AddCircleOutline, Close} from "@material-ui/icons";
 import {useDispatch} from "react-redux";
 import {addZone, updateZone} from "../../../store/reducers/mobileService/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useModal, useSCs} from "../../../utils/hooks";
 import {ReactComponent as ChangeZone} from "../../../assets/img/changeZipZone.svg";
+import AssignZipToZone from "../AssignZipToZone/AssignZipToZone";
 
 const useStyles = makeStyles(() => ({
     text: {
@@ -52,11 +53,11 @@ const useStyles = makeStyles(() => ({
     fieldWrapper: {
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-end',
         marginTop: 16,
     },
     zipsWrapper: {
-
+        marginTop: 8,
     },
     zip: {
         display: 'flex',
@@ -77,9 +78,23 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const AddBtn = styled(Button)({
+    textTransform: 'none',
+    marginLeft: 16,
+    backgroundColor: '#F7F8FB',
+    color: '#7898FF',
+    padding: '8px 16px',
+    '.MuiButtonBase-root:disabled': {
+        color: '#AEBEF2',
+    }
+})
+
 type TEditZoneProps = DialogProps & {
-    zone?: TZone|null,
     isEdit: boolean;
+    zone?: TZone|null,
+    onRemoveZipOpen?: () => void;
+    currentZip?: string;
+    setCurrentZip?: Dispatch<SetStateAction<string>>;
 }
 
 const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
@@ -88,8 +103,11 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
     const [zipList, setZipList] = useState<string[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
-    const classes = useStyles();
+
+    const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
+    const classes = useStyles();
+    const showError = useException();
 
     useEffect(() => {
         if (props.zone) {
@@ -101,6 +119,8 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
     const onCancel = () => {
         setFormIsChecked(false);
         setZoneName('');
+        setNewZip('');
+        setZipList([]);
         props.onClose();
     }
     const onSave = () => {
@@ -121,96 +141,113 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
                 dispatch(addZone(selectedSC.id, data))
             }
         }
+        onCancel();
     }
 
     const onNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setFormIsChecked(true);
+        setFormIsChecked(false);
         setZoneName(e.target.value);
     }
 
     const onZipChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setFormIsChecked(true);
+        setFormIsChecked(false);
         setNewZip(e.target.value);
     }
 
     const onAddZip = (e: React.MouseEvent<{}>): void => {
         if (newZip.length === 5) {
             setZipList(prev => ([...prev, newZip]));
+            setNewZip('');
+        } else {
+            setFormIsChecked(true);
+            showError("It's not a valid ZIP code");
         }
     }
 
     const onChangeZoneClick = (code: string) => {
-        // todo open new modal
+        if (props.setCurrentZip) {
+            props.setCurrentZip(code);
+            onOpen();
+        }
     }
 
     const onRemoveZipClick = (code: string) => {
-        // todo open new modal
+        if (props.isEdit) {
+            if (props.setCurrentZip && props.onRemoveZipOpen) {
+                props.setCurrentZip(code);
+                props.onRemoveZipOpen();
+            }
+        } else {
+            setZipList(prev => prev.filter(item => item !== code))
+        }
     }
 
     return (
-        <BaseModal {...props} width={570} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>{props.isEdit ? 'Edit Zone' : 'Add Zone'}</DialogTitle>
-            <DialogContent style={{padding: '20px 116px'}}>
-                <TextField
-                    fullWidth
-                    label='Zone'
-                    placeholder='Type Here'
-                    error={!zoneName && formIsChecked}
-                    onChange={onNameChange}
-                    value={zoneName}/>
-                <div className={classes.fieldWrapper}>
-                    <div>
-                        <TextField
-                            fullWidth
-                            style={{width: "80%"}}
-                            label='ZIP Code'
-                            placeholder='Type Here'
-                            error={!newZip && formIsChecked}
-                            onChange={onZipChange}
-                            value={newZip}/>
-                    </div>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.addZipBtn}
-                        onClick={onAddZip}
-                        disabled={!zoneName.length}
-                        startIcon={<AddCircleOutline/>}>
-                        Add
-                    </Button>
-                </div>
-                <div className={classes.zipsWrapper}>
-                    {zipList.map(code => <div className={classes.zip}>
-                        <div className={classes.zipCode}>{code}</div>
-                        <div className={classes.zipActions}>
-                            <IconButton onClick={() => onChangeZoneClick(code)}>
-                                <ChangeZone/>
-                            </IconButton>
-                            <IconButton onClick={() => onRemoveZipClick(code)}>
-                                <Close/>
-                            </IconButton>
+        <div>
+            <BaseModal {...props} width={570} onClose={onCancel}>
+                <DialogTitle onClose={onCancel}>{props.isEdit ? 'Edit Zone' : 'Add Zone'}</DialogTitle>
+                <DialogContent style={{padding: '20px 116px'}}>
+                    <TextField
+                        fullWidth
+                        label='Zone'
+                        placeholder='Type Here'
+                        error={!zoneName && formIsChecked}
+                        onChange={onNameChange}
+                        value={zoneName}/>
+                    <div className={classes.fieldWrapper}>
+                        <div style={{width: "80%"}}>
+                            <TextField
+                                fullWidth
+                                label='ZIP Code'
+                                placeholder='Type Here'
+                                error={newZip.length !== 5 && formIsChecked}
+                                onChange={onZipChange}
+                                value={newZip}/>
                         </div>
-                    </div>)}
-                </div>
-            </DialogContent>
-            <Divider style={{ margin: 0 }}/>
-            <DialogActions>
-                <div className={classes.wrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <Button
-                            onClick={onCancel}
-                            className={classes.cancelButton}>
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={onSave}
-                            className={classes.saveButton}>
-                            Save
-                        </Button>
+                        <AddBtn
+                            variant="contained"
+                            onClick={onAddZip}
+                            disabled={!newZip.length}
+                            startIcon={<AddCircleOutline/>}>
+                            Add
+                        </AddBtn>
                     </div>
-                </div>
-            </DialogActions>
-        </BaseModal>
+                    <div className={classes.zipsWrapper}>
+                        {zipList.map(code => <div className={classes.zip}>
+                            <div className={classes.zipCode}>{code}</div>
+                            <div className={classes.zipActions}>
+                                { props.isEdit
+                                    ? <IconButton onClick={() => onChangeZoneClick(code)}>
+                                        <ChangeZone/>
+                                    </IconButton>
+                                    : null }
+                                <IconButton onClick={() => onRemoveZipClick(code)}>
+                                    <Close/>
+                                </IconButton>
+                            </div>
+                        </div>)}
+                    </div>
+                </DialogContent>
+                <Divider style={{ margin: 0 }}/>
+                <DialogActions>
+                    <div className={classes.wrapper}>
+                        <div className={classes.buttonsWrapper}>
+                            <Button
+                                onClick={onCancel}
+                                className={classes.cancelButton}>
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={onSave}
+                                className={classes.saveButton}>
+                                Save
+                            </Button>
+                        </div>
+                    </div>
+                </DialogActions>
+            </BaseModal>
+            <AssignZipToZone open={isOpen} zip={props.currentZip} zone={props.zone} onClose={onClose}/>
+        </div>
     );
 };
 

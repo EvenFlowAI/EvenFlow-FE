@@ -43,8 +43,10 @@ const useStyles = makeStyles(() => ({
     codesContainer: {
         display: "grid",
         gridTemplateColumns: '1fr 1fr',
-        gap: 8,
-        padding: '0px 8px',
+        gridGap: 8,
+        padding: 8,
+        border: "2px solid #DADADA",
+        borderRadius: 2,
         backgroundColor: "#F2F3F7",
     },
     icon: {
@@ -53,6 +55,7 @@ const useStyles = makeStyles(() => ({
         borderRadius: '50%',
         color: "grey",
         backgroundColor: 'white',
+        cursor: 'pointer',
     }
 }))
 
@@ -63,7 +66,6 @@ const ZipCode = styled('div')({
     backgroundColor: "#7898FF",
     borderRadius: 4,
     padding: '2px 6px',
-    margin: 5,
     color: '#FFFFFF',
 })
 

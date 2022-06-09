@@ -21,3 +21,12 @@ export const removeZone = (id: number, zoneId: number): AppThunk => dispatch => 
 export const updateZone = (id: number, zoneId: number, data: TZone): AppThunk => dispatch => {
 // todo request
 }
+
+export const removeZipFromZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
+    console.log('removed zip', zip);
+// todo request
+}
+
+export const assignZipToZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
+    // todo request
+}
