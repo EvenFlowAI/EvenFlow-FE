@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {SquarePaper} from "../../UI/Paper";
 import {TableContainer} from "../../Optimizer/PricingSettings/UI";
@@ -71,6 +71,9 @@ const BookingFlowConfig = () => {
     const showMessage = useMessage();
     const classes = useStyles();
     const dispatch = useDispatch();
+    const visitCenterConfig = useMemo(() => configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter), [configuration])
+    const mobileServiceConfig = useMemo(() => configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService), [configuration])
+    const pickUpDropOffConfig = useMemo(() => configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff), [configuration])
 
     useEffect(() => {
         if (selectedSC) {
@@ -165,20 +168,20 @@ const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'valueService')}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.valueService}
+                                            checked={visitCenterConfig?.valueService}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'productPageForValueService')}
-                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.valueService}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.productPageForValueService}
+                                            disabled={!visitCenterConfig?.valueService}
+                                            checked={visitCenterConfig?.productPageForValueService}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'advisorSelection')}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter)?.advisorSelection}
+                                            checked={visitCenterConfig?.advisorSelection}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
@@ -187,28 +190,28 @@ const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'available')}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.available}
+                                            checked={mobileServiceConfig?.available}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'valueService')}
-                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.available}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.valueService}
+                                            disabled={!mobileServiceConfig?.available}
+                                            checked={mobileServiceConfig?.valueService}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'productPageForValueService')}
-                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.valueService
-                                            || !configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.available}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.productPageForValueService}
+                                            disabled={!mobileServiceConfig?.valueService
+                                            || !mobileServiceConfig?.available}
+                                            checked={mobileServiceConfig?.productPageForValueService}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'advisorSelection')}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService)?.advisorSelection}
+                                            checked={mobileServiceConfig?.advisorSelection}
                                             disabled={true}
                                             color="primary"/>
                                     </TableCell>
@@ -218,29 +221,29 @@ const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'available')}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.available}
+                                            checked={pickUpDropOffConfig?.available}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'valueService')}
-                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.available}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.valueService}
+                                            disabled={!pickUpDropOffConfig?.available}
+                                            checked={pickUpDropOffConfig?.valueService}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'productPageForValueService')}
-                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.valueService
-                                            || !configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.available}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.productPageForValueService}
+                                            disabled={!pickUpDropOffConfig?.valueService
+                                            || !pickUpDropOffConfig?.available}
+                                            checked={pickUpDropOffConfig?.productPageForValueService}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'advisorSelection')}
-                                            disabled={!configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.available}
-                                            checked={configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff)?.advisorSelection}
+                                            disabled={!pickUpDropOffConfig?.available}
+                                            checked={pickUpDropOffConfig?.advisorSelection}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
