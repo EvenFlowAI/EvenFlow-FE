@@ -95,6 +95,7 @@ export const mockZones = [
 
 const useStyles = makeStyles(() => ({
     wrapper: {
+        width: '70%',
         display: "grid",
         gridTemplateColumns: '1fr 1fr',
         gridGap: 24,

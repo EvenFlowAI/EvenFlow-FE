@@ -21,7 +21,7 @@ type TStyleProps = {
 const useStyles = makeStyles(() => ({
     zoneContainer: ({isSelected}: TStyleProps) => ({
         display: 'grid',
-        gridTemplateColumns: '1fr 2fr',
+        gridTemplateColumns: '2fr 3fr',
         alignItems: "flex-start",
         padding: 12,
         borderRadius: 1,
