@@ -3,7 +3,7 @@ import {setCurrentZone, setLoading, setZones} from "./actions";
 import {TZone} from "./types";
 
 type TState = {
-    isLoading: Boolean;
+    isLoading: boolean;
     currentZone: any;
     zones: TZone[];
 }

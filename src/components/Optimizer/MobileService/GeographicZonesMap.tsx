@@ -2,17 +2,17 @@ import React from 'react';
 import {ButtonsWrapper, TabHeaderWrapper, ZonesWrapper, Title} from "./styledComponents";
 import {Button} from "@material-ui/core";
 import EligibleCustomerSegment from "./EligibleCustomerSegment";
+import {useModal} from "../../../utils/hooks";
+import MapIframeLink from "../../Modals/MapIframeLink/MapIframeLink";
 
-type TGeographicZonesMapProps = {
-    onAddZoneOpen: () => void;
-}
+const GeographicZonesMap = () => {
+    const {onOpen, onClose, isOpen} = useModal();
 
-const GeographicZonesMap: React.FC<TGeographicZonesMapProps> = ({onAddZoneOpen}) => {
     return (
         <div>
             <TabHeaderWrapper>
                 <ButtonsWrapper>
-                    <Button onClick={onAddZoneOpen} variant="contained" color="primary" style={{width: 160}}>Add Zone</Button>
+                    <Button onClick={onOpen} variant="contained" color="primary" style={{width: 160}}>Update Map</Button>
                 </ButtonsWrapper>
             </TabHeaderWrapper>
             <Title>Eligible Customer Type</Title>
@@ -26,6 +26,7 @@ const GeographicZonesMap: React.FC<TGeographicZonesMapProps> = ({onAddZoneOpen})
                     <div style={{fontSize: 10}}><a href='https://mapline.com' target='_blank'>Mapping by Mapline</a></div>
                 </div>
             </ZonesWrapper>
+            <MapIframeLink onClose={onClose} open={isOpen}/>
         </div>
     );
 };

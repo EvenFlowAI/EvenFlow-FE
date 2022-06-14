@@ -30,3 +30,7 @@ export const removeZipFromZone = (id: number, zoneId: number, zip: string): AppT
 export const assignZipToZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
     // todo request
 }
+
+export const saveLinkToMap = (id: number, link: string): AppThunk => dispatch => {
+    // todo request
+}

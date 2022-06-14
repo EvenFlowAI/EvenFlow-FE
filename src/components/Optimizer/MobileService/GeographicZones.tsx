@@ -9,7 +9,6 @@ import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeogra
 import RemoveZipCode from "../../Modals/RemoveZipCode/RemoveZipCode";
 import {TabHeaderWrapper, ButtonsWrapper, TextButton, Title, ZonesWrapper} from './styledComponents';
 
-
 type TGeographicZonesProps = {
     onAddZoneOpen: () => void;
 }
