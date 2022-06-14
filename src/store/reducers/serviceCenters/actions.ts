@@ -306,7 +306,7 @@ export const updatePredictionParams = (id: number, data: IPredictionParams, onEr
         .finally(() => dispatch(setParamsLoading(false)));
 }
 
-export const setLaborRate = createAction<ILaborRate>("ServiceCenters?PredictionParams")
+export const setLaborRate = createAction<ILaborRate>("ServiceCenters/SetLaborRate")
 export const loadLaborRate = (id: number): AppThunk => dispatch => {
     dispatch(setParamsLoading(true));
     Api.call(Api.endpoints.ServiceCenters.GetLaborRate, {urlParams: {id}})
