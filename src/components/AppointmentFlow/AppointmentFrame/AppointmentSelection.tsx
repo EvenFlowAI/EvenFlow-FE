@@ -17,6 +17,7 @@ import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 
 const Wrapper = styled('div')(({ theme }) => ({
@@ -61,6 +62,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         categoriesIds,
         allCategories,
         valueService,
+        customerEnteredEmail,
+        userType,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -76,6 +79,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.categoriesIds,
         state.categories.allCategories,
         state.appointmentFrame.valueService,
+        state.appointment.customerEnteredEmail,
+        state.appointmentFrame.userType,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
@@ -181,15 +186,15 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
                     }
                     if (selectedVehicle) {
-                        // todo uncomment for RO prediction
-                        // dd.vehicle = {
-                        //     vin: selectedVehicle.vin,
-                        //     year: selectedVehicle.year,
-                        //     make: selectedVehicle.make,
-                        //     model: selectedVehicle.model,
-                        //     mileage: selectedVehicle.mileage,
-                        // }
+                        dd.vehicle = {
+                            vin: selectedVehicle.vin,
+                            year: selectedVehicle.year,
+                            make: selectedVehicle.make,
+                            model: selectedVehicle.model,
+                            mileage: selectedVehicle.mileage,
+                        }
                     }
+                    if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
                     await dispatch(loadAppointmentSlots(
                         dd,
                         setDateCallback,
