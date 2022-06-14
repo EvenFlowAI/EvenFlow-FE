@@ -275,7 +275,7 @@ export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean
         .finally(() => dispatch(setRemindersLoading(false)));
 }
 export const setParamsLoading = createAction<boolean>("ServiceCenters/SetParamsLoading");
-export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters/PredictionParams")
+export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters/SetPredictionParams")
 export const loadPredictionParams = (id: number): AppThunk => dispatch => {
     dispatch(setParamsLoading(true));
     Api.call(Api.endpoints.ServiceCenters.GetPredictionParams, {urlParams: {id}})
