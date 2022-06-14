@@ -43,9 +43,9 @@ const useStyles = makeStyles(() => ({
 
 const LaborRate: React.FC<DialogProps> = (props) => {
     const {laborRate, selectedSC, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
-    const [customerPay, setCustomerPay] = useState<number>(0);
-    const [warranty, setWarranty] = useState<number>(0);
-    const [internal, setInternal] = useState<number>(0);
+    const [customerPay, setCustomerPay] = useState<string>('0');
+    const [warranty, setWarranty] = useState<string>('0');
+    const [internal, setInternal] = useState<string>('0');
 
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -57,21 +57,23 @@ const LaborRate: React.FC<DialogProps> = (props) => {
     }, [selectedSC])
 
     useEffect(() => {
-        setCustomerPay(laborRate.customerPay);
-        setWarranty(laborRate.warranty);
-        setInternal(laborRate.internal);
-    }, [laborRate])
+        if (props.open && laborRate) {
+            setCustomerPay(laborRate.customerPay.toString());
+            setWarranty(laborRate.warranty.toString());
+            setInternal(laborRate.internal.toString());
+        }
+    }, [laborRate, props.open])
 
     const onCancel = () => {
-        setCustomerPay(laborRate.customerPay);
-        setWarranty(laborRate.warranty);
-        setInternal(laborRate.internal);
+        setCustomerPay(laborRate.customerPay.toString());
+        setWarranty(laborRate.warranty.toString());
+        setInternal(laborRate.internal.toString());
         props.onClose();
     }
 
     const onSuccess = () => {
         showMessage('Labor Rate Updated Successfully')
-        props.onClose();
+        onCancel();
     }
 
     const onError = (err: string) => {
@@ -80,23 +82,23 @@ const LaborRate: React.FC<DialogProps> = (props) => {
 
     const onSave = () => {
         const data: ILaborRate = {
-            customerPay,
-            warranty,
-            internal,
+            customerPay: Number(customerPay),
+            warranty: Number(warranty),
+            internal: Number(internal),
         }
         if (selectedSC) dispatch(updateLaborRate(selectedSC.id, data, onError, onSuccess))
     }
 
     const handleChangeCustomerPay = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCustomerPay(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setCustomerPay(e.target.value)
     }
 
     const handleChangeWarranty = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setWarranty(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setWarranty(e.target.value)
     }
 
     const handleChangeInternal = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInternal(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setInternal(e.target.value)
     }
 
     return (
