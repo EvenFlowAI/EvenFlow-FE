@@ -79,6 +79,7 @@ export interface ICreateAppointment {
     isNeedCall: boolean;
     comment: string;
     serviceRequestIds: number[];
+    searchTerm?: string;
 }
 
 export interface IUpdateAppointment extends ICreateAppointment {
