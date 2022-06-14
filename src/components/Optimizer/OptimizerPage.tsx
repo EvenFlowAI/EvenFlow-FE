@@ -13,6 +13,7 @@ import {PricingSettingsPage} from "./PricingSettings/PricingSettingsPage";
 import {ServiceRequests} from "./ServiceRequests/ServiceRequests";
 import {useCurrentUser} from "../../utils/hooks";
 import {Roles} from "../../config/constants";
+import MobileServicePage from "./MobileService/MobileServicePage";
 
 export const OptimizerPage = () => {
     const currentUer = useCurrentUser();
@@ -26,6 +27,7 @@ export const OptimizerPage = () => {
             <PrivateRoute path={Routes.Optimizer.AppointmentAllocation} component={AppointmentAllocationPage} />
             <PrivateRoute path={Routes.Optimizer.OptimizationWindows} component={OptimizationWindowsPage} />
             <PrivateRoute path={Routes.Optimizer.PricingSettings} component={PricingSettingsPage} />
+            <PrivateRoute path={Routes.Optimizer.MobileService} component={MobileServicePage} />
             <Redirect to={currentUer?.role === Roles.Advisor ? Routes.Optimizer.EmployeeSchedule : Routes.Optimizer.ServiceRequests} />
         </Switch>
     </ContentContainer>

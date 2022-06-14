@@ -36,6 +36,7 @@ enum OptimizerRoutes {
     AppointmentAllocation = "/optimizer/appointment-allocation",
     OptimizationWindows = "/optimizer/optimization-windows",
     PricingSettings = "/optimizer/pricing-settings",
+    MobileService = "/optimizer/mobile-service",
 }
 
 enum EndUser {
