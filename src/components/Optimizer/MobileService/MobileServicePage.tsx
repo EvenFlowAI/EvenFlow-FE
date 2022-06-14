@@ -29,7 +29,7 @@ const MobileServicePage = () => {
 
     const tabs: TTab[] = [
         {id: "0", label: "Geographic Zones", component: <GeographicZones onAddZoneOpen={onAddZoneOpen}/>},
-        {id: "1", label: "Geographic Zones Map", component: <GeographicZonesMap onAddZoneOpen={onAddZoneOpen}/>},
+        {id: "1", label: "Geographic Zones Map", component: <GeographicZonesMap />},
     ]
 
     const handleTabChange = (e: any, value: string) => {
