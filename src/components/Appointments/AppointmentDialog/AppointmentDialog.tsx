@@ -350,6 +350,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             }
             if (payload) {
                 data.id = payload.id;
+                // todo search term
+                data.searchTerm = '';
                 await API.appointment.update(data);
             } else {
                 await API.appointment.create(data);

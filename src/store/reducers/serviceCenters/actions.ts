@@ -275,7 +275,7 @@ export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean
         .finally(() => dispatch(setRemindersLoading(false)));
 }
 export const setParamsLoading = createAction<boolean>("ServiceCenters/SetParamsLoading");
-export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters/PredictionParams")
+export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters/SetPredictionParams")
 export const loadPredictionParams = (id: number): AppThunk => dispatch => {
     dispatch(setParamsLoading(true));
     Api.call(Api.endpoints.ServiceCenters.GetPredictionParams, {urlParams: {id}})
@@ -306,7 +306,7 @@ export const updatePredictionParams = (id: number, data: IPredictionParams, onEr
         .finally(() => dispatch(setParamsLoading(false)));
 }
 
-export const setLaborRate = createAction<ILaborRate>("ServiceCenters?PredictionParams")
+export const setLaborRate = createAction<ILaborRate>("ServiceCenters/SetLaborRate")
 export const loadLaborRate = (id: number): AppThunk => dispatch => {
     dispatch(setParamsLoading(true));
     Api.call(Api.endpoints.ServiceCenters.GetLaborRate, {urlParams: {id}})
