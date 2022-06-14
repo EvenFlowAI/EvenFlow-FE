@@ -42,9 +42,9 @@ const RoPredictionParameters = () => {
     const {selectedSC, predictionParams, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
 
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [heavyRepairLaborHours, setHeavyRepairLaborHours] = useState<number>(0);
-    const [otherRepairLaborHours, setOtherRepairLaborHours] = useState<number>(0);
-    const [defaultLaborHours, setDefaultLaborHours] = useState<number>(0);
+    const [heavyRepairLaborHours, setHeavyRepairLaborHours] = useState<string>('0');
+    const [otherRepairLaborHours, setOtherRepairLaborHours] = useState<string>('0');
+    const [defaultLaborHours, setDefaultLaborHours] = useState<string>('0');
 
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -52,9 +52,9 @@ const RoPredictionParameters = () => {
     const showMessage = useMessage();
 
     const setInitialData = useCallback(() => {
-        setHeavyRepairLaborHours(predictionParams.heavyRepairLaborHours);
-        setOtherRepairLaborHours(predictionParams.otherRepairLaborHours);
-        setDefaultLaborHours(predictionParams.defaultLaborHours);
+        setHeavyRepairLaborHours(predictionParams.heavyRepairLaborHours.toString());
+        setOtherRepairLaborHours(predictionParams.otherRepairLaborHours.toString());
+        setDefaultLaborHours(predictionParams.defaultLaborHours.toString());
     }, [predictionParams])
 
     useEffect(() => {
@@ -66,15 +66,15 @@ const RoPredictionParameters = () => {
     }, [selectedSC])
 
     const handleChangeHeavy = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setHeavyRepairLaborHours(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setHeavyRepairLaborHours(e.target.value)
     }
 
     const handleChangeOther = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOtherRepairLaborHours(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setOtherRepairLaborHours(e.target.value)
     }
 
     const handleChangeDefault = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDefaultLaborHours(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setDefaultLaborHours(e.target.value)
     }
 
     const onSuccess = () => {
@@ -93,9 +93,9 @@ const RoPredictionParameters = () => {
 
     const handleSave = () => {
         const data: IPredictionParams = {
-            heavyRepairLaborHours,
-            otherRepairLaborHours,
-            defaultLaborHours,
+            heavyRepairLaborHours: Number(heavyRepairLaborHours),
+            otherRepairLaborHours: Number(otherRepairLaborHours),
+            defaultLaborHours: Number(defaultLaborHours),
         }
         if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess))
     }
