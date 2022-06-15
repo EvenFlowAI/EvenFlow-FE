@@ -40,6 +40,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
+const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 
 const LaborRate: React.FC<DialogProps> = (props) => {
     const {laborRate, selectedSC, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
@@ -81,9 +82,9 @@ const LaborRate: React.FC<DialogProps> = (props) => {
     }
 
     const onSave = () => {
-        if (customerPay.match(/(^-?\d*\.?\d{1,2}?)$/)
-            && warranty.match(/(^-?\d*\.?\d{1,2}?)$/)
-            && internal.match(/(^-?\d*\.?\d{1,2}?)$/)) {
+        if (customerPay.match(fixedToTwo)
+            && warranty.match(fixedToTwo)
+            && internal.match(fixedToTwo)) {
             const data: ILaborRate = {
                 customerPay: Number(customerPay),
                 warranty: Number(warranty),
@@ -126,7 +127,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
-                                        error={!customerPay.match(/(^-?\d*\.?\d{1,2}?)$/)}
+                                        error={!customerPay.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                         }}
@@ -140,7 +141,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
-                                        error={!warranty.match(/(^-?\d*\.?\d{1,2}?)$/)}
+                                        error={!warranty.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                         }}
@@ -154,7 +155,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
-                                        error={!internal.match(/(^-?\d*\.?\d{1,2}?)$/)}
+                                        error={!internal.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                         }}
