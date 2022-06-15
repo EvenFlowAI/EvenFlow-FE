@@ -49,21 +49,21 @@ type TAssignZipToZoneProps = DialogProps & {
     zone?: TZone|null;
 }
 
-const AssignZipToZone:React.FC<TAssignZipToZoneProps> = (props) => {
+const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, ...props}) => {
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (typeof props.zone !== 'undefined') setSelectedZone(props.zone);
-    }, [props.zone])
+        if (typeof zone !== 'undefined') setSelectedZone(zone);
+    }, [zone])
 
     const onCancel = () => props.onClose();
 
     const onAssign = () => {
-        if (selectedSC && selectedZone && props.zip) {
-            dispatch(assignZipToZone(selectedSC.id, selectedZone.id, props.zip));
+        if (selectedSC && selectedZone && zip) {
+            dispatch(assignZipToZone(selectedSC.id, selectedZone.id, zip));
             props.onClose();
         }
     }
@@ -85,7 +85,7 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = (props) => {
                     value={selectedZone?.id}
                     onChange={onChange}
                 >
-                    {mockZones.map(item => <MenuItem value={item.id}>{item.name}</MenuItem>)}
+                    {mockZones.map(item => <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>)}
                 </Select>
             </DialogContent>
             <Divider style={{ margin: 0 }}/>
