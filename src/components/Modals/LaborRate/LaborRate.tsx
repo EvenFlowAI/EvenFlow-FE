@@ -81,12 +81,18 @@ const LaborRate: React.FC<DialogProps> = (props) => {
     }
 
     const onSave = () => {
-        const data: ILaborRate = {
-            customerPay: Number(customerPay),
-            warranty: Number(warranty),
-            internal: Number(internal),
+        if (customerPay.match(/(^-?\d*\.?\d{1,2}?)$/)
+            && warranty.match(/(^-?\d*\.?\d{1,2}?)$/)
+            && internal.match(/(^-?\d*\.?\d{1,2}?)$/)) {
+            const data: ILaborRate = {
+                customerPay: Number(customerPay),
+                warranty: Number(warranty),
+                internal: Number(internal),
+            }
+            if (selectedSC) dispatch(updateLaborRate(selectedSC.id, data, onError, onSuccess))
+        } else {
+            showError('Each value can contain only two digits after coma');
         }
-        if (selectedSC) dispatch(updateLaborRate(selectedSC.id, data, onError, onSuccess))
     }
 
     const handleChangeCustomerPay = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +126,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
+                                        error={!customerPay.match(/(^-?\d*\.?\d{1,2}?)$/)}
                                         inputProps={{
                                             min: 0,
                                         }}
@@ -133,6 +140,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
+                                        error={!warranty.match(/(^-?\d*\.?\d{1,2}?)$/)}
                                         inputProps={{
                                             min: 0,
                                         }}
@@ -146,6 +154,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
+                                        error={!internal.match(/(^-?\d*\.?\d{1,2}?)$/)}
                                         inputProps={{
                                             min: 0,
                                         }}
