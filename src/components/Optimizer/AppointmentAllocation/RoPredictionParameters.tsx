@@ -130,7 +130,7 @@ const RoPredictionParameters = () => {
                                 HeavyRepairLaborHour
                             </TableCell>
                             <TableCell align="left">
-                                The number of incremental hours added to the appointment if the appointment predicted as Heavy Repair
+                                The number of incremental hours added to the appointment if the appointment predicted a Heavy Repair
                             </TableCell>
                             <TableCell>
                                 {!isEdit
@@ -152,7 +152,7 @@ const RoPredictionParameters = () => {
                                 OtherRepairLaborHour
                             </TableCell>
                             <TableCell align="left">
-                                The number of incremental hours added to the appointment if the appointment is <span style={{textDecoration: 'underline'}}>not</span> predicted as Heavy Repair
+                                The number of incremental hours added to the appointment if the appointment is <span style={{textDecoration: 'underline'}}>not</span> predicted a Heavy Repair
                             </TableCell>
                             <TableCell>
                                 {!isEdit
@@ -176,7 +176,7 @@ const RoPredictionParameters = () => {
                             </TableCell>
                             <TableCell align="left">
                                 When an Open RO or an appointment booked outside of EvenFlow app uses ops codes that are not
-                                in the Service Request Page and the Labor Hour value can not be found in the DMS
+                                in the Service Requests Page and the Labor Hour value can not be found in the DMS
                             </TableCell>
                             <TableCell>
                                 {!isEdit
