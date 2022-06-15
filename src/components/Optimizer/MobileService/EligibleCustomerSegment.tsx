@@ -11,9 +11,6 @@ const TableCell = withStyles({
 })(TC);
 
 const HeaderTableCell = withStyles({
-    '.MuiTableCell-head': {
-        textTransform: "none",
-    },
     root: {
         color: '#9FA2B4',
         textTransform: "none",
@@ -22,7 +19,7 @@ const HeaderTableCell = withStyles({
 
 const EligibleSegmentTable = withStyles({
     root: {
-        "& .MuiTableCell-head": {
+        "& .MuiTableCell-root": {
             textTransform: "none",
         }
     }

@@ -17,18 +17,18 @@ export const mockZones = [
                 id: 2
             },
             {
-                code: '65671',
+                code: '65672',
                 id: 3
             },
             {
-                code: '65655',
+                code: '65656',
                 id: 4
             }, {
-                code: '65671',
+                code: '65677',
                 id: 5
             },
             {
-                code: '65655',
+                code: '65658',
                 id: 6
             }
         ]
@@ -46,18 +46,18 @@ export const mockZones = [
                 id: 2
             },
             {
-                code: '65671',
+                code: '65672',
                 id: 3
             },
             {
-                code: '65655',
+                code: '65656',
                 id: 4
             }, {
-                code: '65671',
+                code: '65677',
                 id: 5
             },
             {
-                code: '65655',
+                code: '65658',
                 id: 6
             }
         ]
@@ -75,18 +75,18 @@ export const mockZones = [
                 id: 2
             },
             {
-                code: '65671',
+                code: '65672',
                 id: 3
             },
             {
-                code: '65655',
+                code: '65656',
                 id: 4
             }, {
-                code: '65671',
+                code: '65677',
                 id: 5
             },
             {
-                code: '65655',
+                code: '65658',
                 id: 6
             }
         ]
@@ -120,6 +120,7 @@ const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone, setCurrentZ
         <div className={classes.wrapper}>
             {mockZones.map(item => <Zone
                 zone={item}
+                key={item.id}
                 setCurrentZip={setCurrentZip}
                 onRemoveZip={onRemoveZip}
                 zipCodes={item.zipCodes}

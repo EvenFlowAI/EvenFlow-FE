@@ -47,7 +47,6 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open}) => {
         }
     }
 
-
     return (
         <BaseModal open={open} width={540} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Past IFrame Code with Link to MapLine</DialogTitle>
@@ -55,7 +54,7 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open}) => {
                 <Textarea
                     fullWidth
                     multiline
-                    inputProps={{error: isError}}
+                    error={isError}
                     placeholder="Past here"
                     label="IFrame Code Snippet"
                     onChange={handleLinkChange}

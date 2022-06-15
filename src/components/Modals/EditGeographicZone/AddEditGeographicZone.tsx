@@ -97,7 +97,13 @@ type TEditZoneProps = DialogProps & {
     setCurrentZip?: Dispatch<SetStateAction<string>>;
 }
 
-const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
+const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
+                                                             isEdit,
+                                                             zone,
+                                                             onRemoveZipOpen,
+                                                             currentZip,
+                                                             setCurrentZip,
+                                                             ...props}) => {
     const [zoneName, setZoneName] = useState<string>('');
     const [newZip, setNewZip] = useState<string>('');
     const [zipList, setZipList] = useState<string[]>([]);
@@ -110,11 +116,11 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
     const showError = useException();
 
     useEffect(() => {
-        if (props.zone && props.open) {
-            setZoneName(props.zone?.name);
-            setZipList(props.zone.zipCodes.map(item => item.code));
+        if (zone && props.open) {
+            setZoneName(zone?.name);
+            setZipList(zone.zipCodes.map(item => item.code));
         }
-    }, [props.zone, props.open])
+    }, [zone, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
@@ -126,13 +132,13 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
     const onSave = () => {
         setFormIsChecked(true);
         if (zoneName.length && zipList.length && selectedSC) {
-            if (props.zone && props.isEdit) {
+            if (zone && isEdit) {
                 const data: TZone = {
-                    ...props.zone,
+                    ...zone,
                     name: zoneName,
                     zipCodes: []
                 }
-                dispatch(updateZone(selectedSC.id, props.zone.id, data))
+                dispatch(updateZone(selectedSC.id, zone.id, data))
             } else {
                 const data: TZoneNew = {
                     name: zoneName,
@@ -165,17 +171,17 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
     }
 
     const onChangeZoneClick = (code: string) => {
-        if (props.setCurrentZip) {
-            props.setCurrentZip(code);
+        if (setCurrentZip) {
+            setCurrentZip(code);
             onOpen();
         }
     }
 
     const onRemoveZipClick = (code: string) => {
-        if (props.isEdit) {
-            if (props.setCurrentZip && props.onRemoveZipOpen) {
-                props.setCurrentZip(code);
-                props.onRemoveZipOpen();
+        if (isEdit) {
+            if (setCurrentZip && onRemoveZipOpen) {
+               setCurrentZip(code);
+                onRemoveZipOpen();
             }
         } else {
             setZipList(prev => prev.filter(item => item !== code))
@@ -185,7 +191,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
     return (
         <div>
             <BaseModal {...props} width={570} onClose={onCancel}>
-                <DialogTitle onClose={onCancel}>{props.isEdit ? 'Edit Zone' : 'Add Zone'}</DialogTitle>
+                <DialogTitle onClose={onCancel}>{isEdit ? 'Edit Zone' : 'Add Zone'}</DialogTitle>
                 <DialogContent style={{padding: '20px 116px'}}>
                     <TextField
                         fullWidth
@@ -216,7 +222,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
                         {zipList.map(code => <div className={classes.zip} key={code}>
                             <div className={classes.zipCode}>{code}</div>
                             <div className={classes.zipActions}>
-                                { props.isEdit
+                                { isEdit
                                     ? <IconButton onClick={() => onChangeZoneClick(code)}>
                                         <ChangeZone/>
                                     </IconButton>
@@ -246,7 +252,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = (props) => {
                     </div>
                 </DialogActions>
             </BaseModal>
-            <AssignZipToZone open={isOpen} zip={props.currentZip} zone={props.zone} onClose={onClose}/>
+            <AssignZipToZone open={isOpen} zip={currentZip} zone={zone} onClose={onClose}/>
         </div>
     );
 };
