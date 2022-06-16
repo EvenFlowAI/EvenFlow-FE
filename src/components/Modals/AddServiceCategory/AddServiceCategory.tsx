@@ -25,6 +25,8 @@ import {
 } from "../../../store/reducers/categories/actions";
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
+import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
+import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
 
 type TAddServiceCategoryProps = DialogProps & {
     isEditing?: boolean;
@@ -100,6 +102,7 @@ const initialFileState = {file: null, dataUrl: undefined};
 const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, isEditing, ...props}) => {
     const { allAssignedList, assignedFilter } = useSelector((state: RootState) => state.serviceRequests);
     const { page } = useSelector((state: RootState) => state.categories);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [categoryName, setCategoryName] = useState<string>('');
     const [definedPage, setDefinedPage] = useState<TOption | null>(null);
@@ -110,6 +113,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2
         || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
+    // todo for Mobile service when it will be separate logic
+    const visitCenterConfig = useMemo(() => config.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter), [config])
 
     const classes = useStyles();
     const { selectedSC } = useSCs();
@@ -141,6 +146,12 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         }
     }, [editingItem, allAssignedList, categoryOptions, props.open])
 
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadBookingFlowConfig(selectedSC.id))
+        }
+    }, [dispatch, selectedSC]);
+
     const onCancel = useCallback(() => {
         setFormIsChecked(false);
         setCategoryName('');
@@ -159,6 +170,10 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const onSave = useCallback(() => {
         if (selectedSC) {
             setFormIsChecked(true);
+            if (categoryType?.value === EServiceCategoryType.ValueService && !visitCenterConfig?.valueService) {
+               showError("Value Service Option is turned off in the Booking Flow and cannot be displayed")
+            }
+
             if (categoryName && definedPage && categoryType && orderIndex) {
                 const data: TUpdateCategoryData = {
                     name: categoryName,
@@ -187,7 +202,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                 onCancel();
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState])
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
