@@ -40,6 +40,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
+const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 
 const LaborRate: React.FC<DialogProps> = (props) => {
     const {laborRate, selectedSC, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
@@ -81,12 +82,18 @@ const LaborRate: React.FC<DialogProps> = (props) => {
     }
 
     const onSave = () => {
-        const data: ILaborRate = {
-            customerPay: Number(customerPay),
-            warranty: Number(warranty),
-            internal: Number(internal),
+        if (customerPay.match(fixedToTwo)
+            && warranty.match(fixedToTwo)
+            && internal.match(fixedToTwo)) {
+            const data: ILaborRate = {
+                customerPay: Number(customerPay),
+                warranty: Number(warranty),
+                internal: Number(internal),
+            }
+            if (selectedSC) dispatch(updateLaborRate(selectedSC.id, data, onError, onSuccess))
+        } else {
+            showError('Each value can contain only two digits after coma');
         }
-        if (selectedSC) dispatch(updateLaborRate(selectedSC.id, data, onError, onSuccess))
     }
 
     const handleChangeCustomerPay = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +127,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
+                                        error={!customerPay.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                         }}
@@ -133,6 +141,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
+                                        error={!warranty.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                         }}
@@ -146,6 +155,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                                 <TableCell>
                                     <TextField
                                         type="number"
+                                        error={!internal.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                         }}

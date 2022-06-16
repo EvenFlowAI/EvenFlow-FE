@@ -38,6 +38,8 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
+
 const RoPredictionParameters = () => {
     const {selectedSC, predictionParams, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
 
@@ -92,12 +94,18 @@ const RoPredictionParameters = () => {
     }, [])
 
     const handleSave = () => {
-        const data: IPredictionParams = {
-            heavyRepairLaborHours: Number(heavyRepairLaborHours),
-            otherRepairLaborHours: Number(otherRepairLaborHours),
-            defaultLaborHours: Number(defaultLaborHours),
+        if (heavyRepairLaborHours.match(fixedToTwo)
+            && otherRepairLaborHours.match(fixedToTwo)
+            && defaultLaborHours.match(fixedToTwo)) {
+            const data: IPredictionParams = {
+                heavyRepairLaborHours: Number(heavyRepairLaborHours),
+                otherRepairLaborHours: Number(otherRepairLaborHours),
+                defaultLaborHours: Number(defaultLaborHours),
+            }
+            if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess))
+        } else {
+            showError('Each value can contain only two digits after coma');
         }
-        if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess))
     }
 
     return (
@@ -137,6 +145,7 @@ const RoPredictionParameters = () => {
                                     ? heavyRepairLaborHours
                                     : <TextField
                                         type="number"
+                                        error={!heavyRepairLaborHours.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                         }}
@@ -159,6 +168,7 @@ const RoPredictionParameters = () => {
                                     ? otherRepairLaborHours
                                     : <TextField
                                         type="number"
+                                        error={!otherRepairLaborHours.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                             step: 1,
@@ -182,6 +192,7 @@ const RoPredictionParameters = () => {
                                 {!isEdit
                                     ? defaultLaborHours
                                     : <TextField
+                                        error={!defaultLaborHours.match(fixedToTwo)}
                                         type="number"
                                         inputProps={{
                                             min: 0,
