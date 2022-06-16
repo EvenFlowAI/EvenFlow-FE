@@ -325,6 +325,7 @@ export const updateLaborRate = (id: number, data: ILaborRate, onError: (err: str
         .then(result => {
             if (result) {
                 dispatch(loadLaborRate(id));
+                dispatch(loadAllSCs());
                 onSuccess();
             }
         })
