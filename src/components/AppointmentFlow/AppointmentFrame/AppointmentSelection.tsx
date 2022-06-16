@@ -64,6 +64,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         valueService,
         customerEnteredEmail,
         userType,
+        vehicle,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -81,6 +82,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.valueService,
         state.appointment.customerEnteredEmail,
         state.appointmentFrame.userType,
+        state.appointmentFrame.selectedVehicle,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
@@ -185,13 +187,13 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
                     }
-                    if (selectedVehicle) {
+                    if (vehicle) {
                         dd.vehicle = {
-                            vin: selectedVehicle.vin,
-                            year: selectedVehicle.year,
-                            make: selectedVehicle.make,
-                            model: selectedVehicle.model,
-                            mileage: selectedVehicle.mileage,
+                            vin: vehicle.vin,
+                            year: vehicle.year,
+                            make: vehicle.make,
+                            model: vehicle.model,
+                            mileage: vehicle.mileage,
                         }
                     }
                     if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
@@ -208,8 +210,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType, month,
-        selectedVehicle, customerData, service, handleDateRangeSet,
-        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant
+        selectedVehicle, customerData, service, handleDateRangeSet, vehicle,
+        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService
     ]);
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
