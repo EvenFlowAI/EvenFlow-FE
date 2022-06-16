@@ -1,6 +1,5 @@
 import {Slider, Table, withStyles} from "@material-ui/core";
 
-
 export const AppointmentTable = withStyles(theme => ({
     root: {
         "& .MuiTableCell-head": {

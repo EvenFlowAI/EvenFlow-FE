@@ -160,6 +160,7 @@ export interface IAppointmentSlotsRequest {
     consultantId?: string | null;
     valueServiceOfferIds?: number[];
     vehicle?: IVehicleForSlots;
+    searchTerm?: string;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;

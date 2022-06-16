@@ -67,10 +67,11 @@ type TProps = {
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
-    const [appointment, appointmentFrame, categories] = useSelector((state: RootState) => [
+    const [appointment, appointmentFrame, categories, customerEnteredEmail] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
         state.categories,
+        state.appointment.customerEnteredEmail,
     ]);
 
     const {id} = useParams();
@@ -178,6 +179,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             serviceCategoryIds: getCategories(),
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
+            searchTerm: customerEnteredEmail,
         };
 
         const endpoint = data?.hashKey

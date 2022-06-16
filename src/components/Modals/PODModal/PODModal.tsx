@@ -23,6 +23,7 @@ import {createPod, updatePod} from "../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../store/reducers/bays/actions";
 import {ConfigButton} from "../../UI/ConfigButton";
 import {Routes} from "../../../config/routes";
+import {TZone} from "../../../store/reducers/mobileService/types";
 
 
 type TForm = {
@@ -39,7 +40,7 @@ const initialForm: TForm = {
     advisor: null,
     technicians: [],
     bays: [],
-    serviceRequests: []
+    serviceRequests: [],
 }
 
 export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...props}) => {

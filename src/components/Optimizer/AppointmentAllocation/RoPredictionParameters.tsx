@@ -38,13 +38,15 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
+
 const RoPredictionParameters = () => {
     const {selectedSC, predictionParams, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
 
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [heavyRepairLaborHours, setHeavyRepairLaborHours] = useState<number>(0);
-    const [otherRepairLaborHours, setOtherRepairLaborHours] = useState<number>(0);
-    const [defaultLaborHours, setDefaultLaborHours] = useState<number>(0);
+    const [heavyRepairLaborHours, setHeavyRepairLaborHours] = useState<string>('0');
+    const [otherRepairLaborHours, setOtherRepairLaborHours] = useState<string>('0');
+    const [defaultLaborHours, setDefaultLaborHours] = useState<string>('0');
 
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -52,9 +54,9 @@ const RoPredictionParameters = () => {
     const showMessage = useMessage();
 
     const setInitialData = useCallback(() => {
-        setHeavyRepairLaborHours(predictionParams.heavyRepairLaborHours);
-        setOtherRepairLaborHours(predictionParams.otherRepairLaborHours);
-        setDefaultLaborHours(predictionParams.defaultLaborHours);
+        setHeavyRepairLaborHours(predictionParams.heavyRepairLaborHours.toString());
+        setOtherRepairLaborHours(predictionParams.otherRepairLaborHours.toString());
+        setDefaultLaborHours(predictionParams.defaultLaborHours.toString());
     }, [predictionParams])
 
     useEffect(() => {
@@ -66,15 +68,15 @@ const RoPredictionParameters = () => {
     }, [selectedSC])
 
     const handleChangeHeavy = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setHeavyRepairLaborHours(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setHeavyRepairLaborHours(e.target.value)
     }
 
     const handleChangeOther = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOtherRepairLaborHours(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setOtherRepairLaborHours(e.target.value)
     }
 
     const handleChangeDefault = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDefaultLaborHours(Number(e.target.value))
+        if (Number(e.target.value) >= 0) setDefaultLaborHours(e.target.value)
     }
 
     const onSuccess = () => {
@@ -92,12 +94,18 @@ const RoPredictionParameters = () => {
     }, [])
 
     const handleSave = () => {
-        const data: IPredictionParams = {
-            heavyRepairLaborHours,
-            otherRepairLaborHours,
-            defaultLaborHours,
+        if (heavyRepairLaborHours.match(fixedToTwo)
+            && otherRepairLaborHours.match(fixedToTwo)
+            && defaultLaborHours.match(fixedToTwo)) {
+            const data: IPredictionParams = {
+                heavyRepairLaborHours: Number(heavyRepairLaborHours),
+                otherRepairLaborHours: Number(otherRepairLaborHours),
+                defaultLaborHours: Number(defaultLaborHours),
+            }
+            if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess))
+        } else {
+            showError('Each value can contain only two digits after coma');
         }
-        if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess))
     }
 
     return (
@@ -130,13 +138,14 @@ const RoPredictionParameters = () => {
                                 HeavyRepairLaborHour
                             </TableCell>
                             <TableCell align="left">
-                                The number of incremental hours added to the appointment if the appointment predicted as Heavy Repair
+                                The number of incremental hours added to the appointment if the appointment predicted a Heavy Repair
                             </TableCell>
                             <TableCell>
                                 {!isEdit
                                     ? heavyRepairLaborHours
                                     : <TextField
                                         type="number"
+                                        error={!heavyRepairLaborHours.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                         }}
@@ -152,13 +161,14 @@ const RoPredictionParameters = () => {
                                 OtherRepairLaborHour
                             </TableCell>
                             <TableCell align="left">
-                                The number of incremental hours added to the appointment if the appointment is <span style={{textDecoration: 'underline'}}>not</span> predicted as Heavy Repair
+                                The number of incremental hours added to the appointment if the appointment is <span style={{textDecoration: 'underline'}}>not</span> predicted a Heavy Repair
                             </TableCell>
                             <TableCell>
                                 {!isEdit
                                     ? otherRepairLaborHours
                                     : <TextField
                                         type="number"
+                                        error={!otherRepairLaborHours.match(fixedToTwo)}
                                         inputProps={{
                                             min: 0,
                                             step: 1,
@@ -176,12 +186,13 @@ const RoPredictionParameters = () => {
                             </TableCell>
                             <TableCell align="left">
                                 When an Open RO or an appointment booked outside of EvenFlow app uses ops codes that are not
-                                in the Service Request Page and the Labor Hour value can not be found in the DMS
+                                in the Service Requests Page and the Labor Hour value can not be found in the DMS
                             </TableCell>
                             <TableCell>
                                 {!isEdit
                                     ? defaultLaborHours
                                     : <TextField
+                                        error={!defaultLaborHours.match(fixedToTwo)}
                                         type="number"
                                         inputProps={{
                                             min: 0,

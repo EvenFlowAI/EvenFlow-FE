@@ -17,6 +17,7 @@ import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 
 const Wrapper = styled('div')(({ theme }) => ({
@@ -61,6 +62,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         categoriesIds,
         allCategories,
         valueService,
+        customerEnteredEmail,
+        userType,
+        vehicle,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -76,6 +80,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.categoriesIds,
         state.categories.allCategories,
         state.appointmentFrame.valueService,
+        state.appointment.customerEnteredEmail,
+        state.appointmentFrame.userType,
+        state.appointmentFrame.selectedVehicle,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(
@@ -180,16 +187,16 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
                     }
-                    if (selectedVehicle) {
-                        // todo uncomment for RO prediction
-                        // dd.vehicle = {
-                        //     vin: selectedVehicle.vin,
-                        //     year: selectedVehicle.year,
-                        //     make: selectedVehicle.make,
-                        //     model: selectedVehicle.model,
-                        //     mileage: selectedVehicle.mileage,
-                        // }
+                    if (vehicle) {
+                        dd.vehicle = {
+                            vin: vehicle.vin,
+                            year: vehicle.year,
+                            make: vehicle.make,
+                            model: vehicle.model,
+                            mileage: vehicle.mileage,
+                        }
                     }
+                    if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
                     await dispatch(loadAppointmentSlots(
                         dd,
                         setDateCallback,
@@ -203,8 +210,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType, month,
-        selectedVehicle, customerData, service, handleDateRangeSet,
-        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant
+        selectedVehicle, customerData, service, handleDateRangeSet, vehicle,
+        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService
     ]);
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
