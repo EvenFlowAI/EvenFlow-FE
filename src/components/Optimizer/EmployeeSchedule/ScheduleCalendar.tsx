@@ -167,7 +167,8 @@ export const ScheduleCalendar = () => {
     const getHoliday = useCallback((date: moment.Moment) => {
         const holiday = holidaysList.find(h => {
             const d = moment.utc(h.date).year(date.year()).startOf('day');
-            return d.isSame(moment.utc(date), "date");
+            return moment(moment(d).format("YYYY-MM-DD"), "YYYY-MM-DD")
+                .isSame(moment(moment.utc(date).format("YYYY-MM-DD"), "YYYY-MM-DD"), "date");
         });
         if (holiday) {
             return <Tooltip title={holiday.description}><Holiday>{holiday.description}</Holiday></Tooltip>;
