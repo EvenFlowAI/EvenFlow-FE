@@ -171,7 +171,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         if (selectedSC) {
             setFormIsChecked(true);
             if (categoryType?.value === EServiceCategoryType.ValueService && !visitCenterConfig?.valueService) {
-               showError("Value Service Option is turned off in the Booking Flow and cannot be displayed")
+                return showError("Value Service Option is turned off in the Booking Flow and cannot be saved")
             }
 
             if (categoryName && definedPage && categoryType && orderIndex) {
