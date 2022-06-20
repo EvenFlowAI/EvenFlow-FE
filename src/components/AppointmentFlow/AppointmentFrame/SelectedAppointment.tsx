@@ -210,7 +210,7 @@ export const SelectedAppointment = () => {
                             : address
                                 ? <div className="service-list">
                                     <h4> YOUR ADDRESS: </h4>
-                                    <div>{`${address?.label}, ` || ""}{zipCode}</div>
+                                    <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
                                 </div>
                                 : null
                             }
