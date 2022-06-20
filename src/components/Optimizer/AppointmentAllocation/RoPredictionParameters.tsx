@@ -138,7 +138,7 @@ const RoPredictionParameters = () => {
                                 HeavyRepairLaborHour
                             </TableCell>
                             <TableCell align="left">
-                                The number of incremental hours added to the appointment if the appointment predicted a Heavy Repair
+                                The number of incremental hours added to the appointment if the appointment is predicted a Heavy Repair
                             </TableCell>
                             <TableCell>
                                 {!isEdit
