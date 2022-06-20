@@ -4,9 +4,26 @@ import {Button} from "@material-ui/core";
 import EligibleCustomerSegment from "./EligibleCustomerSegment";
 import {useModal} from "../../../utils/hooks";
 import MapIframeLink from "../../Modals/MapIframeLink/MapIframeLink";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+    wrapper: {
+        width: '70%',
+        '& > iframe': {
+            width: '100%',
+            height: 548,
+        },
+        '& > div': {
+            fontSize: 10
+        }
+    }
+}))
+
+const mockSRC = 'https://app.mapline.com/map/map_d5743b1/Pz8UfT8UGD9CXT8UJz9vTz8UPz8UPz8UPz8UHz8GY2YuRnUUWD'
 
 const GeographicZonesMap = () => {
     const {onOpen, onClose, isOpen} = useModal();
+    const classes = useStyles();
 
     return (
         <div>
@@ -20,10 +37,8 @@ const GeographicZonesMap = () => {
                 <div style={{width: '30%'}}>
                     <EligibleCustomerSegment/>
                 </div>
-                <div style={{width: '70%'}}>
-                    <iframe src='https://app.mapline.com/map/map_36c1b7f/Pz8UPz4ZIEJDfz8UPxAUP1kAMD8vJT8UPz8UPz8GQkxGCD8tPz'
-                            style={{width: '100%', height :500 }}/>
-                    <div style={{fontSize: 10}}><a href='https://mapline.com' target='_blank'>Mapping by Mapline</a></div>
+                <div className={classes.wrapper}>
+                    <iframe src={mockSRC}/>
                 </div>
             </ZonesWrapper>
             <MapIframeLink onClose={onClose} open={isOpen}/>

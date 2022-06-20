@@ -37,10 +37,12 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open}) => {
         setError(false);
         onClose();
     }
-//iframeLink.match(/(?=[0-9]*[a-fA-F])[a-fA-F0-9]{10}/)
     const onSave = () => {
         if (iframeLink.length) {
-            if (selectedSC) dispatch(saveLinkToMap(selectedSC.id, iframeLink));
+            const iframeWrap = document.createElement('div');
+            iframeWrap.innerHTML = iframeLink;
+            const iframe = iframeWrap.querySelector('iframe');
+            if (selectedSC && iframe?.src) dispatch(saveLinkToMap(selectedSC.id, iframe.src));
         } else {
             setError(true);
             showError('Pasted code is not valid an HTML Snippet')
