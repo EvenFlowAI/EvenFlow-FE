@@ -74,18 +74,19 @@ const ZipCode = styled('div')({
 const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setSelected, setCurrentZip, onRemoveZip}) => {
     const classes = useStyles({isSelected});
 
-    const onChange = (zone: TZone) => (e: React.ChangeEvent<{}>) => {
+    const onClick = () => {
         setSelected(zone)
     }
+
     const deleteZipCode = (item: TZipCode) => (e: React.MouseEvent<{}>) => {
         setCurrentZip(item.code);
         onRemoveZip();
     }
 
     return (
-        <div className={classes.zoneContainer}>
+        <div className={classes.zoneContainer} role="presentation" onClick={onClick}>
             <div className={classes.zoneBox}>
-                <Checkbox checked={isSelected} onChange={onChange(zone)} color="primary"/>
+                <Checkbox checked={isSelected} color="primary"/>
                 <div>{zone.name}</div>
             </div>
             <div className={classes.codesContainer}>
