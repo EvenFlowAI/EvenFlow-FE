@@ -12,7 +12,7 @@ import {Loading} from "../../UI/Loading";
 
 const useStyles = makeStyles(() => ({
     laborPerHour: {
-        width: 300,
+        width: 'fit-content',
         fontSize: 18,
         fontWeight: "bold",
         background: "#FFFFFF",
@@ -91,7 +91,7 @@ const RoPredictionParameters = () => {
     const handleCancel = useCallback(() => {
         setEdit(false);
         setInitialData();
-    }, [])
+    }, [setInitialData])
 
     const handleSave = () => {
         if (heavyRepairLaborHours.match(fixedToTwo)
@@ -138,7 +138,7 @@ const RoPredictionParameters = () => {
                                 HeavyRepairLaborHour
                             </TableCell>
                             <TableCell align="left">
-                                The number of incremental hours added to the appointment if the appointment predicted a Heavy Repair
+                                The number of incremental hours added to the appointment if the appointment is predicted a Heavy Repair
                             </TableCell>
                             <TableCell>
                                 {!isEdit

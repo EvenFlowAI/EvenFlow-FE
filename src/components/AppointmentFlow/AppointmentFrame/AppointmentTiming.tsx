@@ -14,9 +14,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
-import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
+import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
+import {decodeSCID} from "../../../utils/utils";
+import {collectServiceRequestIds} from "./utils";
+import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useParams} from "react-router-dom";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {useException} from "../../../utils/hooks";
 
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
@@ -162,18 +168,95 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
 
 export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
-    const [selectedType, selectedTime, appointment] = useSelector(
+    const {id} = useParams();
+    const showError = useException();
+    const [
+        selectedType,
+        selectedTime,
+        appointment,
+        consultant,
+        selectedPackage,
+        customerData,
+        selectedVehicle,
+        service,
+        subService,
+        valueService,
+        customerEnteredEmail,
+        userType,
+        vehicle,
+        selectedOpsCodes,
+        categoriesIds,
+        allCategories,
+        slots,
+    ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
             state.appointmentFrame.selectedTime,
             state.appointment.appointment,
-        ]
-    );
+            state.appointmentFrame.advisor,
+            state.appointmentFrame.selectedPackage,
+            state.appointment.customerLoadedData,
+            state.appointment.customerSelectedVehicle,
+            state.appointmentFrame.service,
+            state.appointmentFrame.subService,
+            state.appointmentFrame.valueService,
+            state.appointment.customerEnteredEmail,
+            state.appointmentFrame.userType,
+            state.appointmentFrame.selectedVehicle,
+            state.appointment.selectedSR,
+            state.appointmentFrame.categoriesIds,
+            state.categories.allCategories,
+            state.appointment.appointmentSlots,
+        ]);
+
+    const getCategories = (): number[] => {
+        return allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
+            })
+            .map(item => item.id)
+    }
 
     const handleSelectTiming = (t: EAppointmentTimingType) => () => {
         dispatch(setTiming(t));
+
+        if (t === EAppointmentTimingType.PreferredDate) {
+            const date = moment();
+            const dd: IAppointmentSlotsRequest = {
+                appointmentTimingType: EAppointmentTimingType.PreferredDate,
+                serviceCenterId: decodeSCID(id),
+                consultantId: consultant?.id ?? null,
+                fromDate: date.toISOString(),
+                maintenancePackageOptionId: selectedPackage?.id ?? null,
+                serviceRequestIds: collectServiceRequestIds(
+                    service, subService, selectedPackage, selectedOpsCodes
+                ),
+                serviceCategoryIds: getCategories(),
+                countOfDays: Math.abs(date.diff(moment(date).endOf("month"), "days")) + 1,
+                customerId: customerData?.id,
+                warrantyExpiration: selectedVehicle?.warrantyExpiration,
+            }
+            if (valueService?.selectedService) {
+                dd.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            if (vehicle) {
+                dd.vehicle = {
+                    vin: vehicle.vin,
+                    year: vehicle.year,
+                    make: vehicle.make,
+                    model: vehicle.model,
+                    mileage: vehicle.mileage,
+                }
+            }
+            if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
+            dispatch(loadAppointmentSlots(dd));
+        }
     }
+
     const handleChangeTime = (t: moment.Moment|null) => {
+        if (!slots.find(item => moment(item.date).format("YYYY-MM-DD") === moment(t).format('YYYY-MM-DD'))) {
+            return showError("The Service Center does not have free appointment slots for this date")
+        }
         dispatch(setTime(t));
         if (!moment(selectedTime).isSame(t, 'date')) {
             dispatch(selectAppointment(null));

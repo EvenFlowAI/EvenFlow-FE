@@ -155,7 +155,7 @@ export const SelectedAppointment = () => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
 
-    const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
+    const price = appointment?.price.value ?? 0;
     const isDynamicPricing = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic) : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
@@ -210,7 +210,7 @@ export const SelectedAppointment = () => {
                             : address
                                 ? <div className="service-list">
                                     <h4> YOUR ADDRESS: </h4>
-                                    <div>{`${address?.label}, ` || ""}{zipCode}</div>
+                                    <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
                                 </div>
                                 : null
                             }
