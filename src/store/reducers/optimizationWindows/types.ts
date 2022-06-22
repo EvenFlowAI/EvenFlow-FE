@@ -15,7 +15,6 @@ export const optimizationWindowsList: EOptimizationWindowType[] = [
     EOptimizationWindowType.FirstAvailable,
     EOptimizationWindowType.SpecificDate,
     EOptimizationWindowType.DemandSegments,
-    EOptimizationWindowType.OverbookingFactor,
     EOptimizationWindowType.AppointmentsPerSlot,
     EOptimizationWindowType.AppointmentCutoff,
     EOptimizationWindowType.MaxPriceDateRange,

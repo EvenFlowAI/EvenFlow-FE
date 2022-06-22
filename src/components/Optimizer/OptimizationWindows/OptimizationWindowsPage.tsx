@@ -16,7 +16,6 @@ import {
     TOptContent
 } from "../../../store/reducers/optimizationWindows/types";
 import {OptimizationDialog} from "./OptimizationWindowDialog";
-import {OverbookingFactorDialog} from "./OverbookingFactorDialog";
 import {AppointmentCutoffDialog} from "./AppointmentCutoffDialog";
 import moment from "moment";
 import {timeSpanString} from "../../../config/constants";
@@ -76,7 +75,6 @@ const blankWindowParam: IOptimizationWindow = {
 export const OptimizationWindowsPage = () => {
     const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);
     const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
-    const {isOpen: isOverbookingOpen, onClose: onOverbookingClose, onOpen: onOverbookingOpen} = useModal();
     const {isOpen: isCutoffOpen, onClose: onCutoffClose, onOpen: onCutoffOpen} = useModal();
     const {isOpen: isOptOpen, onClose: onOptClose, onOpen: onOptOpen} = useModal();
     const {isOpen: isMaxPriceOpen, onClose: onMaxPriceClose, onOpen: onMaxPriceOpen} = useModal();
@@ -103,8 +101,6 @@ export const OptimizationWindowsPage = () => {
         switch (k) {
             case EOptimizationWindowType.DemandSegments:
                 return onDemandOpen;
-            case EOptimizationWindowType.OverbookingFactor:
-                return onOverbookingOpen;
             case EOptimizationWindowType.AppointmentCutoff:
                 return onCutoffOpen;
             case EOptimizationWindowType.MaxPriceDateRange:
@@ -165,7 +161,6 @@ export const OptimizationWindowsPage = () => {
                 onClose={onOptClose}
             />
             <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
-            <OverbookingFactorDialog open={isOverbookingOpen} onClose={onOverbookingClose} />
             <AppointmentCutoffDialog open={isCutoffOpen} onClose={onCutoffClose} />
             <MaxPriceDateRangeDialog open={isMaxPriceOpen} onClose={onMaxPriceClose}/>
         </Grid>
