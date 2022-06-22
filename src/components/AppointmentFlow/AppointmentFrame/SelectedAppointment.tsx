@@ -161,11 +161,7 @@ export const SelectedAppointment = () => {
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
         if (isBmWService && e.target.value !== advisor?.id) dispatch(selectAppointment(null));
-        if (consultant) {
-            dispatch(setAdvisor(consultant))
-        } else {
-            dispatch(setAdvisor(null));
-        }
+        dispatch(setAdvisor(consultant ? consultant : null))
     }
 
     useEffect(() => {
@@ -221,9 +217,11 @@ export const SelectedAppointment = () => {
 
                 </List>
                 <PriceWrapper>
-                    {appointment && !isSm ? <DateWrapper>
+                    {appointment && !isSm
+                        ? <DateWrapper>
                         Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
-                    </DateWrapper> : null}
+                    </DateWrapper>
+                        : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
