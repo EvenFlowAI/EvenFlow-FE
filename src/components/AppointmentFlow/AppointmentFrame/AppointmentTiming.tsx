@@ -142,10 +142,10 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
         ? <StyledDate
             value={selectedTime}
             onChange={onChangeTime}
-            disabled={!active || isLoading}
+            disabled={!active}
             placeholder={"Choose here"}
             disablePast
-            shouldDisableDate={shouldDisableDate}
+            // shouldDisableDate={shouldDisableDate}
             InputProps={{
                 disableUnderline: true,
                 endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>
@@ -223,7 +223,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                 service, subService, selectedPackage, selectedOpsCodes
             ),
             serviceCategoryIds: getCategories(),
-            countOfDays: 30,
+            countOfDays: 21,
             customerId: customerData?.id,
             warrantyExpiration: selectedVehicle?.warrantyExpiration,
         }
@@ -282,9 +282,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     return (
         <StepWrapper>
             {/*TODO: change to 3 after offers will be included */}
-            {isLoading
-                ? <Loading/>
-                : <TimingWrapper columns={2}>
+            <TimingWrapper columns={2}>
                 {cards.map((card, idx) => {
                     /* TODO: Include again after Post MVP (Offers hidden) */
                     if (!idx) {
@@ -300,7 +298,6 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                         key={card.name}/>
                 })}
             </TimingWrapper>
-            }
             <Actions onBack={onBack} onNext={onSubmit} nextDisabled={!isValid} />
         </StepWrapper>
     );
