@@ -194,8 +194,8 @@ export const SelectedAppointment = () => {
                                     onChange={handleConsultantChange}>
                                     {isBmWService
                                         ? consultants
-                                            .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
-                                            .concat([<MenuItem value="Any">Any Available</MenuItem>])
+                                            .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
+                                            .concat([<MenuItem value="Any" key="any">Any Available</MenuItem>])
                                         : <MenuItem value={advisor ? advisor.id : "Any"}>
                                             {advisor ? advisor.name : 'Any Available'}
                                         </MenuItem>
