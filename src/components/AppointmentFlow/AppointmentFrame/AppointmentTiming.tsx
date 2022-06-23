@@ -22,8 +22,6 @@ import {collectServiceRequestIds} from "./utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {useException} from "../../../utils/hooks";
-
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
     display: "grid",
@@ -136,6 +134,8 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
                                               onChangeTime, selectedTime}) => {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const {appointmentSlots} = useSelector((state: RootState) => state.appointment)
+    const shouldDisableDate = (date: moment.Moment|null) => !appointmentSlots.find(item => moment(item.date).format("YYYY-MM-DD") === moment(date).format('YYYY-MM-DD'));
     const content = card.name === EAppointmentTimingType.PreferredDate
         ? <StyledDate
             value={selectedTime}
@@ -143,6 +143,7 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
             disabled={!active}
             placeholder={"Choose here"}
             disablePast
+            shouldDisableDate={shouldDisableDate}
             InputProps={{
                 disableUnderline: true,
                 endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>
@@ -169,7 +170,6 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
 export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
     const {id} = useParams();
-    const showError = useException();
     const [
         selectedType,
         selectedTime,
@@ -187,7 +187,6 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         selectedOpsCodes,
         categoriesIds,
         allCategories,
-        slots,
     ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
@@ -206,7 +205,6 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.appointment.selectedSR,
             state.appointmentFrame.categoriesIds,
             state.categories.allCategories,
-            state.appointment.appointmentSlots,
         ]);
 
     const getCategories = (): number[] => {
@@ -254,9 +252,9 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     }
 
     const handleChangeTime = (t: moment.Moment|null) => {
-        if (!slots.find(item => moment(item.date).format("YYYY-MM-DD") === moment(t).format('YYYY-MM-DD'))) {
-            return showError("The Service Center does not have free appointment slots for this date")
-        }
+        // if (!slots.find(item => moment(item.date).format("YYYY-MM-DD") === moment(t).format('YYYY-MM-DD'))) {
+        //     return showError("The Service Center does not have free appointment slots for this date")
+        // }
         dispatch(setTime(t));
         if (!moment(selectedTime).isSame(t, 'date')) {
             dispatch(selectAppointment(null));
