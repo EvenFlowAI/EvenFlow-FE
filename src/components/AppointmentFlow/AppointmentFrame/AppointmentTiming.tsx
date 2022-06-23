@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -22,6 +22,7 @@ import {collectServiceRequestIds} from "./utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {Loading} from "../../UI/Loading";
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
     display: "grid",
@@ -126,12 +127,13 @@ type TCardProps = {
     onClick: TCallback;
     selectedTime: moment.Moment|null;
     onChangeTime: TArgCallback<moment.Moment|null>;
+    isLoading: boolean;
 }
 
 const timingTypes = ['Special Offers', 'Preferred Date', 'First Available Date'];
 
 const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
-                                              onChangeTime, selectedTime}) => {
+                                              onChangeTime, selectedTime, isLoading}) => {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const {appointmentSlots} = useSelector((state: RootState) => state.appointment)
@@ -140,7 +142,7 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
         ? <StyledDate
             value={selectedTime}
             onChange={onChangeTime}
-            disabled={!active}
+            disabled={!active || isLoading}
             placeholder={"Choose here"}
             disablePast
             shouldDisableDate={shouldDisableDate}
@@ -168,6 +170,7 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
 }
 
 export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
+    const [isLoading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const {id} = useParams();
     const [
@@ -207,6 +210,39 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.categories.allCategories,
         ]);
 
+    useEffect(() => {
+        setLoading(true);
+        const date = moment();
+        const dd: IAppointmentSlotsRequest = {
+            appointmentTimingType: EAppointmentTimingType.PreferredDate,
+            serviceCenterId: decodeSCID(id),
+            consultantId: consultant?.id ?? null,
+            fromDate: date.toISOString(),
+            maintenancePackageOptionId: selectedPackage?.id ?? null,
+            serviceRequestIds: collectServiceRequestIds(
+                service, subService, selectedPackage, selectedOpsCodes
+            ),
+            serviceCategoryIds: getCategories(),
+            countOfDays: 30,
+            customerId: customerData?.id,
+            warrantyExpiration: selectedVehicle?.warrantyExpiration,
+        }
+        if (valueService?.selectedService) {
+            dd.valueServiceOfferIds = [valueService.selectedService.id];
+        }
+        if (vehicle) {
+            dd.vehicle = {
+                vin: vehicle.vin,
+                year: vehicle.year,
+                make: vehicle.make,
+                model: vehicle.model,
+                mileage: vehicle.mileage,
+            }
+        }
+        if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
+        dispatch(loadAppointmentSlots(dd, () => {}, () => setLoading(false)));
+    }, [consultant, service, subService, selectedPackage, selectedOpsCodes, customerData, selectedVehicle, valueService, vehicle, userType, customerEnteredEmail])
+
     const getCategories = (): number[] => {
         return allCategories
             .filter(category => {
@@ -217,44 +253,9 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
 
     const handleSelectTiming = (t: EAppointmentTimingType) => () => {
         dispatch(setTiming(t));
-
-        if (t === EAppointmentTimingType.PreferredDate) {
-            const date = moment();
-            const dd: IAppointmentSlotsRequest = {
-                appointmentTimingType: EAppointmentTimingType.PreferredDate,
-                serviceCenterId: decodeSCID(id),
-                consultantId: consultant?.id ?? null,
-                fromDate: date.toISOString(),
-                maintenancePackageOptionId: selectedPackage?.id ?? null,
-                serviceRequestIds: collectServiceRequestIds(
-                    service, subService, selectedPackage, selectedOpsCodes
-                ),
-                serviceCategoryIds: getCategories(),
-                countOfDays: Math.abs(date.diff(moment(date).endOf("month"), "days")) + 1,
-                customerId: customerData?.id,
-                warrantyExpiration: selectedVehicle?.warrantyExpiration,
-            }
-            if (valueService?.selectedService) {
-                dd.valueServiceOfferIds = [valueService.selectedService.id];
-            }
-            if (vehicle) {
-                dd.vehicle = {
-                    vin: vehicle.vin,
-                    year: vehicle.year,
-                    make: vehicle.make,
-                    model: vehicle.model,
-                    mileage: vehicle.mileage,
-                }
-            }
-            if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
-            dispatch(loadAppointmentSlots(dd));
-        }
     }
 
     const handleChangeTime = (t: moment.Moment|null) => {
-        // if (!slots.find(item => moment(item.date).format("YYYY-MM-DD") === moment(t).format('YYYY-MM-DD'))) {
-        //     return showError("The Service Center does not have free appointment slots for this date")
-        // }
         dispatch(setTime(t));
         if (!moment(selectedTime).isSame(t, 'date')) {
             dispatch(selectAppointment(null));
@@ -265,7 +266,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         selectedType !== null
         && (selectedType !== EAppointmentTimingType.PreferredDate || selectedTime)
     );
-    
+
     const onSubmit = useCallback((): void => {
         if (selectedType) {
             ReactGA.event({
@@ -281,19 +282,25 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     return (
         <StepWrapper>
             {/*TODO: change to 3 after offers will be included */}
-            <TimingWrapper columns={2}>
+            {isLoading
+                ? <Loading/>
+                : <TimingWrapper columns={2}>
                 {cards.map((card, idx) => {
                     /* TODO: Include again after Post MVP (Offers hidden) */
-                    if (!idx) {return null;}
+                    if (!idx) {
+                        return null;
+                    }
                     return <TimingCard
                         onClick={handleSelectTiming(card.name)}
                         card={card}
+                        isLoading={isLoading}
                         onChangeTime={handleChangeTime}
                         selectedTime={selectedTime}
                         active={selectedType === card.name}
-                        key={card.name} />
+                        key={card.name}/>
                 })}
             </TimingWrapper>
+            }
             <Actions onBack={onBack} onNext={onSubmit} nextDisabled={!isValid} />
         </StepWrapper>
     );
