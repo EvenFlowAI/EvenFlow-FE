@@ -97,7 +97,7 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = ({ isEditing, onClose, ...prop
 
     const onSave = () => {
         setFormIsChecked(true);
-        const modelsList: string[] = newModel ? [...models, newModel] : models;
+        const modelsList: string[] = newModel?.length ? [...models, newModel] : models;
         if (make && modelsList.length) {
             if (isEditing && currentMake?.id) {
                 const data: IMake = {
@@ -125,11 +125,13 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = ({ isEditing, onClose, ...prop
     }
 
     const addModel = () => {
-        if (!models.map(item => item.toUpperCase()).includes(newModel.toUpperCase())) {
-            setModels(prev => [...prev, newModel]);
-            setNewModel('');
-        } else {
-            showError('This Model has been added already')
+        if (newModel.length) {
+            if (!models.map(item => item.toUpperCase()).includes(newModel.toUpperCase())) {
+                setModels(prev => [...prev, newModel]);
+                setNewModel('');
+            } else {
+                showError('This Model has been added already')
+            }
         }
     }
 

@@ -145,7 +145,7 @@ export const UserProfile = () => {
             showError("Please type old password");
         } else if (!passwordForm.newPassword) {
             showError("Please type new password");
-        } else if (!(passwordForm.newPassword === passwordForm.repeatPassword)) {
+        } else if (passwordForm.newPassword !== passwordForm.repeatPassword) {
             showError("Passwords do not match");
         } else {
             setSaving(true);

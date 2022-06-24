@@ -31,36 +31,35 @@ const AdminRowData: TableRowDataType<IEmployee>[] = [
     {val: el => el.phoneNumber, header: "Phone Number", orderId: "phoneNumber"}
 ];
 
-
 export const Employees = () => {
-    const {data, isLoading, count} = useSelector((state: RootState) => ({
-        data: state.employees.employeesList,
-        isLoading: state.employees.loading,
-        count: state.employees.paging.numberOfRecords
-    }));
-    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+    const [data, isLoading, count, search, order] = useSelector((state: RootState) => [
+        state.employees.employeesList,
+        state.employees.loading,
+        state.employees.paging.numberOfRecords,
+        state.employees.searchTerm,
+        state.employees.order
+    ]);
+    const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
+    const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
+
+    const dispatch = useDispatch();
+    const {askConfirm} = useConfirm();
+    const showError = useException();
+    const showMessage = useMessage();
+    const currentUser = useCurrentUser();
+    const {onOpen, isOpen, onClose} = useModal();
+    const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.employees.pageData,
         changePageData
     );
-    const dispatch = useDispatch();
-    const search = useSelector((state: RootState) => state.employees.searchTerm);
-    const order = useSelector((state: RootState) => state.employees.order);
-
-    useEffect(() => {
-        dispatch(loadAll());
-    }, [dispatch, search, order]);
-    const currentUser = useCurrentUser();
-
     const rowData = useMemo<TableRowDataType<IEmployee>[]>(() => {
         return currentUser?.isSuperUser ? SURowData : AdminRowData;
     }, [currentUser]);
 
-    const {askConfirm} = useConfirm();
-    const showError = useException();
-    const showMessage = useMessage();
-    const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
-    const {onOpen, isOpen, onClose} = useModal();
-    const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
+    useEffect(() => {
+        dispatch(loadAll());
+    }, [dispatch, search, order]);
+
     const handleMenuOpen = (item: IEmployee) => (e: React.MouseEvent<HTMLButtonElement>) => {
         setEditedItem(item);
         setAnchorEl(e.currentTarget);

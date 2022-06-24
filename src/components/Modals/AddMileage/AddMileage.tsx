@@ -51,7 +51,7 @@ const AddMileage: React.FC<DialogProps> = (props) => {
 
     const onSave = ():void => {
         setFormIsChecked(true);
-        if ((mileages.length || newMileage) && selectedSC) {
+        if ((mileages.length || newMileage?.length) && selectedSC) {
             if (mileage.find(item => mileages.includes(`${item.value}`) || item.value === +newMileage)) {
                 return showError('Some mileage value already exists!')
             }

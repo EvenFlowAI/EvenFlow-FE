@@ -100,8 +100,8 @@ const getOptionLabel = (option: TOption) => {
 const initialFileState = {file: null, dataUrl: undefined};
 
 const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, isEditing, ...props}) => {
-    const { allAssignedList, assignedFilter } = useSelector((state: RootState) => state.serviceRequests);
-    const { page } = useSelector((state: RootState) => state.categories);
+    const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
+    const {page} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [categoryName, setCategoryName] = useState<string>('');
@@ -110,23 +110,21 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
+
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2
         || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
     // todo for Mobile service when it will be separate logic
     const visitCenterConfig = useMemo(() => config.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter), [config])
 
-    const classes = useStyles();
-    const { selectedSC } = useSCs();
+    const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
+    const classes = useStyles();
 
-    const getCategoryOptions = () => {
-        if (selectedSC?.isValueServiceAvailable) {
-            return categoryOptions;
-        }
-       return categoryOptions.slice(0, categoryOptions.length - 1);
-    }
+    const getCategoryOptions = () => selectedSC?.isValueServiceAvailable
+           ? categoryOptions
+           : categoryOptions.slice(0, categoryOptions.length - 1);
 
     useEffect(() => {
         props.open && selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
@@ -137,11 +135,15 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     useEffect(() => {
         if (editingItem && allAssignedList && props.open) {
             setCategoryName(editingItem.name);
+
             const page = pageOptions.find(option => option.value === +editingItem.page);
             page && setDefinedPage(page);
+
             setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
+
             const currentType = categoryOptions.find(item => item.value === +editingItem.type);
             currentType && setCategoryType(currentType)
+
             if (editingItem.orderIndex) setOrderIndex(editingItem.orderIndex.toString())
         }
     }, [editingItem, allAssignedList, categoryOptions, props.open])
@@ -194,8 +196,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                 if (editingItem) {
                     dispatch(updateCategory(editingItem.id, data));
                     if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file));
-                }
-                else {
+                } else {
                     const newData: TNewCategory = {...data, serviceCenterId: selectedSC.id};
                     dispatch(createCategory(newData, onSuccessCreate));
                 }

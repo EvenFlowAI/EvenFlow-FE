@@ -71,11 +71,6 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
     const [optionError, setOptionError] = useState<boolean>(false);
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
-    const showError = useException();
-    const classes = useStyles();
-    const inputClasses = useInputStyles();
     const [
         serviceList,
         isLoading,
@@ -91,6 +86,13 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
         state.packages.currentPackage,
         state.serviceRequests.nonSelectedPageData
     ]);
+
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+    const showError = useException();
+    const classes = useStyles();
+    const inputClasses = useInputStyles();
+
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
         setNonSelectedPageData
@@ -176,20 +178,23 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
             <DialogContent>
                 <div className={classes.wrapper}>
                     {currentPackage && <Autocomplete
-                        classes={inputClasses}
-                        options={currentPackage.options.map(option => ({name: option.name || MaintenanceOptions[option.type], type: option.type}))}
-                        getOptionSelected={(option, value) => option.type === value.type}
-                        getOptionLabel={option => option.name}
-                        onChange={onSelectOption}
-                        renderInput={autocompleteRender({
-                            label: "Select A Package Option",
-                            fullWidth: true,
-                            placeholder: 'Select An Option',
-                            error: optionError,
-                        })}
-                        value={selectedOption}/>}
+                      classes={inputClasses}
+                      options={
+                          currentPackage.options.map(option => ({name: option.name
+                                  || MaintenanceOptions[option.type], type: option.type}))
+                      }
+                      getOptionSelected={(option, value) => option.type === value.type}
+                      getOptionLabel={option => option.name}
+                      onChange={onSelectOption}
+                      renderInput={autocompleteRender({
+                          label: "Select A Package Option",
+                          fullWidth: true,
+                          placeholder: 'Select An Option',
+                          error: optionError,
+                      })}
+                      value={selectedOption}/>}
                     {currentPackage && selectedOption && <div className={classes.selectedCode}>
-                        Selected:  {getSelectedOpsCode(selectedOption)}
+                      Selected:  {getSelectedOpsCode(selectedOption)}
                     </div>}
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                 </div>

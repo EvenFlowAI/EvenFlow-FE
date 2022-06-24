@@ -9,7 +9,6 @@ import {useMessage, useSCs} from "../../../utils/hooks";
 
 export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
     const {selectedSC} = useSCs();
-
     const showMessage = useMessage();
 
     const [link, frame] = useMemo(() => {
@@ -25,6 +24,7 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
     const success = () => {
         showMessage("Copied to Clipboard");
     }
+
     const copyUrl = () => {
         copyTextToClipboard(link);
         success();
