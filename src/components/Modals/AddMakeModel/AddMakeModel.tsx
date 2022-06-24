@@ -161,7 +161,7 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = ({ isEditing, onClose, ...prop
                         error={formIsChecked && (!make || !!makes.find(item => item.name.toUpperCase() === make.toUpperCase()))}
                         onChange={onMakeChange}
                         value={make}/>
-                {!!models.length && <div className={classes.modelsWrapper}>
+                {Boolean(models.length) && <div className={classes.modelsWrapper}>
                     {models.map(model => <Model key={model} model={model} onDelete={onModelDelete}/>)}
                 </div>}
                 <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>

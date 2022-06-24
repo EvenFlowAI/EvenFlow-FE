@@ -68,7 +68,7 @@ const AddMileage: React.FC<DialogProps> = (props) => {
         <BaseModal {...props} width={540} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Add Mileage</DialogTitle>
             <DialogContent>
-                {!!mileages.length && <div className={classes.modelsWrapper}>
+                {Boolean(mileages.length) && <div className={classes.modelsWrapper}>
                     {mileages.map(mileage => <Model key={mileage} model={mileage} onDelete={onMileageDelete}/>)}
                 </div>}
                 <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>
