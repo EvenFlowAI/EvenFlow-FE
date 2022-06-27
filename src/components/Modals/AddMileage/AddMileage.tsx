@@ -51,7 +51,7 @@ const AddMileage: React.FC<DialogProps> = (props) => {
 
     const onSave = ():void => {
         setFormIsChecked(true);
-        if ((mileages.length || newMileage) && selectedSC) {
+        if ((mileages.length || newMileage?.length) && selectedSC) {
             if (mileage.find(item => mileages.includes(`${item.value}`) || item.value === +newMileage)) {
                 return showError('Some mileage value already exists!')
             }
@@ -68,7 +68,7 @@ const AddMileage: React.FC<DialogProps> = (props) => {
         <BaseModal {...props} width={540} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Add Mileage</DialogTitle>
             <DialogContent>
-                {!!mileages.length && <div className={classes.modelsWrapper}>
+                {Boolean(mileages.length) && <div className={classes.modelsWrapper}>
                     {mileages.map(mileage => <Model key={mileage} model={mileage} onDelete={onMileageDelete}/>)}
                 </div>}
                 <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>

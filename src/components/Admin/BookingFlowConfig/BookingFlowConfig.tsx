@@ -88,33 +88,33 @@ const BookingFlowConfig = () => {
     const onCheck = (serviceType: EServiceTypeBookingFlow, optionType: keyof TServiceTypeSettings) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         if (!selectedSC?.isValueServiceAvailable && optionType === 'valueService') {
             return showError('No Service Offers are available for current Service Center')
-        }
+        } else {
+            let analogServiceType: TServiceTypeSettings|undefined = undefined;
+            const currentServiceType = configuration.find(item => item.serviceType === serviceType);
 
-        let analogServiceType: TServiceTypeSettings|undefined = undefined;
-        const currentServiceType = configuration.find(item => item.serviceType === serviceType);
-
-        if (currentServiceType) {
-            const updated = {...currentServiceType, [optionType]: checked};
-            if (optionType === 'valueService' && !checked) {
-                updated.productPageForValueService = false;
-            }
-            setConfiguration(prev => {
-                const filtered = prev.filter(el => el.serviceType !== serviceType);
-                return [...filtered, updated]
-            })
-
-            if (optionType === 'valueService' || optionType === 'productPageForValueService') {
-                if (currentServiceType?.serviceType === EServiceTypeBookingFlow.VisitCenter) {
-                    analogServiceType = configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff);
-                } else if (currentServiceType.serviceType === EServiceTypeBookingFlow.PickUpDropOff) {
-                    analogServiceType = configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter);
+            if (currentServiceType) {
+                const updated = {...currentServiceType, [optionType]: checked};
+                if (optionType === 'valueService' && !checked) {
+                    updated.productPageForValueService = false;
                 }
-                if (analogServiceType) {
-                    const updatedAnalog = {...analogServiceType, [optionType]: checked};
-                    setConfiguration(prev => {
-                        const filtered = prev.filter(el => el.serviceType !== analogServiceType?.serviceType);
-                        return [...filtered, updatedAnalog]
-                    })
+                setConfiguration(prev => {
+                    const filtered = prev.filter(el => el.serviceType !== serviceType);
+                    return [...filtered, updated]
+                })
+
+                if (optionType === 'valueService' || optionType === 'productPageForValueService') {
+                    if (currentServiceType?.serviceType === EServiceTypeBookingFlow.VisitCenter) {
+                        analogServiceType = configuration.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff);
+                    } else if (currentServiceType.serviceType === EServiceTypeBookingFlow.PickUpDropOff) {
+                        analogServiceType = configuration.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter);
+                    }
+                    if (analogServiceType) {
+                        const updatedAnalog = {...analogServiceType, [optionType]: checked};
+                        setConfiguration(prev => {
+                            const filtered = prev.filter(el => el.serviceType !== analogServiceType?.serviceType);
+                            return [...filtered, updatedAnalog]
+                        })
+                    }
                 }
             }
         }

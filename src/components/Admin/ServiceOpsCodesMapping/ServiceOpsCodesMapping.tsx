@@ -23,12 +23,13 @@ const ServiceOpsCodesMapping = () => {
     const [selectedTab, setTab] = useState<string>("0");
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [currentItem, setCurrentItem] = useState<ICategory | null>(null);
+
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
-    const {isOpen, onOpen, onClose} = useModal();
     const {selectedSC} = useSCs();
+    const {isOpen, onOpen, onClose} = useModal();
 
     useEffect(() => {
         selectedSC && dispatch(loadCategoriesByPage());
@@ -110,7 +111,14 @@ const ServiceOpsCodesMapping = () => {
                         Add Service Category
                     </Button>
                 </div>
-                <Table data={categories} index="name" rowData={RowData} actions={tableActions} hidePagination isLoading={isLoading}/>
+                <Table
+                    data={categories}
+                    index="name"
+                    rowData={RowData}
+                    actions={tableActions}
+                    hidePagination
+                    isLoading={isLoading}
+                />
                 <Menu
                     open={Boolean(anchorEl)}
                     onClose={() => {setAnchorEl(null);}}
@@ -130,7 +138,14 @@ const ServiceOpsCodesMapping = () => {
                         Add Service Category
                     </Button>
                 </div>
-                <Table data={categories} index="name" rowData={RowData} actions={tableActions} hidePagination isLoading={isLoading}/>
+                <Table
+                    data={categories}
+                    index="name"
+                    rowData={RowData}
+                    actions={tableActions}
+                    hidePagination
+                    isLoading={isLoading}
+                />
                 <Menu
                     open={Boolean(anchorEl)}
                     onClose={() => {setAnchorEl(null);}}

@@ -105,7 +105,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
             <DialogContent>
                 <List>
                     {appointment?.serviceRequestPrices?.map(item => (
-                        <li className={classes.item}>
+                        <li className={classes.item} key={item.requestName}>
                             <span>
                                 {item.requestName.includes("Going")
                                 ? "My Description of Needs"

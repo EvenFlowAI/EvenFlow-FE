@@ -11,7 +11,7 @@ import {
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
-import {TScreen} from "../../../components/Layout/types";
+import {TScreen} from "../../Layout/types";
 import {useModal} from "../../../utils/hooks";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {selectSRMultiple} from "../../../store/reducers/appointment/actions";

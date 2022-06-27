@@ -66,10 +66,6 @@ const rowData: TableRowDataType<ISRAdmin>[] = [
 ];
 
 export const ServiceRequests = () => {
-    const dispatch = useDispatch();
-    const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
-        state => state.serviceRequests.adminPageData, setAdminPageData
-    );
     const [
         serviceRequests,
         loading,
@@ -83,10 +79,15 @@ export const ServiceRequests = () => {
     ]);
     const [editedItem, setEditedItem] = useState<ISRAdmin|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+
+    const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
     const {onOpen, onClose, isOpen} = useModal();
+    const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
+        state => state.serviceRequests.adminPageData, setAdminPageData
+    );
 
     useEffect(() => {
         dispatch(loadAdminServiceRequests());
@@ -148,6 +149,7 @@ export const ServiceRequests = () => {
             });
         }
     }
+
     const handleArchive = async () => {
         if (!editedItem) {
             showError("Service request is not loaded");
