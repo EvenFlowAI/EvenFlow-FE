@@ -65,6 +65,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         customerEnteredEmail,
         userType,
         vehicle,
+        hashKey,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -83,6 +84,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointment.customerEnteredEmail,
         state.appointmentFrame.userType,
         state.appointmentFrame.selectedVehicle,
+        state.appointmentFrame.hashKey,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -191,6 +193,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                             mileage: vehicle.mileage,
                         }
                     }
+                    if (hashKey) dd.appointmentHashKey = hashKey;
                     if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
                     await dispatch(loadAppointmentSlots(
                         dd,
