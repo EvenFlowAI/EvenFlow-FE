@@ -4,12 +4,14 @@ import {Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
-import {removeZone} from "../../../store/reducers/mobileService/actions";
+import {removeMobServiceZone} from "../../../store/reducers/mobileService/actions";
 import {useSCs} from "../../../utils/hooks";
-import {TZone} from "../../../store/reducers/mobileService/types";
+import {TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
+import {removeServiceValetZone} from "../../../store/reducers/serviceValet/actions";
 
 type TRemoveGeographicZoneProps = DialogProps & {
     zone: TZone|null;
+    serviceType: TZonesServiceType;
 }
 
 const useStyles = makeStyles(() => ({
@@ -46,15 +48,19 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = (props) => {
+const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zone, ...props}) => {
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
     const onCancel = () => props.onClose();
     const onRemove = async () => {
-        if (props.zone?.id && selectedSC) {
-            await dispatch(removeZone(selectedSC.id, props.zone.id));
+        if (zone?.id && selectedSC) {
+            if (serviceType === 'mobileService') {
+                await dispatch(removeMobServiceZone(selectedSC.id, zone.id));
+            } else {
+                await dispatch(removeServiceValetZone(selectedSC.id, zone.id));
+            }
             await props.onClose();
         }
     }

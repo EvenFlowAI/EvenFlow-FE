@@ -3,14 +3,15 @@ import {makeStyles} from "@material-ui/core/styles";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, IconButton, styled} from "@material-ui/core";
 import {DialogProps} from "../types";
-import {TZone, TZoneNew} from "../../../store/reducers/mobileService/types";
+import {TZone, TZoneNew, TZonesServiceType} from "../../../store/reducers/mobileService/types";
 import {TextField} from "../../UI/TextField";
 import {AddCircleOutline, Close} from "@material-ui/icons";
 import {useDispatch} from "react-redux";
-import {addZone, updateZone} from "../../../store/reducers/mobileService/actions";
+import {addServiceValetZone, updateServiceValetZone} from "../../../store/reducers/serviceValet/actions";
 import {useException, useModal, useSCs} from "../../../utils/hooks";
 import {ReactComponent as ChangeZone} from "../../../assets/img/changeZipZone.svg";
 import AssignZipToZone from "../AssignZipToZone/AssignZipToZone";
+import {addMobServiceZone, updateMobServiceZone} from "../../../store/reducers/mobileService/actions";
 
 const useStyles = makeStyles(() => ({
     text: {
@@ -95,6 +96,7 @@ type TEditZoneProps = DialogProps & {
     onRemoveZipOpen?: () => void;
     currentZip?: string;
     setCurrentZip?: Dispatch<SetStateAction<string>>;
+    serviceType: TZonesServiceType;
 }
 
 const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
@@ -103,6 +105,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                                              onRemoveZipOpen,
                                                              currentZip,
                                                              setCurrentZip,
+                                                             serviceType,
                                                              ...props}) => {
     const [zoneName, setZoneName] = useState<string>('');
     const [newZip, setNewZip] = useState<string>('');
@@ -138,13 +141,21 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                     name: zoneName,
                     zipCodes: []
                 }
-                dispatch(updateZone(selectedSC.id, zone.id, data))
+                if (serviceType === 'serviceValet') {
+                    dispatch(updateServiceValetZone(selectedSC.id, zone.id, data))
+                } else {
+                    dispatch(updateMobServiceZone(selectedSC.id, zone.id, data))
+                }
             } else {
                 const data: TZoneNew = {
                     name: zoneName,
                     zipCodes: []
                 }
-                dispatch(addZone(selectedSC.id, data))
+                if (serviceType === 'serviceValet') {
+                    dispatch(addServiceValetZone(selectedSC.id, data))
+                } else {
+                    dispatch(addMobServiceZone(selectedSC.id, data))
+                }
             }
         }
         onCancel();
@@ -252,7 +263,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                     </div>
                 </DialogActions>
             </BaseModal>
-            <AssignZipToZone open={isOpen} zip={currentZip} zone={zone} onClose={onClose}/>
+            <AssignZipToZone open={isOpen} zip={currentZip} zone={zone} onClose={onClose} serviceType={serviceType}/>
         </div>
     );
 };

@@ -6,7 +6,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {LoadingButton} from "../../UI/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {saveLinkToMap} from "../../../store/reducers/mobileService/actions";
+import {saveLinkToMobServiceMap} from "../../../store/reducers/mobileService/actions";
 import {useException, useSCs} from "../../../utils/hooks";
 
 const Textarea = styled(TextField)({
@@ -42,7 +42,7 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open}) => {
             const iframeWrap = document.createElement('div');
             iframeWrap.innerHTML = iframeLink;
             const iframe = iframeWrap.querySelector('iframe');
-            if (selectedSC && iframe?.src) dispatch(saveLinkToMap(selectedSC.id, iframe.src));
+            if (selectedSC && iframe?.src) dispatch(saveLinkToMobServiceMap(selectedSC.id, iframe.src));
         } else {
             setError(true);
             showError('Pasted code is not valid an HTML Snippet')

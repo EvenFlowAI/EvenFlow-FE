@@ -13,3 +13,5 @@ export type TZone = {
     id: number;
     zipCodes: TZipCode[];
 }
+
+export type TZonesServiceType = "serviceValet" | "mobileService";

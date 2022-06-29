@@ -58,7 +58,7 @@ const MobileServicePage = () => {
                     {t.component}
                 </TabPanel>
             })}
-            <AddEditGeographicZone open={isAddZoneOpen} onClose={onAddZoneClose} isEdit={false}/>
+            <AddEditGeographicZone open={isAddZoneOpen} onClose={onAddZoneClose} isEdit={false} serviceType="mobileService"/>
         </TabContext>
 };
 
