@@ -10,6 +10,7 @@ import {TabList} from "../../UI/Tabs";
 import GeographicZones from "./GeographicZones";
 import GeographicZonesMap from "./GeographicZonesMap";
 import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
+import AncillaryPrice from "./AncillaryPrice";
 
 type TTab = {
     id: string;
@@ -30,11 +31,13 @@ const MobileServicePage = () => {
     const tabs: TTab[] = [
         {id: "0", label: "Geographic Zones", component: <GeographicZones onAddZoneOpen={onAddZoneOpen}/>},
         {id: "1", label: "Geographic Zones Map", component: <GeographicZonesMap />},
+        {id: "2", label: "Ancillary Price", component: <AncillaryPrice />},
     ]
 
     const handleTabChange = (e: any, value: string) => {
         selectTab(value);
     }
+
     return <TabContext value={selectedTab}>
             <TitleContainer title="Mobile Service" pad parent={optimizerRoot}/>
             <TabList
