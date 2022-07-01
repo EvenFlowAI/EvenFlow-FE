@@ -10,7 +10,7 @@ import {TabList} from "../../UI/Tabs";
 import GeographicZones from "./GeographicZones";
 import GeographicZonesMap from "./GeographicZonesMap";
 import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
-import AncillaryPrice from "./AncillaryPrice";
+import AncillaryPrice from "./AncillaryPrice/AncillaryPrice";
 
 type TTab = {
     id: string;
