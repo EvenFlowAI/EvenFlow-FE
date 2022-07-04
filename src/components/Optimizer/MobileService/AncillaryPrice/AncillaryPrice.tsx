@@ -7,6 +7,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import ByDistance from "./ByDistance";
 
 export const TablesWrapper = styled('div')({
+    display: 'flex',
+    flexDirection: 'column',
     padding: 24,
     border: '1px solid #DADADA',
     backgroundColor: "#FFFFFF",
@@ -16,11 +18,6 @@ type TTab = {
     id: string;
     label: string;
     component: JSX.Element
-}
-
-type TLabelProps = {
-    title: string;
-    text: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -33,8 +30,9 @@ const useStyles = makeStyles(() => ({
         display: 'flex',
         alignItems: 'center',
         marginRight: 20,
-        fontSize: 20,
+        fontSize: 14,
         fontWeight: "bold",
+        textTransform: 'uppercase',
     },
     title: {
         fontSize: 16,
@@ -68,19 +66,17 @@ const AncillaryPrice = () => {
     }
 
     return (
-        <div>
+        <TablesWrapper>
             <div className={classes.wrapper}>
-                <div className={classes.optionsTitleWrapper}>Pricing Settings</div>
+                <div className={classes.optionsTitleWrapper}>Pricing Settings: </div>
                 <RadioGroup row aria-label="countType" name="countType" value={typeOfPrice} onChange={onChange}>
                     <FormControlLabel
-                        // className={value === 'round' ? classes.checkedOption :  classes.option}
                         value="byZone"
                         control={<Radio color="primary"/>}
                         label="By Zone"
                         labelPlacement="end"
                     />
                     <FormControlLabel
-                        // className={value === 'decimal' ? classes.checkedOption :  classes.option}
                         value="byDistance"
                         control={<Radio color="primary"/>}
                         label="By Distance"
@@ -109,8 +105,8 @@ const AncillaryPrice = () => {
                     </TabPanel>
                 })}
             </TabContext>
-        </div>
-    );
+        </TablesWrapper>
+    )
 };
 
 export default AncillaryPrice;

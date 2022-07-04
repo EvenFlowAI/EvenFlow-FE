@@ -14,12 +14,8 @@ import {DemandTable, TableRow} from "../../AppointmentAllocation/UI";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../../UI/TextField";
-
-export const TablesWrapper = styled('div')({
-    padding: 24,
-    border: '1px solid #DADADA',
-    backgroundColor: "#FFFFFF",
-})
+import {useModal} from "../../../../utils/hooks";
+import AddDistanceRange from "../../../Modals/AddDistanceRange/AddDistanceRange";
 
 const STextField = styled(TextField)({
     maxWidth: 100
@@ -29,7 +25,6 @@ export const TableCell = withStyles({
     root: {
         border: "none !important",
         padding: "12px 16px !important",
-        // textAlign: "left",
     }
 })(TC);
 
@@ -53,6 +48,19 @@ export const FirstCell = withStyles(({
         color: '#9FA2B4',
     }
 }))(TableCell)
+
+export const ButtonWrapper = styled('div')(() => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 20,
+}));
+
+export const WideButton = withStyles(() => ({
+    root: {
+        padding: '9px 42px'
+    }
+}))(Button)
 
 const Slider = withStyles((theme) => ({
     rail: {
@@ -140,6 +148,7 @@ const ByDistance = () => {
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<TDistancePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const {onOpen, isOpen, onClose} = useModal();
 
     useEffect(() => {
         setDistanceData(data.sort((a, b) => a.id - b.id));
@@ -196,7 +205,10 @@ const ByDistance = () => {
     }
 
     return (
-        <TablesWrapper>
+        <div>
+            <ButtonWrapper>
+                <WideButton color="primary" onClick={onOpen} variant="contained">Add Range</WideButton>
+            </ButtonWrapper>
             <DemandTable>
                 <TableHead>
                     <TableRow>
@@ -317,7 +329,8 @@ const ByDistance = () => {
                     <MenuItem onClick={deleteSettings}>Delete</MenuItem>
                 </Menu>
             </DemandTable>
-        </TablesWrapper>
+            <AddDistanceRange open={isOpen} onClose={onClose}/>
+        </div>
     );
 };
 

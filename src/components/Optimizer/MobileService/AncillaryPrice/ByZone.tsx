@@ -163,7 +163,6 @@ const ByZone = () => {
     }
 
     return (
-        <TablesWrapper>
             <DemandTable>
                 <TableHead>
                     <TableRow>
@@ -246,7 +245,6 @@ const ByZone = () => {
                     <MenuItem onClick={deleteSettings}>Delete</MenuItem>
                 </Menu>
             </DemandTable>
-        </TablesWrapper>
     );
 };
 
