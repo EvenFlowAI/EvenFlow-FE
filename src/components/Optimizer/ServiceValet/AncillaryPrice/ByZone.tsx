@@ -128,7 +128,7 @@ const ByZone = () => {
 
     const deleteSettings = () => {
         if (selectedSC && editedItem) {
-            dispatch(deleteServiceValetPrisingByZones(selectedSC.id, editedItem.id))
+            dispatch(deleteServiceValetPrisingByZones(selectedSC.id, editedItem.zoneId))
         }
     }
 
