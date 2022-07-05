@@ -2,9 +2,11 @@ import React from 'react';
 import {ButtonsWrapper, TabHeaderWrapper, ZonesWrapper, Title} from "./styledComponents";
 import {Button} from "@material-ui/core";
 import EligibleCustomerSegment from "./EligibleCustomerSegment";
-import {useModal} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
 import MapIframeLink from "../../Modals/MapIframeLink/MapIframeLink";
 import {makeStyles} from "@material-ui/core/styles";
+import {useDispatch} from "react-redux";
+import {saveLinkToServiceValetMap} from "../../../store/reducers/serviceValet/actions";
 
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -24,6 +26,12 @@ const mockSRC = 'https://app.mapline.com/map/map_d5743b1/Pz8UfT8UGD9CXT8UJz9vTz8
 const GeographicZonesMap = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+
+    const onSaveLink = (link: string) => {
+        if (selectedSC) dispatch(saveLinkToServiceValetMap(selectedSC.id, link))
+    }
 
     return (
         <div>
@@ -41,7 +49,7 @@ const GeographicZonesMap = () => {
                     <iframe src={mockSRC}/>
                 </div>
             </ZonesWrapper>
-            <MapIframeLink onClose={onClose} open={isOpen}/>
+            <MapIframeLink onClose={onClose} open={isOpen} onSave={onSaveLink}/>
         </div>
     );
 };

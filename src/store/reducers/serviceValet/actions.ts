@@ -1,10 +1,13 @@
 import {createAction} from "@reduxjs/toolkit";
 import {TZone, TZoneNew} from "../mobileService/types";
 import {AppThunk} from "../../../types/types";
+import {IDistancePriceSettings, IZonePriceSettings, TDistanceRange} from "./types";
 
 export const setCurrentZone = createAction<any>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');
 export const setZones = createAction<TZone[]>('ServiceValet/SetZones');
+export const setServiceValetPrisingByZones = createAction<IZonePriceSettings[]>('ServiceValet/SetPrisingSettingsByZones');
+export const setServiceValetPrisingByDistance = createAction<IDistancePriceSettings[]>('ServiceValet/SetPrisingSettingsByDistance');
 
 export const loadServiceValetZones = (id: number): AppThunk => dispatch => {
 // todo request
@@ -32,5 +35,33 @@ export const assignZipToServiceValetZone = (id: number, zoneId: number, zip: str
 }
 
 export const saveLinkToServiceValetMap = (id: number, link: string): AppThunk => dispatch => {
+    // todo request
+}
+
+export const loadServiceValetPrisingByZones = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const loadServiceValetPrisingByDistance = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const updateServiceValetPrisingByZones = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const updateServiceValetPrisingByDistance = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const deleteServiceValetPrisingByZones = (id: number, pricingId: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const deleteServiceValetPrisingByDistance = (id: number, pricingId: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const addServiceValetDistanceRange = (id: number, range: TDistanceRange): AppThunk => dispatch => {
     // todo request
 }

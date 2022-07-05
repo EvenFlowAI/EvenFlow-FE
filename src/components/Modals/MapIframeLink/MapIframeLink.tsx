@@ -16,15 +16,13 @@ const Textarea = styled(TextField)({
 });
 
 type TMapIframeLinkProps = DialogProps & {
-
+    onSave: (link: string) => void;
 }
 
-const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open}) => {
+const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open, onSave}) => {
     const {isLoading} = useSelector((state: RootState) => state.mobileService);
     const [iframeLink, setIframeLink] = useState<string>('')
     const [isError, setError] = useState<boolean>(false);
-    const dispatch = useDispatch();
-    const {selectedSC} = useSCs();
     const showError = useException();
 
     const handleLinkChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,12 +35,12 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open}) => {
         setError(false);
         onClose();
     }
-    const onSave = () => {
+    const onSaveClick = () => {
         if (iframeLink.length) {
             const iframeWrap = document.createElement('div');
             iframeWrap.innerHTML = iframeLink;
             const iframe = iframeWrap.querySelector('iframe');
-            if (selectedSC && iframe?.src) dispatch(saveLinkToMobServiceMap(selectedSC.id, iframe.src));
+            if (iframe?.src) onSave(iframe.src);
         } else {
             setError(true);
             showError('Pasted code is not valid an HTML Snippet')
@@ -69,7 +67,7 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open}) => {
                     Cancel
                 </Button>
                 <LoadingButton
-                    onClick={onSave}
+                    onClick={onSaveClick}
                     loading={isLoading}
                     variant="contained"
                     color="primary"

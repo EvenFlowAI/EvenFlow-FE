@@ -41,30 +41,38 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AddDistanceRange: React.FC<DialogProps> = (props) => {
-    const [rangeMin, setRangeMin] = useState<number>(0);
-    const [rangeMax, setRangeMax] = useState<number>(0);
-    const [costPerMile, setCostPerMile] = useState<number>(0);
+    const [rangeMin, setRangeMin] = useState<number|null>(null);
+    const [rangeMax, setRangeMax] = useState<number|null>(null);
+    const [costPerMile, setCostPerMile] = useState<number|null>(null);
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const classes = useStyles();
 
     const onCancel = () => {
-
+        setRangeMin(null);
+        setRangeMax(null);
+        setCostPerMile(null);
+        setFormChecked(false);
+        props.onClose()
     }
 
     const onSave = () => {
-
+        setFormChecked(true);
+        if (rangeMin && rangeMax && costPerMile) onCancel();
     }
 
     const onRangeMinChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        if (Number(value) >= 0) setRangeMin(+value)
+        setFormChecked(false);
+        if (Number(value) >= 0) setRangeMin(+(Number(value).toFixed(2)));
     }
 
     const onRangeMaxChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        if (Number(value) >= 0) setRangeMax(+value)
+        setFormChecked(false);
+        if (Number(value) >= 0) setRangeMax(+(Number(value).toFixed(2)));
     }
 
     const onCostPerMileChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        if (Number(value) >= 0) setCostPerMile(+value)
+        setFormChecked(false);
+        if (Number(value) >= 0) setCostPerMile(+(Number(value).toFixed(2)));
     }
 
     return (
@@ -74,32 +82,32 @@ const AddDistanceRange: React.FC<DialogProps> = (props) => {
                 <TextField
                     type="number"
                     label='Distance (Range Min)'
-                    placeholder='0.00'
+                    placeholder='Type Range Min'
                     error={!rangeMin && formIsChecked}
                     onChange={onRangeMinChange}
                     fullWidth
                     inputProps={{min: 0, step: 0.01}}
                     style={{ marginBottom: 20 }}
-                    value={rangeMin.toFixed(2)}/>
+                    value={rangeMin}/>
                 <TextField
                     type="number"
                     label='Distance (Range Max)'
-                    placeholder='0.00'
+                    placeholder='Type Range Max'
                     error={!rangeMax && formIsChecked}
                     onChange={onRangeMaxChange}
                     fullWidth
                     inputProps={{min: 0, step: 0.01}}
                     style={{ marginBottom: 20 }}
-                    value={rangeMax.toFixed(2)}/>
+                    value={rangeMax}/>
                 <TextField
                     type="number"
-                    label='Distance (Range Min)'
-                    placeholder='0.00'
+                    label='Cost Per Mile'
+                    placeholder='Type Cost Per Mile'
                     error={!costPerMile && formIsChecked}
                     onChange={onCostPerMileChange}
                     fullWidth
                     inputProps={{min: 0, step: 0.01}}
-                    value={costPerMile.toFixed(2)}/>
+                    value={costPerMile}/>
             </DialogContent>
             <DialogActions>
                 <div className={classes.wrapper}>

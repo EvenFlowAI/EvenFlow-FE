@@ -1,10 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FormControlLabel, Radio, RadioGroup, styled, Tab} from "@material-ui/core";
 import {TabList} from "../../../UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import ByZone from "./ByZone";
 import {makeStyles} from "@material-ui/core/styles";
 import ByDistance from "./ByDistance";
+import {
+    loadMobileServicePrisingByDistance,
+    loadMobileServicePrisingByZones
+} from "../../../../store/reducers/mobileService/actions";
+import {useSCs} from "../../../../utils/hooks";
+import {useDispatch} from "react-redux";
 
 export const TablesWrapper = styled('div')({
     display: 'flex',
@@ -51,6 +57,15 @@ const AncillaryPrice = () => {
     const [selectedTab, selectTab] = useState<string>("0");
     const [typeOfPrice, setTypeOfPrice] = useState<string>("byZone");
     const classes = useStyles();
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadMobileServicePrisingByZones(selectedSC.id))
+            dispatch(loadMobileServicePrisingByDistance(selectedSC.id))
+        }
+    }, [selectedSC])
 
     const tabs: TTab[] = [
         {id: "0", label: "Ancillary Price By Zone", component: <ByZone/>},

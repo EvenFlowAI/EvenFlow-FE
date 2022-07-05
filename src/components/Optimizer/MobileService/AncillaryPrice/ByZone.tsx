@@ -14,6 +14,12 @@ import {ValueSlider} from "../../AppointmentValue/UI";
 import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../../UI/TextField";
 import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
+import {
+    deleteMobileServicePrisingByZones, updateMobileServicePrisingByZones,
+} from "../../../../store/reducers/mobileService/actions";
+import {useSCs} from "../../../../utils/hooks";
 
 export const TablesWrapper = styled('div')({
     padding: 24,
@@ -103,10 +109,13 @@ const data: TZonePriceSettings[] = [
 ]
 
 const ByZone = () => {
+    const {pricingByZones} = useSelector((state: RootState) => state.mobileService)
     const [zonesData, setZonesData] = useState<TZonePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<TZonePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setZonesData(data.sort((a, b) => a.zoneId - b.zoneId));
@@ -123,7 +132,9 @@ const ByZone = () => {
     }
 
     const deleteSettings = () => {
-        //todo delete
+        if (selectedSC && editedItem) {
+            dispatch(deleteMobileServicePrisingByZones(selectedSC.id, editedItem.zoneId))
+        }
     }
 
     const handleSlide = (t: number) => (e: any, value: number|number[]) => {
@@ -159,7 +170,10 @@ const ByZone = () => {
     }
 
     const onSave = () => {
-        setIsEdit(false)
+        if (selectedSC && editedItem) {
+            setIsEdit(false)
+            dispatch(updateMobileServicePrisingByZones(selectedSC.id))
+        }
     }
 
     return (

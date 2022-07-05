@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
     styled,
-    TableCell as TC,
     TableHead,
     withStyles,
     TableBody,
@@ -14,56 +13,20 @@ import {DemandTable, TableRow} from "../../AppointmentAllocation/UI";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../../UI/TextField";
-import {useModal, useSCs} from "../../../../utils/hooks";
-import AddDistanceRange from "../../../Modals/AddDistanceRange/AddDistanceRange";
-import {useDispatch, useSelector} from "react-redux";
+import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";
+import {IZonePriceSettings} from "../../../../store/reducers/serviceValet/types";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {deleteMobileServicePrisingByDistance} from "../../../../store/reducers/mobileService/actions";
+
+export const TablesWrapper = styled('div')({
+    padding: 24,
+    border: '1px solid #DADADA',
+    backgroundColor: "#FFFFFF",
+})
 
 const STextField = styled(TextField)({
     maxWidth: 100
 });
-
-export const TableCell = withStyles({
-    root: {
-        border: "none !important",
-        padding: "12px 16px !important",
-    }
-})(TC);
-
-export const HeaderTableCell = withStyles({
-    root: {
-        color: '#9FA2B4',
-        '& .distanceCell': {
-            display: 'flex',
-            flexDirection: 'column',
-            fontSize: 12,
-            lineHeight: '15px',
-            '& > span': {
-                fontWeight: 400
-            }
-        }
-    }
-})(TableCell)
-
-export const FirstCell = withStyles(({
-    root: {
-        color: '#9FA2B4',
-    }
-}))(TableCell)
-
-export const ButtonWrapper = styled('div')(() => ({
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginBottom: 20,
-}));
-
-export const WideButton = withStyles(() => ({
-    root: {
-        padding: '9px 42px'
-    }
-}))(Button)
 
 const Slider = withStyles((theme) => ({
     rail: {
@@ -114,53 +77,39 @@ const Slider = withStyles((theme) => ({
     }
 }))(ValueSlider);
 
-interface TDistancePriceSettings {
-    id: number;
-    rangeMin: number;
-    rangeMax: number;
-    costPerMile: number;
-    serviceMultiplier: number;
-}
-
-const data: TDistancePriceSettings[] = [
+const data: IZonePriceSettings[] = [
     {
-        id: 1,
-        rangeMin: 1.88,
-        rangeMax: 12,
-        costPerMile: 16,
+        zoneName: 'Zone 1',
+        zoneId: 1,
+        flatFee: 11,
         serviceMultiplier: 0.2,
     },
     {
-        id: 2,
-        rangeMin: 2.88,
-        rangeMax: 22,
-        costPerMile: 26,
-        serviceMultiplier: 0.5,
+        zoneName: 'Zone 2',
+        zoneId: 2,
+        flatFee: 12,
+        serviceMultiplier: 0.3,
     },
     {
-        id: 3,
-        rangeMin: 3.88,
-        rangeMax: 32,
-        costPerMile: 36,
-        serviceMultiplier: 0.8,
-    },
+        zoneName: 'Zone 3',
+        zoneId: 3,
+        flatFee: 13,
+        serviceMultiplier: 0.1,
+    }
 ]
 
-const ByDistance = () => {
-    const {pricingByDistance} = useSelector((state: RootState) => state.mobileService)
-    const [distanceData, setDistanceData] = useState<TDistancePriceSettings[]>([]);
+const ByZone = () => {
+    const {pricingByZones} = useSelector((state: RootState) => state.serviceValet)
+    const [zonesData, setZonesData] = useState<IZonePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
-    const [editedItem, setEditedItem] = useState<TDistancePriceSettings|null>(null);
+    const [editedItem, setEditedItem] = useState<IZonePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
-    const {onOpen, isOpen, onClose} = useModal();
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
 
     useEffect(() => {
-        setDistanceData(data.sort((a, b) => a.id - b.id));
+        setZonesData(data.sort((a, b) => a.zoneId - b.zoneId));
     }, [data]);
 
-    const handleMenuOpen = (item: TDistancePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMenuOpen = (item: IZonePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
         setIsEdit(false);
         setEditedItem(item);
         setAnchorEl(e.currentTarget);
@@ -171,32 +120,30 @@ const ByDistance = () => {
     }
 
     const deleteSettings = () => {
-        if (selectedSC && editedItem) {
-            dispatch(deleteMobileServicePrisingByDistance(selectedSC.id, editedItem.id))
-        }
+        //todo delete
     }
 
     const handleSlide = (t: number) => (e: any, value: number|number[]) => {
         if (typeof value === 'number') {
-            const item = distanceData.find(item => item.id === t);
+            const item = zonesData.find(item => item.zoneId === t);
             if (item) {
                 const updated = {...item, serviceMultiplier: value};
-                setDistanceData(prev => {
-                    const filtered = prev.filter(el =>  el.id !== t);
-                    return [...filtered, updated].sort((a, b) => a.id - b.id);
+                setZonesData(prev => {
+                    const filtered = prev.filter(el =>  el.zoneId !== t);
+                    return [...filtered, updated].sort((a, b) => a.zoneId - b.zoneId);
                 })
             }
         }
     }
 
-    const handleChangeField = (fieldName: string) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeFee = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         if (Number(value) >= 0) {
-            setDistanceData(prev => {
-                const itemToUpdate = prev.find(el => el.id === editedItem?.id);
+            setZonesData(prev => {
+                const itemToUpdate = prev.find(el => el.zoneId === editedItem?.zoneId);
                 if (itemToUpdate) {
-                    const updated = {...itemToUpdate, [fieldName]: Number(value)};
-                    const filtered = prev.filter(el => el.id !== editedItem?.id);
-                    return [...filtered, updated].sort((a, b) => a.id - b.id);
+                    const updated = {...itemToUpdate, flatFee: Number(value)};
+                    const filtered = prev.filter(el => el.zoneId !== editedItem?.zoneId);
+                    return [...filtered, updated].sort((a, b) => a.zoneId - b.zoneId);
                 }
                 return prev;
             })
@@ -204,7 +151,7 @@ const ByDistance = () => {
     }
 
     const onCancel = () => {
-        setDistanceData(data)
+        setZonesData(data)
         setIsEdit(false)
     }
 
@@ -213,37 +160,20 @@ const ByDistance = () => {
     }
 
     return (
-        <div>
-            <ButtonWrapper>
-                <WideButton color="primary" onClick={onOpen} variant="contained">Add Range</WideButton>
-            </ButtonWrapper>
             <DemandTable>
                 <TableHead>
                     <TableRow>
                         <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">№ </div>
+                            <div className="distanceCell">№</div>
                         </HeaderTableCell>
                         <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">
-                                Distance
-                                <span>(Range min)</span>
-                            </div>
+                            <div className="distanceCell">Zone</div>
                         </HeaderTableCell>
                         <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">
-                                Distance
-                                <span>(Range max)</span>
-                            </div>
+                            <div className="distanceCell">Flat Fee, $</div>
                         </HeaderTableCell>
                         <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">
-                              Cost Per Mile, $
-                            </div>
-                        </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">
-                              Service Multiplier
-                            </div>
+                            <div className="distanceCell">Service Multiplier</div>
                         </HeaderTableCell>
                         <HeaderTableCell align="left" size="small" width={170}>
                             {isEdit
@@ -266,47 +196,22 @@ const ByDistance = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {distanceData.map((item, index) => (
-                        <TableRow key={item.id}>
+                    {zonesData.map((item, index) => (
+                        <TableRow key={item.zoneId}>
                             <FirstCell size="small">{index + 1}.</FirstCell>
+                            <TableCell size="small"> {item.zoneName}</TableCell>
                             <TableCell size="small">
-                                {isEdit && (editedItem?.id === item.id)
+                                {isEdit && (editedItem?.zoneId === item.zoneId)
                                     ? <STextField
                                         type="number"
                                         inputProps={{
                                             min: 0,
                                             step: 0.01,
                                         }}
-                                        value={+item?.rangeMin?.toFixed(2)}
-                                        onChange={handleChangeField('rangeMin')}
+                                        value={+item?.flatFee?.toFixed(2)}
+                                        onChange={handleChangeFee}
                                     />
-                                    : item.rangeMin.toFixed(2)}
-                            </TableCell>
-                            <TableCell size="small">
-                                {isEdit && (editedItem?.id === item.id)
-                                    ? <STextField
-                                        type="number"
-                                        inputProps={{
-                                            min: 0,
-                                            step: 0.01,
-                                        }}
-                                        value={+item?.rangeMax?.toFixed(2)}
-                                        onChange={handleChangeField('rangeMax')}
-                                    />
-                                    : item.rangeMax.toFixed(2)}
-                            </TableCell>
-                            <TableCell size="small">
-                                {isEdit && (editedItem?.id === item.id)
-                                    ? <STextField
-                                        type="number"
-                                        inputProps={{
-                                            min: 0,
-                                            step: 0.01,
-                                        }}
-                                        value={+item?.costPerMile?.toFixed(2)}
-                                        onChange={handleChangeField('costPerMile')}
-                                    />
-                                    : item.costPerMile.toFixed(2)}
+                                    : item.flatFee.toFixed(2)}
                             </TableCell>
                             <TableCell size="small">
                                 <Slider
@@ -314,11 +219,11 @@ const ByDistance = () => {
                                     max={1}
                                     valueLabelDisplay="on"
                                     step={0.01}
-                                    disabled={!isEdit || editedItem?.id !== item.id}
+                                    disabled={!isEdit || editedItem?.zoneId !== item.zoneId}
                                     valueLabelFormat={value => value.toFixed(2)}
                                     value={item.serviceMultiplier}
                                     marks={[{label: '0.00', value: 0}, {label: '0.20', value: 0.2}, {label: '0.40', value: 0.4}, {label: '0.60', value: 0.6}, {label: '0.80', value: 0.8}, {label: '1.00', value: 1}]}
-                                    onChange={handleSlide(item.id)}
+                                    onChange={handleSlide(item.zoneId)}
                                 />
                             </TableCell>
                             <TableCell size="small" align="center">
@@ -337,9 +242,7 @@ const ByDistance = () => {
                     <MenuItem onClick={deleteSettings}>Delete</MenuItem>
                 </Menu>
             </DemandTable>
-            <AddDistanceRange open={isOpen} onClose={onClose}/>
-        </div>
     );
 };
 
-export default ByDistance;
+export default ByZone;
