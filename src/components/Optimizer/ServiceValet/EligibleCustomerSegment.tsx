@@ -91,7 +91,7 @@ const EligibleCustomerSegment = () => {
     const [segmentsData, setSegmentsData] = useState<TSegmentType[]>([]);
 
     useEffect(() => {
-        // todo request to get data for mobile service
+        // todo request to get data for pick up / drop off
         setSegmentsData(data.sort((a, b) => a.order - b.order))
     }, [data])
 

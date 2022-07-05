@@ -6,7 +6,7 @@ import {useModal, useSCs} from "../../../utils/hooks";
 import MapIframeLink from "../../Modals/MapIframeLink/MapIframeLink";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
-import {saveLinkToMobServiceMap} from "../../../store/reducers/mobileService/actions";
+import {saveLinkToServiceValetMap} from "../../../store/reducers/serviceValet/actions";
 
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -30,7 +30,7 @@ const GeographicZonesMap = () => {
     const {selectedSC} = useSCs();
 
     const onSaveLink = (link: string) => {
-        if (selectedSC) dispatch(saveLinkToMobServiceMap(selectedSC.id, link))
+        if (selectedSC) dispatch(saveLinkToServiceValetMap(selectedSC.id, link))
     }
 
     return (

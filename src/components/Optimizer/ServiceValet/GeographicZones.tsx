@@ -41,9 +41,9 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                     setCurrentZip={setCurrentZip}
                 />
             </ZonesWrapper>
-            <RemoveGeographicZone open={isRemoveZoneOpen} zone={currentZone} onClose={onRemoveZoneClose} serviceType="mobileService"/>
+            <RemoveGeographicZone open={isRemoveZoneOpen} zone={currentZone} onClose={onRemoveZoneClose} serviceType="serviceValet"/>
             <AddEditGeographicZone
-                serviceType="mobileService"
+                serviceType="serviceValet"
                 open={isEditZoneOpen}
                 onClose={onEditZoneClose}
                 isEdit
@@ -52,7 +52,7 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                 setCurrentZip={setCurrentZip}
                 currentZip={currentZip}
             />
-            <RemoveZipCode open={isRemoveZipOpen} onClose={onRemoveZipClose} zone={currentZone} zip={currentZip} serviceType="mobileService"/>
+            <RemoveZipCode open={isRemoveZipOpen} onClose={onRemoveZipClose} zone={currentZone} zip={currentZip} serviceType="serviceValet"/>
         </div>
     );
 };

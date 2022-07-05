@@ -5,10 +5,11 @@ import {useDispatch} from "react-redux";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, MenuItem, Select} from "@material-ui/core";
-import {TZone} from "../../../store/reducers/mobileService/types";
+import {TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
 import {TextField} from "../../UI/TextField";
 import {mockZones} from "../../Optimizer/MobileService/Zones/Zones";
-import {assignZipToZone} from "../../../store/reducers/mobileService/actions";
+import {assignZipToMobServiceZone} from "../../../store/reducers/mobileService/actions";
+import {assignZipToServiceValetZone} from "../../../store/reducers/serviceValet/actions";
 
 const useStyles = makeStyles(() => ({
     text: {
@@ -45,15 +46,22 @@ const useStyles = makeStyles(() => ({
 }))
 
 type TAssignZipToZoneProps = DialogProps & {
+    serviceType: TZonesServiceType;
     zip?: string;
     zone?: TZone|null;
 }
 
-const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, ...props}) => {
+const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType, ...props}) => {
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
+    const [data, setData] = useState<TZone[]>([]);
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        // todo set different data depends on service type
+        setData(mockZones);
+    }, [mockZones])
 
     useEffect(() => {
         if (typeof zone !== 'undefined') setSelectedZone(zone);
@@ -63,7 +71,11 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, ...props}) 
 
     const onAssign = () => {
         if (selectedSC && selectedZone && zip) {
-            dispatch(assignZipToZone(selectedSC.id, selectedZone.id, zip));
+            if (serviceType === 'mobileService') {
+                dispatch(assignZipToMobServiceZone(selectedSC.id, selectedZone.id, zip));
+            } else {
+                dispatch(assignZipToServiceValetZone(selectedSC.id, selectedZone.id, zip));
+            }
             props.onClose();
         }
     }
@@ -85,7 +97,7 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, ...props}) 
                     value={selectedZone?.id}
                     onChange={onChange}
                 >
-                    {mockZones.map(item => <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>)}
+                    {data.map(item => <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>)}
                 </Select>
             </DialogContent>
             <Divider style={{ margin: 0 }}/>

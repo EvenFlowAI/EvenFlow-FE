@@ -2,12 +2,12 @@ import {createReducer} from "@reduxjs/toolkit";
 import {
     setCurrentZone,
     setLoading,
-    setMobileServicePrisingByDistance,
-    setMobileServicePrisingByZones,
+    setServiceValetPrisingByDistance,
+    setServiceValetPrisingByZones,
     setZones
 } from "./actions";
-import {TZone} from "./types";
-import {IDistancePriceSettings, IZonePriceSettings} from "../serviceValet/types";
+import {TZone} from "../mobileService/types";
+import {IDistancePriceSettings, IZonePriceSettings} from "./types";
 
 type TState = {
     isLoading: boolean;
@@ -25,7 +25,7 @@ const initialState: TState = {
     pricingByDistance: [],
 }
 
-export const mobileServiceReducer = createReducer<TState>(initialState, builder => builder
+export const serviceValetReducer = createReducer<TState>(initialState, builder => builder
     .addCase(setCurrentZone, (state, {payload}) => {
         return {...state, currentZone: payload};
     })
@@ -35,10 +35,10 @@ export const mobileServiceReducer = createReducer<TState>(initialState, builder 
     .addCase(setZones, (state, {payload}) => {
         return {...state, zones: payload}
     })
-    .addCase(setMobileServicePrisingByZones, (state, {payload}) => {
+    .addCase(setServiceValetPrisingByZones, (state, {payload}) => {
         return {...state, pricingByZones: payload}
     })
-    .addCase(setMobileServicePrisingByDistance, (state, {payload}) => {
+    .addCase(setServiceValetPrisingByDistance, (state, {payload}) => {
         return {...state, pricingByDistance: payload}
     })
 )

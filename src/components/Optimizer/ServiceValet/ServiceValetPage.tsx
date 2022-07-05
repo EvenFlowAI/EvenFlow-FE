@@ -18,11 +18,11 @@ type TTab = {
     component: JSX.Element
 }
 
-const MobileServicePage = () => {
+const ServiceValetPage = () => {
     const [selectedTab, selectTab] = useState<string>("0");
     const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
-    const { isLoading } = useSelector((state: RootState) => state.mobileService);
+    const { isLoading } = useSelector((state: RootState) => state.serviceValet);
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
@@ -39,7 +39,7 @@ const MobileServicePage = () => {
     }
 
     return <TabContext value={selectedTab}>
-            <TitleContainer title="Mobile Service" pad parent={optimizerRoot}/>
+            <TitleContainer title="Service Valet" pad parent={optimizerRoot}/>
             <TabList
                 variant="scrollable"
                 scrollButtons="auto"
@@ -58,8 +58,8 @@ const MobileServicePage = () => {
                     {t.component}
                 </TabPanel>
             })}
-            <AddEditGeographicZone open={isAddZoneOpen} onClose={onAddZoneClose} isEdit={false} serviceType="mobileService"/>
+            <AddEditGeographicZone open={isAddZoneOpen} onClose={onAddZoneClose} isEdit={false} serviceType="serviceValet"/>
         </TabContext>
 };
 
-export default MobileServicePage;
+export default ServiceValetPage;
