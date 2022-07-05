@@ -46,11 +46,11 @@ export const loadServiceValetPrisingByDistance = (id: number): AppThunk => dispa
     // todo request
 }
 
-export const updateServiceValetPrisingByZones = (id: number): AppThunk => dispatch => {
+export const updateServiceValetPrisingByZones = (id: number, data: IZonePriceSettings): AppThunk => dispatch => {
     // todo request
 }
 
-export const updateServiceValetPrisingByDistance = (id: number): AppThunk => dispatch => {
+export const updateServiceValetPrisingByDistance = (id: number, data: IDistancePriceSettings): AppThunk => dispatch => {
     // todo request
 }
 

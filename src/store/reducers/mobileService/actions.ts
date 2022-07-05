@@ -46,11 +46,11 @@ export const loadMobileServicePrisingByDistance = (id: number): AppThunk => disp
     // todo request
 }
 
-export const updateMobileServicePrisingByZones = (id: number): AppThunk => dispatch => {
+export const updateMobileServicePrisingByZones = (id: number, data: IZonePriceSettings): AppThunk => dispatch => {
     // todo request
 }
 
-export const updateMobileServicePrisingByDistance = (id: number): AppThunk => dispatch => {
+export const updateMobileServicePrisingByDistance = (id: number, data: IDistancePriceSettings): AppThunk => dispatch => {
     // todo request
 }
 

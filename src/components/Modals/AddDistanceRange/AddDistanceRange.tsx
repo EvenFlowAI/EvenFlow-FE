@@ -4,6 +4,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {DialogProps} from "../types";
 import {Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import {TDistanceRange} from "../../../store/reducers/serviceValet/types";
 
 const useStyles = makeStyles(() => ({
     label: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const AddDistanceRange: React.FC<DialogProps> = (props) => {
+const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRange) => void}> = (props) => {
     const [rangeMin, setRangeMin] = useState<number|null>(null);
     const [rangeMax, setRangeMax] = useState<number|null>(null);
     const [costPerMile, setCostPerMile] = useState<number|null>(null);
@@ -57,7 +58,14 @@ const AddDistanceRange: React.FC<DialogProps> = (props) => {
 
     const onSave = () => {
         setFormChecked(true);
-        if (rangeMin && rangeMax && costPerMile) onCancel();
+        if (rangeMin && rangeMax && costPerMile) {
+            props.onAddRange({
+                rangeMin,
+                rangeMax,
+                costPerMile,
+            })
+            onCancel();
+        }
     }
 
     const onRangeMinChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +84,7 @@ const AddDistanceRange: React.FC<DialogProps> = (props) => {
     }
 
     return (
-        <BaseModal {...props} width={440} onClose={onCancel}>
+        <BaseModal open={props.open} width={440} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>ADD RANGE</DialogTitle>
             <DialogContent>
                 <TextField
