@@ -15,8 +15,13 @@ import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../../UI/TextField";
 import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";
 import {IZonePriceSettings} from "../../../../store/reducers/serviceValet/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {useSCs} from "../../../../utils/hooks";
+import {
+    deleteServiceValetPrisingByZones,
+    updateServiceValetPrisingByZones
+} from "../../../../store/reducers/serviceValet/actions";
 
 export const TablesWrapper = styled('div')({
     padding: 24,
@@ -104,6 +109,8 @@ const ByZone = () => {
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IZonePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setZonesData(data.sort((a, b) => a.zoneId - b.zoneId));
@@ -120,7 +127,9 @@ const ByZone = () => {
     }
 
     const deleteSettings = () => {
-        //todo delete
+        if (selectedSC && editedItem) {
+            dispatch(deleteServiceValetPrisingByZones(selectedSC.id, editedItem.id))
+        }
     }
 
     const handleSlide = (t: number) => (e: any, value: number|number[]) => {
@@ -157,6 +166,10 @@ const ByZone = () => {
 
     const onSave = () => {
         setIsEdit(false)
+        if (selectedSC && editedItem) {
+            // todo data
+            dispatch(updateServiceValetPrisingByZones(selectedSC.id))
+        }
     }
 
     return (

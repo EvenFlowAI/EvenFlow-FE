@@ -172,6 +172,7 @@ const ByZone = () => {
     const onSave = () => {
         if (selectedSC && editedItem) {
             setIsEdit(false)
+            // todo data
             dispatch(updateMobileServicePrisingByZones(selectedSC.id))
         }
     }

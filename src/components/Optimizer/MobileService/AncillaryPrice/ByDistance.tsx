@@ -18,7 +18,10 @@ import {useModal, useSCs} from "../../../../utils/hooks";
 import AddDistanceRange from "../../../Modals/AddDistanceRange/AddDistanceRange";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {deleteMobileServicePrisingByDistance} from "../../../../store/reducers/mobileService/actions";
+import {
+    deleteMobileServicePrisingByDistance,
+    updateMobileServicePrisingByDistance
+} from "../../../../store/reducers/mobileService/actions";
 
 const STextField = styled(TextField)({
     maxWidth: 100
@@ -210,6 +213,10 @@ const ByDistance = () => {
 
     const onSave = () => {
         setIsEdit(false)
+        if (selectedSC && editedItem) {
+            // todo data
+            dispatch(updateMobileServicePrisingByDistance(selectedSC.id))
+        }
     }
 
     return (

@@ -14,11 +14,15 @@ import {DemandTable, TableRow} from "../../AppointmentAllocation/UI";
 import {ValueSlider} from "../../AppointmentValue/UI";
 import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../../UI/TextField";
-import {useModal} from "../../../../utils/hooks";
+import {useModal, useSCs} from "../../../../utils/hooks";
 import AddDistanceRange from "../../../Modals/AddDistanceRange/AddDistanceRange";
 import {IDistancePriceSettings} from "../../../../store/reducers/serviceValet/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {
+    deleteServiceValetPrisingByDistance,
+    updateServiceValetPrisingByDistance
+} from "../../../../store/reducers/serviceValet/actions";
 
 const STextField = styled(TextField)({
     maxWidth: 100
@@ -145,6 +149,8 @@ const ByDistance = () => {
     const [editedItem, setEditedItem] = useState<IDistancePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const {onOpen, isOpen, onClose} = useModal();
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setDistanceData(data.sort((a, b) => a.id - b.id));
@@ -161,7 +167,7 @@ const ByDistance = () => {
     }
 
     const deleteSettings = () => {
-        //todo delete
+        if (selectedSC && editedItem) dispatch(deleteServiceValetPrisingByDistance(selectedSC.id, editedItem.id))
     }
 
     const handleSlide = (t: number) => (e: any, value: number|number[]) => {
@@ -198,6 +204,9 @@ const ByDistance = () => {
 
     const onSave = () => {
         setIsEdit(false)
+        if (selectedSC && editedItem) {
+            dispatch(updateServiceValetPrisingByDistance(selectedSC.id))
+        }
     }
 
     return (
