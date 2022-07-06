@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {TextField} from "../../UI/TextField";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {Button} from "@material-ui/core";
+import {Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {TDistanceRange} from "../../../store/reducers/serviceValet/types";
 
@@ -117,6 +117,7 @@ const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRang
                     inputProps={{min: 0, step: 0.01}}
                     value={costPerMile}/>
             </DialogContent>
+            <Divider style={{marginBottom: 0}}/>
             <DialogActions>
                 <div className={classes.wrapper}>
                     <div className={classes.buttonsWrapper}>
