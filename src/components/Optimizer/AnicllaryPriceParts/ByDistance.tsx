@@ -14,15 +14,9 @@ import {DemandTable, TableRow} from "../AppointmentAllocation/UI";
 import {ValueSlider} from "../AppointmentValue/UI";
 import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../UI/TextField";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useModal} from "../../../utils/hooks";
 import AddDistanceRange from "../../Modals/AddDistanceRange/AddDistanceRange";
 import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
-import {
-    deleteServiceValetPrisingByDistance,
-    updateServiceValetPrisingByDistance
-} from "../../../store/reducers/serviceValet/actions";
 
 const STextField = styled(TextField)({
     maxWidth: 100
@@ -243,7 +237,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                               Cost Per Mile, $
                             </div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
+                        <HeaderTableCell align="left" size="small" width ={450}>
                             <div className="distanceCell">
                               Service Multiplier
                             </div>
@@ -254,12 +248,14 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                     <Button
                                         onClick={onCancel}
                                         color="secondary"
+                                        size="small"
                                     >
                                         Cancel
                                     </Button>
                                     <Button
                                         onClick={onSave}
                                         color="primary"
+                                        size="small"
                                     >
                                         Save
                                     </Button>
