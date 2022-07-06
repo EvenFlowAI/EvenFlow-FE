@@ -140,12 +140,14 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
 
     const renderModelOption = useCallback((option: string) => {
         const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+
         const allModelsSelected = filteredMakes.length
             ? Boolean(!filteredMakes
             .map(item => item.models)
             .flat(1)
             .find(model => !selectedModels.includes(model)))
             : false;
+
         const checked = selectedModels.includes(option) || allModelsSelected;
         return <React.Fragment>
             <Checkbox

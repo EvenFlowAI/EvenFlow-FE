@@ -19,39 +19,26 @@ import {Roles} from "../../../config/constants";
 import {validatePhoneNumber} from "../../../utils/utils";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
-    const isEdit = Boolean(payload?.id);
+    const [shortSC, shortLoading, savingE, savingU, DmsAdvisors] = useSelector((state: RootState) => [
+        state.serviceCenters.shortSC,
+        state.serviceCenters.shortLoading,
+        state.employees.saving,
+        state.users.saving,
+        state.scEmployees.DmsAdvisors
+    ]);
     const [role, setRole] = useState<Roles>(Roles.Technician);
-    const handleChangeRole = (role: string) => {
-        setRole(role as Roles);
-    }
-    const {shortSC, shortLoading, savingE, savingU, DmsAdvisors} = useSelector((state: RootState) => ({
-        shortSC: state.serviceCenters.shortSC,
-        shortLoading: state.serviceCenters.shortLoading,
-        savingE: state.employees.saving,
-        savingU: state.users.saving,
-        DmsAdvisors: state.scEmployees.DmsAdvisors
-    }));
-
     const [avatar, setAvatar] = useState<File | undefined>();
+    const [advisorForm, setAdvisorForm] = useState<TAdvisorForm>(initialAdvisorForm);
+    const [technicianForm, setTechnicianForm] = useState<TTechnicianForm>(initialTechnicianForm);
 
-    const saving = savingU || savingE;
+    const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
-    const {selectedSC} = useSCs();
 
-    useEffect(() => {
-        dispatch(loadShortSC());
-    }, [dispatch]);
+    const isEdit = Boolean(payload?.id);
+    const saving = savingU || savingE;
 
-    useEffect(() => {
-        if (selectedSC) dispatch(loadDMSAdvisors(selectedSC.id))
-    }, [selectedSC, dispatch])
-
-    const buttonStyle = (r: string) => ({
-        startIcon: role === r ? <RadioButtonChecked /> : <RadioButtonUnchecked />,
-        color: role === r ? "primary" as const : "default" as const
-    })
     const startAdvisorForm = useMemo(() => {
         if (!payload) {
             return initialAdvisorForm;
@@ -59,7 +46,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             return payload as TAdvisorForm;
         }
     }, [payload]);
-    const [advisorForm, setAdvisorForm] = useState<TAdvisorForm>(initialAdvisorForm);
+
     const startTechnicianForm = useMemo(() => {
         if (!payload) {
             return initialTechnicianForm;
@@ -72,7 +59,14 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             } as TTechnicianForm;
         }
     }, [payload]);
-    const [technicianForm, setTechnicianForm] = useState<TTechnicianForm>(initialTechnicianForm);
+
+    useEffect(() => {
+        dispatch(loadShortSC());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (selectedSC) dispatch(loadDMSAdvisors(selectedSC.id))
+    }, [selectedSC, dispatch])
 
     useEffect(() => {
         setAdvisorForm(startAdvisorForm);
@@ -81,6 +75,15 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             setRole(payload.role === Roles.Technician ? Roles.Technician : Roles.Advisor);
         }
     }, [props.open, startAdvisorForm, startTechnicianForm, payload]);
+
+    const buttonStyle = (r: string) => ({
+        startIcon: role === r ? <RadioButtonChecked /> : <RadioButtonUnchecked />,
+        color: role === r ? "primary" as const : "default" as const
+    })
+
+    const handleChangeRole = (role: string) => {
+        setRole(role as Roles);
+    }
 
     const handleChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler<HTMLInputElement> => ({target: {name, value}}) => {
         if (name === "phoneNumber") {
@@ -109,9 +112,11 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             setAdvisorForm(prev => ({...prev, dmsId: value ? value.id : null}));
         }
     }
+
     const handleRoleChange = (e: any, value: TRole) => {
         setAdvisorForm({...advisorForm, role: value});
     }
+
     const handleSwitchChange = (e: React.ChangeEvent<{}>, newVal: number) => {
         if (newVal) {
             setTechnicianForm({
@@ -120,6 +125,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             });
         }
     }
+
     const handleCreate = async () => {
         let data: IEmployeeForm | IUserForm;
         if (role !== Roles.Technician) {

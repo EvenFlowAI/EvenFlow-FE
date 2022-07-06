@@ -136,14 +136,14 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, searchedDateRange: payload};
     })
     .addCase(getAppointmentSlots, (state, {payload}) => {
-        if (payload.length && state.appointment) {
-            const {appointment} = state;
-            if (!Boolean(payload.find(sl =>
-                sl.time === appointment.time && sl.date === appointment.id.split("|")[0]
-            ))) {
-                payload = [{...appointment, date: appointment.id.split("|")[0]}, ...payload];
-            }
-        }
+        // if (payload.length && state.appointment) {
+        //     const {appointment} = state;
+        //     if (!Boolean(payload.find(sl =>
+        //         sl.time === appointment.time && sl.date === appointment.id.split("|")[0]
+        //     ))) {
+        //         payload = [{...appointment, date: appointment.id.split("|")[0]}, ...payload];
+        //     }
+        // }
         let appointmentSlots = payload.map(sl => {
             const date = `${String(sl.date).split("T")[0]}T${sl.time}Z`;
             return {...sl, id: `${sl.date}|${sl.time}`, date: moment.utc(date)}

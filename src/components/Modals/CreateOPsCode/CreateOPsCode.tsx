@@ -13,7 +13,6 @@ import {useDispatch} from "react-redux";
 import {createAdminServiceRequest, updateAdminServiceRequest} from "../../../store/reducers/serviceRequests/actions";
 import {ToggleButtons} from "../../UI/ToggleButtons";
 
-
 type TForm = {
     code: string;
     description: string;
@@ -25,6 +24,7 @@ type TForm = {
     partsUnitCost: string;
     numberOfParts: string;
 }
+
 const initialForm: TForm = {
     code: "",
     description: "",
@@ -36,6 +36,7 @@ const initialForm: TForm = {
     partsUnitCost: "",
     numberOfParts: "",
 };
+
 export const CreateOPsCode: React.FC<DialogProps<ISRAdmin>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isLoading, setLoading] = useState<boolean>(false);

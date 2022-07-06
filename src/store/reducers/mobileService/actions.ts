@@ -1,36 +1,67 @@
 import {createAction} from "@reduxjs/toolkit";
 import {TZone, TZoneNew} from "./types";
 import {AppThunk} from "../../../types/types";
+import {IDistancePriceSettings, IZonePriceSettings, TDistanceRange} from "../serviceValet/types";
 
 export const setCurrentZone = createAction<any>('MobileService/SetCurrentZone');
 export const setLoading = createAction<boolean>('MobileService/SetLoading');
 export const setZones = createAction<TZone[]>('MobileService/SetZones');
+export const setMobileServicePrisingByZones = createAction<IZonePriceSettings[]>('MobileService/SetPrisingSettingsByZones');
+export const setMobileServicePrisingByDistance = createAction<IDistancePriceSettings[]>('MobileService/SetPrisingSettingsByDistance');
 
-export const loadZones = (id: number): AppThunk => dispatch => {
+export const loadMobServiceZones = (id: number): AppThunk => dispatch => {
 // todo request
 }
 
-export const addZone = (id: number, data: TZoneNew): AppThunk => dispatch => {
+export const addMobServiceZone = (id: number, data: TZoneNew): AppThunk => dispatch => {
 // todo request
 }
 
-export const removeZone = (id: number, zoneId: number): AppThunk => dispatch => {
+export const removeMobServiceZone = (id: number, zoneId: number): AppThunk => dispatch => {
 // todo request
 }
 
-export const updateZone = (id: number, zoneId: number, data: TZone): AppThunk => dispatch => {
+export const updateMobServiceZone = (id: number, zoneId: number, data: TZone): AppThunk => dispatch => {
 // todo request
 }
 
-export const removeZipFromZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
+export const removeZipFromMobServiceZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
     console.log('removed zip', zip);
 // todo request
 }
 
-export const assignZipToZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
+export const assignZipToMobServiceZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
     // todo request
 }
 
-export const saveLinkToMap = (id: number, link: string): AppThunk => dispatch => {
+export const saveLinkToMobServiceMap = (id: number, link: string): AppThunk => dispatch => {
+    // todo request
+}
+
+export const loadMobileServicePrisingByZones = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const loadMobileServicePrisingByDistance = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const updateMobileServicePrisingByZones = (id: number, data: IZonePriceSettings): AppThunk => dispatch => {
+    // todo request
+}
+
+export const updateMobileServicePrisingByDistance = (id: number, data: IDistancePriceSettings): AppThunk => dispatch => {
+    // todo request
+}
+
+export const deleteMobileServicePrisingByZones = (id: number, pricingId: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const deleteMobileServicePrisingByDistance = (id: number, pricingId: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const addMobileServiceDistanceRange = (id: number, range: TDistanceRange): AppThunk => dispatch => {
     // todo request
 }

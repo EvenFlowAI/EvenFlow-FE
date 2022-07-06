@@ -4,13 +4,15 @@ import {Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
-import {removeZipFromZone} from "../../../store/reducers/mobileService/actions";
+import {removeZipFromMobServiceZone} from "../../../store/reducers/mobileService/actions";
 import {useSCs} from "../../../utils/hooks";
-import {TZone} from "../../../store/reducers/mobileService/types";
+import {TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
+import {removeZipFromServiceValetZone} from "../../../store/reducers/serviceValet/actions";
 
 type TRemoveGeographicZoneProps = DialogProps & {
     zone: TZone|null;
     zip: string;
+    serviceType: TZonesServiceType;
 }
 
 const useStyles = makeStyles(() => ({
@@ -47,15 +49,19 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const RemoveZipCode: React.FC<TRemoveGeographicZoneProps> = (props) => {
+const RemoveZipCode: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zip, zone, ...props}) => {
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
     const onCancel = () => props.onClose();
     const onRemove = async () => {
-        if (props.zone?.id && selectedSC && props.zip.length) {
-            await dispatch(removeZipFromZone(selectedSC.id, props.zone.id, props.zip));
+        if (zone?.id && selectedSC && zip.length) {
+            if (serviceType === 'mobileService') {
+                await dispatch(removeZipFromMobServiceZone(selectedSC.id, zone.id, zip));
+            } else {
+                await dispatch(removeZipFromServiceValetZone(selectedSC.id, zone.id, zip));
+            }
             await props.onClose();
         }
     }
@@ -63,7 +69,7 @@ const RemoveZipCode: React.FC<TRemoveGeographicZoneProps> = (props) => {
     return  <BaseModal {...props} width={540} onClose={onCancel}>
         <DialogTitle onClose={onCancel}>Remove ZIP code</DialogTitle>
         <DialogContent>
-            <div className={classes.text}>Are you sure you want to remove ZIP code from the {props.zone?.name}?</div>
+            <div className={classes.text}>Are you sure you want to remove ZIP code from the {zone?.name}?</div>
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
         <DialogActions>

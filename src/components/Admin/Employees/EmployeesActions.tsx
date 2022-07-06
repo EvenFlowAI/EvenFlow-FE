@@ -9,10 +9,10 @@ import {setEmplSearch} from "../../../store/reducers/employees/actions";
 
 
 export const EmployeesActions = () => {
-    const currentUser = useCurrentUser();
-    const {isOpen, onClose, onOpen} = useModal();
-    const dispatch = useDispatch();
     const search = useSelector((state: RootState) => state.employees.searchTerm);
+    const currentUser = useCurrentUser();
+    const dispatch = useDispatch();
+    const {isOpen, onClose, onOpen} = useModal();
 
     const handleSearch = useCallback((s: string) => {
         dispatch(setEmplSearch(s));
