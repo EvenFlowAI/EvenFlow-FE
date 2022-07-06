@@ -15,10 +15,6 @@ import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../UI/TextField";
 import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";
 import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
-import {
-    deleteServiceValetPrisingByZones,
-    updateServiceValetPrisingByZones
-} from "../../../store/reducers/serviceValet/actions";
 
 export const TablesWrapper = styled('div')({
     padding: 24,
@@ -181,7 +177,7 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
                         <HeaderTableCell align="left" size="small">
                             <div className="distanceCell">Flat Fee, $</div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
+                        <HeaderTableCell align="left" size="small" width ={450}>
                             <div className="distanceCell">Service Multiplier</div>
                         </HeaderTableCell>
                         <HeaderTableCell align="left" size="small" width={170}>
@@ -190,12 +186,14 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
                                     <Button
                                         onClick={onCancel}
                                         color="secondary"
+                                        size="small"
                                     >
                                         Cancel
                                     </Button>
                                     <Button
                                         onClick={onSave}
                                         color="primary"
+                                        size="small"
                                     >
                                         Save
                                     </Button>
