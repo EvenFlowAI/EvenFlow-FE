@@ -203,7 +203,8 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     }
 
     const onCancel = () => {
-        setDistanceData(data)
+        // todo data
+        setDistanceData(mockData)
         setIsEdit(false)
     }
 
@@ -323,7 +324,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                     onChange={handleSlide(item.id)}
                                 />
                             </TableCell>
-                            <TableCell size="small" align="center">
+                            <TableCell size="small" align="right">
                                 <IconButton
                                     size="small"
                                     onClick={handleMenuOpen(item)}>

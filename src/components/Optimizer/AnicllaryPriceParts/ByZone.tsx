@@ -158,7 +158,8 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
     }
 
     const onCancel = () => {
-        setZonesData(data)
+        // todo data
+        setZonesData(mockData)
         setIsEdit(false)
     }
 
@@ -234,7 +235,7 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
                                     onChange={handleSlide(item.zoneId)}
                                 />
                             </TableCell>
-                            <TableCell size="small" align="center">
+                            <TableCell size="small" align="right">
                                 <IconButton
                                     size="small"
                                     onClick={handleMenuOpen(item)}>

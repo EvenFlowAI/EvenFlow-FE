@@ -109,7 +109,7 @@ const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRang
                     value={rangeMax}/>
                 <TextField
                     type="number"
-                    label='Cost Per Mile'
+                    label='Cost Per Mile, $'
                     placeholder='Type Cost Per Mile'
                     error={!costPerMile && formIsChecked}
                     onChange={onCostPerMileChange}
