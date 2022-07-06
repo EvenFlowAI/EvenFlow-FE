@@ -10,18 +10,19 @@ import {
     IconButton,
     Button
 } from "@material-ui/core";
-import {DemandTable, TableRow} from "../../AppointmentAllocation/UI";
-import {ValueSlider} from "../../AppointmentValue/UI";
+import {DemandTable, TableRow} from "../AppointmentAllocation/UI";
+import {ValueSlider} from "../AppointmentValue/UI";
 import {MoreHoriz} from "@material-ui/icons";
-import {TextField} from "../../../UI/TextField";
-import {useModal, useSCs} from "../../../../utils/hooks";
-import AddDistanceRange from "../../../Modals/AddDistanceRange/AddDistanceRange";
+import {TextField} from "../../UI/TextField";
+import {useModal, useSCs} from "../../../utils/hooks";
+import AddDistanceRange from "../../Modals/AddDistanceRange/AddDistanceRange";
+import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
+import {RootState} from "../../../store/rootReducer";
 import {
-    deleteMobileServicePrisingByDistance,
-    updateMobileServicePrisingByDistance
-} from "../../../../store/reducers/mobileService/actions";
+    deleteServiceValetPrisingByDistance,
+    updateServiceValetPrisingByDistance
+} from "../../../store/reducers/serviceValet/actions";
 
 const STextField = styled(TextField)({
     maxWidth: 100
@@ -117,15 +118,7 @@ const Slider = withStyles((theme) => ({
     }
 }))(ValueSlider);
 
-interface TDistancePriceSettings {
-    id: number;
-    rangeMin: number;
-    rangeMax: number;
-    costPerMile: number;
-    serviceMultiplier: number;
-}
-
-const data: TDistancePriceSettings[] = [
+const mockData: IDistancePriceSettings[] = [
     {
         id: 1,
         rangeMin: 1.88,
@@ -149,21 +142,26 @@ const data: TDistancePriceSettings[] = [
     },
 ]
 
-const ByDistance = () => {
-    const {pricingByDistance} = useSelector((state: RootState) => state.mobileService)
-    const [distanceData, setDistanceData] = useState<TDistancePriceSettings[]>([]);
+type TByDistanceProps = {
+    data: IDistancePriceSettings[];
+    onItemSave: (item: IDistancePriceSettings) => void;
+    onItemDelete: (id: number) => void;
+    onAddRange: (data: TDistanceRange) => void;
+}
+
+const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave, onAddRange }) => {
+    const [distanceData, setDistanceData] = useState<IDistancePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
-    const [editedItem, setEditedItem] = useState<TDistancePriceSettings|null>(null);
+    const [editedItem, setEditedItem] = useState<IDistancePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const {onOpen, isOpen, onClose} = useModal();
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
 
     useEffect(() => {
-        setDistanceData(data.sort((a, b) => a.id - b.id));
+        // todo data
+        setDistanceData(mockData.sort((a, b) => a.id - b.id));
     }, [data]);
 
-    const handleMenuOpen = (item: TDistancePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMenuOpen = (item: IDistancePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
         setIsEdit(false);
         setEditedItem(item);
         setAnchorEl(e.currentTarget);
@@ -174,9 +172,7 @@ const ByDistance = () => {
     }
 
     const deleteSettings = () => {
-        if (selectedSC && editedItem) {
-            dispatch(deleteMobileServicePrisingByDistance(selectedSC.id, editedItem.id))
-        }
+        if (editedItem) onItemDelete(editedItem.id)
     }
 
     const handleSlide = (t: number) => (e: any, value: number|number[]) => {
@@ -207,15 +203,15 @@ const ByDistance = () => {
     }
 
     const onCancel = () => {
-        setDistanceData(data)
+        // todo data
+        setDistanceData(mockData)
         setIsEdit(false)
     }
 
     const onSave = () => {
         setIsEdit(false)
-        if (selectedSC && editedItem) {
-            // todo data
-            dispatch(updateMobileServicePrisingByDistance(selectedSC.id))
+        if (editedItem) {
+            onItemSave(editedItem);
         }
     }
 
@@ -328,7 +324,7 @@ const ByDistance = () => {
                                     onChange={handleSlide(item.id)}
                                 />
                             </TableCell>
-                            <TableCell size="small" align="center">
+                            <TableCell size="small" align="right">
                                 <IconButton
                                     size="small"
                                     onClick={handleMenuOpen(item)}>
@@ -344,7 +340,7 @@ const ByDistance = () => {
                     <MenuItem onClick={deleteSettings}>Delete</MenuItem>
                 </Menu>
             </DemandTable>
-            <AddDistanceRange open={isOpen} onClose={onClose}/>
+            <AddDistanceRange open={isOpen} onClose={onClose} onAddRange={onAddRange}/>
         </div>
     );
 };

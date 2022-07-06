@@ -2,15 +2,23 @@ import React, {useEffect, useState} from 'react';
 import {FormControlLabel, Radio, RadioGroup, styled, Tab} from "@material-ui/core";
 import {TabList} from "../../../UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import ByZone from "./ByZone";
+import ByZone from "../../AnicllaryPriceParts/ByZone";
 import {makeStyles} from "@material-ui/core/styles";
-import ByDistance from "./ByDistance";
+import ByDistance from "../../AnicllaryPriceParts/ByDistance";
 import {useSCs} from "../../../../utils/hooks";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
+    addServiceValetDistanceRange,
+    deleteServiceValetPrisingByDistance, deleteServiceValetPrisingByZones,
     loadServiceValetPrisingByDistance,
-    loadServiceValetPrisingByZones
+    loadServiceValetPrisingByZones, updateServiceValetPrisingByDistance, updateServiceValetPrisingByZones
 } from "../../../../store/reducers/serviceValet/actions";
+import {
+    IDistancePriceSettings,
+    IZonePriceSettings,
+    TDistanceRange
+} from "../../../../store/reducers/serviceValet/types";
+import {RootState} from "../../../../store/rootReducer";
 
 export const TablesWrapper = styled('div')({
     display: 'flex',
@@ -54,6 +62,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AncillaryPrice = () => {
+    const {pricingByDistance, pricingByZones} = useSelector((state: RootState) => state.serviceValet);
     const [selectedTab, selectTab] = useState<string>("0");
     const [typeOfPrice, setTypeOfPrice] = useState<string>("byZone");
     const classes = useStyles();
@@ -67,9 +76,41 @@ const AncillaryPrice = () => {
         }
     }, [selectedSC])
 
+    const onDeleteDistanceRange = (itemId: number) => {
+        if (selectedSC) dispatch(deleteServiceValetPrisingByDistance(selectedSC.id, itemId))
+    }
+
+    const onSaveDistanceRange = (item: IDistancePriceSettings) => {
+        if (selectedSC) dispatch(updateServiceValetPrisingByDistance(selectedSC.id, item))
+    }
+
+    const onAddRange = (data: TDistanceRange) => {
+        if (selectedSC) dispatch(addServiceValetDistanceRange(selectedSC.id, data));
+    }
+
+    const onDeleteZoneSettings = (id: number) => {
+        if (selectedSC) dispatch(deleteServiceValetPrisingByZones(selectedSC.id, id))
+    }
+
+    const onSaveZonePricing = (data: IZonePriceSettings) => {
+        if (selectedSC) dispatch(updateServiceValetPrisingByZones(selectedSC.id, data))
+    }
+
     const tabs: TTab[] = [
-        {id: "0", label: "Ancillary Price By Zone", component: <ByZone/>},
-        {id: "1", label: "Ancillary Price By Distance", component: <ByDistance/>},
+        {
+            id: "0",
+            label: "Ancillary Price By Zone",
+            component: <ByZone onDelete={onDeleteZoneSettings} onUpdate={onSaveZonePricing} data={pricingByZones}/>
+        },
+        {
+            id: "1",
+            label: "Ancillary Price By Distance",
+            component: <ByDistance
+                data={pricingByDistance}
+                onItemDelete={onDeleteDistanceRange}
+                onItemSave={onSaveDistanceRange}
+                onAddRange={onAddRange}
+            />},
     ]
     const handleTabChange = (e: any, value: string) => {
         selectTab(value);

@@ -9,19 +9,16 @@ import {
     IconButton,
     Button
 } from "@material-ui/core";
-import {DemandTable, TableRow} from "../../AppointmentAllocation/UI";
-import {ValueSlider} from "../../AppointmentValue/UI";
+import {DemandTable, TableRow} from "../AppointmentAllocation/UI";
+import {ValueSlider} from "../AppointmentValue/UI";
 import {MoreHoriz} from "@material-ui/icons";
-import {TextField} from "../../../UI/TextField";
+import {TextField} from "../../UI/TextField";
 import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";
-import {IZonePriceSettings} from "../../../../store/reducers/serviceValet/types";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {useSCs} from "../../../../utils/hooks";
+import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
 import {
     deleteServiceValetPrisingByZones,
     updateServiceValetPrisingByZones
-} from "../../../../store/reducers/serviceValet/actions";
+} from "../../../store/reducers/serviceValet/actions";
 
 export const TablesWrapper = styled('div')({
     padding: 24,
@@ -82,7 +79,7 @@ const Slider = withStyles((theme) => ({
     }
 }))(ValueSlider);
 
-const data: IZonePriceSettings[] = [
+const mockData: IZonePriceSettings[] = [
     {
         zoneName: 'Zone 1',
         zoneId: 1,
@@ -103,17 +100,20 @@ const data: IZonePriceSettings[] = [
     }
 ]
 
-const ByZone = () => {
-    const {pricingByZones} = useSelector((state: RootState) => state.serviceValet)
+type TByZoneProps = {
+    data: IZonePriceSettings[];
+    onUpdate: (item: IZonePriceSettings) => void;
+    onDelete: (itemId: number) => void;
+}
+
+const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
     const [zonesData, setZonesData] = useState<IZonePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IZonePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
 
     useEffect(() => {
-        setZonesData(data.sort((a, b) => a.zoneId - b.zoneId));
+        setZonesData(mockData.sort((a, b) => a.zoneId - b.zoneId));
     }, [data]);
 
     const handleMenuOpen = (item: IZonePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -127,9 +127,7 @@ const ByZone = () => {
     }
 
     const deleteSettings = () => {
-        if (selectedSC && editedItem) {
-            dispatch(deleteServiceValetPrisingByZones(selectedSC.id, editedItem.zoneId))
-        }
+        if (editedItem) onDelete(editedItem.zoneId);
     }
 
     const handleSlide = (t: number) => (e: any, value: number|number[]) => {
@@ -160,16 +158,14 @@ const ByZone = () => {
     }
 
     const onCancel = () => {
-        setZonesData(data)
+        // todo data
+        setZonesData(mockData)
         setIsEdit(false)
     }
 
     const onSave = () => {
         setIsEdit(false)
-        if (selectedSC && editedItem) {
-            // todo data
-            dispatch(updateServiceValetPrisingByZones(selectedSC.id))
-        }
+        if (editedItem) onUpdate(editedItem)
     }
 
     return (
@@ -239,7 +235,7 @@ const ByZone = () => {
                                     onChange={handleSlide(item.zoneId)}
                                 />
                             </TableCell>
-                            <TableCell size="small" align="center">
+                            <TableCell size="small" align="right">
                                 <IconButton
                                     size="small"
                                     onClick={handleMenuOpen(item)}>
