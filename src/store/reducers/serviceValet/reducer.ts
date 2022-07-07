@@ -1,9 +1,9 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     setCurrentZone,
-    setLoading,
+    setLoading, setPricingOptionLoading,
     setServiceValetPrisingByDistance,
-    setServiceValetPrisingByZones,
+    setServiceValetPrisingByZones, setServiceValetPrisingOption,
     setZones
 } from "./actions";
 import {TZone} from "../mobileService/types";
@@ -15,6 +15,8 @@ type TState = {
     zones: TZone[];
     pricingByZones: IZonePriceSettings[];
     pricingByDistance: IDistancePriceSettings[];
+    isPricingByZoneLoading: boolean;
+    pricingCountByZone: boolean;
 }
 
 const initialState: TState = {
@@ -23,6 +25,8 @@ const initialState: TState = {
     zones: [],
     pricingByZones: [],
     pricingByDistance: [],
+    isPricingByZoneLoading: false,
+    pricingCountByZone: true,
 }
 
 export const serviceValetReducer = createReducer<TState>(initialState, builder => builder
@@ -40,5 +44,11 @@ export const serviceValetReducer = createReducer<TState>(initialState, builder =
     })
     .addCase(setServiceValetPrisingByDistance, (state, {payload}) => {
         return {...state, pricingByDistance: payload}
+    })
+    .addCase(setServiceValetPrisingOption, (state, {payload}) => {
+        return {...state, pricingCountByZone: payload}
+    })
+    .addCase(setPricingOptionLoading, (state, {payload}) => {
+        return {...state, isPricingByZoneLoading: payload}
     })
 )
