@@ -171,14 +171,21 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         setNewZip(e.target.value);
     }
 
-    const onAddZip = (e: React.MouseEvent<{}>): void => {
-        if (newZip.length === 5) {
-            setZipList(prev => ([...prev, newZip]));
-            setNewZip('');
-        } else {
+    const onAddZip = (): void => {
+        if (newZip.length !== 5) {
             setFormIsChecked(true);
             showError("It's not a valid ZIP code");
+        } else if (zipList.includes(newZip)) {
+            setFormIsChecked(true);
+            showError("This ZIP code already exists in the list");
+        } else {
+            setZipList(prev => ([...prev, newZip]));
+            setNewZip('');
         }
+    }
+
+    const onKeyUp = (e: React.KeyboardEvent) => {
+        if (e.keyCode === 13) onAddZip();
     }
 
     const onChangeZoneClick = (code: string) => {
@@ -217,6 +224,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                 fullWidth
                                 label='ZIP Code'
                                 placeholder='Type Here'
+                                onKeyUp={onKeyUp}
                                 error={newZip.length !== 5 && formIsChecked}
                                 onChange={onZipChange}
                                 value={newZip}/>
