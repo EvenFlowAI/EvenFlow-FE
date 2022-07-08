@@ -51,7 +51,7 @@ export const UnplannedDemand = () => {
 
     const handleChange = (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const nForm = [...form];
-        nForm[idx] = Number(e.target.value);
+        nForm[idx] = Number.isInteger(+e.target.value) ? Number(e.target.value) : Number(Number(e.target.value).toFixed(2));
         setForm(nForm);
     }
 
@@ -117,7 +117,7 @@ export const UnplannedDemand = () => {
                                 : <TextField
                                     type="number"
                                     inputProps={{
-                                        min: 0
+                                        min: 0,
                                     }}
                                     value={form[idx]}
                                     onChange={handleChange(idx)}
