@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const mockSRC = 'https://app.mapline.com/map/map_d5743b1/Pz8UfT8UGD9CXT8UJz9vTz8UPz8UPz8UPz8UHz8GY2YuRnUUWD'
+const mockSRC = 'https://app.mapline.com/map/map_36c1b7f/Pz8UPz4ZIEJDfz8UPxAUP1kAMD8vJT8UPz8UPz8GQkxGCD8tPz'
 
 const GeographicZonesMap = () => {
     const {onOpen, onClose, isOpen} = useModal();
