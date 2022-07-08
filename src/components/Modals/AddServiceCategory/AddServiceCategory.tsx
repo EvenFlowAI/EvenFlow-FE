@@ -8,7 +8,7 @@ import {
     TUpdateCategoryData
 } from "../../../store/reducers/categories/types";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
@@ -18,11 +18,7 @@ import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../store
 import {useException, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {
-    createCategory,
-    updateCategory,
-    updateCategoryIcon
-} from "../../../store/reducers/categories/actions";
+import {createCategory, updateCategory, updateCategoryIcon} from "../../../store/reducers/categories/actions";
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
@@ -67,6 +63,10 @@ const useStyles = makeStyles(() => ({
     },
     cancelButton: {
         color: '#9FA2B4'
+    },
+    radioGroup: {
+        display: 'flex',
+        justifyContent: 'flex-end'
     }
 }))
 
@@ -110,6 +110,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
+    const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter);
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2
@@ -123,8 +124,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const classes = useStyles();
 
     const getCategoryOptions = () => selectedSC?.isValueServiceAvailable
-           ? categoryOptions
-           : categoryOptions.slice(0, categoryOptions.length - 1);
+        ? categoryOptions
+        : categoryOptions.slice(0, categoryOptions.length - 1);
 
     useEffect(() => {
         props.open && selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
@@ -183,6 +184,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                     type: categoryType.value,
                     serviceRequests: [],
                     orderIndex: Number(orderIndex),
+                    // todo uncomment and add in the TUpdateCategoryData field for service type
+                    //serviceType,
                 }
                 if (categoryType.value !== EServiceCategoryType.MaintenancePackage
                     && categoryType.value !== EServiceCategoryType.LinkToPage2
@@ -236,11 +239,29 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         dispatch(setAssignedFilter({searchTerm: e.target.value}));
     }, [dispatch])
 
+    const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e.target.value)
+        setSelectedServiceType(e.target.value === '0' ? EServiceTypeBookingFlow.VisitCenter : EServiceTypeBookingFlow.MobileService);
+    }
 
     return (
         <BaseModal {...props} width={1128} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} Service Category</DialogTitle>
             <DialogContent>
+                <RadioGroup row aria-label="countType" name="countType" value={selectedServiceType} onChange={handleTypeChange} className={classes.radioGroup}>
+                    <FormControlLabel
+                        value={EServiceTypeBookingFlow.VisitCenter}
+                        control={<Radio color="primary"/>}
+                        label="VISIT CENTER"
+                        labelPlacement="end"
+                    />
+                    <FormControlLabel
+                        value={EServiceTypeBookingFlow.MobileService}
+                        control={<Radio color="primary"/>}
+                        label="MOBILE SERVICE"
+                        labelPlacement="end"
+                    />
+                </RadioGroup>
                 <div className={classes.inputsWrapper}>
                     <div>
                         <TextField
