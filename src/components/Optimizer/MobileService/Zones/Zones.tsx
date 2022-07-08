@@ -9,26 +9,26 @@ export const mockZones = [
         id: 1,
         zipCodes: [
             {
-                code: '65671',
+                code: '75065',
                 id: 1
             },
             {
-                code: '65655',
+                code: '75077',
                 id: 2
             },
             {
-                code: '65672',
+                code: '76201',
                 id: 3
             },
             {
-                code: '65656',
+                code: '76208',
                 id: 4
             }, {
-                code: '65677',
+                code: '76209',
                 id: 5
             },
             {
-                code: '65658',
+                code: '76210',
                 id: 6
             }
         ]
@@ -38,26 +38,26 @@ export const mockZones = [
         id: 2,
         zipCodes: [
             {
-                code: '65671',
+                code: '75019',
                 id: 1
             },
             {
-                code: '65655',
+                code: '75022',
                 id: 2
             },
             {
-                code: '65672',
+                code: '75028',
                 id: 3
             },
             {
-                code: '65656',
+                code: '75063',
                 id: 4
             }, {
-                code: '65677',
+                code: '75067',
                 id: 5
             },
             {
-                code: '65658',
+                code: '75261',
                 id: 6
             }
         ]
@@ -67,28 +67,24 @@ export const mockZones = [
         id: 3,
         zipCodes: [
             {
-                code: '65671',
+                code: '75007',
                 id: 1
             },
             {
-                code: '65655',
+                code: '75010',
                 id: 2
             },
             {
-                code: '65672',
+                code: '75036',
                 id: 3
             },
             {
-                code: '65656',
+                code: '75056',
                 id: 4
             }, {
-                code: '65677',
+                code: '75057',
                 id: 5
             },
-            {
-                code: '65658',
-                id: 6
-            }
         ]
     }
 ]

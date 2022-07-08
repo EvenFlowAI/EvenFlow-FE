@@ -8,6 +8,8 @@ export const setLoading = createAction<boolean>('MobileService/SetLoading');
 export const setZones = createAction<TZone[]>('MobileService/SetZones');
 export const setMobileServicePrisingByZones = createAction<IZonePriceSettings[]>('MobileService/SetPrisingSettingsByZones');
 export const setMobileServicePrisingByDistance = createAction<IDistancePriceSettings[]>('MobileService/SetPrisingSettingsByDistance');
+export const setMobileServicePrisingOption = createAction<boolean>('MobileService/SetMobileServicePrisingOption');
+export const setPricingOptionLoading = createAction<boolean>('MobileService/SetPricingOptionLoading');
 
 export const loadMobServiceZones = (id: number): AppThunk => dispatch => {
 // todo request
@@ -63,5 +65,13 @@ export const deleteMobileServicePrisingByDistance = (id: number, pricingId: numb
 }
 
 export const addMobileServiceDistanceRange = (id: number, range: TDistanceRange): AppThunk => dispatch => {
+    // todo request
+}
+
+export const loadMobileServicePricingOption = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const changeMobileServicePriceSettings = (id: number, countByZone: boolean): AppThunk => dispatch => {
     // todo request
 }

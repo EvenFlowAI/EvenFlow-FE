@@ -3,7 +3,7 @@ import {
     setCurrentZone,
     setLoading,
     setMobileServicePrisingByDistance,
-    setMobileServicePrisingByZones,
+    setMobileServicePrisingByZones, setMobileServicePrisingOption, setPricingOptionLoading,
     setZones
 } from "./actions";
 import {TZone} from "./types";
@@ -15,6 +15,8 @@ type TState = {
     zones: TZone[];
     pricingByZones: IZonePriceSettings[];
     pricingByDistance: IDistancePriceSettings[];
+    isPricingByZoneLoading: boolean;
+    pricingCountByZone: boolean;
 }
 
 const initialState: TState = {
@@ -23,6 +25,8 @@ const initialState: TState = {
     zones: [],
     pricingByZones: [],
     pricingByDistance: [],
+    isPricingByZoneLoading: false,
+    pricingCountByZone: true,
 }
 
 export const mobileServiceReducer = createReducer<TState>(initialState, builder => builder
@@ -40,5 +44,11 @@ export const mobileServiceReducer = createReducer<TState>(initialState, builder 
     })
     .addCase(setMobileServicePrisingByDistance, (state, {payload}) => {
         return {...state, pricingByDistance: payload}
+    })
+    .addCase(setMobileServicePrisingOption, (state, {payload}) => {
+        return {...state, pricingCountByZone: payload}
+    })
+    .addCase(setPricingOptionLoading, (state, {payload}) => {
+        return {...state, isPricingByZoneLoading: payload}
     })
 )

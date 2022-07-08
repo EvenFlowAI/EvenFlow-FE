@@ -5,11 +5,11 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import ByZone from "../../AnicllaryPriceParts/ByZone";
 import {makeStyles} from "@material-ui/core/styles";
 import ByDistance from "../../AnicllaryPriceParts/ByDistance";
-import {useSCs} from "../../../../utils/hooks";
+import {useConfirm, useException, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    addServiceValetDistanceRange,
-    deleteServiceValetPrisingByDistance, deleteServiceValetPrisingByZones,
+    addServiceValetDistanceRange, changeServiceValetPriceSettings,
+    deleteServiceValetPrisingByDistance, deleteServiceValetPrisingByZones, loadServiceValetPricingOption,
     loadServiceValetPrisingByDistance,
     loadServiceValetPrisingByZones, updateServiceValetPrisingByDistance, updateServiceValetPrisingByZones
 } from "../../../../store/reducers/serviceValet/actions";
@@ -19,6 +19,7 @@ import {
     TDistanceRange
 } from "../../../../store/reducers/serviceValet/types";
 import {RootState} from "../../../../store/rootReducer";
+import {Loading} from "../../../UI/Loading";
 
 export const TablesWrapper = styled('div')({
     display: 'flex',
@@ -62,17 +63,28 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AncillaryPrice = () => {
-    const {pricingByDistance, pricingByZones} = useSelector((state: RootState) => state.serviceValet);
+    const {pricingByDistance, pricingByZones, pricingCountByZone, isPricingByZoneLoading} = useSelector((state: RootState) => state.serviceValet);
     const [selectedTab, selectTab] = useState<string>("0");
     const [typeOfPrice, setTypeOfPrice] = useState<string>("byZone");
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const {askConfirm} = useConfirm();
+    const showError = useException();
+
+    useEffect(() => {
+        if (pricingCountByZone) {
+            setTypeOfPrice("byZone")
+        } else {
+            setTypeOfPrice("byDistance")
+        }
+    }, [pricingCountByZone])
 
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadServiceValetPrisingByDistance(selectedSC.id))
             dispatch(loadServiceValetPrisingByZones(selectedSC.id))
+            dispatch(loadServiceValetPricingOption(selectedSC.id))
         }
     }, [selectedSC])
 
@@ -118,27 +130,42 @@ const AncillaryPrice = () => {
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist();
-        setTypeOfPrice(e.target.value)
+        if (selectedSC) {
+            askConfirm({
+                title: `Are you sure you want to change the option?`,
+                onConfirm: () => {
+                    try {
+                        setTypeOfPrice(e.target.value)
+                        dispatch(changeServiceValetPriceSettings(selectedSC.id, e.target.value === 'byZone'))
+                    } catch (e) {
+                        showError(e);
+                    }
+                }
+            });
+        }
     }
 
     return (
         <TablesWrapper>
             <div className={classes.wrapper}>
                 <div className={classes.optionsTitleWrapper}>Pricing Settings: </div>
-                <RadioGroup row aria-label="countType" name="countType" value={typeOfPrice} onChange={onChange}>
-                    <FormControlLabel
-                        value="byZone"
-                        control={<Radio color="primary"/>}
-                        label="By Zone"
-                        labelPlacement="end"
-                    />
-                    <FormControlLabel
-                        value="byDistance"
-                        control={<Radio color="primary"/>}
-                        label="By Distance"
-                        labelPlacement="end"
-                    />
-                </RadioGroup>
+                {isPricingByZoneLoading
+                    ? <Loading/>
+                    : <RadioGroup row aria-label="countType" name="countType" value={typeOfPrice} onChange={onChange}>
+                        <FormControlLabel
+                            value="byZone"
+                            control={<Radio color="primary"/>}
+                            label="By Zone"
+                            labelPlacement="end"
+                        />
+                        <FormControlLabel
+                            value="byDistance"
+                            control={<Radio color="primary"/>}
+                            label="By Distance"
+                            labelPlacement="end"
+                        />
+                    </RadioGroup>
+                }
             </div>
 
             <TabContext value={selectedTab}>

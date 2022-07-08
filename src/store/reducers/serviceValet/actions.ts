@@ -8,6 +8,8 @@ export const setLoading = createAction<boolean>('ServiceValet/SetLoading');
 export const setZones = createAction<TZone[]>('ServiceValet/SetZones');
 export const setServiceValetPrisingByZones = createAction<IZonePriceSettings[]>('ServiceValet/SetPrisingSettingsByZones');
 export const setServiceValetPrisingByDistance = createAction<IDistancePriceSettings[]>('ServiceValet/SetPrisingSettingsByDistance');
+export const setServiceValetPrisingOption = createAction<boolean>('ServiceValet/SetServiceValetPrisingOption');
+export const setPricingOptionLoading = createAction<boolean>('ServiceValet/SetPricingOptionLoading');
 
 export const loadServiceValetZones = (id: number): AppThunk => dispatch => {
 // todo request
@@ -63,5 +65,13 @@ export const deleteServiceValetPrisingByDistance = (id: number, pricingId: numbe
 }
 
 export const addServiceValetDistanceRange = (id: number, range: TDistanceRange): AppThunk => dispatch => {
+    // todo request
+}
+
+export const loadServiceValetPricingOption = (id: number): AppThunk => dispatch => {
+    // todo request
+}
+
+export const changeServiceValetPriceSettings = (id: number, countByZone: boolean): AppThunk => dispatch => {
     // todo request
 }
