@@ -14,7 +14,7 @@ import {DemandTable, TableRow} from "../AppointmentAllocation/UI";
 import {ValueSlider} from "../AppointmentValue/UI";
 import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../UI/TextField";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import AddDistanceRange from "../../Modals/AddDistanceRange/AddDistanceRange";
 import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
 
@@ -116,21 +116,21 @@ const mockData: IDistancePriceSettings[] = [
     {
         id: 1,
         rangeMin: 1.88,
-        rangeMax: 12,
+        rangeMax: 2.88,
         costPerMile: 16,
         serviceMultiplier: 0.2,
     },
     {
         id: 2,
         rangeMin: 2.88,
-        rangeMax: 22,
+        rangeMax: 4.9,
         costPerMile: 26,
         serviceMultiplier: 0.5,
     },
     {
         id: 3,
-        rangeMin: 3.88,
-        rangeMax: 32,
+        rangeMin: 4.9,
+        rangeMax: 7,
         costPerMile: 36,
         serviceMultiplier: 0.8,
     },
@@ -149,6 +149,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     const [editedItem, setEditedItem] = useState<IDistancePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const {onOpen, isOpen, onClose} = useModal();
+    const showError = useException();
 
     useEffect(() => {
         // todo data
@@ -183,11 +184,22 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     }
 
     const handleChangeField = (fieldName: string) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        if (Number(value) >= 0) {
+        if (editedItem && Number(value) >= 0) {
             setDistanceData(prev => {
-                const itemToUpdate = prev.find(el => el.id === editedItem?.id);
+                const itemToUpdate = prev.find(el => el.id === editedItem.id);
+                const nextItem = prev.find(el => el.id === editedItem.id + 1);
+                const prevItem = prev.find(el => el.id === editedItem.id - 1);
                 if (itemToUpdate) {
-                    const updated = {...itemToUpdate, [fieldName]: Number(value)};
+                    let newValue = Number(value);
+                    if (nextItem && (nextItem.rangeMin < Number(value)) && fieldName === 'rangeMax') {
+                        newValue = nextItem.rangeMin;
+                        showError('The Max Distance Range Value can NOT be greater than the Min Value of the next Distance Range')
+                    }
+                    if (prevItem && (prevItem.rangeMax > Number(value)) && fieldName === 'rangeMin') {
+                        newValue = prevItem.rangeMax;
+                        showError('The Min Distance Range Value can NOT be less than the Max Value of the previous Distance Range')
+                    }
+                    const updated = {...itemToUpdate, [fieldName]: newValue};
                     const filtered = prev.filter(el => el.id !== editedItem?.id);
                     return [...filtered, updated].sort((a, b) => a.id - b.id);
                 }
