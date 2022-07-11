@@ -134,7 +134,7 @@ const AncillaryPrice = () => {
         e.persist();
         if (selectedSC) {
             askConfirm({
-                title: `Are you sure you want to change the option?`,
+                title: `Are you sure you want to change the mobile service price setting?`,
                 onConfirm: () => {
                     try {
                         setTypeOfPrice(e.target.value)
