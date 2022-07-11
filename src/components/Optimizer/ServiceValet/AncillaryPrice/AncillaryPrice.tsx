@@ -132,7 +132,7 @@ const AncillaryPrice = () => {
         e.persist();
         if (selectedSC) {
             askConfirm({
-                title: `Are you sure you want to change the option?`,
+                title: `Are you sure you want to change the service valet price setting?`,
                 onConfirm: () => {
                     try {
                         setTypeOfPrice(e.target.value)
