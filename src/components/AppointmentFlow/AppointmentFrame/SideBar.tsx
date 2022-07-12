@@ -44,6 +44,7 @@ const stepsMap: {[K in TScreen]: number} = {
     appointmentConfirmation: 5,
     appointmentConfirmed: 5,
     location: 1,
+    payment: 5,
 }
 
 const mobileStepsMap: {[K in TScreen]: number} = {
@@ -63,6 +64,7 @@ const mobileStepsMap: {[K in TScreen]: number} = {
     location: 1,
     transportationNeeds: -1,
     consultantSelection: -1,
+    payment: 5,
 }
 
 const pickUpDropOffStepsMap: {[K in TScreen]: number} = {
@@ -82,6 +84,7 @@ const pickUpDropOffStepsMap: {[K in TScreen]: number} = {
     appointmentConfirmed: 5,
     location: 1,
     transportationNeeds: -1,
+    payment: 5,
 }
 
 const Index = styled('span')({
