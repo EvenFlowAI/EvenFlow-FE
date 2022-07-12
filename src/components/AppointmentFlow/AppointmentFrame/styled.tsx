@@ -3,15 +3,7 @@ import {styled, Theme} from "@material-ui/core";
 export const CardsWrapper = styled("div")(({theme}) => ({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr 1fr',
-    gridTemplateRows: '1fr 1fr',
-    // display: "flex",
-    // alignItems: "stretch",
-    // justifyContent: "center",
     gap: "18px",
-    // flexWrap: "wrap",
-    // [theme.breakpoints.down('sm')]: {
-    //     flexWrap: "wrap"
-    // }
 }));
 
 export const CardWrapper = styled("div")<Theme, {activeNow?: boolean, selected?: boolean,}>(({theme, activeNow, selected}) => ({
@@ -19,7 +11,7 @@ export const CardWrapper = styled("div")<Theme, {activeNow?: boolean, selected?:
     gridTemplateColumns: "1fr",
     gridTemplateRows: "3fr 2fr 1fr",
     width: "100%",
-    maxWidth: 200,
+    maxWidth: 250,
     transition: "all .2s",
     background: activeNow ? '#000000' : selected ? "#DEFFDF" : "transparent",
     // color: active ? "#FFFFFF" : "#252733",
