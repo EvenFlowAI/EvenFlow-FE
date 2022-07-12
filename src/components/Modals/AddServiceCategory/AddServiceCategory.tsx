@@ -101,6 +101,7 @@ const initialFileState = {file: null, dataUrl: undefined};
 
 const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, isEditing, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
+    const {categories} = useSelector((state: RootState) => state.categories);
     const {page} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
@@ -302,7 +303,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                     />
                     <Autocomplete
                         disableClearable
-                        options={['1', '2', '3', '4', '5']}
+                        options={categories.map((el, index) => `${index + 1}`).concat(`${categories.length + 1}`)}
                         value={orderIndex}
                         onChange={onOrderIndexChange}
                         renderInput={autocompleteRender({
