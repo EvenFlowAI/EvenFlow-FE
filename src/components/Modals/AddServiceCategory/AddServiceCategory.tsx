@@ -329,7 +329,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                 </div>
                 <TextField
                     fullWidth
-                    type="textarea"
+                    multiline
+                    rows={4}
                     value={description}
                     label="Service Category Description"
                     placeholder="Enter Description"
