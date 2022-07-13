@@ -8,7 +8,7 @@ import {Loading} from "../../UI/Loading";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {Tooltip, styled} from "@material-ui/core";
+import {Tooltip, withStyles} from "@material-ui/core";
 import {InfoOutlined} from "@material-ui/icons";
 
 type TSCProps = {
@@ -18,11 +18,16 @@ type TSCProps = {
     selected: boolean;
 }
 
-const HtmlTooltip = styled(({ className, children, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }}>{children}</Tooltip>
-))(({ theme }) => ({
-    fontSize: 16,
-}));
+const HtmlTooltip = withStyles({
+    tooltip: {
+        fontSize: 13,
+        color: '#202021',
+        background: '#D1D1D1',
+    },
+    popper: {
+        borderRadius: 2,
+    }
+})(Tooltip);
 
 export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selected}) => {
     const [icon, setIcon] = useState<string>('');
@@ -46,10 +51,10 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
 
     return <CardWrapper onClick={onSelect} activeNow={active} selected={selected}>
         {card.serviceRequests.length > 0 ? <HtmlTooltip
-            placement="top"
+            placement="right-end"
             title={<div>{card.serviceRequests.map(item => (<p>- {item.description}</p>))}</div>}
         >
-            <div className="infoIcon"><InfoOutlined/></div>
+            <div className="infoIcon"><InfoOutlined style={{ color: "#828282", filter: active ? "invert(100%)" : "unset"}}/></div>
         </HtmlTooltip> : <div/>}
         {isLoading
             ? <Loading/>
