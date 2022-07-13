@@ -34,6 +34,7 @@ const useStyles = makeStyles(() => ({
         display: "grid",
         gridTemplateColumns: "1fr 1fr 1fr",
         gridGap: 18,
+        marginBottom: 18,
     },
     uploadBtn: {
         width: '100%',
@@ -111,6 +112,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter);
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
@@ -164,8 +166,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         setSelectedCodes([]);
         setCategoryType(null);
         setOrderIndex('');
+        setDescription('')
         props.onClose();
     }, [])
+
+    const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDescription(e.target.value)
+    }
 
     const onSuccessCreate = useCallback((categoryId: number) => {
         if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file));
@@ -249,7 +256,14 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         <BaseModal {...props} width={1128} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} Service Category</DialogTitle>
             <DialogContent>
-                <RadioGroup row aria-label="countType" name="countType" value={selectedServiceType} onChange={handleTypeChange} className={classes.radioGroup}>
+                <RadioGroup
+                    row
+                    aria-label="countType"
+                    name="countType"
+                    value={selectedServiceType}
+                    onChange={handleTypeChange}
+                    className={classes.radioGroup}
+                >
                     <FormControlLabel
                         value={EServiceTypeBookingFlow.VisitCenter}
                         control={<Radio color="primary"/>}
@@ -313,6 +327,14 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                         })}
                     />
                 </div>
+                <TextField
+                    fullWidth
+                    type="textarea"
+                    value={description}
+                    label="Service Category Description"
+                    placeholder="Enter Description"
+                    onChange={onDescriptionChange}
+                />
                 <Divider/>
                 <OpsCodesTable
                     selectedCodes={selectedCodes}

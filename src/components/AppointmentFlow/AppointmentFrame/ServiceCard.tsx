@@ -9,6 +9,7 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Tooltip, styled} from "@material-ui/core";
+import {InfoOutlined} from "@material-ui/icons";
 
 type TSCProps = {
     card: IServiceCategory;
@@ -20,8 +21,7 @@ type TSCProps = {
 const HtmlTooltip = styled(({ className, children, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }}>{children}</Tooltip>
 ))(({ theme }) => ({
-    maxWidth: 200,
-    fontSize: theme.typography.pxToRem(12),
+    fontSize: 16,
 }));
 
 export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selected}) => {
@@ -42,7 +42,15 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         }
     }, [card])
 
-    const cardComponent = <CardWrapper onClick={onSelect} activeNow={active} selected={selected}>
+    // todo card.description instead of card.serviceRequests
+
+    return <CardWrapper onClick={onSelect} activeNow={active} selected={selected}>
+        {card.serviceRequests.length > 0 ? <HtmlTooltip
+            placement="top"
+            title={<div>{card.serviceRequests.map(item => (<p>- {item.description}</p>))}</div>}
+        >
+            <div className="infoIcon"><InfoOutlined/></div>
+        </HtmlTooltip> : <div/>}
         {isLoading
             ? <Loading/>
             : card.iconPath && icon
@@ -54,13 +62,5 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
             <span className="text">Starting At</span>
             <span className="price">${scProfile?.isRoundPrice ? price : price.toFixed(2)}</span>
         </div> : null}
-    </CardWrapper>;
-
-    return card.serviceRequests.length > 0
-        ? <HtmlTooltip
-            placement="top"
-            title={<div>{card.serviceRequests.map(item => (<p>- {item.description}</p>))}</div>}
-        >
-            {cardComponent}
-        </HtmlTooltip> : cardComponent;
+    </CardWrapper>
 }
