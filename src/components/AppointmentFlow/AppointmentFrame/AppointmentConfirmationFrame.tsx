@@ -32,6 +32,7 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
+import ServiceType from "./confirmationSections/ServiceType";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -218,6 +219,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 <ServiceRequests/>
                 <Address/>
                 <SelectedPrice/>
+                <ServiceType/>
                 <div
                     role="presentation"
                     style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
