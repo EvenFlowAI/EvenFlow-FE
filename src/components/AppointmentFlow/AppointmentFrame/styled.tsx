@@ -1,19 +1,15 @@
 import {styled, Theme} from "@material-ui/core";
 
 export const CardsWrapper = styled("div")(({theme}) => ({
-    display: "flex",
-    alignItems: "stretch",
-    justifyContent: "center",
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr',
     gap: "18px",
-    [theme.breakpoints.down('sm')]: {
-        flexWrap: "wrap"
-    }
 }));
 
 export const CardWrapper = styled("div")<Theme, {activeNow?: boolean, selected?: boolean,}>(({theme, activeNow, selected}) => ({
     display: "grid",
     gridTemplateColumns: "1fr",
-    gridTemplateRows: "3fr 2fr 1fr",
+    gridTemplateRows: "1fr 4fr 3fr 2fr",
     width: "100%",
     maxWidth: 250,
     transition: "all .2s",
@@ -47,6 +43,10 @@ export const CardWrapper = styled("div")<Theme, {activeNow?: boolean, selected?:
         fontWeight: "bold",
         fontFamily: "Proxima Nova",
         textTransform: "uppercase",
+    },
+    "& .infoIcon": {
+      display: 'flex',
+      justifyContent: 'flex-end',
     },
     [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: "1fr 3fr",
