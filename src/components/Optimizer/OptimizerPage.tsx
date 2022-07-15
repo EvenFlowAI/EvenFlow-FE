@@ -23,13 +23,13 @@ export const OptimizerPage = () => {
             <PrivateRoute path={Routes.Optimizer.ServiceRequests} component={ServiceRequests} />
             <PrivateRoute path={Routes.Optimizer.AppointmentValue} component={AppointmentValue} />
             <PrivateRoute path={Routes.Optimizer.CapacitySettings} component={CapacitySettings} />
-            <PrivateRoute path={Routes.Optimizer.EmployeeSchedule} component={EmployeeSchedule} />
+            {/*<PrivateRoute path={Routes.Optimizer.EmployeeSchedule} component={EmployeeSchedule} />*/}
             <PrivateRoute path={Routes.Optimizer.AppointmentSlotScoring} component={AppointmentSlotScoring} />
             <PrivateRoute path={Routes.Optimizer.AppointmentAllocation} component={AppointmentAllocationPage} />
             <PrivateRoute path={Routes.Optimizer.OptimizationWindows} component={OptimizationWindowsPage} />
-            <PrivateRoute path={Routes.Optimizer.PricingSettings} component={PricingSettingsPage} />
-            <PrivateRoute path={Routes.Optimizer.MobileService} component={MobileServicePage} />
-            <PrivateRoute path={Routes.Optimizer.ServiceValue} component={ServiceValetPage} />
+            {/*<PrivateRoute path={Routes.Optimizer.PricingSettings} component={PricingSettingsPage} />*/}
+            {/*<PrivateRoute path={Routes.Optimizer.MobileService} component={MobileServicePage} />*/}
+            {/*<PrivateRoute path={Routes.Optimizer.ServiceValue} component={ServiceValetPage} />*/}
             <Redirect to={currentUer?.role === Roles.Advisor ? Routes.Optimizer.EmployeeSchedule : Routes.Optimizer.ServiceRequests} />
         </Switch>
     </ContentContainer>

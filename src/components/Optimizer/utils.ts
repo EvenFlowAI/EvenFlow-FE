@@ -5,6 +5,11 @@ import {IDetailsData} from "./MaintenancePackages/PackageAccordion/PackageAccord
 
 export const optimizerRoot: TTitle = {
     to: Routes.Optimizer.Base,
+    title: "Capacity Optimization"
+}
+
+export const bookingFlowRoot: TTitle = {
+    to: Routes.Optimizer.Base,
     title: "Optimizer Settings"
 }
 const getTotal = (includedRequests: TExtendedService[]): number => {

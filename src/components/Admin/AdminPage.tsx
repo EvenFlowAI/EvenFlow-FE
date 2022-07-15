@@ -16,6 +16,11 @@ import {VehicleDetails} from "./VehicleDetails/VehicleDetails";
 import {Appointments} from "../Appointments/Appointments";
 import ServiceOpsCodesMapping from "./ServiceOpsCodesMapping/ServiceOpsCodesMapping";
 import BookingFlowConfig from "./BookingFlowConfig/BookingFlowConfig";
+import CapacityOptimization from "./CapacityOptimization/CapacityOptimization";
+import Pricing from "./Pricing/Pricing";
+import Reporting from "./Reporting/Reporting";
+import {OptimizerPage} from "../Optimizer/OptimizerPage";
+import {BookingFlowPage} from "./BookingFlow/BookingFlow";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
@@ -49,7 +54,16 @@ export const AdminPage = () => {
                 ? <PrivateRoute path={Routes.Admin.ServiceOpsCodesMapping} exact component={ServiceOpsCodesMapping}/>
                 : null}
             {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.BookingFlowConfig} exact component={BookingFlowConfig}/>
+                ? <PrivateRoute path={Routes.Admin.BookingFlowConfig} exact component={BookingFlowPage}/>
+                : null}
+            {!currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.CapacityOptimization} exact component={OptimizerPage}/>
+                : null}
+            {!currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.Pricing} exact component={Pricing}/>
+                : null}
+            {!currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.Pricing} exact component={Reporting}/>
                 : null}
             {currentUser.role === Roles.Owner
                 ? <PrivateRoute path={Routes.Admin.Profile} component={Profile} />

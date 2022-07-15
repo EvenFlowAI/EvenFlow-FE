@@ -6,9 +6,17 @@ enum AdminRoutes {
     Profile = "/admin/profile",
     ServiceCenters = "/admin/service-centers",
     ServiceRequests = "/admin/service-requests",
-    VehicleDetails = "/admin/vehicle-details",
-    ServiceOpsCodesMapping = "/admin/service-codes-mapping",
     BookingFlowConfig = "/admin/booking-flow-config",
+    BookingFlowConfigDetails = "/admin/booking-flow-config/details",
+    TransportationOptions = "/admin/booking-flow-config/transportation-options",
+    ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
+    VehicleDetails = "/admin/booking-flow-config/vehicle-details",
+    CapacityOptimization = "/admin/capacity-optimization",
+    Pricing = "/admin/pricing",
+    ServicePriceSettings = "/admin/pricing/service-price-settings",
+    MobileService = "/admin/pricing/mobile-service",
+    ServiceValet = "/admin/pricing/service-valet",
+    Reporting = "/admin/reporting",
 }
 
 enum AdminLogin {
@@ -40,6 +48,14 @@ enum OptimizerRoutes {
     ServiceValue = "/optimizer/service-value",
 }
 
+enum BookingFlowConfigRoutes {
+    Base = "/admin/booking-flow-config",
+    BookingFlowConfigDetails = "/admin/booking-flow-config/details",
+    TransportationOptions = "/admin/booking-flow-config/transportation-options",
+    ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
+    VehicleDetails = "/admin/booking-flow-config/vehicle-details",
+}
+
 enum EndUser {
     Base = "/welcome/:id",
     Welcome = "/welcome",
@@ -61,5 +77,6 @@ export const Routes = {
     EndUser: EndUser,
     Account: AccountRoutes,
     Optimizer: OptimizerRoutes,
-    OfferManagement: OfferManagementRoutes
+    OfferManagement: OfferManagementRoutes,
+    BookingFlow: BookingFlowConfigRoutes,
 }
