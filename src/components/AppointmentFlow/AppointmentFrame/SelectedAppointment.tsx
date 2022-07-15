@@ -207,7 +207,7 @@ export const SelectedAppointment = () => {
                     <li key="advisor">
                         {isMobileServiceOn || isPickUpDropOffServiceOn
                             ? <div className="service-list" style={{marginBottom: 10}}>
-                                <div>TYPE OF SERVICE: {getServiceName()}</div>
+                                <div>LOCATION OF SERVICE: {getServiceName()}</div>
                             </div>
                             : null
                         }
