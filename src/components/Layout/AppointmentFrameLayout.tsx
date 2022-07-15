@@ -53,6 +53,7 @@ import {options} from "./EndUserLayout";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
 import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
 import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
+import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 
 const Container = styled('div')({
     display: "flex",
@@ -92,7 +93,8 @@ const SCREENS = {
     transportationNeeds: 'Transportation Needs',
     opsCode: "opsCode",
     vehicleData: "vehicleData",
-    location: "Your Location"
+    location: "Your Location",
+    payment: "payment",
 }
 
 // todo add new parent links while go live with new dealerships
@@ -379,6 +381,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('serviceNeeds')}
                 onLogin={handleLogin}
             />,
+            payment: <PaymentScreen/>,
         }
         return carSelections[currentScreen];
     }, [
@@ -414,6 +417,8 @@ export const AppointmentFrameLayout = () => {
                 return "Please tell us about your vehicle";
             case "location":
                 return "Where are you located?";
+            case "payment":
+                return "Please Enter Your Payment Information";
             default:
                 return null;
         }

@@ -31,6 +31,8 @@ import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import Address from "./confirmationSections/Address";
+import PaymentType from "../../Modals/PaymentType/PaymentType";
+import ServiceType from "./confirmationSections/ServiceType";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -76,6 +78,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
     const {id} = useParams();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
+    const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
 
@@ -216,6 +219,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 <ServiceRequests/>
                 <Address/>
                 <SelectedPrice/>
+                <ServiceType/>
                 <div
                     role="presentation"
                     style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
@@ -231,7 +235,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
 
         </Wrapper>
-        <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
+        <Actions loading={saving} onBack={onBack} onNext={onPaymentOpen} />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
+        <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
     </StepWrapper>
 };

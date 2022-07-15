@@ -15,6 +15,7 @@ export type TScreen =
     | "appointmentConfirmation"
     | "appointmentConfirmed"
     | "location"
+    | "payment"
 
 export type TMobileScreen =
     | "carSelection"
@@ -31,3 +32,4 @@ export type TMobileScreen =
     | "appointmentConfirmation"
     | "appointmentConfirmed"
     | "location"
+    | "payment"

@@ -1,16 +1,25 @@
 import {createAction} from "@reduxjs/toolkit";
-import {TServiceTypeSettings} from "./types";
+import {EServiceTypeBookingFlow, TServiceTypeSettings} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
+import {setMobileServiceAvailability, setPickUpDropOffAvailability} from "../appointmentFrameReducer/actions";
 
 export const setBookingFlowConfig = createAction<TServiceTypeSettings[]>("BookingFlowConfig/SetConfig");
 export const setBookingFlowConfigLoading = createAction<boolean>("BookingFlowConfig/SetLoading");
 
 export const loadBookingFlowConfig = (id: number): AppThunk => dispatch => {
     dispatch(setBookingFlowConfigLoading(true));
-    Api.call(Api.endpoints.BookingFlowConfig.Get, {urlParams: {id}})
+    Api.call<TServiceTypeSettings[]>(Api.endpoints.BookingFlowConfig.Get, {urlParams: {id}})
         .then(result => {
-            if (result?.data) dispatch(setBookingFlowConfig(result.data))
+            if (result?.data) {
+                const mobileServiceIsAvailable = result.data
+                    .find(item => item.serviceType == EServiceTypeBookingFlow.MobileService && item.available);
+                const pickUpDropOffIsAvailable = result.data
+                    .find(item => item.serviceType == EServiceTypeBookingFlow.PickUpDropOff && item.available);
+                dispatch(setMobileServiceAvailability(Boolean(mobileServiceIsAvailable)));
+                dispatch(setPickUpDropOffAvailability(Boolean(pickUpDropOffIsAvailable)));
+                dispatch(setBookingFlowConfig(result.data))
+            }
         })
         .catch(err => {
             console.log('get booking flow config err', err)

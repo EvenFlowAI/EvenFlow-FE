@@ -16,14 +16,12 @@ import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
     setCurrentFrameScreen,
-    setMobileServiceAvailability, setPickUpDropOffAvailability,
     setSideBarSteps, setValueServiceAvailability
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
-import {EServiceTypeBookingFlow} from "../../store/reducers/bookingFlowConfig/types";
 
 export const Welcome = () => {
     const [view, setView] = useState<TView>("select");
@@ -53,13 +51,6 @@ export const Welcome = () => {
             window.location.href = "/";
         }
     }, [id]);
-
-    useEffect(() => {
-        const mobileServiceIsAvailable = config.find(item => item.serviceType == EServiceTypeBookingFlow.MobileService && item.available);
-        const pickUpDropOffIsAvailable = config.find(item => item.serviceType == EServiceTypeBookingFlow.PickUpDropOff && item.available);
-        dispatch(setMobileServiceAvailability(Boolean(mobileServiceIsAvailable)));
-        dispatch(setPickUpDropOffAvailability(Boolean(pickUpDropOffIsAvailable)));
-    }, [config, dispatch])
 
     const handleMobileService = () => {
         if (isMobileServiceOn || isPickUpDropOffServiceOn) setView("serviceSelect")

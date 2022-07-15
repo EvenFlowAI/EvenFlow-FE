@@ -135,7 +135,18 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const SelectedAppointment = () => {
-    const { selectedPackage, advisor, consultants, categoriesIds, serviceType, address, zipCode, valueService } = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        selectedPackage,
+        advisor,
+        consultants,
+        categoriesIds,
+        serviceType,
+        address,
+        zipCode,
+        valueService,
+        isMobileServiceOn,
+        isPickUpDropOffServiceOn,
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -168,6 +179,17 @@ export const SelectedAppointment = () => {
         scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
 
+    const getServiceName = () => {
+        switch (serviceType) {
+            case EServiceType.MobileService:
+                return "Mobile Service";
+            case EServiceType.PikUpDropOff:
+                return "Pick Up / Drop Off";
+            default:
+                return "Visit Center";
+        }
+    }
+
     return (
         <div>
             {!isSm && <h4>Your selections</h4>}
@@ -183,25 +205,31 @@ export const SelectedAppointment = () => {
                         </div> }
                     </li>
                     <li key="advisor">
+                        {isMobileServiceOn || isPickUpDropOffServiceOn
+                            ? <div className="service-list" style={{marginBottom: 10}}>
+                                <div>LOCATION OF SERVICE: {getServiceName()}</div>
+                            </div>
+                            : null
+                        }
                         {serviceType === EServiceType.VisitCenter
                             ? <div className={classes.selectWrapper}>
-                            <div className={classes.selectWrapper}>
-                                Advisor: {isSm ? <br/> : null}
-                                <Select
-                                    value={advisor?.id || "Any"}
-                                    className={classes.select}
-                                    disabled={currentConfig && !currentConfig?.advisorSelection}
-                                    onChange={handleConsultantChange}>
-                                    {isBmWService
-                                        ? consultants
-                                            .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
-                                            .concat([<MenuItem value="Any" key="any">Any Available</MenuItem>])
-                                        : <MenuItem value={advisor ? advisor.id : "Any"}>
-                                            {advisor ? advisor.name : 'Any Available'}
-                                        </MenuItem>
-                                    }
-                                </Select>
-                            </div>
+                                <div className={classes.selectWrapper}>
+                                    Advisor: {isSm ? <br/> : null}
+                                    <Select
+                                        value={advisor?.id || "Any"}
+                                        className={classes.select}
+                                        disabled={currentConfig && !currentConfig?.advisorSelection}
+                                        onChange={handleConsultantChange}>
+                                        {isBmWService
+                                            ? consultants
+                                                .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
+                                                .concat([<MenuItem value="Any" key="any">Any Available</MenuItem>])
+                                            : <MenuItem value={advisor ? advisor.id : "Any"}>
+                                                {advisor ? advisor.name : 'Any Available'}
+                                            </MenuItem>
+                                        }
+                                    </Select>
+                                </div>
                             </div>
                             : address
                                 ? <div className="service-list">
@@ -209,7 +237,7 @@ export const SelectedAppointment = () => {
                                     <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
                                 </div>
                                 : null
-                            }
+                        }
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper> : null}
@@ -219,8 +247,8 @@ export const SelectedAppointment = () => {
                 <PriceWrapper>
                     {appointment && !isSm
                         ? <DateWrapper>
-                        Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
-                    </DateWrapper>
+                            Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
+                        </DateWrapper>
                         : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
@@ -228,11 +256,11 @@ export const SelectedAppointment = () => {
                         </div>}
                         {isDynamicPricing && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
-                          Save by booking at off peak times!
-                        </div>
+                                Save by booking at off peak times!
+                            </div>
                         )}
                     </>
-                    </PriceWrapper>
+                </PriceWrapper>
             </Wrapper>
         </div>
     );

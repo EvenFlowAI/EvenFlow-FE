@@ -34,6 +34,7 @@ const useStyles = makeStyles(() => ({
         display: "grid",
         gridTemplateColumns: "1fr 1fr 1fr",
         gridGap: 18,
+        marginBottom: 18,
     },
     uploadBtn: {
         width: '100%',
@@ -101,6 +102,7 @@ const initialFileState = {file: null, dataUrl: undefined};
 
 const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, isEditing, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
+    const {categories} = useSelector((state: RootState) => state.categories);
     const {page} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
@@ -110,6 +112,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter);
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
@@ -163,8 +166,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         setSelectedCodes([]);
         setCategoryType(null);
         setOrderIndex('');
+        setDescription('')
         props.onClose();
     }, [])
+
+    const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDescription(e.target.value)
+    }
 
     const onSuccessCreate = useCallback((categoryId: number) => {
         if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file));
@@ -187,6 +195,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                     // todo uncomment and add in the TUpdateCategoryData field for service type
                     //serviceType,
                 }
+                if (description) data.description = description;
                 if (categoryType.value !== EServiceCategoryType.MaintenancePackage
                     && categoryType.value !== EServiceCategoryType.LinkToPage2
                     && categoryType.value !== EServiceCategoryType.ValueService) {
@@ -206,7 +215,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                 onCancel();
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig])
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
@@ -248,7 +257,14 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
         <BaseModal {...props} width={1128} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} Service Category</DialogTitle>
             <DialogContent>
-                <RadioGroup row aria-label="countType" name="countType" value={selectedServiceType} onChange={handleTypeChange} className={classes.radioGroup}>
+                <RadioGroup
+                    row
+                    aria-label="countType"
+                    name="countType"
+                    value={selectedServiceType}
+                    onChange={handleTypeChange}
+                    className={classes.radioGroup}
+                >
                     <FormControlLabel
                         value={EServiceTypeBookingFlow.VisitCenter}
                         control={<Radio color="primary"/>}
@@ -302,7 +318,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                     />
                     <Autocomplete
                         disableClearable
-                        options={['1', '2', '3', '4', '5']}
+                        options={categories.map((el, index) => `${index + 1}`).concat(`${categories.length + 1}`)}
                         value={orderIndex}
                         onChange={onOrderIndexChange}
                         renderInput={autocompleteRender({
@@ -312,6 +328,15 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                         })}
                     />
                 </div>
+                <TextField
+                    fullWidth
+                    multiline
+                    rows={4}
+                    value={description}
+                    label="Service Category Description"
+                    placeholder="Enter Description"
+                    onChange={onDescriptionChange}
+                />
                 <Divider/>
                 <OpsCodesTable
                     selectedCodes={selectedCodes}
