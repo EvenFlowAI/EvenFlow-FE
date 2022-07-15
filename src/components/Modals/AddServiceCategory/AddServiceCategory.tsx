@@ -195,6 +195,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                     // todo uncomment and add in the TUpdateCategoryData field for service type
                     //serviceType,
                 }
+                if (description) data.description = description;
                 if (categoryType.value !== EServiceCategoryType.MaintenancePackage
                     && categoryType.value !== EServiceCategoryType.LinkToPage2
                     && categoryType.value !== EServiceCategoryType.ValueService) {
@@ -214,7 +215,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                 onCancel();
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig])
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);

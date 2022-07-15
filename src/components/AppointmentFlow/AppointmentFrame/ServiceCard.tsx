@@ -50,9 +50,9 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
     // todo card.description instead of card.serviceRequests
 
     return <CardWrapper onClick={onSelect} activeNow={active} selected={selected}>
-        {card.serviceRequests.length > 0 ? <HtmlTooltip
+        {card.description ? <HtmlTooltip
             placement="right-end"
-            title={<div>{card.serviceRequests.map(item => (<p>- {item.description}</p>))}</div>}
+            title={<div>{card.description.split('\n').map(line => <p>{line}</p>)}</div>}
         >
             <div className="infoIcon"><InfoOutlined style={{ color: "#828282", filter: active ? "invert(100%)" : "unset"}}/></div>
         </HtmlTooltip> : <div/>}
