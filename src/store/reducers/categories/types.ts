@@ -17,6 +17,7 @@ export type TUpdateCategoryData = {
     page: number;
     type: EServiceCategoryType;
     orderIndex?: number;
+    description?: string;
 }
 
 export type TNewCategory = TUpdateCategoryData & {
