@@ -149,6 +149,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
             currentType && setCategoryType(currentType)
 
             if (editingItem.orderIndex) setOrderIndex(editingItem.orderIndex.toString())
+            if (editingItem.description) setDescription(editingItem.description);
         }
     }, [editingItem, allAssignedList, categoryOptions, props.open])
 
