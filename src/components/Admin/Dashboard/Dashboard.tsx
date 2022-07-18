@@ -23,7 +23,7 @@ import {Bays} from "../../Modals/Bays/Bays";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
 import {DashPodsModal} from "../../Modals/PODModal/DashPodsModal";
-import {TransportationOptions} from "../../Modals/TransportationOptions/TransportationOptions";
+import {TransportationOptions} from "../../Modals/EditTransportation/TransportationOptions";
 import {SquarePaper} from "../../UI/Paper";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as ServiceCodes} from "../../../assets/img/serviceOpsCodes.svg";

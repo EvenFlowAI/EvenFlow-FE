@@ -10,7 +10,7 @@ export const optimizerRoot: TTitle = {
 
 export const bookingFlowRoot: TTitle = {
     to: Routes.Optimizer.Base,
-    title: "Optimizer Settings"
+    title: "Booking Flow"
 }
 const getTotal = (includedRequests: TExtendedService[]): number => {
     const price = includedRequests.reduce((a, b) => a + +b.price, 0);

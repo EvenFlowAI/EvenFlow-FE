@@ -12,11 +12,7 @@ import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDe
 import {Roles} from "../../config/constants";
 import {Profile} from "./Profile/Profile";
 import {ServiceRequests} from "./ServiceRequets/ServiceRequets";
-import {VehicleDetails} from "./VehicleDetails/VehicleDetails";
 import {Appointments} from "../Appointments/Appointments";
-import ServiceOpsCodesMapping from "./ServiceOpsCodesMapping/ServiceOpsCodesMapping";
-import BookingFlowConfig from "./BookingFlowConfig/BookingFlowConfig";
-import CapacityOptimization from "./CapacityOptimization/CapacityOptimization";
 import Pricing from "./Pricing/Pricing";
 import Reporting from "./Reporting/Reporting";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
@@ -48,14 +44,14 @@ export const AdminPage = () => {
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null}
             {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.VehicleDetails} exact component={VehicleDetails}/>
+                ? <PrivateRoute path={Routes.BookingFlow.Base} component={BookingFlowPage}/>
                 : null}
-            {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.ServiceOpsCodesMapping} exact component={ServiceOpsCodesMapping}/>
-                : null}
-            {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.BookingFlowConfig} exact component={BookingFlowPage}/>
-                : null}
+            {/*{!currentUser.isSuperUser*/}
+            {/*    ? <PrivateRoute path={Routes.Admin.ServiceOpsCodesMapping} exact component={ServiceOpsCodesMapping}/>*/}
+            {/*    : null}*/}
+            {/*{!currentUser.isSuperUser*/}
+            {/*    ? <PrivateRoute path={Routes.Admin.VehicleDetails} exact component={VehicleDetails}/>*/}
+            {/*    : null}*/}
             {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Admin.CapacityOptimization} exact component={OptimizerPage}/>
                 : null}
