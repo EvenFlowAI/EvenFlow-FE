@@ -56,6 +56,14 @@ enum BookingFlowConfigRoutes {
     VehicleDetails = "/admin/booking-flow-config/vehicle-details",
 }
 
+enum PricingRoutes {
+    Base = "/admin/pricing",
+    ServicePricingSettings = "/admin/pricing/service-pricing-settings",
+    MobileService = "/admin/pricing/mobile-service",
+    ServiceValet = "/admin/pricing/service-valet",
+    OfferManagement = "/admin/pricing/offer-management",
+}
+
 enum EndUser {
     Base = "/welcome/:id",
     Welcome = "/welcome",
@@ -79,4 +87,5 @@ export const Routes = {
     Optimizer: OptimizerRoutes,
     OfferManagement: OfferManagementRoutes,
     BookingFlow: BookingFlowConfigRoutes,
+    Pricing: PricingRoutes,
 }

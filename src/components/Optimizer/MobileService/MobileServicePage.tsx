@@ -3,7 +3,7 @@ import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {Tab} from "@material-ui/core";
 import {RootState} from "../../../store/rootReducer";
-import {optimizerRoot} from "../utils";
+import {pricingRoot} from "../utils";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TabList} from "../../UI/Tabs";
@@ -39,7 +39,7 @@ const MobileServicePage = () => {
     }
 
     return <TabContext value={selectedTab}>
-            <TitleContainer title="Mobile Service" pad parent={optimizerRoot}/>
+            <TitleContainer title="Mobile Service" pad parent={pricingRoot}/>
             <TabList
                 variant="scrollable"
                 scrollButtons="auto"

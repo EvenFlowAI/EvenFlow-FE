@@ -7,9 +7,8 @@ import {RequiredEquipment} from "./RequiredEquipment";
 import {RequiredSkills} from "./RequiredSkills";
 import {TechnicianStaff} from "./TechnicianStaff";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {Routes} from "../../../config/routes";
-import {TTitle} from "../../Content/ContentTitle/ContentTitle";
 import {makeStyles} from "@material-ui/core/styles";
+import {optimizerRoot} from "../utils";
 
 const useStyles = makeStyles(theme => ({
     panel: {
@@ -20,10 +19,6 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const parent: TTitle = {
-    to: Routes.Optimizer.Base,
-    title: "Optimizer Settings"
-}
 export const CapacitySettings = () => {
     const [selectedTab, setTab] = useState<string>("0");
     const handleTabChange = (e: React.ChangeEvent<{}>, val: string) => {
@@ -31,7 +26,7 @@ export const CapacitySettings = () => {
     }
     const classes = useStyles();
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Capacity Settings" pad parent={parent} />
+        <TitleContainer title="Capacity Settings" pad parent={optimizerRoot} />
         <TabList
             onChange={handleTabChange}
             variant="scrollable"

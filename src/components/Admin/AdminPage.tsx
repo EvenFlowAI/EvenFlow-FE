@@ -13,7 +13,7 @@ import {Roles} from "../../config/constants";
 import {Profile} from "./Profile/Profile";
 import {ServiceRequests} from "./ServiceRequets/ServiceRequets";
 import {Appointments} from "../Appointments/Appointments";
-import Pricing from "./Pricing/Pricing";
+import PricingPage from "./Pricing/PricingPage";
 import Reporting from "./Reporting/Reporting";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {BookingFlowPage} from "./BookingFlow/BookingFlow";
@@ -44,22 +44,16 @@ export const AdminPage = () => {
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null}
             {!currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.CapacityOptimization} component={OptimizerPage}/>
+                : null}
+            {!currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Pricing.Base} component={PricingPage}/>
+                : null}
+            {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.BookingFlow.Base} component={BookingFlowPage}/>
                 : null}
-            {/*{!currentUser.isSuperUser*/}
-            {/*    ? <PrivateRoute path={Routes.Admin.ServiceOpsCodesMapping} exact component={ServiceOpsCodesMapping}/>*/}
-            {/*    : null}*/}
-            {/*{!currentUser.isSuperUser*/}
-            {/*    ? <PrivateRoute path={Routes.Admin.VehicleDetails} exact component={VehicleDetails}/>*/}
-            {/*    : null}*/}
             {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.CapacityOptimization} exact component={OptimizerPage}/>
-                : null}
-            {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.Pricing} exact component={Pricing}/>
-                : null}
-            {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.Pricing} exact component={Reporting}/>
+                ? <PrivateRoute path={Routes.Admin.Reporting} exact component={Reporting}/>
                 : null}
             {currentUser.role === Roles.Owner
                 ? <PrivateRoute path={Routes.Admin.Profile} component={Profile} />

@@ -8,13 +8,9 @@ import {AppointmentValue} from "./AppointmentValue/AppointmentValue";
 import {AppointmentSlotScoring} from "./AppointmentSlotScoring/AppointmentSlotScoring";
 import { OptimizationWindowsPage } from "./OptimizationWindows/OptimizationWindowsPage";
 import {AppointmentAllocationPage} from "./AppointmentAllocation/AppointmentAllocationPage";
-import {EmployeeSchedule} from "./EmployeeSchedule/EmployeeSchedule";
-import {PricingSettingsPage} from "./PricingSettings/PricingSettingsPage";
 import {ServiceRequests} from "./ServiceRequests/ServiceRequests";
 import {useCurrentUser} from "../../utils/hooks";
 import {Roles} from "../../config/constants";
-import MobileServicePage from "./MobileService/MobileServicePage";
-import ServiceValetPage from "./ServiceValet/ServiceValetPage";
 
 export const OptimizerPage = () => {
     const currentUer = useCurrentUser();
@@ -27,9 +23,6 @@ export const OptimizerPage = () => {
             <PrivateRoute path={Routes.Optimizer.AppointmentSlotScoring} component={AppointmentSlotScoring} />
             <PrivateRoute path={Routes.Optimizer.AppointmentAllocation} component={AppointmentAllocationPage} />
             <PrivateRoute path={Routes.Optimizer.OptimizationWindows} component={OptimizationWindowsPage} />
-            {/*<PrivateRoute path={Routes.Optimizer.PricingSettings} component={PricingSettingsPage} />*/}
-            {/*<PrivateRoute path={Routes.Optimizer.MobileService} component={MobileServicePage} />*/}
-            {/*<PrivateRoute path={Routes.Optimizer.ServiceValue} component={ServiceValetPage} />*/}
             <Redirect to={currentUer?.role === Roles.Advisor ? Routes.Optimizer.EmployeeSchedule : Routes.Optimizer.ServiceRequests} />
         </Switch>
     </ContentContainer>

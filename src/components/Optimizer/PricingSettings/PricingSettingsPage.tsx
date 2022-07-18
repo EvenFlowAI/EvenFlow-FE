@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../utils";
+import {pricingRoot} from "../utils";
 import {TabList} from "../../UI/Tabs";
 import {FormControlLabel, styled, Switch, Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
@@ -79,7 +79,7 @@ export const PricingSettingsPage = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Pricing Settings" pad parent={optimizerRoot} actions={
+        <TitleContainer title="Service Price Settings" pad parent={pricingRoot} actions={
             <ButtonsWrapper>
             <ControlLabel labelPlacement="start" control={
                 <Switch
