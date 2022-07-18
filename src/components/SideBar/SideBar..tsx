@@ -133,6 +133,7 @@ const MainLinks: LinkType[] = [
     {to: Routes.Admin.ServiceValet, name: "Service Valet", exact: true, sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Admin.BookingFlowConfig, name: "Booking Flow", roles: ["Owner", "Manager"]},
     {to: Routes.Admin.BookingFlowConfigDetails, name: "Booking Flow Config", exact: true, sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Admin.TransportationOptions, name: "Transportation Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Admin.ServiceOpsCodesMapping, name: "Service Ops Code Mapping", exact: true, sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Admin.VehicleDetails, name: "Vehicle Detail Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
