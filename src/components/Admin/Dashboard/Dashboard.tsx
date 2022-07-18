@@ -4,7 +4,7 @@ import {useHistory} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {
-    Alarm, Build, ChevronRight,
+    Alarm, Build, ChevronRight, DateRange,
     FreeBreakfastOutlined,
     LockOutlined,
     PlaceOutlined
@@ -26,6 +26,7 @@ import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.sv
 import Reminders from "../../Modals/Reminders/Reminders";
 import LaborRate from "../../Modals/LaborRate/LaborRate";
 import {EmployeeSchedule} from "../../Modals/EmployeeSchedule/EmployeeSchedule";
+import {WeeklySchedule} from "../../Modals/WeeklySchedule/WeeklySchedule";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -192,6 +193,11 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenEmployeeSchedule,
         isOpen: isOpenEmployeeSchedule,
     } = useModal();
+    const {
+        onClose: onCloseWS,
+        onOpen: onOpenWS,
+        isOpen: isWSOpen
+    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -203,6 +209,7 @@ export const AdminDashboard: React.FC = () => {
     const items: TItem[] = [
         {label: "Address", icon: <PlaceOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenAddress},
         {label: "Hours of operation", icon: <Alarm htmlColor='rgb(94, 95, 102)'/>, action: onOpenHOO},
+        {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
         {label: "Employee Schedule", icon: <Calendar />, action: onOpenEmployeeSchedule},
         {label: "Holidays", icon: <LockOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenH},
         {label: "Breaks", icon: <FreeBreakfastOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenB},
@@ -252,5 +259,6 @@ export const AdminDashboard: React.FC = () => {
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
         <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
         <LaborRate open={isOpenLaborRate} onClose={onCloseLaborRate}/>
+        <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
     </div>
 }
