@@ -33,18 +33,19 @@ type TProps = {
     timeSlot: string;
     slot?: IRemappedAppointmentSlot;
     selected: boolean;
-    onSelect: TArgCallback<IRemappedAppointmentSlot|null>
+    onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
+    date: moment.Moment|null;
 }
 export const TimeSlotCard: React.FC<TProps> =
-    ({timeSlot, slot, onSelect, selected}) => {
+    ({timeSlot, slot, onSelect, selected, date}) => {
     const [timePassed, setTimePassed] = useState<boolean>(false);
 
     useEffect(() => {
-        if (slot && moment(slot.date).isSame(moment(), 'date')) {
+        if (date && slot && moment(slot.date).isSame(moment(), 'date')) {
             const differenceInMSeconds = moment(slot.time, 'HH:mm').diff(moment());
             differenceInMSeconds > 0 && setTimeout(() => setTimePassed(true), differenceInMSeconds);
         }
-    }, [slot])
+    }, [slot, date])
 
     const getContent = (timePassed: boolean): string => {
         if (!slot || timePassed) {
