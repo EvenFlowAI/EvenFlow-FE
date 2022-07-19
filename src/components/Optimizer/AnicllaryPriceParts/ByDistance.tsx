@@ -115,7 +115,7 @@ const Slider = withStyles((theme) => ({
 const mockData: IDistancePriceSettings[] = [
     {
         id: 1,
-        rangeMin: 1.88,
+        rangeMin: 0,
         rangeMax: 2.88,
         costPerMile: 16,
         serviceMultiplier: 0.2,
@@ -188,20 +188,22 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
             setDistanceData(prev => {
                 const itemToUpdate = prev.find(el => el.id === editedItem.id);
                 const nextItem = prev.find(el => el.id === editedItem.id + 1);
-                const prevItem = prev.find(el => el.id === editedItem.id - 1);
+              //  const prevItem = prev.find(el => el.id === editedItem.id - 1);
+                let nextUpdated: IDistancePriceSettings|null = null;
                 if (itemToUpdate) {
                     let newValue = Number(value);
                     if (nextItem && (nextItem.rangeMin < Number(value)) && fieldName === 'rangeMax') {
-                        newValue = nextItem.rangeMin;
-                        showError('The Max Distance Range Value can NOT be greater than the Min Value of the next Distance Range')
-                    }
-                    if (prevItem && (prevItem.rangeMax > Number(value)) && fieldName === 'rangeMin') {
-                        newValue = prevItem.rangeMax;
-                        showError('The Min Distance Range Value can NOT be less than the Max Value of the previous Distance Range')
+                        nextUpdated = nextItem;
+                        nextUpdated.rangeMin = newValue;
+                        // newValue = nextItem.rangeMin;
+                        // showError('The Max Distance Range Value can NOT be greater than the Min Value of the next Distance Range')
                     }
                     const updated = {...itemToUpdate, [fieldName]: newValue};
-                    const filtered = prev.filter(el => el.id !== editedItem?.id);
-                    return [...filtered, updated].sort((a, b) => a.id - b.id);
+                    const filtered = nextUpdated
+                        ? prev.filter(el => el.id !== editedItem?.id && el.id !== nextUpdated?.id)
+                        : prev.filter(el => el.id !== editedItem?.id);
+                    const data = nextUpdated ? [...filtered, updated, nextUpdated] : [...filtered, updated];
+                    return data.sort((a, b) => a.id - b.id);
                 }
                 return prev;
             })
@@ -289,6 +291,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                             step: 0.01,
                                         }}
                                         value={+item?.rangeMin?.toFixed(2)}
+                                        disabled
                                         onChange={handleChangeField('rangeMin')}
                                     />
                                     : item.rangeMin.toFixed(2)}
