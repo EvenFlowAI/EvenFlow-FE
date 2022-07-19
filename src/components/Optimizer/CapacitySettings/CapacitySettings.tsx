@@ -5,7 +5,6 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import {AvailableStaff} from "./AvailableStaff/AvailableStaff";
 import {RequiredEquipment} from "./RequiredEquipment";
 import {RequiredSkills} from "./RequiredSkills";
-import {TechnicianStaff} from "./TechnicianStaff";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {makeStyles} from "@material-ui/core/styles";
 import {optimizerRoot} from "../utils";
@@ -36,11 +35,9 @@ export const CapacitySettings = () => {
             <Tab label="Available Staff" value="0" />
             <Tab label="Required Equipment" value="1" />
             <Tab label="Required Skills" value="2" />
-            <Tab label="Technician Staff" value="3" />
         </TabList>
         <TabPanel className={classes.panel} value="0" ><AvailableStaff /></TabPanel>
         <TabPanel className={classes.panel} value="1"><RequiredEquipment /></TabPanel>
         <TabPanel className={classes.panel} value="2"><RequiredSkills /></TabPanel>
-        <TabPanel className={classes.panel} value="3"><TechnicianStaff /></TabPanel>
     </TabContext>
 }

@@ -94,6 +94,8 @@ const AdminLinks: LinkType[] = [
     {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.ManageEXEvenFlowAppointments, name: "Manage Ex EvenFlow Appointments", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"]},
     {to: Routes.Pricing.ServicePricingSettings, name: "Service Price Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
@@ -119,6 +121,8 @@ const MainLinks: LinkType[] = [
     {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.ManageEXEvenFlowAppointments, name: "Manage Ex EvenFlow Appointments", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"]},
     {to: Routes.Pricing.ServicePricingSettings, name: "Service Price Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
@@ -134,11 +138,11 @@ const MainLinks: LinkType[] = [
     {to: Routes.Admin.Reporting, name: "Reporting", roles: true},
 ];
 
-
 type TProps = {
     isOpened: boolean;
     onClose: () => void;
 };
+
 export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const classes = useStyles();
     const theme = useTheme();

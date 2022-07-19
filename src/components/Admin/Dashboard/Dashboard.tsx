@@ -114,7 +114,7 @@ const DashboardTitle = () => {
 
     return <TitleContainer
         pad
-        actions={actions}
+        // actions={actions}
         title={selectedSC.name}
         // subtitle={concatAddress(selectedSC.address)}
     />;

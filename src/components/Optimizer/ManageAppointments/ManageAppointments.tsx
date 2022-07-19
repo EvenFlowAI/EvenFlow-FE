@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, Switch} from "@material-ui/core";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {RootState} from "../../../store/rootReducer";
 import {updateAdvisor} from "../../../store/reducers/serviceCenters/actions";
+import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {optimizerRoot} from "../utils";
+import {SquarePaper} from "../../UI/Paper";
 
 const useStyles = makeStyles(() => ({
     switchWrapper: {
@@ -48,7 +49,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const ManageAppointments: React.FC<DialogProps> = (props) => {
+const ManageAppointments = () => {
     const [isManageOn, setManageOn] = useState<boolean>(false);
     const { remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const {selectedSC} = useSCs();
@@ -68,7 +69,6 @@ const ManageAppointments: React.FC<DialogProps> = (props) => {
     const onCancel = () => {
         if (selectedSC) {
             setManageOn(Boolean(selectedSC.isUpdateAdvisorInAppointments));
-            props.onClose();
         }
     }
 
@@ -83,14 +83,13 @@ const ManageAppointments: React.FC<DialogProps> = (props) => {
     const onSave = () => {
         if (selectedSC) {
             dispatch(updateAdvisor(selectedSC.id, isManageOn, onError, onSuccess))
-            props.onClose();
         }
     }
 
     return (
-        <BaseModal {...props} width={600} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Manage Ex EvenFlow Appointments</DialogTitle>
-            <DialogContent>
+        <div style={{width: '100%'}}>
+            <TitleContainer title="Manage Ex EvenFlow Appointments" pad parent={optimizerRoot}/>
+            <SquarePaper variant="outlined" style={{padding: 20}}>
                 <p className={classes.text}>
                     By switching off, the EvenFlow app will no longer flag appointments as "Main Drive" or "Express Service".
                     This feature is only for appointments made outside of EvenFlow through some other booking channel.
@@ -106,9 +105,7 @@ const ManageAppointments: React.FC<DialogProps> = (props) => {
                         color="primary"
                     />
                 </div>
-            </DialogContent>
-            <Divider style={{margin: 0}}/>
-            <DialogActions>
+                <Divider style={{margin: 0}}/>
                 <div className={classes.actionsWrapper}>
                     <div className={classes.buttonsWrapper}>
                         <Button
@@ -125,8 +122,8 @@ const ManageAppointments: React.FC<DialogProps> = (props) => {
                         </Button>
                     </div>
                 </div>
-            </DialogActions>
-        </BaseModal>
+            </SquarePaper>
+        </div>
     );
 };
 

@@ -45,7 +45,8 @@ enum OptimizerRoutes {
     OptimizationWindows = "/optimizer/optimization-windows",
     PricingSettings = "/optimizer/pricing-settings",
     MobileService = "/optimizer/mobile-service",
-    ServiceValue = "/optimizer/service-value",
+    Pods = "/optimizer/pods",
+    ManageEXEvenFlowAppointments = "/optimizer/manage-ex-evenflow-appointments",
 }
 
 enum BookingFlowConfigRoutes {
