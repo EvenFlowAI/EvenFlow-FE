@@ -188,15 +188,16 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
             setDistanceData(prev => {
                 const itemToUpdate = prev.find(el => el.id === editedItem.id);
                 const nextItem = prev.find(el => el.id === editedItem.id + 1);
-              //  const prevItem = prev.find(el => el.id === editedItem.id - 1);
                 let nextUpdated: IDistancePriceSettings|null = null;
                 if (itemToUpdate) {
                     let newValue = Number(value);
-                    if (nextItem && (nextItem.rangeMin < Number(value)) && fieldName === 'rangeMax') {
+                    if (nextItem) {
+                        if (nextItem.rangeMax < Number(value)) {
+                            showError('The Max Distance Range Value can NOT be greater than the Min Value of the next Distance Range');
+                            return prev;
+                        }
                         nextUpdated = nextItem;
                         nextUpdated.rangeMin = newValue;
-                        // newValue = nextItem.rangeMin;
-                        // showError('The Max Distance Range Value can NOT be greater than the Min Value of the next Distance Range')
                     }
                     const updated = {...itemToUpdate, [fieldName]: newValue};
                     const filtered = nextUpdated
