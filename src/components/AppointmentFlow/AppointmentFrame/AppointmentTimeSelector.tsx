@@ -105,6 +105,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
                             a => a.date.isSame(timeSlot.date, 'minute')
                         );
                         return <TimeSlotCard
+                            date={date}
                             slot={appointment}
                             onSelect={handleSelect}
                             selected={Boolean(
