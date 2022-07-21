@@ -32,7 +32,14 @@ const frameStyles = {
 
 // todo add new parent links while go live with new dealerships
 
-const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/"];
+const prodParentLinks = [
+    'https://apps.evenflow.ai/',
+    'https://www.riverviewford.com/',
+    "https://www.bmwofschererville.com/",
+    "https://bmw-schererville.evenflow.services",
+    "https://www.fremontchryslerdodgejeepcasper.com",
+    "https://www.fremontchryslerdodgejeeprocksprings.com"
+];
 
 export const options: GaOptions = {
     siteSpeedSampleRate: 100,
