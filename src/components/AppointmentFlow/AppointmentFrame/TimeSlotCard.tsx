@@ -48,8 +48,6 @@ export const TimeSlotCard: React.FC<TProps> =
             } else {
                 setTimePassed(true)
             }
-        } else {
-            setTimePassed(false);
         }
     }, [slot, date])
 
