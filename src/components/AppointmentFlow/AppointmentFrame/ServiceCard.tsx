@@ -47,8 +47,6 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         }
     }, [card])
 
-    // todo card.description instead of card.serviceRequests
-
     return <CardWrapper onClick={onSelect} activeNow={active} selected={selected}>
         {card.description ? <HtmlTooltip
             placement="right-end"
