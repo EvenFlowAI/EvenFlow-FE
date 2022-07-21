@@ -3,6 +3,7 @@ import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/type
 import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
+import {TSlot} from "./AppointmentTimeSelector";
 
 const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, offPeak?: boolean}>(({theme, available, offPeak, selected}) => ({
     display: "flex",
@@ -30,7 +31,7 @@ const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, o
 }))
 
 type TProps = {
-    timeSlot: string;
+    timeSlot: TSlot;
     slot?: IRemappedAppointmentSlot;
     selected: boolean;
     onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
@@ -41,15 +42,15 @@ export const TimeSlotCard: React.FC<TProps> =
     const [timePassed, setTimePassed] = useState<boolean>(false);
 
     useEffect(() => {
-        if (date && moment(date).isSame(moment(), 'date') && slot && moment(slot.date).isSame(moment(), 'date')) {
-            const differenceInMSeconds = moment(slot.time, 'HH:mm').diff(moment());
+        if (date && moment(date).isSame(moment(), 'date') && moment(slot?.date).isSame(moment(), 'date')) {
+            const differenceInMSeconds = moment(slot?.date).diff(moment());
             if (differenceInMSeconds > 0) {
                 setTimeout(() => setTimePassed(true), differenceInMSeconds);
             } else {
                 setTimePassed(true)
             }
         }
-    }, [slot, date])
+    }, [timeSlot, date])
 
     const getContent = (timePassed: boolean): string => {
         if (!slot || timePassed) {
@@ -64,7 +65,7 @@ export const TimeSlotCard: React.FC<TProps> =
     const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
     return (
         <Wrapper available={Boolean(slot) && !timePassed} selected={selected} offPeak={isOffPeak}>
-            <div>{timeSlot}</div>
+            <div>{timeSlot.label}</div>
             <div onClick={() => timePassed ? {} : onSelect(slot ?? null)} className="availability">{getContent(timePassed)}</div>
         </Wrapper>
     );

@@ -156,16 +156,23 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
         setDistanceData(mockData.sort((a, b) => a.id - b.id));
     }, [data]);
 
-    const handleMenuOpen = (item: IDistancePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    const checkIsValid = () => {
         if (editedItem) {
             const updated = distanceData.find(el => el.id === editedItem.id);
             if (updated && (updated.rangeMin > updated.rangeMax)) {
-                return showError('The Max Value of the Distance Range can not be LESS than its Min Value');
+                showError('The Max Value of the Distance Range can not be LESS than its Min Value');
+                return false;
             }
         }
-        setIsEdit(false);
-        setEditedItem(item);
-        setAnchorEl(e.currentTarget);
+        return true;
+    }
+
+    const handleMenuOpen = (item: IDistancePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (checkIsValid()) {
+            setIsEdit(false);
+            setEditedItem(item);
+            setAnchorEl(e.currentTarget);
+        }
     }
     const editZone = () => {
         setIsEdit(true);
@@ -198,7 +205,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                 if (itemToUpdate) {
                     let newValue = Number(value);
                     if (nextItem && fieldName === 'rangeMax') {
-                        if (nextItem.rangeMax < Number(value)) {
+                        if (newValue > nextItem.rangeMax) {
                             showError('The Max Value of the Distance Range can not be GREATER than the Max Value of the next Distance Range');
                             return prev;
                         }
@@ -219,14 +226,18 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
 
     const onCancel = () => {
         // todo data
-        setDistanceData(mockData)
-        setIsEdit(false)
+        if (checkIsValid()) {
+            setDistanceData(mockData)
+            setIsEdit(false)
+        }
     }
 
     const onSave = () => {
-        setIsEdit(false)
-        if (editedItem) {
-            onItemSave(editedItem);
+        if (checkIsValid()) {
+            setIsEdit(false)
+            if (editedItem) {
+                onItemSave(editedItem);
+            }
         }
     }
 

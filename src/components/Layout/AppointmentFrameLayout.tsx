@@ -99,7 +99,14 @@ const SCREENS = {
 
 // todo add new parent links while go live with new dealerships
 
-export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/", "https://bmw-schererville.evenflow.services"];
+export const prodParentLinks = [
+    'https://apps.evenflow.ai/',
+    'https://www.riverviewford.com/',
+    "https://www.bmwofschererville.com/",
+    "https://bmw-schererville.evenflow.services",
+    "https://www.fremontchryslerdodgejeepcasper.com",
+    "https://www.fremontchryslerdodgejeeprocksprings.com"
+];
 
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
