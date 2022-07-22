@@ -42,15 +42,17 @@ export const TimeSlotCard: React.FC<TProps> =
     const [timePassed, setTimePassed] = useState<boolean>(false);
 
     useEffect(() => {
-        if (date && moment(date).isSame(moment(), 'date') && moment(slot?.date).isSame(moment(), 'date')) {
-            const differenceInMSeconds = moment(slot?.date).diff(moment());
+        if (slot?.date && moment(slot?.date).isSame(moment(), 'day')) {
+            const differenceInMSeconds = moment(slot?.date.format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
             if (differenceInMSeconds > 0) {
                 setTimeout(() => setTimePassed(true), differenceInMSeconds);
             } else {
-                setTimePassed(true)
+                setTimePassed(true);
             }
+        } else {
+            setTimePassed(false);
         }
-    }, [timeSlot, date])
+    }, [slot, date])
 
     const getContent = (timePassed: boolean): string => {
         if (!slot || timePassed) {
