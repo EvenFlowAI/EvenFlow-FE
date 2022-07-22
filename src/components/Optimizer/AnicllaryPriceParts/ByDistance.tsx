@@ -226,10 +226,8 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
 
     const onCancel = () => {
         // todo data
-        if (checkIsValid()) {
-            setDistanceData(mockData)
-            setIsEdit(false)
-        }
+        setDistanceData(mockData)
+        setIsEdit(false)
     }
 
     const onSave = () => {
