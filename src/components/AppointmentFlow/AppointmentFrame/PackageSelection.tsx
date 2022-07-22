@@ -340,7 +340,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                         data={packages}
                         isBmWService={isBmWService}
                         isSanfordInfinity={isSanfordInfinity}
-                        />
+                    />
                     : <Wrapper>
                         <PackageTitles packages={packages} handleClick={handleClick} setClasses={setClasses}/>
 
@@ -385,9 +385,11 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             setClasses={setClasses}
                         />
                         <Info>
-                            {isBmWService
-                                ? 'Note: Please ask your service advisor regarding factory covered maintenance services.'
-                                : 'Note: The maintenance packages may not be available for all vehicle types. Please speak with your Service Advisor to understand where restrictions apply.'
+                            {scProfile?.disclaimer
+                                ? scProfile?.disclaimer
+                                :  isBmWService
+                                    ? 'Note: Please ask your service advisor regarding factory covered maintenance services.'
+                                    : 'Note: The maintenance packages may not be available for all vehicle types. Please speak with your Service Advisor to understand where restrictions apply.'
                             }
                         </Info>
                     </Wrapper>
