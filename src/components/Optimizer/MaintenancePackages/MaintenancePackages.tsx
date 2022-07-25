@@ -9,7 +9,7 @@ import {getPackageById, loadPackages} from "../../../store/reducers/packages/act
 import AddPackage from "../../Modals/AddPackage/AddPackage";
 import {useModal} from "../../../utils/hooks";
 import LaborRate from "./LaborRate/LaborRate";
-import {TextField} from "../../UI/TextField";
+import Disclaimer from "./Disclaimer/Disclaimer";
 
 type TExpandedState = {
     id?: number;
@@ -37,7 +37,6 @@ export const MaintenancePackages = () => {
     const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [disclaimer, setDisclaimer] = useState<string>('');
     const [isDisclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -47,7 +46,6 @@ export const MaintenancePackages = () => {
     useEffect(() => {
         if (selectedSc) {
             dispatch(loadPackages(selectedSc.id))
-            if (selectedSc.disclaimer) setDisclaimer(selectedSc.disclaimer);
         }
         return () => {
             dispatch(getPackageById(null));
@@ -78,19 +76,6 @@ export const MaintenancePackages = () => {
 
     const handleAddDisclaimer = () => setDisclaimerOpen(!isDisclaimerOpen);
 
-    const onDisclaimerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDisclaimer(e.target.value)
-    }
-
-    const handleCancel = () => {
-        setDisclaimer(selectedSc?.disclaimer ?? '');
-        setDisclaimerOpen(false);
-    }
-
-    const handleSave = () => {
-        // todo request
-    }
-
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
         <div className={classes.topLineWrapper}>
@@ -115,36 +100,7 @@ export const MaintenancePackages = () => {
             </div>
         </div>
         {isDisclaimerOpen
-            ? <div>
-                <TextField
-                    fullWidth
-                    multiline
-                    rows={2}
-                    value={disclaimer}
-                    style={{marginBottom: 20}}
-                    label="Maintenance Package Page Disclaimer (for Booking Flow)"
-                    placeholder="Enter Disclaimer Text"
-                    onChange={onDisclaimerChange}
-                />
-                <div style={{display: "flex", alignItems: "center", justifyContent: "flex-end"}}>
-                    <Button
-                        style={{marginLeft: 16}}
-                        color="primary"
-                        variant="outlined"
-                        onClick={handleCancel}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        style={{marginLeft: 16}}
-                        color="primary"
-                        variant="contained"
-                        onClick={handleSave}
-                    >
-                        Save
-                    </Button>
-                </div>
-            </div>
+            ? <Disclaimer setDisclaimerOpen={setDisclaimerOpen}/>
             : null}
         <div className={classes.titleWrapper}>
             <ContentTitle title="Maintenance Package Pricing"/>

@@ -385,8 +385,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             setClasses={setClasses}
                         />
                         <Info>
-                            {scProfile?.disclaimer
-                                ? scProfile?.disclaimer
+                            {scProfile?.maintenancePackageDisclaimer
+                                ? scProfile?.maintenancePackageDisclaimer
                                 :  isBmWService
                                     ? 'Note: Please ask your service advisor regarding factory covered maintenance services.'
                                     : 'Note: The maintenance packages may not be available for all vehicle types. Please speak with your Service Advisor to understand where restrictions apply.'

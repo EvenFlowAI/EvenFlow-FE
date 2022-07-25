@@ -24,7 +24,7 @@ export interface IServiceCenterProfile {
     serviceCenterFlag: number;
     isRoundPrice: boolean;
     isAuthRequired: boolean;
-    disclaimer?: string;
+    maintenancePackageDisclaimer?: string;
 }
 export interface ISR {
     id: number;
