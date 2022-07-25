@@ -334,3 +334,13 @@ export const updateLaborRate = (id: number, data: ILaborRate, onError: (err: str
             onError(err)
         })
 }
+
+export const updatePackageDisclaimer = (id: number, maintenancePackageDisclaimer: string): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.UpdatePackageDisclaimer, {urlParams: {id}, data: {maintenancePackageDisclaimer}})
+        .then(result => {
+            if (result) dispatch(loadAllSCs())
+        })
+        .catch((error) => {
+            console.log('update package disclaimer error', error)
+        })
+}

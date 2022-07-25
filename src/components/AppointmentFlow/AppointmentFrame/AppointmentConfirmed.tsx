@@ -142,9 +142,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             },
             {
                 label: "Selected Price",
-                content: `$${scProfile?.isRoundPrice 
-                    ? appointment?.price?.value 
-                    : appointment?.price?.value.toFixed(2)}`
+                content: appointment?.price?.value
+                    ? scProfile?.isRoundPrice
+                        ? `$${appointment?.price?.value}`
+                        : `$${appointment?.price?.value.toFixed(2)}`
+                    : 'Will be quoted at the dealership'
+
             },
             {
                 label: "Name",
