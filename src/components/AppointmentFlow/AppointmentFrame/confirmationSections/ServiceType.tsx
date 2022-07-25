@@ -27,7 +27,7 @@ const ServiceType = () => {
     return isMobileServiceOn || isPickUpDropOffServiceOn
         ? <div>
             <TitleWrapper>
-                <ConfirmationTitle>Type Of Service</ConfirmationTitle>
+                <ConfirmationTitle>Location Of Service</ConfirmationTitle>
             </TitleWrapper>
             {getServiceName()}
         </div>

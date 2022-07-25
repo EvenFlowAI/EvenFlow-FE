@@ -3,6 +3,7 @@ import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/type
 import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
+import {TSlot} from "./AppointmentTimeSelector";
 
 const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, offPeak?: boolean}>(({theme, available, offPeak, selected}) => ({
     display: "flex",
@@ -30,21 +31,28 @@ const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, o
 }))
 
 type TProps = {
-    timeSlot: string;
+    timeSlot: TSlot;
     slot?: IRemappedAppointmentSlot;
     selected: boolean;
-    onSelect: TArgCallback<IRemappedAppointmentSlot|null>
+    onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
+    date: moment.Moment|null;
 }
 export const TimeSlotCard: React.FC<TProps> =
-    ({timeSlot, slot, onSelect, selected}) => {
+    ({timeSlot, slot, onSelect, selected, date}) => {
     const [timePassed, setTimePassed] = useState<boolean>(false);
 
     useEffect(() => {
-        if (slot && moment(slot.date).isSame(moment(), 'date')) {
-            const differenceInMSeconds = moment(slot.time, 'HH:mm').diff(moment());
-            differenceInMSeconds > 0 && setTimeout(() => setTimePassed(true), differenceInMSeconds);
+        if (slot?.date && moment(slot?.date).isSame(moment(), 'day')) {
+            const differenceInMSeconds = moment(slot?.date.format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
+            if (differenceInMSeconds > 0) {
+                setTimeout(() => setTimePassed(true), differenceInMSeconds);
+            } else {
+                setTimePassed(true);
+            }
+        } else {
+            setTimePassed(false);
         }
-    }, [slot])
+    }, [slot, date])
 
     const getContent = (timePassed: boolean): string => {
         if (!slot || timePassed) {
@@ -59,7 +67,7 @@ export const TimeSlotCard: React.FC<TProps> =
     const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
     return (
         <Wrapper available={Boolean(slot) && !timePassed} selected={selected} offPeak={isOffPeak}>
-            <div>{timeSlot}</div>
+            <div>{timeSlot.label}</div>
             <div onClick={() => timePassed ? {} : onSelect(slot ?? null)} className="availability">{getContent(timePassed)}</div>
         </Wrapper>
     );

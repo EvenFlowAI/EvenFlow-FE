@@ -139,10 +139,10 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     }, [scProfile])
 
     useEffect(() => {
-        if (subService?.type === EServiceCategoryType.IndividualServices && service?.type === EServiceCategoryType.LinkToPage2) {
-            setOpsCodesList(() => subService.serviceRequests);
-        } else if (service?.type === EServiceCategoryType.Diagnose) {
+        if (service?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose) {
             setOpsCodesList(() => service.serviceRequests);
+        } else if (subService?.type === EServiceCategoryType.IndividualServices || subService?.type === EServiceCategoryType.Diagnose) {
+            setOpsCodesList(() => subService.serviceRequests);
         }
     }, [subService, service])
 
@@ -222,8 +222,16 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
 
     const handleBack = () => {
         let codes: number[] = [];
-        if (subService?.type === EServiceCategoryType.IndividualServices && service?.type === EServiceCategoryType.LinkToPage2) {
+        if (subService?.type === EServiceCategoryType.IndividualServices) {
             codes = getIndCodes();
+            dispatch(selectSubService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
+        } else if (service?.type === EServiceCategoryType.IndividualServices) {
+            codes = getIndCodes();
+            dispatch(selectService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
+        } else if (subService?.type === EServiceCategoryType.Diagnose) {
+            codes = getDiagnoseCodes();
             dispatch(selectSubService(null));
             dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
         } else if (service?.type === EServiceCategoryType.Diagnose) {

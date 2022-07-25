@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-type TSlot = {
+export type TSlot = {
     date: moment.Moment;
     label: string;
 }
@@ -105,12 +105,13 @@ export const AppointmentTimeSelector: React.FC<TProps> =
                             a => a.date.isSame(timeSlot.date, 'minute')
                         );
                         return <TimeSlotCard
+                            date={date}
                             slot={appointment}
                             onSelect={handleSelect}
                             selected={Boolean(
                                 selectedAppointment && appointment?.id === selectedAppointment.id
                             )}
-                            timeSlot={timeSlot.label}
+                            timeSlot={timeSlot}
                             key={timeSlot.label}
                         />
                     })}
