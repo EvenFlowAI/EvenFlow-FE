@@ -2,15 +2,15 @@ import React, {Dispatch, useEffect, useState} from 'react';
 import {TextField} from "../../../UI/TextField";
 import {Button} from "@material-ui/core";
 import {updatePackageDisclaimer} from "../../../../store/reducers/serviceCenters/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
+import {useDispatch} from "react-redux";
+import {useSCs} from "../../../../utils/hooks";
 
 type TDisclaimerProps = {
     setDisclaimerOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Disclaimer: React.FC<TDisclaimerProps> = ({setDisclaimerOpen}) => {
-    const selectedSc = useSelector((state: RootState) => state.serviceCenters.selectedSC);
+    const {selectedSC} = useSCs();
     const [disclaimer, setDisclaimer] = useState<string>('');
     const dispatch = useDispatch();
 
@@ -19,16 +19,16 @@ const Disclaimer: React.FC<TDisclaimerProps> = ({setDisclaimerOpen}) => {
     }
 
     useEffect(() => {
-        if (selectedSc?.disclaimer) setDisclaimer(selectedSc.disclaimer);
-    }, [selectedSc])
+        if (selectedSC?.maintenancePackageDisclaimer) setDisclaimer(selectedSC.maintenancePackageDisclaimer);
+    }, [selectedSC])
 
     const handleCancel = () => {
-        setDisclaimer(selectedSc?.disclaimer ?? '');
+        setDisclaimer(selectedSC?.maintenancePackageDisclaimer ?? '');
         setDisclaimerOpen(false);
     }
 
     const handleSave = () => {
-        selectedSc && disclaimer?.length && dispatch(updatePackageDisclaimer(selectedSc.id, disclaimer))
+        selectedSC && disclaimer?.length && dispatch(updatePackageDisclaimer(selectedSC.id, disclaimer))
     }
 
     return (
