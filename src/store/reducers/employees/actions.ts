@@ -156,3 +156,28 @@ export const loadDMSAdvisors = (serviceCenterId: number): AppThunk => dispatch =
             console.log('get DMS Advisors', err)
         })
 }
+
+export const loadByFilters: ActionCreator<AppThunk> = (selectedRole: string, serviceCenterId: number|null) =>
+    async (dispatch, getState) => {
+
+        dispatch(loading(true));
+        const state = getState();
+        try {
+            const {data: {result: employees, paging}} = await Api.call<PaginatedAPIResponse<IEmployee>>(
+                Api.endpoints.Users.GetAll,
+                {data: {
+                        ...state.employees.pageData,
+                        ...state.employees.order,
+                        searchTerm: state.employees.searchTerm,
+                        roles: selectedRole ? [selectedRole] : [],
+                        serviceCenterId,
+                    }}
+            );
+            dispatch(loading(false));
+            dispatch(changePaging(paging));
+            dispatch(getAll(employees));
+        } catch (e) {
+            dispatch(loading(false));
+            throw e;
+        }
+    };

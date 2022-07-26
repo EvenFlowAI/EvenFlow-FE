@@ -15,6 +15,8 @@ import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 import {Roles, Titles} from "../../../config/constants";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {IOrder} from "../../../types/types";
+import {EmployeesActions} from "./EmployeesActions";
+import EmployeesFilters from "./EmployeesFilters";
 
 const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
@@ -41,6 +43,7 @@ export const Employees = () => {
     ]);
     const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
+    const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const {askConfirm} = useConfirm();
@@ -109,7 +112,8 @@ export const Employees = () => {
     )
 
     return <>
-        <TitleContainer title={Titles.Employees} pad actions />
+        <TitleContainer title={Titles.Employees} pad actions={<EmployeesActions setFiltersOpen={setFiltersOpen}/>} />
+        {isFiltersOpen && <EmployeesFilters/>}
         <Table<IEmployee>
             data={data}
             order={order.orderBy}
