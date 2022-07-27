@@ -4,16 +4,13 @@ import {useHistory} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {
-    Alarm, Build, ChevronRight,
-    DateRange, FormatListNumbered,
+    Alarm, Build, ChevronRight, DateRange,
     FreeBreakfastOutlined,
     LockOutlined,
-    PeopleAltOutlined,
     PlaceOutlined
 } from "@material-ui/icons";
 import {EditAddress} from "../../Modals/EditAddress/EditAddress";
 import {HourOfOperations} from "../../Modals/HourOfOperations/HourOfOperations";
-import {WeeklySchedule} from "../../Modals/WeeklySchedule/WeeklySchedule";
 import {Holidays} from "../../Modals/Holydays/Holidays";
 import {Break} from "../../Modals/Breaks/Break";
 import {useCurrentUser, useModal, useSCs} from "../../../utils/hooks";
@@ -22,19 +19,14 @@ import {Technicians} from "../../Modals/Technicians/Technicians";
 import {Bays} from "../../Modals/Bays/Bays";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
-import {DashPodsModal} from "../../Modals/PODModal/DashPodsModal";
-import {TransportationOptions} from "../../Modals/TransportationOptions/TransportationOptions";
 import {SquarePaper} from "../../UI/Paper";
 import {RootState} from "../../../store/rootReducer";
-import {ReactComponent as ServiceCodes} from "../../../assets/img/serviceOpsCodes.svg";
-import {ReactComponent as Transportation} from "../../../assets/img/transportation_options.svg";
-import {ReactComponent as Vehicle} from "../../../assets/img/vehicleDetails.svg";
 import {ReactComponent as Calendar} from "../../../assets/img/date_1_grey.svg";
-import {ReactComponent as OffFlag} from "../../../assets/img/Off_Flag_Appointments.svg";
 import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.svg";
 import Reminders from "../../Modals/Reminders/Reminders";
-import ManageAppointments from "../../Modals/ManageAppointments/ManageAppointments";
 import LaborRate from "../../Modals/LaborRate/LaborRate";
+import {EmployeeSchedule} from "../../Modals/EmployeeSchedule/EmployeeSchedule";
+import {WeeklySchedule} from "../../Modals/WeeklySchedule/WeeklySchedule";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -122,7 +114,7 @@ const DashboardTitle = () => {
 
     return <TitleContainer
         pad
-        actions={actions}
+        // actions={actions}
         title={selectedSC.name}
         // subtitle={concatAddress(selectedSC.address)}
     />;
@@ -153,7 +145,6 @@ const overallData: TDataMap[] = [
 export const AdminDashboard: React.FC = () => {
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
-    const history = useHistory();
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
     }, [currentUser]);
@@ -173,11 +164,6 @@ export const AdminDashboard: React.FC = () => {
         isOpen: isHOOOpen
     } = useModal();
     const {
-        onClose: onCloseWS,
-        onOpen: onOpenWS,
-        isOpen: isWSOpen
-    } = useModal();
-    const {
         onClose: onCloseB,
         onOpen: onOpenB,
         isOpen: isBOpen
@@ -188,24 +174,9 @@ export const AdminDashboard: React.FC = () => {
         isOpen: isHOpen
     } = useModal();
     const {
-        onClose: onCloseTech,
-        onOpen: onOpenTech,
-        isOpen: isTechOpen
-    } = useModal();
-    const {
         onClose: onCloseBays,
         onOpen: onOpenBays,
         isOpen: isBaysOpen
-    } = useModal();
-    const {
-        onClose: onClosePods,
-        onOpen: onOpenPods,
-        isOpen: isOpenPods,
-    } = useModal();
-    const {
-        onClose: onCloseTransOptions,
-        onOpen: onOpenTransOptions,
-        isOpen: isOpenTransOptions,
     } = useModal();
     const {
         onClose: onCloseReminders,
@@ -213,14 +184,19 @@ export const AdminDashboard: React.FC = () => {
         isOpen: isOpenReminders,
     } = useModal();
     const {
-        onClose: onCloseManageAppointments,
-        onOpen: onOpenManageAppointments,
-        isOpen: isOpenManageAppointments,
-    } = useModal();
-    const {
         onClose: onCloseLaborRate,
         onOpen: onOpenLaborRate,
         isOpen: isOpenLaborRate,
+    } = useModal();
+    const {
+        onClose: onCloseEmployeeSchedule,
+        onOpen: onOpenEmployeeSchedule,
+        isOpen: isOpenEmployeeSchedule,
+    } = useModal();
+    const {
+        onClose: onCloseWS,
+        onOpen: onOpenWS,
+        isOpen: isWSOpen
     } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
@@ -230,30 +206,16 @@ export const AdminDashboard: React.FC = () => {
         pods: analytics.countOfPods
     }));
 
-    const onOpenVehicle = (): void => {
-        history.push(Routes.Admin.VehicleDetails);
-    }
-
-    const onOpenServicesOps = (): void => {
-        history.push(Routes.Admin.ServiceOpsCodesMapping);
-    }
-
     const items: TItem[] = [
         {label: "Address", icon: <PlaceOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenAddress},
         {label: "Hours of operation", icon: <Alarm htmlColor='rgb(94, 95, 102)'/>, action: onOpenHOO},
-        {label: "Weekly schedule", icon: <DateRange htmlColor='rgb(94, 95, 102)'/>, action: onOpenWS},
-        {label: "Bays", icon: <Build htmlColor='rgb(94, 95, 102)'/>, action: onOpenBays},
-        {label: "Breaks", icon: <FreeBreakfastOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenB},
+        {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
+        {label: "Employee Schedule", icon: <Calendar />, action: onOpenEmployeeSchedule},
         {label: "Holidays", icon: <LockOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenH},
-        {label: "Technicians", icon: <PeopleAltOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenTech},
-        {label: "Pods", icon: <FormatListNumbered htmlColor='rgb(94, 95, 102)'/>, action: onOpenPods},
-        {label: "Transportation Options", icon: <Transportation />, action: onOpenTransOptions},
-        {label: "Service Ops Codes Mapping", icon: <ServiceCodes />, action: onOpenServicesOps},
-        {label: "Vehicle Detail Options", icon: <Vehicle />, action: onOpenVehicle},
-        {label: "Appointment Reminders", icon: <Calendar />, action: onOpenReminders},
-        {label: "Manage Ex EvenFlow Appointments", icon: <OffFlag/>, action: onOpenManageAppointments},
+        {label: "Breaks", icon: <FreeBreakfastOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenB},
+        {label: "Bays", icon: <Build htmlColor='rgb(94, 95, 102)'/>, action: onOpenBays},
         {label: "Labor Rate", icon: <LaborRateIcon/>, action: onOpenLaborRate},
-        // {label: "Customer Verification", icon: <Customer/>, action: onOpenVerification},
+        {label: "Appointment Reminders", icon: <Calendar />, action: onOpenReminders},
     ];
 
     const classes = useStyles();
@@ -291,16 +253,12 @@ export const AdminDashboard: React.FC = () => {
         </Grid>
         <EditAddress open={isAddressOpen} viewMode={isCCRView} onClose={onCloseAddress} />
         <HourOfOperations viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
-        <WeeklySchedule viewMode={isCCRView} open={isWSOpen} onClose={onCloseWS} />
-        <Break viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
+        <EmployeeSchedule open={isOpenEmployeeSchedule} onClose={onCloseEmployeeSchedule}/>
         <Holidays viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
-        <Technicians open={isTechOpen} onClose={onCloseTech} />
+        <Break viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
-        <DashPodsModal viewMode={isCCRView} open={isOpenPods} onClose={onClosePods} />
-        <TransportationOptions open={isOpenTransOptions} onClose={onCloseTransOptions}/>
         <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
-        <ManageAppointments open={isOpenManageAppointments} onClose={onCloseManageAppointments}/>
         <LaborRate open={isOpenLaborRate} onClose={onCloseLaborRate}/>
-        {/*<CustomerVerification open={isOpenVerification} onClose={onCloseVerification}/>*/}
+        <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
     </div>
 }

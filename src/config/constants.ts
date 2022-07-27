@@ -78,7 +78,11 @@ export enum Titles {
     DealershipGroups = "Dealership Groups",
     Employees = "Employees",
     ServiceCenters = "Service Centers",
-    Appointments = "Appointments"
+    Appointments = "Appointments",
+    Pricing = "Pricing",
+    OperationalSetUp = "Operational Set Up",
+    CapacityOptimization = "Capacity Optimization",
+    Reporting = "Reporting",
 }
 
 export const timeSpanString = "HH:mm:ss";

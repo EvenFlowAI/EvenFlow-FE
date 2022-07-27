@@ -12,10 +12,11 @@ import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDe
 import {Roles} from "../../config/constants";
 import {Profile} from "./Profile/Profile";
 import {ServiceRequests} from "./ServiceRequets/ServiceRequets";
-import {VehicleDetails} from "./VehicleDetails/VehicleDetails";
 import {Appointments} from "../Appointments/Appointments";
-import ServiceOpsCodesMapping from "./ServiceOpsCodesMapping/ServiceOpsCodesMapping";
-import BookingFlowConfig from "./BookingFlowConfig/BookingFlowConfig";
+import PricingPage from "./Pricing/PricingPage";
+import Reporting from "./Reporting/Reporting";
+import {OptimizerPage} from "../Optimizer/OptimizerPage";
+import {BookingFlowPage} from "./BookingFlow/BookingFlow";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
@@ -43,13 +44,16 @@ export const AdminPage = () => {
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null}
             {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.VehicleDetails} exact component={VehicleDetails}/>
+                ? <PrivateRoute path={Routes.Admin.CapacityOptimization} component={OptimizerPage}/>
                 : null}
             {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.ServiceOpsCodesMapping} exact component={ServiceOpsCodesMapping}/>
+                ? <PrivateRoute path={Routes.Pricing.Base} component={PricingPage}/>
                 : null}
             {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.BookingFlowConfig} exact component={BookingFlowConfig}/>
+                ? <PrivateRoute path={Routes.BookingFlow.Base} component={BookingFlowPage}/>
+                : null}
+            {!currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.Reporting} exact component={Reporting}/>
                 : null}
             {currentUser.role === Roles.Owner
                 ? <PrivateRoute path={Routes.Admin.Profile} component={Profile} />

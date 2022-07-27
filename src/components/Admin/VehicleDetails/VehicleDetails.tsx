@@ -5,6 +5,7 @@ import {TabList} from "../../UI/Tabs";
 import {Tab} from "@material-ui/core";
 import MakesModelsTable from "./parts/MakesModelsTable/MakesModelsTable";
 import MileageTable from "./parts/MileageTable/MileageTable";
+import {bookingFlowRoot} from "../../Optimizer/utils";
 
 export const VehicleDetails = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -14,7 +15,7 @@ export const VehicleDetails = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Vehicle Options" pad />
+        <TitleContainer title="Vehicle Detail Options" pad parent={bookingFlowRoot}/>
         <TabList
             onChange={handleTabChange}
             variant="scrollable"

@@ -5,6 +5,7 @@ import {TabList} from "../UI/Tabs";
 import {Tab} from "@material-ui/core";
 import {ActiveOffers} from "./Offers/ActiveOffers";
 import {ArchiveOffers} from "./Offers/ArchiveOffers";
+import {pricingRoot} from "../Optimizer/utils";
 
 export const OfferManagement = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -13,7 +14,7 @@ export const OfferManagement = () => {
     }
     return (
         <div style={{width: "100%"}}>
-            <TitleContainer title={"Offer Management"} />
+            <TitleContainer title={"Offer Management"} parent={pricingRoot} />
             <TabContext value={selectedTab}>
                 <TabList
                     variant="scrollable"
