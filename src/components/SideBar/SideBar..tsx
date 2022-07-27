@@ -1,19 +1,18 @@
 import React, {useMemo} from "react";
-import {Button, Drawer, IconButton, lighten, List, ListItem, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Drawer, IconButton, List, useMediaQuery, useTheme} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import logo from '../../assets/img/logoSidebar.svg';
-import {NavLink} from "react-router-dom";
-import {LinkType} from "../../types/types";
+import {LinkType, LinkTypeWithSub} from "../../types/types";
 import {sideBarWidth} from "../../theme/theme";
 import {Routes} from "../../config/routes";
 import {useCurrentUser, useModal, useSCs} from "../../utils/hooks";
 import {useLocation, useHistory, matchPath} from "react-router-dom";
-import clsx from "clsx";
 import {ArrowForwardIos, Close} from "@material-ui/icons";
 import {BookingModal} from "../Modals/BookingModal/BookingModal";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {Loading} from "../UI/Loading";
+import Link from "./Link";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -55,26 +54,6 @@ const useStyles = makeStyles(theme => ({
             width: "100%"
         }
     },
-    listItem: {
-        color: "#FFFFFF",
-        textTransform: "uppercase",
-        fontSize: 14,
-        padding: "16px 0",
-        lineHeight: "17px",
-        fontWeight: "bold",
-        transition: theme.transitions.create(['color']),
-        "&.active": {
-            color: "#7898FF"
-        },
-        "&:hover": {
-            color: lighten("#7898FF", .5)
-        }
-    },
-    subMenu: {
-        color: "#929292",
-        padding: "10px 0 10px 15px",
-        textTransform: "none"
-    }
 }));
 
 const SULinks: LinkType[] = [
@@ -83,60 +62,36 @@ const SULinks: LinkType[] = [
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Super Admin"]},
     {to: Routes.Admin.ServiceRequests, name: "Service Requests", roles: ["Super Admin"]}
 ];
-const AdminLinks: LinkType[] = [
+const AdminLinksWithSub: LinkTypeWithSub[] = [
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner"]},
     {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager"]},
     {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.Base, name: "Capacity Optimization", exact: true, roles: true},
-    {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true, roles: ["Owner", "Manager"]},
-    // {to: Routes.Optimizer.EmployeeSchedule, name: "Employee Schedule", sub: true, roles: ["Owner", "Manager", "Advisor"]},
-    {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.ManageEXEvenFlowAppointments, name: "Manage Ex EvenFlow Appointments", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.ServicePricingSettings, name: "Service Price Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.MobileService, name: "Mobile Service", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.ServiceValet, name: "Service Valet", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.OfferManagement, name: "Offer Management", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.Base, name: "Booking Flow", roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.BookingFlowConfigDetails, name: "Booking Flow Config", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.TransportationOptions, name: "Transportation Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.ServiceOpsCodesMapping, name: "Service Ops Code Mapping", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.VehicleDetails, name: "Vehicle Detail Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.Base, name: "Capacity Optimization", exact: true, roles: true, subLinks: [
+            {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Optimizer.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Optimizer.ManageEXEvenFlowAppointments, name: "Manage Ex EvenFlow Appointments", sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
+        ]},
+    {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"], subLinks: [
+            {to: Routes.Pricing.ServicePricingSettings, name: "Service Price Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Pricing.MobileService, name: "Mobile Service", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Pricing.ServiceValet, name: "Service Valet", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Pricing.OfferManagement, name: "Offer Management", exact: true, sub: true, roles: ["Owner", "Manager"]},
+        ]},
+
+    {to: Routes.BookingFlow.Base, name: "Booking Flow", roles: ["Owner", "Manager"], subLinks: [
+            {to: Routes.BookingFlow.BookingFlowConfigDetails, name: "Booking Flow Config", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.BookingFlow.TransportationOptions, name: "Transportation Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.BookingFlow.ServiceOpsCodesMapping, name: "Service Ops Code Mapping", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.BookingFlow.VehicleDetails, name: "Vehicle Detail Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
+        ]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
     {to: Routes.Admin.Reporting, name: "Reporting", roles: true},
 ]
-const MainLinks: LinkType[] = [
-    {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner"]},
-    {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager"]},
-    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.Base, name: "Capacity Optimization", exact: true, roles: true},
-    {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true, roles: ["Owner", "Manager"]},
-    // {to: Routes.Optimizer.EmployeeSchedule, name: "Employee Schedule", sub: true, roles: ["Owner", "Manager", "Advisor"]},
-    {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.ManageEXEvenFlowAppointments, name: "Manage Ex EvenFlow Appointments", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.ServicePricingSettings, name: "Service Price Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.MobileService, name: "Mobile Service", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.ServiceValet, name: "Service Valet", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Pricing.OfferManagement, name: "Offer Management", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.Base, name: "Booking Flow", roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.BookingFlowConfigDetails, name: "Booking Flow Config", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.TransportationOptions, name: "Transportation Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.ServiceOpsCodesMapping, name: "Service Ops Code Mapping", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.BookingFlow.VehicleDetails, name: "Vehicle Detail Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
-    {to: Routes.Admin.Reporting, name: "Reporting", roles: true},
-];
 
 type TProps = {
     isOpened: boolean;
@@ -156,11 +111,11 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const {selectedSC} = useSCs();
     const history = useHistory();
 
-    const links: LinkType[] = useMemo(() => {
+    const links: LinkTypeWithSub[] = useMemo(() => {
         if (matchPath(pathname, Routes.Admin.Base)) {
-            return currentUser?.isSuperUser ? SULinks : AdminLinks;
+            return currentUser?.isSuperUser ? SULinks : AdminLinksWithSub;
         }
-        return MainLinks;
+        return AdminLinksWithSub;
     }, [currentUser, pathname]);
 
     const handleLogoClick = () => {
@@ -191,25 +146,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         <List disablePadding>
             {loading
                 ? <Loading/>
-                : links.map(link => {
-                    if (typeof link.roles === "boolean") {
-                        if (!link.roles) {
-                            return null;
-                        }
-                    } else {
-                        if (currentUser?.role && !link.roles.includes(currentUser.role)) {
-                            return null;
-                        }
-                    }
-                    return <ListItem
-                        disableGutters
-                        className={clsx(classes.listItem, link.sub ? classes.subMenu : "")}
-                        component={NavLink}
-                        to={link.to}
-                        onClick={closeSidebar}
-                        exact={link.exact}
-                        key={link.to}>{link.name}</ListItem>;
-                })
+                : links.map(link =>  <Link link={link} closeSidebar={closeSidebar}/>)
             }
         </List>
         <div style={{flex: 1}} />
