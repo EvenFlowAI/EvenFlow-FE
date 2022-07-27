@@ -235,7 +235,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
 
         </Wrapper>
-        <Actions loading={saving} onBack={onBack} onNext={onPaymentOpen} />
+        {/*todo change to open payment window on next*/}
+        <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
     </StepWrapper>
