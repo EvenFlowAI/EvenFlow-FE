@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {ListItem, List, lighten} from "@material-ui/core";
+import {ListItem, List, lighten, ListItemSecondaryAction} from "@material-ui/core";
 import clsx from "clsx";
 import {NavLink} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import {LinkTypeWithSub} from "../../types/types";
 import {useCurrentUser} from "../../utils/hooks";
+import {ExpandLess, ExpandMore} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -26,6 +27,20 @@ const useStyles = makeStyles((theme) => ({
         color: "#929292",
         padding: "10px 0 10px 15px",
         textTransform: "none"
+    },
+    expandIcon: {
+        top: 28,
+        right: -30,
+        cursor: "pointer",
+    },
+    listWithSubs: {
+        transition: theme.transitions.create(['color']),
+        "&.active": {
+            color: "#7898FF"
+        },
+        "&:hover": {
+            color: lighten("#7898FF", .5)
+        }
     }
 }))
 
@@ -54,26 +69,35 @@ const Link: React.FC<TLinkProps> = ({link, closeSidebar}) => {
         closeSidebar();
     }
 
+    const onOpenSubList = () => {
+        setSubListOpen(prev => !prev)
+    }
+
     return link.subLinks?.length
-            ? <List disablePadding>
+        ? <List disablePadding className={classes.listWithSubs}>
+            <ListItem
+                disableGutters
+                className={classes.listItem}
+                component={NavLink}
+                to={link.to}
+                onClick={onOpenSubList}
+                exact={link.exact}
+                key={link.to}>{link.name}</ListItem>
+            <ListItemSecondaryAction
+                onClick={onOpenSubList}
+                className={classes.expandIcon}>
+                {isSubListOpen ? <ExpandLess/> : <ExpandMore/>}
+            </ListItemSecondaryAction>
+            {isSubListOpen && link.subLinks.map(subLink => (
                 <ListItem
                     disableGutters
-                    className={classes.listItem}
+                    className={clsx(classes.listItem, classes.subMenu)}
                     component={NavLink}
-                    to={link.to}
-                    onClick={() => setSubListOpen(prev => !prev)}
-                    exact={link.exact}
-                    key={link.to}>{link.name}</ListItem>
-                {isSubListOpen && link.subLinks.map(subLink => (
-                    <ListItem
-                        disableGutters
-                        className={clsx(classes.listItem, classes.subMenu)}
-                        component={NavLink}
-                        to={subLink.to}
-                        exact={subLink.exact}
-                        key={subLink.to}>{subLink.name}</ListItem>
-                ))}
-            </List>
+                    to={subLink.to}
+                    exact={subLink.exact}
+                    key={subLink.to}>{subLink.name}</ListItem>
+            ))}
+        </List>
         : <ListItem
             disableGutters
             className={classes.listItem}
