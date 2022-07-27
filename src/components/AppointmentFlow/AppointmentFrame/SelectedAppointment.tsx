@@ -220,14 +220,9 @@ export const SelectedAppointment = () => {
                                         className={classes.select}
                                         disabled={currentConfig && !currentConfig?.advisorSelection}
                                         onChange={handleConsultantChange}>
-                                        {isBmWService
-                                            ? consultants
-                                                .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
-                                                .concat([<MenuItem value="Any" key="any">Any Available</MenuItem>])
-                                            : <MenuItem value={advisor ? advisor.id : "Any"}>
-                                                {advisor ? advisor.name : 'Any Available'}
-                                            </MenuItem>
-                                        }
+                                        {consultants
+                                            .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
+                                            .concat([<MenuItem value="Any" key="any">Any Available</MenuItem>])}
                                     </Select>
                                 </div>
                             </div>

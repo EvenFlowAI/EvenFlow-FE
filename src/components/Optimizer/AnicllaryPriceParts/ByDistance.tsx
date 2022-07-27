@@ -115,7 +115,7 @@ const Slider = withStyles((theme) => ({
 const mockData: IDistancePriceSettings[] = [
     {
         id: 1,
-        rangeMin: 1.88,
+        rangeMin: 0,
         rangeMax: 2.88,
         costPerMile: 16,
         serviceMultiplier: 0.2,
@@ -156,10 +156,23 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
         setDistanceData(mockData.sort((a, b) => a.id - b.id));
     }, [data]);
 
+    const checkIsValid = () => {
+        if (editedItem) {
+            const updated = distanceData.find(el => el.id === editedItem.id);
+            if (updated && (updated.rangeMin > updated.rangeMax)) {
+                showError('The Max Value of the Distance Range can not be LESS than its Min Value');
+                return false;
+            }
+        }
+        return true;
+    }
+
     const handleMenuOpen = (item: IDistancePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
-        setIsEdit(false);
-        setEditedItem(item);
-        setAnchorEl(e.currentTarget);
+        if (checkIsValid()) {
+            setIsEdit(false);
+            setEditedItem(item);
+            setAnchorEl(e.currentTarget);
+        }
     }
     const editZone = () => {
         setIsEdit(true);
@@ -188,20 +201,23 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
             setDistanceData(prev => {
                 const itemToUpdate = prev.find(el => el.id === editedItem.id);
                 const nextItem = prev.find(el => el.id === editedItem.id + 1);
-                const prevItem = prev.find(el => el.id === editedItem.id - 1);
+                let nextUpdated: IDistancePriceSettings|null = null;
                 if (itemToUpdate) {
                     let newValue = Number(value);
-                    if (nextItem && (nextItem.rangeMin < Number(value)) && fieldName === 'rangeMax') {
-                        newValue = nextItem.rangeMin;
-                        showError('The Max Distance Range Value can NOT be greater than the Min Value of the next Distance Range')
-                    }
-                    if (prevItem && (prevItem.rangeMax > Number(value)) && fieldName === 'rangeMin') {
-                        newValue = prevItem.rangeMax;
-                        showError('The Min Distance Range Value can NOT be less than the Max Value of the previous Distance Range')
+                    if (nextItem && fieldName === 'rangeMax') {
+                        if (newValue > nextItem.rangeMax) {
+                            showError('The Max Value of the Distance Range can not be GREATER than the Max Value of the next Distance Range');
+                            return prev;
+                        }
+                        nextUpdated = nextItem;
+                        nextUpdated.rangeMin = newValue;
                     }
                     const updated = {...itemToUpdate, [fieldName]: newValue};
-                    const filtered = prev.filter(el => el.id !== editedItem?.id);
-                    return [...filtered, updated].sort((a, b) => a.id - b.id);
+                    const filtered = nextUpdated
+                        ? prev.filter(el => el.id !== editedItem?.id && el.id !== nextUpdated?.id)
+                        : prev.filter(el => el.id !== editedItem?.id);
+                    const data = nextUpdated ? [...filtered, updated, nextUpdated] : [...filtered, updated];
+                    return data.sort((a, b) => a.id - b.id);
                 }
                 return prev;
             })
@@ -215,9 +231,11 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     }
 
     const onSave = () => {
-        setIsEdit(false)
-        if (editedItem) {
-            onItemSave(editedItem);
+        if (checkIsValid()) {
+            setIsEdit(false)
+            if (editedItem) {
+                onItemSave(editedItem);
+            }
         }
     }
 
@@ -288,7 +306,8 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                             min: 0,
                                             step: 0.01,
                                         }}
-                                        value={+item?.rangeMin?.toFixed(2)}
+                                        value={item?.rangeMin}
+                                        disabled
                                         onChange={handleChangeField('rangeMin')}
                                     />
                                     : item.rangeMin.toFixed(2)}
@@ -301,7 +320,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                             min: 0,
                                             step: 0.01,
                                         }}
-                                        value={+item?.rangeMax?.toFixed(2)}
+                                        value={item?.rangeMax || ''}
                                         onChange={handleChangeField('rangeMax')}
                                     />
                                     : item.rangeMax.toFixed(2)}
@@ -314,7 +333,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                             min: 0,
                                             step: 0.01,
                                         }}
-                                        value={+item?.costPerMile?.toFixed(2)}
+                                        value={item?.costPerMile || ''}
                                         onChange={handleChangeField('costPerMile')}
                                     />
                                     : item.costPerMile.toFixed(2)}
