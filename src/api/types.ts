@@ -345,6 +345,16 @@ export interface IMake {
     id?:number;
 }
 
+export interface IModel {
+    name: string;
+    id: number;
+}
+export interface IMakeExtended {
+    name: string;
+    models: IModel[];
+    id?:number;
+}
+
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
     isApplyBusinessRules: boolean;

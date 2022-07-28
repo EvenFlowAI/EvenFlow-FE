@@ -4,7 +4,7 @@ import {useHistory} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {
-    Alarm, Build, ChevronRight, DateRange,
+    Build, ChevronRight, DateRange,
     FreeBreakfastOutlined,
     LockOutlined,
     PlaceOutlined
@@ -23,6 +23,7 @@ import {SquarePaper} from "../../UI/Paper";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as Calendar} from "../../../assets/img/date_1_grey.svg";
 import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.svg";
+import {ReactComponent as HoursIcon} from "../../../assets/img/Icon_Hours_of_operation.svg";
 import Reminders from "../../Modals/Reminders/Reminders";
 import LaborRate from "../../Modals/LaborRate/LaborRate";
 import {EmployeeSchedule} from "../../Modals/EmployeeSchedule/EmployeeSchedule";
@@ -208,7 +209,7 @@ export const AdminDashboard: React.FC = () => {
 
     const items: TItem[] = [
         {label: "Address", icon: <PlaceOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenAddress},
-        {label: "Hours of operation", icon: <Alarm htmlColor='rgb(94, 95, 102)'/>, action: onOpenHOO},
+        {label: "Hours of operation", icon: <HoursIcon />, action: onOpenHOO},
         {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
         {label: "Employee Schedule", icon: <Calendar />, action: onOpenEmployeeSchedule},
         {label: "Holidays", icon: <LockOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenH},
