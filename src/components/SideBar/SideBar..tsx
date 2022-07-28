@@ -83,7 +83,7 @@ const AdminLinksWithSub: LinkTypeWithSub[] = [
             {to: Routes.Pricing.OfferManagement, name: "Offer Management", exact: true, sub: true, roles: ["Owner", "Manager"]},
         ]},
 
-    {to: Routes.BookingFlow.Base, name: "Booking Flow", roles: ["Owner", "Manager"], subLinks: [
+    {to: Routes.BookingFlow.Base, name: "Booking UI", roles: ["Owner", "Manager"], subLinks: [
             {to: Routes.BookingFlow.BookingFlowConfigDetails, name: "Booking Flow Config", exact: true, sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.BookingFlow.TransportationOptions, name: "Transportation Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.BookingFlow.ServiceOpsCodesMapping, name: "Service Ops Code Mapping", exact: true, sub: true, roles: ["Owner", "Manager"]},
@@ -128,6 +128,8 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         }
     }
 
+    const onProdPush = () => {}
+
     return <Drawer
         className={classes.drawer}
         classes={{paper: classes.drawerPaper}}
@@ -151,12 +153,20 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         </List>
         <div style={{flex: 1}} />
         {selectedSC
-            ? <Button
+            ? <>
+            <Button
                 endIcon={<ArrowForwardIos/>}
                 className={classes.link}
                 onClick={onOpen}>
                 Booking Info
             </Button>
+                <Button
+                    endIcon={<ArrowForwardIos/>}
+                    className={classes.link}
+                    onClick={onProdPush}>
+                    Push To Prod
+                </Button>
+            </>
             : null}
         <BookingModal open={isOpen} onClose={onModalClose} />
     </Drawer>

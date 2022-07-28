@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
         padding: "2px 12px !important"
     },
     tableWrapper: {
-        overflowX: "auto",
         width: "100%",
         "& .MuiTableCell-root": {
             [theme.breakpoints.down("xs")]: {

@@ -1,10 +1,10 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
 import {DialogProps} from "../types";
-import {IPod, IPodForm} from "../../../store/reducers/pods/types";
+import {EJobType, IPod, IPodForm} from "../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {Button, Grid} from "@material-ui/core";
-import {LinkButton, LoadingButton} from "../../UI/Button";
+import {LoadingButton} from "../../UI/Button";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../UI/TextField";
@@ -22,11 +22,9 @@ import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actio
 import {createPod, updatePod} from "../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../store/reducers/bays/actions";
 import {ConfigButton} from "../../UI/ConfigButton";
-import {Routes} from "../../../config/routes";
-import {useMakeAndModelStyles} from "../AddPackage/parts/MakeAndModel/MakeAndModel";
-import {IMakeExtended} from "../../../api/types";
-import Checkbox from "../../UI/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {IMakeExtended, IModel} from "../../../api/types";
+import {getOptions} from "../../../utils/utils";
+import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
 
 const mockMakes = [
     {
@@ -73,16 +71,24 @@ const initialForm: TForm = {
     serviceRequests: [],
 }
 
+type TOption = {
+    value: number;
+    name: string;
+}
+
 export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const {selectedSC} = useSCs();
     const [loading, setLoading] = useState<boolean>();
     const [formIsChecked, setFormIsChecked] = useState<boolean>();
     const [selectedMakes, setSelectedMakes] = useState<IMakeExtended[]>([]);
+    const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
+    const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
+    const [jobType, setJobType] = useState<TOption|null>(null);
+    const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const classes = useMakeAndModelStyles();
     const [
         advisorsList,
         techniciansList,
@@ -109,6 +115,13 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 ...payload,
                 bays: payload?.bays?.map(b => b.id) || []
             });
+            if (payload?.makes?.length) {
+                const filteredMakes = mockMakes.filter(item => payload?.makes?.includes(item.id));
+                setSelectedMakes(filteredMakes);
+                if (payload?.models?.length) {
+
+                }
+            }
         }
     }, [props.open, payload]);
     useEffect(() => {
@@ -141,6 +154,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
 
     const handleSave = async () => {
+        setFormIsChecked(true)
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
@@ -153,7 +167,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     name: form.name,
                     serviceCenterId: selectedSC.id,
                     serviceRequests: form.serviceRequests.map(sr => sr.id),
-                    technicians: form.technicians.map(t => t.id)
+                    technicians: form.technicians.map(t => t.id),
+                    makes: selectedMakes.map(item => item.id),
+                    models: selectedModels.map(item => item.id),
                 };
                 if (payload) {
                     await dispatch(updatePod(data, payload.id));
@@ -175,38 +191,30 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             .sort((a, b) => selectedMakes.find(make => make.id === a.id) ? selectedMakes.find(make => make.id === b.id) ? 0 : -1 : 1);
     }
 
-    const onMakeCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: IMakeExtended) => {
-        setFormIsChecked(false);
-        if (!e.target.checked) {
-            setSelectedMakes(prev => {
-                return prev
-                    .filter(item => item.id !== option.id)
-                    .sort((a, b) => selectedMakes.find(make => make.id === a.id) ? selectedMakes.find(make => make.id === b.id) ? 0 : -1 : 1)
-            })
-        }
-    }, [selectedMakes])
+    const getSortedModels = () => {
+        return modelsOptions.sort((a, b) => selectedModels.find(model => model.id === a.id)
+            ? selectedModels.find(model => model.id === b.id)
+                ? 0
+                : -1
+            : 1);
+    }
 
     const onMakeChange = useCallback((e: ChangeEvent<{}>, value: IMakeExtended[]) => {
+        setFormIsChecked(false);
         setSelectedMakes(value);
-        // const filteredMakes = mockMakes.filter(item => value.find(item => item.id ===))
-        // setModels(getSortedModels(filteredMakes));
-        // setSelectedModels(prev => prev.filter(item => filteredMakes.find(make => make.models.includes(item))))
+        setModelsOptions(value.map(make => make.models).flat());
+        setSelectedModels(prev => prev.filter(item => selectedMakes.find(make => make.models.find(model => model.id === item.id))));
+    }, [selectedMakes])
+
+    const onModelChange = useCallback((e: ChangeEvent<{}>, value: IModel[]) => {
+        setFormIsChecked(false);
+        setSelectedModels(value);
     }, [])
 
-    const renderMakeOption = useCallback((option: IMakeExtended) => {
-        const checked = !!selectedMakes.find(make => option.id === make.id) || Boolean(!mockMakes.find(make => !selectedMakes.find(make => option.id === make.id)));
-        return <React.Fragment>
-            <Checkbox
-                color="primary"
-                icon={checked
-                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
-                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
-                checked={checked}
-                onChange={e => onMakeCheckboxChange(e, option)}
-            />
-            {option}
-        </React.Fragment>
-    }, [mockMakes, selectedMakes]);
+    const onJobTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setFormIsChecked(false);
+        setJobType(value)
+    }, [])
 
     return <BaseModal {...props} maxWidth="md">
         <DialogTitle onClose={props.onClose}>
@@ -285,6 +293,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     <Autocomplete
                         options={serviceRequests}
                         multiple
+                        fullWidth
                         ChipProps={{
                             color: "primary",
                             style: {borderRadius: 4},
@@ -299,29 +308,70 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         renderInput={autocompleteRender({label: "Service Requests", fullWidth: true})}
                     />
                 </Grid>
-                <Grid>
+                <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
                         multiple
                         style={{ marginBottom: 10 }}
-                        classes={classes}
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
                         options={getSortedMakes()}
                         disableCloseOnSelect
                         getOptionLabel={i => i.name}
-                        renderOption={renderMakeOption}
+                        renderOption={autocompleteOptionsRender(e => e.name)}
                         value={selectedMakes}
                         onChange={onMakeChange}
                         renderInput={autocompleteRender({
-                            label: "Make",
+                            label: "Makes",
                             error: !selectedMakes.length && formIsChecked,
-                            placeholder: 'Select Make'
+                            placeholder: 'Select Makes'
                         })}
                     />
                 </Grid>
-                <Grid item xs={12}>
-                    <LinkButton to={Routes.Optimizer.EmployeeSchedule}
+                <Grid item xs={12} sm={12} md={6}>
+                    <Autocomplete
+                        multiple
+                        style={{ marginBottom: 10 }}
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        options={getSortedModels()}
+                        disableCloseOnSelect
+                        getOptionLabel={i => i.name}
+                        renderOption={autocompleteOptionsRender(e => e.name)}
+                        value={selectedModels}
+                        onChange={onModelChange}
+                        renderInput={autocompleteRender({
+                            label: "Models",
+                            error: !selectedMakes.length && formIsChecked,
+                            placeholder: 'Select Models'
+                        })}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <Autocomplete
+                        options={getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key)))}
+                        renderOption={autocompleteOptionsRender(e => e.name)}
+                        getOptionLabel={i => i.name}
+                        value={jobType}
+                        onChange={onJobTypeChange}
+                        renderInput={autocompleteRender({
+                            label: "Job Type",
+                            placeholder: 'Job Type'
+                        })}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
+                        <Button onClick={onOpen}
                                 color="primary">
-                        Go To Employees Schedule
-                    </LinkButton>
+                            Go To Employees Schedule
+                        </Button>
+                    </div>
                 </Grid>
             </Grid>
         </DialogContent>
@@ -338,5 +388,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 Save
             </LoadingButton>
         </DialogActions>
+        <EmployeeSchedule open={isOpen} onClose={onClose}/>
     </BaseModal>
 }
