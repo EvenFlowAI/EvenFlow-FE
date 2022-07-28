@@ -23,6 +23,7 @@ import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {Button, Divider} from "@material-ui/core";
 import {editTransportationOptionRules} from "../../../store/reducers/transportationNeeds/actions";
 import {TextField} from "../../UI/TextField";
+import {getOptions} from "../../../utils/utils";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
@@ -118,21 +119,6 @@ const useMultipleACStyles = makeStyles(() => ({
         paddingRight: 8,
     },
 }))
-
-const getOptions = (optionsArray: string[]) => {
-    const options: TOption[] = [];
-    optionsArray.forEach((option, index) => {
-        const array = [];
-        for (let i = 0; i < option.length; i++) {
-            if (option[i] === option[i].toUpperCase() && i > 0) {
-                array.push(' ');
-            }
-            array.push(option[i]);
-        }
-        options.push({name: array.join(''), value: index});
-    })
-    return options;
-}
 
 const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOptionDialogProps> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);

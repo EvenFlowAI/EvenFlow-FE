@@ -1,6 +1,6 @@
 import {IAddress} from "../store/reducers/dealershipGroups/types";
 import {ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction} from "react";
-import {TCalendarProps, TGroupedAppointments, TGroupedAppointmentsList} from "./types";
+import {TCalendarProps, TGroupedAppointments, TGroupedAppointmentsList, TOption} from "./types";
 import * as queryString from "querystring";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {PERMISSIONS} from "../permissions";
@@ -204,4 +204,19 @@ export const getTracker = (origin: string): string => {
                                 ? "UA-210743216-10"
                                 : "UA-210743216-5"
             : "UA-210743216-5";
+}
+
+export const getOptions = (optionsArray: string[]) => {
+    const options: TOption[] = [];
+    optionsArray.forEach((option, index) => {
+        const array = [];
+        for (let i = 0; i < option.length; i++) {
+            if (option[i] === option[i].toUpperCase() && i > 0) {
+                array.push(' ');
+            }
+            array.push(option[i]);
+        }
+        options.push({name: array.join(''), value: index});
+    })
+    return options;
 }
