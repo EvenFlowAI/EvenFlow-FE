@@ -352,7 +352,7 @@ export interface IModel {
 export interface IMakeExtended {
     name: string;
     models: IModel[];
-    id?:number;
+    id: number;
 }
 
 export interface IPackageById {
