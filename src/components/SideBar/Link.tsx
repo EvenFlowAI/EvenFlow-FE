@@ -88,15 +88,24 @@ const Link: React.FC<TLinkProps> = ({link, closeSidebar}) => {
                 className={classes.expandIcon}>
                 {isSubListOpen ? <ExpandLess/> : <ExpandMore/>}
             </ListItemSecondaryAction>
-            {isSubListOpen && link.subLinks.map(subLink => (
-                <ListItem
+            {isSubListOpen && link.subLinks.map(subLink => {
+                if (typeof subLink.roles === "boolean") {
+                    if (!subLink.roles) {
+                        return null;
+                    }
+                } else {
+                    if (currentUser?.role && !subLink.roles.includes(currentUser.role)) {
+                        return null;
+                    }
+                }
+                return <ListItem
                     disableGutters
                     className={clsx(classes.listItem, classes.subMenu)}
                     component={NavLink}
                     to={subLink.to}
                     exact={subLink.exact}
                     key={subLink.to}>{subLink.name}</ListItem>
-            ))}
+            })}
         </List>
         : <ListItem
             disableGutters
