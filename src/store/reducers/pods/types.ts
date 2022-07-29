@@ -1,7 +1,6 @@
 import {IAdvisorShort} from "../users/types";
 import {IBayShort} from "../bays/types";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
-import {IMake} from "../../../api/types";
 
 
 export interface IPodShort {
@@ -18,8 +17,8 @@ export interface IPod {
     bays?: IBayShort[];
     technicians?: IAdvisorShort[];
     serviceRequests?: IAssignedServiceRequestShort[];
-    makes?: number[];
-    models?: number[];
+    vehicleMakes?: number[];
+    vehicleModels?: number[];
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -34,8 +33,8 @@ export interface IPodForm {
     technicians?: string[];
     serviceRequests?: number[];
     bays?: number[];
-    makes: number[];
-    models: number[];
+    vehicleMakes: number[];
+    vehicleModels: number[];
 }
 
 export enum EJobType {

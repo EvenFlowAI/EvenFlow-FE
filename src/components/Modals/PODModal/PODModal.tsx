@@ -115,10 +115,10 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 ...payload,
                 bays: payload?.bays?.map(b => b.id) || []
             });
-            if (payload?.makes?.length) {
-                const filteredMakes = mockMakes.filter(item => payload?.makes?.includes(item.id));
+            if (payload?.vehicleMakes?.length) {
+                const filteredMakes = mockMakes.filter(item => payload?.vehicleMakes?.includes(item.id));
                 setSelectedMakes(filteredMakes);
-                if (payload?.models?.length) {
+                if (payload?.vehicleModels?.length) {
 
                 }
             }
@@ -168,8 +168,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     serviceCenterId: selectedSC.id,
                     serviceRequests: form.serviceRequests.map(sr => sr.id),
                     technicians: form.technicians.map(t => t.id),
-                    makes: selectedMakes.map(item => item.id),
-                    models: selectedModels.map(item => item.id),
+                    vehicleMakes: selectedMakes.map(item => item.id),
+                    vehicleModels: selectedModels.map(item => item.id),
                 };
                 if (payload) {
                     await dispatch(updatePod(data, payload.id));
