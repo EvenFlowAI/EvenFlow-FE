@@ -24,7 +24,6 @@ import {RootState} from "../../../store/rootReducer";
 import {LoadingButton} from "../../UI/Button";
 import {validatePhoneNumber} from "../../../utils/utils";
 
-
 type KeyPair<U> = {
     name: keyof U,
     label: string;
@@ -76,10 +75,10 @@ const initialCPState: IContactPersonForm = {
     phoneNumber: "", firstName: "", lastName: "", email: ""
 }
 
-
 export const CreateDealershipGroup: React.FC<DialogProps> = props => {
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
     const [contactPerson, setCP] = useState<IContactPersonForm>({...initialCPState});
+
     useEffect(() => {
         setDealership({...initialStateDealershipState});
         setCP({...initialCPState});

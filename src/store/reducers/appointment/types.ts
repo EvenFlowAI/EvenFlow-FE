@@ -24,6 +24,7 @@ export interface IServiceCenterProfile {
     serviceCenterFlag: number;
     isRoundPrice: boolean;
     isAuthRequired: boolean;
+    maintenancePackageDisclaimer?: string;
 }
 export interface ISR {
     id: number;
@@ -53,17 +54,21 @@ export interface IVehicleData {
     engineType: string;
 }
 
-export interface IVehicle {
+export interface IVehicleShort {
     vin: string;
     make: string;
     year: number;
     model: string;
     mileage: number;
+}
+
+export interface IVehicle extends IVehicleShort {
     transmission: string;
     driveType: string;
     engineType: string;
     // serviceInterval: string;
 }
+
 export type TS3Form = {
     date?: ParsableDate,
     appointmentType: EAppointmentTimingType;
@@ -131,6 +136,15 @@ export interface IAppointmentResponse {
 export enum EAppointmentTimingType {
     SpecialOffers, PreferredDate, FirstAvailable
 }
+
+export interface IVehicleForSlots {
+    vin: string;
+    make: string;
+    year: number|null;
+    model: string;
+    mileage: number|null;
+}
+
 export interface IAppointmentSlotsRequest {
     serviceCenterId: number;
     maintenancePackageOptionId?: number|null;
@@ -146,6 +160,9 @@ export interface IAppointmentSlotsRequest {
     warrantyExpiration?: ParsableDate;
     consultantId?: string | null;
     valueServiceOfferIds?: number[];
+    vehicle?: IVehicleForSlots;
+    searchTerm?: string;
+    appointmentHashKey?: string;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;

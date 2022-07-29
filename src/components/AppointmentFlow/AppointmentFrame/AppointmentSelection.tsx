@@ -17,6 +17,7 @@ import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 
 const Wrapper = styled('div')(({ theme }) => ({
@@ -61,6 +62,10 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         categoriesIds,
         allCategories,
         valueService,
+        customerEnteredEmail,
+        userType,
+        vehicle,
+        hashKey,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -76,24 +81,24 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.categoriesIds,
         state.categories.allCategories,
         state.appointmentFrame.valueService,
+        state.appointment.customerEnteredEmail,
+        state.appointmentFrame.userType,
+        state.appointmentFrame.selectedVehicle,
+        state.appointmentFrame.hashKey,
     ]);
 
-    const [date, setDate] = useState<moment.Moment>(
-        appointment?.date
-            ? moment.utc(appointment.date).startOf('day')
-            : moment.utc().startOf('day')
-    );
-    const [month, setMonth] = useState<moment.Moment>(
-        selectedTime ? moment.utc(selectedTime) : moment.utc()
-    );
+    const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
+    const [month, setMonth] = useState<moment.Moment>(moment.utc());
     const [loading, setLoading] = useState<boolean>(false);
 
-    const dispatch = useDispatch();
-    const initRef = useRef<boolean>(false);
-
     const {id} = useParams();
-
+    const initRef = useRef<boolean>(false);
     const isMount = useRef(true);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedTime) setMonth(moment.utc(selectedTime))
+    }, [selectedTime])
 
     useEffect(() => {
         if (slots.length && isMount.current) {
@@ -117,14 +122,13 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             label: consultant ? consultant.name : 'Any available',
             nonInteraction: true
         });
-        if (selectedPackage) {
-            const price = selectedPackage.serviceRequests.reduce((acc, el) => acc + el.price, 0);
+        if (appointment) {
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: 'Selected Service Requests',
                 label: `Requests Codes: 
-                ${selectedPackage.serviceRequests.map(item => (`${item.code} - ${item.description}`)).join(', ')}
-                ${!isNaN(price) ? `with Total Price $${+price}` : ''}`,
+                ${appointment?.serviceRequestPrices?.map(item => item.requestName).join(', ')}
+                ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
             });
         }
     }, [selectedPackage, consultant])
@@ -138,7 +142,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, [month, selectedTimingType]);
 
     const setDateCallback = useCallback((d: moment.Moment) => {
-        if (selectedTimingType && selectedTimingType !== EAppointmentTimingType.FirstAvailable) {
+        if (selectedTimingType !== EAppointmentTimingType.FirstAvailable) {
             setDate(d.startOf('day'));   
         }
     }, [selectedTimingType]);
@@ -175,11 +179,22 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                         serviceCategoryIds: getCategories(),
                         countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
-                        warrantyExpiration: selectedVehicle?.warrantyExpiration
+                        warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     }
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
                     }
+                    if (vehicle) {
+                        dd.vehicle = {
+                            vin: vehicle.vin,
+                            year: vehicle.year,
+                            make: vehicle.make,
+                            model: vehicle.model,
+                            mileage: vehicle.mileage,
+                        }
+                    }
+                    if (hashKey) dd.appointmentHashKey = hashKey;
+                    if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
                     await dispatch(loadAppointmentSlots(
                         dd,
                         setDateCallback,
@@ -193,8 +208,8 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType, month,
-        selectedVehicle, customerData, service, handleDateRangeSet,
-        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant
+        selectedVehicle, customerData, service, handleDateRangeSet, vehicle,
+        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService
     ]);
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);

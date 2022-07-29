@@ -144,6 +144,7 @@ type ApiRoutes = {
     AppointmentSlots: Record<"GetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
+    BookingFlowConfig: Record<"Get" | "Update", TApiRoute>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
@@ -167,7 +168,8 @@ type ApiRoutes = {
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
-        | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth", TApiRoute>,
+        | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
+        | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate" | "UpdatePackageDisclaimer", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -239,6 +241,11 @@ export class Api {
             GetAll: {route: "/bays/by-query", method: "post"},
             GetShort: {route: "/bays/short-by-query", method: "post"},
         },
+        BookingFlowConfig: {
+            // todo change to real routes
+            Get: {route: "/booking-flow/{id}/settings", method: "get"},
+            Update: {route: "/booking-flow/{id}/settings", method: "put"},
+        },
         ComplimentaryServices: {
             GetByQuery: {route: "/complimentary-services/by-query", method: "post"},
             Create: {route: "/complimentary-services", method: "post"},
@@ -280,7 +287,7 @@ export class Api {
             ByVehicle: {route: "/maintenance-packages/by-vehicle", method: "post"},
             GetShortByQuery: {route: "/maintenance-packages/short-by-query", method: "post"},
             GetOptionsByQuery: {route: "/maintenance-packages/options-by-query", method: "post"},
-            ChangePricingDisplayType: {route: "/maintenance-packages/{id}/pricing-display-type", method: "patch"}
+            ChangePricingDisplayType: {route: "/maintenance-packages/{id}/pricing-display-type", method: "patch"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
@@ -368,6 +375,12 @@ export class Api {
             GetReminders: {route: "/service-centers/{id}/send-reminders", method: "get"},
             UpdateReminders: {route: "/service-centers/{id}/send-reminders", method: "patch"},
             UpdateAuth: {route: "/service-centers/{id}/auth", method: "patch"},
+            UpdateAdvisor: {route: "/service-centers/{id}/update-appointments-advisor", method: "patch"},
+            UpdatePredictionParams: {route: "/service-center-settings/{id}/prediction-parameters", method: "put"},
+            GetPredictionParams: {route: "/service-center-settings/{id}/prediction-parameters", method: "get"},
+            GetLaborRate: {route: "/service-center-settings/{id}/labor-rates", method: "get"},
+            UpdateLaborRate: {route: "/service-center-settings/{id}/labor-rates", method: "put"},
+            UpdatePackageDisclaimer: {route: "/service-centers/{id}/set-package-disclaimer", method: "patch"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

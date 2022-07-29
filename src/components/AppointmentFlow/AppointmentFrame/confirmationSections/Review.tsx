@@ -37,7 +37,6 @@ export const Review = () => {
                     ? TRANSPORTATION_SHORT_DESCRIPTION[transportation.type]
                     : "I will wait at the dealership"}
                 </li>
-                {/* TODO: Advisor | consultant*/}
                 <li>Service Advisor: {consultant?.name ?? "Any Available"}</li>
             </Wrapper>
         </div>

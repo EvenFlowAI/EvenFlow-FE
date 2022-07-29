@@ -18,6 +18,7 @@ import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {EServiceCenterName} from "../../api/types";
+import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -79,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
 type TProps = {
     onReturn: () => void;
     onConfirm: () => void;
-    onComplete: () => void;
+    onComplete: (serviceType: EServiceType) => void;
     view: TView;
 }
 export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConfirm}) => {
@@ -93,6 +94,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
     const sessionId = useSelector((state: RootState) => state.appointment.sessionId);
     const serviceCenter = useSelector((state: RootState) => state.appointment.scProfile)
+    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const isRiverviewFord = useMemo(() => serviceCenter?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [serviceCenter])
 
     useEffect(() => {
@@ -120,7 +122,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
             // dispatch(setSessionId(data));
             // dispatch(saveAppointmentReducer());
             // showMessage("We've send a code with an email for confirmation.");
-            onComplete();
+            onComplete(serviceType);
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: 'Enters Page',
@@ -157,7 +159,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 dispatch(setCustomerLoadedData(c));
                 saveCustomerCache(c);
             } finally {
-                onComplete();
+                onComplete(serviceType);
             }
         } catch {
             showError("Invalid code");

@@ -1,25 +1,21 @@
 import {styled, Theme} from "@material-ui/core";
 
 export const CardsWrapper = styled("div")(({theme}) => ({
-    display: "flex",
-    alignItems: "stretch",
-    justifyContent: "center",
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr',
     gap: "18px",
-    [theme.breakpoints.down('sm')]: {
-        flexWrap: "wrap"
-    }
 }));
 
-export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: boolean,}>(({theme, active, selected}) => ({
+export const CardWrapper = styled("div")<Theme, {activeNow?: boolean, selected?: boolean,}>(({theme, activeNow, selected}) => ({
     display: "grid",
     gridTemplateColumns: "1fr",
-    gridTemplateRows: "3fr 2fr 1fr",
+    gridTemplateRows: "1fr 4fr 3fr 2fr",
     width: "100%",
     maxWidth: 250,
     transition: "all .2s",
-    background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
+    background: activeNow ? '#000000' : selected ? "#DEFFDF" : "transparent",
     // color: active ? "#FFFFFF" : "#252733",
-    border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
+    border: `1px solid ${activeNow ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
     fontSize: 24,
     textAlign: "center",
     alignItems: "center",
@@ -32,6 +28,9 @@ export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: bo
         alignItems: 'center',
         flexWrap: 'wrap',
         padding: "0 12px",
+        [theme.breakpoints.down('sm')]: {
+            gridColumn: "1/3",
+        }
     },
     "& .price": {
         color: "#27AE60",
@@ -44,6 +43,10 @@ export const CardWrapper = styled("div")<Theme, {active?: boolean, selected?: bo
         fontWeight: "bold",
         fontFamily: "Proxima Nova",
         textTransform: "uppercase",
+    },
+    "& .infoIcon": {
+      display: 'flex',
+      justifyContent: 'flex-end',
     },
     [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: "1fr 3fr",

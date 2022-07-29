@@ -1,22 +1,25 @@
 import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {setUserType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {LocalTokens} from "../../types/types";
+import {v4 as uuidv4} from 'uuid';
+import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {TView} from "./types";
+import {RootState} from "../../store/rootReducer";
 import {
     getBlankCustomer,
     getBlankVehicle,
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {useDispatch} from "react-redux";
-import {setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
-import {LocalTokens} from "../../types/types";
-import { v4 as uuidv4 } from 'uuid';
 
-const mh400 = "@media (max-height: 400px)";
-const mh600 = "@media (max-height: 600px)";
+export const mh400 = "@media (max-height: 400px)";
+export const mh600 = "@media (max-height: 600px)";
 
-const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles(theme => ({
     buttonsContainer: {
         marginTop: "5%",
         [mh600]: {
@@ -58,12 +61,14 @@ const useStyles = makeStyles(theme => ({
 }))
 type TProps = {
     onLogin: () => void;
-    onComplete: () => void;
+    onComplete: (serviceType: EServiceType) => void;
+    setView: (view: TView) => void;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
+export const CustomerSelect: React.FC<TProps> = ({setView, onLogin, onComplete}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const {isMobileServiceOn, serviceType, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
 
     useEffect(() => {
         const uid = uuidv4();
@@ -73,21 +78,40 @@ export const CustomerSelect: React.FC<TProps> = ({onLogin, onComplete}) => {
         })
     }, [])
 
-    const handleExisting = (): void => {
-        onLogin();
-    }
-
-    const handleNew = () => {
+    const createBlankCar = () => {
         const c = getBlankCustomer();
         dispatch(setCustomerLoadedData(c));
         dispatch(setVehicle(getBlankVehicle()));
         saveCustomerCache(c);
+    }
+
+    const handleReactGA = (userType: string) => {
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Enters Page',
-            label: `As New User`,
+            label: `As ${userType} Customer`,
         });
-        onComplete();
+    }
+
+    const handleExisting = (): void => {
+        dispatch(setUserType(EUserType.Existing));
+        handleReactGA('An Existing');
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            setView('serviceSelect')
+        } else {
+            onLogin()
+        }
+    }
+
+    const handleNew = () => {
+        dispatch(setUserType(EUserType.New));
+        handleReactGA('A New');
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            setView('serviceSelect')
+        } else {
+            createBlankCar()
+            onComplete(serviceType);
+        }
     }
 
     return <Grid className={classes.buttonsContainer}

@@ -79,7 +79,6 @@ const useInputStyles = makeStyles(() => ({
     }
 }))
 
-
 const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
     ({
          selectedCodes,

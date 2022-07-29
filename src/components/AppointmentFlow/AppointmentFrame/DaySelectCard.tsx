@@ -86,7 +86,7 @@ export const DaySelectCard: React.FC<TProps> = ({
                 return "Not Available";
             }
         }
-        if (appointment && isPackage) {
+        if (appointment?.lowestPrice) {
             return `$${scProfile?.isRoundPrice ? appointment.lowestPrice : appointment.lowestPrice.toFixed(2)}`;
         }
         if (appointment) {

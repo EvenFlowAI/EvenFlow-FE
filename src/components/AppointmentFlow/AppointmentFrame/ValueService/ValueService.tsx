@@ -5,7 +5,7 @@ import {YearModel} from "./YearModel";
 import {
     setCurrentFrameScreen,
     setMaintenanceDetails,
-    setValueService, setVehicle
+    setVehicle
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
@@ -14,6 +14,7 @@ import ServiceDetails from "./ServiceDetails";
 import {ILoadedVehicle} from "../../../../api/types";
 import {yearOptions} from "../MaintenanceDetails";
 import {RootState} from "../../../../store/rootReducer";
+import {TScreen} from "../../../Layout/types";
 import {loadSCProfile} from "../../../../store/reducers/appointment/actions";
 import {decodeSCID} from "../../../../utils/utils";
 
@@ -31,24 +32,28 @@ const Container = styled('div')(({theme}) => ({
     },
 }));
 
-type TScreen = "vehicleDetails" | "serviceSelection" | "serviceDetails";
+type TValueServiceScreen = "vehicleDetails" | "serviceSelection" | "serviceDetails";
 
-const ValueService: React.FC = () => {
-    const [screen, setScreen] = useState<TScreen>("vehicleDetails");
-    const {makes, valueService, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+type TValueServiceProps = {
+    onBack: () => void;
+    nextScreen: TScreen;
+}
+
+const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
+    const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
+    const {makes, valueService, selectedVehicle, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
+    const isServiceDetailsPageOn = useMemo(() => {
+        return Boolean(config.find(item => item.serviceType.toString() === serviceType.toString())?.productPageForValueService)
+    }, [config, serviceType])
+
     const history = useHistory();
 
     useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
     }, [id])
-
-    const onBack = async () => {
-        await dispatch(setValueService(null));
-        await dispatch(setCurrentFrameScreen("serviceNeeds"));
-        history.push( "/f/appointment/" + id);
-    };
 
     const setSelectedVehicle = () => {
         if (valueService) {
@@ -82,15 +87,20 @@ const ValueService: React.FC = () => {
 
     const onNext = async () => {
         await setSelectedVehicle();
-        await dispatch(setCurrentFrameScreen("consultantSelection"));
-        history.push( `/f/appointment/${id}`);
+        await dispatch(setCurrentFrameScreen(nextScreen));
+        history.push( "/f/appointment/" + id);
     };
 
+    const onBackClick = () => {
+        if (id) history.push( "/f/appointment/" + id);
+        onBack();
+    }
+
     const component = useMemo(() => {
-        const screens: {[k in TScreen]: JSX.Element} = {
-            vehicleDetails: <YearModel onBack={onBack} onNext={() => setScreen("serviceSelection")}/>,
+        const screens: {[k in TValueServiceScreen]: JSX.Element} = {
+            vehicleDetails: <YearModel onBack={onBackClick} onNext={() => setScreen("serviceSelection")}/>,
             serviceSelection: <ServiceSelection
-                onNext={() => setScreen("serviceDetails")}
+                onNext={() => isServiceDetailsPageOn ? setScreen("serviceDetails") : onNext()}
                 onBack={() => setScreen("vehicleDetails")}
             />,
             serviceDetails: <ServiceDetails

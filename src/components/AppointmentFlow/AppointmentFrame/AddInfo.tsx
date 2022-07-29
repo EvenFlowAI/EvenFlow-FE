@@ -11,7 +11,7 @@ import {
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
-import {TScreen} from "../../../components/Layout/types";
+import {TScreen} from "../../Layout/types";
 import {useModal} from "../../../utils/hooks";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {selectSRMultiple} from "../../../store/reducers/appointment/actions";
@@ -27,7 +27,16 @@ type TProps = {
     onAddServices: () => void;
 };
 export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServices}) => {
-    const [subService, vehicle, vehicles, selectedPackage, selectedSR, service, categoriesIds, allCategories] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
+    const [
+        subService,
+        vehicle,
+        vehicles,
+        selectedPackage,
+        selectedSR,
+        service,
+        categoriesIds,
+        allCategories
+    ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
         appointment.customerLoadedData?.vehicles,
@@ -71,7 +80,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
         } else handleNext()
     }
 
-    const handleBack = () => {
+    const handleCategories = () => {
         let categories = [...categoriesIds];
         if (subService && categoriesIds?.includes(subService.id)) {
             categories = categoriesIds.filter(id => id !== subService?.id)
@@ -80,6 +89,10 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 categories = categoriesIds.filter(id => id !== service?.id)
             }
         }
+        dispatch(selectCategoriesIds(categories))
+    }
+
+    const handleServiceRequests = () => {
         if (subService?.type === EServiceCategoryType.IndividualServices) {
             const diagnoseCategoryRequestsIds: number[] = allCategories
                 .find(item => item.type === EServiceCategoryType.Diagnose)
@@ -88,7 +101,11 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 .filter(item => !subService.serviceRequests.find(el => item === el.id) || diagnoseCategoryRequestsIds.includes(item))
             dispatch(selectSRMultiple(codes));
         }
-        dispatch(selectCategoriesIds(categories))
+    }
+
+    const handleBack = () => {
+        handleCategories();
+        handleServiceRequests();
         onBack(screenToReturn);
     }
 

@@ -21,20 +21,21 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
 ]
 
 export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {
-    const {selectedSC} = useSCs();
-    const [editedItem, setEditedItem] = useState<IPod|undefined>(undefined);
-    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const {isOpen, onClose, onOpen} = useModal();
-    const dispatch = useDispatch();
     const [pods, podsCount, isLoading] = useSelector((state: RootState) => [
         state.pods.podsList,
         state.pods.podsPaging.numberOfRecords,
         state.pods.podsLoading
     ]);
+    const [editedItem, setEditedItem] = useState<IPod|undefined>(undefined);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+
+    const {selectedSC} = useSCs();
     const showMessage = useMessage();
     const showError = useException();
-    const {pageSize, pageIndex, changeRowsPerPage, changePage} = usePagination(state => state.pods.podsPageData, setPodsPageData);
     const {askConfirm} = useConfirm();
+    const dispatch = useDispatch();
+    const {isOpen, onClose, onOpen} = useModal();
+    const {pageSize, pageIndex, changeRowsPerPage, changePage} = usePagination(state => state.pods.podsPageData, setPodsPageData);
 
     useEffect(() => {
         if (selectedSC) {

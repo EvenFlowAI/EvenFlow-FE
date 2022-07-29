@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../../../utils/hooks";
 import {deleteMake, loadMakes, setCurrentMake} from "../../../../../store/reducers/vehicleDetails/actions";
@@ -16,13 +16,14 @@ const RowData: TableRowDataType<IMake>[] = [
 ];
 
 const MakesModelsTable = () => {
-    const { makes, currentMake, isLoading } = useSelector((state: RootState) => state.vehicleDetails);
+    const {makes, currentMake, isLoading} = useSelector((state: RootState) => state.vehicleDetails);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [tableData, setTableData] = useState<IMake[]>([]);
-    const { selectedSC } = useSCs();
+
+    const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
-    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
     const {askConfirm} = useConfirm();
     const {onOpen, onClose, isOpen} = useModal();
 
@@ -32,29 +33,29 @@ const MakesModelsTable = () => {
         }
     }, [selectedSC])
 
-    useEffect(() => {
+    const truncateNames = useCallback(() => {
         if (makes) {
             setTableData(() => {
                 const formattedData: IMake[] = [];
                 makes.forEach(make => {
                     const formattedMake = {...make};
+
                     if (formattedMake.name.length > 30) {
                         formattedMake.name = formattedMake.name.slice(0, 26).concat('...');
                     }
-                    const formattedModels: string[] = [];
-                    formattedMake.models.forEach(model => {
-                        if (model.length > 30) {
-                            formattedModels.push(model.slice(0, 26).concat('...'));
-                        } else {
-                            formattedModels.push(model);
-                        }
-                    })
-                    formattedMake.models = formattedModels;
+                    formattedMake.models = formattedMake.models
+                        .map(model => model.length > 30
+                        ? model.slice(0, 26).concat('...')
+                        : model)
                     formattedData.push(formattedMake);
                 })
                 return formattedData;
             })
         }
+    }, [makes])
+
+    useEffect(() => {
+        truncateNames()
     }, [makes])
 
     const openMenu = (el: IMake) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -114,7 +115,7 @@ const MakesModelsTable = () => {
             <Table data={tableData} index="name" rowData={RowData} actions={tableActions} hidePagination isLoading={isLoading}/>
             <Menu
                 open={Boolean(anchorEl)}
-                onClose={() => {setAnchorEl(null);}}
+                onClose={() => setAnchorEl(null)}
                 anchorEl={anchorEl}
             >
                 <MenuItem onClick={openEdit}>Edit</MenuItem>

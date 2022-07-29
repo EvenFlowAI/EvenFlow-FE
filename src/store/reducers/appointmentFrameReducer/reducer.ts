@@ -1,21 +1,44 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getMakes,
-    getModels, getSeriesModels, getSlotsGap, getValueServiceOffers, selectCategoriesIds,
+    getModels,
+    getSlotsGap,
+    selectCategoriesIds,
+    getSeriesModels,
+    getValueServiceOffers,
     selectService,
-    selectSubService, setAdditionalServicesChosen,
+    selectSubService,
+    setAdditionalServicesChosen,
+    setAddress,
     setAdvisor,
-    setAppointmentId, setConsultants, setCurrentFrameScreen,
+    setAppointmentId,
+    setConsultants,
+    setCurrentFrameScreen,
     setCustomer,
-    setFrameDescription, setLoadingPackages,
-    setMaintenanceDetails, setOffersLoading,
-    setPackage, setPackageIsSelected, setPackages,
-    setReminders, setSelectedPackageOptionType,
+    setFrameDescription,
+    setLoadingPackages,
+    setMaintenanceDetails,
+    setPackage,
+    setPackageIsSelected,
+    setPackages,
+    setReminders,
+    setSelectedPackageOptionType,
+    setServiceType,
+    setOffersLoading,
     setTime,
-    setTiming, setTrackerCreated,
+    setTiming,
+    setTrackerCreated,
     setTransportation,
-    setUpdateAppointment, setValueService,
-    setVehicle, updateVehicle
+    setUpdateAppointment,
+    setUserType,
+    setVehicle,
+    setZipCode,
+    updateVehicle,
+    setValueService,
+    setSideBarSteps,
+    setMobileServiceAvailability,
+    setPickUpDropOffAvailability,
+    setValueServiceAvailability,
 } from "./actions";
 import {
     ICustomer,
@@ -27,7 +50,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
+import {IServiceOffer, IValueService, TMaintenanceDetails, TYear, EServiceType, EUserType} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 
 type TState = {
@@ -57,10 +80,18 @@ type TState = {
     id?: number;
     hashKey?: string;
     gap: number | undefined;
+    userType: EUserType | undefined;
+    serviceType: EServiceType;
+    address: any;
+    zipCode: string | null;
     valueService: IValueService | null;
     seriesModels: TYear[];
     offersLoading: boolean;
     serviceOffers: IServiceOffer[];
+    isMobileServiceOn: boolean;
+    isPickUpDropOffServiceOn: boolean;
+    isValueServiceOn: boolean;
+    sideBarSteps: TScreen[];
 }
 const initialState: TState = {
     service: null,
@@ -91,10 +122,18 @@ const initialState: TState = {
     categoriesIds: [],
     packageOptionType: null,
     gap: undefined,
+    userType: undefined,
+    serviceType: EServiceType.VisitCenter,
+    address: null,
+    zipCode: null,
     valueService: null,
     seriesModels: [],
     offersLoading: false,
     serviceOffers: [],
+    isMobileServiceOn: false,
+    isPickUpDropOffServiceOn: false,
+    isValueServiceOn: false,
+    sideBarSteps: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -203,6 +242,18 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     .addCase(getSlotsGap, (state, {payload}) => {
         return {...state, gap: payload};
     })
+    .addCase(setUserType, (state, {payload}) => {
+        return {...state, userType: payload};
+    })
+    .addCase(setServiceType, (state, { payload }) => {
+        return {...state, serviceType: payload};
+    })
+    .addCase(setAddress, (state, { payload }) => {
+        return {...state, address: payload};
+    })
+    .addCase(setZipCode, (state, { payload }) => {
+        return {...state, zipCode: payload};
+    })
     .addCase(setValueService, (state, {payload}) => {
         return {...state, valueService: payload};
     })
@@ -214,5 +265,17 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setOffersLoading, (state, {payload}) => {
         return {...state, offersLoading: payload}
+    })
+    .addCase(setSideBarSteps, (state, {payload}) => {
+        return {...state, sideBarSteps: payload}
+    })
+    .addCase(setMobileServiceAvailability, (state, {payload}) => {
+        return {...state, isMobileServiceOn: payload}
+    })
+    .addCase(setPickUpDropOffAvailability, (state, {payload}) => {
+        return {...state, isPickUpDropOffServiceOn: payload}
+    })
+    .addCase(setValueServiceAvailability, (state, {payload}) => {
+        return {...state, isValueServiceOn: payload}
     })
 )

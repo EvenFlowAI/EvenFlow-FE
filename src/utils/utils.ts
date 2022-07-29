@@ -159,33 +159,33 @@ export const getGroupedAppointmentList = (slots: TGroupedAppointments): TGrouped
 }
 
 export const fallbackCopyTextToClipboard = (text: string) => {
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
 
-  // Avoid scrolling to bottom
-  textArea.style.top = "0";
-  textArea.style.left = "0";
-  textArea.style.position = "fixed";
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
 
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
 
-  try {
-    document.execCommand('copy');
-  } catch (err) {
-    console.error('Fallback: Unable to copy', err);
-  }
-  document.body.removeChild(textArea);
+    try {
+        document.execCommand('copy');
+    } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+    }
+    document.body.removeChild(textArea);
 }
 export const copyTextToClipboard = (text: string) => {
-  if (!navigator.clipboard) {
-    fallbackCopyTextToClipboard(text);
-    return;
-  }
-  navigator.clipboard.writeText(text).then(() => {}, (err) => {
-    console.error('Async: Could not copy text: ', err);
-  });
+    if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+    }
+    navigator.clipboard.writeText(text).then(() => {}, (err) => {
+        console.error('Async: Could not copy text: ', err);
+    });
 }
 
 export const getTracker = (origin: string): string => {
@@ -198,6 +198,10 @@ export const getTracker = (origin: string): string => {
                     ? "UA-210743216-3"
                     : origin.includes("bmw-schererville.evenflow")
                         ? "UA-210743216-8"
-                        : "UA-210743216-5"
+                        : origin.includes("fremontchryslerdodgejeepcasper")
+                            ? "UA-210743216-9"
+                            : origin.includes("fremontchryslerdodgejeeprocksprings")
+                                ? "UA-210743216-10"
+                                : "UA-210743216-5"
             : "UA-210743216-5";
 }

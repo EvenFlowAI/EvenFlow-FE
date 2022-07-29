@@ -9,6 +9,7 @@ import {getPackageById, loadPackages} from "../../../store/reducers/packages/act
 import AddPackage from "../../Modals/AddPackage/AddPackage";
 import {useModal} from "../../../utils/hooks";
 import LaborRate from "./LaborRate/LaborRate";
+import Disclaimer from "./Disclaimer/Disclaimer";
 
 type TExpandedState = {
     id?: number;
@@ -36,6 +37,7 @@ export const MaintenancePackages = () => {
     const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [isDisclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
     const classes = useStyles();
     const dispatch = useDispatch();
     const {onOpen, onClose, isOpen} = useModal();
@@ -72,11 +74,21 @@ export const MaintenancePackages = () => {
         onCloseEdit();
     }
 
+    const handleAddDisclaimer = () => setDisclaimerOpen(!isDisclaimerOpen);
+
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
         <div className={classes.topLineWrapper}>
             <LaborRate/>
             <div style={{display: "flex", alignItems: "center"}}>
+                <Button
+                    style={{marginLeft: 16}}
+                    color="primary"
+                    variant="contained"
+                    onClick={handleAddDisclaimer}
+                >
+                    {isDisclaimerOpen ? 'Close' : 'Open'} Disclaimer
+                </Button>
                 <Button
                     style={{marginLeft: 16}}
                     color="primary"
@@ -87,9 +99,12 @@ export const MaintenancePackages = () => {
                 </Button>
             </div>
         </div>
-    <div className={classes.titleWrapper}>
-    <ContentTitle title="Maintenance Package Pricing"/>
-    </div>
+        {isDisclaimerOpen
+            ? <Disclaimer setDisclaimerOpen={setDisclaimerOpen}/>
+            : null}
+        <div className={classes.titleWrapper}>
+            <ContentTitle title="Maintenance Package Pricing"/>
+        </div>
         {packages.map((item: IPackageByQuery, index) => {
             return <PackageAccordion
                 setIsEditing={setIsEditing}

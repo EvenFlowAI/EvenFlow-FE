@@ -87,7 +87,8 @@ const AdminLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: ["Owner", "Manager"]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner"]},
-    {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager"]}
+    {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager"]},
+    {to: Routes.Admin.BookingFlowConfig, name: "Booking Flow", roles: ["Owner", "Manager"]}
 ]
 const MainLinks: LinkType[] = [
     {to: Routes.Admin.Base, name: "Dashboard", exact: true, roles: ["Owner", "Manager"]},
@@ -100,6 +101,8 @@ const MainLinks: LinkType[] = [
     {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.OptimizationWindows, name: "Optimization Windows", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.Optimizer.PricingSettings, name: "Pricing Settings", sub: true, roles: ["Owner", "Manager"]},
+    // {to: Routes.Optimizer.MobileService, name: "Mobile Service", sub: true, roles: ["Owner", "Manager"]},
+    // {to: Routes.Optimizer.ServiceValue, name: "Service Valet", sub: true, roles: ["Owner", "Manager"]},
     {to: Routes.OfferManagement.Base, name: "Offer Management", sub: false, roles: ["Owner", "Manager"]},
 ];
 

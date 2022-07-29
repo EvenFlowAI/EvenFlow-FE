@@ -331,7 +331,11 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             showError('Check the Vehicle Year fields - "To" must be more than "From"')
             return false
         }
-        return selectedModels.length && selectedMakes.length && yearFrom && yearTo && selectedMileages.length;
+        return selectedModels.length
+            && selectedMakes.length
+            && selectedMileages.length
+            && yearFrom
+            && yearTo;
     }
 
     const isValid = () => {

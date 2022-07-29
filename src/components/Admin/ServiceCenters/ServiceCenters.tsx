@@ -31,26 +31,29 @@ const rowDataA: TableRowDataType<IServiceCenterExtended>[] = [
 ];
 
 export const ServiceCenters = () => {
-    const {data, loading, count} = useSelector((state: RootState) => ({
-        data: state.serviceCenters.serviceCenters,
-        loading: state.serviceCenters.loading,
-        count: state.serviceCenters.paging.numberOfRecords
-    }));
-    const currentUser = useCurrentUser();
-    const rowData = useMemo(() => {
-        return currentUser?.isSuperUser ? rowDataSU : rowDataA;
-    }, [currentUser]);
-    const order = useSelector((state: RootState) => state.serviceCenters.order);
-    const search = useSelector((state: RootState) => state.serviceCenters.searchTerm);
+    const [data, loading, count, order, search] = useSelector((state: RootState) => [
+        state.serviceCenters.serviceCenters,
+        state.serviceCenters.loading,
+        state.serviceCenters.paging.numberOfRecords,
+        state.serviceCenters.order,
+        state.serviceCenters.searchTerm
+    ]);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
+    const [editedItem, setEditedItem] = useState<IServiceCenterForm|undefined>();
 
     const dispatch = useDispatch();
+    const showError = useException();
+    const showMessage = useMessage();
+    const {askConfirm} = useConfirm();
+    const currentUser = useCurrentUser();
+    const {onOpen, onClose, isOpen} = useModal();
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceCenters.pageData,
         changePageData
     );
-    const showError = useException();
-    const showMessage = useMessage();
-
+    const rowData = useMemo(() => {
+        return currentUser?.isSuperUser ? rowDataSU : rowDataA;
+    }, [currentUser]);
 
     useEffect(() => {
         dispatch(loadAll())
@@ -60,15 +63,12 @@ export const ServiceCenters = () => {
         setEditedItem(el);
         onOpen();
     };
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
 
     const openEdit = () => {
         setAnchorEl(null);
         onOpen();
     }
-    const handleSetAnchor = (
-        el: IServiceCenterExtended
-    ) => (
+    const handleSetAnchor = (el: IServiceCenterExtended) => (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const data: IServiceCenterForm = el as IServiceCenterForm;
         setEditedItem(data);
@@ -80,11 +80,10 @@ export const ServiceCenters = () => {
             : <IconButton size="small"
                           onClick={handleSetAnchor(el)}><MoreHoriz/></IconButton>
     );
+
     const startActions = (el: IServiceCenterExtended) => (
         <TableAvatar name={el.name} src={el.avatarPath} />
     )
-
-    const {askConfirm} = useConfirm();
 
     const handleRemove = async () => {
         try {
@@ -94,7 +93,6 @@ export const ServiceCenters = () => {
         } catch (e) {
             showError(e);
         }
-
     }
 
     const openRemove = () => {
@@ -109,9 +107,6 @@ export const ServiceCenters = () => {
     const handleSort = (d: IOrder<IServiceCenterExtended>) => () => {
         dispatch(setSCOrder(d));
     }
-
-    const {onOpen, onClose, isOpen} = useModal();
-    const [editedItem, setEditedItem] = useState<IServiceCenterForm|undefined>();
 
     return <>
         <TitleContainer title={Titles.ServiceCenters} actions pad />

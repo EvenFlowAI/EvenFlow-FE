@@ -29,6 +29,10 @@ import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import Address from "./confirmationSections/Address";
+import PaymentType from "../../Modals/PaymentType/PaymentType";
+import ServiceType from "./confirmationSections/ServiceType";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -65,14 +69,16 @@ type TProps = {
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
-    const [appointment, appointmentFrame, categories] = useSelector((state: RootState) => [
+    const [appointment, appointmentFrame, categories, customerEnteredEmail] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
         state.categories,
+        state.appointment.customerEnteredEmail,
     ]);
 
     const {id} = useParams();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
+    const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
 
@@ -132,6 +138,12 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             : appointmentFrame?.valueService?.series?.name
                 ? appointmentFrame.valueService.series.name
                 : null;
+
+        const year = appointmentFrame?.selectedVehicle?.year
+                ? String(appointmentFrame.selectedVehicle.year)
+            : appointmentFrame?.valueService?.year?.year
+                ? String(appointmentFrame.valueService.year.year)
+                : null;
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
@@ -154,9 +166,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 make,
                 transmission: "",
                 vin: appointmentFrame.selectedVehicle?.vin ?? '',
-                year: appointmentFrame?.selectedVehicle?.year
-                    ? String(appointmentFrame.selectedVehicle.year) : appointmentFrame?.valueService?.year?.year
-                        ? String(appointmentFrame.valueService.year.year) : null,
+                year,
                 mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
                 modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
             },
@@ -172,6 +182,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             serviceCategoryIds: getCategories(),
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
+            searchTerm: customerEnteredEmail,
         };
 
         const endpoint = data?.hashKey
@@ -206,14 +217,16 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 <SelectedDate onChangeSlot={onChangeSlot} />
                 <Vehicle/>
                 <ServiceRequests/>
+                <Address/>
                 <SelectedPrice/>
+                <ServiceType/>
                 <div
                     role="presentation"
                     style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
                     onClick={onFeesOpen}>
                     View itemized fees of services
                 </div>
-                <Review />
+                {appointmentFrame.serviceType === EServiceType.VisitCenter ? <Review/> : null}
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>
@@ -222,7 +235,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             </div>
 
         </Wrapper>
+        {/*todo change to open payment window on next*/}
         <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
+        <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
     </StepWrapper>
 };

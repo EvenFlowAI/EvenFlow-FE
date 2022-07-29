@@ -48,6 +48,10 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
     const [form, setForm] = useState<TForm>(initialForm);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+    const showMessage = useMessage();
+    const showError = useException();
+    const dispatch = useDispatch();
+    const classes = useStyles();
 
     useEffect(() => {
         if (selectedSC && props.open) {
@@ -58,10 +62,6 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
             }
         }
     }, [selectedSC, props.open, payload])
-
-    const showMessage = useMessage();
-    const showError = useException();
-    const dispatch = useDispatch();
 
     const handleChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [name]: e.target.value});
@@ -90,7 +90,6 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
         }
     }
 
-    const classes = useStyles();
     return <BaseModal {...props} maxWidth="xs">
         <DialogTitle onClose={props.onClose}>Edit Medium Value</DialogTitle>
         <DialogContent>

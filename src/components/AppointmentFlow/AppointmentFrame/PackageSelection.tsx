@@ -196,8 +196,16 @@ const Info = styled("p")({
 export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddServices}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
-    const {selectedPackage, selectedVehicle, maintenanceDetails, packageIsSelected, service, subService, packageOptionType} = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {
+        selectedPackage,
+        selectedVehicle,
+        maintenanceDetails,
+        packageIsSelected,
+        service,
+        subService,
+        packageOptionType
+    } = useSelector((state: RootState) => state.appointmentFrame);
 
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
@@ -279,15 +287,21 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         }
     }
 
-    const handleNext = (): void => {
+    const handleGA = () => {
         if (selectedPackage) {
-            dispatch(setPackageIsSelected(true));
             const packageOptions = ['Good', 'Better', 'Best'];
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: `Selected Package`,
                 label: `With ${packageOptions[selectedPackage.type]} Option`,
             })
+        }
+    }
+
+    const handleNext = (): void => {
+        if (selectedPackage) {
+            dispatch(setPackageIsSelected(true));
+            handleGA();
             if (packageIsSelected && packageOptionType && packageOptionType !== selectedPackage.type) {
                 onOpen();
             } else {
@@ -326,7 +340,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                         data={packages}
                         isBmWService={isBmWService}
                         isSanfordInfinity={isSanfordInfinity}
-                        />
+                    />
                     : <Wrapper>
                         <PackageTitles packages={packages} handleClick={handleClick} setClasses={setClasses}/>
 
@@ -340,7 +354,11 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                         />
 
                         {(isSanfordInfinity || isBmWService)
-                        && <TotalMaintenance isBmWService={isBmWService} setClasses={setClasses} packages={packages}/>}
+                        && <TotalMaintenance
+                          isBmWService={isBmWService}
+                          setClasses={setClasses}
+                          packages={packages}/>
+                        }
 
                         <Complimentary
                             packages={packages}
@@ -367,9 +385,11 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             setClasses={setClasses}
                         />
                         <Info>
-                            {isBmWService
-                                ? 'Note: Please ask your service advisor regarding factory covered maintenance services.'
-                                : 'Note: The maintenance packages may not be available for all vehicle types. Please speak with your Service Advisor to understand where restrictions apply.'
+                            {scProfile?.maintenancePackageDisclaimer
+                                ? scProfile?.maintenancePackageDisclaimer
+                                :  isBmWService
+                                    ? 'Note: Please ask your service advisor regarding factory covered maintenance services.'
+                                    : 'Note: The maintenance packages may not be available for all vehicle types. Please speak with your Service Advisor to understand where restrictions apply.'
                             }
                         </Info>
                     </Wrapper>

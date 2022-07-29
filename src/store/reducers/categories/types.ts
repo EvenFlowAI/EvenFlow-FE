@@ -9,6 +9,7 @@ export interface ICategory {
     serviceRequests: IServiceRequestShort[];
     type: EServiceCategoryType;
     orderIndex?: number;
+    description?: string;
 }
 
 export type TUpdateCategoryData = {
@@ -17,6 +18,7 @@ export type TUpdateCategoryData = {
     page: number;
     type: EServiceCategoryType;
     orderIndex?: number;
+    description?: string;
 }
 
 export type TNewCategory = TUpdateCategoryData & {

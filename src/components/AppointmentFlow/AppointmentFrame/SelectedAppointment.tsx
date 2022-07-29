@@ -8,6 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 
 
@@ -20,7 +21,6 @@ const Wrapper = styled('div')(({theme}) => ({
     }
 }))
 
-
 const List = styled('ul')(({theme}) => ({
     listStyle: "none",
     margin: 0,
@@ -31,7 +31,7 @@ const List = styled('ul')(({theme}) => ({
     gap: "18px",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         alignSelf: "flex-start",
         gap: "10px",
         width: "100%",
@@ -55,7 +55,7 @@ const List = styled('ul')(({theme}) => ({
             display: 'block',
             maxHeight: 120,
             overflow: "auto",
-            padding: 8,
+            padding: '8px 8px 8px 0',
         }
     },
     "& ul": {
@@ -77,7 +77,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     flexDirection: "column",
     alignItems: "flex-end",
     textAlign: "right",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         alignItems: "flex-start",
     },
     "& .price": {
@@ -89,7 +89,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     },
     "& .info": {
         color: "#27AE60",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             marginTop: 5
         }
     }
@@ -100,7 +100,7 @@ const DateWrapper = styled('div')(({theme}) => ({
     textAlign: "right",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
         marginTop: 8,
         textAlign: "left",
     }
@@ -113,7 +113,7 @@ const useStyles = makeStyles(theme => ({
         '& > span': {
             marginLeft: 5,
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             '& > div > div': {
                 padding: 5
             }
@@ -135,9 +135,21 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const SelectedAppointment = () => {
-    const { selectedPackage, advisor, consultants, categoriesIds, valueService } = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        selectedPackage,
+        advisor,
+        consultants,
+        categoriesIds,
+        serviceType,
+        address,
+        zipCode,
+        valueService,
+        isMobileServiceOn,
+        isPickUpDropOffServiceOn,
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests
@@ -150,23 +162,33 @@ export const SelectedAppointment = () => {
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType])
 
-    const price = appointment?.price.value ?? selectedPackage?.price ?? 0;
+    const price = appointment?.price.value ?? 0;
     const isDynamicPricing = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic) : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
         if (isBmWService && e.target.value !== advisor?.id) dispatch(selectAppointment(null));
-        if (consultant) {
-            dispatch(setAdvisor(consultant))
-        } else {
-            dispatch(setAdvisor(null));
-        }
+        dispatch(setAdvisor(consultant ? consultant : null))
     }
 
     useEffect(() => {
         scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
+
+    const getServiceName = () => {
+        switch (serviceType) {
+            case EServiceType.MobileService:
+                return "Mobile Service";
+            case EServiceType.PikUpDropOff:
+                return "Pick Up / Drop Off";
+            default:
+                return "Visit Center";
+        }
+    }
 
     return (
         <div>
@@ -182,44 +204,58 @@ export const SelectedAppointment = () => {
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div> }
                     </li>
-                        <li key="advisor">
-                            <div className={classes.selectWrapper}>
-                                Advisor: {isSm ? <br/> : null}
+                    <li key="advisor">
+                        {isMobileServiceOn || isPickUpDropOffServiceOn
+                            ? <div className="service-list" style={{marginBottom: 10}}>
+                                <div>LOCATION OF SERVICE: {getServiceName()}</div>
+                            </div>
+                            : null
+                        }
+                        {serviceType === EServiceType.VisitCenter
+                            ? <div className={classes.selectWrapper}>
+                                <div className={classes.selectWrapper}>
+                                    Advisor: {isSm ? <br/> : null}
                                     <Select
                                         value={advisor?.id || "Any"}
                                         className={classes.select}
+                                        disabled={currentConfig && !currentConfig?.advisorSelection}
                                         onChange={handleConsultantChange}>
-                                        {isBmWService
-                                            ? consultants
-                                                .map(consultant => <MenuItem value={consultant.id}>{consultant.name}</MenuItem>)
-                                                .concat([<MenuItem value="Any">Any Available</MenuItem>])
-                                            : <MenuItem value={advisor ? advisor.id : "Any"}>
-                                                {advisor ? advisor.name : 'Any Available'}
-                                              </MenuItem>
-                                        }
+                                        {consultants
+                                            .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
+                                            .concat([<MenuItem value="Any" key="any">Any Available</MenuItem>])}
                                     </Select>
+                                </div>
                             </div>
-                            {appointment && isSm ? <DateWrapper>
-                               {appointment.date.format('MMMM D, h:mm A')}
-                            </DateWrapper> : null}
-                        </li>
+                            : address
+                                ? <div className="service-list">
+                                    <h4> YOUR ADDRESS: </h4>
+                                    <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
+                                </div>
+                                : null
+                        }
+                        {appointment && isSm ? <DateWrapper>
+                            {appointment.date.format('MMMM D, h:mm A')}
+                        </DateWrapper> : null}
+                    </li>
 
                 </List>
                 <PriceWrapper>
-                    {appointment && !isSm ? <DateWrapper>
-                        Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
-                    </DateWrapper> : null}
+                    {appointment && !isSm
+                        ? <DateWrapper>
+                            Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
+                        </DateWrapper>
+                        : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div>}
                         {isDynamicPricing && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
-                          Save by booking at off peak times!
-                        </div>
+                                Save by booking at off peak times!
+                            </div>
                         )}
                     </>
-                    </PriceWrapper>
+                </PriceWrapper>
             </Wrapper>
         </div>
     );

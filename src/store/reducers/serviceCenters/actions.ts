@@ -1,4 +1,12 @@
-import {ISCAnalytics, IServiceCenter, IServiceCenterExtended, IServiceCenterForm, TServiceCenterActions} from "./types";
+import {
+    ILaborRate,
+    IPredictionParams,
+    ISCAnalytics,
+    IServiceCenter,
+    IServiceCenterExtended,
+    IServiceCenterForm,
+    TServiceCenterActions
+} from "./types";
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
@@ -249,5 +257,90 @@ export const updateAuth = (id: number, isAuthRequired: boolean, onError: (err: s
         onError(err)
         console.log('update auth error', err)
     }).finally(() => dispatch(setRemindersLoading(false)))
+}
 
+export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setRemindersLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateAdvisor, {urlParams: {id}, data: {isUpdateAdvisorInAppointments}})
+        .then(res => {
+            if (res) {
+                onSuccess();
+                dispatch(loadAllSCs());
+            }
+        })
+        .catch(err => {
+            console.log('update appointments advisor', err)
+            onError(err);
+        })
+        .finally(() => dispatch(setRemindersLoading(false)));
+}
+export const setParamsLoading = createAction<boolean>("ServiceCenters/SetParamsLoading");
+export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters/SetPredictionParams")
+export const loadPredictionParams = (id: number): AppThunk => dispatch => {
+    dispatch(setParamsLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.GetPredictionParams, {urlParams: {id}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(setPredictionParams(result.data));
+            }
+        })
+        .catch(err => {
+            console.log("load RO prediction parameters error", err)
+        })
+        .finally(() => dispatch(setParamsLoading(false)));
+}
+
+export const updatePredictionParams = (id: number, data: IPredictionParams, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setParamsLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdatePredictionParams, {urlParams: {id}, data})
+        .then(result => {
+            if (result?.data) {
+                dispatch(loadPredictionParams(id));
+                onSuccess();
+            }
+        })
+        .catch(err => {
+            console.log("load RO prediction parameters error", err)
+            onError(err)
+        })
+        .finally(() => dispatch(setParamsLoading(false)));
+}
+
+export const setLaborRate = createAction<ILaborRate>("ServiceCenters/SetLaborRate")
+export const loadLaborRate = (id: number): AppThunk => dispatch => {
+    dispatch(setParamsLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.GetLaborRate, {urlParams: {id}})
+        .then(result => {
+            if (result?.data) dispatch(setLaborRate(result.data));
+        })
+        .catch(err => {
+            console.log('load labor rate error', err)
+        })
+        .finally(() => dispatch(setParamsLoading(false)));
+}
+
+export const updateLaborRate = (id: number, data: ILaborRate, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setParamsLoading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateLaborRate, {urlParams: {id}, data})
+        .then(result => {
+            if (result) {
+                dispatch(loadLaborRate(id));
+                dispatch(loadAllSCs());
+                onSuccess();
+            }
+        })
+        .catch(err => {
+            console.log('update labor rate err', err)
+            onError(err)
+        })
+}
+
+export const updatePackageDisclaimer = (id: number, maintenancePackageDisclaimer: string): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.UpdatePackageDisclaimer, {urlParams: {id}, data: {maintenancePackageDisclaimer}})
+        .then(result => {
+            if (result) dispatch(loadAllSCs())
+        })
+        .catch((error) => {
+            console.log('update package disclaimer error', error)
+        })
 }

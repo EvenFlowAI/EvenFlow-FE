@@ -112,6 +112,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
     const [isLoading, setLoading] = useState(false);
     const carDetails = useSelector((state: RootState) => state.appointment.s1Data);
     const [
+        customerEnteredEmail,
         srList,
         selectedSR,
         appointment,
@@ -122,6 +123,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         appointmentId,
         forms
     ] = useSelector((state: RootState) => [
+        state.appointment.customerEnteredEmail,
         state.appointment.serviceRequests,
         state.appointment.selectedSR,
         state.appointment.appointment,
@@ -193,7 +195,8 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             serviceRequestIds: forms.selectedSR,
             date: forms.appointment?.id.split("|")[0] || "",
             maintenancePackageOptionId: null,
-            serviceCategoryId: null
+            serviceCategoryId: null,
+            searchTerm: customerEnteredEmail,
         };
         setLoading(true);
         try {

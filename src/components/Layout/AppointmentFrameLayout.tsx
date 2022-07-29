@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
 import {frameTheme} from "../../theme/theme";
-import {TScreen} from "./types";
+import {TMobileScreen, TScreen} from "./types";
 import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeedsFrame";
 import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
@@ -21,9 +21,14 @@ import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
-    clearCustomerCache, getBlankCustomer, getBlankVehicle,
+    clearCustomerCache,
+    getBlankCustomer,
+    getBlankVehicle,
     getCustomerCache,
-    loadSCProfile, loadSRs, saveCustomerCache, selectSR,
+    saveCustomerCache,
+    loadSCProfile,
+    loadSRs,
+    selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, getTracker} from "../../utils/utils";
@@ -32,7 +37,9 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    setCurrentFrameScreen, setPackage, setTrackerCreated,
+    setCurrentFrameScreen,
+    setPackage,
+    setTrackerCreated,
     setUpdateAppointment,
     setVehicle
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -44,6 +51,9 @@ import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
+import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
+import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
+import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 
 const Container = styled('div')({
     display: "flex",
@@ -82,17 +92,39 @@ const SCREENS = {
     appointmentTiming: 'Appointment Timing',
     transportationNeeds: 'Transportation Needs',
     opsCode: "opsCode",
-    vehicleData: 'vehicleData',
+    vehicleData: "vehicleData",
+    location: "Your Location",
+    payment: "payment",
 }
 
 // todo add new parent links while go live with new dealerships
 
-export const prodParentLinks = ['https://apps.evenflow.ai/', 'https://www.riverviewford.com/', "https://www.bmwofschererville.com/", "https://bmw-schererville.evenflow.services"];
+export const prodParentLinks = [
+    'https://apps.evenflow.ai/',
+    'https://www.riverviewford.com/',
+    "https://www.bmwofschererville.com/",
+    "https://bmw-schererville.evenflow.services",
+    "https://www.fremontchryslerdodgejeepcasper.com",
+    "https://www.fremontchryslerdodgejeeprocksprings.com"
+];
 
 export const AppointmentFrameLayout = () => {
-    const [currentScreen, setCurrentScreen] = useState<TScreen>("carSelection");
+    const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
     const [origin, setOrigin] = useState<string>('');
+
+    const {
+        selectedVehicle,
+        trackerCreated,
+        isAdditionalServices,
+        service,
+        subService,
+        valueService,
+        serviceType,
+        currentScreen: currentFrameScreen,
+    } = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -103,10 +135,10 @@ export const AppointmentFrameLayout = () => {
     const dispatch = useDispatch();
     const showError = useException();
 
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
-    const currentFrameScreen = useSelector((state: RootState) => state.appointmentFrame.currentScreen);
-    const {selectedVehicle, trackerCreated, isAdditionalServices, service, subService, valueService} = useSelector((state: RootState) => state.appointmentFrame);
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType])
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -114,7 +146,7 @@ export const AppointmentFrameLayout = () => {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
-                debug: true,
+                debug: false,
                 titleCase: false,
                 gaOptions: options,
             });
@@ -171,8 +203,6 @@ export const AppointmentFrameLayout = () => {
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        // const isBMWPromotionalPage = window.location?.ancestorOrigins?.length
-        //     && window.location.ancestorOrigins[0].includes('bmw-schererville.evenflow');
         if (isPromotionPage) {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
@@ -194,9 +224,6 @@ export const AppointmentFrameLayout = () => {
     }, [customerLoadedData, dispatch, handleLogin, origin]);
 
     useEffect(() => {
-        if (currentFrameScreen) {
-            setCurrentScreen(currentFrameScreen);
-        }
         if (currentFrameScreen === currentScreen) {
             window.onbeforeunload = () => {
                 ReactGA.event({
@@ -206,8 +233,17 @@ export const AppointmentFrameLayout = () => {
                     nonInteraction: true
                 })
             }
+        } else {
+            currentFrameScreen && setCurrentScreen(currentFrameScreen);
         }
     }, [currentScreen, currentFrameScreen])
+
+    useEffect(() => {
+        if (serviceType === EServiceType.MobileService && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
+            dispatch(setCurrentFrameScreen("location"))
+            setCurrentScreen("location");
+        }
+    }, [serviceType, customerLoadedData])
 
     useEffect(() => {
         dispatch(loadSCProfile(decodeSCID(id)));
@@ -233,6 +269,16 @@ export const AppointmentFrameLayout = () => {
         handleSetScreen('serviceNeeds');
     }, [dispatch, handleSetScreen]);
 
+    const getNextScreen = (): TScreen => {
+        let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+        if (valueService?.selectedService) {
+            nextScreen = currentConfig?.advisorSelection
+                ? 'consultantSelection'
+                : 'appointmentTiming'
+        }
+        return nextScreen;
+    }
+
     const handleSelectCar = useCallback(async () => {
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
@@ -244,7 +290,7 @@ export const AppointmentFrameLayout = () => {
                 if (data.maintenancePackageOption) {
                     dispatch(setPackage(data.maintenancePackageOption))
                 }
-                handleSetScreen('serviceNeeds');
+                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
             } catch (e) {
                 showError(e);
             } finally {
@@ -252,10 +298,9 @@ export const AppointmentFrameLayout = () => {
             }
 
         } else {
-            valueService?.selectedService ? handleSetScreen('consultantSelection') : handleSetScreen('serviceNeeds');
+            handleSetScreen(getNextScreen());
         }
     }, [handleSetScreen, selectedVehicle, showError, dispatch]);
-
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
@@ -267,7 +312,9 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 onLogin={handleLogin}
-                onBack={isPromotionPage ? () => {} : handleChangeScreen('carSelection')}
+                onBack={isPromotionPage
+                    ? () => {}
+                    : handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
                 onBack={handleChangeScreen('serviceNeeds')}
@@ -275,46 +322,58 @@ export const AppointmentFrameLayout = () => {
             />,
             maintenanceDetails: <MaintenanceDetails
                 onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleChangeScreen('packageSelection')}
+                onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
+                    ? 'packageSelection'
+                    : !currentConfig?.advisorSelection
+                        ? 'appointmentTiming'
+                        : 'consultantSelection')
+                }
             />,
             packageSelection: <PackageSelection
                 onBack={handleChangeScreen('maintenanceDetails')}
-                onNext={handleChangeScreen('consultantSelection')}
+                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             describeMore: <AddInfo
                 onBack={handleSetScreen}
-                onNext={handleChangeScreen('consultantSelection')}
-                onFillCar={handleChangeScreen(isAdditionalServices ? 'consultantSelection' : 'carDetails')}
+                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
+                onFillCar={handleChangeScreen(isAdditionalServices
+                    ? !currentConfig?.advisorSelection
+                        ? 'appointmentTiming'
+                        : 'consultantSelection'
+                    : 'maintenanceDetails')}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             opsCode: <SelectOpsCode
                 onAddServices={handleChangeScreen('serviceNeeds')}
-                onBack={handleChangeScreen(service?.type === EServiceCategoryType.Diagnose ? 'serviceNeeds' : 'serviceSelection')}
+                onBack={handleChangeScreen(service?.type === EServiceCategoryType.Diagnose
+                || service?.type === EServiceCategoryType.IndividualServices
+                    ? 'serviceNeeds'
+                    : 'serviceSelection')}
                 onNext={handleSetScreen}
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
-                onNext={handleChangeScreen('consultantSelection')}
+                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
             />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen('appointmentTiming')}
             />,
             appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen('consultantSelection')}
+                onBack={handleChangeScreen(!currentConfig?.advisorSelection ? 'serviceNeeds' : 'consultantSelection')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection
                 onBack={handleChangeScreen('appointmentTiming')}
-                onNext={handleChangeScreen('transportationNeeds')}
+                onNext={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'transportationNeeds' : 'appointmentConfirmation')}
             />,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,
             appointmentConfirmation: <AppointmentConfirmationFrame
-                onBack={handleChangeScreen('transportationNeeds')}
+                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'transportationNeeds' : 'appointmentSelection')}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
@@ -325,8 +384,14 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen(
                     service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
                     ? 'opsCode' : 'describeMore')}
-                onNext={handleChangeScreen('consultantSelection')}
-            />
+                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
+            />,
+            location: <YourLocation
+                onBack={handleChangeScreen('carSelection')}
+                onNext={handleChangeScreen('serviceNeeds')}
+                onLogin={handleLogin}
+            />,
+            payment: <PaymentScreen/>,
         }
         return carSelections[currentScreen];
     }, [
@@ -359,7 +424,11 @@ export const AppointmentFrameLayout = () => {
             case "appointmentConfirmation":
                 return "Appointment Confirmation";
             case "carDetails":
-                return "Please tell us about your vehicle"
+                return "Please tell us about your vehicle";
+            case "location":
+                return "Where are you located?";
+            case "payment":
+                return "Please Enter Your Payment Information";
             default:
                 return null;
         }

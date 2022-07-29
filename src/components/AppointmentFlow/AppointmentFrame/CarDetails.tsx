@@ -22,11 +22,26 @@ import {useParams} from "react-router-dom";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {yearOptions} from "./MaintenanceDetails";
 
-const SelectWrapper = styled('div')(({theme}) => ({
+export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "20px",
     width: "100%",
+    "& .label": {
+        fontWeight: 700,
+        margin: '0 0 4px 0',
+        textTransform: 'uppercase',
+        fontSize: 12,
+    },
+    // '& > div > div > div': {
+    //     borderRadius: 0,
+    //     backgroundColor: '#F7F8FB',
+    //     padding: 2,
+    //     border: "1px solid #DADADA",
+    //     '& > div > div': {
+    //         fontSize: '1rem',
+    //     }
+    // },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
     }
@@ -51,17 +66,18 @@ const requiredFields: TVehicleKey[] = [
 
 type TProps = {} & TActionProps;
 export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
-    const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
-    const [errors, setErrors] = useState<TVehicleKey[]>([]);
-    const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const {selectedVehicle, makes, valueService}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile}= useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
+    const [errors, setErrors] = useState<TVehicleKey[]>([]);
+    const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const {id} = useParams();
     const dispatch = useDispatch();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const showError = useException();
+
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
@@ -75,9 +91,6 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         {label: "Year", name: "year", options: yearOptions, noVehicle: true},
         {label: "Model", name: "model", options: "model", noVehicle: true},
         {label: "Estimated Mileage", name: "mileage", options: mileage.map(item => item.value.toString())},
-        // {label: "Transmission", name: "transmission"},
-        // {label: "Drive Type", name: "driveType"},
-        // {label: "Engine Type", name: "engineType"},
     ];
 
     useEffect(() => {

@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 
 const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Description Title", val: v => v.description},
-    {header: "Date", val: v => moment(v.date).format("MMMM D")},
+    {header: "Date", val: v => moment.utc(v.date).format("MMMM D")},
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
