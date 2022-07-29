@@ -115,7 +115,7 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
             {to: Routes.Pricing.OfferManagement, name: "Offer Management", exact: true, sub: true, roles: ["Owner", "Manager", "Advisor"]},
         ]},
 
-    {to: Routes.BookingFlow.Base, name: "Booking UI", roles: ["Owner", "Manager"], subLinks: [
+    {to: Routes.BookingFlow.Base, name: "Booking Flow", roles: ["Owner", "Manager"], subLinks: [
             {to: Routes.BookingFlow.BookingFlowConfigDetails, name: "Booking Flow Config", exact: true, sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.BookingFlow.TransportationOptions, name: "Transportation Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.BookingFlow.ServiceOpsCodesMapping, name: "Service Ops Code Mapping", exact: true, sub: true, roles: ["Owner", "Manager"]},
@@ -190,7 +190,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
                 endIcon={<ArrowForwardIos/>}
                 className={classes.link}
                 onClick={onOpen}>
-                Booking Info
+                Booking UI
             </Button>
                 <Button
                     endIcon={<ArrowForwardIos/>}
