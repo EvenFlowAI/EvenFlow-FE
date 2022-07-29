@@ -19,7 +19,7 @@ import {
     loadSCEmployees
 } from "../../../store/reducers/employees/actions";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
-import {createPod, updatePod} from "../../../store/reducers/pods/actions";
+import {createPod, loadMakesForPods, updatePod} from "../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../store/reducers/bays/actions";
 import {ConfigButton} from "../../UI/ConfigButton";
 import {IMakeExtended, IModel} from "../../../api/types";
@@ -93,12 +93,14 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         advisorsList,
         techniciansList,
         serviceRequests,
-        baysList
+        baysList,
+        makesForPods,
     ] = useSelector((state: RootState) => [
         state.scEmployees.advisorsList,
         state.scEmployees.techniciansList,
         state.serviceRequests.scRequestsShort,
         state.bays.baysShort,
+        state.pods.makes,
     ]);
 
     const disabledBays: number[] = useMemo(() => {
@@ -116,20 +118,30 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 bays: payload?.bays?.map(b => b.id) || []
             });
             if (payload?.vehicleMakes?.length) {
-                const filteredMakes = mockMakes.filter(item => payload?.vehicleMakes?.includes(item.id));
+                const filteredMakes = mockMakes.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
                 setSelectedMakes(filteredMakes);
-                if (payload?.vehicleModels?.length) {
-
-                }
+            }
+            if (payload?.vehicleModels?.length) {
+                const models: IModel[][] = [];
+                mockMakes.forEach(item => {
+                    const makeIsSelected = payload?.vehicleMakes?.find(make => make.id === item.id);
+                    if (makeIsSelected) {
+                        models.push(item.models)
+                    }
+                });
+                const modelsIDs = models.flat().map(item => item.id);
+                const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
+                setSelectedModels(filteredModels);
             }
         }
-    }, [props.open, payload]);
+    }, [props.open, payload, mockMakes]);
     useEffect(() => {
         if (selectedSC && props.open) {
             dispatch(loadSCAdvisors(selectedSC.id));
             dispatch(loadSCEmployees(selectedSC.id));
             dispatch(loadSCRequestsShort(selectedSC.id));
             dispatch(loadBaysShort(selectedSC.id));
+            dispatch(loadMakesForPods(selectedSC.id));
         }
     }, [selectedSC, dispatch, props.open]);
 

@@ -2,6 +2,15 @@ import {IAdvisorShort} from "../users/types";
 import {IBayShort} from "../bays/types";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
 
+export interface IPodVehicleMake {
+    id: number;
+    name: string;
+}
+
+export interface IPodVehicleModel {
+    id: number;
+    name: string;
+}
 
 export interface IPodShort {
     id: number;
@@ -17,8 +26,8 @@ export interface IPod {
     bays?: IBayShort[];
     technicians?: IAdvisorShort[];
     serviceRequests?: IAssignedServiceRequestShort[];
-    vehicleMakes?: number[];
-    vehicleModels?: number[];
+    vehicleMakes?: IPodVehicleMake[];
+    vehicleModels?: IPodVehicleModel[];
 }
 export interface IPodFilters {
     searchTerm: string;

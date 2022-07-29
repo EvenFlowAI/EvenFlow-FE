@@ -4,11 +4,12 @@ import {
     setPodsLoading,
     setPodsPageData,
     setPodsPaging,
-    setPodsFilters, getPodsShort, setSelectedPod
+    setPodsFilters, getPodsShort, setSelectedPod, setPodsMakes
 } from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {createReducer} from "@reduxjs/toolkit";
+import {IMakeExtended} from "../../../api/types";
 
 type TState = {
     podsList: IPod[],
@@ -17,7 +18,8 @@ type TState = {
     podsPageData: IPageRequest;
     podsFilters: IPodFilters;
     shortPodsList: IPodShort[];
-    selectedPod: IPodShort|null
+    selectedPod: IPodShort|null;
+    makes: IMakeExtended[];
 }
 const initialState: TState = {
     podsList: [],
@@ -29,7 +31,8 @@ const initialState: TState = {
         advisorId: ""
     },
     selectedPod: null,
-    shortPodsList: []
+    shortPodsList: [],
+    makes: [],
 }
 
 export const podsReducer = createReducer(initialState, builder => builder
@@ -53,5 +56,8 @@ export const podsReducer = createReducer(initialState, builder => builder
     })
     .addCase(setSelectedPod, (state, {payload}) => {
         return {...state, selectedPod: payload};
+    })
+    .addCase(setPodsMakes, (state, {payload}) => {
+        return {...state, makes: payload};
     })
 )

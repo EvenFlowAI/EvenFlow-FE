@@ -156,7 +156,7 @@ type ApiRoutes = {
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
-    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
+    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort" | "GetMakes", TApiRoute>,
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
@@ -312,6 +312,8 @@ export class Api {
             Remove: {route: "/pods/{id}", method: "delete"},
             GetAll: {route: "/pods/by-query", method: "post"},
             GetShort: {route: "/pods/short-by-query", method: "post"},
+            // todo change to real endpoint
+            GetMakes: {route: "/pods/makes", method: "get"},
         },
         PricingSettings: {
             GetList: {route: "/pricing-settings", method: "get"},
