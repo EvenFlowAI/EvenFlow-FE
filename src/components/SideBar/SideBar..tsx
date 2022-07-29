@@ -113,7 +113,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const history = useHistory();
 
     const links: LinkTypeWithSub[] = useMemo(() => {
-        if (matchPath(pathname, Routes.Admin.Base && currentUser?.isSuperUser)) {
+        if (matchPath(pathname, Routes.Admin.Base) && currentUser?.isSuperUser) {
             return SULinks;
         }
         return MainLinksWithSub;
