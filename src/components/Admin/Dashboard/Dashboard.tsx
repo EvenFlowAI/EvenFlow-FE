@@ -3,12 +3,7 @@ import {Box, Button, Grid, Paper} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
-import {
-    Build, ChevronRight, DateRange,
-    FreeBreakfastOutlined,
-    LockOutlined,
-    PlaceOutlined
-} from "@material-ui/icons";
+import {ChevronRight} from "@material-ui/icons";
 import {EditAddress} from "../../Modals/EditAddress/EditAddress";
 import {HourOfOperations} from "../../Modals/HourOfOperations/HourOfOperations";
 import {Holidays} from "../../Modals/Holydays/Holidays";
@@ -21,9 +16,15 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
 import {SquarePaper} from "../../UI/Paper";
 import {RootState} from "../../../store/rootReducer";
-import {ReactComponent as Calendar} from "../../../assets/img/date_1_grey.svg";
 import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.svg";
-import {ReactComponent as HoursIcon} from "../../../assets/img/Icon_Hours_of_operation.svg";
+import {ReactComponent as HoursIcon} from "../../../assets/img/Icon 2 Hours of operation.svg";
+import {ReactComponent as ScheduleIcon} from "../../../assets/img/Icon_3_Weekly_schedule.svg";
+import {ReactComponent as AddressIcon} from "../../../assets/img/Icon_1_Address.svg";
+import {ReactComponent as BaysIcon} from "../../../assets/img/Icon_6 _Bays.svg";
+import {ReactComponent as RemindersIcon} from "../../../assets/img/Icon_36px_Appointment_reminders.svg";
+import {ReactComponent as EmployeeScheduleIcon} from "../../../assets/img/Subtract.svg";
+import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.svg";
+import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
 import Reminders from "../../Modals/Reminders/Reminders";
 import LaborRate from "../../Modals/LaborRate/LaborRate";
 import {EmployeeSchedule} from "../../Modals/EmployeeSchedule/EmployeeSchedule";
@@ -208,15 +209,15 @@ export const AdminDashboard: React.FC = () => {
     }));
 
     const items: TItem[] = [
-        {label: "Address", icon: <PlaceOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenAddress},
+        {label: "Address", icon: <AddressIcon />, action: onOpenAddress},
         {label: "Hours of operation", icon: <HoursIcon />, action: onOpenHOO},
-        {label: "Weekly schedule", icon: <DateRange />, action: onOpenWS},
-        {label: "Employee Schedule", icon: <Calendar />, action: onOpenEmployeeSchedule},
-        {label: "Holidays", icon: <LockOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenH},
-        {label: "Breaks", icon: <FreeBreakfastOutlined htmlColor='rgb(94, 95, 102)'/>, action: onOpenB},
-        {label: "Bays", icon: <Build htmlColor='rgb(94, 95, 102)'/>, action: onOpenBays},
-        {label: "Labor Rate", icon: <LaborRateIcon/>, action: onOpenLaborRate},
-        {label: "Appointment Reminders", icon: <Calendar />, action: onOpenReminders},
+        {label: "Weekly schedule", icon: <ScheduleIcon />, action: onOpenWS},
+        {label: "Employee Schedule", icon: <EmployeeScheduleIcon />, action: onOpenEmployeeSchedule},
+        {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
+        {label: "Breaks", icon: <BreaksIcon />, action: onOpenB},
+        {label: "Bays", icon: <BaysIcon />, action: onOpenBays},
+        {label: "Labor Rate", icon: <LaborRateIcon />, action: onOpenLaborRate},
+        {label: "Appointment Reminders", icon: <RemindersIcon />, action: onOpenReminders},
     ];
 
     const classes = useStyles();
