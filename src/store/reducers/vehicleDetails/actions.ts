@@ -1,13 +1,14 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {IMake} from "../../../api/types";
+import {IMake, IMakeExtended} from "../../../api/types";
 import {ICreateMake, IMileage, TCreateMileage} from "./types";
 
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');
 export const setLoading = createAction<boolean>('VehicleDetails/SetLoading');
 export const getMileage = createAction<IMileage[]>('VehicleDetails/GetMileage');
+export const setPodsMakes = createAction<IMakeExtended[]>("VehicleDetails/MakesModels");
 
 export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch => {
     dispatch(setLoading(true));
@@ -95,5 +96,15 @@ export const removeMileage = (id: number, serviceCenterId: number): AppThunk => 
         })
         .catch(err => {
             console.log('remove mileage error', err);
+        })
+}
+
+export const loadMakesForPods = (id: number): AppThunk => dispatch => {
+    Api.call<IMakeExtended[]>(Api.endpoints.Vehicles.MakesModels, {params: {id}})
+        .then(result => {
+            dispatch(setPodsMakes(result.data))
+        })
+        .catch(err => {
+            console.log('get makes for pods error', err)
         })
 }

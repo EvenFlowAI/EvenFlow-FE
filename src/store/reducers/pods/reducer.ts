@@ -17,7 +17,7 @@ type TState = {
     podsPageData: IPageRequest;
     podsFilters: IPodFilters;
     shortPodsList: IPodShort[];
-    selectedPod: IPodShort|null
+    selectedPod: IPodShort|null;
 }
 const initialState: TState = {
     podsList: [],
@@ -29,7 +29,7 @@ const initialState: TState = {
         advisorId: ""
     },
     selectedPod: null,
-    shortPodsList: []
+    shortPodsList: [],
 }
 
 export const podsReducer = createReducer(initialState, builder => builder

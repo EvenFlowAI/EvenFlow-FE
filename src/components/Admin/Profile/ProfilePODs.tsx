@@ -17,7 +17,9 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "Advisor", val: e => e.advisor?.fullName},
     {header: "Technicians", val: e => e.technicians?.map(t => t.fullName).join(", ") || ""},
     {header: "Bays", val: e => e.bays?.map(b => b.name).join(", ") || ""},
-    {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || "", xsHidden: true}
+    {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || "", xsHidden: true},
+    {header: "Makes", val: e => e.vehicleMakes?.map(s => s.name).join(", ") || "", xsHidden: true},
+    {header: "Models", val: e => e.vehicleModels?.map(s => s.name).join(", ") || "", xsHidden: true},
 ]
 
 export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {

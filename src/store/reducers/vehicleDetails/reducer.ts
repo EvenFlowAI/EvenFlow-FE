@@ -1,6 +1,6 @@
-import {IMake} from "../../../api/types";
+import {IMake, IMakeExtended} from "../../../api/types";
 import {createReducer} from "@reduxjs/toolkit";
-import {getMakes, getMileage, setCurrentMake, setLoading} from "./actions";
+import {getMakes, getMileage, setCurrentMake, setLoading, setPodsMakes} from "./actions";
 import {IMileage} from "./types";
 
 type TState = {
@@ -8,6 +8,7 @@ type TState = {
     currentMake: IMake | null;
     isLoading: boolean;
     mileage: IMileage[];
+    makesModels: IMakeExtended[];
 }
 
 const initialState: TState = {
@@ -15,6 +16,7 @@ const initialState: TState = {
     currentMake: null,
     isLoading: false,
     mileage: [],
+    makesModels: [],
 }
 
 export const vehicleDetailsReducer = createReducer<TState>(initialState, builder => builder
@@ -29,5 +31,8 @@ export const vehicleDetailsReducer = createReducer<TState>(initialState, builder
     })
     .addCase(getMileage, (state, {payload}) => {
         return { ...state, mileage: payload }
+    })
+    .addCase(setPodsMakes, (state, {payload}) => {
+        return { ...state, makesModels: payload }
     })
 )

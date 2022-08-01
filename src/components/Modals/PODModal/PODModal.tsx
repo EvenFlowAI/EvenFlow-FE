@@ -25,35 +25,8 @@ import {ConfigButton} from "../../UI/ConfigButton";
 import {IMakeExtended, IModel} from "../../../api/types";
 import {getOptions} from "../../../utils/utils";
 import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
+import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 
-const mockMakes = [
-    {
-        name: 'BMW',
-        id: 1,
-        models: [
-            {
-                name: '3x',
-                id: 2,
-            },
-            {
-                name: '4x',
-                id: 2,
-            }]
-    },
-    {
-        name: 'BMW1',
-        id: 4,
-        models: [
-            {
-                name: '3x1',
-                id: 5,
-            },
-            {
-                name: '4x1',
-                id: 6,
-            }]
-    }
-]
 type TForm = {
     name: string;
     description: string;
@@ -62,6 +35,7 @@ type TForm = {
     bays: number[];
     serviceRequests: IAssignedServiceRequestShort[];
 }
+
 const initialForm: TForm = {
     name: "",
     description: "",
@@ -93,12 +67,14 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         advisorsList,
         techniciansList,
         serviceRequests,
-        baysList
+        baysList,
+        makesModels,
     ] = useSelector((state: RootState) => [
         state.scEmployees.advisorsList,
         state.scEmployees.techniciansList,
         state.serviceRequests.scRequestsShort,
         state.bays.baysShort,
+        state.vehicleDetails.makesModels,
     ]);
 
     const disabledBays: number[] = useMemo(() => {
@@ -116,20 +92,30 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 bays: payload?.bays?.map(b => b.id) || []
             });
             if (payload?.vehicleMakes?.length) {
-                const filteredMakes = mockMakes.filter(item => payload?.vehicleMakes?.includes(item.id));
+                const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
                 setSelectedMakes(filteredMakes);
-                if (payload?.vehicleModels?.length) {
-
-                }
+            }
+            if (payload?.vehicleModels?.length) {
+                const models: IModel[][] = [];
+                makesModels.forEach(item => {
+                    const makeIsSelected = payload?.vehicleMakes?.find(make => make.id === item.id);
+                    if (makeIsSelected) {
+                        models.push(item.models)
+                    }
+                });
+                const modelsIDs = models.flat().map(item => item.id);
+                const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
+                setSelectedModels(filteredModels);
             }
         }
-    }, [props.open, payload]);
+    }, [props.open, payload, makesModels]);
     useEffect(() => {
         if (selectedSC && props.open) {
             dispatch(loadSCAdvisors(selectedSC.id));
             dispatch(loadSCEmployees(selectedSC.id));
             dispatch(loadSCRequestsShort(selectedSC.id));
             dispatch(loadBaysShort(selectedSC.id));
+            dispatch(loadMakesForPods(selectedSC.id));
         }
     }, [selectedSC, dispatch, props.open]);
 
@@ -187,7 +173,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
 
     const getSortedMakes = () => {
-        return mockMakes
+        return makesModels
             .sort((a, b) => selectedMakes.find(make => make.id === a.id) ? selectedMakes.find(make => make.id === b.id) ? 0 : -1 : 1);
     }
 
