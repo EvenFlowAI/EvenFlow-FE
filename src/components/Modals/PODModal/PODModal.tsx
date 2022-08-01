@@ -173,8 +173,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
 
     const getSortedMakes = () => {
+        // todo fix sorting
         return makesModels
-            .sort((a, b) => selectedMakes.find(make => make.id === a.id) ? selectedMakes.find(make => make.id === b.id) ? 0 : -1 : 1);
+            // .sort((a, b) => selectedMakes.find(make => make.id === a.id) ? selectedMakes.find(make => make.id === b.id) ? 0 : -1 : 1);
     }
 
     const getSortedModels = () => {
