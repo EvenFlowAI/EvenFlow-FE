@@ -2,14 +2,12 @@ import {createAction} from "@reduxjs/toolkit";
 import {IPod, IPodFilters, IPodForm, IPodShort} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {IMakeExtended} from "../../../api/types";
 
 export const getPods = createAction<IPod[]>("Pods/GetPods");
 export const setPodsLoading = createAction<boolean>("Pods/Loading");
 export const setPodsPageData = createAction<Partial<IPageRequest>>("Pods/PageData");
 export const setPodsPaging = createAction<IPagingResponse>("Pods/Paging");
 export const setPodsFilters = createAction<Partial<IPodFilters>>("Pods/Filters");
-export const setPodsMakes = createAction<IMakeExtended[]>("Pods/Makes");
 
 export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     const {podsFilters, podsPageData} = getState().pods;
@@ -56,14 +54,4 @@ export const loadPodsShort = (serviceCenterId: number): AppThunk => async dispat
         {data: {serviceCenterId, pageSize: 0}}
     );
     dispatch(getPodsShort(result));
-}
-
-export const loadMakesForPods = (id: number): AppThunk => dispatch => {
-    Api.call<IMakeExtended[]>(Api.endpoints.Pods.GetMakes, {urlParams: {id}})
-        .then(result => {
-            dispatch(setPodsMakes(result.data))
-        })
-        .catch(err => {
-            console.log('get makes for pods error', err)
-        })
 }

@@ -184,7 +184,7 @@ type ApiRoutes = {
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
     Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "RemoveMake" | "UpdateMake" | "CreateMake"
-        | "GetMileage" | "RemoveMileage" | "CreateMileage", TApiRoute>,
+        | "GetMileage" | "RemoveMileage" | "CreateMileage" | "MakesModels", TApiRoute>,
     ValueService: Record<"GetSeriesModels" | "GetValueServiceOffers", TApiRoute>
 }
 
@@ -466,6 +466,7 @@ export class Api {
             GetMileage: {route: "/vehicles/mileage", method: "get"},
             RemoveMileage: {route: "/vehicles/mileage/{id}", method: "delete"},
             CreateMileage: {route: "/vehicles/mileage", method: "post"},
+            MakesModels: {route: "/vehicles/makes-models", method: "get"},
         },
         ValueService: {
             GetSeriesModels: {route: "/value-service-offers/vehicle-models", method: "get"},
