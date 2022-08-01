@@ -99,8 +99,8 @@ export const removeMileage = (id: number, serviceCenterId: number): AppThunk => 
         })
 }
 
-export const loadMakesForPods = (id: number): AppThunk => dispatch => {
-    Api.call<IMakeExtended[]>(Api.endpoints.Vehicles.MakesModels, {params: {id}})
+export const loadMakesForPods = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call<IMakeExtended[]>(Api.endpoints.Vehicles.MakesModels, {params: {serviceCenterId}})
         .then(result => {
             dispatch(setPodsMakes(result.data))
         })
