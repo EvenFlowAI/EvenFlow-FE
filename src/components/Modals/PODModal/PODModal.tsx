@@ -94,6 +94,11 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             if (payload?.vehicleMakes?.length) {
                 const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
                 setSelectedMakes(filteredMakes);
+                setModelsOptions(filteredMakes.map(make => make.models).flat())
+            } else {
+                setSelectedMakes([])
+                setSelectedModels([])
+                setModelsOptions([])
             }
             if (payload?.vehicleModels?.length) {
                 const models: IModel[][] = [];
@@ -174,8 +179,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
 
     const getSortedMakes = () => {
         // todo fix sorting
-        return makesModels
-            // .sort((a, b) => selectedMakes.find(make => make.id === a.id) ? selectedMakes.find(make => make.id === b.id) ? 0 : -1 : 1);
+        return [...makesModels]
+            .sort((a, b) => selectedMakes.find(make => make.id === a.id) ? selectedMakes.find(make => make.id === b.id) ? 0 : -1 : 1);
     }
 
     const getSortedModels = () => {
@@ -190,7 +195,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         setFormIsChecked(false);
         setSelectedMakes(value);
         setModelsOptions(value.map(make => make.models).flat());
-        setSelectedModels(prev => prev.filter(item => selectedMakes.find(make => make.models.find(model => model.id === item.id))));
+        setSelectedModels(prev => prev.filter(item => value.find(make => make.models.find(model => model.id === item.id))));
     }, [selectedMakes])
 
     const onModelChange = useCallback((e: ChangeEvent<{}>, value: IModel[]) => {
@@ -202,6 +207,14 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         setFormIsChecked(false);
         setJobType(value)
     }, [])
+
+    const getMakeOptionSelected = (option: IMakeExtended) => {
+       return !!selectedMakes.find(make => make.id === option.id)
+    };
+
+    const getModelOptionSelected = (option: IModel) => {
+        return !!selectedModels.find(model => model.id === option.id);
+    }
 
     return <BaseModal {...props} maxWidth="md">
         <DialogTitle onClose={props.onClose}>
@@ -307,7 +320,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         options={getSortedMakes()}
                         disableCloseOnSelect
                         getOptionLabel={i => i.name}
-                        renderOption={autocompleteOptionsRender(e => e.name)}
+                        getOptionSelected={getMakeOptionSelected}
+                        renderOption={autocompleteOptionsRender((e) => e.name)}
                         value={selectedMakes}
                         onChange={onMakeChange}
                         renderInput={autocompleteRender({
@@ -329,7 +343,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         options={getSortedModels()}
                         disableCloseOnSelect
                         getOptionLabel={i => i.name}
-                        renderOption={autocompleteOptionsRender(e => e.name)}
+                        renderOption={autocompleteOptionsRender((e) => e.name)}
+                        getOptionSelected={getModelOptionSelected}
                         value={selectedModels}
                         onChange={onModelChange}
                         renderInput={autocompleteRender({
