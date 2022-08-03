@@ -12,6 +12,7 @@ import {LoadingButton} from "../../UI/Button";
 import {loadBookingFlowConfig, updateBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {Loading} from "../../UI/Loading";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {bookingFlowRoot} from "../../Optimizer/utils";
 
 const useStyles = makeStyles(theme => ({
     switchCell: {
@@ -19,7 +20,6 @@ const useStyles = makeStyles(theme => ({
         padding: "2px 12px !important"
     },
     tableWrapper: {
-        overflowX: "auto",
         width: "100%",
         "& .MuiTableCell-root": {
             [theme.breakpoints.down("xs")]: {
@@ -134,13 +134,13 @@ const BookingFlowConfig = () => {
         }
     }
 
-    return <div>
-        <TitleContainer title="Booking Flow Configuration" pad={true}/>
+    return <div style={{width: '100%'}}>
+        <TitleContainer title="Booking Flow Configuration" pad parent={bookingFlowRoot}/>
         <SquarePaper variant="outlined">
             <TableContainer>
                 <div className={classes.tableWrapper}>
                     {isLoading
-                        ? <div style={{width: '80vw', height: "40vh"}}><Loading/></div>
+                        ? <Loading/>
                         : <DenseTable>
                             <TableHead>
                                 <TableRow>

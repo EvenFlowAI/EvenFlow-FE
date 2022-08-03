@@ -6,9 +6,17 @@ enum AdminRoutes {
     Profile = "/admin/profile",
     ServiceCenters = "/admin/service-centers",
     ServiceRequests = "/admin/service-requests",
-    VehicleDetails = "/admin/vehicle-details",
-    ServiceOpsCodesMapping = "/admin/service-codes-mapping",
     BookingFlowConfig = "/admin/booking-flow-config",
+    BookingFlowConfigDetails = "/admin/booking-flow-config/details",
+    TransportationOptions = "/admin/booking-flow-config/transportation-options",
+    ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
+    VehicleDetails = "/admin/booking-flow-config/vehicle-details",
+    CapacityOptimization = "/admin/capacity-optimization",
+    Pricing = "/admin/pricing",
+    ServicePriceSettings = "/admin/pricing/service-price-settings",
+    MobileService = "/admin/pricing/mobile-service",
+    ServiceValet = "/admin/pricing/service-valet",
+    Reporting = "/admin/reporting",
 }
 
 enum AdminLogin {
@@ -37,7 +45,24 @@ enum OptimizerRoutes {
     OptimizationWindows = "/optimizer/optimization-windows",
     PricingSettings = "/optimizer/pricing-settings",
     MobileService = "/optimizer/mobile-service",
-    ServiceValue = "/optimizer/service-value",
+    Pods = "/optimizer/pods",
+    ManageEXEvenFlowAppointments = "/optimizer/manage-ex-evenflow-appointments",
+}
+
+enum BookingFlowConfigRoutes {
+    Base = "/admin/booking-flow-config",
+    BookingFlowConfigDetails = "/admin/booking-flow-config/details",
+    TransportationOptions = "/admin/booking-flow-config/transportation-options",
+    ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
+    VehicleDetails = "/admin/booking-flow-config/vehicle-details",
+}
+
+enum PricingRoutes {
+    Base = "/admin/pricing",
+    ServicePricingSettings = "/admin/pricing/service-pricing-settings",
+    MobileService = "/admin/pricing/mobile-service",
+    ServiceValet = "/admin/pricing/service-valet",
+    OfferManagement = "/admin/pricing/offer-management",
 }
 
 enum EndUser {
@@ -61,5 +86,7 @@ export const Routes = {
     EndUser: EndUser,
     Account: AccountRoutes,
     Optimizer: OptimizerRoutes,
-    OfferManagement: OfferManagementRoutes
+    OfferManagement: OfferManagementRoutes,
+    BookingFlow: BookingFlowConfigRoutes,
+    Pricing: PricingRoutes,
 }

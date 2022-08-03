@@ -2,6 +2,15 @@ import {IAdvisorShort} from "../users/types";
 import {IBayShort} from "../bays/types";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
 
+export interface IPodVehicleMake {
+    id: number;
+    name: string;
+}
+
+export interface IPodVehicleModel {
+    id: number;
+    name: string;
+}
 
 export interface IPodShort {
     id: number;
@@ -10,13 +19,15 @@ export interface IPodShort {
 export interface IPod {
     id: number;
     name: string;
+    serviceCenterId: number;
     description?: string;
     advisorId?: string;
     advisor?: IAdvisorShort;
     bays?: IBayShort[];
     technicians?: IAdvisorShort[];
     serviceRequests?: IAssignedServiceRequestShort[];
-    serviceCenterId: number;
+    vehicleMakes?: IPodVehicleMake[];
+    vehicleModels?: IPodVehicleModel[];
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -31,4 +42,10 @@ export interface IPodForm {
     technicians?: string[];
     serviceRequests?: number[];
     bays?: number[];
+    vehicleMakes: number[];
+    vehicleModels: number[];
+}
+
+export enum EJobType {
+    Internal, Warranty, CustomerPay, Recall
 }

@@ -5,8 +5,19 @@ import {IDetailsData} from "./MaintenancePackages/PackageAccordion/PackageAccord
 
 export const optimizerRoot: TTitle = {
     to: Routes.Optimizer.Base,
-    title: "Optimizer Settings"
+    title: "Capacity Optimization"
 }
+
+export const bookingFlowRoot: TTitle = {
+    to: Routes.BookingFlow.Base,
+    title: "Booking Flow"
+}
+
+export const pricingRoot: TTitle = {
+    to: Routes.Pricing.Base,
+    title: "Pricing"
+}
+
 const getTotal = (includedRequests: TExtendedService[]): number => {
     const price = includedRequests.reduce((a, b) => a + +b.price, 0);
     return Number.isInteger(price) ? price : +price.toFixed(2);

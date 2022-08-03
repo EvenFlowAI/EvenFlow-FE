@@ -12,6 +12,7 @@ import {ICategory} from "../../../store/reducers/categories/types";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {Table} from "../../UI/Table";
 import AddServiceCategory from "../../Modals/AddServiceCategory/AddServiceCategory";
+import {bookingFlowRoot} from "../../Optimizer/utils";
 
 const RowData: TableRowDataType<ICategory>[] = [
     {val: (el: ICategory) => el.name, header: "Service Category Name",  width: 300},
@@ -91,7 +92,7 @@ const ServiceOpsCodesMapping = () => {
 
     return (
             <TabContext value={selectedTab}>
-            <TitleContainer title="Service Ops Codes Mapping" pad />
+            <TitleContainer title="Service Ops Codes Mapping" pad parent={bookingFlowRoot}/>
             <TabList
                 onChange={handleTabChange}
                 variant="scrollable"
