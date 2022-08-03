@@ -54,7 +54,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const [form, setForm] = useState<TForm>(initialForm);
     const {selectedSC} = useSCs();
     const [loading, setLoading] = useState<boolean>();
-    const [formIsChecked, setFormIsChecked] = useState<boolean>();
     const [selectedMakes, setSelectedMakes] = useState<IMakeExtended[]>([]);
     const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
     const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
@@ -145,7 +144,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
 
     const handleSave = async () => {
-        setFormIsChecked(true)
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
@@ -178,7 +176,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
 
     const getSortedMakes = () => {
-        // todo fix sorting
         return [...makesModels]
             .sort((a, b) => selectedMakes.find(make => make.id === a.id) ? selectedMakes.find(make => make.id === b.id) ? 0 : -1 : 1);
     }
@@ -192,19 +189,16 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
 
     const onMakeChange = useCallback((e: ChangeEvent<{}>, value: IMakeExtended[]) => {
-        setFormIsChecked(false);
         setSelectedMakes(value);
         setModelsOptions(value.map(make => make.models).flat());
         setSelectedModels(prev => prev.filter(item => value.find(make => make.models.find(model => model.id === item.id))));
     }, [selectedMakes])
 
     const onModelChange = useCallback((e: ChangeEvent<{}>, value: IModel[]) => {
-        setFormIsChecked(false);
         setSelectedModels(value);
     }, [])
 
     const onJobTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
-        setFormIsChecked(false);
         setJobType(value)
     }, [])
 
@@ -214,6 +208,10 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
 
     const getModelOptionSelected = (option: IModel) => {
         return !!selectedModels.find(model => model.id === option.id);
+    }
+
+    const getRequestOptionSelected = (option: IAssignedServiceRequestShort) => {
+        return !!form.serviceRequests.find(request => request.id === option.id);
     }
 
     return <BaseModal {...props} maxWidth="md">
@@ -302,6 +300,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         onChange={handleSCChange}
                         getOptionLabel={i => i.code}
+                        getOptionSelected={getRequestOptionSelected}
                         renderOption={autocompleteOptionsRender((e) => e.code)}
                         loading={false}
                         value={form.serviceRequests}
@@ -326,7 +325,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         onChange={onMakeChange}
                         renderInput={autocompleteRender({
                             label: "Makes",
-                            error: !selectedMakes.length && formIsChecked,
                             placeholder: 'Select Makes'
                         })}
                     />
@@ -349,7 +347,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         onChange={onModelChange}
                         renderInput={autocompleteRender({
                             label: "Models",
-                            error: !selectedMakes.length && formIsChecked,
                             placeholder: 'Select Models'
                         })}
                     />
