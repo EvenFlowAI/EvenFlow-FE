@@ -19,7 +19,7 @@ type MakeAndModelProps = {
     isApplyBusinessRules?:boolean;
 }
 
-export const useStyles = makeStyles(() => ({
+export const useMakeAndModelStyles = makeStyles(() => ({
     tag: {
         display: 'flex',
         alignItems: 'center',
@@ -54,7 +54,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                                                        isApplyBusinessRules}) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const [models, setModels] = useState<string[]>([]);
-    const classes = useStyles();
+    const classes = useMakeAndModelStyles();
 
     useEffect(() => {
         const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));

@@ -1,7 +1,7 @@
 import React, {ChangeEvent, Dispatch, SetStateAction, useCallback} from 'react';
 import {autocompleteRender} from "../../../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
-import {useStyles} from "../MakeAndModel/MakeAndModel";
+import {useMakeAndModelStyles} from "../MakeAndModel/MakeAndModel";
 import Checkbox from "../../../../UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {useSelector} from "react-redux";
@@ -24,7 +24,7 @@ const Mileage: React.FC<TMileageProps> = ({
                                               setSelectedMileages,
                                               setFormIsChecked }) => {
     const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
-    const classes = useStyles();
+    const classes = useMakeAndModelStyles();
 
     const getOptions = useCallback(() => {
         const options = mileage.map(item => item.value.toString());

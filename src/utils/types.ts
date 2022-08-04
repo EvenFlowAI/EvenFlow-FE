@@ -27,4 +27,9 @@ export type TGroupedAppointments = {
     [k: string]: TGroupedAppointment
 }
 
+export type TOption = {
+    value: number;
+    name: string;
+}
+
 export type TGroupedAppointmentsList = [keyof TGroupedAppointments, TGroupedAppointment];

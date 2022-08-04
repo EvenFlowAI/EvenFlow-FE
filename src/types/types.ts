@@ -11,6 +11,15 @@ export type LinkType = {
     sub?: boolean;
 }
 
+export type LinkTypeWithSub = {
+    to: string;
+    name: string;
+    roles: TRole[]|boolean;
+    exact?: boolean;
+    subLinks?: LinkType[];
+    sub?: boolean;
+}
+
 export type ValidationKeyPairs<U> = {
     field: keyof U;
     message: string;

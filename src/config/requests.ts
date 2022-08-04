@@ -156,7 +156,7 @@ type ApiRoutes = {
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
-    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort", TApiRoute>,
+    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort" | "GetMakes", TApiRoute>,
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
@@ -184,7 +184,7 @@ type ApiRoutes = {
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
     Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "RemoveMake" | "UpdateMake" | "CreateMake"
-        | "GetMileage" | "RemoveMileage" | "CreateMileage", TApiRoute>,
+        | "GetMileage" | "RemoveMileage" | "CreateMileage" | "MakesModels", TApiRoute>,
     ValueService: Record<"GetSeriesModels" | "GetValueServiceOffers", TApiRoute>
 }
 
@@ -312,6 +312,8 @@ export class Api {
             Remove: {route: "/pods/{id}", method: "delete"},
             GetAll: {route: "/pods/by-query", method: "post"},
             GetShort: {route: "/pods/short-by-query", method: "post"},
+            // todo change to real endpoint
+            GetMakes: {route: "/pods/makes", method: "get"},
         },
         PricingSettings: {
             GetList: {route: "/pricing-settings", method: "get"},
@@ -464,6 +466,7 @@ export class Api {
             GetMileage: {route: "/vehicles/mileage", method: "get"},
             RemoveMileage: {route: "/vehicles/mileage/{id}", method: "delete"},
             CreateMileage: {route: "/vehicles/mileage", method: "post"},
+            MakesModels: {route: "/vehicles/makes-models", method: "get"},
         },
         ValueService: {
             GetSeriesModels: {route: "/value-service-offers/vehicle-models", method: "get"},
