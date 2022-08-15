@@ -8,7 +8,12 @@ import {Box, Divider, styled, TableBody, TableCell, TableHead, TableRow} from "@
 import {DenseTable} from "../AppointmentAllocation/UI";
 import moment from "moment";
 import {mappedCalculationsSelector} from "../../../store/reducers/pricingSettings/selectors";
-import {demandCategories, EDay, EDemandCategory} from "../../../store/reducers/pricingSettings/types";
+import {
+    demandCategories,
+    EDay,
+    EDemandCategory,
+    EPricingDisplayType
+} from "../../../store/reducers/pricingSettings/types";
 import {Autocomplete} from "@material-ui/lab";
 import {TextField} from "../../UI/EndUserInputs";
 import {Label} from "../../AppointmentFlow/UI";
@@ -39,7 +44,7 @@ export const PricingOptimization = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadSCRequestsShort(selectedSC.id));
+            dispatch(loadSCRequestsShort(selectedSC.id, EPricingDisplayType.Dynamic));
         }
     }, [selectedSC, dispatch]);
 
