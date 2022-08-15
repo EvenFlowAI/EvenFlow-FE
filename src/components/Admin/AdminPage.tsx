@@ -52,7 +52,7 @@ export const AdminPage = () => {
             {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.BookingFlow.Base} component={BookingFlowPage}/>
                 : null}
-            {!currentUser.isSuperUser
+            {!currentUser.isSuperUser && !hideDashboard
                 ? <PrivateRoute path={Routes.Admin.Reporting} exact component={Reporting}/>
                 : null}
             {currentUser.role === Roles.Owner
