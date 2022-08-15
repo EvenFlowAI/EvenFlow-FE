@@ -199,10 +199,10 @@ async (dispatch, getState) => {
 }
 
 export const getSCRequestsShort = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/GetSCShort");
-export const loadSCRequestsShort = (serviceCenterId: number): AppThunk => async dispatch => {
+export const loadSCRequestsShort = (serviceCenterId: number, pricingDisplayType?: EPricingDisplayType): AppThunk => async dispatch => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
         Api.endpoints.ServiceRequests.GetShort,
-        {params: {serviceCenterId, pageSize: 0, pricingDisplayType: EPricingDisplayType.Dynamic}}
+        {params: {serviceCenterId, pageSize: 0, pricingDisplayType}}
     );
     dispatch(getSCRequestsShort(result));
 }
