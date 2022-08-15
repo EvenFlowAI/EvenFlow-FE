@@ -10,7 +10,7 @@ import {
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
-import {Api} from "../../../config/requests";
+import {Api, TOptions} from "../../../config/requests";
 import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {LocalItems} from "../../../config/constants";
@@ -276,9 +276,11 @@ export const updateAdvisor = (id: number, isUpdateAdvisorInAppointments: boolean
 }
 export const setParamsLoading = createAction<boolean>("ServiceCenters/SetParamsLoading");
 export const setPredictionParams = createAction<IPredictionParams>("ServiceCenters/SetPredictionParams")
-export const loadPredictionParams = (id: number): AppThunk => dispatch => {
+export const loadPredictionParams = (id: number, podId?: number): AppThunk => dispatch => {
     dispatch(setParamsLoading(true));
-    Api.call(Api.endpoints.ServiceCenters.GetPredictionParams, {urlParams: {id}})
+    const data: TOptions = {urlParams: {id}}
+    if (podId) data.params = {podId};
+    Api.call(Api.endpoints.ServiceCenters.GetPredictionParams, data)
         .then(result => {
             if (result?.data) {
                 dispatch(setPredictionParams(result.data));
@@ -295,7 +297,9 @@ export const updatePredictionParams = (id: number, data: IPredictionParams, onEr
     Api.call(Api.endpoints.ServiceCenters.UpdatePredictionParams, {urlParams: {id}, data})
         .then(result => {
             if (result?.data) {
-                dispatch(loadPredictionParams(id));
+                data.podId
+                    ? dispatch(loadPredictionParams(id, data.podId))
+                    : dispatch(loadPredictionParams(id));
                 onSuccess();
             }
         })

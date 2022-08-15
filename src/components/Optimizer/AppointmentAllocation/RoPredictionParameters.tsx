@@ -42,6 +42,7 @@ const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 
 const RoPredictionParameters = () => {
     const {selectedSC, predictionParams, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
+    const {selectedPod} = useSelector((state: RootState) => state.pods);
 
     const [isEdit, setEdit] = useState<boolean>(false);
     const [heavyRepairLaborHours, setHeavyRepairLaborHours] = useState<string>('0');
@@ -64,8 +65,12 @@ const RoPredictionParameters = () => {
     }, [predictionParams])
 
     useEffect(() => {
-        if (selectedSC) dispatch(loadPredictionParams(selectedSC.id))
-    }, [selectedSC])
+        if (selectedSC) {
+            selectedPod
+                ? dispatch(loadPredictionParams(selectedSC.id, selectedPod.id))
+                : dispatch(loadPredictionParams(selectedSC.id))
+        }
+    }, [selectedSC, selectedPod])
 
     const handleChangeHeavy = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (Number(e.target.value) >= 0) setHeavyRepairLaborHours(e.target.value)
@@ -102,7 +107,8 @@ const RoPredictionParameters = () => {
                 otherRepairLaborHours: Number(otherRepairLaborHours),
                 defaultLaborHours: Number(defaultLaborHours),
             }
-            if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess))
+            if (selectedPod) data.podId = selectedPod.id;
+            if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess));
         } else {
             showError('Each value can contain only two digits after coma');
         }
