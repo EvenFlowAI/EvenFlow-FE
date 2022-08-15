@@ -188,7 +188,7 @@ type ApiRoutes = {
     ValueService: Record<"GetSeriesModels" | "GetValueServiceOffers", TApiRoute>
 }
 
-type TOptions = {
+export type TOptions = {
     data?: any,
     params?: Record<string, any>,
     urlParams?: Record<string, any>
