@@ -25,6 +25,7 @@ import moment from "moment";
 import {ViewOfferContent} from "./ViewOfferContent";
 import {OfferEditContent} from "./OfferEditContent";
 import {selectAllSR, TOfferForm} from "./types";
+import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 
 const clearForm: TOfferForm = {
     offerValue: undefined,
@@ -91,7 +92,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadSCRequestsShort(selectedSC.id));
+            dispatch(loadSCRequestsShort(selectedSC.id, EPricingDisplayType.Dynamic));
         }
     }, [dispatch, selectedSC]);
 

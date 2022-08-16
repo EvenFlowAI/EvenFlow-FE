@@ -31,7 +31,7 @@ const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner'];
 const EmployeesFilters = () => {
     const {fullSCList} = useSelector((state: RootState) => state.serviceCenters);
     const [selectedRole, setSelectedRole] = useState<string|unknown>('');
-    const [selectedCenterId, setSelectedCenterId] = useState<number|null>(null);
+    const [selectedCenterId, setSelectedCenterId] = useState<number|unknown>('');
     const dispatch = useDispatch();
 
     const handleSelectRole = (e: React.ChangeEvent<{value: unknown}>) => {

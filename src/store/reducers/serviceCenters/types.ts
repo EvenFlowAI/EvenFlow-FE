@@ -120,6 +120,7 @@ export interface IPredictionParams {
     heavyRepairLaborHours: number;
     otherRepairLaborHours: number;
     defaultLaborHours: number;
+    podId?: number;
 }
 
 export interface ILaborRate {

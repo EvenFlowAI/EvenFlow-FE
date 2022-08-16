@@ -65,10 +65,10 @@ const SULinks: LinkType[] = [
 
 const MainLinksWithSub: LinkTypeWithSub[] = [
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner"]},
-    {to: Routes.Admin.Employees, name: "Employees", roles: ["Advisor", "Owner", "Manager"]},
-    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Advisor"]},
-    {to: Routes.Optimizer.Base, name: "Capacity Optimization", exact: true, roles: true, subLinks: [
-            {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager", "Advisor"]},
+    {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager"]},
+    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager"]},
+    {to: Routes.Optimizer.Base, name: "Capacity Optimization", exact: true, roles: ["Owner", "Manager"], subLinks: [
+            {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Optimizer.AppointmentAllocation, name: "Appointment Allocation", sub: true, roles: ["Owner", "Manager"]},
@@ -77,11 +77,11 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
             {to: Routes.Optimizer.ManageEXEvenFlowAppointments, name: "Manage Ex EvenFlow Appointments", sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
         ]},
-    {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager", "Advisor"], subLinks: [
+    {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"], subLinks: [
             {to: Routes.Pricing.ServicePricingSettings, name: "Service Price Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
-            // {to: Routes.Pricing.MobileService, name: "Mobile Service", exact: true, sub: true, roles: ["Owner", "Manager"]},
-            // {to: Routes.Pricing.ServiceValet, name: "Service Valet", exact: true, sub: true, roles: ["Owner", "Manager"]},
-            {to: Routes.Pricing.OfferManagement, name: "Offer Management", exact: true, sub: true, roles: ["Owner", "Manager", "Advisor"]},
+            {to: Routes.Pricing.MobileService, name: "Mobile Service", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Pricing.ServiceValet, name: "Service Valet", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Pricing.OfferManagement, name: "Offer Management", exact: true, sub: true, roles: ["Owner", "Manager"]},
         ]},
 
     {to: Routes.BookingFlow.Base, name: "Booking Flow", roles: ["Owner", "Manager"], subLinks: [
@@ -91,7 +91,7 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
             {to: Routes.BookingFlow.VehicleDetails, name: "Vehicle Detail Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
         ]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
-    {to: Routes.Admin.Reporting, name: "Reporting", roles: true},
+    {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager"]},
 ]
 
 type TProps = {
@@ -149,7 +149,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         <List disablePadding>
             {loading
                 ? <Loading/>
-                : links.map(link =>  <Link link={link} closeSidebar={closeSidebar}/>)
+                : links.map(link =>  <Link link={link} closeSidebar={closeSidebar} key={link.name}/>)
             }
         </List>
         <div style={{flex: 1}} />
@@ -161,12 +161,14 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
                 onClick={onOpen}>
                 Booking UI
             </Button>
-                <Button
-                    endIcon={<ArrowForwardIos/>}
-                    className={classes.link}
-                    onClick={onProdPush}>
-                    Push To Prod
-                </Button>
+                 {currentUser && ["Call Center Rep", "Advisor"].includes(currentUser?.role)
+                     ? null
+                     : <Button
+                         endIcon={<ArrowForwardIos/>}
+                         className={classes.link}
+                         onClick={onProdPush}>
+                         Push To Prod
+                     </Button>}
             </>
             : null}
         <BookingModal open={isOpen} onClose={onModalClose} />

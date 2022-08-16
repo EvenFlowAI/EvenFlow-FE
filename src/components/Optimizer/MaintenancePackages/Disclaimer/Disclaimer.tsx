@@ -1,9 +1,11 @@
-import React, {Dispatch, useEffect, useState} from 'react';
+import React, {Dispatch, useCallback, useEffect, useState} from 'react';
 import {TextField} from "../../../UI/TextField";
 import {Button} from "@material-ui/core";
 import {updatePackageDisclaimer} from "../../../../store/reducers/serviceCenters/actions";
 import {useDispatch} from "react-redux";
-import {useSCs} from "../../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../../utils/hooks";
+import {Loading} from "../../../UI/Loading";
+import {LoadingButton} from "../../../UI/Button";
 
 type TDisclaimerProps = {
     setDisclaimerOpen: Dispatch<React.SetStateAction<boolean>>;
@@ -12,7 +14,10 @@ type TDisclaimerProps = {
 const Disclaimer: React.FC<TDisclaimerProps> = ({setDisclaimerOpen}) => {
     const {selectedSC} = useSCs();
     const [disclaimer, setDisclaimer] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const showMessage = useMessage();
+    const showError = useException();
 
     const onDisclaimerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDisclaimer(e.target.value)
@@ -27,12 +32,23 @@ const Disclaimer: React.FC<TDisclaimerProps> = ({setDisclaimerOpen}) => {
         setDisclaimerOpen(false);
     }
 
-    const handleSave = () => {
-        selectedSC && disclaimer?.length && dispatch(updatePackageDisclaimer(selectedSC.id, disclaimer))
-    }
+    const handleSave = useCallback(() => {
+        setLoading(true);
+        if (selectedSC && disclaimer?.length) {
+            try {
+                dispatch(updatePackageDisclaimer(selectedSC.id, disclaimer, () => showMessage('Disclaimer has been updated')))
+            } catch (e) {
+                showError(e)
+            }
+            finally {
+                setLoading(false)
+            }
+        }
+    }, [selectedSC, disclaimer, showError, dispatch, showMessage])
 
-    return (
-        <div>
+    return loading
+        ? <Loading/>
+        : <div>
             <TextField
                 fullWidth
                 multiline
@@ -52,17 +68,17 @@ const Disclaimer: React.FC<TDisclaimerProps> = ({setDisclaimerOpen}) => {
                 >
                     Cancel
                 </Button>
-                <Button
+                <LoadingButton
+                    loading={loading}
                     style={{marginLeft: 16}}
                     color="primary"
                     variant="contained"
                     onClick={handleSave}
                 >
                     Save
-                </Button>
+                </LoadingButton>
             </div>
-        </div>
-    );
+        </div>;
 };
 
 export default Disclaimer;
