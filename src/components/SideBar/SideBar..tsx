@@ -149,7 +149,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         <List disablePadding>
             {loading
                 ? <Loading/>
-                : links.map(link =>  <Link link={link} closeSidebar={closeSidebar}/>)
+                : links.map(link =>  <Link link={link} closeSidebar={closeSidebar} key={link.name}/>)
             }
         </List>
         <div style={{flex: 1}} />
