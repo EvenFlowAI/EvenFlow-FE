@@ -79,8 +79,8 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
         ]},
     {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"], subLinks: [
             {to: Routes.Pricing.ServicePricingSettings, name: "Service Price Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
-            // {to: Routes.Pricing.MobileService, name: "Mobile Service", exact: true, sub: true, roles: ["Owner", "Manager"]},
-            // {to: Routes.Pricing.ServiceValet, name: "Service Valet", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Pricing.MobileService, name: "Mobile Service", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Pricing.ServiceValet, name: "Service Valet", exact: true, sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Pricing.OfferManagement, name: "Offer Management", exact: true, sub: true, roles: ["Owner", "Manager"]},
         ]},
 
@@ -149,7 +149,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         <List disablePadding>
             {loading
                 ? <Loading/>
-                : links.map(link =>  <Link link={link} closeSidebar={closeSidebar}/>)
+                : links.map(link =>  <Link link={link} closeSidebar={closeSidebar} key={link.name}/>)
             }
         </List>
         <div style={{flex: 1}} />
