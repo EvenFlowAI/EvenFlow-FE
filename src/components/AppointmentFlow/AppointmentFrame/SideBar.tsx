@@ -240,20 +240,25 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         }
     }, [serviceType, screen, advisorSelection])
 
-    const onClick = (idx: number) => {
-        const screen = serviceType === EServiceType.VisitCenter
-            ? currentConfig?.advisorSelection
-                ? stepScreens[idx]
-                : withoutAdvisorScreens[idx]
-            : serviceType === EServiceType.MobileService
-                ? mobileServiceScreens[idx]
-                : currentConfig?.advisorSelection
+    const getNextScreen = (idx: number): TScreen => {
+        switch (serviceType) {
+            case EServiceType.VisitCenter:
+                return currentConfig?.advisorSelection
+                    ? stepScreens[idx]
+                    : withoutAdvisorScreens[idx];
+            case EServiceType.PikUpDropOff:
+                return currentConfig?.advisorSelection
                     ? pickUpDropOffScreens[idx]
                     : pickUpDropOffWithoutAdvisorScreens[idx];
-        if (idx === 0) {
-            dispatch(setAdditionalServicesChosen(true));
+            default:
+                return mobileServiceScreens[idx];
         }
+    }
+
+    const onClick = (idx: number) => {
+        const screen: TScreen = getNextScreen(idx);
         handleSetScreen(screen);
+        if (idx === 0) dispatch(setAdditionalServicesChosen(true));
     }
 
     useEffect(() => {
@@ -264,9 +269,6 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         const pickUpSteps = getPickUpDropOffStepsMap(advisorSelection);
         const usualSteps = getStepsMap(advisorSelection);
 
-        if (index === currentSteps["consultantSelection"] - 1 && currentConfig && !currentConfig?.advisorSelection) {
-            if (serviceType === EServiceType.VisitCenter || serviceType === EServiceType.PikUpDropOff) return true;
-        }
         switch (serviceType) {
             case EServiceType.MobileService:
                 return mobileStepsMap[screen] < index + 1 && mobileStepsMap[sideBarSteps[sideBarSteps.length - 1]] < index + 1;
