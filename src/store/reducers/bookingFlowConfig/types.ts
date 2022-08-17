@@ -9,9 +9,3 @@ export type TServiceTypeSettings = {
     advisorSelection: boolean;
     serviceType: EServiceTypeBookingFlow;
 }
-
-export interface IBookingFlowConfig {
-    visitCenter: TServiceTypeSettings;
-    mobileService: TServiceTypeSettings;
-    pickUpDropOff: TServiceTypeSettings;
-}
