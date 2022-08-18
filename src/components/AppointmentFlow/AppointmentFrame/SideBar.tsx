@@ -162,6 +162,13 @@ const pickUpDropOffMenuItems: string[] = [
     "Appointment Confirmation"
 ]
 
+const pickUpDropOffWithoutAdvisorMenuItems: string[] = [
+    "Your Location",
+    "Service Needs",
+    "Appointment Selection",
+    "Appointment Confirmation"
+]
+
 const withoutAdvisorMenuItems: string[] = [
     "Service Needs",
     "Appointment Selection",
@@ -207,49 +214,43 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const currentMenu = useMemo(() => {
         switch (serviceType) {
             case EServiceType.VisitCenter:
-                return currentConfig?.advisorSelection
-                    ? menuItems
-                    : withoutAdvisorMenuItems;
+                return advisorSelection ? menuItems : withoutAdvisorMenuItems;
             case EServiceType.PikUpDropOff:
-                return pickUpDropOffMenuItems;
+                return advisorSelection ? pickUpDropOffMenuItems : pickUpDropOffWithoutAdvisorMenuItems;
             default:
                 return mobileMenuItems;
 
         }
-    }, [serviceType, currentConfig]);
+    }, [serviceType, advisorSelection]);
 
     const currentSteps = useMemo(() => {
         switch (serviceType) {
             case EServiceType.VisitCenter:
-                return getStepsMap(Boolean(currentConfig?.advisorSelection));
+                return getStepsMap(Boolean(advisorSelection));
             case EServiceType.PikUpDropOff:
-                return getPickUpDropOffStepsMap(Boolean(currentConfig?.advisorSelection));
+                return getPickUpDropOffStepsMap(Boolean(advisorSelection));
             default:
                 return mobileStepsMap;
         }
-    }, [serviceType, currentConfig]);
+    }, [serviceType, advisorSelection]);
 
     const getStepsState = useCallback((idx: number): boolean => {
         switch (serviceType) {
-            case EServiceType.MobileService:
-                return mobileStepsMap[screen] === idx;
+            case EServiceType.VisitCenter:
+                return getStepsMap(advisorSelection)[screen] === idx
             case EServiceType.PikUpDropOff:
                 return getPickUpDropOffStepsMap(advisorSelection)[screen] === idx;
             default:
-                return getStepsMap(advisorSelection)[screen] === idx
+                return mobileStepsMap[screen] === idx;
         }
     }, [serviceType, screen, advisorSelection])
 
     const getNextScreen = (idx: number): TScreen => {
         switch (serviceType) {
             case EServiceType.VisitCenter:
-                return currentConfig?.advisorSelection
-                    ? stepScreens[idx]
-                    : withoutAdvisorScreens[idx];
+                return advisorSelection ? stepScreens[idx] : withoutAdvisorScreens[idx];
             case EServiceType.PikUpDropOff:
-                return currentConfig?.advisorSelection
-                    ? pickUpDropOffScreens[idx]
-                    : pickUpDropOffWithoutAdvisorScreens[idx];
+                return advisorSelection ? pickUpDropOffScreens[idx] : pickUpDropOffWithoutAdvisorScreens[idx];
             default:
                 return mobileServiceScreens[idx];
         }
