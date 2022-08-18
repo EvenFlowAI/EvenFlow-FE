@@ -118,9 +118,13 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             if (payload?.jobType) {
                 const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
                 selectedJobType && setJobType(selectedJobType);
+            } else {
+                setJobType(null);
             }
             if (payload?.mobileZones) {
                 setMobileZones(mockZones.filter(zone => payload?.mobileZones?.includes(zone.id)))
+            } else {
+                setMobileZones([]);
             }
         }
     }, [props.open, payload, makesModels, mockZones]);

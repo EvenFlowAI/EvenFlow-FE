@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {PODModal} from "../../Modals/PODModal/PODModal";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {IPod} from "../../../store/reducers/pods/types";
+import {EJobType, IPod} from "../../../store/reducers/pods/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadPods, removePod, setPodsPageData} from "../../../store/reducers/pods/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -20,8 +20,9 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || "", xsHidden: true},
     {header: "Makes", val: e => e.vehicleMakes?.map(s => s.name).join(", ") || "", xsHidden: true},
     {header: "Models", val: e => e.vehicleModels?.map(s => s.name).join(", ") || "", xsHidden: true},
+    {header: "Job Type", val: e => e.jobType ? EJobType[e.jobType] : "", xsHidden: true},
 ]
-
+// todo add the mobile zones column to the table
 export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {
     const [pods, podsCount, isLoading] = useSelector((state: RootState) => [
         state.pods.podsList,
