@@ -26,6 +26,8 @@ import {IMakeExtended, IModel} from "../../../api/types";
 import {getOptions} from "../../../utils/utils";
 import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
 import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
+import {mockZones} from "../../Optimizer/MobileService/Zones/Zones";
+import {TZone} from "../../../store/reducers/mobileService/types";
 
 type TForm = {
     name: string;
@@ -57,6 +59,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const [selectedMakes, setSelectedMakes] = useState<IMakeExtended[]>([]);
     const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
     const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
+    const [mobileZones, setMobileZones] = useState<TZone[]>([]);
     const [jobType, setJobType] = useState<TOption|null>(null);
     const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
@@ -116,8 +119,12 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
                 selectedJobType && setJobType(selectedJobType);
             }
+            if (payload?.mobileZones) {
+                setMobileZones(mockZones.filter(zone => payload?.mobileZones?.includes(zone.id)))
+            }
         }
-    }, [props.open, payload, makesModels]);
+    }, [props.open, payload, makesModels, mockZones]);
+
     useEffect(() => {
         if (selectedSC && props.open) {
             dispatch(loadSCAdvisors(selectedSC.id));
@@ -139,6 +146,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
     const handleSCChange = (e: any, val: IAssignedServiceRequestShort[]) => {
         setForm({...form, serviceRequests: val});
+    }
+    const handleZoneChange = (e: any, val: TZone[]) => {
+        setMobileZones(val);
     }
     const handleBaySelect = (b: IBayShort) => () => {
         if (form.bays.includes(b.id)) {
@@ -164,8 +174,11 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     technicians: form.technicians.map(t => t.id),
                     vehicleMakes: selectedMakes.map(item => item.id),
                     vehicleModels: selectedModels.map(item => item.id),
+                    // todo uncomment once BE is ready
+                    // mobileZones: mobileZones.map(zone => zone.id),
                 };
                 if (jobType) data.jobType = jobType.value;
+
                 if (payload) {
                     await dispatch(updatePod(data, payload.id));
                 } else {
@@ -219,6 +232,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const getRequestOptionSelected = (option: IAssignedServiceRequestShort) => {
         return !!form.serviceRequests.find(request => request.id === option.id);
     }
+    const getZoneOptionSelected = (option: TZone) => {
+        return !!mobileZones.find(zone => zone.id === option.id);
+    }
 
     return <BaseModal {...props} maxWidth="md">
         <DialogTitle onClose={props.onClose}>
@@ -231,6 +247,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         id="name"
                         name="name"
                         label="Name"
+                        placeholder="Type Name"
                         fullWidth
                         autoComplete="pod-name pod"
                         onChange={handleChange}
@@ -242,6 +259,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         id="description"
                         name="description"
                         label="Description"
+                        placeholder="Type Description"
                         fullWidth
                         autoComplete="pod-description"
                         onChange={handleChange}
@@ -256,7 +274,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         getOptionSelected={(o, s) => o.id === s.id}
                         loading={false}
                         value={form.advisor}
-                        renderInput={autocompleteRender({label: "Advisor", fullWidth: true})}
+                        renderInput={autocompleteRender({label: "Advisor", fullWidth: true, placeholder: "Select Advisor"})}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -290,7 +308,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         renderOption={autocompleteOptionsRender((e) => e.fullName)}
                         loading={false}
                         value={form.technicians}
-                        renderInput={autocompleteRender({label: "Technicians", fullWidth: true})}
+                        renderInput={autocompleteRender({label: "Technicians", fullWidth: true, placeholder: "Select Technicians"})}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
@@ -310,7 +328,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         renderOption={autocompleteOptionsRender((e) => e.code)}
                         loading={false}
                         value={form.serviceRequests}
-                        renderInput={autocompleteRender({label: "Service Requests", fullWidth: true})}
+                        renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
@@ -368,6 +386,26 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                             label: "Job Type",
                             placeholder: 'Job Type'
                         })}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <Autocomplete
+                        options={mockZones}
+                        multiple
+                        fullWidth
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        onChange={handleZoneChange}
+                        getOptionLabel={i => i.name}
+                        getOptionSelected={getZoneOptionSelected}
+                        renderOption={autocompleteOptionsRender((e) => e.name)}
+                        loading={false}
+                        value={mobileZones}
+                        renderInput={autocompleteRender({label: "Mobile Zones", fullWidth: true, placeholder: "Select Mobile Zones"})}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>

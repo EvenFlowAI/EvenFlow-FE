@@ -29,6 +29,7 @@ export interface IPod {
     vehicleMakes?: IPodVehicleMake[];
     vehicleModels?: IPodVehicleModel[];
     jobType?: EJobType;
+    mobileZones?: number[];
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -46,6 +47,7 @@ export interface IPodForm {
     vehicleMakes: number[];
     vehicleModels: number[];
     jobType?: EJobType;
+    mobileZones?: number[];
 }
 
 export enum EJobType {
