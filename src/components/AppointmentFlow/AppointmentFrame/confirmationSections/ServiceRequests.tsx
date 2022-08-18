@@ -34,7 +34,7 @@ const ServiceRequests = () => {
             </TitleWrapper>
             <List>
                 {appointment?.serviceRequestPrices.map(item => (
-                    <li className="service-item">
+                    <li className="service-item" key={item.requestName}>
                         {item.requestName.includes("Going") ? "My Description of Needs" : item.requestName}
                     </li>
                 ))}

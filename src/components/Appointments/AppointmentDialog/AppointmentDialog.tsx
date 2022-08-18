@@ -27,7 +27,7 @@ import {API} from "../../../api/api";
 import moment from "moment";
 import {VIN_LENGTH} from "../../../config/constants";
 import {Api} from "../../../config/requests";
-import {validatePhoneNumber} from "../../../utils/utils";
+import {getOptions, validatePhoneNumber} from "../../../utils/utils";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 import {loadMakes} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
@@ -40,6 +40,9 @@ import Transportation from "./parts/Transportation";
 import Reminders from "./parts/Reminders";
 import {ICategory} from "../../../store/reducers/categories/types";
 import {RootState} from "../../../store/rootReducer";
+import {EJobType} from "../../../store/reducers/pods/types";
+import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
+import {Autocomplete} from "@material-ui/lab";
 
 export type TForm = {
     date: string;
@@ -85,6 +88,11 @@ const initialForm: TForm = {
 
 export type TKey = keyof TForm;
 
+type TOption = {
+    value: number;
+    name: string;
+}
+
 const requiredFields = ['driverName', 'driverPhoneNumber', 'driverEmail', 'vehicleMake', 'vehicleYear', 'vehicleModel', 'vehicleMileage']
 
 export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({onAction, payload, ...props}) => {
@@ -97,6 +105,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const [selectedSR, setSelectedSR] = useState<ISR[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
     const [selectedPackage, setSelectedPackage] = useState<IPackageAppointments | null>(null);
+    const [jobType, setJobType] = useState<TOption|null>(null);
     const [selectedPackageOption, setSelectedPackageOption] = useState<IPackageOptions | null>(null);
     const [srLoading, setSrLoading] = useState<boolean>(false);
     const [slots, setSlots] = useState<IAppointmentSlot[]>([]);
@@ -113,6 +122,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const isVehicleDataValid = useMemo(() => {
         return Boolean(form.vehicleMake) && Boolean(form.vehicleYear) && Boolean(form.vehicleModel) && Boolean(form.vehicleMileage)
     }, [form])
+    const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
@@ -143,6 +153,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setSelectedCategories([]);
         setDate("");
         setSelectedSlot(null);
+        setJobType(null);
     }
 
     useEffect(() => {
@@ -170,6 +181,10 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 });
                 payload.serviceRequests && setSelectedSR(payload.serviceRequests);
                 payload.serviceCategories && setSelectedCategories(payload.serviceCategories);
+                if (payload.jobType) {
+                    const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
+                    selectedJobType && setJobType(selectedJobType);
+                }
                 setDate(payload.dateInUtc);
                 const slot: IAppointmentSlot = {
                     date: payload.dateInUtc,
@@ -348,6 +363,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 appointmentTimingType: EAppointmentTimingType.PreferredDate,
                 transportationType: form.transportationOption?.type,
             }
+            if (jobType) data.jobType = jobType.value;
             if (payload) {
                 data.id = payload.id;
                 // todo search term
@@ -399,6 +415,10 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setSelectedPackageOption(null);
     }
 
+    const onJobTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setJobType(value)
+    }, [])
+
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Update"} Appointment</DialogTitle>
         <DialogContent>
@@ -449,6 +469,20 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     errors={errors}
                     setErrors={setErrors}
                 />
+
+                <Grid item xs={12}>
+                    <Autocomplete
+                        options={jobTypeOptions}
+                        renderOption={autocompleteOptionsRender(e => e.name)}
+                        getOptionLabel={i => i.name}
+                        value={jobType}
+                        onChange={onJobTypeChange}
+                        renderInput={autocompleteRender({
+                            label: "Job Type",
+                            placeholder: 'Job Type'
+                        })}
+                    />
+                </Grid>
 
                 <Grid item xs={12}>
                     <Divider />
