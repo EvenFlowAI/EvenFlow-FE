@@ -28,6 +28,7 @@ export interface IPod {
     serviceRequests?: IAssignedServiceRequestShort[];
     vehicleMakes?: IPodVehicleMake[];
     vehicleModels?: IPodVehicleModel[];
+    jobType?: EJobType;
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -44,6 +45,7 @@ export interface IPodForm {
     bays?: number[];
     vehicleMakes: number[];
     vehicleModels: number[];
+    jobType?: EJobType;
 }
 
 export enum EJobType {

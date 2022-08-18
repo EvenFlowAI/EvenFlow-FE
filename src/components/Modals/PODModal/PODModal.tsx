@@ -82,6 +82,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         }
         return baysList.filter(b => !b?.podId).map(b => b.id);
     }, [baysList, payload]);
+    const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
 
     useEffect(() => {
         if (props.open) {
@@ -110,6 +111,10 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 const modelsIDs = models.flat().map(item => item.id);
                 const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
                 setSelectedModels(filteredModels);
+            }
+            if (payload?.jobType) {
+                const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
+                selectedJobType && setJobType(selectedJobType);
             }
         }
     }, [props.open, payload, makesModels]);
@@ -160,6 +165,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     vehicleMakes: selectedMakes.map(item => item.id),
                     vehicleModels: selectedModels.map(item => item.id),
                 };
+                if (jobType) data.jobType = jobType.value;
                 if (payload) {
                     await dispatch(updatePod(data, payload.id));
                 } else {
@@ -353,7 +359,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
-                        options={getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key)))}
+                        options={jobTypeOptions}
                         renderOption={autocompleteOptionsRender(e => e.name)}
                         getOptionLabel={i => i.name}
                         value={jobType}
