@@ -41,7 +41,7 @@ import Reminders from "./parts/Reminders";
 import {ICategory} from "../../../store/reducers/categories/types";
 import {RootState} from "../../../store/rootReducer";
 import {EJobType} from "../../../store/reducers/pods/types";
-import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 
 export type TForm = {
@@ -473,7 +473,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 <Grid item xs={12}>
                     <Autocomplete
                         options={jobTypeOptions}
-                        renderOption={autocompleteOptionsRender(e => e.name)}
                         getOptionLabel={i => i.name}
                         value={jobType}
                         onChange={onJobTypeChange}
