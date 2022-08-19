@@ -275,7 +275,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                 />
                 <CodesWrapper>
                     {opsCodesList.map(s => {
-                        return <CodeWrapper>
+                        return <CodeWrapper key={`${s.code} ${s.id}`}>
                             <Code
                             key={s.id}
                             label={s?.description ?? s.code}
