@@ -115,7 +115,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
                 setSelectedModels(filteredModels);
             }
-            if (payload?.jobType) {
+            if (typeof payload?.jobType !== "undefined") {
                 const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
                 selectedJobType && setJobType(selectedJobType);
             } else {
