@@ -382,7 +382,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
                         options={jobTypeOptions}
-                        renderOption={autocompleteOptionsRender(e => e.name)}
                         getOptionLabel={i => i.name}
                         value={jobType}
                         onChange={onJobTypeChange}
