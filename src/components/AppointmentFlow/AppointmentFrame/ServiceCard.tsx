@@ -47,7 +47,12 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         }
     }, [card])
 
-    return <CardWrapper onClick={onSelect} activeNow={active} selected={selected}>
+    return <CardWrapper
+        onClick={onSelect}
+        style={{
+            background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
+            border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
+        }}>
         {card.description ? <HtmlTooltip
             placement="right-end"
             title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
