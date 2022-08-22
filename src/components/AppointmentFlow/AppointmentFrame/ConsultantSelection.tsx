@@ -35,13 +35,14 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-const ConsultantWrapper = styled('div')(({theme}) => ({
+const ConsultantWrapper = styled(
+    ({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     display: "flex",
     rowGap: 16,
     columnGap: 16,
-    // border: `1px solid ${props.active ? "#000000" : "#DADADA"}`,
-    color: theme.palette.text.primary,
-    // background: active ? "#000000" : "transparent",
+    border: `1px solid ${active ? "#000000" : "#DADADA"}`,
+    color: active ? "#FFFFFF" : theme.palette.text.primary,
+    background: active ? "#000000" : "transparent",
     alignItems: "center",
     fontSize: 18,
     fontWeight: 400,
@@ -56,7 +57,7 @@ const ConsultantWrapper = styled('div')(({theme}) => ({
         justifyContent: 'center',
         height: 50,
         borderRadius: "50%",
-        color: theme.palette.text.primary,
+        color: active ? "#FFFFFF" : theme.palette.text.primary,
     }
 }));
 
@@ -79,16 +80,9 @@ type TCardProps = {
 }
 
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
-    return <ConsultantWrapper onClick={onClick}
-                              style={{
-                                  border: `1px solid ${active ? "#000000" : "#DADADA"}`,
-                                  color: active ? "#FFFFFF" : '',
-                                  background: active ? "#000000" : "transparent",
-                              }}>
+    return <ConsultantWrapper onClick={onClick} active={active}>
         {blank
-            ? <div className={"icon-wrapper"} style={{color: active ? "#FFFFFF" : ""}}>
-                <AnyConsultantIcon />
-        </div>
+            ? <div className={"icon-wrapper"}><AnyConsultantIcon /></div>
             : advisor?.iconPath
                 ? <Avatar src={advisor?.iconPath}/>
                 : <ConsultantIcon/>

@@ -14,7 +14,7 @@ type TDayCardProps = {
     isOffPeak?: boolean;
 }
 
-const DayCard = styled('div')<Theme, TDayCardProps>(({theme, available, isCurrent, isOffPeak}) => ({
+const DayCard = styled(({available, isCurrent, isOffPeak, ...props}) => (<div {...props}/>))<Theme, TDayCardProps>(({theme, available, isCurrent, isOffPeak}) => ({
     flex: "1 0 0px",
     opacity: (!available && !isCurrent) ? .3 : 1,
     display: "flex",
