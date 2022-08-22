@@ -17,7 +17,7 @@ import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
 
-const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
+const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     minHeight: 264,
     fontSize: 22,
     cursor: "pointer",

@@ -53,27 +53,27 @@ const StyledDate = styled(DatePicker)(({theme}) => ({
         marginTop: 0
     }
 }))
-const CardWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
+const CardWrapper = styled(({active, ...props}) => <div {...props}/>)<Theme, {active?: boolean}>(({theme, active}) => ({
     border: "1px solid #DADADA",
-    borderColor: active ? "#000000" : "#DADADA",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     textAlign: "center",
+    borderColor: active ? "#000000" : "#DADADA",
+    background: active ? "#E7E7E7" : "transparent",
     gap: "20px",
     padding: 20,
     fontSize: 15,
-    background: active ? "#E7E7E7" : "transparent",
     transition: "all .2s",
     cursor: "pointer",
     "& .icon": {
         borderRadius: "50%",
-        background: active ? "#FFFFFF" : "#E7E7E7",
         width: 86,
         height: 86,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        background: active ? "#FFFFFF" : "#E7E7E7",
         [theme.breakpoints.down("sm")]: {
             display: "none"
         }
@@ -152,7 +152,7 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
             }}
         />
         : null;
-    return <CardWrapper active={active} onClick={onClick}>
+    return <CardWrapper onClick={onClick} active={active}>
         {active ? <RadioButtonChecked /> : <RadioButtonUnchecked />}
         <div className="icon">{card.icon}</div>
         {!isSm

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {TCallback} from "../../../types/types";
-import {CardWrapper} from "./styled";
 import {IServiceCategory} from "../../../api/types";
 import {ReactComponent as Icon} from "../../../assets/img/oil-icon.svg";
 import axios from "axios";
@@ -8,7 +7,7 @@ import {Loading} from "../../UI/Loading";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {Tooltip, withStyles} from "@material-ui/core";
+import {styled, Theme, Tooltip, withStyles} from "@material-ui/core";
 import {InfoOutlined} from "@material-ui/icons";
 
 type TSCProps = {
@@ -17,6 +16,60 @@ type TSCProps = {
     active: boolean;
     selected: boolean;
 }
+
+const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<Theme, {active?: boolean, selected?: boolean}>(({theme, active, selected}) => {
+    return {
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        gridTemplateRows: "1fr 4fr 3fr 2fr",
+        width: "100%",
+        maxWidth: 250,
+        transition: "all .2s",
+        fontSize: 24,
+        textAlign: "center",
+        alignItems: "center",
+        padding: 10,
+        background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
+        border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
+        cursor: "pointer",
+        "& .priceWrapper": {
+            height: 30,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            padding: "0 12px",
+            [theme.breakpoints.down('sm')]: {
+                gridColumn: "1/3",
+            }
+        },
+        "& .price": {
+            color: "#27AE60",
+            fontSize: 20,
+            fontWeight: "bold",
+        },
+        "& .text": {
+            color: "#727273",
+            fontSize: 11,
+            fontWeight: "bold",
+            fontFamily: "Proxima Nova",
+            textTransform: "uppercase",
+        },
+        "& .infoIcon": {
+            display: 'flex',
+            justifyContent: 'flex-end',
+        },
+        [theme.breakpoints.down('sm')]: {
+            gridTemplateColumns: "1fr 3fr",
+            gridTemplateRows: "1fr",
+            fontSize: 18,
+            "& svg": {
+                width: 65,
+                height: 65
+            }
+        }
+    }
+});
 
 const HtmlTooltip = withStyles({
     tooltip: {
@@ -49,10 +102,8 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
 
     return <CardWrapper
         onClick={onSelect}
-        style={{
-            background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
-            border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
-        }}>
+        selected={selected}
+        active={active}>
         {card.description ? <HtmlTooltip
             placement="right-end"
             title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
