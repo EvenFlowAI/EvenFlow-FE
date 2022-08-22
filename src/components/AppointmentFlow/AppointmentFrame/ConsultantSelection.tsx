@@ -35,13 +35,13 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
+const ConsultantWrapper = styled('div')(({theme}) => ({
     display: "flex",
     rowGap: 16,
     columnGap: 16,
-    border: `1px solid ${active ? "#000000" : "#DADADA"}`,
-    color: active ? "#FFFFFF" : theme.palette.text.primary,
-    background: active ? "#000000" : "transparent",
+    // border: `1px solid ${props.active ? "#000000" : "#DADADA"}`,
+    color: theme.palette.text.primary,
+    // background: active ? "#000000" : "transparent",
     alignItems: "center",
     fontSize: 18,
     fontWeight: 400,
@@ -56,7 +56,7 @@ const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>(({theme, acti
         justifyContent: 'center',
         height: 50,
         borderRadius: "50%",
-        color: active ? "#FFFFFF" : theme.palette.text.primary,
+        color: theme.palette.text.primary,
     }
 }));
 
@@ -79,13 +79,20 @@ type TCardProps = {
 }
 
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
-    return <ConsultantWrapper active={active} onClick={onClick}>
+    return <ConsultantWrapper onClick={onClick}
+                              style={{
+                                  border: `1px solid ${active ? "#000000" : "#DADADA"}`,
+                                  color: active ? "#FFFFFF" : '',
+                                  background: active ? "#000000" : "transparent",
+                              }}>
         {blank
-            ? <div className={"icon-wrapper"}><AnyConsultantIcon /></div>
+            ? <div className={"icon-wrapper"} style={{color: active ? "#FFFFFF" : ""}}>
+                <AnyConsultantIcon />
+        </div>
             : advisor?.iconPath
                 ? <Avatar src={advisor?.iconPath}/>
                 : <ConsultantIcon/>
-            }
+        }
         <div>
             {blank ? "Any available advisor" : advisor?.name ?? "-"}
         </div>
@@ -183,12 +190,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                     active={selectedConsultant === null}
                 />
                 {consultants.map(c =>
-                <ConsultantCard
-                    onClick={handleSelectConsultant(c)}
-                    advisor={c}
-                    key={c.id}
-                    active={selectedConsultant?.id === c.id} />
-            )}
+                    <ConsultantCard
+                        onClick={handleSelectConsultant(c)}
+                        advisor={c}
+                        key={c.id}
+                        active={selectedConsultant?.id === c.id} />
+                )}
             </React.Fragment>
             }
         </ConsultantsWrapper>
