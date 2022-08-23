@@ -8,27 +8,37 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
-import {clearStorage} from "../../store/reducers/appointment/actions";
+import {
+    clearStorage,
+    saveAppointmentReducer,
+    setCustomerLoadedData,
+    setSessionId
+} from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
-import {useLayout} from "../../utils/hooks";
+import {useException, useLayout} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
     setCurrentFrameScreen,
-    setSideBarSteps, setValueServiceAvailability
+    setSideBarSteps,
+    setValueServiceAvailability
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
-import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {API} from "../../api/api";
+import ReactGA from "react-ga";
 
 export const Welcome = () => {
-    const [view, setView] = useState<TView>("select");
-    const history = useHistory();
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn, userType} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const [view, setView] = useState<TView>("select");
+    const [loading, setLoading] = useState<boolean>(false);
+    const history = useHistory();
+    const showError = useException();
     const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
@@ -56,17 +66,56 @@ export const Welcome = () => {
         if (isMobileServiceOn || isPickUpDropOffServiceOn) setView("serviceSelect")
     };
 
-    const onComplete = (serviceType: EServiceType) => {
+    const redirect = () => {
+        const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
+        history.push(
+            route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
+        );
+    }
+
+    const onComplete = async (serviceType: EServiceType) => {
+        setLoading(true);
+
         const selectedServiceConfig = config.find(item => item.serviceType.toString() === serviceType.toString());
         if (selectedServiceConfig) dispatch(setValueServiceAvailability(selectedServiceConfig.valueService));
         handleMobileService();
         dispatch(setSideBarSteps([]));
         dispatch(setCurrentFrameScreen("carSelection"));
 
-        const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
-        history.push(
-            route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
-        );
+        if (customerEnteredEmail && userType === EUserType.Existing) {
+            try {
+                const {data} = await API.appointment.searchCustomer({
+                    searchTerm: customerEnteredEmail,
+                    serviceCenterId: scProfile?.id ?? 0
+                });
+                dispatch(setCustomerLoadedData(data));
+                dispatch(saveAppointmentReducer());
+                // dispatch(setSessionId(data));
+                // dispatch(saveAppointmentReducer());
+                // showMessage("We've send a code with an email for confirmation.");
+                ReactGA.event({
+                    category: 'EvenFlow User',
+                    action: 'Enters Page',
+                    label: `As Returning Customer`,
+                });
+            } catch (err) {
+                dispatch(setSessionId(""));
+                if (err.message) {
+                    showError(err)
+                } else {
+                    showError("We are sorry but we could not find your vehicle in our system. Please schedule appointment as a new customer");
+                }
+            } finally {
+                setLoading(false);
+                if ((isMobileServiceOn || isPickUpDropOffServiceOn) && view !== "serviceSelect") {
+                    setView('serviceSelect')
+                } else {
+                    redirect();
+                }
+            }
+        } else {
+            redirect();
+        }
     }
 
     // useEffect(() => {
@@ -90,15 +139,12 @@ export const Welcome = () => {
                     onReturn={() => setView("select")}
                 />;
             case "serviceSelect":
-                return <ServiceTypeSelect
-                    onComplete={onComplete}
-                    onLogin={() => setView("search")}
-                />;
+                return <ServiceTypeSelect onComplete={onComplete} loading={loading}/>;
             case "select":
             default:
                 return <CustomerSelect
                     setView={setView}
-                    onLogin={() => setView("search")}
+                    loading={loading}
                     onComplete={onComplete}
                 />;
         }

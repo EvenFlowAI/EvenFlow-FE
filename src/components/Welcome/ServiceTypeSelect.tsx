@@ -12,21 +12,19 @@ import {
 } from "../../store/reducers/appointment/actions";
 import {clearAppointmentData, setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
+import {Loading} from "../UI/Loading";
 
 type TProps = {
-    onLogin: () => void;
     onComplete: (serviceType: EServiceType) => void;
+    loading: boolean;
 };
 
-const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
+const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const {userType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const handleUser = (serviceType: EServiceType) => {
-        if (userType === EUserType.Existing) {
-            return onLogin();
-        }
         if (userType === EUserType.New) {
             const c = getBlankCustomer();
             dispatch(setCustomerLoadedData(c));
@@ -37,8 +35,8 @@ const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
                 action: 'Enters Page',
                 label: `As New User`,
             });
-            onComplete(serviceType);
         }
+        onComplete(serviceType);
     }
 
     const handleSelect = (service: EServiceType) => {
@@ -47,8 +45,9 @@ const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
         handleUser(service);
     }
 
-    return (
-        <Grid className={classes.buttonsContainer}
+    return loading
+        ? <Loading/>
+        : <Grid className={classes.buttonsContainer}
               alignItems="stretch"
               container
               spacing={4}>
@@ -72,7 +71,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({onLogin, onComplete }) => {
             </Grid>
                 : null}
         </Grid>
-    );
 };
 
 export default ServiceTypeSelect;
