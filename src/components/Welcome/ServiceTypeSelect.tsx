@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {useStyles} from "./CustomerSelect";
+import {mh400, mh600} from "./CustomerSelect";
 import {RootState} from "../../store/rootReducer";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {
@@ -13,11 +13,53 @@ import {
 import {clearAppointmentData, setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
 import {Loading} from "../UI/Loading";
+import {makeStyles} from "@material-ui/core/styles";
 
 type TProps = {
-    onComplete: (serviceType: EServiceType) => void;
+    onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
 };
+
+const useStyles = makeStyles((theme) => ({
+    buttonsContainer: {
+        marginTop: "5%",
+        [mh600]: {
+            marginTop: "2%"
+        },
+        [theme.breakpoints.down("sm")]: {
+            marginTop: theme.spacing(5)
+        }
+    },
+    button: {
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: "bold",
+        fontSize: 32,
+        textAlign: "center",
+        cursor: "pointer",
+        padding: "10%",
+        border: "1px solid #DADADA",
+        background: "#FFFFFF",
+        transition: theme.transitions.create(["box-shadow"]),
+        "&:hover": {
+            boxShadow: "0 2px 8px rgba(0,0,0,.1)"
+        },
+        [mh600]: {
+            fontSize: 22,
+            padding: "7%"
+        },
+        [mh400]: {
+            fontSize: 18,
+            padding: "2%"
+        },
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 18,
+            padding: "5%"
+        }
+    },
+}))
 
 const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const {userType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);

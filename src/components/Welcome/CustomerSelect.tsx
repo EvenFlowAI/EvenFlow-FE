@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Grid} from "@material-ui/core";
+import {Button, Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
@@ -58,13 +58,13 @@ export const useStyles = makeStyles(theme => ({
         }
     },
     button: {
-        cursor: "pointer",
         fontWeight: "bold",
         fontSize: 32,
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        padding: "10%",
+        justifyContent: "space-between",
+        padding: "7%",
         height: "100%",
         textAlign: "center",
         border: "1px solid #DADADA",
@@ -98,7 +98,7 @@ export const useStyles = makeStyles(theme => ({
     },
 }))
 type TProps = {
-    onComplete: (serviceType: EServiceType) => void;
+    onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     setView: (view: TView) => void;
     loading: boolean;
 };
@@ -136,11 +136,12 @@ export const CustomerSelect: React.FC<TProps> = ({setView, onComplete, loading})
     const handleNew = () => {
         dispatch(setUserType(EUserType.New));
         handleReactGA('A New');
+        dispatch(setCustomerEnteredEmail(''));
         if (isMobileServiceOn || isPickUpDropOffServiceOn) {
             setView('serviceSelect')
         } else {
             createBlankCar()
-            onComplete(serviceType);
+            onComplete(serviceType, EUserType.New);
         }
     }
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
@@ -149,18 +150,13 @@ export const CustomerSelect: React.FC<TProps> = ({setView, onComplete, loading})
 
     const handleComplete = async () => {
         dispatch(setUserType(EUserType.Existing));
-        handleReactGA('An Existing');
-        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
-            setView('serviceSelect')
-        } else {
-            onComplete(serviceType);
-        }
+        onComplete(serviceType, EUserType.Existing);
     }
 
     return <Grid className={classes.buttonsContainer}
-          alignItems="stretch"
-          container
-          spacing={4}>
+                 alignItems="stretch"
+                 container
+                 spacing={4}>
         <Grid item xs={12} sm={12} md={6}>
             <div className={classes.existing}>
                 <span>I`m a returning customer</span>
@@ -184,8 +180,14 @@ export const CustomerSelect: React.FC<TProps> = ({setView, onComplete, loading})
             </div>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
-            <div onClick={handleNew} className={classes.button}>
+            <div className={classes.button}>
                 <span>I`m a new customer</span>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.loadingButton}
+                    onClick={handleNew}
+                >Submit</Button>
             </div>
         </Grid>
     </Grid>
