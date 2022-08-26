@@ -2,6 +2,8 @@ import React, {Dispatch, SetStateAction} from 'react';
 import Zone from "./Zone";
 import {TZone} from "../../../../store/reducers/mobileService/types";
 import {makeStyles} from "@material-ui/core/styles";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
 
 export const mockZones = [
     {
@@ -106,6 +108,7 @@ type TZonesProps = {
 }
 
 const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone, setCurrentZip, onRemoveZip }) => {
+    const {zones} = useSelector((state: RootState) => state.mobileService);
     const classes = useStyles();
 
     const setSelected = (zone: TZone) => {
@@ -114,7 +117,7 @@ const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone, setCurrentZ
 
     return (
         <div className={classes.wrapper}>
-            {mockZones.map(item => <Zone
+            {zones.map(item => <Zone
                 zone={item}
                 key={item.id}
                 setCurrentZip={setCurrentZip}
