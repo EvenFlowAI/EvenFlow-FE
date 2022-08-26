@@ -129,7 +129,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
                         active={selectedService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
-                        key={card.name}/>
+                        key={card.id}/>
                 })}
             </CardsWrapper> : <Loading />}
             <CartTable/>

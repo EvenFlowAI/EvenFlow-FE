@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
 import {CustomerSelect} from "./CustomerSelect";
-import {LoginInput} from './LoginInput';
 import {useHistory, useParams} from 'react-router-dom';
 import {Routes} from "../../config/routes";
 import {useDispatch, useSelector} from "react-redux";
@@ -33,7 +32,7 @@ import ReactGA from "react-ga";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn, userType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [view, setView] = useState<TView>("select");
     const [loading, setLoading] = useState<boolean>(false);
@@ -62,10 +61,6 @@ export const Welcome = () => {
         }
     }, [id]);
 
-    const handleMobileService = () => {
-        if (isMobileServiceOn || isPickUpDropOffServiceOn) setView("serviceSelect")
-    };
-
     const redirect = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
         history.push(
@@ -73,16 +68,13 @@ export const Welcome = () => {
         );
     }
 
-    const onComplete = async (serviceType: EServiceType) => {
-        setLoading(true);
-
+    const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
         const selectedServiceConfig = config.find(item => item.serviceType.toString() === serviceType.toString());
         if (selectedServiceConfig) dispatch(setValueServiceAvailability(selectedServiceConfig.valueService));
-        handleMobileService();
         dispatch(setSideBarSteps([]));
-        dispatch(setCurrentFrameScreen("carSelection"));
 
-        if (customerEnteredEmail && userType === EUserType.Existing) {
+        if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
+            setLoading(true);
             try {
                 const {data} = await API.appointment.searchCustomer({
                     searchTerm: customerEnteredEmail,
@@ -93,11 +85,19 @@ export const Welcome = () => {
                 // dispatch(setSessionId(data));
                 // dispatch(saveAppointmentReducer());
                 // showMessage("We've send a code with an email for confirmation.");
-                ReactGA.event({
-                    category: 'EvenFlow User',
-                    action: 'Enters Page',
-                    label: `As Returning Customer`,
-                });
+                if (data) {
+                    ReactGA.event({
+                        category: 'EvenFlow User',
+                        action: 'Enters Page',
+                        label: `As Returning Customer`,
+                    });
+                    if ((isMobileServiceOn || isPickUpDropOffServiceOn) && view !== "serviceSelect") {
+                        setView('serviceSelect')
+                    } else {
+                        dispatch(setCurrentFrameScreen("carSelection"));
+                        redirect();
+                    }
+                }
             } catch (err) {
                 dispatch(setSessionId(""));
                 if (err.message) {
@@ -107,14 +107,13 @@ export const Welcome = () => {
                 }
             } finally {
                 setLoading(false);
-                if ((isMobileServiceOn || isPickUpDropOffServiceOn) && view !== "serviceSelect") {
-                    setView('serviceSelect')
-                } else {
-                    redirect();
-                }
             }
         } else {
-            redirect();
+            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && view !== "serviceSelect") {
+                setView('serviceSelect')
+            } else {
+                redirect();
+            }
         }
     }
 
@@ -131,13 +130,6 @@ export const Welcome = () => {
     const getComponent = () => {
         switch (view) {
             case "search":
-            case "confirm":
-                return <LoginInput
-                    view={view}
-                    onComplete={onComplete}
-                    onConfirm={() => setView("confirm")}
-                    onReturn={() => setView("select")}
-                />;
             case "serviceSelect":
                 return <ServiceTypeSelect onComplete={onComplete} loading={loading}/>;
             case "select":
