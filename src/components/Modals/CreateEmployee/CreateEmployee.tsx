@@ -61,12 +61,12 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     }, [payload]);
 
     useEffect(() => {
-        dispatch(loadShortSC());
-    }, [dispatch]);
+        if (props.open && !shortSC.length) dispatch(loadShortSC());
+    }, [props.open, shortSC]);
 
     useEffect(() => {
-        if (selectedSC) dispatch(loadDMSAdvisors(selectedSC.id))
-    }, [selectedSC, dispatch])
+        if (selectedSC && props.open) dispatch(loadDMSAdvisors(selectedSC.id))
+    }, [selectedSC, props.open])
 
     useEffect(() => {
         setAdvisorForm(startAdvisorForm);

@@ -35,7 +35,8 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-const ConsultantWrapper = styled('div')<Theme, {active?: boolean}>(({theme, active}) => ({
+const ConsultantWrapper = styled(
+    ({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     display: "flex",
     rowGap: 16,
     columnGap: 16,
@@ -79,13 +80,13 @@ type TCardProps = {
 }
 
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
-    return <ConsultantWrapper active={active} onClick={onClick}>
+    return <ConsultantWrapper onClick={onClick} active={active}>
         {blank
             ? <div className={"icon-wrapper"}><AnyConsultantIcon /></div>
             : advisor?.iconPath
                 ? <Avatar src={advisor?.iconPath}/>
                 : <ConsultantIcon/>
-            }
+        }
         <div>
             {blank ? "Any available advisor" : advisor?.name ?? "-"}
         </div>
@@ -183,12 +184,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                     active={selectedConsultant === null}
                 />
                 {consultants.map(c =>
-                <ConsultantCard
-                    onClick={handleSelectConsultant(c)}
-                    advisor={c}
-                    key={c.id}
-                    active={selectedConsultant?.id === c.id} />
-            )}
+                    <ConsultantCard
+                        onClick={handleSelectConsultant(c)}
+                        advisor={c}
+                        key={c.id}
+                        active={selectedConsultant?.id === c.id} />
+                )}
             </React.Fragment>
             }
         </ConsultantsWrapper>

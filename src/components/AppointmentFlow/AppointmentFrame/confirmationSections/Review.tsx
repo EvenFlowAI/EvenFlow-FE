@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {ConfirmationTitle} from "../Title";
 import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
@@ -24,10 +24,18 @@ export const Review = () => {
     const [
         consultant,
         transportation,
+        serviceType,
+        config
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
+        state.appointmentFrame.serviceType,
+        state.bookingFlowConfig.config,
     ]);
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType])
+
     return (
         <div>
             <ConfirmationTitle>Appointment Details</ConfirmationTitle>
@@ -37,7 +45,10 @@ export const Review = () => {
                     ? TRANSPORTATION_SHORT_DESCRIPTION[transportation.type]
                     : "I will wait at the dealership"}
                 </li>
-                <li>Service Advisor: {consultant?.name ?? "Any Available"}</li>
+                {currentConfig?.advisorSelection
+                    ? <li>Service Advisor: {consultant?.name ?? "Any Available"}</li>
+                    : null
+                }
             </Wrapper>
         </div>
     );

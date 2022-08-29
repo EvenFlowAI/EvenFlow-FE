@@ -4,7 +4,7 @@ import {styled} from "@material-ui/core";
 
 const Wrapper = styled('div')({
     width: '80%',
-    maxWidth: 800
+    maxWidth: 1000
 });
 const Title = styled('h1')(({theme}) => ({
     textTransform: 'uppercase',

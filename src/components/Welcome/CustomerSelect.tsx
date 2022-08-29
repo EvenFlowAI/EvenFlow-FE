@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Grid} from "@material-ui/core";
+import {Button, Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
@@ -11,10 +11,13 @@ import {RootState} from "../../store/rootReducer";
 import {
     getBlankCustomer,
     getBlankVehicle,
-    saveCustomerCache,
-    setCustomerLoadedData
+    saveCustomerCache, setCustomerEnteredEmail,
+    setCustomerLoadedData,
 } from "../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
+import {TextField} from "../UI/EndUserInputs";
+import {EServiceCenterName} from "../../api/types";
+import {LoadingButton} from "../UI/Button";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -29,14 +32,10 @@ export const useStyles = makeStyles(theme => ({
             marginTop: theme.spacing(5)
         }
     },
-    button: {
-        cursor: "pointer",
+    existing: {
         fontWeight: "bold",
         fontSize: 32,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "10%",
+        padding: "7%",
         height: "100%",
         textAlign: "center",
         border: "1px solid #DADADA",
@@ -57,18 +56,59 @@ export const useStyles = makeStyles(theme => ({
             fontSize: 18,
             padding: "5%"
         }
-    }
+    },
+    button: {
+        fontWeight: "bold",
+        fontSize: 32,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "7%",
+        height: "100%",
+        textAlign: "center",
+        border: "1px solid #DADADA",
+        background: "#FFFFFF",
+        transition: theme.transitions.create(["box-shadow"]),
+        "&:hover": {
+            boxShadow: "0 2px 8px rgba(0,0,0,.1)"
+        },
+        [mh600]: {
+            fontSize: 22,
+            padding: "7%"
+        },
+        [mh400]: {
+            fontSize: 18,
+            padding: "2%"
+        },
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 18,
+            padding: "5%"
+        }
+    },
+    loadingButton: {
+        minWidth: 144,
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
+            "&:last-child": {
+                order: -1,
+                marginBottom: theme.spacing(2)
+            }
+        }
+    },
 }))
 type TProps = {
-    onLogin: () => void;
-    onComplete: (serviceType: EServiceType) => void;
+    onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     setView: (view: TView) => void;
+    loading: boolean;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({setView, onLogin, onComplete}) => {
+export const CustomerSelect: React.FC<TProps> = ({setView, onComplete, loading}) => {
+    const {isMobileServiceOn, serviceType, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
+    const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {isMobileServiceOn, serviceType, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
 
     useEffect(() => {
         const uid = uuidv4();
@@ -93,39 +133,61 @@ export const CustomerSelect: React.FC<TProps> = ({setView, onLogin, onComplete})
         });
     }
 
-    const handleExisting = (): void => {
-        dispatch(setUserType(EUserType.Existing));
-        handleReactGA('An Existing');
-        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
-            setView('serviceSelect')
-        } else {
-            onLogin()
-        }
-    }
-
     const handleNew = () => {
         dispatch(setUserType(EUserType.New));
         handleReactGA('A New');
+        dispatch(setCustomerEnteredEmail(''));
         if (isMobileServiceOn || isPickUpDropOffServiceOn) {
             setView('serviceSelect')
         } else {
             createBlankCar()
-            onComplete(serviceType);
+            onComplete(serviceType, EUserType.New);
         }
+    }
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
+        dispatch(setCustomerEnteredEmail(value));
+    }
+
+    const handleComplete = async () => {
+        dispatch(setUserType(EUserType.Existing));
+        onComplete(serviceType, EUserType.Existing);
     }
 
     return <Grid className={classes.buttonsContainer}
-          alignItems="stretch"
-          container
-          spacing={4}>
+                 alignItems="stretch"
+                 container
+                 spacing={4}>
         <Grid item xs={12} sm={12} md={6}>
-            <div onClick={handleExisting} className={classes.button}>
+            <div className={classes.existing}>
                 <span>I`m a returning customer</span>
+                <TextField
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    placeholder={`Enter your ${!isRiverviewFord ? 'Email or ' : ''}Phone`}
+                    InputProps={{disableUnderline: true}}
+                    variant="standard"
+                    onChange={handleChange}
+                    value={customerEnteredEmail}
+                    fullWidth/>
+                <LoadingButton
+                    loading={loading}
+                    variant="contained"
+                    color="primary"
+                    className={classes.loadingButton}
+                    disabled={loading || !customerEnteredEmail}
+                    onClick={handleComplete}>
+                    Search
+                </LoadingButton>
             </div>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
-            <div onClick={handleNew} className={classes.button}>
+            <div className={classes.button}>
                 <span>I`m a new customer</span>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.loadingButton}
+                    onClick={handleNew}
+                >Submit</Button>
             </div>
         </Grid>
     </Grid>
