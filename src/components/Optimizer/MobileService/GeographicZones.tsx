@@ -34,8 +34,8 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
         <div>
             <TabHeaderWrapper>
                 <ButtonsWrapper>
-                    <TextButton variant="text" onClick={onEditZoneOpen} disabled={!currentZone}>Edit</TextButton>
-                    <TextButton variant="text" onClick={onRemoveZoneOpen} disabled={!currentZone}>Remove</TextButton>
+                    <TextButton variant="text" onClick={onEditZoneOpen} disabled={!selectedZone}>Edit</TextButton>
+                    <TextButton variant="text" onClick={onRemoveZoneOpen} disabled={!selectedZone}>Remove</TextButton>
                     <Button onClick={onAddZoneOpen} variant="contained" color="primary" style={{width: 160}}>Add Zone</Button>
                 </ButtonsWrapper>
             </TabHeaderWrapper>

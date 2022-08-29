@@ -22,6 +22,7 @@ import {
 } from "../../../store/reducers/mobileService/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../store/rootReducer";
+import {Loading} from "../../UI/Loading";
 
 const useStyles = makeStyles(() => ({
     text: {
@@ -117,8 +118,8 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                                              setCurrentZip,
                                                              serviceType,
                                                              ...props}) => {
-    const {currentZone: currentMobileZone} = useSelector((state: RootState) => state.mobileService);
-    const {currentZone: currentServiceValetZone} = useSelector((state: RootState) => state.serviceValet);
+    const {currentZone: currentMobileZone, isLoading: isMobileloading} = useSelector((state: RootState) => state.mobileService);
+    const {currentZone: currentServiceValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
     const [currentZone, setCurrentZone] = useState<TZone|null>(null);
     const [zoneName, setZoneName] = useState<string>('');
     const [newZip, setNewZip] = useState<number|''>('');
@@ -133,14 +134,14 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const showMessage = useMessage();
 
     useEffect(() => {
-        if (zone) {
+        if (zone && props.open) {
             if (serviceType === 'serviceValet') {
                 dispatch(getServiceValetZoneById(zone.id))
             } else {
                 dispatch(getMobileZoneById(zone.id))
             }
         }
-    }, [serviceType, zone])
+    }, [serviceType, zone, props.open])
 
     useEffect(() => {
         if (zone) {
@@ -266,48 +267,53 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
             <BaseModal {...props} width={570} onClose={onCancel}>
                 <DialogTitle onClose={onCancel}>{isEdit ? 'Edit Zone' : 'Add Zone'}</DialogTitle>
                 <DialogContent style={{padding: '20px 116px'}}>
-                    <TextField
-                        fullWidth
-                        label='Zone'
-                        placeholder='Type Here'
-                        error={!zoneName && formIsChecked}
-                        onChange={onNameChange}
-                        value={zoneName}/>
-                    <div className={classes.fieldWrapper}>
-                        <div style={{width: "80%"}}>
+                    { isMobileloading || isValetLoading
+                        ? <Loading/>
+                        : <>
                             <TextField
                                 fullWidth
-                                type="number"
-                                label='ZIP Code'
+                                label='Zone'
                                 placeholder='Type Here'
-                                onKeyUp={onKeyUp}
-                                error={newZip.toString().length !== 5 && formIsChecked}
-                                onChange={onZipChange}
-                                value={newZip}/>
-                        </div>
-                        <AddBtn
-                            variant="contained"
-                            onClick={onAddZip}
-                            disabled={!newZip.toString().length}
-                            startIcon={<AddCircleOutline/>}>
-                            Add
-                        </AddBtn>
-                    </div>
-                    <div className={classes.zipsWrapper}>
-                        {zipList.map(code => <div className={classes.zip} key={code}>
-                            <div className={classes.zipCode}>{code}</div>
-                            <div className={classes.zipActions}>
-                                { isEdit
-                                    ? <IconButton onClick={() => onChangeZoneClick(code)}>
-                                        <ChangeZone/>
-                                    </IconButton>
-                                    : null }
-                                <IconButton onClick={() => onRemoveZipClick(code)}>
-                                    <Close/>
-                                </IconButton>
+                                error={!zoneName && formIsChecked}
+                                onChange={onNameChange}
+                                value={zoneName}/>
+                            <div className={classes.fieldWrapper}>
+                                <div style={{width: "80%"}}>
+                                    <TextField
+                                        fullWidth
+                                        type="number"
+                                        label='ZIP Code'
+                                        placeholder='Type Here'
+                                        onKeyUp={onKeyUp}
+                                        error={newZip.toString().length !== 5 && formIsChecked}
+                                        onChange={onZipChange}
+                                        value={newZip}/>
+                                </div>
+                                <AddBtn
+                                    variant="contained"
+                                    onClick={onAddZip}
+                                    disabled={!newZip.toString().length}
+                                    startIcon={<AddCircleOutline/>}>
+                                    Add
+                                </AddBtn>
                             </div>
-                        </div>)}
-                    </div>
+                            <div className={classes.zipsWrapper}>
+                                {zipList.map(code => <div className={classes.zip} key={code}>
+                                    <div className={classes.zipCode}>{code}</div>
+                                    <div className={classes.zipActions}>
+                                        { isEdit
+                                            ? <IconButton onClick={() => onChangeZoneClick(code)}>
+                                                <ChangeZone/>
+                                            </IconButton>
+                                            : null }
+                                        <IconButton onClick={() => onRemoveZipClick(code)}>
+                                            <Close/>
+                                        </IconButton>
+                                    </div>
+                                </div>)}
+                            </div>
+                        </>
+                    }
                 </DialogContent>
                 <Divider style={{ margin: 0 }}/>
                 <DialogActions>
