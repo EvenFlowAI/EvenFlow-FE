@@ -151,7 +151,7 @@ type ApiRoutes = {
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek", TApiRoute>,
     GeographicZones: Record<"Create" | "Update" | "GetZones" | "ReassignZipCode"
-        | "RemoveZipCode" | "Remove",  TApiRoute>,
+        | "RemoveZipCode" | "Remove" | "GetById",  TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType", TApiRoute>,
@@ -285,6 +285,7 @@ export class Api {
             Remove: {route: "/geographic-zones/{id}", method: "delete"},
             ReassignZipCode: {route: "/geographic-zones/re-assign-zip-code/{id}", method: "put"},
             RemoveZipCode: {route: "", method: "delete"},
+            GetById: {route: "/geographic-zones/{id}", method: "get"},
         },
         MaintenancePackages: {
             Create: {route: "/maintenance-packages", method: "post"},

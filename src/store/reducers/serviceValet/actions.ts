@@ -6,7 +6,7 @@ import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../config/requests";
 import {loadMobServiceZones} from "../mobileService/actions";
 
-export const setCurrentZone = createAction<any>('ServiceValet/SetCurrentZone');
+export const setCurrentZone = createAction<TZone|null>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');
 export const setZones = createAction<TZone[]>('ServiceValet/SetZones');
 export const setServiceValetPrisingByZones = createAction<IZonePriceSettings[]>('ServiceValet/SetPrisingSettingsByZones');
@@ -31,6 +31,20 @@ export const loadServiceValetZones = (id: number): AppThunk => dispatch => {
         })
         .finally(() => dispatch(setLoading(false)))
 
+}
+
+export const getServiceValetZoneById = (id: number): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.GeographicZones.GetById, {urlParams: {id}})
+        .then(result => {
+            if (result) {
+                dispatch(setCurrentZone(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('get geographic zone by id error', err)
+        })
+        .finally(() => dispatch(setLoading(false)));
 }
 
 export const addServiceValetZone = (id: number, data: TZoneNew): AppThunk => dispatch => {
@@ -67,6 +81,7 @@ export const updateServiceValetZone = (id: number, serviceCenterId: number, data
         .then(result => {
             if (result) {
                 dispatch(loadServiceValetZones(serviceCenterId))
+                dispatch(getServiceValetZoneById(id))
                 onSuccess();
             }
         })
@@ -89,6 +104,7 @@ export const reassignZipToServiceValetZone = (id: number, serviceCenterId: numbe
             if (result) {
                 onSuccess();
                 dispatch(loadServiceValetZones(serviceCenterId))
+                dispatch(getServiceValetZoneById(id))
             }
         })
         .catch(err => {

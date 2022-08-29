@@ -7,8 +7,11 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {Button, Divider, MenuItem, Select} from "@material-ui/core";
 import {TReassignZip, TZipCode, TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
 import {TextField} from "../../UI/TextField";
-import {assignZipToMobServiceZone} from "../../../store/reducers/mobileService/actions";
-import {reassignZipToServiceValetZone} from "../../../store/reducers/serviceValet/actions";
+import {assignZipToMobServiceZone, removeZipFromMobServiceZone} from "../../../store/reducers/mobileService/actions";
+import {
+    reassignZipToServiceValetZone,
+    removeZipFromServiceValetZone
+} from "../../../store/reducers/serviceValet/actions";
 import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles(() => ({
@@ -74,6 +77,13 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
 
     const onSuccess = () => {
         showMessage(`ZIP code ${zip?.code} was reassigned to the zone ${selectedZone?.name}`)
+        if (selectedSC && zone && zip) {
+            if (serviceType === 'mobileService') {
+                dispatch(removeZipFromMobServiceZone(selectedSC.id, zone.id, zip));
+            } else {
+                dispatch(removeZipFromServiceValetZone(selectedSC.id, zone.id, zip));
+            }
+        }
     }
 
     const onError = (err:string) => {

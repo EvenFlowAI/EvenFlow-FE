@@ -145,12 +145,12 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const onSave = () => {
         setFormIsChecked(true);
-        if (zoneName.length && zipList.length && selectedSC) {
+        if (zoneName.length && selectedSC) {
             if (zone && isEdit) {
                 const data: TZoneUpdate = {
                     ...zone,
                     name: zoneName,
-                    zipCodes: [],
+                    zipCodes: zipList,
                     serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
                 }
                 if (serviceType === 'serviceValet') {
@@ -159,16 +159,20 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                     dispatch(updateMobServiceZone(zone.id, selectedSC.id, data, onSuccess, onError))
                 }
             } else {
-                const data: TZoneNew = {
-                    name: zoneName,
-                    zipCodes: zipList,
-                    serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
-                    serviceCenterId: selectedSC.id,
-                }
-                if (serviceType === 'serviceValet') {
-                    dispatch(addServiceValetZone(selectedSC.id, data))
+                if (zipList.length) {
+                    const data: TZoneNew = {
+                        name: zoneName,
+                        zipCodes: zipList,
+                        serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
+                        serviceCenterId: selectedSC.id,
+                    }
+                    if (serviceType === 'serviceValet') {
+                        dispatch(addServiceValetZone(selectedSC.id, data))
+                    } else {
+                        dispatch(addMobServiceZone(selectedSC.id, data))
+                    }
                 } else {
-                    dispatch(addMobServiceZone(selectedSC.id, data))
+                    showError('ZIP codes list must not be empty')
                 }
             }
         }
@@ -217,15 +221,16 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     }
 
     const onRemoveZipClick = (code: number) => {
-        if (isEdit && zone) {
-            if (setCurrentZip && onRemoveZipOpen) {
-                const codeObject = zone.zipCodes.find(item => item.code === code);
-                codeObject && setCurrentZip(codeObject);
-                onRemoveZipOpen();
-            }
-        } else {
-            setZipList(prev => prev.filter(item => item !== code))
-        }
+        setZipList(prev => prev.filter(item => item !== code))
+        // if (isEdit && zone) {
+        //     if (setCurrentZip && onRemoveZipOpen) {
+        //         const codeObject = zone.zipCodes.find(item => item.code === code);
+        //         codeObject && setCurrentZip(codeObject);
+        //         onRemoveZipOpen();
+        //     }
+        // } else {
+        //     setZipList(prev => prev.filter(item => item !== code))
+        // }
     }
 
     return (
@@ -244,6 +249,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                         <div style={{width: "80%"}}>
                             <TextField
                                 fullWidth
+                                type="number"
                                 label='ZIP Code'
                                 placeholder='Type Here'
                                 onKeyUp={onKeyUp}

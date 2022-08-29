@@ -4,12 +4,13 @@ import {makeStyles} from "@material-ui/core/styles";
 import Checkbox from "../../../UI/Checkbox";
 import {styled} from "@material-ui/core";
 import {CloseOutlined} from "@material-ui/icons";
+import {useDispatch} from "react-redux";
+import {getServiceValetZoneById} from "../../../../store/reducers/serviceValet/actions";
 
 type TZoneProps = {
     zone: TZone;
     zipCodes: TZipCode[];
     isSelected: boolean;
-    setSelected: (zone: TZone) => void;
     onRemoveZip: () => void;
     setCurrentZip: Dispatch<SetStateAction<TZipCode|null>>;
 }
@@ -71,11 +72,12 @@ const ZipCode = styled('div')({
     color: '#FFFFFF',
 })
 
-const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setSelected, setCurrentZip, onRemoveZip}) => {
+const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip}) => {
     const classes = useStyles({isSelected});
+    const dispatch = useDispatch();
 
     const onClick = () => {
-        setSelected(zone)
+        zone && dispatch(getServiceValetZoneById(zone.id));
     }
 
     const deleteZipCode = (item: TZipCode) => (e: React.MouseEvent<{}>) => {
