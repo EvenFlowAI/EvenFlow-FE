@@ -4,7 +4,7 @@ import EligibleCustomerSegment from "./EligibleCustomerSegment";
 import Zones from "./Zones/Zones";
 import {useModal, useSCs} from "../../../utils/hooks";
 import RemoveGeographicZone from "../../Modals/RemoveGeographicZone/RemoveGeographicZone";
-import {TZipCode} from "../../../store/reducers/mobileService/types";
+import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
 import RemoveZipCode from "../../Modals/RemoveZipCode/RemoveZipCode";
 import {TabHeaderWrapper, ButtonsWrapper, TextButton, Title, ZonesWrapper} from './styledComponents';
@@ -18,6 +18,7 @@ type TGeographicZonesProps = {
 
 const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => {
     const {currentZone} = useSelector((state: RootState) => state.serviceValet);
+    const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
     const [currentZip, setCurrentZip] = useState<TZipCode|null>(null);
     const {onOpen: onRemoveZoneOpen, onClose: onRemoveZoneClose, isOpen: isRemoveZoneOpen} = useModal();
     const {onOpen: onEditZoneOpen, onClose: onEditZoneClose, isOpen: isEditZoneOpen} = useModal();
@@ -29,7 +30,6 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
     useEffect(() => {
         if (selectedSC) dispatch(loadServiceValetZones(selectedSC.id))
     }, [selectedSC])
-
 
     return (
         <div>
@@ -46,6 +46,8 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                     <EligibleCustomerSegment/>
                 </div>
                 <Zones
+                    selectedZone={selectedZone}
+                    setSelectedZone={setSelectedZone}
                     onRemoveZip={onRemoveZipOpen}
                     setCurrentZip={setCurrentZip}
                 />
@@ -60,7 +62,7 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                 open={isEditZoneOpen}
                 onClose={onEditZoneClose}
                 isEdit
-                zone={currentZone}
+                zone={selectedZone}
                 onRemoveZipOpen={onRemoveZipOpen}
                 setCurrentZip={setCurrentZip}
                 currentZip={currentZip}

@@ -92,9 +92,16 @@ export const updateServiceValetZone = (id: number, serviceCenterId: number, data
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const removeZipFromServiceValetZone = (id: number, zoneId: number, zip: TZipCode): AppThunk => dispatch => {
-    console.log('removed zip', zip);
-// todo request
+export const removeZipFromServiceValetZone = (serviceCenterId: number, zip: TZipCode): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.GeographicZones.RemoveZipCode, {urlParams: {id: zip.id}})
+        .then(result => {
+            if (result) dispatch(loadServiceValetZones(serviceCenterId))
+        })
+        .catch(err => {
+            console.log('remove zip code from the service valet zone error', err)
+        })
+        .finally(() => setLoading(false))
 }
 
 export const reassignZipToServiceValetZone = (id: number, serviceCenterId: number, data: TReassignZip, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {

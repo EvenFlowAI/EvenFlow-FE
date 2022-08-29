@@ -4,6 +4,7 @@ import {AppThunk} from "../../../types/types";
 import {IDistancePriceSettings, IZonePriceSettings, TDistanceRange} from "../serviceValet/types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../config/requests";
+import {loadServiceValetZones} from "../serviceValet/actions";
 
 export const setCurrentZone = createAction<TZone|null>('MobileService/SetCurrentZone');
 export const setLoading = createAction<boolean>('MobileService/SetLoading');
@@ -90,9 +91,16 @@ export const updateMobServiceZone = (id: number, serviceCenterId: number, data: 
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const removeZipFromMobServiceZone = (id: number, zoneId: number, zip: TZipCode): AppThunk => dispatch => {
-    console.log('removed zip', zip);
-// todo request
+export const removeZipFromMobServiceZone = (id: number, zip: TZipCode): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.GeographicZones.RemoveZipCode, {urlParams: {id: zip.id}})
+        .then(result => {
+            if (result) dispatch(loadMobServiceZones(id))
+        })
+        .catch(err => {
+            console.log('remove zip code from the mobile service zone error', err)
+        })
+        .finally(() => setLoading(false))
 }
 
 export const assignZipToMobServiceZone = (id: number, serviceCenterId: number, data: TReassignZip, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {

@@ -4,8 +4,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import Checkbox from "../../../UI/Checkbox";
 import {styled} from "@material-ui/core";
 import {CloseOutlined} from "@material-ui/icons";
-import {getMobileZoneById} from "../../../../store/reducers/mobileService/actions";
-import {useDispatch} from "react-redux";
 
 type TZoneProps = {
     zone: TZone;
@@ -13,6 +11,7 @@ type TZoneProps = {
     isSelected: boolean;
     onRemoveZip: () => void;
     setCurrentZip: Dispatch<SetStateAction<TZipCode|null>>;
+    setSelectedZone: Dispatch<SetStateAction<TZone|null>>;
 }
 
 type TStyleProps = {
@@ -73,12 +72,11 @@ const ZipCode = styled('div')({
     color: '#FFFFFF',
 })
 
-const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip}) => {
+const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip, setSelectedZone}) => {
     const classes = useStyles({isSelected});
-    const dispatch = useDispatch();
 
     const onClick = () => {
-        zone && dispatch(getMobileZoneById(zone.id))
+        setSelectedZone(zone);
     }
 
     const deleteZipCode = (item: TZipCode) => (e: React.MouseEvent<{}>) => {

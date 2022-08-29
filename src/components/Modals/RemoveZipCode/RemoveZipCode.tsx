@@ -58,9 +58,9 @@ const RemoveZipCode: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zip, 
     const onRemove = async () => {
         if (zone?.id && selectedSC && zip) {
             if (serviceType === 'mobileService') {
-                await dispatch(removeZipFromMobServiceZone(selectedSC.id, zone.id, zip));
+                await dispatch(removeZipFromMobServiceZone(selectedSC.id, zip));
             } else {
-                await dispatch(removeZipFromServiceValetZone(selectedSC.id, zone.id, zip));
+                await dispatch(removeZipFromServiceValetZone(selectedSC.id, zip));
             }
             await props.onClose();
         }

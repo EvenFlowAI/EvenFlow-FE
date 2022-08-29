@@ -284,7 +284,7 @@ export class Api {
             Update: {route: "/geographic-zones/{id}", method: "put"},
             Remove: {route: "/geographic-zones/{id}", method: "delete"},
             ReassignZipCode: {route: "/geographic-zones/re-assign-zip-code/{id}", method: "put"},
-            RemoveZipCode: {route: "", method: "delete"},
+            RemoveZipCode: {route: "/geographic-zones/zip-code/{id}", method: "delete"},
             GetById: {route: "/geographic-zones/{id}", method: "get"},
         },
         MaintenancePackages: {

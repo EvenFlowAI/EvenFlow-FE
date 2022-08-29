@@ -78,10 +78,11 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
     const onSuccess = () => {
         showMessage(`ZIP code ${zip?.code} was reassigned to the zone ${selectedZone?.name}`)
         if (selectedSC && zone && zip) {
+            // todo delete when this logic will be on the backend
             if (serviceType === 'mobileService') {
-                dispatch(removeZipFromMobServiceZone(selectedSC.id, zone.id, zip));
+                dispatch(removeZipFromMobServiceZone(selectedSC.id, zip));
             } else {
-                dispatch(removeZipFromServiceValetZone(selectedSC.id, zone.id, zip));
+                dispatch(removeZipFromServiceValetZone(selectedSC.id, zip));
             }
         }
     }

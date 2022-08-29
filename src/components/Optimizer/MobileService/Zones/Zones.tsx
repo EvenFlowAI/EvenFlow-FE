@@ -1,6 +1,6 @@
-import React, {Dispatch, SetStateAction} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import Zone from "./Zone";
-import {TZipCode} from "../../../../store/reducers/mobileService/types";
+import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -18,10 +18,12 @@ const useStyles = makeStyles(() => ({
 type TZonesProps = {
     onRemoveZip: () => void;
     setCurrentZip: Dispatch<SetStateAction<TZipCode|null>>;
+    selectedZone: TZone|null;
+    setSelectedZone: Dispatch<SetStateAction<TZone|null>>
 }
 
-const Zones: React.FC<TZonesProps> = ({ setCurrentZip, onRemoveZip }) => {
-    const {zones, isLoading, currentZone} = useSelector((state: RootState) => state.mobileService);
+const Zones: React.FC<TZonesProps> = ({ setCurrentZip, onRemoveZip, setSelectedZone, selectedZone }) => {
+    const {zones, isLoading} = useSelector((state: RootState) => state.mobileService);
     const classes = useStyles();
 
     return (
@@ -34,7 +36,8 @@ const Zones: React.FC<TZonesProps> = ({ setCurrentZip, onRemoveZip }) => {
                     setCurrentZip={setCurrentZip}
                     onRemoveZip={onRemoveZip}
                     zipCodes={item.zipCodes}
-                    isSelected={currentZone?.id === item.id}
+                    setSelectedZone={setSelectedZone}
+                    isSelected={selectedZone?.id === item.id}
                     />
                 )}
         </div>
