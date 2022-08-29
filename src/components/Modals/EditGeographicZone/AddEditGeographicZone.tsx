@@ -251,15 +251,6 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const onRemoveZipClick = (code: number) => {
         setZipList(prev => prev.filter(item => item !== code))
-        // if (isEdit && zone) {
-        //     if (setCurrentZip && onRemoveZipOpen) {
-        //         const codeObject = zone.zipCodes.find(item => item.code === code);
-        //         codeObject && setCurrentZip(codeObject);
-        //         onRemoveZipOpen();
-        //     }
-        // } else {
-        //     setZipList(prev => prev.filter(item => item !== code))
-        // }
     }
 
     return (
