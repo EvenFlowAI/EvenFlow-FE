@@ -1,9 +1,10 @@
 import {createAction} from "@reduxjs/toolkit";
-import {TZone, TZoneNew} from "../mobileService/types";
+import {TReassignZip, TZipCode, TZone, TZoneNew, TZoneUpdate} from "../mobileService/types";
 import {AppThunk} from "../../../types/types";
 import {IDistancePriceSettings, IZonePriceSettings, TDistanceRange} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../config/requests";
+import {loadMobServiceZones} from "../mobileService/actions";
 
 export const setCurrentZone = createAction<any>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');
@@ -23,7 +24,7 @@ export const loadServiceValetZones = (id: number): AppThunk => dispatch => {
     }
     Api.call(Api.endpoints.GeographicZones.GetZones, {data})
         .then(result => {
-            if (result) dispatch(setZones(result.data))
+            if (result?.data?.result) dispatch(setZones(result.data.result))
         })
         .catch(err => {
             console.log('get geographic zones for service valet error', err)
@@ -44,30 +45,57 @@ export const addServiceValetZone = (id: number, data: TZoneNew): AppThunk => dis
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const removeServiceValetZone = (id: number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+export const removeServiceValetZone = (id: number, serviceCenterId: number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.GeographicZones.Remove, {urlParams: {id}})
         .then(result => {
-            if (result) onSuccess();
+            if (result) {
+                dispatch(loadMobServiceZones(serviceCenterId))
+                onSuccess();
+            }
         })
         .catch(err => {
-            console.log('remove mobile service zone error', err)
+            console.log('remove service valet zone error', err)
             onError(err);
         })
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updateServiceValetZone = (id: number, zoneId: number, data: TZone): AppThunk => dispatch => {
-// todo request
+export const updateServiceValetZone = (id: number, serviceCenterId: number, data: TZoneUpdate, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.GeographicZones.Update, {urlParams: {id}, data})
+        .then(result => {
+            if (result) {
+                dispatch(loadServiceValetZones(serviceCenterId))
+                onSuccess();
+            }
+        })
+        .catch(err => {
+            console.log('update service valet zone error', err)
+            onError(err);
+        })
+        .finally(() => dispatch(setLoading(false)))
 }
 
-export const removeZipFromServiceValetZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
+export const removeZipFromServiceValetZone = (id: number, zoneId: number, zip: TZipCode): AppThunk => dispatch => {
     console.log('removed zip', zip);
 // todo request
 }
 
-export const assignZipToServiceValetZone = (id: number, zoneId: number, zip: string): AppThunk => dispatch => {
-    // todo request
+export const reassignZipToServiceValetZone = (id: number, serviceCenterId: number, data: TReassignZip, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.GeographicZones.ReassignZipCode, {urlParams: {id: data.id}, data})
+        .then(result => {
+            if (result) {
+                onSuccess();
+                dispatch(loadServiceValetZones(serviceCenterId))
+            }
+        })
+        .catch(err => {
+            console.log('reassign zip code to the service valet zone error', err)
+            onError(err);
+        })
+        .finally(() => dispatch(setLoading(false)))
 }
 
 export const saveLinkToServiceValetMap = (id: number, link: string): AppThunk => dispatch => {

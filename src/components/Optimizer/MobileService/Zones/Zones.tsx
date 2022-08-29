@@ -1,95 +1,10 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import Zone from "./Zone";
-import {TZone} from "../../../../store/reducers/mobileService/types";
+import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-
-export const mockZones = [
-    {
-        name: 'Zone 1',
-        id: 1,
-        zipCodes: [
-            {
-                code: '75065',
-                id: 1
-            },
-            {
-                code: '75077',
-                id: 2
-            },
-            {
-                code: '76201',
-                id: 3
-            },
-            {
-                code: '76208',
-                id: 4
-            }, {
-                code: '76209',
-                id: 5
-            },
-            {
-                code: '76210',
-                id: 6
-            }
-        ]
-    },
-    {
-        name: 'Zone 2',
-        id: 2,
-        zipCodes: [
-            {
-                code: '75019',
-                id: 1
-            },
-            {
-                code: '75022',
-                id: 2
-            },
-            {
-                code: '75028',
-                id: 3
-            },
-            {
-                code: '75063',
-                id: 4
-            }, {
-                code: '75067',
-                id: 5
-            },
-            {
-                code: '75261',
-                id: 6
-            }
-        ]
-    },
-    {
-        name: 'Zone 3',
-        id: 3,
-        zipCodes: [
-            {
-                code: '75007',
-                id: 1
-            },
-            {
-                code: '75010',
-                id: 2
-            },
-            {
-                code: '75036',
-                id: 3
-            },
-            {
-                code: '75056',
-                id: 4
-            }, {
-                code: '75057',
-                id: 5
-            },
-        ]
-    }
-]
+import {Loading} from "../../../UI/Loading";
 
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -104,11 +19,11 @@ type TZonesProps = {
     currentZone: TZone|null;
     setCurrentZone: Dispatch<SetStateAction<TZone|null>>;
     onRemoveZip: () => void;
-    setCurrentZip: Dispatch<SetStateAction<string>>;
+    setCurrentZip: Dispatch<SetStateAction<TZipCode|null>>;
 }
 
 const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone, setCurrentZip, onRemoveZip }) => {
-    const {zones} = useSelector((state: RootState) => state.mobileService);
+    const {zones, isLoading} = useSelector((state: RootState) => state.mobileService);
     const classes = useStyles();
 
     const setSelected = (zone: TZone) => {
@@ -117,15 +32,17 @@ const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone, setCurrentZ
 
     return (
         <div className={classes.wrapper}>
-            {zones.map(item => <Zone
-                zone={item}
-                key={item.id}
-                setCurrentZip={setCurrentZip}
-                onRemoveZip={onRemoveZip}
-                zipCodes={item.zipCodes}
-                isSelected={currentZone?.id === item.id}
-                setSelected={setSelected}/>
-            )}
+            {isLoading
+                ? <Loading/>
+                : zones.map(item => <Zone
+                    zone={item}
+                    key={item.id}
+                    setCurrentZip={setCurrentZip}
+                    onRemoveZip={onRemoveZip}
+                    zipCodes={item.zipCodes}
+                    isSelected={currentZone?.id === item.id}
+                    setSelected={setSelected}/>
+                )}
         </div>
     );
 };

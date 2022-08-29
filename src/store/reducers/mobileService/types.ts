@@ -26,4 +26,9 @@ export type TZone = {
     serviceType: EServiceType;
 }
 
+export type TReassignZip = {
+    id: number;
+    geographicZoneId: number;
+}
+
 export type TZonesServiceType = "serviceValet" | "mobileService";

@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from "@material-ui/core";
 import EligibleCustomerSegment from "./EligibleCustomerSegment";
 import Zones from "./Zones/Zones";
-import {useModal} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
 import RemoveGeographicZone from "../../Modals/RemoveGeographicZone/RemoveGeographicZone";
-import {TZone} from "../../../store/reducers/mobileService/types";
+import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
 import RemoveZipCode from "../../Modals/RemoveZipCode/RemoveZipCode";
 import {TabHeaderWrapper, ButtonsWrapper, TextButton, Title, ZonesWrapper} from './styledComponents';
+import {useDispatch} from "react-redux";
+import {loadMobServiceZones} from "../../../store/reducers/mobileService/actions";
 
 type TGeographicZonesProps = {
     onAddZoneOpen: () => void;
@@ -15,10 +17,16 @@ type TGeographicZonesProps = {
 
 const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => {
     const [currentZone, setCurrentZone] = useState<TZone|null>(null);
-    const [currentZip, setCurrentZip] = useState<string>('');
+    const [currentZip, setCurrentZip] = useState<TZipCode|null>(null);
     const {onOpen: onRemoveZoneOpen, onClose: onRemoveZoneClose, isOpen: isRemoveZoneOpen} = useModal();
     const {onOpen: onEditZoneOpen, onClose: onEditZoneClose, isOpen: isEditZoneOpen} = useModal();
     const {onOpen: onRemoveZipOpen, onClose: onRemoveZipClose, isOpen: isRemoveZipOpen} = useModal();
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+
+    useEffect(() => {
+        if (selectedSC) dispatch(loadMobServiceZones(selectedSC.id))
+    }, [selectedSC])
 
     return (
         <div>
@@ -41,7 +49,13 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                     setCurrentZip={setCurrentZip}
                 />
             </ZonesWrapper>
-            <RemoveGeographicZone open={isRemoveZoneOpen} zone={currentZone} onClose={onRemoveZoneClose} serviceType="mobileService"/>
+            <RemoveGeographicZone
+                open={isRemoveZoneOpen}
+                setZone={setCurrentZone}
+                zone={currentZone}
+                onClose={onRemoveZoneClose}
+                serviceType="mobileService"
+            />
             <AddEditGeographicZone
                 serviceType="mobileService"
                 open={isEditZoneOpen}

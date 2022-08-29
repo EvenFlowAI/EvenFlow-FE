@@ -6,12 +6,12 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {removeZipFromMobServiceZone} from "../../../store/reducers/mobileService/actions";
 import {useSCs} from "../../../utils/hooks";
-import {TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
+import {TZipCode, TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
 import {removeZipFromServiceValetZone} from "../../../store/reducers/serviceValet/actions";
 
 type TRemoveGeographicZoneProps = DialogProps & {
     zone: TZone|null;
-    zip: string;
+    zip: TZipCode|null;
     serviceType: TZonesServiceType;
 }
 
@@ -56,7 +56,7 @@ const RemoveZipCode: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zip, 
 
     const onCancel = () => props.onClose();
     const onRemove = async () => {
-        if (zone?.id && selectedSC && zip.length) {
+        if (zone?.id && selectedSC && zip) {
             if (serviceType === 'mobileService') {
                 await dispatch(removeZipFromMobServiceZone(selectedSC.id, zone.id, zip));
             } else {

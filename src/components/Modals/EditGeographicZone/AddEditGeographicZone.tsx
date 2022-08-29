@@ -1,17 +1,18 @@
-import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, IconButton, styled} from "@material-ui/core";
 import {DialogProps} from "../types";
-import {TZone, TZoneNew, TZonesServiceType} from "../../../store/reducers/mobileService/types";
+import {TZipCode, TZone, TZoneNew, TZonesServiceType, TZoneUpdate} from "../../../store/reducers/mobileService/types";
 import {TextField} from "../../UI/TextField";
 import {AddCircleOutline, Close} from "@material-ui/icons";
 import {useDispatch} from "react-redux";
 import {addServiceValetZone, updateServiceValetZone} from "../../../store/reducers/serviceValet/actions";
-import {useException, useModal, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {ReactComponent as ChangeZone} from "../../../assets/img/changeZipZone.svg";
 import AssignZipToZone from "../AssignZipToZone/AssignZipToZone";
 import {addMobServiceZone, updateMobServiceZone} from "../../../store/reducers/mobileService/actions";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const useStyles = makeStyles(() => ({
     text: {
@@ -94,8 +95,8 @@ type TEditZoneProps = DialogProps & {
     isEdit: boolean;
     zone?: TZone|null,
     onRemoveZipOpen?: () => void;
-    currentZip?: string;
-    setCurrentZip?: Dispatch<SetStateAction<string>>;
+    currentZip?: TZipCode|null;
+    setCurrentZip?: Dispatch<SetStateAction<TZipCode|null>>;
     serviceType: TZonesServiceType;
 }
 
@@ -108,8 +109,8 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                                              serviceType,
                                                              ...props}) => {
     const [zoneName, setZoneName] = useState<string>('');
-    const [newZip, setNewZip] = useState<string>('');
-    const [zipList, setZipList] = useState<string[]>([]);
+    const [newZip, setNewZip] = useState<number|''>('');
+    const [zipList, setZipList] = useState<number[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
 
@@ -117,6 +118,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const dispatch = useDispatch();
     const classes = useStyles();
     const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
         if (zone && props.open) {
@@ -132,24 +134,36 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         setZipList([]);
         props.onClose();
     }
+
+    const onSuccess = () => {
+        showMessage(`The Zone ${zone?.name} was ${isEdit ? 'updated' : 'created'} successfully`);
+    }
+
+    const onError = (err:string) => {
+        showError(err)
+    }
+
     const onSave = () => {
         setFormIsChecked(true);
         if (zoneName.length && zipList.length && selectedSC) {
             if (zone && isEdit) {
-                const data: TZone = {
+                const data: TZoneUpdate = {
                     ...zone,
                     name: zoneName,
-                    zipCodes: []
+                    zipCodes: [],
+                    serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
                 }
                 if (serviceType === 'serviceValet') {
-                    dispatch(updateServiceValetZone(selectedSC.id, zone.id, data))
+                    dispatch(updateServiceValetZone(zone.id, selectedSC.id, data, onSuccess, onError))
                 } else {
-                    dispatch(updateMobServiceZone(selectedSC.id, zone.id, data))
+                    dispatch(updateMobServiceZone(zone.id, selectedSC.id, data, onSuccess, onError))
                 }
             } else {
                 const data: TZoneNew = {
                     name: zoneName,
-                    zipCodes: []
+                    zipCodes: zipList,
+                    serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
+                    serviceCenterId: selectedSC.id,
                 }
                 if (serviceType === 'serviceValet') {
                     dispatch(addServiceValetZone(selectedSC.id, data))
@@ -168,19 +182,21 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const onZipChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setFormIsChecked(false);
-        setNewZip(e.target.value);
+        setNewZip(+e.target.value);
     }
 
     const onAddZip = (): void => {
-        if (newZip.length !== 5) {
+        if (newZip.toString().length !== 5) {
             setFormIsChecked(true);
             showError("It's not a valid ZIP code");
-        } else if (zipList.includes(newZip)) {
+        } else if (newZip && zipList.includes(newZip)) {
             setFormIsChecked(true);
             showError("This ZIP code already exists in the list");
         } else {
-            setZipList(prev => ([...prev, newZip]));
-            setNewZip('');
+            if (newZip) {
+                setZipList(prev => ([...prev, newZip]));
+                setNewZip('');
+            }
         }
     }
 
@@ -188,17 +204,23 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         if (e.keyCode === 13) onAddZip();
     }
 
-    const onChangeZoneClick = (code: string) => {
-        if (setCurrentZip) {
-            setCurrentZip(code);
-            onOpen();
+    const onChangeZoneClick = (code: number) => {
+        if (setCurrentZip && isEdit && zone) {
+            const codeObject = zone.zipCodes.find(item => item.code === code);
+            if (codeObject) {
+                setCurrentZip(codeObject);
+                onOpen();
+            } else {
+                showError('This code has not been saved to the ZIP codes list of the current zone')
+            }
         }
     }
 
-    const onRemoveZipClick = (code: string) => {
-        if (isEdit) {
+    const onRemoveZipClick = (code: number) => {
+        if (isEdit && zone) {
             if (setCurrentZip && onRemoveZipOpen) {
-               setCurrentZip(code);
+                const codeObject = zone.zipCodes.find(item => item.code === code);
+                codeObject && setCurrentZip(codeObject);
                 onRemoveZipOpen();
             }
         } else {
@@ -225,14 +247,14 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                 label='ZIP Code'
                                 placeholder='Type Here'
                                 onKeyUp={onKeyUp}
-                                error={newZip.length !== 5 && formIsChecked}
+                                error={newZip.toString().length !== 5 && formIsChecked}
                                 onChange={onZipChange}
                                 value={newZip}/>
                         </div>
                         <AddBtn
                             variant="contained"
                             onClick={onAddZip}
-                            disabled={!newZip.length}
+                            disabled={!newZip.toString().length}
                             startIcon={<AddCircleOutline/>}>
                             Add
                         </AddBtn>

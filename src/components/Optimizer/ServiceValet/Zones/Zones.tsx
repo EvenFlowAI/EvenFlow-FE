@@ -1,9 +1,10 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import Zone from "./Zone";
-import {TZone} from "../../../../store/reducers/mobileService/types";
+import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {Loading} from "../../../UI/Loading";
 
 export const mockZones = [
     {
@@ -108,11 +109,11 @@ type TZonesProps = {
     currentZone: TZone|null;
     setCurrentZone: Dispatch<SetStateAction<TZone|null>>;
     onRemoveZip: () => void;
-    setCurrentZip: Dispatch<SetStateAction<string>>;
+    setCurrentZip: Dispatch<SetStateAction<TZipCode|null>>;
 }
 
 const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone, setCurrentZip, onRemoveZip }) => {
-    const {zones} = useSelector((state: RootState) => state.serviceValet);
+    const {zones, isLoading} = useSelector((state: RootState) => state.serviceValet);
     const classes = useStyles();
 
     const setSelected = (zone: TZone) => {
@@ -121,7 +122,9 @@ const Zones: React.FC<TZonesProps> = ({ currentZone, setCurrentZone, setCurrentZ
 
     return (
         <div className={classes.wrapper}>
-            {zones.map(item => <Zone
+            {isLoading
+                ? <Loading/>
+                : zones.map(item => <Zone
                 zone={item}
                 key={item.id}
                 setCurrentZip={setCurrentZip}

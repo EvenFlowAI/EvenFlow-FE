@@ -11,7 +11,7 @@ type TZoneProps = {
     isSelected: boolean;
     setSelected: (zone: TZone) => void;
     onRemoveZip: () => void;
-    setCurrentZip: Dispatch<SetStateAction<string>>;
+    setCurrentZip: Dispatch<SetStateAction<TZipCode|null>>;
 }
 
 type TStyleProps = {
@@ -79,7 +79,7 @@ const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setSelected, se
     }
 
     const deleteZipCode = (item: TZipCode) => (e: React.MouseEvent<{}>) => {
-        setCurrentZip(item.code);
+        setCurrentZip(item);
         onRemoveZip();
     }
 
