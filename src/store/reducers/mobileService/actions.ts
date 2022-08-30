@@ -67,15 +67,15 @@ export const removeMobServiceZone = (id: number, serviceCenterId: number, onSucc
     Api.call(Api.endpoints.GeographicZones.Remove, {urlParams: {id}})
         .then(result => {
             if (result) {
-                onSuccess();
                 dispatch(loadMobServiceZones(serviceCenterId))
+                onSuccess();
             }
         })
         .catch(err => {
             console.log('remove mobile service zone error', err)
+            dispatch(setLoading(false))
             onError(err);
         })
-        .finally(() => dispatch(setLoading(false)))
 }
 
 export const updateMobServiceZone = (id: number, serviceCenterId: number, data: TZoneUpdate, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
