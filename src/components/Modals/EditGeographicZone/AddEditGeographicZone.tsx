@@ -166,6 +166,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const onSuccess = () => {
         showMessage(`The Zone ${currentZone?.name} was ${isEdit ? 'updated' : 'created'} successfully`);
+        onCancel();
     }
 
     const onError = (err:string) => {
@@ -205,7 +206,6 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                 }
             }
         }
-        onCancel();
     }
 
     const onNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
