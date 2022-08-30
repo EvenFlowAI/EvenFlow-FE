@@ -3,15 +3,15 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {makeStyles} from "@material-ui/core/styles";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {removeMobServiceZone} from "../../../store/reducers/mobileService/actions";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
-import {TZonesServiceType} from "../../../store/reducers/mobileService/types";
+import {TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
 import {removeServiceValetZone, setCurrentZone} from "../../../store/reducers/serviceValet/actions";
-import {RootState} from "../../../store/rootReducer";
 
 type TRemoveGeographicZoneProps = DialogProps & {
     serviceType: TZonesServiceType;
+    zone: TZone|null;
 }
 
 const useStyles = makeStyles(() => ({
@@ -48,8 +48,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType, ...props}) => {
-    const {currentZone: zone} = useSelector((state: RootState) => state.serviceValet);
+const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zone, ...props}) => {
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
