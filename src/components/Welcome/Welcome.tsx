@@ -34,11 +34,13 @@ export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
     const {isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+
     const [view, setView] = useState<TView>("select");
     const [loading, setLoading] = useState<boolean>(false);
+
+    const {id} = useParams();
     const history = useHistory();
     const showError = useException();
-    const {id} = useParams();
     const isFrame = useLayout();
     const dispatch = useDispatch();
 
@@ -116,16 +118,6 @@ export const Welcome = () => {
             }
         }
     }
-
-    // useEffect(() => {
-    //     window.addEventListener('message', function(event) {
-    //         if (event.origin.includes('https://dev.evenflow.ai')) {
-    //             if (!valueService) {
-    //                 history.push(`/f/appointment/${id}/valueService`)
-    //             }
-    //         }
-    //     });
-    // }, [id, valueService])
 
     const getComponent = () => {
         switch (view) {
