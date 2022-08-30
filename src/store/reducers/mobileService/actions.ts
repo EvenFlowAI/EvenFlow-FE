@@ -46,14 +46,18 @@ export const getMobileZoneById = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setLoading(false)));
 }
 
-export const addMobServiceZone = (id: number, data: TZoneNew): AppThunk => dispatch => {
+export const addMobServiceZone = (id: number, data: TZoneNew, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.GeographicZones.Create, {data: {...data, serviceType: EServiceType.MobileService}})
         .then(result => {
-            if (result) dispatch(loadMobServiceZones(data.serviceCenterId))
+            if (result) {
+                dispatch(loadMobServiceZones(data.serviceCenterId))
+                onSuccess();
+            }
         })
         .catch(err => {
             console.log('add mobile zone error', err)
+            onError(err);
         })
         .finally(() => dispatch(setLoading(false)))
 }

@@ -196,9 +196,9 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                         serviceCenterId: selectedSC.id,
                     }
                     if (serviceType === 'serviceValet') {
-                        dispatch(addServiceValetZone(selectedSC.id, data))
+                        dispatch(addServiceValetZone(selectedSC.id, data, onSuccess, onError))
                     } else {
-                        dispatch(addMobServiceZone(selectedSC.id, data))
+                        dispatch(addMobServiceZone(selectedSC.id, data, onSuccess, onError))
                     }
                 } else {
                     showError('ZIP codes list must not be empty')
