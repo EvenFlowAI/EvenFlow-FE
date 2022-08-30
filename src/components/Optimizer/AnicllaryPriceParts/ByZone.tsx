@@ -123,8 +123,9 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
             setZonesData(prev => {
                 const itemToUpdate = prev.find(el => el.geographicZoneId === editedItem?.geographicZoneId);
                 if (itemToUpdate) {
-                    setEditedItem(itemToUpdate)
+                    console.log(value);
                     const updated = {...itemToUpdate, flatFee: Number(value)};
+                    setEditedItem(updated);
                     const filtered = prev.filter(el => el.geographicZoneId !== editedItem?.geographicZoneId);
                     return [...filtered, updated].sort((a, b) => a.id - b.id)
                 }
@@ -196,7 +197,7 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
                                             min: 0,
                                             step: 0.01,
                                         }}
-                                        value={+item?.flatFee?.toFixed(2)}
+                                        value={item?.flatFee}
                                         onChange={handleChangeFee}
                                     />
                                     : item.flatFee.toFixed(2)}

@@ -101,7 +101,7 @@ const AncillaryPrice = () => {
     }
 
     const onSaveZonePricing = (data: IZonePriceSettings) => {
-        const dataToUpdate = {flatFee: data.flatFee, serviceMultiplier: data.serviceMultiplier};
+        const dataToUpdate = {flatFee: +data.flatFee, serviceMultiplier: data.serviceMultiplier};
         if (selectedSC) dispatch(updateMobileServicePrisingByZones(selectedSC.id, data.id, dataToUpdate))
     }
 
