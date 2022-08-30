@@ -108,14 +108,14 @@ export const removeZipFromServiceValetZone = (serviceCenterId: number, zip: TZip
         .finally(() => setLoading(false))
 }
 
-export const reassignZipToServiceValetZone = (id: number, serviceCenterId: number, data: TReassignZip, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+export const reassignZipToServiceValetZone = (id: number, serviceCenterId: number, data: TReassignZip, prevZoneId:number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.GeographicZones.ReassignZipCode, {urlParams: {id: data.id}, data})
         .then(result => {
             if (result) {
-                onSuccess();
                 dispatch(loadServiceValetZones(serviceCenterId))
-                dispatch(getServiceValetZoneById(id))
+                dispatch(getServiceValetZoneById(prevZoneId))
+                onSuccess();
             }
         })
         .catch(err => {

@@ -107,14 +107,14 @@ export const removeZipFromMobServiceZone = (id: number, zip: TZipCode): AppThunk
         .finally(() => setLoading(false))
 }
 
-export const assignZipToMobServiceZone = (id: number, serviceCenterId: number, data: TReassignZip, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+export const assignZipToMobServiceZone = (id: number, serviceCenterId: number, data: TReassignZip, prevZoneId: number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.GeographicZones.ReassignZipCode, {urlParams: {id: data.id}, data})
         .then(result => {
             if (result) {
-                onSuccess();
                 dispatch(loadMobServiceZones(serviceCenterId))
-                dispatch(getMobileZoneById(id));
+                dispatch(getMobileZoneById(prevZoneId));
+                onSuccess();
             }
         })
         .catch(err => {

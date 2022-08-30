@@ -55,8 +55,8 @@ type TAssignZipToZoneProps = DialogProps & {
 }
 
 const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType, ...props}) => {
-    const {zones: serviceValetZones} = useSelector((state: RootState) => state.serviceValet);
-    const {zones: mobileServiceZones} = useSelector((state: RootState) => state.mobileService);
+    const {zones: serviceValetZones, currentZone: currentValetZone} = useSelector((state: RootState) => state.serviceValet);
+    const {zones: mobileServiceZones, currentZone: currentMobileZone} = useSelector((state: RootState) => state.mobileService);
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
     const [data, setData] = useState<TZone[]>([]);
     const classes = useStyles();
@@ -77,14 +77,7 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
 
     const onSuccess = () => {
         showMessage(`ZIP code ${zip?.code} was reassigned to the zone ${selectedZone?.name}`)
-        if (selectedSC && zone && zip) {
-            // todo delete when this logic will be on the backend
-            if (serviceType === 'mobileService') {
-                dispatch(removeZipFromMobServiceZone(selectedSC.id, zip));
-            } else {
-                dispatch(removeZipFromServiceValetZone(selectedSC.id, zip));
-            }
-        }
+        props.onClose();
     }
 
     const onError = (err:string) => {
@@ -98,11 +91,14 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
                 geographicZoneId: selectedZone.id,
             }
             if (serviceType === 'mobileService') {
-                dispatch(assignZipToMobServiceZone(zip.id, selectedSC.id, data, onSuccess, onError));
+                if (currentMobileZone) {
+                    dispatch(assignZipToMobServiceZone(zip.id, selectedSC.id, data, currentMobileZone.id, onSuccess, onError));
+                }
             } else {
-                dispatch(reassignZipToServiceValetZone(zip.id, selectedSC.id, data, onSuccess, onError));
+                if (currentValetZone) {
+                    dispatch(reassignZipToServiceValetZone(zip.id, selectedSC.id, data, currentValetZone.id, onSuccess, onError));
+                }
             }
-            props.onClose();
         }
     }
     const onChange = (e: React.ChangeEvent<{value: unknown}>) => {
