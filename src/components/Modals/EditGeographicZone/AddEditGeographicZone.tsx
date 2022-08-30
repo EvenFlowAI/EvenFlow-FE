@@ -1,17 +1,28 @@
-import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, IconButton, styled} from "@material-ui/core";
 import {DialogProps} from "../types";
-import {TZone, TZoneNew, TZonesServiceType} from "../../../store/reducers/mobileService/types";
+import {TZipCode, TZone, TZoneNew, TZonesServiceType, TZoneUpdate} from "../../../store/reducers/mobileService/types";
 import {TextField} from "../../UI/TextField";
 import {AddCircleOutline, Close} from "@material-ui/icons";
-import {useDispatch} from "react-redux";
-import {addServiceValetZone, updateServiceValetZone} from "../../../store/reducers/serviceValet/actions";
-import {useException, useModal, useSCs} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    addServiceValetZone,
+    getServiceValetZoneById,
+    updateServiceValetZone
+} from "../../../store/reducers/serviceValet/actions";
+import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {ReactComponent as ChangeZone} from "../../../assets/img/changeZipZone.svg";
 import AssignZipToZone from "../AssignZipToZone/AssignZipToZone";
-import {addMobServiceZone, updateMobServiceZone} from "../../../store/reducers/mobileService/actions";
+import {
+    addMobServiceZone,
+    getMobileZoneById,
+    updateMobServiceZone
+} from "../../../store/reducers/mobileService/actions";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {RootState} from "../../../store/rootReducer";
+import {Loading} from "../../UI/Loading";
 
 const useStyles = makeStyles(() => ({
     text: {
@@ -94,8 +105,8 @@ type TEditZoneProps = DialogProps & {
     isEdit: boolean;
     zone?: TZone|null,
     onRemoveZipOpen?: () => void;
-    currentZip?: string;
-    setCurrentZip?: Dispatch<SetStateAction<string>>;
+    currentZip?: TZipCode|null;
+    setCurrentZip?: Dispatch<SetStateAction<TZipCode|null>>;
     serviceType: TZonesServiceType;
 }
 
@@ -107,9 +118,12 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                                              setCurrentZip,
                                                              serviceType,
                                                              ...props}) => {
+    const {currentZone: currentMobileZone, isLoading: isMobileloading} = useSelector((state: RootState) => state.mobileService);
+    const {currentZone: currentServiceValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
+    const [currentZone, setCurrentZone] = useState<TZone|null>(null);
     const [zoneName, setZoneName] = useState<string>('');
-    const [newZip, setNewZip] = useState<string>('');
-    const [zipList, setZipList] = useState<string[]>([]);
+    const [newZip, setNewZip] = useState<number|''>('');
+    const [zipList, setZipList] = useState<number[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
 
@@ -117,13 +131,30 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const dispatch = useDispatch();
     const classes = useStyles();
     const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
         if (zone && props.open) {
-            setZoneName(zone?.name);
-            setZipList(zone.zipCodes.map(item => item.code));
+            if (serviceType === 'serviceValet') {
+                dispatch(getServiceValetZoneById(zone.id))
+            } else {
+                dispatch(getMobileZoneById(zone.id))
+            }
         }
-    }, [zone, props.open])
+    }, [serviceType, zone, props.open])
+
+    useEffect(() => {
+        if (zone) {
+            setCurrentZone(serviceType === 'serviceValet' ? currentServiceValetZone : currentMobileZone);
+        }
+    }, [zone, serviceType, currentServiceValetZone, currentMobileZone])
+
+    useEffect(() => {
+        if (isEdit && currentZone && props.open) {
+            setZoneName(currentZone?.name);
+            setZipList(currentZone.zipCodes.map(item => item.code));
+        }
+    }, [currentZone, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
@@ -132,29 +163,45 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         setZipList([]);
         props.onClose();
     }
+
+    const onSuccess = () => {
+        showMessage(`The Zone ${currentZone?.name} was ${isEdit ? 'updated' : 'created'} successfully`);
+    }
+
+    const onError = (err:string) => {
+        showError(err)
+    }
+
     const onSave = () => {
         setFormIsChecked(true);
-        if (zoneName.length && zipList.length && selectedSC) {
-            if (zone && isEdit) {
-                const data: TZone = {
-                    ...zone,
+        if (zoneName.length && selectedSC) {
+            if (currentZone && isEdit) {
+                const data: TZoneUpdate = {
+                    ...currentZone,
                     name: zoneName,
-                    zipCodes: []
+                    zipCodes: zipList,
+                    serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
                 }
                 if (serviceType === 'serviceValet') {
-                    dispatch(updateServiceValetZone(selectedSC.id, zone.id, data))
+                    dispatch(updateServiceValetZone(currentZone.id, selectedSC.id, data, onSuccess, onError))
                 } else {
-                    dispatch(updateMobServiceZone(selectedSC.id, zone.id, data))
+                    dispatch(updateMobServiceZone(currentZone.id, selectedSC.id, data, onSuccess, onError))
                 }
             } else {
-                const data: TZoneNew = {
-                    name: zoneName,
-                    zipCodes: []
-                }
-                if (serviceType === 'serviceValet') {
-                    dispatch(addServiceValetZone(selectedSC.id, data))
+                if (zipList.length) {
+                    const data: TZoneNew = {
+                        name: zoneName,
+                        zipCodes: zipList,
+                        serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
+                        serviceCenterId: selectedSC.id,
+                    }
+                    if (serviceType === 'serviceValet') {
+                        dispatch(addServiceValetZone(selectedSC.id, data))
+                    } else {
+                        dispatch(addMobServiceZone(selectedSC.id, data))
+                    }
                 } else {
-                    dispatch(addMobServiceZone(selectedSC.id, data))
+                    showError('ZIP codes list must not be empty')
                 }
             }
         }
@@ -168,19 +215,21 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const onZipChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setFormIsChecked(false);
-        setNewZip(e.target.value);
+        setNewZip(+e.target.value);
     }
 
     const onAddZip = (): void => {
-        if (newZip.length !== 5) {
+        if (newZip.toString().length !== 5) {
             setFormIsChecked(true);
             showError("It's not a valid ZIP code");
-        } else if (zipList.includes(newZip)) {
+        } else if (newZip && zipList.includes(newZip)) {
             setFormIsChecked(true);
             showError("This ZIP code already exists in the list");
         } else {
-            setZipList(prev => ([...prev, newZip]));
-            setNewZip('');
+            if (newZip) {
+                setZipList(prev => ([...prev, newZip]));
+                setNewZip('');
+            }
         }
     }
 
@@ -188,22 +237,20 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         if (e.keyCode === 13) onAddZip();
     }
 
-    const onChangeZoneClick = (code: string) => {
-        if (setCurrentZip) {
-            setCurrentZip(code);
-            onOpen();
+    const onChangeZoneClick = (code: number) => {
+        if (setCurrentZip && isEdit && currentZone) {
+            const codeObject = currentZone.zipCodes.find(item => item.code === code);
+            if (codeObject) {
+                setCurrentZip(codeObject);
+                onOpen();
+            } else {
+                showError('This code has not been saved to the ZIP codes list of the current zone')
+            }
         }
     }
 
-    const onRemoveZipClick = (code: string) => {
-        if (isEdit) {
-            if (setCurrentZip && onRemoveZipOpen) {
-               setCurrentZip(code);
-                onRemoveZipOpen();
-            }
-        } else {
-            setZipList(prev => prev.filter(item => item !== code))
-        }
+    const onRemoveZipClick = (code: number) => {
+        setZipList(prev => prev.filter(item => item !== code))
     }
 
     return (
@@ -211,47 +258,53 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
             <BaseModal {...props} width={570} onClose={onCancel}>
                 <DialogTitle onClose={onCancel}>{isEdit ? 'Edit Zone' : 'Add Zone'}</DialogTitle>
                 <DialogContent style={{padding: '20px 116px'}}>
-                    <TextField
-                        fullWidth
-                        label='Zone'
-                        placeholder='Type Here'
-                        error={!zoneName && formIsChecked}
-                        onChange={onNameChange}
-                        value={zoneName}/>
-                    <div className={classes.fieldWrapper}>
-                        <div style={{width: "80%"}}>
+                    { isMobileloading || isValetLoading
+                        ? <Loading/>
+                        : <>
                             <TextField
                                 fullWidth
-                                label='ZIP Code'
+                                label='Zone'
                                 placeholder='Type Here'
-                                onKeyUp={onKeyUp}
-                                error={newZip.length !== 5 && formIsChecked}
-                                onChange={onZipChange}
-                                value={newZip}/>
-                        </div>
-                        <AddBtn
-                            variant="contained"
-                            onClick={onAddZip}
-                            disabled={!newZip.length}
-                            startIcon={<AddCircleOutline/>}>
-                            Add
-                        </AddBtn>
-                    </div>
-                    <div className={classes.zipsWrapper}>
-                        {zipList.map(code => <div className={classes.zip} key={code}>
-                            <div className={classes.zipCode}>{code}</div>
-                            <div className={classes.zipActions}>
-                                { isEdit
-                                    ? <IconButton onClick={() => onChangeZoneClick(code)}>
-                                        <ChangeZone/>
-                                    </IconButton>
-                                    : null }
-                                <IconButton onClick={() => onRemoveZipClick(code)}>
-                                    <Close/>
-                                </IconButton>
+                                error={!zoneName && formIsChecked}
+                                onChange={onNameChange}
+                                value={zoneName}/>
+                            <div className={classes.fieldWrapper}>
+                                <div style={{width: "80%"}}>
+                                    <TextField
+                                        fullWidth
+                                        type="number"
+                                        label='ZIP Code'
+                                        placeholder='Type Here'
+                                        onKeyUp={onKeyUp}
+                                        error={newZip.toString().length !== 5 && formIsChecked}
+                                        onChange={onZipChange}
+                                        value={newZip}/>
+                                </div>
+                                <AddBtn
+                                    variant="contained"
+                                    onClick={onAddZip}
+                                    disabled={!newZip.toString().length}
+                                    startIcon={<AddCircleOutline/>}>
+                                    Add
+                                </AddBtn>
                             </div>
-                        </div>)}
-                    </div>
+                            <div className={classes.zipsWrapper}>
+                                {zipList.map(code => <div className={classes.zip} key={code}>
+                                    <div className={classes.zipCode}>{code}</div>
+                                    <div className={classes.zipActions}>
+                                        { isEdit
+                                            ? <IconButton onClick={() => onChangeZoneClick(code)}>
+                                                <ChangeZone/>
+                                            </IconButton>
+                                            : null }
+                                        <IconButton onClick={() => onRemoveZipClick(code)}>
+                                            <Close/>
+                                        </IconButton>
+                                    </div>
+                                </div>)}
+                            </div>
+                        </>
+                    }
                 </DialogContent>
                 <Divider style={{ margin: 0 }}/>
                 <DialogActions>

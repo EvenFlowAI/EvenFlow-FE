@@ -26,7 +26,6 @@ import {IMakeExtended, IModel} from "../../../api/types";
 import {getOptions} from "../../../utils/utils";
 import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
 import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
-import {mockZones} from "../../Optimizer/MobileService/Zones/Zones";
 import {TZone} from "../../../store/reducers/mobileService/types";
 
 type TForm = {
@@ -71,12 +70,14 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         serviceRequests,
         baysList,
         makesModels,
+        zones
     ] = useSelector((state: RootState) => [
         state.scEmployees.advisorsList,
         state.scEmployees.techniciansList,
         state.serviceRequests.scRequestsShort,
         state.bays.baysShort,
         state.vehicleDetails.makesModels,
+        state.mobileService.zones,
     ]);
 
     const disabledBays: number[] = useMemo(() => {
@@ -122,12 +123,12 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 setJobType(null);
             }
             if (payload?.mobileZones) {
-                setMobileZones(mockZones.filter(zone => payload?.mobileZones?.includes(zone.id)))
+                setMobileZones(zones.filter(zone => payload?.mobileZones?.includes(zone.id)))
             } else {
                 setMobileZones([]);
             }
         }
-    }, [props.open, payload, makesModels, mockZones]);
+    }, [props.open, payload, makesModels]);
 
     useEffect(() => {
         if (selectedSC && props.open) {
@@ -393,7 +394,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
-                        options={mockZones}
+                        options={zones}
                         multiple
                         fullWidth
                         ChipProps={{

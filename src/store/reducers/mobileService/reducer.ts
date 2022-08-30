@@ -11,7 +11,7 @@ import {IDistancePriceSettings, IZonePriceSettings} from "../serviceValet/types"
 
 type TState = {
     isLoading: boolean;
-    currentZone: any;
+    currentZone: TZone|null;
     zones: TZone[];
     pricingByZones: IZonePriceSettings[];
     pricingByDistance: IDistancePriceSettings[];
