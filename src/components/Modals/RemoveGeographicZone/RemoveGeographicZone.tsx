@@ -60,16 +60,16 @@ const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType
     const onError = (err: string) => showError(err)
 
     const onCancel = () => props.onClose();
-    const onRemove = async () => {
+    const onRemove = () => {
         if (zone?.id && selectedSC) {
-            await dispatch(setCurrentZone(null));
+            dispatch(setCurrentZone(null));
             if (serviceType === 'mobileService') {
-                await dispatch(removeMobServiceZone(zone.id, selectedSC.id, onSuccess, onError));
+                dispatch(removeMobServiceZone(zone.id, selectedSC.id, onSuccess, onError));
             } else {
-                await dispatch(removeServiceValetZone(zone.id, selectedSC.id, onSuccess, onError));
+                dispatch(removeServiceValetZone(zone.id, selectedSC.id, onSuccess, onError));
             }
             setZone(null);
-            await props.onClose();
+            props.onClose();
         }
     }
 
