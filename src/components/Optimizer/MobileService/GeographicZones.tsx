@@ -52,6 +52,7 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                 />
             </ZonesWrapper>
             <RemoveGeographicZone
+                setZone={setSelectedZone}
                 zone={selectedZone}
                 open={isRemoveZoneOpen}
                 onClose={onRemoveZoneClose}
