@@ -1,10 +1,9 @@
 import {createAction} from "@reduxjs/toolkit";
 import {TReassignZip, TZipCode, TZone, TZoneNew, TZoneUpdate} from "./types";
 import {AppThunk} from "../../../types/types";
-import {IDistancePriceSettings, IZonePriceSettings, TDistanceRange} from "../serviceValet/types";
+import {IDistancePriceSettings, IZonePriceSettings, IZonePricingUpdate, TDistanceRange} from "../serviceValet/types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../config/requests";
-import {loadServiceValetZones} from "../serviceValet/actions";
 
 export const setCurrentZone = createAction<TZone|null>('MobileService/SetCurrentZone');
 export const setLoading = createAction<boolean>('MobileService/SetLoading');
@@ -125,15 +124,41 @@ export const saveLinkToMobServiceMap = (id: number, link: string): AppThunk => d
 }
 
 export const loadMobileServicePrisingByZones = (id: number): AppThunk => dispatch => {
-    // todo request
+    dispatch(setLoading(true));
+    const data = {
+        pageIndex: 0,
+        pageSize: 0,
+        serviceType: EServiceType.MobileService,
+        serviceCenterId: id
+    }
+    Api.call(Api.endpoints.AncillaryPricing.GetZones, {data})
+        .then(result => {
+            if (result?.data?.result) dispatch(setMobileServicePrisingByZones(result.data.result))
+        })
+        .catch(err => {
+            console.log('get ancillary pricing by geographic zones for Mobile Service error', err)
+        })
+        .finally(() => {
+            dispatch(setLoading(false));
+        })
 }
 
 export const loadMobileServicePrisingByDistance = (id: number): AppThunk => dispatch => {
     // todo request
 }
 
-export const updateMobileServicePrisingByZones = (id: number, data: IZonePriceSettings): AppThunk => dispatch => {
-    // todo request
+export const updateMobileServicePrisingByZones = (serviceCenterId: number, id: number, data: IZonePricingUpdate): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.AncillaryPricing.UpdateZone, {urlParams: {id}, data})
+        .then(result => {
+            if (result) {
+                dispatch(loadMobileServicePrisingByZones(serviceCenterId));
+            }
+        })
+        .catch(err => {
+            console.log('update ancillary pricing by zone for mobile service error', err)
+        })
+        .finally(() => dispatch(setLoading(false)));
 }
 
 export const updateMobileServicePrisingByDistance = (id: number, data: IDistancePriceSettings): AppThunk => dispatch => {

@@ -5,7 +5,7 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     addMobileServiceDistanceRange, changeMobileServicePriceSettings,
-    deleteMobileServicePrisingByDistance, deleteMobileServicePrisingByZones, loadMobileServicePricingOption,
+    deleteMobileServicePrisingByDistance, loadMobileServicePricingOption,
     loadMobileServicePrisingByDistance,
     loadMobileServicePrisingByZones, updateMobileServicePrisingByDistance, updateMobileServicePrisingByZones
 } from "../../../../store/reducers/mobileService/actions";
@@ -63,7 +63,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AncillaryPrice = () => {
-    const {pricingByDistance, pricingByZones, pricingCountByZone, isPricingByZoneLoading} = useSelector((state: RootState) => state.mobileService)
+    const {pricingByDistance, pricingByZones, pricingCountByZone, isPricingByZoneLoading, isLoading} = useSelector((state: RootState) => state.mobileService)
     const [selectedTab, selectTab] = useState<string>("0");
     const [typeOfPrice, setTypeOfPrice] = useState<string>("byZone");
     const classes = useStyles();
@@ -100,19 +100,16 @@ const AncillaryPrice = () => {
         if (selectedSC) dispatch(addMobileServiceDistanceRange(selectedSC.id, data))
     }
 
-    const onDeleteZoneSettings = (id: number) => {
-        if (selectedSC) dispatch(deleteMobileServicePrisingByZones(selectedSC.id, id))
-    }
-
     const onSaveZonePricing = (data: IZonePriceSettings) => {
-        if (selectedSC) dispatch(updateMobileServicePrisingByZones(selectedSC.id, data))
+        const dataToUpdate = {flatFee: data.flatFee, serviceMultiplier: data.serviceMultiplier};
+        if (selectedSC) dispatch(updateMobileServicePrisingByZones(selectedSC.id, data.id, dataToUpdate))
     }
 
     const tabs: TTab[] = [
         {
             id: "0",
             label: "Ancillary Price By Zone",
-            component: <ByZone onDelete={onDeleteZoneSettings} onUpdate={onSaveZonePricing} data={pricingByZones}/>
+            component: <ByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
         },
         {
             id: "1",

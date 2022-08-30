@@ -9,7 +9,7 @@ import {useConfirm, useException, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceValetDistanceRange, changeServiceValetPriceSettings,
-    deleteServiceValetPrisingByDistance, deleteServiceValetPrisingByZones, loadServiceValetPricingOption,
+    deleteServiceValetPrisingByDistance, loadServiceValetPricingOption,
     loadServiceValetPrisingByDistance,
     loadServiceValetPrisingByZones, updateServiceValetPrisingByDistance, updateServiceValetPrisingByZones
 } from "../../../../store/reducers/serviceValet/actions";
@@ -63,7 +63,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AncillaryPrice = () => {
-    const {pricingByDistance, pricingByZones, pricingCountByZone, isPricingByZoneLoading} = useSelector((state: RootState) => state.serviceValet);
+    const {pricingByDistance, pricingByZones, pricingCountByZone, isPricingByZoneLoading, isLoading} = useSelector((state: RootState) => state.serviceValet);
     const [selectedTab, selectTab] = useState<string>("0");
     const [typeOfPrice, setTypeOfPrice] = useState<string>("byZone");
     const classes = useStyles();
@@ -100,10 +100,6 @@ const AncillaryPrice = () => {
         if (selectedSC) dispatch(addServiceValetDistanceRange(selectedSC.id, data));
     }
 
-    const onDeleteZoneSettings = (id: number) => {
-        if (selectedSC) dispatch(deleteServiceValetPrisingByZones(selectedSC.id, id))
-    }
-
     const onSaveZonePricing = (data: IZonePriceSettings) => {
         if (selectedSC) dispatch(updateServiceValetPrisingByZones(selectedSC.id, data))
     }
@@ -112,7 +108,7 @@ const AncillaryPrice = () => {
         {
             id: "0",
             label: "Ancillary Price By Zone",
-            component: <ByZone onDelete={onDeleteZoneSettings} onUpdate={onSaveZonePricing} data={pricingByZones}/>
+            component: <ByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
         },
         {
             id: "1",

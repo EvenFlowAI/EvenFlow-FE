@@ -1,6 +1,12 @@
 export interface IZonePriceSettings {
-    zoneName: string;
-    zoneId: number;
+    geographicZoneName: string;
+    geographicZoneId: number;
+    flatFee: number;
+    serviceMultiplier: number;
+    id: number,
+}
+
+export interface IZonePricingUpdate {
     flatFee: number;
     serviceMultiplier: number;
 }

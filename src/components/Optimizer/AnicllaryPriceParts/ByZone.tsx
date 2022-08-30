@@ -15,6 +15,8 @@ import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../UI/TextField";
 import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";
 import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
+import {NoData} from "../../UI/NoData";
+import {Loading} from "../../UI/Loading";
 
 export const TablesWrapper = styled('div')({
     padding: 24,
@@ -75,41 +77,21 @@ const Slider = withStyles((theme) => ({
     }
 }))(ValueSlider);
 
-const mockData: IZonePriceSettings[] = [
-    {
-        zoneName: 'Zone 1',
-        zoneId: 1,
-        flatFee: 11,
-        serviceMultiplier: 0.2,
-    },
-    {
-        zoneName: 'Zone 2',
-        zoneId: 2,
-        flatFee: 12,
-        serviceMultiplier: 0.3,
-    },
-    {
-        zoneName: 'Zone 3',
-        zoneId: 3,
-        flatFee: 13,
-        serviceMultiplier: 0.1,
-    }
-]
-
 type TByZoneProps = {
     data: IZonePriceSettings[];
     onUpdate: (item: IZonePriceSettings) => void;
-    onDelete: (itemId: number) => void;
+    isLoading: boolean;
 }
 
-const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
+const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
     const [zonesData, setZonesData] = useState<IZonePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IZonePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
     useEffect(() => {
-        setZonesData(mockData.sort((a, b) => a.zoneId - b.zoneId));
+        const sortedOut = data.slice().sort((a, b) => a.id - b.id);
+        setZonesData(sortedOut);
     }, [data]);
 
     const handleMenuOpen = (item: IZonePriceSettings) => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -122,18 +104,15 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
         setAnchorEl(null);
     }
 
-    const deleteSettings = () => {
-        if (editedItem) onDelete(editedItem.zoneId);
-    }
-
     const handleSlide = (t: number) => (e: any, value: number|number[]) => {
         if (typeof value === 'number') {
-            const item = zonesData.find(item => item.zoneId === t);
+            const item = zonesData.find(item => item.geographicZoneId === t);
             if (item) {
                 const updated = {...item, serviceMultiplier: value};
+                setEditedItem(updated)
                 setZonesData(prev => {
-                    const filtered = prev.filter(el =>  el.zoneId !== t);
-                    return [...filtered, updated].sort((a, b) => a.zoneId - b.zoneId);
+                    const filtered = prev.filter(el =>  el.geographicZoneId !== t);
+                    return [...filtered, updated].sort((a, b) => a.id - b.id);
                 })
             }
         }
@@ -142,11 +121,12 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
     const handleChangeFee = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         if (Number(value) >= 0) {
             setZonesData(prev => {
-                const itemToUpdate = prev.find(el => el.zoneId === editedItem?.zoneId);
+                const itemToUpdate = prev.find(el => el.geographicZoneId === editedItem?.geographicZoneId);
                 if (itemToUpdate) {
+                    setEditedItem(itemToUpdate)
                     const updated = {...itemToUpdate, flatFee: Number(value)};
-                    const filtered = prev.filter(el => el.zoneId !== editedItem?.zoneId);
-                    return [...filtered, updated].sort((a, b) => a.zoneId - b.zoneId);
+                    const filtered = prev.filter(el => el.geographicZoneId !== editedItem?.geographicZoneId);
+                    return [...filtered, updated].sort((a, b) => a.id - b.id)
                 }
                 return prev;
             })
@@ -154,8 +134,7 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
     }
 
     const onCancel = () => {
-        // todo data
-        setZonesData(mockData)
+        setZonesData(data.slice().sort((a, b) => a.id - b.id))
         setIsEdit(false)
     }
 
@@ -164,8 +143,10 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
         if (editedItem) onUpdate(editedItem)
     }
 
-    return (
-            <DemandTable>
+    return isLoading
+        ? <Loading/>
+        : data.length
+            ? <DemandTable>
                 <TableHead>
                     <TableRow>
                         <HeaderTableCell align="left" size="small">
@@ -204,11 +185,11 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
                 </TableHead>
                 <TableBody>
                     {zonesData.map((item, index) => (
-                        <TableRow key={item.zoneId}>
+                        <TableRow key={item.geographicZoneId}>
                             <FirstCell size="small">{index + 1}.</FirstCell>
-                            <TableCell size="small"> {item.zoneName}</TableCell>
+                            <TableCell size="small"> {item.geographicZoneName}</TableCell>
                             <TableCell size="small">
-                                {isEdit && (editedItem?.zoneId === item.zoneId)
+                                {isEdit && (editedItem?.geographicZoneId === item.geographicZoneId)
                                     ? <STextField
                                         type="number"
                                         inputProps={{
@@ -226,11 +207,11 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
                                     max={1}
                                     valueLabelDisplay="on"
                                     step={0.01}
-                                    disabled={!isEdit || editedItem?.zoneId !== item.zoneId}
+                                    disabled={!isEdit || editedItem?.geographicZoneId !== item.geographicZoneId}
                                     valueLabelFormat={value => value.toFixed(2)}
                                     value={item.serviceMultiplier}
                                     marks={[{label: '0.00', value: 0}, {label: '0.20', value: 0.2}, {label: '0.40', value: 0.4}, {label: '0.60', value: 0.6}, {label: '0.80', value: 0.8}, {label: '1.00', value: 1}]}
-                                    onChange={handleSlide(item.zoneId)}
+                                    onChange={handleSlide(item.geographicZoneId)}
                                 />
                             </TableCell>
                             <TableCell size="small" align="right">
@@ -246,10 +227,9 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, onDelete }) => {
                 </TableBody>
                 <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
                     <MenuItem onClick={editZone}>Edit</MenuItem>
-                    <MenuItem onClick={deleteSettings}>Delete</MenuItem>
                 </Menu>
             </DemandTable>
-    );
+            : <NoData/>
 };
 
 export default ByZone;
