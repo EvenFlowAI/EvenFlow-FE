@@ -8,16 +8,14 @@ import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
 import RemoveZipCode from "../../Modals/RemoveZipCode/RemoveZipCode";
 import {TabHeaderWrapper, ButtonsWrapper, TextButton, Title, ZonesWrapper} from './styledComponents';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {loadMobServiceZones} from "../../../store/reducers/mobileService/actions";
-import {RootState} from "../../../store/rootReducer";
 
 type TGeographicZonesProps = {
     onAddZoneOpen: () => void;
 }
 
 const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => {
-    const {currentZone} = useSelector((state: RootState) => state.mobileService);
     const [currentZip, setCurrentZip] = useState<TZipCode|null>(null);
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
     const {onOpen: onRemoveZoneOpen, onClose: onRemoveZoneClose, isOpen: isRemoveZoneOpen} = useModal();
@@ -68,7 +66,7 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                 setCurrentZip={setCurrentZip}
                 currentZip={currentZip}
             />
-            <RemoveZipCode open={isRemoveZipOpen} zone={currentZone} onClose={onRemoveZipClose} zip={currentZip} serviceType="mobileService"/>
+            <RemoveZipCode open={isRemoveZipOpen} zone={selectedZone} onClose={onRemoveZipClose} zip={currentZip} serviceType="mobileService"/>
         </div>
     );
 };

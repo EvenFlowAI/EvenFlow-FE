@@ -47,14 +47,18 @@ export const getServiceValetZoneById = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setLoading(false)));
 }
 
-export const addServiceValetZone = (id: number, data: TZoneNew): AppThunk => dispatch => {
+export const addServiceValetZone = (id: number, data: TZoneNew, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.GeographicZones.Create, {data: {...data, serviceType: EServiceType.PikUpDropOff}})
         .then(result => {
-            if (result) dispatch(loadServiceValetZones(data.serviceCenterId))
+            if (result) {
+                dispatch(loadServiceValetZones(data.serviceCenterId))
+                onSuccess();
+            }
         })
         .catch(err => {
             console.log('add service valet zone error', err)
+            onError(err)
         })
         .finally(() => dispatch(setLoading(false)))
 }
