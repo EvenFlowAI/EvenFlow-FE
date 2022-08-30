@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../types";
@@ -12,6 +12,7 @@ import {removeServiceValetZone, setCurrentZone} from "../../../store/reducers/se
 type TRemoveGeographicZoneProps = DialogProps & {
     serviceType: TZonesServiceType;
     zone: TZone|null;
+    setZone: Dispatch<SetStateAction<TZone|null>>;
 }
 
 const useStyles = makeStyles(() => ({
@@ -48,7 +49,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zone, ...props}) => {
+const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType, setZone, zone, ...props}) => {
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -61,7 +62,8 @@ const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType
     const onCancel = () => props.onClose();
     const onRemove = async () => {
         if (zone?.id && selectedSC) {
-            dispatch(setCurrentZone(null));
+            setZone(null);
+            await dispatch(setCurrentZone(null));
             if (serviceType === 'mobileService') {
                 await dispatch(removeMobServiceZone(zone.id, selectedSC.id, onSuccess, onError));
             } else {
