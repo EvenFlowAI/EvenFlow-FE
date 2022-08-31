@@ -7,10 +7,9 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {Button, Divider, MenuItem, Select} from "@material-ui/core";
 import {TReassignZip, TZipCode, TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
 import {TextField} from "../../UI/TextField";
-import {assignZipToMobServiceZone, removeZipFromMobServiceZone} from "../../../store/reducers/mobileService/actions";
+import {assignZipToMobServiceZone} from "../../../store/reducers/mobileService/actions";
 import {
     reassignZipToServiceValetZone,
-    removeZipFromServiceValetZone
 } from "../../../store/reducers/serviceValet/actions";
 import {RootState} from "../../../store/rootReducer";
 
@@ -69,10 +68,6 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
         setData(serviceType === 'serviceValet' ? serviceValetZones : mobileServiceZones);
     }, [serviceType, serviceValetZones, mobileServiceZones])
 
-    useEffect(() => {
-        if (typeof zone !== 'undefined') setSelectedZone(zone);
-    }, [zone])
-
     const onCancel = () => props.onClose();
 
     const onSuccess = () => {
@@ -118,10 +113,10 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
                     id="zone"
                     placeholder="Zone name"
                     name="zone"
-                    value={selectedZone?.id}
+                    value={selectedZone?.id ?? ''}
                     onChange={onChange}
                 >
-                    {data.map(item => <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>)}
+                    {data.filter(item => item.id !== zone?.id).map(item => <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>)}
                 </Select>
             </DialogContent>
             <Divider style={{ margin: 0 }}/>
