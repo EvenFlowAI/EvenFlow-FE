@@ -4,7 +4,6 @@ import {AppThunk} from "../../../types/types";
 import {IDistancePriceSettings, IZonePriceSettings, TDistanceRange} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../config/requests";
-import {loadMobServiceZones} from "../mobileService/actions";
 
 export const setCurrentZone = createAction<TZone|null>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');
@@ -47,14 +46,18 @@ export const getServiceValetZoneById = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setLoading(false)));
 }
 
-export const addServiceValetZone = (id: number, data: TZoneNew): AppThunk => dispatch => {
+export const addServiceValetZone = (id: number, data: TZoneNew, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.GeographicZones.Create, {data: {...data, serviceType: EServiceType.PikUpDropOff}})
         .then(result => {
-            if (result) dispatch(loadServiceValetZones(data.serviceCenterId))
+            if (result) {
+                dispatch(loadServiceValetZones(data.serviceCenterId))
+                onSuccess();
+            }
         })
         .catch(err => {
             console.log('add service valet zone error', err)
+            onError(err)
         })
         .finally(() => dispatch(setLoading(false)))
 }
@@ -64,15 +67,15 @@ export const removeServiceValetZone = (id: number, serviceCenterId: number, onSu
     Api.call(Api.endpoints.GeographicZones.Remove, {urlParams: {id}})
         .then(result => {
             if (result) {
-                dispatch(loadMobServiceZones(serviceCenterId))
+                dispatch(loadServiceValetZones(serviceCenterId))
                 onSuccess();
             }
         })
         .catch(err => {
             console.log('remove service valet zone error', err)
+            dispatch(setLoading(false))
             onError(err);
         })
-        .finally(() => dispatch(setLoading(false)))
 }
 
 export const updateServiceValetZone = (id: number, serviceCenterId: number, data: TZoneUpdate, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
@@ -104,14 +107,14 @@ export const removeZipFromServiceValetZone = (serviceCenterId: number, zip: TZip
         .finally(() => setLoading(false))
 }
 
-export const reassignZipToServiceValetZone = (id: number, serviceCenterId: number, data: TReassignZip, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+export const reassignZipToServiceValetZone = (id: number, serviceCenterId: number, data: TReassignZip, prevZoneId:number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.GeographicZones.ReassignZipCode, {urlParams: {id: data.id}, data})
         .then(result => {
             if (result) {
-                onSuccess();
                 dispatch(loadServiceValetZones(serviceCenterId))
-                dispatch(getServiceValetZoneById(id))
+                dispatch(getServiceValetZoneById(prevZoneId))
+                onSuccess();
             }
         })
         .catch(err => {
