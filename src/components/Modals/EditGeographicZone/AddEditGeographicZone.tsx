@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, IconButton, styled} from "@material-ui/core";
@@ -118,8 +118,8 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                                              setCurrentZip,
                                                              serviceType,
                                                              ...props}) => {
-    const {currentZone: currentMobileZone, isLoading: isMobileloading} = useSelector((state: RootState) => state.mobileService);
-    const {currentZone: currentServiceValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
+    const {currentZone: currentMobileZone, isLoading: isMobileloading, zones: mobileZones} = useSelector((state: RootState) => state.mobileService);
+    const {currentZone: currentServiceValetZone, isLoading: isValetLoading, zones: valetZones} = useSelector((state: RootState) => state.serviceValet);
     const [currentZone, setCurrentZone] = useState<TZone|null>(null);
     const [zoneName, setZoneName] = useState<string>('');
     const [newZip, setNewZip] = useState<number|''>('');
@@ -132,6 +132,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const classes = useStyles();
     const showError = useException();
     const showMessage = useMessage();
+    const zonesList = useMemo(() => serviceType === 'serviceValet' ? valetZones : mobileZones, [serviceType, valetZones, mobileZones]);
 
     useEffect(() => {
         if (zone && props.open) {
@@ -242,7 +243,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
             const codeObject = currentZone.zipCodes.find(item => item.code === code);
             if (codeObject) {
                 setCurrentZip(codeObject);
-                onOpen();
+                if (zonesList.length > 1) onOpen();
             } else {
                 showError('This code has not been saved to the ZIP codes list of the current zone')
             }
@@ -293,7 +294,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                     <div className={classes.zipCode}>{code}</div>
                                     <div className={classes.zipActions}>
                                         { isEdit
-                                            ? <IconButton onClick={() => onChangeZoneClick(code)}>
+                                            ? <IconButton disabled={zonesList.length < 2} onClick={() => onChangeZoneClick(code)}>
                                                 <ChangeZone/>
                                             </IconButton>
                                             : null }
