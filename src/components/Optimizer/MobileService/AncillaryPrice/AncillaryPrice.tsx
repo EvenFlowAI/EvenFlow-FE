@@ -94,7 +94,7 @@ const AncillaryPrice = () => {
     }, [selectedSC])
 
     const onDelete = (itemId: number) => {
-        if (selectedSC) dispatch(deleteMobileServicePrisingByDistance(selectedSC.id, itemId))
+        if (selectedSC) dispatch(deleteMobileServicePrisingByDistance(selectedSC.id, itemId, onError))
     }
 
     const onSave = (item: TDistanceRangeUpdate) => {

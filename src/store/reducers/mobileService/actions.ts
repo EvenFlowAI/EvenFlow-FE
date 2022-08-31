@@ -198,8 +198,17 @@ export const updateMobileServicePrisingByDistance = (serviceCenterId: number, id
         })
 }
 
-export const deleteMobileServicePrisingByDistance = (id: number, pricingId: number): AppThunk => dispatch => {
-    // todo request
+export const deleteMobileServicePrisingByDistance = (id: number, pricingId: number, onError: (err:string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.AncillaryPricing.DeleteDistance, {urlParams: {id: pricingId}})
+        .then(result => {
+            if (result) dispatch(loadMobileServicePrisingByDistance(id))
+        })
+        .catch(err => {
+            console.log('delete pricing by distance for mobile service error', err)
+            onError(err)
+            dispatch(setLoading(false))
+        })
 }
 
 export const addMobileServiceDistanceRange = (id: number, data: TDistanceRange, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {

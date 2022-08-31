@@ -10,7 +10,6 @@ import {
 } from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../config/requests";
-import {loadMobileServicePrisingByDistance} from "../mobileService/actions";
 
 export const setCurrentZone = createAction<TZone|null>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');
@@ -200,8 +199,17 @@ export const updateServiceValetPrisingByDistance = (serviceCenterId: number, id:
         })
 }
 
-export const deleteServiceValetPrisingByDistance = (id: number, pricingId: number): AppThunk => dispatch => {
-    // todo request
+export const deleteServiceValetPrisingByDistance = (id: number, pricingId: number, onError: (err:string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.AncillaryPricing.DeleteDistance, {urlParams: {id: pricingId}})
+        .then(result => {
+            if (result) dispatch(loadServiceValetPrisingByDistance(id))
+        })
+        .catch(err => {
+            console.log('delete pricing by distance for service valet error', err)
+            onError(err)
+            dispatch(setLoading(false))
+        })
 }
 
 export const addServiceValetDistanceRange = (id: number, data: TDistanceRange, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {

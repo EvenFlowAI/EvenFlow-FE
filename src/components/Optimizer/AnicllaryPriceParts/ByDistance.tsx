@@ -166,6 +166,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
             const item = distanceData.find(item => item.id === t);
             if (item) {
                 const updated = {...item, serviceMultiplier: value};
+                setEditedItem(updated);
                 setDistanceData(prev => {
                     const filtered = prev.filter(el =>  el.id !== t);
                     return [...filtered, updated]
@@ -192,6 +193,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                         nextUpdated.minValue = newValue;
                     }
                     const updated = {...itemToUpdate, [fieldName]: newValue};
+                    setEditedItem(updated);
                     const filtered = nextUpdated
                         ? prev.filter(el => el.id !== editedItem?.id && el.id !== nextUpdated?.id)
                         : prev.filter(el => el.id !== editedItem?.id);
