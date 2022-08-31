@@ -126,12 +126,13 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     const [distanceData, setDistanceData] = useState<IDistancePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IDistancePriceSettings|null>(null);
+    const [nextEditedItem, setNextEditedItem] = useState<IDistancePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
 
     useEffect(() => {
-        setDistanceData(data);
+        setDistanceData(data.slice().sort((a, b) => a.orderIndex - b.orderIndex));
     }, [data]);
 
     const checkIsValid = () => {
@@ -170,7 +171,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                 setDistanceData(prev => {
                     const filtered = prev.filter(el =>  el.id !== t);
                     return [...filtered, updated]
-                        .sort((a, b) => b.orderIndex - a.orderIndex);
+                        .sort((a, b) => a.orderIndex - b.orderIndex);
                 })
             }
         }
@@ -184,13 +185,14 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                 let nextUpdated: IDistancePriceSettings|null = null;
                 if (itemToUpdate) {
                     let newValue = Number(value);
-                    if (nextItem && fieldName === 'rangeMax') {
+                    if (nextItem && fieldName === 'maxValue') {
                         if (newValue > nextItem.maxValue) {
                             showError('The Max Value of the Distance Range can not be GREATER than the Max Value of the next Distance Range');
                             return prev;
                         }
-                        nextUpdated = nextItem;
+                        nextUpdated = {...nextItem};
                         nextUpdated.minValue = newValue;
+                        setNextEditedItem(nextUpdated);
                     }
                     const updated = {...itemToUpdate, [fieldName]: newValue};
                     setEditedItem(updated);
@@ -198,7 +200,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                         ? prev.filter(el => el.id !== editedItem?.id && el.id !== nextUpdated?.id)
                         : prev.filter(el => el.id !== editedItem?.id);
                     const data = nextUpdated ? [...filtered, updated, nextUpdated] : [...filtered, updated];
-                    return data.sort((a, b) => b.orderIndex - a.orderIndex);
+                    return data.sort((a, b) => a.orderIndex - b.orderIndex);
                 }
                 return prev;
             })
@@ -213,9 +215,8 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     const onSave = () => {
         if (checkIsValid()) {
             setIsEdit(false)
-            if (editedItem) {
-                onItemSave(editedItem);
-            }
+            if (editedItem) onItemSave(editedItem);
+            if (nextEditedItem) onItemSave(nextEditedItem);
         }
     }
 
@@ -292,7 +293,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                                 }}
                                                 value={item?.minValue}
                                                 disabled
-                                                onChange={handleChangeField('rangeMin')}
+                                                onChange={handleChangeField('minValue')}
                                             />
                                             : item.minValue.toFixed(2)}
                                     </TableCell>
@@ -305,7 +306,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                                     step: 0.01,
                                                 }}
                                                 value={item?.maxValue || ''}
-                                                onChange={handleChangeField('rangeMax')}
+                                                onChange={handleChangeField('maxValue')}
                                             />
                                             : item.maxValue.toFixed(2)}
                                     </TableCell>

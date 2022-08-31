@@ -42,16 +42,16 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRange) => void}> = (props) => {
-    const [rangeMin, setRangeMin] = useState<number>(0);
-    const [rangeMax, setRangeMax] = useState<number>(0);
-    const [costPerMile, setCostPerMile] = useState<number>(0);
+    const [rangeMin, setRangeMin] = useState<number|''>('');
+    const [rangeMax, setRangeMax] = useState<number|''>('');
+    const [costPerMile, setCostPerMile] = useState<number|''>('');
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const classes = useStyles();
 
     const onCancel = () => {
-        setRangeMin(0);
-        setRangeMax(0);
-        setCostPerMile(0);
+        setRangeMin('');
+        setRangeMax('');
+        setCostPerMile('');
         setFormChecked(false);
         props.onClose()
     }

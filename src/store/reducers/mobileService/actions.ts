@@ -129,10 +129,6 @@ export const assignZipToMobServiceZone = (id: number, serviceCenterId: number, d
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const saveLinkToMobServiceMap = (id: number, link: string): AppThunk => dispatch => {
-    // todo request
-}
-
 export const loadMobileServicePrisingByZones = (id: number): AppThunk => dispatch => {
     dispatch(setLoading(true));
     const data = {
@@ -232,5 +228,9 @@ export const loadMobileServicePricingOption = (id: number): AppThunk => dispatch
 }
 
 export const changeMobileServicePriceSettings = (id: number, countByZone: boolean): AppThunk => dispatch => {
+    // todo request
+}
+
+export const saveLinkToMobServiceMap = (id: number, link: string): AppThunk => dispatch => {
     // todo request
 }

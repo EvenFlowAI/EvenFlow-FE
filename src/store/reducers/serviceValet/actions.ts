@@ -130,10 +130,6 @@ export const reassignZipToServiceValetZone = (id: number, serviceCenterId: numbe
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const saveLinkToServiceValetMap = (id: number, link: string): AppThunk => dispatch => {
-    // todo request
-}
-
 export const loadServiceValetPrisingByZones = (id: number): AppThunk => dispatch => {
     dispatch(setLoading(true));
     const data = {
@@ -226,6 +222,10 @@ export const addServiceValetDistanceRange = (id: number, data: TDistanceRange, o
             console.log('create service valet distance range error', err)
             dispatch(setLoading(false))
         })
+}
+
+export const saveLinkToServiceValetMap = (id: number, link: string): AppThunk => dispatch => {
+    // todo request
 }
 
 export const loadServiceValetPricingOption = (id: number): AppThunk => dispatch => {
