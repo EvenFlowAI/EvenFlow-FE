@@ -123,7 +123,6 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
             setZonesData(prev => {
                 const itemToUpdate = prev.find(el => el.geographicZoneId === editedItem?.geographicZoneId);
                 if (itemToUpdate) {
-                    console.log(value);
                     const updated = {...itemToUpdate, flatFee: Number(value)};
                     setEditedItem(updated);
                     const filtered = prev.filter(el => el.geographicZoneId !== editedItem?.geographicZoneId);

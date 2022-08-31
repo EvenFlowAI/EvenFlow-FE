@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {TReassignZip, TZipCode, TZone, TZoneNew, TZoneUpdate} from "../mobileService/types";
 import {AppThunk} from "../../../types/types";
-import {IDistancePriceSettings, IZonePriceSettings, TDistanceRange} from "./types";
+import {IDistancePriceSettings, IZonePriceSettings, IZonePricingUpdate, TDistanceRange} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../config/requests";
 
@@ -129,15 +129,41 @@ export const saveLinkToServiceValetMap = (id: number, link: string): AppThunk =>
 }
 
 export const loadServiceValetPrisingByZones = (id: number): AppThunk => dispatch => {
-    // todo request
+    dispatch(setLoading(true));
+    const data = {
+        pageIndex: 0,
+        pageSize: 0,
+        serviceType: EServiceType.PikUpDropOff,
+        serviceCenterId: id
+    }
+    Api.call(Api.endpoints.AncillaryPricing.GetZones, {data})
+        .then(result => {
+            if (result?.data?.result) dispatch(setServiceValetPrisingByZones(result.data.result))
+        })
+        .catch(err => {
+            console.log('get ancillary pricing by geographic zones for Service Valet error', err)
+        })
+        .finally(() => {
+            dispatch(setLoading(false));
+        })
 }
 
 export const loadServiceValetPrisingByDistance = (id: number): AppThunk => dispatch => {
     // todo request
 }
 
-export const updateServiceValetPrisingByZones = (id: number, data: IZonePriceSettings): AppThunk => dispatch => {
-    // todo request
+export const updateServiceValetPrisingByZones =  (serviceCenterId: number, id: number, data: IZonePricingUpdate): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.AncillaryPricing.UpdateZone, {urlParams: {id}, data})
+        .then(result => {
+            if (result) {
+                dispatch(loadServiceValetPrisingByZones(serviceCenterId));
+            }
+        })
+        .catch(err => {
+            console.log('update ancillary pricing by zone for service valet error', err)
+        })
+        .finally(() => dispatch(setLoading(false)));
 }
 
 export const updateServiceValetPrisingByDistance = (id: number, data: IDistancePriceSettings): AppThunk => dispatch => {
