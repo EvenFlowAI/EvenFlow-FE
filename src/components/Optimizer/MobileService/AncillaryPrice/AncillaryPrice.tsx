@@ -4,22 +4,26 @@ import {TabList} from "../../../UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {
-    addMobileServiceDistanceRange, changeMobileServicePriceSettings,
-    deleteMobileServicePrisingByDistance, loadMobileServicePricingOption,
+    addMobileServiceDistanceRange,
+    changeMobileServicePriceSettings,
+    deleteMobileServicePrisingByDistance,
+    loadMobileServicePricingOption,
     loadMobileServicePrisingByDistance,
-    loadMobileServicePrisingByZones, updateMobileServicePrisingByDistance, updateMobileServicePrisingByZones
+    loadMobileServicePrisingByZones,
+    updateMobileServicePrisingByDistance,
+    updateMobileServicePrisingByZones
 } from "../../../../store/reducers/mobileService/actions";
-import {useConfirm, useException, useSCs} from "../../../../utils/hooks";
+import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    IDistancePriceSettings,
     IZonePriceSettings,
-    TDistanceRange
+    TDistanceRange, TDistanceRangeUpdate
 } from "../../../../store/reducers/serviceValet/types";
 import {RootState} from "../../../../store/rootReducer";
 import ByDistance from "../../AnicllaryPriceParts/ByDistance";
 import ByZone from "../../AnicllaryPriceParts/ByZone";
 import {Loading} from "../../../UI/Loading";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 export const TablesWrapper = styled('div')({
     display: 'flex',
@@ -69,6 +73,7 @@ const AncillaryPrice = () => {
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const {askConfirm} = useConfirm();
+    const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
 
@@ -92,12 +97,24 @@ const AncillaryPrice = () => {
         if (selectedSC) dispatch(deleteMobileServicePrisingByDistance(selectedSC.id, itemId))
     }
 
-    const onSave = (item: IDistancePriceSettings) => {
-        if (selectedSC) dispatch(updateMobileServicePrisingByDistance(selectedSC.id, item))
+    const onSave = (item: TDistanceRangeUpdate) => {
+        if (selectedSC) dispatch(updateMobileServicePrisingByDistance(selectedSC.id, item.id, item, onError))
+    }
+
+    const onSuccess = () => {
+        showMessage('New Distance Range Has Been Created')
+    }
+
+    const onError = (err:string) => {
+        showError(err);
     }
 
     const onAddRange = (data: TDistanceRange) => {
-        if (selectedSC) dispatch(addMobileServiceDistanceRange(selectedSC.id, data))
+        if (selectedSC) {
+            data.serviceCenterId = selectedSC.id;
+            data.serviceType = EServiceType.MobileService;
+            dispatch(addMobileServiceDistanceRange(selectedSC.id, data, onSuccess, onError))
+        }
     }
 
     const onSaveZonePricing = (data: IZonePriceSettings) => {
@@ -118,6 +135,7 @@ const AncillaryPrice = () => {
                 onItemSave={onSave}
                 onItemDelete={onDelete}
                 onAddRange={onAddRange}
+                isLoading={isLoading}
             />
         },
     ]

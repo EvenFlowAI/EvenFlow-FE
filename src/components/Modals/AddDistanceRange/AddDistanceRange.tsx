@@ -42,16 +42,16 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRange) => void}> = (props) => {
-    const [rangeMin, setRangeMin] = useState<string>('');
-    const [rangeMax, setRangeMax] = useState<string>('');
-    const [costPerMile, setCostPerMile] = useState<string>('');
+    const [rangeMin, setRangeMin] = useState<number>(0);
+    const [rangeMax, setRangeMax] = useState<number>(0);
+    const [costPerMile, setCostPerMile] = useState<number>(0);
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const classes = useStyles();
 
     const onCancel = () => {
-        setRangeMin('');
-        setRangeMax('');
-        setCostPerMile('');
+        setRangeMin(0);
+        setRangeMax(0);
+        setCostPerMile(0);
         setFormChecked(false);
         props.onClose()
     }
@@ -60,9 +60,10 @@ const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRang
         setFormChecked(true);
         if (rangeMin && rangeMax && costPerMile) {
             props.onAddRange({
-                rangeMin: +rangeMin,
-                rangeMax: +rangeMax,
-                costPerMile: +costPerMile,
+                minValue: rangeMin,
+                maxValue: rangeMax,
+                costPerMile: costPerMile,
+                serviceMultiplier: 0,
             })
             onCancel();
         }
@@ -70,17 +71,17 @@ const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRang
 
     const onRangeMinChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         setFormChecked(false);
-        if (Number(value) >= 0) setRangeMin(`${Number(value).toFixed(2)}`);
+        if (Number(value) >= 0) setRangeMin(+value);
     }
 
     const onRangeMaxChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         setFormChecked(false);
-        if (Number(value) >= 0) setRangeMax(`${Number(value).toFixed(2)}`);
+        if (Number(value) >= 0) setRangeMax(+value);
     }
 
     const onCostPerMileChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         setFormChecked(false);
-        if (Number(value) >= 0) setCostPerMile(`${Number(value).toFixed(2)}`);
+        if (Number(value) >= 0) setCostPerMile(+value);
     }
 
     return (

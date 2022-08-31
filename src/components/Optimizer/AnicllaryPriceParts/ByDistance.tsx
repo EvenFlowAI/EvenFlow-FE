@@ -17,6 +17,8 @@ import {TextField} from "../../UI/TextField";
 import {useException, useModal} from "../../../utils/hooks";
 import AddDistanceRange from "../../Modals/AddDistanceRange/AddDistanceRange";
 import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
+import {Loading} from "../../UI/Loading";
+import {NoData} from "../../UI/NoData";
 
 const STextField = styled(TextField)({
     maxWidth: 100
@@ -112,38 +114,15 @@ const Slider = withStyles((theme) => ({
     }
 }))(ValueSlider);
 
-const mockData: IDistancePriceSettings[] = [
-    {
-        id: 1,
-        rangeMin: 0,
-        rangeMax: 2.88,
-        costPerMile: 16,
-        serviceMultiplier: 0.2,
-    },
-    {
-        id: 2,
-        rangeMin: 2.88,
-        rangeMax: 4.9,
-        costPerMile: 26,
-        serviceMultiplier: 0.5,
-    },
-    {
-        id: 3,
-        rangeMin: 4.9,
-        rangeMax: 7,
-        costPerMile: 36,
-        serviceMultiplier: 0.8,
-    },
-]
-
 type TByDistanceProps = {
     data: IDistancePriceSettings[];
     onItemSave: (item: IDistancePriceSettings) => void;
     onItemDelete: (id: number) => void;
     onAddRange: (data: TDistanceRange) => void;
+    isLoading: boolean;
 }
 
-const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave, onAddRange }) => {
+const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave, onAddRange, isLoading }) => {
     const [distanceData, setDistanceData] = useState<IDistancePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IDistancePriceSettings|null>(null);
@@ -152,14 +131,13 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     const showError = useException();
 
     useEffect(() => {
-        // todo data
-        setDistanceData(mockData.sort((a, b) => a.id - b.id));
+        setDistanceData(data);
     }, [data]);
 
     const checkIsValid = () => {
         if (editedItem) {
             const updated = distanceData.find(el => el.id === editedItem.id);
-            if (updated && (updated.rangeMin > updated.rangeMax)) {
+            if (updated && (updated.minValue > updated.maxValue)) {
                 showError('The Max Value of the Distance Range can not be LESS than its Min Value');
                 return false;
             }
@@ -190,7 +168,8 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                 const updated = {...item, serviceMultiplier: value};
                 setDistanceData(prev => {
                     const filtered = prev.filter(el =>  el.id !== t);
-                    return [...filtered, updated].sort((a, b) => a.id - b.id);
+                    return [...filtered, updated]
+                        .sort((a, b) => b.orderIndex - a.orderIndex);
                 })
             }
         }
@@ -205,19 +184,19 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                 if (itemToUpdate) {
                     let newValue = Number(value);
                     if (nextItem && fieldName === 'rangeMax') {
-                        if (newValue > nextItem.rangeMax) {
+                        if (newValue > nextItem.maxValue) {
                             showError('The Max Value of the Distance Range can not be GREATER than the Max Value of the next Distance Range');
                             return prev;
                         }
                         nextUpdated = nextItem;
-                        nextUpdated.rangeMin = newValue;
+                        nextUpdated.minValue = newValue;
                     }
                     const updated = {...itemToUpdate, [fieldName]: newValue};
                     const filtered = nextUpdated
                         ? prev.filter(el => el.id !== editedItem?.id && el.id !== nextUpdated?.id)
                         : prev.filter(el => el.id !== editedItem?.id);
                     const data = nextUpdated ? [...filtered, updated, nextUpdated] : [...filtered, updated];
-                    return data.sort((a, b) => a.id - b.id);
+                    return data.sort((a, b) => b.orderIndex - a.orderIndex);
                 }
                 return prev;
             })
@@ -225,8 +204,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     }
 
     const onCancel = () => {
-        // todo data
-        setDistanceData(mockData)
+        setDistanceData(data)
         setIsEdit(false)
     }
 
@@ -244,129 +222,140 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
             <ButtonWrapper>
                 <WideButton color="primary" onClick={onOpen} variant="contained">Add Range</WideButton>
             </ButtonWrapper>
-            <DemandTable>
-                <TableHead>
-                    <TableRow>
-                        <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">№ </div>
-                        </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">
-                                Distance
-                                <span>(Range min)</span>
-                            </div>
-                        </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">
-                                Distance
-                                <span>(Range max)</span>
-                            </div>
-                        </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
-                            <div className="distanceCell">
-                              Cost Per Mile, $
-                            </div>
-                        </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small" width ={450}>
-                            <div className="distanceCell">
-                              Service Multiplier
-                            </div>
-                        </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small" width={170}>
-                            {isEdit
-                                ? <>
-                                    <Button
-                                        onClick={onCancel}
-                                        color="secondary"
-                                        size="small"
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        onClick={onSave}
-                                        color="primary"
-                                        size="small"
-                                    >
-                                        Save
-                                    </Button>
-                                </>
-                                : null }
-                        </HeaderTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {distanceData.map((item, index) => (
-                        <TableRow key={item.id}>
-                            <FirstCell size="small">{index + 1}.</FirstCell>
-                            <TableCell size="small">
-                                {isEdit && (editedItem?.id === item.id)
-                                    ? <STextField
-                                        type="number"
-                                        inputProps={{
-                                            min: 0,
-                                            step: 0.01,
-                                        }}
-                                        value={item?.rangeMin}
-                                        disabled
-                                        onChange={handleChangeField('rangeMin')}
-                                    />
-                                    : item.rangeMin.toFixed(2)}
-                            </TableCell>
-                            <TableCell size="small">
-                                {isEdit && (editedItem?.id === item.id)
-                                    ? <STextField
-                                        type="number"
-                                        inputProps={{
-                                            min: 0,
-                                            step: 0.01,
-                                        }}
-                                        value={item?.rangeMax || ''}
-                                        onChange={handleChangeField('rangeMax')}
-                                    />
-                                    : item.rangeMax.toFixed(2)}
-                            </TableCell>
-                            <TableCell size="small">
-                                {isEdit && (editedItem?.id === item.id)
-                                    ? <STextField
-                                        type="number"
-                                        inputProps={{
-                                            min: 0,
-                                            step: 0.01,
-                                        }}
-                                        value={item?.costPerMile || ''}
-                                        onChange={handleChangeField('costPerMile')}
-                                    />
-                                    : item.costPerMile.toFixed(2)}
-                            </TableCell>
-                            <TableCell size="small">
-                                <Slider
-                                    min={0}
-                                    max={1}
-                                    valueLabelDisplay="on"
-                                    step={0.01}
-                                    disabled={!isEdit || editedItem?.id !== item.id}
-                                    valueLabelFormat={value => value.toFixed(2)}
-                                    value={item.serviceMultiplier}
-                                    marks={[{label: '0.00', value: 0}, {label: '0.20', value: 0.2}, {label: '0.40', value: 0.4}, {label: '0.60', value: 0.6}, {label: '0.80', value: 0.8}, {label: '1.00', value: 1}]}
-                                    onChange={handleSlide(item.id)}
-                                />
-                            </TableCell>
-                            <TableCell size="small" align="right">
-                                <IconButton
-                                    size="small"
-                                    onClick={handleMenuOpen(item)}>
-                                    <MoreHoriz />
-                                </IconButton>
-                            </TableCell>
-                        </TableRow>
-                    ))
-                    }
-                </TableBody>
-                <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-                    <MenuItem onClick={editZone}>Edit</MenuItem>
-                    <MenuItem onClick={deleteSettings}>Delete</MenuItem>
-                </Menu>
-            </DemandTable>
+            {isLoading
+                ? <Loading/>
+                : !data.length
+                    ? <NoData/>
+                    : <DemandTable>
+                        <TableHead>
+                            <TableRow>
+                                <HeaderTableCell align="left" size="small">
+                                    <div className="distanceCell">№</div>
+                                </HeaderTableCell>
+                                <HeaderTableCell align="left" size="small">
+                                    <div className="distanceCell">
+                                        Distance
+                                        <span>(Range min)</span>
+                                    </div>
+                                </HeaderTableCell>
+                                <HeaderTableCell align="left" size="small">
+                                    <div className="distanceCell">
+                                        Distance
+                                        <span>(Range max)</span>
+                                    </div>
+                                </HeaderTableCell>
+                                <HeaderTableCell align="left" size="small">
+                                    <div className="distanceCell">
+                                        Cost Per Mile, $
+                                    </div>
+                                </HeaderTableCell>
+                                <HeaderTableCell align="left" size="small" width={450}>
+                                    <div className="distanceCell">
+                                        Service Multiplier
+                                    </div>
+                                </HeaderTableCell>
+                                <HeaderTableCell align="left" size="small" width={170}>
+                                    {isEdit
+                                        ? <>
+                                            <Button
+                                                onClick={onCancel}
+                                                color="secondary"
+                                                size="small"
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                onClick={onSave}
+                                                color="primary"
+                                                size="small"
+                                            >
+                                                Save
+                                            </Button>
+                                        </>
+                                        : null}
+                                </HeaderTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {distanceData.map((item, index) => (
+                                <TableRow key={item.id}>
+                                    <FirstCell size="small">{index + 1}.</FirstCell>
+                                    <TableCell size="small">
+                                        {isEdit && (editedItem?.id === item.id)
+                                            ? <STextField
+                                                type="number"
+                                                inputProps={{
+                                                    min: 0,
+                                                    step: 0.01,
+                                                }}
+                                                value={item?.minValue}
+                                                disabled
+                                                onChange={handleChangeField('rangeMin')}
+                                            />
+                                            : item.minValue.toFixed(2)}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                        {isEdit && (editedItem?.id === item.id)
+                                            ? <STextField
+                                                type="number"
+                                                inputProps={{
+                                                    min: 0,
+                                                    step: 0.01,
+                                                }}
+                                                value={item?.maxValue || ''}
+                                                onChange={handleChangeField('rangeMax')}
+                                            />
+                                            : item.maxValue.toFixed(2)}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                        {isEdit && (editedItem?.id === item.id)
+                                            ? <STextField
+                                                type="number"
+                                                inputProps={{
+                                                    min: 0,
+                                                    step: 0.01,
+                                                }}
+                                                value={item?.costPerMile || ''}
+                                                onChange={handleChangeField('costPerMile')}
+                                            />
+                                            : item.costPerMile.toFixed(2)}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                        <Slider
+                                            min={0}
+                                            max={1}
+                                            valueLabelDisplay="on"
+                                            step={0.01}
+                                            disabled={!isEdit || editedItem?.id !== item.id}
+                                            valueLabelFormat={value => value.toFixed(2)}
+                                            value={item.serviceMultiplier}
+                                            marks={[{label: '0.00', value: 0}, {
+                                                label: '0.20',
+                                                value: 0.2
+                                            }, {label: '0.40', value: 0.4}, {label: '0.60', value: 0.6}, {
+                                                label: '0.80',
+                                                value: 0.8
+                                            }, {label: '1.00', value: 1}]}
+                                            onChange={handleSlide(item.id)}
+                                        />
+                                    </TableCell>
+                                    <TableCell size="small" align="right">
+                                        <IconButton
+                                            size="small"
+                                            onClick={handleMenuOpen(item)}>
+                                            <MoreHoriz/>
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                            }
+                        </TableBody>
+                        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+                            <MenuItem onClick={editZone}>Edit</MenuItem>
+                            <MenuItem onClick={deleteSettings}>Delete</MenuItem>
+                        </Menu>
+                    </DemandTable>
+            }
             <AddDistanceRange open={isOpen} onClose={onClose} onAddRange={onAddRange}/>
         </div>
     );

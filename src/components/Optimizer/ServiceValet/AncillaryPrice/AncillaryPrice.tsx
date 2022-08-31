@@ -5,7 +5,7 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import ByZone from "../../AnicllaryPriceParts/ByZone";
 import {makeStyles} from "@material-ui/core/styles";
 import ByDistance from "../../AnicllaryPriceParts/ByDistance";
-import {useConfirm, useException, useSCs} from "../../../../utils/hooks";
+import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceValetDistanceRange, changeServiceValetPriceSettings,
@@ -14,12 +14,12 @@ import {
     loadServiceValetPrisingByZones, updateServiceValetPrisingByDistance, updateServiceValetPrisingByZones
 } from "../../../../store/reducers/serviceValet/actions";
 import {
-    IDistancePriceSettings,
     IZonePriceSettings,
-    TDistanceRange
+    TDistanceRange, TDistanceRangeUpdate
 } from "../../../../store/reducers/serviceValet/types";
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../UI/Loading";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 export const TablesWrapper = styled('div')({
     display: 'flex',
@@ -71,6 +71,7 @@ const AncillaryPrice = () => {
     const dispatch = useDispatch();
     const {askConfirm} = useConfirm();
     const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
         if (pricingCountByZone) {
@@ -88,16 +89,28 @@ const AncillaryPrice = () => {
         }
     }, [selectedSC])
 
+    const onSuccess = () => {
+        showMessage('New Distance Range Has Been Created')
+    }
+
+    const onError = (err:string) => {
+        showError(err);
+    }
+
     const onDeleteDistanceRange = (itemId: number) => {
         if (selectedSC) dispatch(deleteServiceValetPrisingByDistance(selectedSC.id, itemId))
     }
 
-    const onSaveDistanceRange = (item: IDistancePriceSettings) => {
-        if (selectedSC) dispatch(updateServiceValetPrisingByDistance(selectedSC.id, item))
+    const onSaveDistanceRange = (item: TDistanceRangeUpdate) => {
+        if (selectedSC) dispatch(updateServiceValetPrisingByDistance(selectedSC.id, item.id, item, onError))
     }
 
     const onAddRange = (data: TDistanceRange) => {
-        if (selectedSC) dispatch(addServiceValetDistanceRange(selectedSC.id, data));
+        if (selectedSC) {
+            data.serviceCenterId = selectedSC.id;
+            data.serviceType = EServiceType.PikUpDropOff;
+            dispatch(addServiceValetDistanceRange(selectedSC.id, data, onSuccess, onError))
+        }
     }
 
     const onSaveZonePricing = (data: IZonePriceSettings) => {
@@ -115,6 +128,7 @@ const AncillaryPrice = () => {
             label: "Ancillary Price By Distance",
             component: <ByDistance
                 data={pricingByDistance}
+                isLoading={isLoading}
                 onItemDelete={onDeleteDistanceRange}
                 onItemSave={onSaveDistanceRange}
                 onAddRange={onAddRange}

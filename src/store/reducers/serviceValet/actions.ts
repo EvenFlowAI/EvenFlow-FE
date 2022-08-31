@@ -1,9 +1,16 @@
 import {createAction} from "@reduxjs/toolkit";
 import {TReassignZip, TZipCode, TZone, TZoneNew, TZoneUpdate} from "../mobileService/types";
 import {AppThunk} from "../../../types/types";
-import {IDistancePriceSettings, IZonePriceSettings, IZonePricingUpdate, TDistanceRange} from "./types";
+import {
+    IDistancePriceSettings,
+    IZonePriceSettings,
+    IZonePricingUpdate,
+    TDistanceRange,
+    TDistanceRangeUpdate
+} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../config/requests";
+import {loadMobileServicePrisingByDistance} from "../mobileService/actions";
 
 export const setCurrentZone = createAction<TZone|null>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');
@@ -149,7 +156,21 @@ export const loadServiceValetPrisingByZones = (id: number): AppThunk => dispatch
 }
 
 export const loadServiceValetPrisingByDistance = (id: number): AppThunk => dispatch => {
-    // todo request
+    dispatch(setLoading(true));
+    const data = {
+        pageIndex: 0,
+        pageSize: 0,
+        serviceCenterId: id,
+        serviceType: EServiceType.PikUpDropOff,
+    }
+    Api.call(Api.endpoints.AncillaryPricing.GetDistances, {data})
+        .then(({data}) => {
+            if (data?.result) dispatch(setServiceValetPrisingByDistance(data.result))
+        })
+        .catch(err => {
+            console.log('get distances for service valet error', err)
+        })
+        .finally(() => dispatch(setLoading(false)));
 }
 
 export const updateServiceValetPrisingByZones =  (serviceCenterId: number, id: number, data: IZonePricingUpdate): AppThunk => dispatch => {
@@ -166,20 +187,37 @@ export const updateServiceValetPrisingByZones =  (serviceCenterId: number, id: n
         .finally(() => dispatch(setLoading(false)));
 }
 
-export const updateServiceValetPrisingByDistance = (id: number, data: IDistancePriceSettings): AppThunk => dispatch => {
-    // todo request
-}
-
-export const deleteServiceValetPrisingByZones = (id: number, pricingId: number): AppThunk => dispatch => {
-    // todo request
+export const updateServiceValetPrisingByDistance = (serviceCenterId: number, id: number, data: TDistanceRangeUpdate, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.AncillaryPricing.UpdateDistance, {urlParams: {id}, data})
+        .then(result => {
+            if (result) dispatch(loadServiceValetPrisingByDistance(serviceCenterId))
+        })
+        .catch(err => {
+            dispatch(setLoading(false))
+            onError(err)
+            console.log('update service valet pricing by distance error', err)
+        })
 }
 
 export const deleteServiceValetPrisingByDistance = (id: number, pricingId: number): AppThunk => dispatch => {
     // todo request
 }
 
-export const addServiceValetDistanceRange = (id: number, range: TDistanceRange): AppThunk => dispatch => {
-    // todo request
+export const addServiceValetDistanceRange = (id: number, data: TDistanceRange, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.AncillaryPricing.CreateDistance, {data})
+        .then(result => {
+            if (result) {
+                onSuccess();
+                dispatch(loadServiceValetPrisingByDistance(id))
+            }
+        })
+        .catch(err => {
+            onError(err)
+            console.log('create service valet distance range error', err)
+            dispatch(setLoading(false))
+        })
 }
 
 export const loadServiceValetPricingOption = (id: number): AppThunk => dispatch => {
