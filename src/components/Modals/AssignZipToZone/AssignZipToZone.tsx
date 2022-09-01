@@ -54,8 +54,8 @@ type TAssignZipToZoneProps = DialogProps & {
 }
 
 const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType, ...props}) => {
-    const {zones: serviceValetZones, currentZone: currentValetZone} = useSelector((state: RootState) => state.serviceValet);
-    const {zones: mobileServiceZones, currentZone: currentMobileZone} = useSelector((state: RootState) => state.mobileService);
+    const {zones: serviceValetZones, currentZone: currentValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
+    const {zones: mobileServiceZones, currentZone: currentMobileZone, isLoading: isMobileLoading} = useSelector((state: RootState) => state.mobileService);
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
     const [data, setData] = useState<TZone[]>([]);
     const classes = useStyles();
@@ -130,6 +130,7 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
                         </Button>
                         <Button
                             onClick={onAssign}
+                            disabled={isMobileLoading || isValetLoading}
                             className={classes.saveButton}>
                             Assign
                         </Button>
