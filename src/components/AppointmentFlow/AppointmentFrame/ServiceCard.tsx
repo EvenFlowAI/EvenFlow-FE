@@ -7,7 +7,7 @@ import {Loading} from "../../UI/Loading";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {styled, Theme, Tooltip, withStyles} from "@material-ui/core";
+import {styled, Theme, Tooltip, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
 import {InfoOutlined} from "@material-ui/icons";
 
 type TSCProps = {
@@ -58,12 +58,18 @@ const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<
         "& .infoIcon": {
             display: 'flex',
             justifyContent: 'flex-end',
+            [theme.breakpoints.down("sm")]: {
+                position: 'absolute',
+                top: 10,
+                right: 10,
+            }
         },
         [theme.breakpoints.down('sm')]: {
+            position: 'relative',
             gridTemplateColumns: "1fr 3fr",
             gridTemplateRows: "1fr",
             fontSize: 18,
-            "& svg": {
+            ".cardIcon": {
                 width: 65,
                 height: 65
             }
@@ -86,6 +92,8 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
     const [icon, setIcon] = useState<string>('');
     const [isLoading, setLoading] = useState<boolean>(false);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const theme = useTheme();
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     const price = card.type === EServiceCategoryType.GeneralCategory ? card.price : undefined;
 
@@ -109,12 +117,12 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
             title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
         >
             <div className="infoIcon"><InfoOutlined style={{ color: "#828282", filter: active ? "invert(100%)" : "unset"}}/></div>
-        </HtmlTooltip> : <div/>}
+        </HtmlTooltip> : isSM ? null : <div/>}
         {isLoading
             ? <Loading/>
             : card.iconPath && icon
-                ? <span style={{ filter: active ? "invert(100%)" : "unset"}} dangerouslySetInnerHTML={{__html: icon}} />
-                : <span style={{ filter: active ? "invert(100%)" : "unset"}}><Icon /></span>
+                ? <span className="cardIcon" style={{ filter: active ? "invert(100%)" : "unset"}} dangerouslySetInnerHTML={{__html: icon}} />
+                : <span className="cardIcon" style={{ filter: active ? "invert(100%)" : "unset"}}><Icon /></span>
         }
         <span style={{color: active ? "#FFFFFF" : "#252733"}}>{card.name}</span>
         {!!price ? <div className="priceWrapper">
