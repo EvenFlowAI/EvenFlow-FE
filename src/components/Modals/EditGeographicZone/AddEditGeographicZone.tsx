@@ -118,12 +118,12 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                                              setCurrentZip,
                                                              serviceType,
                                                              ...props}) => {
-    const {currentZone: currentMobileZone, isLoading: isMobileloading, zones: mobileZones} = useSelector((state: RootState) => state.mobileService);
+    const {currentZone: currentMobileZone, isLoading: isMobileLoading, zones: mobileZones} = useSelector((state: RootState) => state.mobileService);
     const {currentZone: currentServiceValetZone, isLoading: isValetLoading, zones: valetZones} = useSelector((state: RootState) => state.serviceValet);
     const [currentZone, setCurrentZone] = useState<TZone|null>(null);
     const [zoneName, setZoneName] = useState<string>('');
-    const [newZip, setNewZip] = useState<number|''>('');
-    const [zipList, setZipList] = useState<number[]>([]);
+    const [newZip, setNewZip] = useState<string>('');
+    const [zipList, setZipList] = useState<string[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
 
@@ -216,7 +216,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const onZipChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setFormIsChecked(false);
-        setNewZip(+e.target.value);
+        setNewZip(e.target.value);
     }
 
     const onAddZip = (): void => {
@@ -238,7 +238,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         if (e.keyCode === 13) onAddZip();
     }
 
-    const onChangeZoneClick = (code: number) => {
+    const onChangeZoneClick = (code: string) => {
         if (setCurrentZip && isEdit && currentZone) {
             const codeObject = currentZone.zipCodes.find(item => item.code === code);
             if (codeObject) {
@@ -250,7 +250,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         }
     }
 
-    const onRemoveZipClick = (code: number) => {
+    const onRemoveZipClick = (code: string) => {
         setZipList(prev => prev.filter(item => item !== code))
     }
 
@@ -259,7 +259,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
             <BaseModal {...props} width={570} onClose={onCancel}>
                 <DialogTitle onClose={onCancel}>{isEdit ? 'Edit Zone' : 'Add Zone'}</DialogTitle>
                 <DialogContent style={{padding: '20px 116px'}}>
-                    { isMobileloading || isValetLoading
+                    { isMobileLoading || isValetLoading
                         ? <Loading/>
                         : <>
                             <TextField
