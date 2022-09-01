@@ -181,7 +181,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
         if (editedItem && Number(value) >= 0) {
             setDistanceData(prev => {
                 const itemToUpdate = prev.find(el => el.id === editedItem.id);
-                const nextItem = prev.find(el => el.id === editedItem.id + 1);
+                const nextItem = prev.find(el => el.orderIndex === editedItem.orderIndex + 1);
                 let nextUpdated: IDistancePriceSettings|null = null;
                 if (itemToUpdate) {
                     let newValue = Number(value);
