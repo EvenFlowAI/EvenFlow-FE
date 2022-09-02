@@ -16,6 +16,7 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
 import {selectAppointment, selectSR} from "../appointment/actions";
+import {TView} from "../../../components/Welcome/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -55,7 +56,8 @@ export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoa
 export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
 export const setMobileServiceAvailability = createAction<boolean>('fAppointment/SetMobileServiceState');
 export const setPickUpDropOffAvailability = createAction<boolean>('fAppointment/SetPickUpDropOffAvailability');
-export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability')
+export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability');
+export const setWelcomeScreenView = createAction<TView>('fAppointment/SetWelcomeScreenView');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
