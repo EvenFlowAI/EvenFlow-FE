@@ -2,7 +2,7 @@ import React, {useEffect, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {setUserType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setUserType, setVehicle, setWelcomeScreenView} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
@@ -99,11 +99,10 @@ export const useStyles = makeStyles(theme => ({
 }))
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
-    setView: (view: TView) => void;
     loading: boolean;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({setView, onComplete, loading}) => {
+export const CustomerSelect: React.FC<TProps> = ({onComplete, loading}) => {
     const {isMobileServiceOn, serviceType, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
@@ -138,7 +137,7 @@ export const CustomerSelect: React.FC<TProps> = ({setView, onComplete, loading})
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
         if (isMobileServiceOn || isPickUpDropOffServiceOn) {
-            setView('serviceSelect')
+            dispatch(setWelcomeScreenView('serviceSelect'))
         } else {
             createBlankCar()
             onComplete(serviceType, EUserType.New);

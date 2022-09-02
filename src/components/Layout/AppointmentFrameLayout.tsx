@@ -31,7 +31,7 @@ import {
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {decodeSCID, getTracker} from "../../utils/utils";
+import {decodeSCID, encodeSCID, getTracker} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
@@ -41,7 +41,7 @@ import {
     setPackage,
     setTrackerCreated,
     setUpdateAppointment,
-    setVehicle
+    setVehicle, setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
@@ -122,6 +122,8 @@ export const AppointmentFrameLayout = () => {
         valueService,
         serviceType,
         currentScreen: currentFrameScreen,
+        isMobileServiceOn,
+        isPickUpDropOffServiceOn,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -298,7 +300,12 @@ export const AppointmentFrameLayout = () => {
             }
 
         } else {
-            handleSetScreen(getNextScreen());
+            if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+                dispatch(setWelcomeScreenView('serviceSelect'))
+                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+            } else {
+                handleSetScreen(getNextScreen());
+            }
         }
     }, [handleSetScreen, selectedVehicle, showError, dispatch]);
 

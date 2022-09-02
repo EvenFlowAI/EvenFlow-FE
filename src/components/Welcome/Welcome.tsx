@@ -21,7 +21,7 @@ import {frameTheme} from "../../theme/theme";
 import {
     setCurrentFrameScreen,
     setSideBarSteps,
-    setValueServiceAvailability
+    setValueServiceAvailability, setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
@@ -32,10 +32,9 @@ import ReactGA from "react-ga";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
-    const [view, setView] = useState<TView>("select");
     const [loading, setLoading] = useState<boolean>(false);
 
     const {id} = useParams();
@@ -70,10 +69,14 @@ export const Welcome = () => {
         );
     }
 
-    const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
+    const handleConfig = (serviceType: EServiceType) => {
         const selectedServiceConfig = config.find(item => item.serviceType.toString() === serviceType.toString());
         if (selectedServiceConfig) dispatch(setValueServiceAvailability(selectedServiceConfig.valueService));
         dispatch(setSideBarSteps([]));
+    }
+
+    const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
+        handleConfig(serviceType);
 
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
             setLoading(true);
@@ -84,21 +87,14 @@ export const Welcome = () => {
                 });
                 dispatch(setCustomerLoadedData(data));
                 dispatch(saveAppointmentReducer());
-                // dispatch(setSessionId(data));
-                // dispatch(saveAppointmentReducer());
-                // showMessage("We've send a code with an email for confirmation.");
                 if (data) {
                     ReactGA.event({
                         category: 'EvenFlow User',
                         action: 'Enters Page',
                         label: `As Returning Customer`,
                     });
-                    if ((isMobileServiceOn || isPickUpDropOffServiceOn) && view !== "serviceSelect") {
-                        setView('serviceSelect')
-                    } else {
-                        dispatch(setCurrentFrameScreen("carSelection"));
-                        redirect();
-                    }
+                    dispatch(setCurrentFrameScreen("carSelection"));
+                    redirect();
                 }
             } catch (err) {
                 dispatch(setSessionId(""));
@@ -111,23 +107,32 @@ export const Welcome = () => {
                 setLoading(false);
             }
         } else {
-            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && view !== "serviceSelect") {
-                setView('serviceSelect')
+            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && welcomeScreenView !== "serviceSelect") {
+                dispatch(setWelcomeScreenView("serviceSelect"))
             } else {
                 redirect();
             }
         }
     }
 
+    const onServiceTypeSelect = (serviceType: EServiceType) => {
+        handleConfig(serviceType);
+        console.log(welcomeScreenView)
+        if ((isMobileServiceOn || isPickUpDropOffServiceOn) && welcomeScreenView !== "serviceSelect") {
+            dispatch(setWelcomeScreenView("serviceSelect"))
+        } else {
+            redirect();
+        }
+    }
+
     const getComponent = () => {
-        switch (view) {
+        switch (welcomeScreenView) {
             case "search":
             case "serviceSelect":
-                return <ServiceTypeSelect onComplete={onComplete} loading={loading}/>;
+                return <ServiceTypeSelect onComplete={onServiceTypeSelect} loading={loading}/>;
             case "select":
             default:
                 return <CustomerSelect
-                    setView={setView}
                     loading={loading}
                     onComplete={onComplete}
                 />;
@@ -142,7 +147,7 @@ export const Welcome = () => {
                     {getComponent()}
                 </FrameWelcomeLayout>
             </MuiThemeProvider> :
-            <WelcomeLayout title={getTitle(view)} subtitle={getSubTitle(view)}>
+            <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
                 {getComponent()}
             </WelcomeLayout>
     );

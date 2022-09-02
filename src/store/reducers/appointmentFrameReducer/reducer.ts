@@ -38,7 +38,7 @@ import {
     setSideBarSteps,
     setMobileServiceAvailability,
     setPickUpDropOffAvailability,
-    setValueServiceAvailability,
+    setValueServiceAvailability, setWelcomeScreenView,
 } from "./actions";
 import {
     ICustomer,
@@ -52,6 +52,7 @@ import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {IServiceOffer, IValueService, TMaintenanceDetails, TYear, EServiceType, EUserType} from "./types";
 import {TScreen} from "../../../components/Layout/types";
+import {TView} from "../../../components/Welcome/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -92,6 +93,7 @@ type TState = {
     isPickUpDropOffServiceOn: boolean;
     isValueServiceOn: boolean;
     sideBarSteps: TScreen[];
+    welcomeScreenView: TView;
 }
 const initialState: TState = {
     service: null,
@@ -134,6 +136,7 @@ const initialState: TState = {
     isPickUpDropOffServiceOn: false,
     isValueServiceOn: false,
     sideBarSteps: [],
+    welcomeScreenView: "select",
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -277,5 +280,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setValueServiceAvailability, (state, {payload}) => {
         return {...state, isValueServiceOn: payload}
+    })
+    .addCase(setWelcomeScreenView, (state, {payload}) => {
+        return {...state, welcomeScreenView: payload}
     })
 )
