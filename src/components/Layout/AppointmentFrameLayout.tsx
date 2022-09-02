@@ -7,11 +7,11 @@ import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeed
 import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
 import {MaintenanceDetails} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import { ConsultantSelection } from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
-import { AppointmentTiming } from '../AppointmentFlow/AppointmentFrame/AppointmentTiming';
-import { AppointmentSelection } from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
-import { TransportationNeeds } from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
-import { AppointmentConfirmationFrame } from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
+import {ConsultantSelection} from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
+import {AppointmentTiming} from '../AppointmentFlow/AppointmentFrame/AppointmentTiming';
+import {AppointmentSelection} from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
+import {TransportationNeeds} from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
+import {AppointmentConfirmationFrame} from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
 import {AddInfo} from "../AppointmentFlow/AppointmentFrame/AddInfo";
 import {ServiceSelection} from "../AppointmentFlow/AppointmentFrame/ServiceSelection";
 import {PackageSelection} from "../AppointmentFlow/AppointmentFrame/PackageSelection";
@@ -25,13 +25,13 @@ import {
     getBlankCustomer,
     getBlankVehicle,
     getCustomerCache,
-    saveCustomerCache,
     loadSCProfile,
     loadSRs,
+    saveCustomerCache,
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {decodeSCID, encodeSCID, getTracker} from "../../utils/utils";
+import {decodeSCID, getTracker} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
@@ -41,7 +41,8 @@ import {
     setPackage,
     setTrackerCreated,
     setUpdateAppointment,
-    setVehicle, setWelcomeScreenView
+    setVehicle,
+    setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle} from "../../api/types";
@@ -52,7 +53,7 @@ import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
 import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
-import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 
 const Container = styled('div')({
@@ -124,6 +125,7 @@ export const AppointmentFrameLayout = () => {
         currentScreen: currentFrameScreen,
         isMobileServiceOn,
         isPickUpDropOffServiceOn,
+        userType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -209,6 +211,7 @@ export const AppointmentFrameLayout = () => {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
+            dispatch(setWelcomeScreenView('select'))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         }
     }, [id, history, dispatch, origin]);
@@ -281,6 +284,11 @@ export const AppointmentFrameLayout = () => {
         return nextScreen;
     }
 
+    const handleServiceTypeSelection = () => {
+        dispatch(setWelcomeScreenView('serviceSelect'))
+        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    }
+
     const handleSelectCar = useCallback(async () => {
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
@@ -292,17 +300,19 @@ export const AppointmentFrameLayout = () => {
                 if (data.maintenancePackageOption) {
                     dispatch(setPackage(data.maintenancePackageOption))
                 }
-                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+                if ((isMobileServiceOn || isPickUpDropOffServiceOn) && userType === EUserType.Existing) {
+                    handleServiceTypeSelection()
+                } else {
+                    handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+                }
             } catch (e) {
                 showError(e);
             } finally {
                 setLoadingCar(false);
             }
-
         } else {
-            if (isMobileServiceOn || isPickUpDropOffServiceOn) {
-                dispatch(setWelcomeScreenView('serviceSelect'))
-                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && userType === EUserType.Existing) {
+                handleServiceTypeSelection()
             } else {
                 handleSetScreen(getNextScreen());
             }

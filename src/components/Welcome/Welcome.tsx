@@ -117,12 +117,8 @@ export const Welcome = () => {
 
     const onServiceTypeSelect = (serviceType: EServiceType) => {
         handleConfig(serviceType);
-        console.log(welcomeScreenView)
-        if ((isMobileServiceOn || isPickUpDropOffServiceOn) && welcomeScreenView !== "serviceSelect") {
-            dispatch(setWelcomeScreenView("serviceSelect"))
-        } else {
-            redirect();
-        }
+        dispatch(setCurrentFrameScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location'));
+        redirect();
     }
 
     const getComponent = () => {
