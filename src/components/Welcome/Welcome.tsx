@@ -75,39 +75,46 @@ export const Welcome = () => {
         dispatch(setSideBarSteps([]));
     }
 
+    const handleGA = () => {
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Enters Page',
+            label: `As Returning Customer`,
+        });
+    }
+
+    const handleExistingUser = async () => {
+        setLoading(true);
+        try {
+            const {data} = await API.appointment.searchCustomer({
+                searchTerm: customerEnteredEmail,
+                serviceCenterId: scProfile?.id ?? 0
+            });
+            dispatch(setCustomerLoadedData(data));
+            dispatch(saveAppointmentReducer());
+            if (data) {
+                handleGA();
+                dispatch(setCurrentFrameScreen("carSelection"));
+                redirect();
+            }
+        } catch (err) {
+            dispatch(setSessionId(""));
+            if (err.message) {
+                showError(err)
+            } else {
+                showError("We are sorry but we could not find your vehicle in our system. Please schedule appointment as a new customer");
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
         handleConfig(serviceType);
-
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
-            setLoading(true);
-            try {
-                const {data} = await API.appointment.searchCustomer({
-                    searchTerm: customerEnteredEmail,
-                    serviceCenterId: scProfile?.id ?? 0
-                });
-                dispatch(setCustomerLoadedData(data));
-                dispatch(saveAppointmentReducer());
-                if (data) {
-                    ReactGA.event({
-                        category: 'EvenFlow User',
-                        action: 'Enters Page',
-                        label: `As Returning Customer`,
-                    });
-                    dispatch(setCurrentFrameScreen("carSelection"));
-                    redirect();
-                }
-            } catch (err) {
-                dispatch(setSessionId(""));
-                if (err.message) {
-                    showError(err)
-                } else {
-                    showError("We are sorry but we could not find your vehicle in our system. Please schedule appointment as a new customer");
-                }
-            } finally {
-                setLoading(false);
-            }
+            handleExistingUser().then();
         } else {
-            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && welcomeScreenView !== "serviceSelect") {
+            if (isMobileServiceOn || isPickUpDropOffServiceOn) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
             } else {
                 redirect();

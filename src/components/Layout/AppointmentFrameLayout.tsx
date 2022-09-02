@@ -290,6 +290,7 @@ export const AppointmentFrameLayout = () => {
     }
 
     const handleSelectCar = useCallback(async () => {
+        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
             setLoadingCar(true);
@@ -300,7 +301,7 @@ export const AppointmentFrameLayout = () => {
                 if (data.maintenancePackageOption) {
                     dispatch(setPackage(data.maintenancePackageOption))
                 }
-                if ((isMobileServiceOn || isPickUpDropOffServiceOn) && userType === EUserType.Existing) {
+                if (needToShowServiceSelection) {
                     handleServiceTypeSelection()
                 } else {
                     handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
@@ -311,7 +312,7 @@ export const AppointmentFrameLayout = () => {
                 setLoadingCar(false);
             }
         } else {
-            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && userType === EUserType.Existing) {
+            if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
             } else {
                 handleSetScreen(getNextScreen());
