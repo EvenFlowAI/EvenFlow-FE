@@ -1,7 +1,10 @@
-import {styled} from "@material-ui/core";
+import {styled, Theme} from "@material-ui/core";
 
-export const CardsWrapper = styled("div")({
+export const CardsWrapper = styled("div")<Theme>(({theme}) => ({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr 1fr',
     gap: "18px",
-});
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateColumns: '1fr',
+    }
+}));

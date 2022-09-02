@@ -1,17 +1,18 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {removeMobServiceZone} from "../../../store/reducers/mobileService/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
-import {removeServiceValetZone} from "../../../store/reducers/serviceValet/actions";
+import {removeServiceValetZone, setCurrentZone} from "../../../store/reducers/serviceValet/actions";
 
 type TRemoveGeographicZoneProps = DialogProps & {
-    zone: TZone|null;
     serviceType: TZonesServiceType;
+    zone: TZone|null;
+    setZone: Dispatch<SetStateAction<TZone|null>>;
 }
 
 const useStyles = makeStyles(() => ({
@@ -48,20 +49,27 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zone, ...props}) => {
+const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType, setZone, zone, ...props}) => {
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showError = useException();
+    const showMessage = useMessage();
+
+    const onSuccess = () => showMessage(`Zone ${zone?.name} was removed`)
+    const onError = (err: string) => showError(err)
 
     const onCancel = () => props.onClose();
-    const onRemove = async () => {
+    const onRemove = () => {
         if (zone?.id && selectedSC) {
+            dispatch(setCurrentZone(null));
             if (serviceType === 'mobileService') {
-                await dispatch(removeMobServiceZone(selectedSC.id, zone.id));
+                dispatch(removeMobServiceZone(zone.id, selectedSC.id, onSuccess, onError));
             } else {
-                await dispatch(removeServiceValetZone(selectedSC.id, zone.id));
+                dispatch(removeServiceValetZone(zone.id, selectedSC.id, onSuccess, onError));
             }
-            await props.onClose();
+            setZone(null);
+            props.onClose();
         }
     }
 
