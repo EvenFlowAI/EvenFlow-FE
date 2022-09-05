@@ -106,7 +106,9 @@ export const prodParentLinks = [
     "https://www.bmwofschererville.com/",
     "https://bmw-schererville.evenflow.services",
     "https://www.fremontchryslerdodgejeepcasper.com",
-    "https://www.fremontchryslerdodgejeeprocksprings.com"
+    "https://www.fremontchryslerdodgejeeprocksprings.com",
+    "https://www.janssenfordholdrege.com/",
+    "https://www.janssenchryslerjeepdodge.com/"
 ];
 
 export const AppointmentFrameLayout = () => {

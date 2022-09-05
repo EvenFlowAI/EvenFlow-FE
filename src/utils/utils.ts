@@ -202,7 +202,11 @@ export const getTracker = (origin: string): string => {
                             ? "UA-210743216-9"
                             : origin.includes("fremontchryslerdodgejeeprocksprings")
                                 ? "UA-210743216-10"
-                                : "UA-210743216-5"
+                                : origin.includes("janssenchryslerjeepdodge")
+                                    ? "UA-210743216-11"
+                                    : origin.includes("janssenfordholdrege")
+                                        ? "UA-210743216-12"
+                                        : "UA-210743216-5"
             : "UA-210743216-5";
 }
 

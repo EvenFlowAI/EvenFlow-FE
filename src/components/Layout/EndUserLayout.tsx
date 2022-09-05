@@ -14,6 +14,7 @@ import {useLayout} from "../../utils/hooks";
 import ReactGA, {GaOptions} from "react-ga";
 import {RootState} from "../../store/rootReducer";
 import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
+import {prodParentLinks} from "./AppointmentFrameLayout";
 
 const nonFrameStyles = {
     display: "flex",
@@ -29,17 +30,6 @@ const frameStyles = {
     height: '100%',
     width: '100%'
 }
-
-// todo add new parent links while go live with new dealerships
-
-const prodParentLinks = [
-    'https://apps.evenflow.ai/',
-    'https://www.riverviewford.com/',
-    "https://www.bmwofschererville.com/",
-    "https://bmw-schererville.evenflow.services",
-    "https://www.fremontchryslerdodgejeepcasper.com",
-    "https://www.fremontchryslerdodgejeeprocksprings.com"
-];
 
 export const options: GaOptions = {
     siteSpeedSampleRate: 100,
