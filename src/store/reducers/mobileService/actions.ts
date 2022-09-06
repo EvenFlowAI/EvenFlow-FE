@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EAncillaryPriceType,
-    TAncillaryPriceTypeData,
+    TAncillaryPriceTypeData, TChangeAncillaryPriceType,
     TReassignZip,
     TZipCode,
     TZone,
@@ -248,8 +248,21 @@ export const loadMobileServicePricingOption = (id: number): AppThunk => dispatch
         .finally(() => dispatch(setPricingOptionLoading(false)))
 }
 
-export const changeMobileServicePriceSettings = (id: number, countByZone: boolean): AppThunk => dispatch => {
-    // todo request
+export const changeMobileServicePriceSettings = (id: number, ancillaryPriceType: EAncillaryPriceType, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setPricingOptionLoading(true))
+    const data: TChangeAncillaryPriceType = {
+        serviceType: EServiceType.MobileService,
+        ancillaryPriceType,
+    }
+    Api.call(Api.endpoints.ServiceCenters.UpdateAncillaryPriceType, {urlParams: {id}, data})
+        .then(result => {
+            if (result) dispatch(loadMobileServicePricingOption(id))
+        })
+        .catch(err => {
+            console.log('update ancillary pricing type error', err)
+            onError(err);
+            dispatch(setPricingOptionLoading(false));
+        })
 }
 
 export const saveLinkToMobServiceMap = (id: number, link: string): AppThunk => dispatch => {
