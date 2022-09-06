@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, IconButton, styled} from "@material-ui/core";
@@ -118,12 +118,12 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                                              setCurrentZip,
                                                              serviceType,
                                                              ...props}) => {
-    const {currentZone: currentMobileZone, isLoading: isMobileloading} = useSelector((state: RootState) => state.mobileService);
-    const {currentZone: currentServiceValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
+    const {currentZone: currentMobileZone, isLoading: isMobileLoading, zones: mobileZones} = useSelector((state: RootState) => state.mobileService);
+    const {currentZone: currentServiceValetZone, isLoading: isValetLoading, zones: valetZones} = useSelector((state: RootState) => state.serviceValet);
     const [currentZone, setCurrentZone] = useState<TZone|null>(null);
     const [zoneName, setZoneName] = useState<string>('');
-    const [newZip, setNewZip] = useState<number|''>('');
-    const [zipList, setZipList] = useState<number[]>([]);
+    const [newZip, setNewZip] = useState<string>('');
+    const [zipList, setZipList] = useState<string[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
 
@@ -132,6 +132,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const classes = useStyles();
     const showError = useException();
     const showMessage = useMessage();
+    const zonesList = useMemo(() => serviceType === 'serviceValet' ? valetZones : mobileZones, [serviceType, valetZones, mobileZones]);
 
     useEffect(() => {
         if (zone && props.open) {
@@ -215,7 +216,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const onZipChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setFormIsChecked(false);
-        setNewZip(+e.target.value);
+        setNewZip(e.target.value);
     }
 
     const onAddZip = (): void => {
@@ -237,19 +238,19 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         if (e.keyCode === 13) onAddZip();
     }
 
-    const onChangeZoneClick = (code: number) => {
+    const onChangeZoneClick = (code: string) => {
         if (setCurrentZip && isEdit && currentZone) {
             const codeObject = currentZone.zipCodes.find(item => item.code === code);
             if (codeObject) {
                 setCurrentZip(codeObject);
-                onOpen();
+                if (zonesList.length > 1) onOpen();
             } else {
                 showError('This code has not been saved to the ZIP codes list of the current zone')
             }
         }
     }
 
-    const onRemoveZipClick = (code: number) => {
+    const onRemoveZipClick = (code: string) => {
         setZipList(prev => prev.filter(item => item !== code))
     }
 
@@ -258,7 +259,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
             <BaseModal {...props} width={570} onClose={onCancel}>
                 <DialogTitle onClose={onCancel}>{isEdit ? 'Edit Zone' : 'Add Zone'}</DialogTitle>
                 <DialogContent style={{padding: '20px 116px'}}>
-                    { isMobileloading || isValetLoading
+                    { isMobileLoading || isValetLoading
                         ? <Loading/>
                         : <>
                             <TextField
@@ -293,7 +294,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                     <div className={classes.zipCode}>{code}</div>
                                     <div className={classes.zipActions}>
                                         { isEdit
-                                            ? <IconButton onClick={() => onChangeZoneClick(code)}>
+                                            ? <IconButton disabled={zonesList.length < 2} onClick={() => onChangeZoneClick(code)}>
                                                 <ChangeZone/>
                                             </IconButton>
                                             : null }

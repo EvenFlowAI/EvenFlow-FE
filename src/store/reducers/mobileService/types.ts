@@ -1,20 +1,20 @@
 import {EServiceType} from "../appointmentFrameReducer/types";
 
 export type TZipCode = {
-    code: number;
+    code: string;
     id: number;
 }
 
 export type TZoneNew = {
     name: string;
-    zipCodes: number[];
+    zipCodes: string[];
     serviceType?: EServiceType;
     serviceCenterId: number;
 }
 
 export type TZoneUpdate = {
     name: string;
-    zipCodes: number[];
+    zipCodes: string[];
     serviceType: EServiceType;
     id: number;
 }
