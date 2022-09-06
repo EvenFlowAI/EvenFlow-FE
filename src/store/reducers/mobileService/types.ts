@@ -32,3 +32,13 @@ export type TReassignZip = {
 }
 
 export type TZonesServiceType = "serviceValet" | "mobileService";
+
+export enum EAncillaryPriceType {
+    Zone,
+    Distance
+}
+
+export type TAncillaryPriceTypeData = {
+    serviceCenterId: number;
+    serviceType: EServiceType;
+}

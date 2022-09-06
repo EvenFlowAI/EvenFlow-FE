@@ -172,7 +172,8 @@ type ApiRoutes = {
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
-        | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate" | "UpdatePackageDisclaimer", TApiRoute>,
+        | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
+        | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -403,6 +404,8 @@ export class Api {
             GetLaborRate: {route: "/service-center-settings/{id}/labor-rates", method: "get"},
             UpdateLaborRate: {route: "/service-center-settings/{id}/labor-rates", method: "put"},
             UpdatePackageDisclaimer: {route: "/service-centers/{id}/set-package-disclaimer", method: "patch"},
+            GetAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "post"},
+            UpdateAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "put"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},
