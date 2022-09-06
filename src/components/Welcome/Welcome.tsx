@@ -29,6 +29,7 @@ import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {API} from "../../api/api";
 import ReactGA from "react-ga";
+import {useTranslation} from "react-i18next";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
@@ -36,6 +37,7 @@ export const Welcome = () => {
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [loading, setLoading] = useState<boolean>(false);
+    const { t } = useTranslation();
 
     const {id} = useParams();
     const history = useHistory();
@@ -102,7 +104,7 @@ export const Welcome = () => {
             if (err.message) {
                 showError(err)
             } else {
-                showError("We are sorry but we could not find your vehicle in our system. Please schedule appointment as a new customer");
+                showError(t('could not find your vehicle'));
             }
         } finally {
             setLoading(false);
@@ -142,8 +144,8 @@ export const Welcome = () => {
         }
     }
 
-    const getTitle = (view: TView) => view === 'serviceSelect' ? "Do you want to bring your car in" : "Welcome!";
-    const getSubTitle = (view: TView) => view === 'serviceSelect' ? "Or use our mobile service?" : "Schedule Your Service:";
+    const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : t("welcome");
+    const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
 
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
                 <FrameWelcomeLayout>
