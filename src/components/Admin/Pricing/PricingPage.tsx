@@ -7,15 +7,21 @@ import {PricingSettingsPage} from "../../Optimizer/PricingSettings/PricingSettin
 import MobileServicePage from "../../Optimizer/MobileService/MobileServicePage";
 import ServiceValetPage from "../../Optimizer/ServiceValet/ServiceValetPage";
 import {OfferManagementPage} from "../../OfferManagement/OfferManagementPage";
+import {useCurrentUser} from "../../../utils/hooks";
 
 const PricingPage = () => {
+    const currentUser = useCurrentUser();
     return <ContentContainer>
         <Switch>
             <PrivateRoute path={Routes.Pricing.MobileService} component={MobileServicePage} />
             <PrivateRoute path={Routes.Pricing.ServiceValet} component={ServiceValetPage} />
             <PrivateRoute path={Routes.Pricing.OfferManagement} component={OfferManagementPage} />
             <PrivateRoute path={Routes.Pricing.ServicePricingSettings} component={PricingSettingsPage} />
-            <Redirect to={Routes.Pricing.ServicePricingSettings} />
+            <Redirect
+                to={currentUser && ["Advisor", "Call Center Rep"].includes(currentUser?.role)
+                ? Routes.Pricing.OfferManagement
+                    : Routes.Pricing.ServicePricingSettings}
+            />
         </Switch>
     </ContentContainer>
 }

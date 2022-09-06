@@ -211,7 +211,7 @@ export const SelectedAppointment = () => {
                             </div>
                             : null
                         }
-                        {serviceType === EServiceType.VisitCenter
+                        {currentConfig?.advisorSelection
                             ? <div className={classes.selectWrapper}>
                                 <div className={classes.selectWrapper}>
                                     Advisor: {isSm ? <br/> : null}
@@ -226,13 +226,13 @@ export const SelectedAppointment = () => {
                                     </Select>
                                 </div>
                             </div>
-                            : address
-                                ? <div className="service-list">
-                                    <h4> YOUR ADDRESS: </h4>
-                                    <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
-                                </div>
-                                : null
-                        }
+                            : null}
+                        {serviceType !== EServiceType.VisitCenter && address
+                            ? <div className="service-list">
+                                <h4> YOUR ADDRESS: </h4>
+                                <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
+                            </div>
+                            : null}
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper> : null}

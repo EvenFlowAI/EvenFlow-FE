@@ -150,6 +150,8 @@ type ApiRoutes = {
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek", TApiRoute>,
+    GeographicZones: Record<"Create" | "Update" | "GetZones" | "ReassignZipCode"
+        | "RemoveZipCode" | "Remove" | "GetById",  TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType", TApiRoute>,
@@ -188,7 +190,7 @@ type ApiRoutes = {
     ValueService: Record<"GetSeriesModels" | "GetValueServiceOffers", TApiRoute>
 }
 
-type TOptions = {
+export type TOptions = {
     data?: any,
     params?: Record<string, any>,
     urlParams?: Record<string, any>
@@ -275,6 +277,15 @@ export class Api {
             Remove: {route: "/employee-schedules/{id}", method: "delete"},
             GetAll: {route: "/employee-schedules/by-query", method: "post"},
             SetForWeek: {route: "/employee-schedules/batch-update", method: "put"},
+        },
+        GeographicZones: {
+            GetZones: {route: "/geographic-zones/by-query", method: "post"},
+            Create: {route: "/geographic-zones", method: "post"},
+            Update: {route: "/geographic-zones/{id}", method: "put"},
+            Remove: {route: "/geographic-zones/{id}", method: "delete"},
+            ReassignZipCode: {route: "/geographic-zones/re-assign-zip-code/{id}", method: "put"},
+            RemoveZipCode: {route: "/geographic-zones/zip-code/{id}", method: "delete"},
+            GetById: {route: "/geographic-zones/{id}", method: "get"},
         },
         MaintenancePackages: {
             Create: {route: "/maintenance-packages", method: "post"},

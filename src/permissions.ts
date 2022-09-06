@@ -7,10 +7,10 @@ export const PERMISSIONS: TRouteRoleMap[] = [
 
     {route: Routes.Admin.Appointments, roles: true},
     {route: Routes.Admin.DealershipGroups, roles: ["Super Admin"]},
-    {route: Routes.Admin.Employees, roles: ["Advisor", "Manager", "Owner"]},
+    {route: Routes.Admin.Employees, roles: ["Manager", "Owner"]},
     {route: Routes.Admin.Profile, roles: true},
     {route: Routes.Admin.ServiceCenters, roles: ["Super Admin", "Owner"]},
-    {route: Routes.Admin.ServiceRequests, roles: ["Owner", "Super Admin", "Manager", "Advisor"]},
+    {route: Routes.Admin.ServiceRequests, roles: ["Owner", "Super Admin", "Manager",]},
 
     {route: Routes.Account.ResetPassword, roles: true},
     {route: Routes.Account.Verification, roles: true},
@@ -19,13 +19,13 @@ export const PERMISSIONS: TRouteRoleMap[] = [
     {route: Routes.Optimizer.AppointmentSlotScoring, roles: ["Owner", "Manager"]},
     {route: Routes.Optimizer.AppointmentValue, roles: ["Owner", "Manager"]},
     {route: Routes.Optimizer.CapacitySettings, roles: ["Owner", "Manager"]},
-    {route: Routes.Optimizer.EmployeeSchedule, roles: ["Owner", "Manager", "Advisor"]},
+    {route: Routes.Optimizer.EmployeeSchedule, roles: ["Owner", "Manager"]},
     {route: Routes.Optimizer.OptimizationWindows, roles: ["Owner", "Manager"]},
     {route: Routes.Optimizer.PricingSettings, roles: ["Owner", "Manager"]},
     {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager"]},
     // {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager", "Advisor"]},
 
-    {route: Routes.OfferManagement.Base, roles: ["Owner", "Advisor", "Manager"]},
+    {route: Routes.OfferManagement.Base, roles: ["Owner", "Manager"]},
 
     {route: Routes.Admin.Base, roles: true},
     {route: Routes.Account.Base, roles: true},

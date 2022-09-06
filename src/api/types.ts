@@ -11,6 +11,7 @@ import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRe
 import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
+import {EJobType} from "../store/reducers/pods/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -80,6 +81,7 @@ export interface ICreateAppointment {
     comment: string;
     serviceRequestIds: number[];
     searchTerm?: string;
+    jobType?: EJobType;
 }
 
 export interface IUpdateAppointment extends ICreateAppointment {
@@ -207,6 +209,7 @@ export interface IListAppointment extends IBaseAppointment {
 
 export interface IAppointmentByQuery extends IBaseAppointment {
     serviceCategories: ICategory[];
+    jobType?: EJobType;
 }
 
 export interface ISearchCustomerParams {

@@ -5,7 +5,13 @@ import {TArgCallback} from "../../../types/types";
 import moment from "moment";
 import {TSlot} from "./AppointmentTimeSelector";
 
-const Wrapper = styled('div')<Theme, {available?: boolean, selected?: boolean, offPeak?: boolean}>(({theme, available, offPeak, selected}) => ({
+type TSlotsWrapperProps = {
+    available?: boolean,
+    selected?: boolean,
+    offPeak?: boolean
+}
+
+const Wrapper = styled(({available, offPeak, selected, ...props}) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({theme, available, offPeak, selected}) => ({
     display: "flex",
     alignItems: "center",
     fontWeight: "bold",

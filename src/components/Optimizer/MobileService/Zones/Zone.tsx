@@ -9,9 +9,9 @@ type TZoneProps = {
     zone: TZone;
     zipCodes: TZipCode[];
     isSelected: boolean;
-    setSelected: (zone: TZone) => void;
     onRemoveZip: () => void;
-    setCurrentZip: Dispatch<SetStateAction<string>>;
+    setCurrentZip: Dispatch<SetStateAction<TZipCode|null>>;
+    setSelectedZone: Dispatch<SetStateAction<TZone|null>>;
 }
 
 type TStyleProps = {
@@ -43,6 +43,7 @@ const useStyles = makeStyles(() => ({
 
     },
     codesContainer: {
+        minHeight: 45,
         display: "grid",
         gridTemplateColumns: '1fr 1fr',
         gridGap: 8,
@@ -71,15 +72,15 @@ const ZipCode = styled('div')({
     color: '#FFFFFF',
 })
 
-const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setSelected, setCurrentZip, onRemoveZip}) => {
+const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip, setSelectedZone}) => {
     const classes = useStyles({isSelected});
 
     const onClick = () => {
-        setSelected(zone)
+        setSelectedZone(zone);
     }
 
     const deleteZipCode = (item: TZipCode) => (e: React.MouseEvent<{}>) => {
-        setCurrentZip(item.code);
+        setCurrentZip(item);
         onRemoveZip();
     }
 
