@@ -176,7 +176,7 @@ export const loadServiceValetPrisingByDistance = (id: number): AppThunk => dispa
         .finally(() => dispatch(setLoading(false)));
 }
 
-export const updateServiceValetPrisingByZones =  (serviceCenterId: number, id: number, data: IZonePricingUpdate): AppThunk => dispatch => {
+export const updateServiceValetPrisingByZones =  (serviceCenterId: number, id: number, data: IZonePricingUpdate, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.AncillaryPricing.UpdateZone, {urlParams: {id}, data})
         .then(result => {
@@ -185,6 +185,7 @@ export const updateServiceValetPrisingByZones =  (serviceCenterId: number, id: n
             }
         })
         .catch(err => {
+            onError(err);
             console.log('update ancillary pricing by zone for service valet error', err)
         })
         .finally(() => dispatch(setLoading(false)));

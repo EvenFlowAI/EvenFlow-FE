@@ -114,7 +114,7 @@ const AncillaryPrice = () => {
     }
 
     const onSaveZonePricing = (data: IZonePriceSettings) => {
-        if (selectedSC) dispatch(updateServiceValetPrisingByZones(selectedSC.id, data.id, data))
+        if (selectedSC) dispatch(updateServiceValetPrisingByZones(selectedSC.id, data.id, data, (err) => showError(err)))
     }
 
     const tabs: TTab[] = [

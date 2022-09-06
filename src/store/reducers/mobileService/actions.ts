@@ -175,7 +175,7 @@ export const loadMobileServicePrisingByDistance = (id: number): AppThunk => disp
         .finally(() => dispatch(setLoading(false)));
 }
 
-export const updateMobileServicePrisingByZones = (serviceCenterId: number, id: number, data: IZonePricingUpdate): AppThunk => dispatch => {
+export const updateMobileServicePrisingByZones = (serviceCenterId: number, id: number, data: IZonePricingUpdate, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.AncillaryPricing.UpdateZone, {urlParams: {id}, data})
         .then(result => {
@@ -184,6 +184,7 @@ export const updateMobileServicePrisingByZones = (serviceCenterId: number, id: n
             }
         })
         .catch(err => {
+            onError(err);
             console.log('update ancillary pricing by zone for mobile service error', err)
         })
         .finally(() => dispatch(setLoading(false)));
