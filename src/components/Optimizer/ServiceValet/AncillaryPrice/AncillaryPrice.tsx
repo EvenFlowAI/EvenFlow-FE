@@ -63,7 +63,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AncillaryPrice = () => {
-    const {pricingByDistance, pricingByZones, pricingCountByZone, isPricingByZoneLoading, isLoading} = useSelector((state: RootState) => state.serviceValet);
+    const {pricingByDistance, pricingByZones, ancillaryPriceType, isPricingByZoneLoading, isLoading} = useSelector((state: RootState) => state.serviceValet);
     const [selectedTab, selectTab] = useState<string>("0");
     const [typeOfPrice, setTypeOfPrice] = useState<string>("byZone");
     const classes = useStyles();
@@ -74,12 +74,12 @@ const AncillaryPrice = () => {
     const showMessage = useMessage();
 
     useEffect(() => {
-        if (pricingCountByZone) {
+        if (ancillaryPriceType) {
             setTypeOfPrice("byZone")
         } else {
             setTypeOfPrice("byDistance")
         }
-    }, [pricingCountByZone])
+    }, [ancillaryPriceType])
 
     useEffect(() => {
         if (selectedSC) {
@@ -114,7 +114,7 @@ const AncillaryPrice = () => {
     }
 
     const onSaveZonePricing = (data: IZonePriceSettings) => {
-        if (selectedSC) dispatch(updateServiceValetPrisingByZones(selectedSC.id, data.id, data))
+        if (selectedSC) dispatch(updateServiceValetPrisingByZones(selectedSC.id, data.id, data, (err) => showError(err)))
     }
 
     const tabs: TTab[] = [
