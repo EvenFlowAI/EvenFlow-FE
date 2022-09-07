@@ -17,6 +17,7 @@ import {useDispatch} from "react-redux";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {MoreVert} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
+import {useTranslation} from "react-i18next";
 
 type TProps = {
     car: ILoadedVehicle;
@@ -82,6 +83,7 @@ const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment}) => {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef<HTMLDivElement|null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number>(1);
+    const {t} = useTranslation();
 
     const handleMenuItemClick = (event: any, index:number) => {
         setSelectedIndex(index);
@@ -97,7 +99,7 @@ const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment}) => {
 
     const hasAppointments = Boolean(car.appointmentHashKeys.length);
     const getLabel = (): string => {
-        return hasAppointments ? "Manage Appointment" : "Schedule Appointment";
+        return hasAppointments ? t("Manage Appointment") : t("Schedule Appointment");
     }
     const handleSelect = () => {
         dispatch(setVehicle(car));

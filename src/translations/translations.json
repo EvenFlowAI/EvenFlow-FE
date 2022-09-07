@@ -49,7 +49,14 @@
       "Appointment Confirmation": "Appointment Confirmation",
       "Your Location": "Your Location",
       "of": "of",
-      "Next": "Next"
+      "Next": "Next",
+      "Which vehicle are you coming in for?": "Which vehicle are you coming in for?",
+      "No vehicles present": "No vehicles present",
+      "Click here to": "Click here to",
+      "add new vehicle": "add new vehicle",
+      "Back": "Back",
+      "Manage Appointment": "Manage Appointment",
+      "Schedule Appointment": "Schedule Appointment"
     }
   },
   "es": {
