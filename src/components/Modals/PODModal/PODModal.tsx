@@ -27,6 +27,7 @@ import {getOptions} from "../../../utils/utils";
 import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
 import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 import {TZone} from "../../../store/reducers/mobileService/types";
+import {loadMobServiceZones} from "../../../store/reducers/mobileService/actions";
 
 type TForm = {
     name: string;
@@ -123,7 +124,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 setJobType(null);
             }
             if (payload?.mobileZones) {
-                setMobileZones(zones.filter(zone => payload?.mobileZones?.includes(zone.id)))
+                setMobileZones(zones.filter(zone => payload?.mobileZones?.find(item => item.id === zone.id)))
             } else {
                 setMobileZones([]);
             }
@@ -137,6 +138,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             dispatch(loadSCRequestsShort(selectedSC.id));
             dispatch(loadBaysShort(selectedSC.id));
             dispatch(loadMakesForPods(selectedSC.id));
+            dispatch(loadMobServiceZones(selectedSC.id));
         }
     }, [selectedSC, dispatch, props.open]);
 
@@ -179,8 +181,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     technicians: form.technicians.map(t => t.id),
                     vehicleMakes: selectedMakes.map(item => item.id),
                     vehicleModels: selectedModels.map(item => item.id),
-                    // todo uncomment once BE is ready
-                    // mobileZones: mobileZones.map(zone => zone.id),
+                    mobileZones: mobileZones.map(zone => zone.id),
                 };
                 if (jobType) data.jobType = jobType.value;
 
