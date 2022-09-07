@@ -16,6 +16,12 @@ export interface IPodShort {
     id: number;
     name: string;
 }
+
+export type TPodZone = {
+    id: number;
+    name: string;
+}
+
 export interface IPod {
     id: number;
     name: string;
@@ -29,7 +35,7 @@ export interface IPod {
     vehicleMakes?: IPodVehicleMake[];
     vehicleModels?: IPodVehicleModel[];
     jobType?: EJobType;
-    mobileZones?: number[];
+    mobileZones?: TPodZone[];
 }
 export interface IPodFilters {
     searchTerm: string;
