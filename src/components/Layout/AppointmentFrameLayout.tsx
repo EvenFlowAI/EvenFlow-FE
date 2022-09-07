@@ -444,7 +444,7 @@ export const AppointmentFrameLayout = () => {
             case "transportationNeeds":
                 return t("Will you be waiting at the dealership?");
             case "appointmentConfirmation":
-                return t("Appointment Confirmation");
+                return t("Appointment Confirmation Title");
             case "carDetails":
                 return t("Please tell us about your vehicle");
             case "location":
