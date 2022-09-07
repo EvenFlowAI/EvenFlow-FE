@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EAncillaryPriceType,
-    TAncillaryPriceTypeData,
+    TAncillaryPriceTypeData, TChangeAncillaryPriceType,
     TReassignZip,
     TZipCode,
     TZone,
@@ -245,7 +245,9 @@ export const loadServiceValetPricingOption = (id: number): AppThunk => dispatch 
     }
     Api.call(Api.endpoints.ServiceCenters.GetAncillaryPriceType, {urlParams: {id}, data})
         .then(result => {
-            if (result?.data) dispatch(setServiceValetPrisingOption(result.data))
+            if (result && Number.isInteger(result.data)) {
+                dispatch(setServiceValetPrisingOption(result.data))
+            }
         })
         .catch(err => {
             console.log('get ancillary pricing type error', err)
@@ -253,6 +255,19 @@ export const loadServiceValetPricingOption = (id: number): AppThunk => dispatch 
         .finally(() => dispatch(setPricingOptionLoading(false)))
 }
 
-export const changeServiceValetPriceSettings = (id: number, countByZone: boolean): AppThunk => dispatch => {
-    // todo request
+export const changeServiceValetPriceSettings = (id: number, ancillaryPriceType: EAncillaryPriceType, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setPricingOptionLoading(true))
+    const data: TChangeAncillaryPriceType = {
+        serviceType: EServiceType.PikUpDropOff,
+        ancillaryPriceType,
+    }
+    Api.call(Api.endpoints.ServiceCenters.UpdateAncillaryPriceType, {urlParams: {id}, data})
+        .then(result => {
+            if (result) dispatch(loadServiceValetPricingOption(id))
+        })
+        .catch(err => {
+            console.log('update ancillary pricing type error', err)
+            onError(err);
+            dispatch(setPricingOptionLoading(false));
+        })
 }

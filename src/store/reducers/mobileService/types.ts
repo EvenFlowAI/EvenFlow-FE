@@ -42,3 +42,8 @@ export type TAncillaryPriceTypeData = {
     serviceCenterId: number;
     serviceType: EServiceType;
 }
+
+export type TChangeAncillaryPriceType = {
+    serviceType: EServiceType;
+    ancillaryPriceType: EAncillaryPriceType;
+}
