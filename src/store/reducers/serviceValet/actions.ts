@@ -245,7 +245,9 @@ export const loadServiceValetPricingOption = (id: number): AppThunk => dispatch 
     }
     Api.call(Api.endpoints.ServiceCenters.GetAncillaryPriceType, {urlParams: {id}, data})
         .then(result => {
-            if (result?.data) dispatch(setServiceValetPrisingOption(result.data))
+            if (result && Number.isInteger(result.data)) {
+                dispatch(setServiceValetPrisingOption(result.data))
+            }
         })
         .catch(err => {
             console.log('get ancillary pricing type error', err)
