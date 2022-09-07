@@ -15,7 +15,19 @@
       "Phone": "Phone",
       "Search": "Search",
       "Submit": "Submit",
-      "I`m a new customer": "I`m a new customer"
+      "I`m a new customer": "I`m a new customer",
+      "appointment canceled": "Your appointment is already canceled",
+      "You've successfully canceled your appointment": "You've successfully canceled your appointment",
+      "Please do not forget to update the appointment in your calendar": "Please do not forget to update the appointment in your calendar",
+      "Schedule different appointment": "If you want to schedule a different appointment, please click the button below",
+      "Schedule appointment": "Schedule appointment",
+      "Sorry, we can't find your appointment": "Sorry, we can't find your appointment",
+      "Please check your link or contact service center directly": "Please check your link or contact service center directly",
+      "Please confirm you want to cancel your appointment for": "Please confirm you want to cancel your appointment for",
+      "Cancel Appointment": "Cancel Appointment",
+      "If you've changed your mind - you can close this window": "If you've changed your mind - you can close this window",
+      "Appointment time is already passed": "Appointment time is already passed",
+      "Appointment is already cancelled": "Appointment is already cancelled"
     }
   },
   "es": {

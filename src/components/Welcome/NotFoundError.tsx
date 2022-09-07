@@ -1,9 +1,11 @@
 import React from 'react';
+import {useTranslation} from "react-i18next";
 
 export const NotFoundError = () => {
+    const {t} = useTranslation();
     return <p>
-        Sorry, we can't find your appointment.
+        {t("Sorry, we can't find your appointment")}.
         <br/>
-        Please check your link or contact service center directly.
+        {t("Please check your link or contact service center directly")}.
     </p>
 };
