@@ -238,9 +238,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const getRequestOptionSelected = (option: IAssignedServiceRequestShort) => {
         return !!form.serviceRequests.find(request => request.id === option.id);
     }
-    const getZoneOptionSelected = (option: TZone) => {
-        return !!mobileZones.find(zone => zone.id === option.id);
-    }
 
     return <BaseModal {...props} maxWidth="md">
         <DialogTitle onClose={props.onClose}>
@@ -406,7 +403,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         onChange={handleZoneChange}
                         getOptionLabel={i => i.name}
-                        getOptionSelected={getZoneOptionSelected}
                         renderOption={autocompleteOptionsRender((e) => e.name)}
                         loading={false}
                         value={mobileZones}
