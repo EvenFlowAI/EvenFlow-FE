@@ -96,6 +96,7 @@ const SCREENS = {
     vehicleData: "vehicleData",
     location: "Your Location",
     payment: "payment",
+    serviceOfferDetails: "Service Offer Details",
 }
 
 // todo add new parent links while go live with new dealerships
@@ -412,6 +413,7 @@ export const AppointmentFrameLayout = () => {
                 onLogin={handleLogin}
             />,
             payment: <PaymentScreen/>,
+            serviceOfferDetails: <div/>,
         }
         return carSelections[currentScreen];
     }, [
