@@ -2,6 +2,7 @@ import React from 'react';
 import {TPackage} from "../PackageSelection";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
 
 type TTotalMaintenanceProps = {
     isBmWService: boolean;
@@ -11,12 +12,13 @@ type TTotalMaintenanceProps = {
 
 const TotalMaintenance: React.FC<TTotalMaintenanceProps> = ({ packages, isBmWService, setClasses }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {t} = useTranslation();
 
     return (
         <React.Fragment key="maintenance">
             <div className="totalMaintenance"
                  style={isBmWService ? {fontSize: 16} : {}}>
-                Total Maintenance Value:
+                {t("Total Maintenance Value")}:
             </div>
             {packages.map(p => (
                 <div className={setClasses(p.id, '')}>

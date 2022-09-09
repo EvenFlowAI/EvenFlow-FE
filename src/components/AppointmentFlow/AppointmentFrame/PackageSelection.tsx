@@ -32,6 +32,7 @@ import TotalMaintenance from "./PackageSelectionParts/TotalMaintenance";
 import Complimentary from "./PackageSelectionParts/Complimentary";
 import TotalComplimentary from "./PackageSelectionParts/TotalComplimentary";
 import Total from "./PackageSelectionParts/Total";
+import {useTranslation} from "react-i18next";
 
 const border = '1px solid #DADADA';
 
@@ -211,6 +212,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
     const { isOpen, onOpen, onClose } = useModal();
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+    const {t} = useTranslation();
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -332,7 +334,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                 wrapperStyles={{marginTop: 20}}
                 items={packages}
                 loading={loading}
-                label={"There are no packages available"}
+                label={t("There are no packages available")}
             />
             {packages.length ? <React.Fragment>
                 {isXs
@@ -388,8 +390,8 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             {scProfile?.maintenancePackageDisclaimer
                                 ? scProfile?.maintenancePackageDisclaimer
                                 :  isBmWService
-                                    ? 'Note: Please ask your service advisor regarding factory covered maintenance services.'
-                                    : 'Note: The maintenance packages may not be available for all vehicle types. Please speak with your Service Advisor to understand where restrictions apply.'
+                                    ? t("Please ask your service advisor")
+                                    : t("The maintenance packages may not be available")
                             }
                         </Info>
                     </Wrapper>
