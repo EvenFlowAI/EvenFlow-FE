@@ -227,18 +227,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         setJobType(value)
     }, [])
 
-    const getMakeOptionSelected = (option: IMakeExtended) => {
-       return !!selectedMakes.find(make => make.id === option.id)
-    };
-
-    const getModelOptionSelected = (option: IModel) => {
-        return !!selectedModels.find(model => model.id === option.id);
-    }
-
-    const getRequestOptionSelected = (option: IAssignedServiceRequestShort) => {
-        return !!form.serviceRequests.find(request => request.id === option.id);
-    }
-
     return <BaseModal {...props} maxWidth="md">
         <DialogTitle onClose={props.onClose}>
             {payload ? "Edit POD" : "Add POD"}
@@ -307,7 +295,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         onChange={handleTechniciansChange}
                         getOptionLabel={i => i.fullName}
-                        getOptionSelected={(option, value) => option.id === value.id}
+                        getOptionSelected={(o, v) => o.id === v.id}
                         renderOption={autocompleteOptionsRender((e) => e.fullName)}
                         loading={false}
                         value={form.technicians}
@@ -327,7 +315,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         onChange={handleSCChange}
                         getOptionLabel={i => i.code}
-                        getOptionSelected={getRequestOptionSelected}
+                        getOptionSelected={(o, v) => o.id === v.id}
                         renderOption={autocompleteOptionsRender((e) => e.code)}
                         loading={false}
                         value={form.serviceRequests}
@@ -346,7 +334,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         options={getSortedMakes()}
                         disableCloseOnSelect
                         getOptionLabel={i => i.name}
-                        getOptionSelected={getMakeOptionSelected}
+                        getOptionSelected={(o, v) => o.id === v.id}
                         renderOption={autocompleteOptionsRender((e) => e.name)}
                         value={selectedMakes}
                         onChange={onMakeChange}
@@ -369,7 +357,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         getOptionLabel={i => i.name}
                         renderOption={autocompleteOptionsRender((e) => e.name)}
-                        getOptionSelected={getModelOptionSelected}
+                        getOptionSelected={(o, v) => o.id === v.id}
                         value={selectedModels}
                         onChange={onModelChange}
                         renderInput={autocompleteRender({
@@ -401,6 +389,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                             size: "small"
                         }}
                         disableCloseOnSelect
+                        getOptionSelected={(o, v) => o.id === v.id}
                         onChange={handleZoneChange}
                         getOptionLabel={i => i.name}
                         renderOption={autocompleteOptionsRender((e) => e.name)}
