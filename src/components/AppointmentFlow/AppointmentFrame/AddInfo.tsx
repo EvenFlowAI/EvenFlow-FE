@@ -16,6 +16,7 @@ import {useModal} from "../../../utils/hooks";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
+import {useTranslation} from "react-i18next";
 
 type TProps = {
     onFillCar: TCallback;
@@ -49,6 +50,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useModal();
+    const {t} = useTranslation();
     const screenToReturn = useMemo(() => subService ? 'serviceSelection' : 'serviceNeeds', [subService])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
@@ -117,7 +119,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
                 onChange={handleChange}
                 value={description}
                 rows={4}
-                placeholder="Describe what`s going on"
+                placeholder={t("Describe what`s going on")}
             />
             <Actions onBack={handleBack} onNext={onSubmit} />
             <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen}/>
