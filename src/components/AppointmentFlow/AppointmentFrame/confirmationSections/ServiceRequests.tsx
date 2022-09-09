@@ -3,6 +3,7 @@ import {styled} from "@material-ui/core";
 import {ConfirmationTitle} from "../Title";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -27,15 +28,17 @@ const List = styled('ul')({
 
 const ServiceRequests = () => {
     const {appointment} = useSelector((state: RootState) => state.appointment);
+    const {t} = useTranslation();
+
     return appointment?.serviceRequestPrices?.length
         ? <div>
             <TitleWrapper>
-                <ConfirmationTitle>Service Requests</ConfirmationTitle>
+                <ConfirmationTitle>{t("Service Requests")}</ConfirmationTitle>
             </TitleWrapper>
             <List>
                 {appointment?.serviceRequestPrices.map(item => (
                     <li className="service-item" key={item.requestName}>
-                        {item.requestName.includes("Going") ? "My Description of Needs" : item.requestName}
+                        {item.requestName.includes("Going") ? t("My Description of Needs") : item.requestName}
                     </li>
                 ))}
             </List>

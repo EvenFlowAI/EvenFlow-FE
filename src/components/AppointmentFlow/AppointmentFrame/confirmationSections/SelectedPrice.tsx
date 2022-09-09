@@ -3,6 +3,7 @@ import {ConfirmationTitle} from "../Title";
 import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
 
 const Price = styled('div')({
     marginTop: 8,
@@ -13,16 +14,17 @@ const Price = styled('div')({
 
 export const SelectedPrice = () => {
     const {appointment, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {t} = useTranslation();
     return (
         <div>
-            <ConfirmationTitle>Selected Price</ConfirmationTitle>
+            <ConfirmationTitle>{t("Selected Price")}</ConfirmationTitle>
             <Price>
                 {appointment?.price.value ?
                     <span>${scProfile?.isRoundPrice
                         ? appointment.price.value
                         : appointment.price.value.toFixed(2)}
                     </span>
-                    : 'Service items will be quoted at dealership'
+                    : t('Service items will be quoted at dealership')
                 }
             </Price>
         </div>

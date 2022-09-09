@@ -3,6 +3,7 @@ import {ConfirmationTitle} from "../Title";
 import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
 
 const Wrapper = styled('ul')({
     display: "flex",
@@ -17,8 +18,6 @@ const Wrapper = styled('ul')({
         textTransform: "capitalize"
     }
 });
-
-const TRANSPORTATION_SHORT_DESCRIPTION = ["I will take the shuttle", "I would like a loaner vehicle", "I would like a rental car", "I would like you to book me a ride", "I would like vehicle pick up / drop off services", "I will drop off my vehicle and have a ride"]
 
 export const Review = () => {
     const [
@@ -35,18 +34,28 @@ export const Review = () => {
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
+    const {t} = useTranslation();
+
+    const TRANSPORTATION_SHORT_DESCRIPTION = [
+        t("I will take the shuttle"),
+        t("I would like a loaner vehicle"),
+        t("I would like a rental car"),
+        t("I would like you to book me a ride"),
+        t("I would like vehicle pick up / drop off services"),
+        t("I will drop off my vehicle and have a ride")
+    ]
 
     return (
         <div>
-            <ConfirmationTitle>Appointment Details</ConfirmationTitle>
+            <ConfirmationTitle>{t("Appointment Details")}</ConfirmationTitle>
             <Wrapper>
                 <li>Transportation needs: {
                     typeof transportation?.type === 'number'
                     ? TRANSPORTATION_SHORT_DESCRIPTION[transportation.type]
-                    : "I will wait at the dealership"}
+                    : t("I will wait at the dealership")}
                 </li>
                 {currentConfig?.advisorSelection
-                    ? <li>Service Advisor: {consultant?.name ?? "Any Available"}</li>
+                    ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}</li>
                     : null
                 }
             </Wrapper>

@@ -33,6 +33,7 @@ import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/type
 import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";
+import {useTranslation} from "react-i18next";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -81,6 +82,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
     const showError = useException();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
@@ -224,14 +226,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     role="presentation"
                     style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
                     onClick={onFeesOpen}>
-                    View itemized fees of services
+                    {t("View itemized fees of services")}
                 </div>
                 {appointmentFrame.serviceType === EServiceType.VisitCenter ? <Review/> : null}
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>
                 <Reminders/>
-                <Info>By using this service you accept the terms of our Visitor Agreement.</Info>
+                <Info>{t("terms of our Visitor Agreement")}.</Info>
             </div>
 
         </Wrapper>

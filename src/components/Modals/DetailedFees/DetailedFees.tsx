@@ -6,6 +6,7 @@ import {DialogProps} from "../types";
 import {Dialog, styled} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ErrorOutline} from "@material-ui/icons";
+import {useTranslation} from "react-i18next";
 
 const List = styled('ul')({
     display: "flex",
@@ -88,6 +89,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const {appointment, scProfile} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
+    const {t} = useTranslation();
     const price = useMemo(() => appointment?.price?.value && appointment.price.value > 0
         ? `$${scProfile?.isRoundPrice
             ? appointment.price.value 
@@ -100,7 +102,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
             <DialogTitle onClose={onClose} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                Selected Price:   {price}
+                {t("Selected Price")}:   {price}
             </DialogTitle>
             <DialogContent>
                 <List>
@@ -108,7 +110,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                         <li className={classes.item} key={item.requestName}>
                             <span>
                                 {item.requestName.includes("Going")
-                                ? "My Description of Needs"
+                                ? t("My Description of Needs")
                                 : item.requestName}
                             </span>
                             {Object(item).hasOwnProperty('priceValue') && item.priceValue
@@ -122,7 +124,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                 </List>
                 {noDefinedPriceExists && <Info>
                   <ErrorOutline/>
-                  <span className="text">Service item will be quoted at dealership</span>
+                  <span className="text">{t("Service item will be quoted at dealership")}</span>
                 </Info>}
 
             </DialogContent>

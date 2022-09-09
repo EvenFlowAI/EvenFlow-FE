@@ -16,6 +16,7 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
+import {useTranslation} from "react-i18next";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     minHeight: 264,
@@ -109,6 +110,7 @@ const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportat
 
 export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {id} = useParams();
+    const {t} = useTranslation();
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const transportation = useSelector((state: RootState) => state.appointmentFrame.transportation);
@@ -185,7 +187,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 <TransportationCard
                     active={transportation === null}
                     selectedTransportation={transportation}
-                    transportation={"Yes, I will be waiting"}
+                    transportation={t("Yes, I will be waiting")}
                     options={null}
                     onSelect={() => handleSelectOption(null)}
                     onSelectOption={handleSelectOption}
@@ -194,7 +196,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     active={Boolean(transportation && transportation.type !== customOption?.type)}
                     options={tOptions}
                     selectedTransportation={transportation}
-                    transportation={"No, I would like transportation options"}
+                    transportation={t("No, I would like transportation options")}
                     onSelect={handleSelectGeneric}
                     onSelectOption={handleSelectOption}
                 /> : null}
