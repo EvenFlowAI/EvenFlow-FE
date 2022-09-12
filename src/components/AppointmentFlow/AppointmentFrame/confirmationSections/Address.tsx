@@ -4,6 +4,7 @@ import {ConfirmationTitle} from "../Title";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 const TitleWrapper = styled('div')({
     display: "flex",

@@ -10,6 +10,7 @@ import {G_CALENDAR_FORMAT} from "../../../config/constants";
 import {TCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 const Wrapper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -105,6 +106,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.valueService,
     ]);
 
+    const {t} = useTranslation();
     const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
     const vehicleData = vehicle?.year
@@ -124,12 +126,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const data: TItem[] = useMemo(() => {
         return [
             {
-                label: "Date and time",
+                label: t("Date and time"),
                 content: appointment?.date.format('ddd, MMM D, h:mm A')
                     ?? moment.utc().format('ddd, MMM D, h:mm A'),
             },
             {
-                label: serviceType === EServiceType.VisitCenter || address ? "Address" : '',
+                label: serviceType === EServiceType.VisitCenter || address ? t("Address") : '',
                 content: serviceType === EServiceType.VisitCenter
                     ? scProfile?.address
                         ? concatAddress(scProfile?.address)
@@ -137,32 +139,32 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                     : address ? `${address?.label ?? ""} ${zipCode ? zipCode : ""}` : "",
             },
             {
-                label: servicesList?.length > 1 ? "Services type" : "Service type",
+                label: servicesList?.length > 1 ? t("Services type") : t("Service type"),
                 content: servicesList.map(item => <div>{item}</div>)
             },
             {
-                label: "Selected Price",
+                label: t("Selected Price"),
                 content: appointment?.price?.value
                     ? scProfile?.isRoundPrice
                         ? `$${appointment?.price?.value}`
                         : `$${appointment?.price?.value.toFixed(2)}`
-                    : 'Will be quoted at the dealership'
+                    : t('Will be quoted at the dealership')
 
             },
             {
-                label: "Name",
+                label: t("Name"),
                 content: customer.fullName
             },
             {
-                label: "Vehicle",
+                label: t("Vehicle"),
                 content: vehicleData,
             },
             {
-                label: "Phone number",
+                label: t("Phone number"),
                 content: customer.phoneNumber
             },
             {
-                label: "Email",
+                label: t("Email"),
                 content: customer.email
             }
         ]
@@ -171,8 +173,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const getPrice = (): string => {
         const price = appointment?.price?.value;
         return price
-            ? `Selected Price: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
-            : 'Service price will be quoted at dealership';
+            ? `${t("Selected Price")}: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
+            : t('Service price will be quoted at dealership');
     }
 
     const handleAddToCalendar = () => {
@@ -181,14 +183,14 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             dates: [
                 date.format(G_CALENDAR_FORMAT) + appointment?.time.split(":").join(""),
                 date.add(1, "hour").format(G_CALENDAR_FORMAT) + appointment?.time.split(":").join("")],
-            text: `${scProfile?.name} Service Appointment`,
+            text: `${scProfile?.name} ${t("Service Appointment")}`,
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
             details: [
-                `Contact number: ${scProfile?.phoneNumber}\n`,
+                `${t("Contact number")}: ${scProfile?.phoneNumber}\n`,
                 ...data.slice(0, 2).map(r =>
                     `${r.label}: ${r.content}`
                 ),
-                `Service type: ${servicesList.map(item => item.includes('Going') ? 'My Description Of Need' : item).join(', ')}`,
+                `${t("Service type")}: ${servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', ')}`,
                 getPrice(),
             ].join("\n"),
         });
@@ -200,7 +202,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         <Wrapper>
             <h2>Appointment Confirmed!</h2>
             {data.map(item => {
-                if (!selectedPackage && item.label === "Selected Price") {
+                if (!selectedPackage && item.label === t("Selected Price")) {
                     return null;
                 }
                 return <React.Fragment key={item.label}>
@@ -210,13 +212,13 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             })}
 
             <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
-                Modify Appointment
+                {t("Modify Appointment")}
             </Button>
             <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained">
-                Add to Calendar
+                {t("Add to Calendar")}
             </Button>
             <Divider />
-            <h3>We will see you soon !</h3>
+            <h3>{t("We will see you soon!")}</h3>
         </Wrapper>
     </StepWrapper>
 };

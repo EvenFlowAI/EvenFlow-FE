@@ -34,6 +34,7 @@ type TWrapperProps = {
 
 export const LoadingWrapper: React.FC<TWrapperProps> = ({
     isLoading, itemsExist, noItemsLabel, children}) => {
+    const {t} = useTranslation();
     return isLoading
         ? <Loading />
         : itemsExist
