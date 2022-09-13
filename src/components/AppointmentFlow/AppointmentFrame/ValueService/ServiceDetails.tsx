@@ -5,6 +5,7 @@ import {CarName, ChangeButton, PageWrapper, SubTitle} from "./ServiceSelection";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {Loading} from "../../../UI/Loading";
 import {Actions} from "../Actions";
+import {useTranslation} from "react-i18next";
 
 type TServiceDetails = {
     onChangeVehicle: () => void;
@@ -29,18 +30,19 @@ const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onN
     const {valueService} = useSelector((state: RootState) => state.appointmentFrame);
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const {t} = useTranslation();
 
     return valueService?.selectedService ? (
         <PageWrapper>
             <CarName>{valueService.year?.year} {valueService.series?.name} {valueService.model?.name}</CarName>
-            <ChangeButton onClick={onChangeVehicle} variant="text">Change Vehicle</ChangeButton>
+            <ChangeButton onClick={onChangeVehicle} variant="text">{t("Change Vehicle")}</ChangeButton>
             <SubTitle>{valueService.selectedService?.name}</SubTitle>
             <Price>${valueService.selectedService?.price}</Price>
             <Description dangerouslySetInnerHTML={{ __html: valueService.selectedService?.description}}/>
             <Actions
                 onBack={onBack}
                 onNext={onNext}
-                nextLabel={isSM ? "Schedule" : "Schedule Service"}
+                nextLabel={isSM ? t("Schedule") : t("Schedule Service")}
             />
         </PageWrapper>
     )

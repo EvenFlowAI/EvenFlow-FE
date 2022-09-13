@@ -2,12 +2,14 @@ import React from 'react';
 import {BaseModal, DialogActions, DialogTitle} from "../BaseModal";
 import {LoadingButton} from "../../UI/Button";
 import {DialogProps} from "../types";
+import {useTranslation} from "react-i18next";
 
 type TPromptNewSearchRangeProps = DialogProps & {
     onSave: () => void
 }
 
 const PromptNewSearchRange: React.FC<TPromptNewSearchRangeProps> = (props) => {
+    const {t} = useTranslation();
     return (
         <BaseModal
             width={400}
@@ -15,7 +17,7 @@ const PromptNewSearchRange: React.FC<TPromptNewSearchRangeProps> = (props) => {
             onClose={props.onClose}
         >
             <DialogTitle onClose={props.onClose}>
-               To see more options please adjust your appointment search. Would you like to see more options?
+                {t("To see more options")}
             </DialogTitle>
             <DialogActions>
                 <LoadingButton
@@ -23,14 +25,14 @@ const PromptNewSearchRange: React.FC<TPromptNewSearchRangeProps> = (props) => {
                     onClick={props.onSave}
                     variant="outlined"
                     color="primary">
-                    Yes
+                    {t("Yes")}
                 </LoadingButton>
                 <LoadingButton
                     loading={false}
                     onClick={props.onClose}
                     color="primary"
                     variant="contained">
-                    No
+                    {t("No")}
                 </LoadingButton>
             </DialogActions>
         </BaseModal>

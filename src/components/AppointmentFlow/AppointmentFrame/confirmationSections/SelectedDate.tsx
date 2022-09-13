@@ -6,6 +6,7 @@ import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TCallback} from "../../../../types/types";
+import {useTranslation} from "react-i18next";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -21,12 +22,14 @@ type TProps = {
 }
 export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const appointment = useSelector((state: RootState) => state.appointment.appointment);
+    const {t} = useTranslation();
+
     const handleChangeSlot = () => {
         onChangeSlot();
     }
     return <div>
         <TitleWrapper>
-            <ConfirmationTitle>Selected Date & Time</ConfirmationTitle>
+            <ConfirmationTitle>{t("Selected Date & Time")}</ConfirmationTitle>
             <Edit fontSize="small" onClick={handleChangeSlot} />
         </TitleWrapper>
         {moment.utc(appointment?.date).format('MMMM D, h:mm A')}

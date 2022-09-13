@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, styled} from "@material-ui/core";
 import { TActionProps } from './types';
 import {Loading} from "../../UI/Loading";
+import {useTranslation} from "react-i18next";
 
 
 const ButtonsRow = styled('div')(({theme}) => ({
@@ -23,6 +24,7 @@ const ButtonsRow = styled('div')(({theme}) => ({
     }
 }));
 export const Actions: React.FC<TActionProps> = ({onBack, onNext, nextDisabled, nextLabel, loading, prevDisabled}) => {
+    const {t} = useTranslation();
     return (
         <ButtonsRow>
             {!loading ? <>
@@ -32,14 +34,14 @@ export const Actions: React.FC<TActionProps> = ({onBack, onNext, nextDisabled, n
                     variant='outlined'
                     disabled={prevDisabled}
                     style={{backgroundColor: '#F7F8FB'}}>
-                    Back
+                    {t("Back")}
                 </Button>
                 <Button
                 disabled={nextDisabled}
                 onClick={onNext}
                 color={'primary'}
                 variant='contained'>
-            {nextLabel ?? 'Submit'}
+            {nextLabel ?? t("Submit")}
                 </Button>
             </> : <Loading />}
         </ButtonsRow>

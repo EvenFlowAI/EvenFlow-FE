@@ -3,6 +3,7 @@ import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {TComplimentary, TPackage, TService} from "../PackageSelection";
 import {IPackageOptions} from "../../../../api/types";
+import {useTranslation} from "react-i18next";
 
 type TComplimentaryProps = {
     packages: TPackage[];
@@ -16,8 +17,9 @@ type TComplimentaryProps = {
 
 const Complimentary: React.FC<TComplimentaryProps> =
     ({complimentary, packages, handleClick, setClasses, isBmWService, isRiverviewFord}) => {
+    const {t} = useTranslation();
     return <React.Fragment>
-            <div className="green subtitle">Complimentary</div>
+            <div className="green subtitle">{t("Complimentary")}</div>
         
             {packages.map(p =>
                 <div

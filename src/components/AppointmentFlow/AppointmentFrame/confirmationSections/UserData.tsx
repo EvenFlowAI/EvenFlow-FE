@@ -5,6 +5,7 @@ import {TextField} from "../../../UI/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setCustomer} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {useTranslation} from "react-i18next";
 
 const Wrapper = styled('div')({
     "& label": {
@@ -21,6 +22,7 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
     const dispatch = useDispatch();
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const customer = useSelector((state: RootState) => state.appointmentFrame.customer);
+    const {t} = useTranslation();
 
     useEffect(() => {
         if (customerLoadedData) {
@@ -40,31 +42,31 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
     }
     return (
         <Wrapper>
-            <ConfirmationTitle>Customer Information</ConfirmationTitle>
+            <ConfirmationTitle>{t("Customer Information")}</ConfirmationTitle>
             <TextField
                 onChange={handleChange}
                 value={customer?.fullName}
                 error={errors.includes('fullname')}
                 name="fullName"
                 fullWidth
-                placeholder="Type here"
-                label="Full Name:" />
+                placeholder={t("Type here")}
+                label={`${t("Full Name")}:`} />
             <TextField
                 onChange={handleChange}
                 value={customer?.phoneNumber}
                 name="phoneNumber"
                 fullWidth
                 error={errors.includes('phonenumber')}
-                placeholder="Type here"
-                label="Phone Number:" />
+                placeholder={t("Type here")}
+                label={`${t("Phone Number")}:`} />
             <TextField
                 onChange={handleChange}
                 value={customer?.email}
                 error={errors.includes('email')}
                 name="email"
                 fullWidth
-                placeholder="Type here"
-                label="Email:" />
+                placeholder={t("Type here")}
+                label={`${t("Email")}:`} />
         </Wrapper>
     );
 };

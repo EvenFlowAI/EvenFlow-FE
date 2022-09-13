@@ -16,6 +16,7 @@ import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
 import {v4 as uuidv4} from "uuid";
 import {LocalTokens} from "../../types/types";
+import {useTranslation} from "react-i18next";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
 
@@ -39,6 +40,7 @@ export const CancelAppointment = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
+    const {t} = useTranslation();
 
     useEffect(() => {
         setLoading(true);
@@ -103,36 +105,35 @@ export const CancelAppointment = () => {
     const getData = (): JSX.Element|null => {
         switch (tState) {
             case "already_canceled":
-                return <p>Your appointment is already canceled.</p>;
+                return <p>{t("appointment canceled")}.</p>;
             case "canceled":
                 return <div>
-                    <p>You've successfully canceled your appointment.</p>
-                    <p><small><em>Please do not forget to update the appointment in your calendar.</em></small></p>
+                    <p>{t("You've successfully canceled your appointment")}.</p>
+                    <p><small><em>{t("Please do not forget to update the appointment in your calendar")}.</em></small></p>
                     <p>
-                        <small>If you want to schedule a different appointment,
-                            please click the button below</small>
+                        <small>{t("Schedule different appointment")}</small>
                     </p> <br/>
                     <Button
                         onClick={handleCreateNew}
                         startIcon={<Edit />}
                         color="primary" variant="contained">
-                        Schedule appointment
+                        {t("Schedule appointment")}
                     </Button>
                 </div>;
             case "error":
                 return <NotFoundError />
             case "new":
                 return <div>
-                    <p>Please confirm you want to cancel your appointment for {getDate().format("dddd, MMM Do, h:mm a")}?</p>
+                    <p>{t("Please confirm you want to cancel your appointment for")} {getDate().format("dddd, MMM Do, h:mm a")}?</p>
                     <LoadingButton
                         onClick={handleCancel}
                         loading={saving}
                         fullWidth
                         variant="contained"
                         color="secondary">
-                        Cancel Appointment
+                        {t("Cancel Appointment")}
                     </LoadingButton>
-                    <Info>If you've changed your mind - you can close this window.</Info>
+                    <Info>{t("If you've changed your mind - you can close this window")}.</Info>
                 </div>;
             default:
                 if (loading) {

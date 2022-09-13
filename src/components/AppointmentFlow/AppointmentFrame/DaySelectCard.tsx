@@ -6,6 +6,7 @@ import {TGroupedAppointment} from "../../../utils/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
+import {useTranslation} from "react-i18next";
 
 
 type TDayCardProps = {
@@ -74,6 +75,7 @@ export const DaySelectCard: React.FC<TProps> = ({
         );
     })
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {t} = useTranslation();
 
     const getLabel = () => {
         if (isXs) {
@@ -81,18 +83,18 @@ export const DaySelectCard: React.FC<TProps> = ({
         }
         if (isCurrent) {
             if (appointment) {
-                return "Available";
+                return t("Available");
             } else {
-                return "Not Available";
+                return t("Not Available");
             }
         }
         if (appointment?.lowestPrice) {
             return `$${scProfile?.isRoundPrice ? appointment.lowestPrice : appointment.lowestPrice.toFixed(2)}`;
         }
         if (appointment) {
-            return "Available";
+            return t("Available");
         }
-        return "Not Available";
+        return t("Not Available");
     }
 
     const getFormat = () => {

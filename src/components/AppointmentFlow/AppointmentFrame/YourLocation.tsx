@@ -12,6 +12,7 @@ import {setAddress, setSideBarSteps, setZipCode} from "../../../store/reducers/a
 import {makeStyles} from "@material-ui/core/styles";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 type TOption = {
     value: string;
@@ -46,6 +47,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const {zipCode: zipCodeValue, address, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const classes = useStyles();
+    const {t} = useTranslation();
 
     useEffect(() => {
         const selectedZip = mockZip.find(item => item.value === zipCodeValue);
@@ -120,7 +122,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             addressValue: address?.label ?? '',
                             className: classes.select,
                             onChange: handleChangeAddress,
-                            placeholder: address?.label ?? 'Start To Type',
+                            placeholder: address?.label ?? t('Start To Type'),
                             isClearable: true,
                             isSearchable: true,
                             defaultInputValue: addressValue?.label || "",
@@ -136,8 +138,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     autoComplete={true}
                     getOptionLabel={(option) => option.name}
                     renderInput={autocompleteRender({
-                        label: 'Your ZIP',
-                        placeholder: isFormChecked && !zip ? `ZIP required` : `Your ZIP`,
+                        label: t('Your ZIP'),
+                        placeholder: isFormChecked && !zip ? t("ZIP required") : t("Your ZIP"),
                         error: isFormChecked && !zip,
                         required: true,
                         key: zipCodeValue || "zipcode",

@@ -9,6 +9,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {styled, Theme, Tooltip, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
 import {InfoOutlined} from "@material-ui/icons";
+import {useTranslation} from "react-i18next";
 
 type TSCProps = {
     card: IServiceCategory;
@@ -94,6 +95,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const {t} = useTranslation();
 
     const price = card.type === EServiceCategoryType.GeneralCategory ? card.price : undefined;
 
@@ -126,7 +128,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         }
         <span style={{color: active ? "#FFFFFF" : "#252733"}}>{card.name}</span>
         {!!price ? <div className="priceWrapper">
-            <span className="text">Starting At</span>
+            <span className="text">{t("Starting At")}</span>
             <span className="price">${scProfile?.isRoundPrice ? price : price.toFixed(2)}</span>
         </div> : null}
     </CardWrapper>

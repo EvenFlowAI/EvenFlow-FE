@@ -2,12 +2,15 @@ import React from 'react';
 import {BaseModal, DialogActions, DialogTitle} from "../BaseModal";
 import {LoadingButton} from "../../UI/Button";
 import {DialogProps} from "../types";
+import {useTranslation} from "react-i18next";
 
 type TAskAddServiceProps = DialogProps & {
     onSave: () => void;
 }
 
 const AskAddService = (props: TAskAddServiceProps) => {
+    const {t} = useTranslation();
+
     return (
         <BaseModal
             width={400}
@@ -15,7 +18,7 @@ const AskAddService = (props: TAskAddServiceProps) => {
             onClose={props.onClose}
         >
             <DialogTitle onClose={props.onClose}>
-                Would you like to add another service?
+                {t("Would you like to add another service?")}
             </DialogTitle>
             <DialogActions>
                 <LoadingButton
@@ -23,14 +26,14 @@ const AskAddService = (props: TAskAddServiceProps) => {
                     onClick={props.onSave}
                     color="primary"
                     variant="outlined">
-                    Yes
+                    {t("Yes")}
                 </LoadingButton>
                 <LoadingButton
                     loading={false}
                     onClick={props.onClose}
                     variant="contained"
                     color="primary">
-                    No
+                    {t("No")}
                 </LoadingButton>
             </DialogActions>
         </BaseModal>

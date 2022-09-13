@@ -10,7 +10,16 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
-import {EServiceType, EUserType, IAppointmentId, IServiceOffer, IValueService, TMaintenanceDetails, TYear} from "./types";
+import {
+    EServiceType,
+    EUserType,
+    IAppointmentId,
+    IServiceOffer,
+    IValueService,
+    TLanguage,
+    TMaintenanceDetails,
+    TYear
+} from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
@@ -58,6 +67,7 @@ export const setMobileServiceAvailability = createAction<boolean>('fAppointment/
 export const setPickUpDropOffAvailability = createAction<boolean>('fAppointment/SetPickUpDropOffAvailability');
 export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability');
 export const setWelcomeScreenView = createAction<TView>('fAppointment/SetWelcomeScreenView');
+export const switchLanguage = createAction<TLanguage>('fAppointment/ChangeLanguage');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;

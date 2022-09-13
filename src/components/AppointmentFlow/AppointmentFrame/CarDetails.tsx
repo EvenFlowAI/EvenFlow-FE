@@ -21,6 +21,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {yearOptions} from "./MaintenanceDetails";
+import {useTranslation} from "react-i18next";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -77,6 +78,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const showError = useException();
+    const {t} = useTranslation();
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -86,11 +88,11 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     }, [selectedVehicle, customerLoadedData]);
 
     const selects: TSelect[] = [
-        {label: "VIN", name: "vin", noVehicle: true, isVin: true},
-        {label: "Make", name: "make", options: 'make', noVehicle: true},
-        {label: "Year", name: "year", options: yearOptions, noVehicle: true},
-        {label: "Model", name: "model", options: "model", noVehicle: true},
-        {label: "Estimated Mileage", name: "mileage", options: mileage.map(item => item.value.toString())},
+        {label: t("VIN"), name: "vin", noVehicle: true, isVin: true},
+        {label: t("Make"), name: "make", options: 'make', noVehicle: true},
+        {label: t("Year"), name: "year", options: yearOptions, noVehicle: true},
+        {label: t("Model"), name: "model", options: "model", noVehicle: true},
+        {label: t("Estimated Mileage"), name: "mileage", options: mileage.map(item => item.value.toString())},
     ];
 
     useEffect(() => {
@@ -156,7 +158,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         if (makes.length) {
             setLoadedOptions(prevOptions => ({...prevOptions, make: makes.map(item => item.name)}));
         } else {
-            setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
+            setLoadedOptions(prevOptions => ({...prevOptions, make: [t("Other")]}));
         }
         if (selectedVehicle?.make) {
             const currentMake = makes.find(item => item.name === selectedVehicle.make);
@@ -174,8 +176,8 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         dispatch(updateVehicle({[name]: option}));
 
         if (name === 'make') {
-            if (option === 'Other') {
-                setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+            if (option === t("Other")) {
+                setLoadedOptions(prevOptions => ({...prevOptions, model: [t("Other")]}));
                 if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
             } else {
                 const currentMake = makes.find(item => item.name === option);
@@ -202,7 +204,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
         }
         if (errorsArray.length) {
             const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
-            const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
+            const message = fields.join(', ').concat(fields.length < 2 ? ` ${t("is")}` : ` ${t("are")}`).concat( ` ${t("required")}`);
             showError(message);
         }
         return !errorsArray.length;
@@ -238,7 +240,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         disabled={select.noVehicle && !isNewVehicleView}
                         autoComplete={true}
                         renderInput={autocompleteRender({
-                            label: select.label, placeholder: `Select ${select.label}`, error: hasError, required: requiredFields.includes(select.name)
+                            label: select.label, placeholder: `${t("Select")} ${select.label}`, error: hasError, required: requiredFields.includes(select.name)
                         })}
                         value={getSelectValue(select)}
                     />
@@ -256,8 +258,8 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                         fullWidth
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
                         placeholder={hasError
-                            ? `${select.label} required`
-                            : `Type ${select.label} ${select.name === 'vin' ? '(Optional)' : ''}`}
+                            ? `${select.label} ${t("required")}`
+                            : `${t("Type (enter)")} ${select.label} ${select.name === 'vin' ? `(${t("Optional")})` : ''}`}
                     />
                 </div>
             })}
