@@ -19,6 +19,7 @@ import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {EServiceCenterName} from "../../api/types";
 import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 const mh600 = "@media (max-height: 600px)";
 
@@ -90,6 +91,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const isXS = useMediaQuery(theme.breakpoints.down("sm"));
     const classes = useStyles();
     const showError = useException();
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const customerEnteredEmail = useSelector((state: RootState) => state.appointment.customerEnteredEmail);
     const sessionId = useSelector((state: RootState) => state.appointment.sessionId);
@@ -133,7 +135,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
             if (err.message) {
                 showError(err)
             } else {
-                showError("We are sorry but we could not find your vehicle in our system. Please schedule appointment as a new customer");
+                showError(t("We are sorry but we could not find your vehicle in our system. Please schedule appointment as a new customer"));
             }
             onReturn();
         } finally {
@@ -162,7 +164,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 onComplete(serviceType);
             }
         } catch {
-            showError("Invalid code");
+            showError(t("Invalid code"));
         } finally {
             setLoading(false);
         }
@@ -171,18 +173,18 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
 
     return <Paper variant="outlined" className={classes.paper}>
         {view === "search" ? <>
-            <h3 className={classes.title}>Enter your {!isRiverviewFord ? 'Email or ' : ''}Phone</h3>
+            <h3 className={classes.title}>Enter your {!isRiverviewFord ? `${t("Email")} ${t("or")} ` : ''}{t("Phone")}</h3>
             <TextField
-                placeholder="Type Here"
+                placeholder={t("Type Here")}
                 InputProps={{disableUnderline: true}}
                 variant="standard"
                 onChange={handleChange}
                 value={customerEnteredEmail}
                 fullWidth/>
         </> : <>
-            <h3 className={classes.title}>Enter security code</h3>
+            <h3 className={classes.title}>{t("Enter security code")}</h3>
             <TextField
-                placeholder="Please enter a code from an email"
+                placeholder={t("Please enter a code from an email")}
                 InputProps={{disableUnderline: true}}
                 variant="standard"
                 onChange={({target: {value}}) => setSecurityCode(value)}
@@ -196,7 +198,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                 color="primary"
                 className={classes.button}
                 onClick={onReturn}>
-                Back
+                {t("Back")}
             </Button>
             <LoadingButton
                 loading={loading}
@@ -209,7 +211,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
                     || (!customerEnteredEmail && view === "search")
                 }
                 onClick={view === "search" ? handleComplete : handleConfirm}>
-                {view === "search" ? "Search" : "Confirm"}
+                {view === "search" ? t("Search") : t("Confirm")}
             </LoadingButton>
         </div>
     </Paper>

@@ -20,6 +20,7 @@ import moment from "moment";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {loadCategoriesByQuery} from "../../store/reducers/categories/actions";
+import {useTranslation} from "react-i18next";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -39,6 +40,7 @@ export const EditAppointment = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const {id} = useParams();
+    const {t} = useTranslation();
 
     useEffect(() => {
         if (selectedSC) {
@@ -116,30 +118,28 @@ export const EditAppointment = () => {
                 return <NotFoundError />
             case "passed":
                 return <div>
-                    <p>Appointment time is already passed.</p>
+                    <p>{t("Appointment time is already passed")}.</p>
                     <p>
-                        <small>If you want to schedule a different appointment,
-                            please click the button below</small>
+                        <small>{t("Schedule different appointment")}</small>
                     </p> <br/>
                     <Button
                         onClick={handleCreateNew}
                         startIcon={<Edit />}
                         color="primary" variant="contained">
-                        Schedule appointment
+                        {t("Schedule appointment")}
                     </Button>
                 </div>
             case "canceled":
                 return <div>
-                    <p>Appointment is already cancelled.</p>
+                    <p>{t("Appointment is already cancelled")}.</p>
                     <p>
-                        <small>If you want to schedule a different appointment,
-                            please click the button below</small>
+                        <small>{t("Schedule different appointment")}</small>
                     </p> <br/>
                     <Button
                         onClick={handleCreateNew}
                         startIcon={<Edit />}
                         color="primary" variant="contained">
-                        Schedule appointment
+                        {t("Schedule appointment")}
                     </Button>
                 </div>
             case "loading":

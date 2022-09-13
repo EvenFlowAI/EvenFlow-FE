@@ -25,6 +25,7 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import {yearOptions} from "./MaintenanceDetails";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -86,6 +87,7 @@ const CartTable = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const {t} = useTranslation();
 
 
     useEffect(() => {
@@ -189,7 +191,7 @@ const CartTable = () => {
     const onClick = (item: IMaintenanceItem) => {
         askConfirm({
             isRemove: true,
-            title: 'Do you want to remove selected service?',
+            title: t("Do you want to remove selected service?"),
             onConfirm: () => deleteService(item),
             onCancel: closeConfirm,
         })
@@ -198,7 +200,7 @@ const CartTable = () => {
     return selectedServices?.length
         ? <div className={classes.wrapper}>
             <div className={classes.title}>
-                <span>Selected Services</span>
+                <span>{t("Selected Services")}</span>
                 {isSM && <IconButton onClick={() => setOpen(prev => !prev)}>
                     {isOpen ? <ExpandLess/> : <ExpandMore/>}
                 </IconButton>}

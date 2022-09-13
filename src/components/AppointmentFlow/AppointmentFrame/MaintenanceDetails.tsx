@@ -21,6 +21,7 @@ import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {useTranslation} from "react-i18next";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -65,6 +66,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const showError = useException();
     const theme = useTheme();
     const {id} = useParams();
+    const {t} = useTranslation();
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
@@ -74,11 +76,11 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     }, [selectedVehicle, customerLoadedData]);
 
     const selects: TSelect[] = [
-        {label: "VIN", name: "vin", noVehicle: true},
-        {label: "Make", name: "make", options: 'make'},
-        {label: "Year", name: "year", options: yearOptions},
-        {label: "Model", name: "model", options: "model",},
-        {label: "Estimated mileage", name:"mileage", options: mileage.map(item => item.value.toString())},
+        {label: t("VIN"), name: "vin", noVehicle: true},
+        {label: t("Make"), name: "make", options: 'make'},
+        {label: t("Year"), name: "year", options: yearOptions},
+        {label: t("Model"), name: "model", options: "model",},
+        {label: t("Estimated mileage"), name:"mileage", options: mileage.map(item => item.value.toString())},
     ];
 
     useEffect(() => {
@@ -136,7 +138,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         if (makes.length) {
             setLoadedOptions(prevOptions => ({...prevOptions, make: makes.map(item => item.name)}));
         } else {
-            setLoadedOptions(prevOptions => ({...prevOptions, make: ['Other']}));
+            setLoadedOptions(prevOptions => ({...prevOptions, make: [t('Other')]}));
         }
         if (selectedVehicle?.make) {
             const currentMake = makes.find(item => item.name === selectedVehicle.make);
@@ -160,8 +162,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             }
             setErrors(e => e.filter(err => err !== name));
             if (name === 'make') {
-                if (option === 'Other') {
-                    setLoadedOptions(prevOptions => ({...prevOptions, model: ['Other']}));
+                if (option === t('Other')) {
+                    setLoadedOptions(prevOptions => ({...prevOptions, model: [t('Other')]}));
                     if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
                 } else {
                     const currentMake = makes.find(item => item.name === option);
@@ -186,7 +188,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
                 setErrors(e => [...e, f]);
                 if (f === "mileage" && !selectedVehicle?.mileage) {
-                    errorsArray.push("estimated Mileage");
+                    errorsArray.push(t("Estimated Mileage"));
                 } else {
                     errorsArray.push(f);
                 }
@@ -195,7 +197,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
         if (errorsArray.length) {
             const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
-            const message = fields.join(', ').concat(fields.length < 2 ? ' is' : ' are').concat(' required');
+            const message = fields.join(', ').concat(fields.length < 2 ? ` ${t("is")}` : ` ${t("are")}`).concat(` ${t("required")}`);
             showError(message);
         }
         return !errorsArray.length;
@@ -235,7 +237,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         disabled={select.name !== 'mileage' && !isNewVehicleView}
                         renderInput={autocompleteRender({
                             label: select.label,
-                            placeholder: hasError ? `${select.label} required` : `Select ${select.label}`,
+                            placeholder: hasError ? `${select.label} ${t("required")}` : `${t("Select")} ${select.label}`,
                             error: hasError,
                             required: requiredFields.includes(select.name)
                         })}
@@ -258,8 +260,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                         disabled={select.name !== 'mileage' && !isNewVehicleView}
                         value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
                         placeholder={hasError
-                            ? `${select.label} required`
-                            : `Type ${select.label} ${select.name === 'vin' ? '(Optional)' : ''}`}
+                            ? `${select.label} ${t("required")}`
+                            : `${t("Type")} ${select.label} ${select.name === 'vin' ? `(${t("Optional")})` : ''}`}
                     />
                 </div>
             })}
