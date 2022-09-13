@@ -27,8 +27,8 @@ const LanguageSwitcher = () => {
                 value={language}
                 onChange={handleChangeLanguage}
             >
-                <MenuItem key="en" value="en">EN</MenuItem>
-                <MenuItem key="en" value="es">ES</MenuItem>
+                <MenuItem key="english" value="en">EN</MenuItem>
+                <MenuItem key="spanish" value="es">ES</MenuItem>
             </Select>
         </Wrapper>
     );
