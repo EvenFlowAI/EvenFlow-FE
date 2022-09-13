@@ -100,3 +100,5 @@ export interface IServiceOffer  {
     imagePath: string;
     description: string;
 }
+
+export type TLanguage = "en" | "es";
