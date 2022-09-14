@@ -98,6 +98,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const serviceCenter = useSelector((state: RootState) => state.appointment.scProfile)
     const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const isRiverviewFord = useMemo(() => serviceCenter?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [serviceCenter])
+    const isDominion = useMemo(() => serviceCenter?.serviceCenterFlag === EServiceCenterName.Dominion, [serviceCenter])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
@@ -171,9 +172,13 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
 
     }
 
+    const getDataName = (): string => {
+        return !isRiverviewFord && !isDominion ? `${t("Email")} ${t("or")} ` : ''
+    }
+
     return <Paper variant="outlined" className={classes.paper}>
         {view === "search" ? <>
-            <h3 className={classes.title}>Enter your {!isRiverviewFord ? `${t("Email")} ${t("or")} ` : ''}{t("Phone")}</h3>
+            <h3 className={classes.title}>{t("Enter your")} {getDataName()}{t("Phone")}</h3>
             <TextField
                 placeholder={t("Type Here")}
                 InputProps={{disableUnderline: true}}
