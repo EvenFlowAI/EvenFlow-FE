@@ -145,7 +145,9 @@ export const setEmplSearch = createAction<string>("SCEmployees/SetSearch");
 export const setEmplOrder = createAction<IOrder<IEmployee>>("SCEmployees/SetOrder")
 
 export const getDMSAdvisors = createAction<TDmsAdvisor[]>("SCEmployees/GetDMSAdvisors");
+export const loadingDMSAdvisors = createAction<boolean>("SCEmployees/LoadingDMSAdvisors");
 export const loadDMSAdvisors = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(loadingDMSAdvisors(true));
     Api.call(Api.endpoints.ServiceConsultants.GetDmsAdvisors, {urlParams: {id: serviceCenterId}})
         .then(result => {
             if (result?.data) {
@@ -155,6 +157,7 @@ export const loadDMSAdvisors = (serviceCenterId: number): AppThunk => dispatch =
         .catch(err => {
             console.log('get DMS Advisors', err)
         })
+        .finally(() => dispatch(loadingDMSAdvisors(false)))
 }
 
 export const loadByFilters: ActionCreator<AppThunk> = (selectedRole: string, serviceCenterId: number|null) =>

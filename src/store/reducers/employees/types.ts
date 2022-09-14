@@ -61,6 +61,7 @@ export type TChangeFilters = {type: "Employees/ChangeFilters", payload: IEmploye
 export type TChangeDPaging = TChangePagingGeneric<"Employees/ChangeDPaging">;
 export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
 export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
+export type TLoadingDMSAdvisors = { type: "SCEmployees/LoadingDMSAdvisors", payload: boolean };
 
 export type TEmployeeActions =
     | TGetDealershipEmployees
@@ -74,7 +75,8 @@ export type TEmployeeActions =
     | TChangePageData
     | TChangePaging
     | TChangeFilters
-    | TGetAll;
+    | TGetAll
+    | TLoadingDMSAdvisors;
 
 export type TDmsAdvisor = {
     id: string;
