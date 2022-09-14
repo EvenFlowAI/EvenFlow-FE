@@ -10,7 +10,12 @@ import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
 import {TAdvisorForm, TDMSConsultantChange, TSelectChange, TTechnicianForm} from "./types";
 import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
 import {IEmployee, IEmployeeForm} from "../../../store/reducers/employees/types";
-import {createEmployee, loadAll, loadDMSAdvisors, updateEmployee} from "../../../store/reducers/employees/actions";
+import {
+    createEmployee,
+    loadAll,
+    loadDMSAdvisors,
+    updateEmployee
+} from "../../../store/reducers/employees/actions";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {IUserForm, TRole} from "../../../store/reducers/users/types";
 import {createUser, updateUser} from "../../../store/reducers/users/actions";
@@ -19,12 +24,13 @@ import {Roles} from "../../../config/constants";
 import {validatePhoneNumber} from "../../../utils/utils";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
-    const [shortSC, shortLoading, savingE, savingU, DmsAdvisors] = useSelector((state: RootState) => [
+    const [shortSC, shortLoading, savingE, savingU, DmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [
         state.serviceCenters.shortSC,
         state.serviceCenters.shortLoading,
         state.employees.saving,
         state.users.saving,
-        state.scEmployees.DmsAdvisors
+        state.scEmployees.DmsAdvisors,
+        state.employees.loadingDMSAdvisors,
     ]);
     const [role, setRole] = useState<Roles>(Roles.Technician);
     const [avatar, setAvatar] = useState<File | undefined>();
@@ -65,8 +71,11 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     }, [props.open, shortSC]);
 
     useEffect(() => {
-        if (selectedSC && props.open) dispatch(loadDMSAdvisors(selectedSC.id))
-    }, [selectedSC, props.open])
+        if (selectedSC && props.open) {
+            const centerId = payload && isEdit ? payload.serviceCenterId : selectedSC.id;
+            dispatch(loadDMSAdvisors(centerId))
+        }
+    }, [selectedSC, props.open, payload, isEdit])
 
     useEffect(() => {
         setAdvisorForm(startAdvisorForm);
@@ -96,6 +105,9 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         }
     }
     const handleSelectChange = (r: Roles.Advisor | Roles.Technician): TSelectChange => (e, value) => {
+        if (typeof value !== 'string' && value?.id) {
+            dispatch(loadDMSAdvisors(value.id))
+        }
         if (r === Roles.Advisor) {
             setAdvisorForm({...advisorForm, serviceCenter: typeof value !== 'string' ? value : null});
         } else {
@@ -214,7 +226,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                     onSelectChange={handleSelectChange(Roles.Advisor)}
                     onRoleChange={handleRoleChange}
                     shortSC={shortSC}
-                    loading={shortLoading}
+                    loading={shortLoading ?? loadingDMSAdvisors}
                     onChange={handleChange(Roles.Advisor)} />
                 : <TechnicianForm
                     form={technicianForm}
