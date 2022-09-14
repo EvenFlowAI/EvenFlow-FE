@@ -4,6 +4,7 @@ import {ConfirmationTitle} from "../Title";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -28,17 +29,18 @@ const List = styled('ul')({
 
 const Address = () => {
     const {address, zipCode, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {t} = useTranslation();
     return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PikUpDropOff)
         ? <div>
             <TitleWrapper>
-                <ConfirmationTitle>Address</ConfirmationTitle>
+                <ConfirmationTitle>{t("Address")}</ConfirmationTitle>
             </TitleWrapper>
             <List>
                 <li className="service-item">
                     {address?.label || ""}
                 </li>
                 <li className="service-item">
-                    ZIP: {zipCode}
+                    {t("ZIP")}: {zipCode}
                 </li>
             </List>
         </div>

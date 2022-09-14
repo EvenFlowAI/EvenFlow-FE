@@ -26,6 +26,7 @@ import {
     setAdditionalServicesChosen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {Caption} from "../../UI/Caption";
+import {useTranslation} from "react-i18next";
 
 
 const Wrapper = styled('div')({
@@ -117,6 +118,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const isInit = useRef(true);
+    const {t} = useTranslation();
     const debouncedSearch = useDebounce(searchInput);
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
 
@@ -262,7 +264,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
         <StepWrapper>
             <Wrapper>
                 <SearchInput
-                    placeholder="Type here"
+                    placeholder={t("Type here")}
                     value={searchInput}
                     onChange={handleChange}
                     style={{flexShrink: 0}}
@@ -298,7 +300,7 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                         </CodeWrapper>
                     })}
                 </CodesWrapper>
-                <Caption title="The price for the service will be quoted at the dealership"/>
+                <Caption title={t("The price for the service will be quoted at the dealership")}/>
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
             <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} />

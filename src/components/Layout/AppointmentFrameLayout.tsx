@@ -55,6 +55,7 @@ import {EServiceCategoryType} from "../../store/reducers/categories/types";
 import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
+import {useTranslation} from "react-i18next";
 
 const Container = styled('div')({
     display: "flex",
@@ -141,6 +142,7 @@ export const AppointmentFrameLayout = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const showError = useException();
+    const {t} = useTranslation();
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const currentConfig = useMemo(() => {
@@ -428,29 +430,29 @@ export const AppointmentFrameLayout = () => {
             case "maintenanceDetails":
             case "serviceNeeds":
             case "serviceSelection":
-                return "How can we help you?";
+                return t("How can we help you?");
             case "describeMore":
-                return "Please describe what’s going on";
+                return t("Please describe what’s going on");
             case "opsCode":
-                return "What does your car need?";
+                return t("What does your car need?");
             case "packageSelection":
-                return "Please select your Maintenance Package"
+                return t("Please select your Maintenance Package")
             case "consultantSelection":
-                return "Do you have a preferred advisor?";
+                return t("Do you have a preferred advisor?");
             case "appointmentTiming":
-                return "When would you like your vehicle serviced?";
+                return t("When would you like your vehicle serviced?");
             case "appointmentSelection":
-                return "Select Appointment date & time"
+                return t("Select Appointment date & time")
             case "transportationNeeds":
-                return "Will you be waiting at the dealership?";
+                return t("Will you be waiting at the dealership?");
             case "appointmentConfirmation":
-                return "Appointment Confirmation";
+                return t("Appointment Confirmation Title");
             case "carDetails":
-                return "Please tell us about your vehicle";
+                return t("Please tell us about your vehicle");
             case "location":
-                return "Where are you located?";
+                return t("Where are you located?");
             case "payment":
-                return "Please Enter Your Payment Information";
+                return t("Please Enter Your Payment Information");
             default:
                 return null;
         }
@@ -463,9 +465,12 @@ export const AppointmentFrameLayout = () => {
                 {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
                 {isXs && currentScreen === 'packageSelection'
-                    ? <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 0}}>Please click on the maintenance package for your vehicle</p> : null}
+                    ? <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 0}}>
+                        {t("Please click on the maintenance package for your vehicle")}
+                    </p>
+                    : null}
                 {currentScreen === 'maintenanceDetails'
-                    ? <Subtitle>Please provide the maintenance details for your vehicle</Subtitle> : null}
+                    ? <Subtitle>{t("Please provide the maintenance details for your vehicle")}</Subtitle> : null}
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? component
                     : !isSm ? <SidebarWrapper>

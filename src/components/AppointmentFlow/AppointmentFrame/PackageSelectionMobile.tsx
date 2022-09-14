@@ -8,6 +8,7 @@ import {setPackage} from "../../../store/reducers/appointmentFrameReducer/action
 import {useDispatch, useSelector} from "react-redux";
 import {TExtendedComplimentary} from "../../../api/types";
 import {RootState} from "../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
 
 const style = withStyles(() => ({
     root: {
@@ -224,6 +225,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const classes = useStyles();
+    const {t} = useTranslation();
 
     useEffect(() => {
         if (selectedPackage) {
@@ -275,15 +277,17 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                 ))}
                             </div>
 
-                            { (isBmWService || isSanfordInfinity) && <div className={classes.totalMaintenance}>
+                            { (isBmWService || isSanfordInfinity)
+                            && <div className={classes.totalMaintenance}>
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
-                                  Total Maintenance Value:
+                                  {t("Total Maintenance Value)")}:
                                 </span>
                                 <span style={{ fontSize: 20 }}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
-                            </div>
-                            }
+                            </div>}
 
-                            <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>Complimentary</div>
+                            <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
+                                {t("Complimentary")}
+                            </div>
 
                             <div className={classes.complimentaryServices}>
                                 {item.complimentaryServices.map(item => (
@@ -293,7 +297,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
 
                             <div className={classes.complimentaryTotal}>
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
-                                    Total Complimentary Value:
+                                    {t("Total Complimentary Value")}:
                                 </span>
                                 {isBmWService || isSanfordInfinity
                                     ? <span style={{ fontSize: 20 }}>

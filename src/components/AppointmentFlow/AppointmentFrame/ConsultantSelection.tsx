@@ -19,6 +19,7 @@ import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
 import {selectAppointment, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {useTranslation} from "react-i18next";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -80,6 +81,7 @@ type TCardProps = {
 }
 
 const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
+    const {t} = useTranslation();
     return <ConsultantWrapper onClick={onClick} active={active}>
         {blank
             ? <div className={"icon-wrapper"}><AnyConsultantIcon /></div>
@@ -88,7 +90,7 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
                 : <ConsultantIcon/>
         }
         <div>
-            {blank ? "Any available advisor" : advisor?.name ?? "-"}
+            {blank ? t("Any available advisor") : advisor?.name ?? "-"}
         </div>
     </ConsultantWrapper>
 }

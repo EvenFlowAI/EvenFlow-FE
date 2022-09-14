@@ -12,6 +12,7 @@ import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
 import {loadHorsOfOperations, loadRange} from "../../../store/reducers/slotScoring/actions";
 import {loadSlotsGap} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useTranslation} from "react-i18next";
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -60,6 +61,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
     const {slotRange} = useSelector((state : RootState) => state.slotScoring);
     const dispatch = useDispatch();
     const classes = useStyles();
+    const {t} = useTranslation();
 
         useEffect(() => {
             if (scProfile) {
@@ -97,7 +99,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
 
     return (
         <div className={classes.wrapper}>
-            <h4>Select Time</h4>
+            <h4>{t("Select Time")}</h4>
             {!loading
                 ? <TimeSlotsWrapper>
                     {slots.map(timeSlot => {

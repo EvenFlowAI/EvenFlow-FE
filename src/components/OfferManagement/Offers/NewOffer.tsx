@@ -36,7 +36,8 @@ const clearForm: TOfferForm = {
     customerPresence: ECustomerPresence.Both,
     dayOfWeek: [dayOfWeek[0]],
     timeOfDayFrom: moment("00:00:00", "hh:mm:ss"),
-    timeOfDayTo: moment("23:59:59", "hh:mm:ss")
+    timeOfDayTo: moment("23:59:59", "hh:mm:ss"),
+    isProductPageOn: false,
 }
 export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAction, archive, payload, ...props}) => {
     const [form, setForm] = useState<TOfferForm>(clearForm);

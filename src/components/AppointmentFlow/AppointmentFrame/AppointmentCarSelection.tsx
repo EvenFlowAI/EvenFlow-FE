@@ -11,6 +11,7 @@ import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
 import {setMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useTranslation} from "react-i18next";
 
 const CarsWrapper = styled('div')({
     display: "flex",
@@ -59,6 +60,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     const vehiclesPerScreen = useMemo(() => {
         return isXs ? 1 : 2;
@@ -100,7 +102,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
 
     return (
         <StepWrapper>
-            <Title>Which vehicle are you coming in for?</Title>
+            <Title>{t("Which vehicle are you coming in for?")}</Title>
             <CarsWrapper>
                 {customerLoadedData?.vehicles.length ?
                     <>
@@ -119,11 +121,11 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                         <Arrow onClick={next} disabled={nextDisabled()}>
                             <ChevronRight />
                         </Arrow>
-                    </> : <p>No vehicles present</p>
+                    </> : <p>{t("No vehicles present")}</p>
                 }
             </CarsWrapper>
             <Info>
-                Click here to <span onClick={onAddNew}>add new vehicle</span>
+                {t("Click here to")} <span onClick={onAddNew}>{t("add new vehicle")}</span>
             </Info>
             <Actions
                 onBack={onBack}

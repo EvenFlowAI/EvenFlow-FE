@@ -38,7 +38,7 @@ import {
     setSideBarSteps,
     setMobileServiceAvailability,
     setPickUpDropOffAvailability,
-    setValueServiceAvailability, setWelcomeScreenView,
+    setValueServiceAvailability, setWelcomeScreenView, switchLanguage,
 } from "./actions";
 import {
     ICustomer,
@@ -50,7 +50,7 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {IServiceOffer, IValueService, TMaintenanceDetails, TYear, EServiceType, EUserType} from "./types";
+import {IServiceOffer, IValueService, TMaintenanceDetails, TYear, EServiceType, EUserType, TLanguage} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 import {TView} from "../../../components/Welcome/types";
 
@@ -94,6 +94,7 @@ type TState = {
     isValueServiceOn: boolean;
     sideBarSteps: TScreen[];
     welcomeScreenView: TView;
+    language: TLanguage;
 }
 const initialState: TState = {
     service: null,
@@ -137,6 +138,7 @@ const initialState: TState = {
     isValueServiceOn: false,
     sideBarSteps: [],
     welcomeScreenView: "select",
+    language: "en",
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -283,5 +285,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setWelcomeScreenView, (state, {payload}) => {
         return {...state, welcomeScreenView: payload}
+    })
+    .addCase(switchLanguage, (state, {payload}) => {
+        return {...state, language: payload}
     })
 )

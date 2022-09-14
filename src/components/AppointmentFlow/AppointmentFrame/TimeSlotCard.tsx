@@ -4,6 +4,7 @@ import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
 import {TSlot} from "./AppointmentTimeSelector";
+import {useTranslation} from "react-i18next";
 
 type TSlotsWrapperProps = {
     available?: boolean,
@@ -46,6 +47,7 @@ type TProps = {
 export const TimeSlotCard: React.FC<TProps> =
     ({timeSlot, slot, onSelect, selected, date}) => {
         const [timePassed, setTimePassed] = useState<boolean>(false);
+        const {t} = useTranslation();
 
         useEffect(() => {
             if (slot?.date && moment(slot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
@@ -62,12 +64,12 @@ export const TimeSlotCard: React.FC<TProps> =
 
         const getContent = (timePassed: boolean): string => {
             if (!slot || timePassed) {
-                return "Not Available";
+                return t("Not Available");
             }
             if (slot.price.amountOfSavingMoney) {
-                return `Save $${slot.price.amountOfSavingMoney}`;
+                return `${t("Save")} $${slot.price.amountOfSavingMoney}`;
             }
-            return "Available";
+            return t("Available");
         }
 
         const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);

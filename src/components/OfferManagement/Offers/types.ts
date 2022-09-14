@@ -23,6 +23,7 @@ export type TOfferForm = {
     durationFrom?: moment.Moment;
     durationTo?: moment.Moment;
     serviceType?: string;
+    isProductPageOn?: boolean;
 }
 export const selectAllSR: IAssignedServiceRequestShort = {
     id: 0,

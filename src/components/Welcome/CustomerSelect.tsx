@@ -6,7 +6,6 @@ import {setUserType, setVehicle, setWelcomeScreenView} from "../../store/reducer
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
-import {TView} from "./types";
 import {RootState} from "../../store/rootReducer";
 import {
     getBlankCustomer,
@@ -18,6 +17,7 @@ import ReactGA from "react-ga";
 import {TextField} from "../UI/EndUserInputs";
 import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
+import {useTranslation} from "react-i18next";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -106,8 +106,10 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading}) => {
     const {isMobileServiceOn, serviceType, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
+    const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
     const classes = useStyles();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const uid = uuidv4();
@@ -158,10 +160,10 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading}) => {
                  spacing={4}>
         <Grid item xs={12} sm={12} md={6}>
             <div className={classes.existing}>
-                <span>I`m a returning customer</span>
+                <span>{t("I`m a returning customer")}</span>
                 <TextField
                     style={{ marginTop: 20, marginBottom: 20 }}
-                    placeholder={`Enter your ${!isRiverviewFord ? 'Email or ' : ''}Phone`}
+                    placeholder={`${t("Enter your")} ${!isRiverviewFord && !isDominion ? t("Email or ") : ''}${t("Phone")}`}
                     InputProps={{disableUnderline: true}}
                     variant="standard"
                     onChange={handleChange}
@@ -174,19 +176,21 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading}) => {
                     className={classes.loadingButton}
                     disabled={loading || !customerEnteredEmail}
                     onClick={handleComplete}>
-                    Search
+                    {t("Search")}
                 </LoadingButton>
             </div>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
             <div className={classes.button}>
-                <span>I`m a new customer</span>
+                <span>{t("I`m a new customer")}</span>
                 <Button
                     variant="contained"
                     color="primary"
                     className={classes.loadingButton}
                     onClick={handleNew}
-                >Submit</Button>
+                >
+                    {t("Submit")}
+                </Button>
             </div>
         </Grid>
     </Grid>

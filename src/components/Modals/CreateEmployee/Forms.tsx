@@ -128,6 +128,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 onChange={props.onDMSConsultantChange}
                 getOptionLabel={i => i.name}
                 getOptionSelected={(o, s) => o.id === s.id}
+                disabled={props.loading}
                 loading={props.loading}
                 value={props.form?.dmsId ? props.dmsConsultants.find(item => item.id.toString() === props.form.dmsId) : null}
                 renderInput={autocompleteRender({label: "Assign Advisor from DMS", fullWidth: true, placeholder: "Select Advisor"})}

@@ -5,6 +5,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {IServiceOffer} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {loadServiceOffers, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../UI/Loading";
+import {useTranslation} from "react-i18next";
 
 export const PageWrapper = styled('div')(({theme}) => ({
     // maxWidth: '80vw',
@@ -114,6 +115,7 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
     const {valueService, serviceOffers, offersLoading} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     useEffect(() => {
         const year = valueService?.year?.year;
@@ -130,8 +132,8 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
     return (
         <PageWrapper>
             <CarName>{valueService?.year?.year} {valueService?.series?.name} {valueService?.model?.name}</CarName>
-            <ChangeButton onClick={onBack} variant="text">Change Vehicle</ChangeButton>
-            <SubTitle>Select Service</SubTitle>
+            <ChangeButton onClick={onBack} variant="text">{t("Change Vehicle")}</ChangeButton>
+            <SubTitle>{t("Select Service")}</SubTitle>
             <Container>
                 {offersLoading
                     ? <Loading/>
@@ -140,7 +142,7 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
                         <Title>{service.name}</Title>
                         <div  className="image" style={{backgroundImage: `url(${service.imagePath})`}}/>
                         <div className="buttonsWrapper">
-                            <SelectButton onClick={onSelectClick(service)}>Select</SelectButton>
+                            <SelectButton onClick={onSelectClick(service)}>{t("Select")}</SelectButton>
                             <Price>$ {service.price}</Price>
                         </div>
                     </CardWrapper>
