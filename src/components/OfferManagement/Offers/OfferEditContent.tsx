@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {TextField} from "../../UI/TextField";
-import {FormControlLabel, MenuItem, Radio, RadioGroup, Select} from "@material-ui/core";
+import {FormControlLabel, MenuItem, Radio, RadioGroup, Select, Switch} from "@material-ui/core";
 import {
     customerPresence,
     customerSegments,
@@ -53,6 +53,10 @@ const useStyles = makeStyles(theme => ({
             visibility: "hidden",
             height: theme.spacing(1)
         }
+    },
+    text: {
+        textTransform: "uppercase",
+        fontWeight: "bold",
     }
 }));
 
@@ -78,7 +82,7 @@ export const OfferEditContent: React.FC<TProps> = ({
     onRadio,
     onChangeDateTime,
     onDOWSelect,
-    // onValueChange,
+    onValueChange,
     onSegmentSelect,
     onSRChange,
 }) => {
@@ -103,6 +107,10 @@ export const OfferEditContent: React.FC<TProps> = ({
     //     }
     //     onValueChange("serviceType", values);
     // }
+
+    const handleSwitch = (e: any, value: boolean) => {
+        onValueChange('isProductPageOn', value);
+    }
 
     const classes = useStyles();
     return <DialogContent>
@@ -327,6 +335,14 @@ export const OfferEditContent: React.FC<TProps> = ({
                     value={form.durationTo||null}
                     onChange={onChangeDateTime("durationTo")} />
             </div>
+        </div>
+        <div className={classes.rowContainer}>
+            <p className={classes.text}>Product Page For Service Special</p>
+            <Switch
+                onChange={handleSwitch}
+                checked={form.isProductPageOn}
+                color="primary"
+            />
         </div>
     </DialogContent>
 };
