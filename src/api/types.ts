@@ -35,7 +35,8 @@ export enum EServiceCenterName {
     RiverviewFord,
     BMWSchererville,
     DealertrackTest,
-    SanfordInfinity
+    SanfordInfinity,
+    Dominion
 }
 
 export enum EVehiclePropType {
