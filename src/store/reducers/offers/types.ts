@@ -1,6 +1,7 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TEnumKeyLabel, TEnumMap} from "../utils";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
+import {ICategory} from "../categories/types";
 
 export enum EOfferType {
     AmountOff, PercentOff, FreeService
@@ -103,6 +104,7 @@ export interface IOffer {
     isAllServiceRequestsIncluded: boolean;
     serviceCenterId: number;
     serviceRequests: IAssignedServiceRequestShort[];
+    serviceCategories: ICategory[];
 }
 
 export interface IOfferForm {

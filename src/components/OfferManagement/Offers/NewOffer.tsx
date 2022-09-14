@@ -26,12 +26,15 @@ import {ViewOfferContent} from "./ViewOfferContent";
 import {OfferEditContent} from "./OfferEditContent";
 import {selectAllSR, TOfferForm} from "./types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
+import {ICategory} from "../../../store/reducers/categories/types";
+import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 
 const clearForm: TOfferForm = {
     offerValue: undefined,
     offerTitle: undefined,
     offerType: EOfferType.AmountOff,
     serviceRequests: [selectAllSR],
+    serviceCategories: [],
     customerSegments: [customerSegments[0]],
     customerPresence: ECustomerPresence.Both,
     dayOfWeek: [dayOfWeek[0]],
@@ -84,6 +87,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     timeOfDayFrom: moment(payload.timeOfDay.start, timeSpanString),
                     timeOfDayTo: moment(payload.timeOfDay.end, timeSpanString),
                     serviceType: payload.serviceType?.name,
+                    serviceCategories: payload.serviceCategories,
                 })
             } else {
                 setForm(clearForm);
@@ -94,6 +98,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadSCRequestsShort(selectedSC.id, EPricingDisplayType.Dynamic));
+            dispatch(loadCategoriesByQuery(selectedSC.id));
         }
     }, [dispatch, selectedSC]);
 
@@ -181,6 +186,10 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         }
     }
 
+    const onCategoryChange = (e: any, value: ICategory[]) => {
+        setForm(prev => ({...prev, serviceCategories: value}))
+    }
+
     const handleSelect = ({target: {name, value}}: React.ChangeEvent<{name?: string, value: unknown}>) => {
         if (name) {
             setForm({...form, [name]: value});
@@ -252,6 +261,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     onDOWSelect={handleDOWSelect}
                     onSegmentSelect={handleSegmentsSelect}
                     onSRChange={handleSRChange}
+                    onCategoryChange={onCategoryChange}
                 />}
             <DialogActions>
                 <Button onClick={props.onClose}>Cancel</Button>
