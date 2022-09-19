@@ -109,7 +109,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         <StepWrapper>
             <SelectWrapper>
                 <div>
-                    <p className="label">Your Address</p>
+                    <p className="label">{t("Your Address")}</p>
                     <GooglePlacesAutocomplete
                         apiKey="AIzaSyCTy-LeuU4m1uoh1nhbUVZBC2G4HDUQQ04"
                         apiOptions={{ language: 'en', region: 'us' }}
