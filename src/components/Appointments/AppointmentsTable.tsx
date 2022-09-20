@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {Table} from "../UI/Table";
-import {AppointmentStatus, appointmentStatuses, IAppointmentByQuery} from "../../api/types";
+import {AppointmentStatus, appointmentStatuses, IAppointmentByQuery, jobTypes} from "../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
 import moment from "moment";
@@ -19,7 +19,8 @@ const cols: TableRowDataType<IAppointmentByQuery>[] = [
     {header: "Time", val: el => moment(el.timeSlot, timeSpanString).format(timeString)},
     {header: "Full Name", val: el => el.driver.fullName, orderId: "fullName"},
     {header: "Car Info", val: el => `${el.vehicle.make} ${el.vehicle.model} ${el.vehicle.year}`},
-    {header: "Status", val: el => appointmentStatuses[el.appointmentStatus], orderId: "appointmentStatus"}
+    {header: "Status", val: el => appointmentStatuses[el.appointmentStatus], orderId: "appointmentStatus"},
+    {header: "Job Type", val: el => el.jobType ? jobTypes[el.jobType] : ""},
 ]
 
 type TAppointmentsTable = {

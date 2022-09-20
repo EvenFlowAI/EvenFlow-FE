@@ -48,6 +48,8 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
+    "slate": "^0.82.1",
+    "slate-react": "^0.82.2",
     "typescript": "~3.7.2",
     "url-safe-base64": "^1.1.1",
     "uuid": "^8.3.0"

@@ -239,7 +239,14 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceRequestIds: selectedSR.map(sr => sr.id),
                     maintenancePackageOptionId: selectedPackageOption?.id ?? null,
                     serviceCategoryIds: selectedCategories.map(item => item.id),
-                    serviceCenterId: selectedSC.id
+                    serviceCenterId: selectedSC.id,
+                    vehicle: {
+                        make: form.vehicleMake,
+                        model: form.vehicleModel,
+                        year: +form.vehicleYear,
+                        mileage: +form.vehicleMileage,
+                        vin: form.vehicleVin,
+                    }
                 })
                 .then(({data: {items}}) => {
                     if (waiting) {
@@ -273,7 +280,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         return () => {
             waiting = false;
         };
-    }, [selectedSC, props.open, filterDate, selectedSR, showError, preloadedSlot, selectedPackageOption, selectedCategories]);
+    }, [form, selectedSC, props.open, filterDate, selectedSR, showError,
+        preloadedSlot, selectedPackageOption, selectedCategories]);
 
     useEffect(() => {
         if (preloadedSlot && initialRef.current) {
