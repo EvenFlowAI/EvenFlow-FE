@@ -59,16 +59,16 @@ export const Welcome = () => {
         clearStorage();
     }, []);
     useEffect(() => {
-        if (!id || !decodeSCID(id)) {
+        if ((!id || !decodeSCID(id) && !scProfile?.id)) {
             window.location.href = "/";
         }
-    }, [id]);
+    }, [id, scProfile]);
 
     const redirect = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
-        history.push(
-            route.replace(":id", scProfile?.id ? encodeSCID(scProfile.id) : "0")
-        );
+        if (scProfile?.id) {
+            history.push(route.replace(":id", encodeSCID(scProfile.id)));
+        }
     }
 
     const handleConfig = (serviceType: EServiceType) => {
