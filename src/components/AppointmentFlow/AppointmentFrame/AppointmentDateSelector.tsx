@@ -5,6 +5,7 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {DaySelector} from "./DaySelector";
 import {TGroupedAppointments} from "../../../utils/types";
+import {useTranslation} from "react-i18next";
 
 
 const MonthSelectorWrapper = styled('div')({
@@ -64,10 +65,11 @@ export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDate
     dateRangeUpdated, onDateRangeSet}) => {
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("sm"));
+    const {t} = useTranslation();
 
     return (
         <div>
-            {!isXs && <h4>Select Date</h4>}
+            {!isXs && <h4>{t("Select Date")}</h4>}
             {!dateChangeDisabled ? <MonthSelector
                 date={date}
                 loading={loading}

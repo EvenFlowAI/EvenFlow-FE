@@ -1,5 +1,6 @@
 import React from 'react';
 import {styled} from "@material-ui/core";
+import {useTranslation} from "react-i18next";
 
 
 const Wrapper = styled('div')({
@@ -20,11 +21,12 @@ const Title = styled('h1')(({theme}) => ({
     }
 }));
 export const FrameWelcomeLayout: React.FC<{}> = ({children}) => {
+    const {t} = useTranslation();
     return (
         <Wrapper>
             <div>
-                <Title>Welcome!</Title>
-                <Title>Schedule your service:</Title>
+                <Title>{t("Welcome")!}</Title>
+                <Title>{t("Schedule your service")}:</Title>
             </div>
             <div>{children}</div>
         </Wrapper>

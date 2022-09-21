@@ -135,6 +135,7 @@ type TApiRoute = {
 
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
+    AncillaryPricing: Record<"GetZones" | "UpdateZone" | "GetDistances" | "UpdateDistance" | "CreateDistance" | "DeleteDistance", TApiRoute>,
     Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey", TApiRoute>,
     AppointmentAllocation: Record<"SetTimeWindows" | "GetTimeWindows"
         | "CreateDemandSegment" | "GetDemandSegments"
@@ -171,7 +172,8 @@ type ApiRoutes = {
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
-        | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate" | "UpdatePackageDisclaimer", TApiRoute>,
+        | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
+        | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -208,6 +210,14 @@ export class Api {
             Verification: {route: "/accounts/verification", method: "patch"},
             Profile: {route: "/accounts/profile", method: "get"},
             Dealership: {route: "/accounts/dealership", method: "get"},
+        },
+        AncillaryPricing: {
+          GetZones: {route: "/ancillary-price/geographic-zone/by-query", method: "post"},
+          UpdateZone: {route: "/ancillary-price/geographic-zone/{id}", method: "put"},
+          GetDistances: {route: "/ancillary-price/distance/by-query", method: "post"},
+          CreateDistance: {route: "/ancillary-price/distance", method: "post"},
+          UpdateDistance: {route: "/ancillary-price/distance/{id}", method: "put"},
+          DeleteDistance: {route: "/ancillary-price/distance/{id}", method: "delete"},
         },
         Appointments: {
             Create: {route: "/appointments", method: "post"},
@@ -394,6 +404,8 @@ export class Api {
             GetLaborRate: {route: "/service-center-settings/{id}/labor-rates", method: "get"},
             UpdateLaborRate: {route: "/service-center-settings/{id}/labor-rates", method: "put"},
             UpdatePackageDisclaimer: {route: "/service-centers/{id}/set-package-disclaimer", method: "patch"},
+            GetAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "post"},
+            UpdateAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "put"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

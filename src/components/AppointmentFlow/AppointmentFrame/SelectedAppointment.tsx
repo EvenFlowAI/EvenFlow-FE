@@ -10,6 +10,7 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
+import {useTranslation} from "react-i18next";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -157,6 +158,7 @@ export const SelectedAppointment = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const theme = useTheme();
+    const {t} = useTranslation();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -182,17 +184,17 @@ export const SelectedAppointment = () => {
     const getServiceName = () => {
         switch (serviceType) {
             case EServiceType.MobileService:
-                return "Mobile Service";
+                return t("Mobile Service");
             case EServiceType.PikUpDropOff:
-                return "Pick Up / Drop Off";
+                return t("Pick Up / Drop Off");
             default:
-                return "Visit Center";
+                return t("Visit Center");
         }
     }
 
     return (
         <div>
-            {!isSm && <h4>Your selections</h4>}
+            {!isSm && <h4>{t("Your selections")}</h4>}
             <Wrapper>
                 <List>
                     <li className={"service-item"} key="service-item">
@@ -207,14 +209,14 @@ export const SelectedAppointment = () => {
                     <li key="advisor">
                         {isMobileServiceOn || isPickUpDropOffServiceOn
                             ? <div className="service-list" style={{marginBottom: 10}}>
-                                <div>LOCATION OF SERVICE: {getServiceName()}</div>
+                                <div>{t("LOCATION OF SERVICE")}: {getServiceName()}</div>
                             </div>
                             : null
                         }
                         {currentConfig?.advisorSelection
                             ? <div className={classes.selectWrapper}>
                                 <div className={classes.selectWrapper}>
-                                    Advisor: {isSm ? <br/> : null}
+                                    {t("Advisor")}: {isSm ? <br/> : null}
                                     <Select
                                         value={advisor?.id || "Any"}
                                         className={classes.select}
@@ -222,14 +224,14 @@ export const SelectedAppointment = () => {
                                         onChange={handleConsultantChange}>
                                         {consultants
                                             .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
-                                            .concat([<MenuItem value="Any" key="any">Any Available</MenuItem>])}
+                                            .concat([<MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>])}
                                     </Select>
                                 </div>
                             </div>
                             : null}
                         {serviceType !== EServiceType.VisitCenter && address
                             ? <div className="service-list">
-                                <h4> YOUR ADDRESS: </h4>
+                                <h4> {t("YOUR ADDRESS")}: </h4>
                                 <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
                             </div>
                             : null}
@@ -242,7 +244,7 @@ export const SelectedAppointment = () => {
                 <PriceWrapper>
                     {appointment && !isSm
                         ? <DateWrapper>
-                            Date & Time: <br /> {appointment.date.format('MMMM D, h:mm A')}
+                            {t("Date & Time")}: <br /> {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper>
                         : null}
                     <>
@@ -251,7 +253,7 @@ export const SelectedAppointment = () => {
                         </div>}
                         {isDynamicPricing && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
-                                Save by booking at off peak times!
+                                {t("Save by booking at off peak times!")}
                             </div>
                         )}
                     </>

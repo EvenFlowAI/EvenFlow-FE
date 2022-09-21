@@ -3,10 +3,12 @@ import {
     setCurrentZone,
     setLoading,
     setMobileServicePrisingByDistance,
-    setMobileServicePrisingByZones, setMobileServicePrisingOption, setPricingOptionLoading,
+    setMobileServicePrisingByZones,
+    setMobileServicePrisingOption,
+    setPricingOptionLoading,
     setZones
 } from "./actions";
-import {TZone} from "./types";
+import {EAncillaryPriceType, TZone} from "./types";
 import {IDistancePriceSettings, IZonePriceSettings} from "../serviceValet/types";
 
 type TState = {
@@ -16,7 +18,7 @@ type TState = {
     pricingByZones: IZonePriceSettings[];
     pricingByDistance: IDistancePriceSettings[];
     isPricingByZoneLoading: boolean;
-    pricingCountByZone: boolean;
+    ancillaryPriceType: EAncillaryPriceType;
 }
 
 const initialState: TState = {
@@ -26,7 +28,7 @@ const initialState: TState = {
     pricingByZones: [],
     pricingByDistance: [],
     isPricingByZoneLoading: false,
-    pricingCountByZone: true,
+    ancillaryPriceType: EAncillaryPriceType.Zone,
 }
 
 export const mobileServiceReducer = createReducer<TState>(initialState, builder => builder
@@ -46,7 +48,7 @@ export const mobileServiceReducer = createReducer<TState>(initialState, builder 
         return {...state, pricingByDistance: payload}
     })
     .addCase(setMobileServicePrisingOption, (state, {payload}) => {
-        return {...state, pricingCountByZone: payload}
+        return {...state, ancillaryPriceType: payload}
     })
     .addCase(setPricingOptionLoading, (state, {payload}) => {
         return {...state, isPricingByZoneLoading: payload}

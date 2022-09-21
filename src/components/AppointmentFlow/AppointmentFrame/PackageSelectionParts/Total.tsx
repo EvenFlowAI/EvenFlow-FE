@@ -3,6 +3,7 @@ import {TPackage} from "../PackageSelection";
 import {IPackageOptions} from "../../../../api/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
 
 type TTotalProps = {
     packages: TPackage[];
@@ -14,9 +15,11 @@ type TTotalProps = {
 
 const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isSanfordInfinity, setClasses }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {t} = useTranslation();
+
     return <React.Fragment>
         <div className="total end" style={isBmWService ? {fontSize: 16} : {}}>
-            Total <span className="info" >(excluding taxes)</span>
+            Total <span className="info" >({t("excluding taxes")})</span>
         </div>
 
         {packages.map(p => {

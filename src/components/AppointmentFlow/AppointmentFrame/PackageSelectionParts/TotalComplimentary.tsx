@@ -3,6 +3,7 @@ import {TPackage} from "../PackageSelection";
 import {IPackageOptions} from "../../../../api/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
 
 type TTotalComplimentaryProps = {
     packages: TPackage[];
@@ -14,9 +15,12 @@ type TTotalComplimentaryProps = {
 
 const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, isSanfordInfinity, packages, handleClick, setClasses}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {t} = useTranslation();
 
     return <React.Fragment>
-        <div className="totalComplimentary last" style={isBmWService ? {fontSize: 16} : {}}>Total Complimentary Value</div>
+        <div className="totalComplimentary last" style={isBmWService ? {fontSize: 16} : {}}>
+            {t("Total Complimentary Value")}
+        </div>
         {isBmWService|| isSanfordInfinity
             ? packages.map(p => {
                 return <div

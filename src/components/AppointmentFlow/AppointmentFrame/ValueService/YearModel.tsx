@@ -12,6 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {TModel, TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useException} from "../../../../utils/hooks";
 import {Loading} from "../../../UI/Loading";
+import {useTranslation} from "react-i18next";
 
 const SelectsTitle = styled('div')(() => ({
     width: "100%",
@@ -65,6 +66,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const yearOptions = useMemo(() => seriesModels.map(item => item.year.toString()), [seriesModels]);
     const isError = useMemo(() => Boolean(selectedVehicle && selectedVehicle?.make === "Other"), [selectedVehicle]);
     const showError = useException();
+    const {t} = useTranslation();
 
     useEffect(() => {
         scProfile && dispatch(loadSeriesModels(scProfile.id));
@@ -100,7 +102,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
 
     useEffect(() => {
         if (isError) {
-            showError('Sorry, but only BMW models are eligible for Value Service')
+            showError(t("Sorry, but only BMW models are eligible for Value Service"))
         }
     }, [isError, showError])
 
@@ -137,7 +139,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
 
     return (<StepWrapper>
         <ScreenWrapper>
-        <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
+        <SelectsTitle>{t("SELECT YOUR VEHICLE")}</SelectsTitle>
         <SelectWrapper>
             {seriesModels?.length > 0
                 ? <Autocomplete
@@ -149,8 +151,8 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 className={classes.input}
                 disableClearable
                 renderInput={autocompleteRender({
-                    label: "Year",
-                    placeholder: "Select Year",
+                    label: t("Year"),
+                    placeholder: t("Select Year"),
                     required: true
                 })}
                 value={valueService?.year?.year.toString() ?? ""}
@@ -169,8 +171,8 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 autoComplete={true}
                 className={classes.input}
                 renderInput={autocompleteRender({
-                    label: "Series",
-                    placeholder: "Select Series",
+                    label: t("Series"),
+                    placeholder: t("Select Series"),
                     required: true
                 })}
                 value={valueService.series}
@@ -189,8 +191,8 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 autoComplete={true}
                 className={classes.input}
                 renderInput={autocompleteRender({
-                    label: "Model",
-                    placeholder: "Select Model",
+                    label: t("Model"),
+                    placeholder: t("Select Model"),
                     required: true
                 })}
                 value={valueService.model || undefined}
@@ -200,7 +202,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         <Actions
             onBack={handleBack}
             onNext={handleNext}
-            nextLabel="View Price"
+            nextLabel={t("View Price")}
             nextDisabled={!valueService?.year || !valueService?.series || !valueService?.model || isError}
         />
         </ScreenWrapper>

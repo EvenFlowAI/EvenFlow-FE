@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setReminders} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {EReminderType} from "../../../../store/reducers/appointment/types";
+import {useTranslation} from "react-i18next";
 
 
 const FlexGroup = styled(FormGroup)({
@@ -19,6 +20,7 @@ const FlexGroup = styled(FormGroup)({
 export const Reminders = () => {
     const {reminders}= useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     const handleChange = (t: EReminderType) => () => {
         if (reminders.includes(t)) {
@@ -29,17 +31,17 @@ export const Reminders = () => {
     }
     return (
         <div>
-            <ConfirmationTitle>Reminders</ConfirmationTitle>
+            <ConfirmationTitle>{t("Reminders")}</ConfirmationTitle>
             <FlexGroup>
                 <FormControlLabel
-                    label="Text"
+                    label={t("Text")}
                     control={<Checkbox
                         checked={reminders.includes(EReminderType.Sms)}
                         onChange={handleChange(EReminderType.Sms)}
                         color="primary" />}
                 />
                 <FormControlLabel
-                    label="E-mail"
+                    label={t("E-mail")}
                     control={<Checkbox
                         checked={reminders.includes(EReminderType.Email)}
                         onChange={handleChange(EReminderType.Email)}

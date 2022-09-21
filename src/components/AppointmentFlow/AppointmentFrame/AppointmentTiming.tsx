@@ -23,6 +23,7 @@ import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Loading} from "../../UI/Loading";
+import {useTranslation} from "react-i18next";
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
     display: "grid",
@@ -136,6 +137,7 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
                                               onChangeTime, selectedTime, isLoading}) => {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const {t} = useTranslation();
     const {appointmentSlots} = useSelector((state: RootState) => state.appointment)
     const shouldDisableDate = (date: moment.Moment|null) => !appointmentSlots.find(item => moment(item.date).format("YYYY-MM-DD") === moment(date).format('YYYY-MM-DD'));
     const content = card.name === EAppointmentTimingType.PreferredDate
@@ -143,7 +145,7 @@ const TimingCard: React.FC<TCardProps> = ({card, active, onClick,
             value={selectedTime}
             onChange={onChangeTime}
             disabled={!active}
-            placeholder={"Choose here"}
+            placeholder={t("Choose here")}
             disablePast
             // shouldDisableDate={shouldDisableDate}
             InputProps={{
@@ -281,10 +283,8 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
 
     return (
         <StepWrapper>
-            {/*TODO: change to 3 after offers will be included */}
             <TimingWrapper columns={2}>
                 {cards.map((card, idx) => {
-                    /* TODO: Include again after Post MVP (Offers hidden) */
                     if (!idx) {
                         return null;
                     }

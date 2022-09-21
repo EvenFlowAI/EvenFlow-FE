@@ -5,6 +5,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {DialogProps} from "../types";
 import {useDispatch} from "react-redux";
 import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles(() => ({
     buttonsWrapper: {
@@ -39,6 +40,7 @@ type TPaymentTypeProps = DialogProps & {
 const PaymentType: React.FC<TPaymentTypeProps> = (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     const handleYes = () => {
         dispatch(setCurrentFrameScreen("payment"))
@@ -54,7 +56,7 @@ const PaymentType: React.FC<TPaymentTypeProps> = (props) => {
         <BaseModal {...props} width={600} onClose={props.onClose}>
             <DialogTitle onClose={props.onClose}> </DialogTitle>
             <DialogContent>
-            <div className={classes.bigText}>Would you like to leave a card on file so you can take advantage for remote payment?</div>
+            <div className={classes.bigText}>{t("leave a card")}</div>
             </DialogContent>
             <DialogActions>
                     <div className={classes.buttonsWrapper}>
@@ -62,20 +64,20 @@ const PaymentType: React.FC<TPaymentTypeProps> = (props) => {
                             onClick={handleYes}
                             variant="outlined"
                             color={'primary'}>
-                            Yes
+                            {t("Yes")}
                         </Button>
                         <Button
                             onClick={handleNo}
                             variant="contained"
                             color={'primary'}>
-                            No
+                            {t("No")}
                         </Button>
                     </div>
             </DialogActions>
             <DialogContent>
                 <div className={classes.smallTextWrapper}>
-                    <p>Leaving a card on file will allow us to send you an email or text with you service bill so you can pay at you own convenience before you come to pick up your vehicle.</p>
-                    <p>Rest assured, we will not charge you credit or debit card until after your vehicle servicing is complete and you have authorized payment</p>
+                    <p>{t("Leaving a card on file will allow us")}.</p>
+                    <p>{t("Rest assured")}</p>
                 </div>
             </DialogContent>
         </BaseModal>

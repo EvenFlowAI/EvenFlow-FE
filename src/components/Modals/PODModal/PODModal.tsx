@@ -27,6 +27,7 @@ import {getOptions} from "../../../utils/utils";
 import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
 import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 import {TZone} from "../../../store/reducers/mobileService/types";
+import {loadMobServiceZones} from "../../../store/reducers/mobileService/actions";
 
 type TForm = {
     name: string;
@@ -123,7 +124,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 setJobType(null);
             }
             if (payload?.mobileZones) {
-                setMobileZones(zones.filter(zone => payload?.mobileZones?.includes(zone.id)))
+                setMobileZones(zones.filter(zone => payload?.mobileZones?.find(item => item.id === zone.id)))
             } else {
                 setMobileZones([]);
             }
@@ -137,6 +138,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             dispatch(loadSCRequestsShort(selectedSC.id));
             dispatch(loadBaysShort(selectedSC.id));
             dispatch(loadMakesForPods(selectedSC.id));
+            dispatch(loadMobServiceZones(selectedSC.id));
         }
     }, [selectedSC, dispatch, props.open]);
 
@@ -179,8 +181,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     technicians: form.technicians.map(t => t.id),
                     vehicleMakes: selectedMakes.map(item => item.id),
                     vehicleModels: selectedModels.map(item => item.id),
-                    // todo uncomment once BE is ready
-                    // mobileZones: mobileZones.map(zone => zone.id),
+                    mobileZones: mobileZones.map(zone => zone.id),
                 };
                 if (jobType) data.jobType = jobType.value;
 
@@ -225,21 +226,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const onJobTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
         setJobType(value)
     }, [])
-
-    const getMakeOptionSelected = (option: IMakeExtended) => {
-       return !!selectedMakes.find(make => make.id === option.id)
-    };
-
-    const getModelOptionSelected = (option: IModel) => {
-        return !!selectedModels.find(model => model.id === option.id);
-    }
-
-    const getRequestOptionSelected = (option: IAssignedServiceRequestShort) => {
-        return !!form.serviceRequests.find(request => request.id === option.id);
-    }
-    const getZoneOptionSelected = (option: TZone) => {
-        return !!mobileZones.find(zone => zone.id === option.id);
-    }
 
     return <BaseModal {...props} maxWidth="md">
         <DialogTitle onClose={props.onClose}>
@@ -309,7 +295,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         onChange={handleTechniciansChange}
                         getOptionLabel={i => i.fullName}
-                        getOptionSelected={(option, value) => option.id === value.id}
+                        getOptionSelected={(o, v) => o.id === v.id}
                         renderOption={autocompleteOptionsRender((e) => e.fullName)}
                         loading={false}
                         value={form.technicians}
@@ -329,7 +315,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         onChange={handleSCChange}
                         getOptionLabel={i => i.code}
-                        getOptionSelected={getRequestOptionSelected}
+                        getOptionSelected={(o, v) => o.id === v.id}
                         renderOption={autocompleteOptionsRender((e) => e.code)}
                         loading={false}
                         value={form.serviceRequests}
@@ -348,7 +334,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         options={getSortedMakes()}
                         disableCloseOnSelect
                         getOptionLabel={i => i.name}
-                        getOptionSelected={getMakeOptionSelected}
+                        getOptionSelected={(o, v) => o.id === v.id}
                         renderOption={autocompleteOptionsRender((e) => e.name)}
                         value={selectedMakes}
                         onChange={onMakeChange}
@@ -371,7 +357,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         disableCloseOnSelect
                         getOptionLabel={i => i.name}
                         renderOption={autocompleteOptionsRender((e) => e.name)}
-                        getOptionSelected={getModelOptionSelected}
+                        getOptionSelected={(o, v) => o.id === v.id}
                         value={selectedModels}
                         onChange={onModelChange}
                         renderInput={autocompleteRender({
@@ -403,9 +389,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                             size: "small"
                         }}
                         disableCloseOnSelect
+                        getOptionSelected={(o, v) => o.id === v.id}
                         onChange={handleZoneChange}
                         getOptionLabel={i => i.name}
-                        getOptionSelected={getZoneOptionSelected}
                         renderOption={autocompleteOptionsRender((e) => e.name)}
                         loading={false}
                         value={mobileZones}

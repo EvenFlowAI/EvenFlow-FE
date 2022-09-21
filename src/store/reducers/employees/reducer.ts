@@ -3,7 +3,13 @@ import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
 import {createReducer} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
-import {getDMSAdvisors, getSCAdvisors, getSCEmployees, setEmplOrder, setEmplSearch} from "./actions";
+import {
+    getDMSAdvisors,
+    getSCAdvisors,
+    getSCEmployees,
+    setEmplOrder,
+    setEmplSearch
+} from "./actions";
 import {defaultOrder} from "../../../config/config";
 
 export type TEmployeesState = {
@@ -15,6 +21,7 @@ export type TEmployeesState = {
     loadingTechnicians: boolean;
     loadingDealership: boolean;
     loading: boolean;
+    loadingDMSAdvisors: boolean;
     saving: boolean;
     dealershipPaging: IPagingResponse;
     paging: IPagingResponse;
@@ -30,6 +37,7 @@ const initialState: TEmployeesState = {
     loadingTechnicians: false,
     loadingDealership: false,
     loading: false,
+    loadingDMSAdvisors: false,
     searchTerm: "",
     order: {...defaultOrder},
     saving: false,
@@ -62,6 +70,8 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
             return {...state, saving: action.payload};
         case "Employees/ChangeFilters":
             return {...state, filters: action.payload};
+            case "SCEmployees/LoadingDMSAdvisors":
+            return {...state, loadingDMSAdvisors: action.payload};
         case setEmplSearch.type:
             if (setEmplSearch.match(action)) {
                 return {...state, searchTerm: action.payload, pageData: {...state.pageData, pageIndex: 0}};

@@ -14,6 +14,7 @@ import {clearAppointmentData, setServiceType, setVehicle} from "../../store/redu
 import ReactGA from "react-ga";
 import {Loading} from "../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
+import {useTranslation} from "react-i18next";
 
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
@@ -65,6 +66,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const {userType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
     const classes = useStyles();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const handleUser = (serviceType: EServiceType) => {
         if (userType === EUserType.New) {
@@ -95,20 +97,20 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
               spacing={4}>
             <Grid item xs={12} sm={12} md={isMobileServiceOn && isPickUpDropOffServiceOn ? 4 : 6}>
                 <div onClick={() => handleSelect(EServiceType.VisitCenter)} className={classes.button}>
-                    <span>Visit Center</span>
+                    <span>{t("Visit Center")}</span>
                 </div>
             </Grid>
             {isMobileServiceOn
                 ? <Grid item xs={12} sm={12} md={isPickUpDropOffServiceOn ? 4 : 6}>
                 <div onClick={() => handleSelect(EServiceType.MobileService)} className={classes.button}>
-                    <span>Mobile</span>
+                    <span>{t("Mobile")}</span>
                 </div>
             </Grid>
                 : null}
             {isPickUpDropOffServiceOn
                 ? <Grid item xs={12} sm={12} md={isMobileServiceOn ? 4 : 6}>
                 <div onClick={() => handleSelect(EServiceType.PikUpDropOff)} className={classes.button}>
-                    <span>Pick Up / Drop Off Service</span>
+                    <span>{t("Pick Up / Drop Off Service")}</span>
                 </div>
             </Grid>
                 : null}

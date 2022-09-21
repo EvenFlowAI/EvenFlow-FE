@@ -5,21 +5,23 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import ByZone from "../../AnicllaryPriceParts/ByZone";
 import {makeStyles} from "@material-ui/core/styles";
 import ByDistance from "../../AnicllaryPriceParts/ByDistance";
-import {useConfirm, useException, useSCs} from "../../../../utils/hooks";
+import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    addServiceValetDistanceRange, changeServiceValetPriceSettings,
-    deleteServiceValetPrisingByDistance, deleteServiceValetPrisingByZones, loadServiceValetPricingOption,
+    addServiceValetDistanceRange,
+    changeServiceValetPriceSettings,
+    deleteServiceValetPrisingByDistance,
+    loadServiceValetPricingOption,
     loadServiceValetPrisingByDistance,
-    loadServiceValetPrisingByZones, updateServiceValetPrisingByDistance, updateServiceValetPrisingByZones
+    loadServiceValetPrisingByZones,
+    updateServiceValetPrisingByDistance,
+    updateServiceValetPrisingByZones
 } from "../../../../store/reducers/serviceValet/actions";
-import {
-    IDistancePriceSettings,
-    IZonePriceSettings,
-    TDistanceRange
-} from "../../../../store/reducers/serviceValet/types";
+import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../../../store/reducers/serviceValet/types";
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../UI/Loading";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {EAncillaryPriceType} from "../../../../store/reducers/mobileService/types";
 
 export const TablesWrapper = styled('div')({
     display: 'flex',
@@ -63,22 +65,21 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AncillaryPrice = () => {
-    const {pricingByDistance, pricingByZones, pricingCountByZone, isPricingByZoneLoading} = useSelector((state: RootState) => state.serviceValet);
+    const {pricingByDistance, pricingByZones, ancillaryPriceType, isPricingByZoneLoading, isLoading} = useSelector((state: RootState) => state.serviceValet);
     const [selectedTab, selectTab] = useState<string>("0");
-    const [typeOfPrice, setTypeOfPrice] = useState<string>("byZone");
+    const [typeOfPrice, setTypeOfPrice] = useState<EAncillaryPriceType>(EAncillaryPriceType.Zone);
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {askConfirm} = useConfirm();
     const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
-        if (pricingCountByZone) {
-            setTypeOfPrice("byZone")
-        } else {
-            setTypeOfPrice("byDistance")
+        if (ancillaryPriceType) {
+            setTypeOfPrice(ancillaryPriceType)
         }
-    }, [pricingCountByZone])
+    }, [ancillaryPriceType])
 
     useEffect(() => {
         if (selectedSC) {
@@ -88,37 +89,46 @@ const AncillaryPrice = () => {
         }
     }, [selectedSC])
 
-    const onDeleteDistanceRange = (itemId: number) => {
-        if (selectedSC) dispatch(deleteServiceValetPrisingByDistance(selectedSC.id, itemId))
+    const onSuccess = () => {
+        showMessage('New Distance Range Has Been Created')
     }
 
-    const onSaveDistanceRange = (item: IDistancePriceSettings) => {
-        if (selectedSC) dispatch(updateServiceValetPrisingByDistance(selectedSC.id, item))
+    const onError = (err:string) => {
+        showError(err);
+    }
+
+    const onDeleteDistanceRange = (itemId: number) => {
+        if (selectedSC) dispatch(deleteServiceValetPrisingByDistance(selectedSC.id, itemId, onError))
+    }
+
+    const onSaveDistanceRange = (item: TDistanceRangeUpdate) => {
+        if (selectedSC) dispatch(updateServiceValetPrisingByDistance(selectedSC.id, item.id, item, onError))
     }
 
     const onAddRange = (data: TDistanceRange) => {
-        if (selectedSC) dispatch(addServiceValetDistanceRange(selectedSC.id, data));
-    }
-
-    const onDeleteZoneSettings = (id: number) => {
-        if (selectedSC) dispatch(deleteServiceValetPrisingByZones(selectedSC.id, id))
+        if (selectedSC) {
+            data.serviceCenterId = selectedSC.id;
+            data.serviceType = EServiceType.PikUpDropOff;
+            dispatch(addServiceValetDistanceRange(selectedSC.id, data, onSuccess, onError))
+        }
     }
 
     const onSaveZonePricing = (data: IZonePriceSettings) => {
-        if (selectedSC) dispatch(updateServiceValetPrisingByZones(selectedSC.id, data))
+        if (selectedSC) dispatch(updateServiceValetPrisingByZones(selectedSC.id, data.id, data, (err) => showError(err)))
     }
 
     const tabs: TTab[] = [
         {
             id: "0",
             label: "Ancillary Price By Zone",
-            component: <ByZone onDelete={onDeleteZoneSettings} onUpdate={onSaveZonePricing} data={pricingByZones}/>
+            component: <ByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
         },
         {
             id: "1",
             label: "Ancillary Price By Distance",
             component: <ByDistance
                 data={pricingByDistance}
+                isLoading={isLoading}
                 onItemDelete={onDeleteDistanceRange}
                 onItemSave={onSaveDistanceRange}
                 onAddRange={onAddRange}
@@ -135,8 +145,9 @@ const AncillaryPrice = () => {
                 title: `Are you sure you want to change the service valet price setting?`,
                 onConfirm: () => {
                     try {
-                        setTypeOfPrice(e.target.value)
-                        dispatch(changeServiceValetPriceSettings(selectedSC.id, e.target.value === 'byZone'))
+                        const value = e.target?.value === "byZone" ? EAncillaryPriceType.Zone : EAncillaryPriceType.Distance;
+                        setTypeOfPrice(value)
+                        dispatch(changeServiceValetPriceSettings(selectedSC.id, value, err => showError(err)))
                     } catch (e) {
                         showError(e);
                     }
@@ -147,11 +158,17 @@ const AncillaryPrice = () => {
 
     return (
         <TablesWrapper>
-            <div className={classes.wrapper}>
-                <div className={classes.optionsTitleWrapper}>Pricing Settings: </div>
-                {isPricingByZoneLoading
-                    ? <Loading/>
-                    : <RadioGroup row aria-label="countType" name="countType" value={typeOfPrice} onChange={onChange}>
+            {isPricingByZoneLoading
+                ? <Loading/>
+                : <div className={classes.wrapper}>
+                    <div className={classes.optionsTitleWrapper}>Pricing Settings: </div>
+                    <RadioGroup
+                        row
+                        aria-label="countType"
+                        name="countType"
+                        value={typeOfPrice === EAncillaryPriceType.Zone ? "byZone" : "byDistance"}
+                        onChange={onChange}
+                    >
                         <FormControlLabel
                             value="byZone"
                             control={<Radio color="primary"/>}
@@ -165,8 +182,8 @@ const AncillaryPrice = () => {
                             labelPlacement="end"
                         />
                     </RadioGroup>
-                }
-            </div>
+                </div>
+            }
 
             <TabContext value={selectedTab}>
                 <TabList

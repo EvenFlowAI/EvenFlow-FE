@@ -189,21 +189,19 @@ export const copyTextToClipboard = (text: string) => {
 }
 
 export const getTracker = (origin: string): string => {
-    return process.env.REACT_APP_ENV === "stage"
-        ? "UA-210743216-4"
-        : process.env.REACT_APP_ENV === "production"
-            ? origin.includes("bmwofschererville")
-                ? "UA-210743216-6"
-                : origin.includes("riverviewford")
-                    ? "UA-210743216-3"
-                    : origin.includes("bmw-schererville.evenflow")
-                        ? "UA-210743216-8"
-                        : origin.includes("fremontchryslerdodgejeepcasper")
-                            ? "UA-210743216-9"
-                            : origin.includes("fremontchryslerdodgejeeprocksprings")
-                                ? "UA-210743216-10"
-                                : "UA-210743216-5"
-            : "UA-210743216-5";
+    if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
+    if (process.env.REACT_APP_ENV === "production") {
+        if (origin.includes("bmwofschererville")) return "UA-210743216-6";
+        if (origin.includes("riverviewford")) return "UA-210743216-3";
+        if (origin.includes("bmw-schererville.evenflow")) return "UA-210743216-8";
+        if (origin.includes("fremontchryslerdodgejeepcasper")) return "UA-210743216-9";
+        if (origin.includes("fremontchryslerdodgejeeprocksprings")) return "UA-210743216-10";
+        if (origin.includes("janssenchryslerjeepdodge")) return "UA-210743216-11";
+        if (origin.includes("janssenfordholdrege")) return "UA-210743216-12";
+        return "UA-210743216-5";
+    } else {
+        return "UA-210743216-5";
+    }
 }
 
 export const getOptions = (optionsArray: string[]) => {

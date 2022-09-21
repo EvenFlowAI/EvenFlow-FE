@@ -6,6 +6,7 @@ import {setAdditionalServicesChosen, setSideBarSteps} from "../../../store/reduc
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -205,6 +206,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const {t} = useTranslation();
 
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
@@ -291,7 +293,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
                             onClick={() => onClick(idx)}
                             color="primary"
                             variant={getStepsState(idx+1) ? "contained" : "outlined"}>
-                            <Index>{idx + 1}</Index> {item}
+                            <Index>{idx + 1}</Index> {t(item)}
                         </Button>
                     </li>
                 })
