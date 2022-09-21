@@ -388,7 +388,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                         />
                         <Info>
                             {scProfile?.maintenancePackageDisclaimer
-                                ? scProfile?.maintenancePackageDisclaimer
+                                ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
                                 :  isBmWService
                                     ? t("Please ask your service advisor")
                                     : t("The maintenance packages may not be available")
