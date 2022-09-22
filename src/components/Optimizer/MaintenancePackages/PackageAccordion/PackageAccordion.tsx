@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction, useCallback, useEffect, useRef, useStat
 import {
     Accordion as MuiAccordion,
     AccordionDetails,
-    AccordionSummary, Divider,
+    AccordionSummary, Button, Divider,
     IconButton,
     makeStyles, Menu, MenuItem,
     Typography
@@ -21,6 +21,7 @@ import AssignOpsCodeModal from "../../../Modals/AssignOpsCodeModal/AssignOpsCode
 import SaveRequestToDms from "../../../Modals/SaveRequestToDMS/SaveRequestToDMS";
 import {ServiceRequestsWithOptions} from "../ServiceRequestsAndOptions/ServiceRequestsAndOptions";
 import {ComplimentaryAndOptions} from "../ComplimenteryAndOptions/ComplimentaryAndOptions";
+import Description from "../Description/Description";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -128,6 +129,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [editingOption, setEditingOption] = useState<IPackageOptionDetailed | null>(null);
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isRequestToDMSOpen, onOpen: onRequestToDMSOpen, onClose: onRequestToDMSClose} = useModal();
+    const {isOpen: isDescriptionOpen, onOpen: onDescriptionOpen, onClose: onDescriptionClose} = useModal();
     const { askConfirm } = useConfirm();
     const {selectedSC} = useSCs();
     const anchorRef = useRef(null);
@@ -360,6 +362,12 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                     <div style={{ fontSize: 16 }}>Package ID: {id}</div>
                 </div>
                 <div className={classes.iconsWrapper}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={onDescriptionOpen}>
+                        To Describe OPS Codes
+                    </Button>
                     <IconButton
                         className={classes.button}
                         onClick={onMoreIconClick}
@@ -455,5 +463,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             setPackageData={setPackageData}
             onSave={onRequestToDmsSave}
         />
+        <Description open={isDescriptionOpen} onClose={onDescriptionClose}/>
     </MuiAccordion>
 }
