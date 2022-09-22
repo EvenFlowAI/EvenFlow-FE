@@ -308,7 +308,7 @@ export type TServiceRequestShort = {
 export type TExtendedComplimentary = {
     laborAmount: number;
     partsAmount: number;
-    description?: string;
+    detailedDescription?: string;
 } & IComplimentaryService;
 
 export type TExtendedService = {
