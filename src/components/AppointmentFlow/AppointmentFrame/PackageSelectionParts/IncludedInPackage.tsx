@@ -1,9 +1,10 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon_black.svg";
-import {CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlined, InfoOutlined} from "@material-ui/icons";
 import {IPackageOptions} from "../../../../api/types";
 import {TPackage, TService} from "../PackageSelection";
 import {useTranslation} from "react-i18next";
+import {HtmlTooltip} from "../ServiceCard";
 
 type TIncludedInPackageProps = {
     packages: TPackage[];
@@ -23,9 +24,16 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
         {services.map((s, idx) => {
             const isLast = idx + 1 === services.length;
             const cls = `service${isLast ? ' last' : ''}`;
-
+            // todo change description to detailedDescription
+            // todo insertHTML into div
             return <React.Fragment key={s.id}>
-                <div className={cls} style={isBmWService ? {fontSize: 18} : {}}>{s.description}</div>
+                <div className={`serviceWithInfo${isLast ? ' last' : ''}`} style={isBmWService ? {fontSize: 18} : {}}>
+                    {s.description} {s.description
+                    ? <HtmlTooltip
+                        placement="right-end"
+                        title={<div>{s.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                    ><InfoOutlined style={{cursor: 'pointer', marginLeft: 20}}/></HtmlTooltip> : null}
+                </div>
 
                 {packages.map(p => {
                         const clsx = p.lastIdx === idx ? 'service last' : cls;

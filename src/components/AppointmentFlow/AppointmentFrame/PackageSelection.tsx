@@ -126,6 +126,12 @@ const Wrapper = styled('div')(({theme}) => ({
         "&.service": {
             padding: "6px 8px",
         },
+        "&.serviceWithInfo": {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            padding: "6px 8px",
+        },
         "&.green": {
             background: "#E6FCEC"
         },
