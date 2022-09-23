@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, makeStyles} from "@material-ui/core";
+import {Button, makeStyles, Switch} from "@material-ui/core";
 import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
@@ -28,6 +28,11 @@ const useStyles = makeStyles(() => ({
         alignItems: "center",
         justifyContent: 'space-between',
         marginBottom: 20,
+    },
+    toggleWrapper: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: 'space-between',
     }
 }));
 
@@ -76,10 +81,24 @@ export const MaintenancePackages = () => {
 
     const handleAddDisclaimer = () => setDisclaimerOpen(!isDisclaimerOpen);
 
+    const handleSwitch = (e: any, value: boolean) => {
+        // todo request
+    }
+
+
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
         <div className={classes.topLineWrapper}>
             <LaborRate/>
+            <div className={classes.toggleWrapper}>
+                <h4>Show Maintenance Value</h4>
+                <Switch
+                    onChange={handleSwitch}
+                    checked={selectedSc?.showStrikethroughPrice}
+                    color="primary"
+                />
+                <h4>Show Strikethrough Price</h4>
+            </div>
             <div style={{display: "flex", alignItems: "center"}}>
                 <Button
                     style={{marginLeft: 16}}
