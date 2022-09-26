@@ -167,6 +167,13 @@ export const appointmentStatuses: TEnumKeyLabel<AppointmentStatus> = {
     [AppointmentStatus.Cancelled]: "Canceled"
 }
 
+export const jobTypes: TEnumKeyLabel<EJobType> = {
+    [EJobType.Internal]: "Internal",
+    [EJobType.Warranty]: "Warranty",
+    [EJobType.CustomerPay]: "Customer Pay",
+    [EJobType.Recall]: "Recall",
+}
+
 export interface IMaintenancePackageOption {
     name: string;
     maintenancePackageName: string;
