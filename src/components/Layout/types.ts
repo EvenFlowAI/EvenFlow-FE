@@ -16,7 +16,7 @@ export type TScreen =
     | "appointmentConfirmed"
     | "location"
     | "payment"
-    | "serviceOfferDetails"
+    | "serviceOfferProductPage"
 
 export type TMobileScreen =
     | "carSelection"
@@ -34,4 +34,4 @@ export type TMobileScreen =
     | "appointmentConfirmed"
     | "location"
     | "payment"
-    | "serviceOfferDetails"
+    | "serviceOfferProductPage"

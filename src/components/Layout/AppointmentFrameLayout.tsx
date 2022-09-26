@@ -97,7 +97,7 @@ const SCREENS = {
     vehicleData: "vehicleData",
     location: "Your Location",
     payment: "payment",
-    serviceOfferDetails: "Service Offer Details",
+    serviceOfferProductPage: "Service Offer Produce Page",
 }
 
 // todo add new parent links while go live with new dealerships
@@ -419,7 +419,7 @@ export const AppointmentFrameLayout = () => {
                 onLogin={handleLogin}
             />,
             payment: <PaymentScreen/>,
-            serviceOfferDetails: <div/>,
+            serviceOfferProductPage: <div/>,
         }
         return carSelections[currentScreen];
     }, [
@@ -457,6 +457,8 @@ export const AppointmentFrameLayout = () => {
                 return t("Where are you located?");
             case "payment":
                 return t("Please Enter Your Payment Information");
+            case "serviceOfferProductPage":
+                return "Select Service With Special Offer";
             default:
                 return null;
         }
