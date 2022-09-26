@@ -20,7 +20,6 @@ import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointme
 import {TScreen} from "./components/Layout/types";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions";
-import LanguageSwitcher from "./components/AppointmentFlow/AppointmentFrame/LanguageSwitcher/LanguageSwitcher";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -70,7 +69,6 @@ const App = () => {
             variant="success">
             <Container component="main" maxWidth={false} className={isWin ? "winos" : undefined} disableGutters style={{
                 height: "100vh", maxHeight: "-webkit-fill-available"}}>
-                <LanguageSwitcher/>
                 <ConfirmDialog/>
                 <Switch>
                     <Route path={Routes.Login.Base} exact component={Login} />

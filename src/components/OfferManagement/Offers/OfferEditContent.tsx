@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {TextField} from "../../UI/TextField";
-import {FormControlLabel, MenuItem, Radio, RadioGroup, Select} from "@material-ui/core";
+import {Button, FormControlLabel, MenuItem, Radio, RadioGroup, Select, Switch} from "@material-ui/core";
 import {
     customerPresence,
     customerSegments,
@@ -23,6 +23,8 @@ import {RootState} from "../../../store/rootReducer";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TEnumMap} from "../../../store/reducers/utils";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
+import {useModal} from "../../../utils/hooks";
+import HtmlEditor from "../../Modals/HTMLEditor/HTMLEditor";
 
 
 const useStyles = makeStyles(theme => ({
@@ -43,6 +45,17 @@ const useStyles = makeStyles(theme => ({
             marginTop: theme.spacing(4)
         }
     },
+    lastRowContainer: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexFlow: "row nowrap",
+        [theme.breakpoints.down("xs")]: {
+            flexDirection: "column",
+            alignItems: "stretch",
+            marginTop: theme.spacing(4)
+        }
+    },
     innerContainer: {
         flexGrow: 1,
         flexBasis: 0
@@ -53,6 +66,10 @@ const useStyles = makeStyles(theme => ({
             visibility: "hidden",
             height: theme.spacing(1)
         }
+    },
+    text: {
+        textTransform: "uppercase",
+        fontWeight: "bold",
     }
 }));
 
@@ -78,7 +95,7 @@ export const OfferEditContent: React.FC<TProps> = ({
     onRadio,
     onChangeDateTime,
     onDOWSelect,
-    // onValueChange,
+    onValueChange,
     onSegmentSelect,
     onSRChange,
 }) => {
@@ -87,6 +104,7 @@ export const OfferEditContent: React.FC<TProps> = ({
     const srWithAll: IAssignedServiceRequestShort[] = useMemo(() => {
         return [selectAllSR, ...serviceRequests];
     }, [serviceRequests]);
+    const {isOpen, onOpen, onClose} = useModal();
 
     // const handleChangeServiceType = (event: any, values: TServiceTypeWithCustom[]) => {
     //     if (values.length) {
@@ -103,6 +121,10 @@ export const OfferEditContent: React.FC<TProps> = ({
     //     }
     //     onValueChange("serviceType", values);
     // }
+
+    const handleSwitch = (e: any, value: boolean) => {
+        onValueChange('isProductPageOn', value);
+    }
 
     const classes = useStyles();
     return <DialogContent>
@@ -328,5 +350,18 @@ export const OfferEditContent: React.FC<TProps> = ({
                     onChange={onChangeDateTime("durationTo")} />
             </div>
         </div>
+        <div className={classes.lastRowContainer}>
+            <p className={classes.text}>Product Page</p>
+            <Switch
+                onChange={handleSwitch}
+                checked={form.isProductPageOn}
+                color="primary"
+            />
+            <Button variant="contained" onClick={onOpen} color="primary" disabled={!form.isProductPageOn}>
+                Edit Product Page
+            </Button>
+        </div>
+
+        <HtmlEditor open={isOpen} onSave={(value) => console.log(value)} onClose={onClose} title="Edit Product Page Content"/>
     </DialogContent>
 };
