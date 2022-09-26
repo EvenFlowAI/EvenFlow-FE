@@ -126,6 +126,12 @@ const Wrapper = styled('div')(({theme}) => ({
         "&.service": {
             padding: "6px 8px",
         },
+        "&.serviceWithInfo": {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            padding: "6px 8px",
+        },
         "&.green": {
             background: "#E6FCEC"
         },
@@ -388,7 +394,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                         />
                         <Info>
                             {scProfile?.maintenancePackageDisclaimer
-                                ? scProfile?.maintenancePackageDisclaimer
+                                ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
                                 :  isBmWService
                                     ? t("Please ask your service advisor")
                                     : t("The maintenance packages may not be available")

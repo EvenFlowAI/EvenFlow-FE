@@ -1,9 +1,10 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon_black.svg";
-import {CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlined, InfoOutlined} from "@material-ui/icons";
 import {TComplimentary, TPackage, TService} from "../PackageSelection";
 import {IPackageOptions} from "../../../../api/types";
 import {useTranslation} from "react-i18next";
+import {HtmlTooltip} from "../ServiceCard";
 
 type TComplimentaryProps = {
     packages: TPackage[];
@@ -29,7 +30,16 @@ const Complimentary: React.FC<TComplimentaryProps> =
             )}
 
             {complimentary.map(c => <React.Fragment key={c.name}>
-                <div className="service" style={isBmWService ? {fontSize: 18} : {}}>{c.name}</div>
+                <div className="serviceWithInfo" style={isBmWService ? {fontSize: 18} : {}}>
+                    {c.name} {c.name
+                    ? <HtmlTooltip
+                        placement="right-end"
+                        title={<div>{c.name.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                    >
+                        <InfoOutlined style={{cursor: 'pointer', marginLeft: 20}}/>
+                    </HtmlTooltip>
+                    : null}
+                </div>
 
                 {packages.map(p =>
                     <div

@@ -318,11 +318,13 @@ export type TServiceRequestShort = {
 export type TExtendedComplimentary = {
     laborAmount: number;
     partsAmount: number;
+    detailedDescription?: string;
 } & IComplimentaryService;
 
 export type TExtendedService = {
     laborAmount: number;
     partsAmount: number;
+    detailedDescription?: string;
 } & TServiceRequestShort;
 
 export interface IPackageOptions {

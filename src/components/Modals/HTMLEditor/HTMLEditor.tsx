@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {Editor} from "react-draft-wysiwyg";
 import {EditorState} from "draft-js";
-import {convertToHTML} from "draft-convert";
+import {convertToHTML, convertFromHTML} from "draft-convert";
 import {Button} from "@material-ui/core";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {LoadingButton} from "../../UI/Button";
@@ -13,6 +13,7 @@ import classnames from 'classnames';
 type THTMLEditor = DialogProps & {
     onSave: (value: string) => void;
     isLoading?: boolean;
+    payload?: string;
 }
 
 const useStyles = makeStyles(({
@@ -21,15 +22,22 @@ const useStyles = makeStyles(({
     }
 }))
 
-const HtmlEditor: React.FC<THTMLEditor> = ({open, onClose, title, onSave, isLoading}) => {
+const HtmlEditor: React.FC<THTMLEditor> = ({open, onClose, title, onSave, isLoading, payload}) => {
     const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty())
     const styles = useStyles();
+
+    useEffect(() => {
+        if (payload) setEditorState(EditorState.createWithContent(convertFromHTML(payload)))
+    }, [payload, convertFromHTML, setEditorState])
 
     const onEditorStateChange = (value: EditorState) => {
         setEditorState(value)
     };
 
-    const onCancel = () => onClose();
+    const onCancel = () => {
+        setEditorState(EditorState.createEmpty())
+        onClose()
+    };
 
     const onSubmit = () => onSave(convertToHTML(editorState.getCurrentContent()))
 
