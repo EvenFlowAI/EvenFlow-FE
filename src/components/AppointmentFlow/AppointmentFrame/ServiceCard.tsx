@@ -78,7 +78,7 @@ const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<
     }
 });
 
-const HtmlTooltip = withStyles({
+export const HtmlTooltip = withStyles({
     tooltip: {
         fontSize: 13,
         color: '#202021',

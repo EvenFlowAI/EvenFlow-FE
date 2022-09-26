@@ -31,7 +31,7 @@ import {
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {decodeSCID, getTracker} from "../../utils/utils";
+import {decodeSCID, encodeSCID, getTracker} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
@@ -130,7 +130,7 @@ export const AppointmentFrameLayout = () => {
         isPickUpDropOffServiceOn,
         userType,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const theme = useTheme();
@@ -216,9 +216,13 @@ export const AppointmentFrameLayout = () => {
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
             dispatch(setWelcomeScreenView('select'))
-            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+            if (id) {
+                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+            } else if (scProfile?.id) {
+                history.push(Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1");
+            }
         }
-    }, [id, history, dispatch, origin]);
+    }, [id, history, dispatch, origin, scProfile]);
 
     useEffect(() => {
         if (!customerLoadedData) {
