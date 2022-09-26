@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
 import {TArgCallback, TCallback} from "../../../types/types";
@@ -27,8 +27,9 @@ type TProps = {
     onSelect: TArgCallback<TScreen>;
     onBack: TCallback;
     onLogin: TCallback;
+    setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
 }
-export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin}) => {
+export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, setLastSelectedCategory}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {
@@ -94,22 +95,27 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin})
 
     const handleSubmit = () => {
         if (selectedService) {
-            handleGA();
-            handleCategoryHighlight();
-            dispatch(setAdditionalServicesChosen(false));
+            setLastSelectedCategory(selectedService);
+            if (selectedService.offer?.description) {
+                onSelect('serviceOfferProductPage');
+            } else {
+                handleGA();
+                handleCategoryHighlight();
+                dispatch(setAdditionalServicesChosen(false));
 
-            switch (selectedService?.type) {
-                case 2:
-                case 4:
-                    return onSelect('opsCode');
-                case 1:
-                    return onSelect('maintenanceDetails');
-                case 3:
-                    return onSelect('serviceSelection');
-                case 5:
-                    return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
-                default:
-                    return onSelect('describeMore');
+                switch (selectedService?.type) {
+                    case 2:
+                    case 4:
+                        return onSelect('opsCode');
+                    case 1:
+                        return onSelect('maintenanceDetails');
+                    case 3:
+                        return onSelect('serviceSelection');
+                    case 5:
+                        return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
+                    default:
+                        return onSelect('describeMore');
+                }
             }
         }
     }

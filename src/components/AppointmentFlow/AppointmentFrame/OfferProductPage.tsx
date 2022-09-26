@@ -1,19 +1,27 @@
 import React from 'react';
 import {CarName, ChangeButton, PageWrapper, SubTitle} from "./ValueService/ServiceSelection";
 import {Actions} from "./Actions";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IServiceCategory} from "../../../api/types";
 import {useTranslation} from "react-i18next";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {offerTypes} from "../../../store/reducers/offers/types";
 import moment from "moment";
+import {TScreen} from "../../Layout/types";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {
+    selectCategoriesIds,
+    setAdditionalServicesChosen
+} from "../../../store/reducers/appointmentFrameReducer/actions";
+import ReactGA from "react-ga";
 
 type TOfferProductPageProps = {
-    category: IServiceCategory;
+    category: IServiceCategory|null;
     onChangeVehicle: () => void;
     onBack: () => void;
-    onNext: () => void;
+    onNext: (screen: TScreen) => void;
+    lastCategory: IServiceCategory|null;
 }
 const Description = styled('div')(() => ({
     padding: 10,
@@ -46,34 +54,84 @@ const PriceAndDate = styled('div')(() => ({
     }
 }))
 
-const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeVehicle, onBack, onNext}) => {
-    const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeVehicle, onBack, onNext, lastCategory}) => {
+    const {selectedVehicle, categoriesIds, subService, service} = useSelector((state: RootState) => state.appointmentFrame);
+    const dispatch = useDispatch();
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
     const {t} = useTranslation();
 
+    const handleCategoriesAndGA = () => {
+        dispatch(setAdditionalServicesChosen(false));
+        if (service && service.id === lastCategory?.id) {
+            if (categoriesIds && service.type !== EServiceCategoryType.LinkToPage2) {
+                const categories = categoriesIds?.includes(service.id)
+                    ? categoriesIds
+                    : [...categoriesIds, service.id];
+                dispatch(selectCategoriesIds(categories));
+            }
+            const requestsString = service.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
+            ReactGA.event({
+                category: 'EvenFlow User',
+                action: 'Selected Service',
+                label: `With Name ${service.name} And Service Requests ${requestsString}`,
+            })
+        } else {
+            if (subService && subService?.id === lastCategory?.id) {
+                if (categoriesIds && subService.type !== EServiceCategoryType.LinkToPage2) {
+                    const categories = categoriesIds?.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
+                    dispatch(selectCategoriesIds(categories));
+                }
+                const requestsString = subService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
+                ReactGA.event({
+                    category: 'EvenFlow User',
+                    action: 'Selected Sub Service',
+                    label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
+                })
+            }
+        }
+    }
+
+    const onSubmit = () => {
+        handleCategoriesAndGA();
+        let type: null|number = null;
+        if (service && service.id === lastCategory?.id) type = service.type;
+        if (subService && subService?.id === lastCategory?.id) type = subService.type;
+        switch (type) {
+            case 2:
+            case 4:
+                return onNext('opsCode');
+            case 1:
+                return onNext('maintenanceDetails');
+            case 3:
+                return onNext('serviceSelection');
+            default:
+                return onNext('describeMore');
+        }
+    }
+
     return (
         <PageWrapper>
-            <CarName>{selectedVehicle?.year} {selectedVehicle?.make} {selectedVehicle?.model}</CarName>
-            <ChangeButton onClick={onChangeVehicle} variant="text">{t("Change Vehicle")}</ChangeButton>
-            <SubTitle>{category.name}</SubTitle>
+            {selectedVehicle ? <CarName>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</CarName> : null}
+            {selectedVehicle ? <ChangeButton onClick={onChangeVehicle} variant="text">{t("Change Vehicle")}</ChangeButton> : null}
+            <SubTitle>{category?.name ?? ''}</SubTitle>
             <PriceAndDate>
                 <div className="innerWrapper">
-                    Price: ${category.price}
+                    Price: ${category?.price}
                     <div className="greenText">
-                        {category.offer?.valueOff ?? ''} {category.offer?.type ? offerTypes[category.offer?.type].label : ''}
+                        {category?.offer?.valueOff ?? ''} {category?.offer?.type ? offerTypes[category?.offer?.type].label : ''}
                     </div>
-                    {category.offer?.expiringDate
+                    {category?.offer?.expiringDate
                         ? <div className="date">Exp.date {moment(category.offer.expiringDate).format('DD/MM/YY')}</div>
                         : null
                     }
                 </div>
 
             </PriceAndDate>
-            {category.offer?.description ? <Description dangerouslySetInnerHTML={{ __html: category.offer.description}}/> : null }
+            {category?.offer?.description ? <Description dangerouslySetInnerHTML={{ __html: category.offer.description}}/> : null }
             <Actions
                 onBack={onBack}
-                onNext={onNext}
+                onNext={onSubmit}
                 nextLabel={isSM ? t("Schedule") : t("Schedule Service")}
             />
         </PageWrapper>
