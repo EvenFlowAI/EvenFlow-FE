@@ -240,6 +240,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     maintenancePackageOptionId: selectedPackageOption?.id ?? null,
                     serviceCategoryIds: selectedCategories.map(item => item.id),
                     serviceCenterId: selectedSC.id,
+                    jobType: jobType?.value ?? null,
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,
