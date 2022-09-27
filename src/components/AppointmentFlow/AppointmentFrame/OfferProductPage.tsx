@@ -122,7 +122,7 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
                         {category?.offer?.valueOff ?? ''} {category?.offer?.type ? offerTypes[category?.offer?.type].label : ''}
                     </div>
                     {category?.offer?.expiringDate
-                        ? <div className="date">Exp.date {moment(category.offer.expiringDate).format('DD/MM/YY')}</div>
+                        ? <div className="date">Exp.date {moment(category.offer.expiringDate).format('MM/DD/YY')}</div>
                         : null
                     }
                 </div>

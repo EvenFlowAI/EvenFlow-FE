@@ -10,6 +10,8 @@ import {RootState} from "../../../store/rootReducer";
 import {styled, Theme, Tooltip, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
 import {InfoOutlined} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
+import {EOfferType} from "../../../store/reducers/offers/types";
+import moment from "moment";
 
 type TSCProps = {
     card: IServiceCategory;
@@ -48,6 +50,24 @@ const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<
             color: "#27AE60",
             fontSize: 20,
             fontWeight: "bold",
+        },
+        "& .bluePrice": {
+            color: "#142EA1",
+            fontSize: 20,
+            fontWeight: "bold",
+        },
+        "& .blueStrikePrice": {
+            color: "#142EA1",
+            fontSize: 20,
+            fontWeight: "bold",
+            textDecoration: 'line-through',
+        },
+        "& .expiringDate": {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            color: "#202021",
+            fontWeight: 'bold',
+            fontSize: 9,
         },
         "& .text": {
             color: "#727273",
@@ -98,6 +118,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
     const {t} = useTranslation();
 
     const price = card.type === EServiceCategoryType.GeneralCategory ? card.price : undefined;
+    const offerString = `${card.offer?.type === EOfferType.AmountOff ? '$' : ''}${card.offer?.valueOff}${card.offer?.type === EOfferType.PercentOff ? t('% Off') : card.offer?.type === EOfferType.FreeService ? card.offer.title : ''}`
 
     useEffect(() => {
         if (card.iconPath) {
@@ -127,9 +148,30 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
                 : <span className="cardIcon" style={{ filter: active ? "invert(100%)" : "unset"}}><Icon /></span>
         }
         <span style={{color: active ? "#FFFFFF" : "#252733"}}>{card.name}</span>
-        {!!price ? <div className="priceWrapper">
-            <span className="text">{t("Starting At")}</span>
-            <span className="price">${scProfile?.isRoundPrice ? price : price.toFixed(2)}</span>
-        </div> : null}
+        {!!price
+            ? <React.Fragment>
+                <div className="priceWrapper">
+                    <span className="text">{t("Starting At")}</span>
+                    <span
+                        className={card.offer
+                            ? card.offer.type === EOfferType.AmountOff
+                                ? "blueStrikePrice"
+                                : "bluePrice"
+                            : "price" }>
+                ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
+            </span>
+                </div>
+                {card.offer
+                    ? <React.Fragment>
+                    <div className="priceWrapper">
+                        <span className="text">{t("Special")}</span>
+                        <span className="price">{offerString}</span>
+                    </div>
+                        <div className="expiringDate">{t("Expires")}{moment(card.offer.expiringDate).format('MM/DD/YY')}</div>
+                    </React.Fragment>
+                    : <div/>
+                }
+            </React.Fragment>
+            : null}
     </CardWrapper>
 }
