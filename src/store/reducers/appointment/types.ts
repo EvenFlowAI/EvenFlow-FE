@@ -215,8 +215,14 @@ export interface IMake {
     models: string[];
 }
 
+export type TOfferShort = {
+    type: EOfferType;
+    valueOff?: number;
+}
+
 export interface IServiceRequestPrice {
     requestName: string;
     pricingDisplayType: EPricingDisplayType;
     priceValue?: number;
+    offer?: TOfferShort;
 }

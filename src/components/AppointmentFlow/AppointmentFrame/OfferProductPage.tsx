@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IServiceCategory} from "../../../api/types";
 import {useTranslation} from "react-i18next";
-import {styled, useMediaQuery, useTheme} from "@material-ui/core";
+import {styled} from "@material-ui/core";
 import {offerTypes} from "../../../store/reducers/offers/types";
 import moment from "moment";
 import {TScreen} from "../../Layout/types";
@@ -57,8 +57,6 @@ const PriceAndDate = styled('div')(() => ({
 const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeVehicle, onBack, onNext, lastCategory}) => {
     const {selectedVehicle, categoriesIds, subService, service} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
-    const theme = useTheme();
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
     const {t} = useTranslation();
 
     const handleCategoriesAndGA = () => {
@@ -132,7 +130,6 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
             <Actions
                 onBack={onBack}
                 onNext={onSubmit}
-                nextLabel={isSM ? t("Schedule") : t("Schedule Service")}
             />
         </PageWrapper>
     );
