@@ -164,6 +164,7 @@ export interface IAppointmentSlotsRequest {
     vehicle?: IVehicleForSlots;
     searchTerm?: string;
     appointmentHashKey?: string;
+    jobType?: number|null;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
