@@ -282,7 +282,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             waiting = false;
         };
     }, [form, selectedSC, props.open, filterDate, selectedSR, showError,
-        preloadedSlot, selectedPackageOption, selectedCategories]);
+        preloadedSlot, selectedPackageOption, selectedCategories, jobType]);
 
     useEffect(() => {
         if (preloadedSlot && initialRef.current) {
@@ -425,6 +425,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     }
 
     const onJobTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setSelectedSlot(null);
         setJobType(value)
     }, [])
 
