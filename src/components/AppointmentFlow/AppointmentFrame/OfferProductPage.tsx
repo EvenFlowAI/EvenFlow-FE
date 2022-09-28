@@ -6,7 +6,6 @@ import {RootState} from "../../../store/rootReducer";
 import {IServiceCategory} from "../../../api/types";
 import {useTranslation} from "react-i18next";
 import {styled} from "@material-ui/core";
-import {EOfferType, offerTypes} from "../../../store/reducers/offers/types";
 import moment from "moment";
 import {TScreen} from "../../Layout/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -15,6 +14,7 @@ import {
     setAdditionalServicesChosen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
+import {getOfferString} from "./utils";
 
 type TOfferProductPageProps = {
     category: IServiceCategory|null;
@@ -37,17 +37,20 @@ const PriceAndDate = styled('div')(() => ({
     justifyContent: "space-between",
     alignItems: 'center',
     fontSize: 20,
-    ".innerWrapper": {
+    "& .innerWrapper": {
+        width: "100%",
         display: "flex",
         justifyContent: "space-between",
         alignItems: 'center',
     },
-    ".greenText": {
+    "& .price": {
+        marginRight: 16,
+    },
+    "& .greenText": {
         fontWeight: 'bold',
         color: '#008331',
-        marginLeft: 16,
     },
-    ".date": {
+    "& .date": {
         color: '#202021',
         fontWeight: 'bold',
         fontSize: 16
@@ -110,17 +113,15 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
 
     return (
         <PageWrapper>
-            {selectedVehicle ? <CarName>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</CarName> : null}
-            {selectedVehicle ? <ChangeButton onClick={onChangeVehicle} variant="text">{t("Change Vehicle")}</ChangeButton> : null}
+            {selectedVehicle?.make ? <CarName>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</CarName> : null}
+            {selectedVehicle?.make ? <ChangeButton onClick={onChangeVehicle} variant="text">{t("Change Vehicle")}</ChangeButton> : null}
             <SubTitle>{category?.name ?? ''}</SubTitle>
             <PriceAndDate>
                 <div className="innerWrapper">
-                    Price: ${category?.price}
-                    <div className="greenText">
-                        {category?.offer?.type === EOfferType.AmountOff ? '$' : ''}{category?.offer?.valueOff ?? ''} {(category?.offer && category?.offer?.type !== EOfferType.AmountOff) ? offerTypes[category?.offer?.type].label : ''}
-                    </div>
+                    {category?.price ? <span className="price">{t("Price")}: ${category?.price}</span> : null}
+                    {category?.offer ? <div className="greenText">{getOfferString(category.offer)}</div> : null}
                     {category?.offer?.expiringDate
-                        ? <div className="date">Exp.date {moment(category.offer.expiringDate).format('MM/DD/YY')}</div>
+                        ? <div className="date">{t("Exp.date")} {moment(category.offer.expiringDate).format('MM/DD/YY')}</div>
                         : null
                     }
                 </div>

@@ -180,7 +180,9 @@
       "Special": "Special",
       "% Off": "% Off",
       "Expires": "Expires",
-      "Service special applied": "Service special applied"
+      "Service special applied": "Service special applied",
+      "Price": "Price",
+      "Exp.date": "Exp.date"
     }
   },
   "es": {
