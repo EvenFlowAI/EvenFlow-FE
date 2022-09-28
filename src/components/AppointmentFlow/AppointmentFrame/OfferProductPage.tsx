@@ -6,7 +6,7 @@ import {RootState} from "../../../store/rootReducer";
 import {IServiceCategory} from "../../../api/types";
 import {useTranslation} from "react-i18next";
 import {styled} from "@material-ui/core";
-import {offerTypes} from "../../../store/reducers/offers/types";
+import {EOfferType, offerTypes} from "../../../store/reducers/offers/types";
 import moment from "moment";
 import {TScreen} from "../../Layout/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -117,7 +117,7 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
                 <div className="innerWrapper">
                     Price: ${category?.price}
                     <div className="greenText">
-                        {category?.offer?.valueOff ?? ''} {category?.offer?.type ? offerTypes[category?.offer?.type].label : ''}
+                        {category?.offer?.type === EOfferType.AmountOff ? '$' : ''}{category?.offer?.valueOff ?? ''} {(category?.offer && category?.offer?.type !== EOfferType.AmountOff) ? offerTypes[category?.offer?.type].label : ''}
                     </div>
                     {category?.offer?.expiringDate
                         ? <div className="date">Exp.date {moment(category.offer.expiringDate).format('MM/DD/YY')}</div>

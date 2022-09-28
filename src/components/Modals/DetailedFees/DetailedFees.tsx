@@ -7,6 +7,7 @@ import {Dialog, styled} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ErrorOutline} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
+import {EOfferType, offerTypes} from "../../../store/reducers/offers/types";
 
 const List = styled('ul')({
     display: "flex",
@@ -50,6 +51,17 @@ const useStyles = makeStyles(() => ({
         fontWeight: 600,
         fontSize: 16,
         textAlign: 'end',
+    },
+    pricesBlock: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    offersPrice: {
+        color: '#008331',
+        fontSize: 16,
+        fontWeight: 600,
+        marginLeft: 12,
     }
 }))
 
@@ -91,10 +103,10 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const classes = useStyles();
     const {t} = useTranslation();
     const price = useMemo(() => appointment?.price?.value && appointment.price.value > 0
-        ? `$${scProfile?.isRoundPrice
-            ? appointment.price.value 
-            : appointment.price.value.toFixed(2)}`
-        : '',
+            ? `$${scProfile?.isRoundPrice
+                ? appointment.price.value
+                : appointment.price.value.toFixed(2)}`
+            : '',
         [appointment])
     const noDefinedPriceExists = useMemo(() => appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0),
         [appointment])
@@ -110,17 +122,24 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                         <li className={classes.item} key={item.requestName}>
                             <span>
                                 {item.requestName.includes("Going")
-                                ? t("My Description of Needs")
-                                : item.requestName}
+                                    ? t("My Description of Needs")
+                                    : item.requestName}
                             </span>
-                            {Object(item).hasOwnProperty('priceValue') && item.priceValue
-                                ? <span className={classes.price}>
+                            <div className={classes.pricesBlock}>
+                                {Object(item).hasOwnProperty('priceValue') && item.priceValue
+                                    ? <span className={classes.price}>
                                     ${scProfile?.isRoundPrice
-                                    ? item.priceValue
-                                    : item.priceValue.toFixed(2)}
+                                        ? item.priceValue
+                                        : item.priceValue.toFixed(2)}
                             </span>
-                                : <ErrorOutline/>}
-                    </li>))}
+                                    : <ErrorOutline/>}
+                                {item.offer
+                                    ? <span className={classes.offersPrice}>
+                                       {item?.offer?.type === EOfferType.AmountOff ? '$' : ''}{item?.offer?.valueOff ?? ''} {(item?.offer && item?.offer?.type !== EOfferType.AmountOff) ? offerTypes[item?.offer?.type].label : ''}
+                                </span>
+                                    : null}
+                            </div>
+                        </li>))}
                 </List>
                 {noDefinedPriceExists && <Info>
                   <ErrorOutline/>
