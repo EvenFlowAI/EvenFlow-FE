@@ -62,6 +62,12 @@ const useStyles = makeStyles(() => ({
         fontSize: 16,
         fontWeight: 600,
         marginLeft: 12,
+    },
+    offersText: {
+        color: '#008331',
+        fontSize: 14,
+        fontWeight: 400,
+        marginLeft: 12,
     }
 }))
 
@@ -134,7 +140,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                             </span>
                                     : <ErrorOutline/>}
                                 {item.offer
-                                    ? <span className={classes.offersPrice}>
+                                    ? <span className={item?.offer?.type === EOfferType.FreeService ? classes.offersText : classes.offersPrice}>
                                        {item?.offer?.type === EOfferType.AmountOff ? '$' : ''}{item?.offer?.valueOff ?? ''} {(item?.offer && item?.offer?.type !== EOfferType.AmountOff) ? offerTypes[item?.offer?.type].label : ''}
                                 </span>
                                     : null}

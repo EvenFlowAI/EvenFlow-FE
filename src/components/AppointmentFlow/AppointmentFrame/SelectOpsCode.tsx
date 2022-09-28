@@ -4,11 +4,7 @@ import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useModal} from "../../../utils/hooks";
-import {
-    handleSearch,
-    selectAppointment,
-    selectSR, selectSRMultiple
-} from "../../../store/reducers/appointment/actions";
+import {handleSearch, selectAppointment, selectSR, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
@@ -22,11 +18,13 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {
     selectCategoriesIds,
-    selectService, selectSubService,
+    selectService,
+    selectSubService,
     setAdditionalServicesChosen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {Caption} from "../../UI/Caption";
 import {useTranslation} from "react-i18next";
+import {EOfferType, offerTypes} from "../../../store/reducers/offers/types";
 
 
 const Wrapper = styled('div')({
@@ -59,7 +57,21 @@ const Price = styled('span')({
     alignItems: "center",
     fontSize: 14,
     fontWeight: "bold",
+})
+
+const PricesWrapper = styled('div')({
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingRight: 8,
+})
+
+const OfferPrice = styled('div')({
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginRight: 28,
+    fontSize: 14,
 })
 
 const Code = styled(FormControlLabel)({
@@ -294,9 +306,14 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                             }
                             >
                             </Code>
+                            <PricesWrapper>
                             {Boolean(s.price)
                                 ? <Price style={isSm ? {width: '20%'} : {}}>${s.price}</Price>
                                 : <InfoOutlined style={{paddingRight: 8, fontSize: '2rem'}}/>}
+                                {s.offer ? <OfferPrice style={{fontSize: s.offer.type === EOfferType.FreeService ? 400 : 600}}>
+                                    {s.offer.type === EOfferType.AmountOff ? '$' : ''}{s.offer.valueOff ?? ''} {s.offer.type !== EOfferType.AmountOff ? offerTypes[s.offer.type].label : ''}
+                                </OfferPrice> : null}
+                            </PricesWrapper>
                         </CodeWrapper>
                     })}
                 </CodesWrapper>
