@@ -251,7 +251,7 @@ export interface IOfferForCategory {
     type: EOfferType;
     expiringDate: string;
     description: string;
-    title?: string;
+    title: string;
     valueOff?: number;
 }
 

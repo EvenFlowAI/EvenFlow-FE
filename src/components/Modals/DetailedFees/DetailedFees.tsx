@@ -7,7 +7,9 @@ import {Dialog, styled} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ErrorOutline} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
-import {EOfferType, offerTypes} from "../../../store/reducers/offers/types";
+import {EOfferType} from "../../../store/reducers/offers/types";
+import {getOfferString} from "../../AppointmentFlow/AppointmentFrame/utils";
+import moment from "moment";
 
 const List = styled('ul')({
     display: "flex",
@@ -103,6 +105,15 @@ const useDialogStyles = makeStyles({
     }
 });
 
+export const mockOffer = {
+    id: 1,
+    expiringDate: moment().toISOString(),
+    title: 'Buy For Free',
+    type: EOfferType.AmountOff,
+    valueOff: 20,
+    description: 'fdzhgdjhkl'
+}
+
 const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const {appointment, scProfile} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
@@ -124,7 +135,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
             </DialogTitle>
             <DialogContent>
                 <List>
-                    {appointment?.serviceRequestPrices?.map(item => (
+                    {appointment?.serviceRequestPrices?.map(item => ({...item, offer: mockOffer})).map(item => (
                         <li className={classes.item} key={item.requestName}>
                             <span>
                                 {item.requestName.includes("Going")
@@ -132,6 +143,11 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                                     : item.requestName}
                             </span>
                             <div className={classes.pricesBlock}>
+                                {item.offer
+                                    ? <span className={item?.offer?.type === EOfferType.FreeService ? classes.offersText : classes.offersPrice}>
+                                       {getOfferString(item.offer)}
+                                </span>
+                                    : null}
                                 {Object(item).hasOwnProperty('priceValue') && item.priceValue
                                     ? <span className={classes.price}>
                                     ${scProfile?.isRoundPrice
@@ -139,11 +155,6 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                                         : item.priceValue.toFixed(2)}
                             </span>
                                     : <ErrorOutline/>}
-                                {item.offer
-                                    ? <span className={item?.offer?.type === EOfferType.FreeService ? classes.offersText : classes.offersPrice}>
-                                       {item?.offer?.type === EOfferType.AmountOff ? '$' : ''}{item?.offer?.valueOff ?? ''} {(item?.offer && item?.offer?.type !== EOfferType.AmountOff) ? offerTypes[item?.offer?.type].label : ''}
-                                </span>
-                                    : null}
                             </div>
                         </li>))}
                 </List>

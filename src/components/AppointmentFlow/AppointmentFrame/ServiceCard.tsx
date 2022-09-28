@@ -12,6 +12,7 @@ import {InfoOutlined} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import moment from "moment";
+import {getOfferString} from "./utils";
 
 type TSCProps = {
     card: IServiceCategory;
@@ -118,7 +119,6 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
     const {t} = useTranslation();
 
     const price = card.type === EServiceCategoryType.GeneralCategory ? card.price : undefined;
-    const offerString = `${card.offer?.type === EOfferType.AmountOff ? '$' : ''}${card.offer?.valueOff}${card.offer?.type === EOfferType.PercentOff ? t('% Off') : card.offer?.type === EOfferType.FreeService ? card.offer.title : ''}`
 
     useEffect(() => {
         if (card.iconPath) {
@@ -130,6 +130,9 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
                 .finally(() => setLoading(false))
         }
     }, [card])
+
+    // todo add possibility tos show only offers
+    // todo delete mockOffer
 
     return <CardWrapper
         onClick={onSelect}
@@ -163,10 +166,10 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
                 </div>
                 {card.offer
                     ? <React.Fragment>
-                    <div className="priceWrapper">
-                        <span className="text">{t("Special")}</span>
-                        <span className="price">{offerString}</span>
-                    </div>
+                        <div className="priceWrapper">
+                            <span className="text">{t("Special")}</span>
+                            <span className="price">{getOfferString(card.offer)}</span>
+                        </div>
                         <div className="expiringDate">{t("Expires")}{moment(card.offer.expiringDate).format('MM/DD/YY')}</div>
                     </React.Fragment>
                     : <div/>

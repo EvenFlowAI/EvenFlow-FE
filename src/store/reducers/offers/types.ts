@@ -7,9 +7,9 @@ export enum EOfferType {
     AmountOff, PercentOff, FreeService
 }
 export const offerTypes: TEnumMap<EOfferType>[] = [
-    {id: EOfferType.AmountOff, label: "$ off"},
+    {id: EOfferType.AmountOff, label: "Off"},
+    {id: EOfferType.PercentOff, label: "% Off"},
     {id: EOfferType.FreeService, label: "free service"},
-    {id: EOfferType.PercentOff, label: "% off"},
 ];
 export enum ECustomerSegment {
     All, New, LowValue, MediumValue, HighValue, EndOfWarranty
