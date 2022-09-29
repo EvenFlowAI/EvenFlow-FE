@@ -14,7 +14,7 @@ const Price = styled('div')({
     fontWeight: "bold",
 })
 
-const SpecialLabel = styled('div')({
+export const SpecialLabel = styled('div')({
     display: "flex",
     justifyContent: 'space-between',
     alignItems: 'center',

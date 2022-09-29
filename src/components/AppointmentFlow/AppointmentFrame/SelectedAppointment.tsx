@@ -11,6 +11,8 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {useTranslation} from "react-i18next";
+import {ReactComponent as SpecialServiceIcon} from "../../../assets/img/specail_label.svg";
+import {SpecialLabel} from "./confirmationSections/SelectedPrice";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -251,6 +253,9 @@ export const SelectedAppointment = () => {
                         {!isSm && Boolean(price) && <div className="price">
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div>}
+                        {!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">
+                          <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>
+                        </div> : null}
                         {isDynamicPricing && (
                             <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
                                 {t("Save by booking at off peak times!")}
