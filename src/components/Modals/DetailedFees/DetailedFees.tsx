@@ -9,7 +9,6 @@ import {ErrorOutline} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import {getOfferString} from "../../AppointmentFlow/AppointmentFrame/utils";
-import moment from "moment";
 
 const List = styled('ul')({
     display: "flex",
@@ -105,15 +104,6 @@ const useDialogStyles = makeStyles({
     }
 });
 
-export const mockOffer = {
-    id: 1,
-    expiringDate: moment().toISOString(),
-    title: 'Buy For Free',
-    type: EOfferType.AmountOff,
-    valueOff: 20,
-    description: 'fdzhgdjhkl'
-}
-
 const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const {appointment, scProfile} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
@@ -135,7 +125,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
             </DialogTitle>
             <DialogContent>
                 <List>
-                    {appointment?.serviceRequestPrices?.map(item => ({...item, offer: mockOffer})).map(item => (
+                    {appointment?.serviceRequestPrices?.map(item => (
                         <li className={classes.item} key={item.requestName}>
                             <span>
                                 {item.requestName.includes("Going")

@@ -131,9 +131,6 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         }
     }, [card])
 
-    // todo add possibility tos show only offers
-    // todo delete mockOffer
-
     return <CardWrapper
         onClick={onSelect}
         selected={selected}
@@ -152,8 +149,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         }
         <span style={{color: active ? "#FFFFFF" : "#252733"}}>{card.name}</span>
         {!!price
-            ? <React.Fragment>
-                <div className="priceWrapper">
+            ? <div className="priceWrapper">
                     <span className="text">{t("Starting At")}</span>
                     <span
                         className={card.offer
@@ -164,17 +160,16 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
                 ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
             </span>
                 </div>
-                {card.offer
-                    ? <React.Fragment>
-                        <div className="priceWrapper">
-                            <span className="text">{t("Special")}</span>
-                            <span className="price">{getOfferString(card.offer)}</span>
-                        </div>
-                        <div className="expiringDate">{t("Expires")}{moment(card.offer.expiringDate).format('MM/DD/YY')}</div>
-                    </React.Fragment>
-                    : <div/>
-                }
-            </React.Fragment>
             : null}
+        {card.offer
+            ? <React.Fragment>
+                <div className="priceWrapper">
+                    <span className="text">{t("Special")}</span>
+                    <span className="price">{getOfferString(card.offer)}</span>
+                </div>
+                <div className="expiringDate">{t("Expires")}{moment(card.offer.expiringDate).format('MM/DD/YY')}</div>
+            </React.Fragment>
+            : <div/>
+        }
     </CardWrapper>
 }

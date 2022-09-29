@@ -22,7 +22,6 @@ import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {mockOffer} from "../../Modals/DetailedFees/DetailedFees";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -130,7 +129,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
     return (
         <StepWrapper>
             {!loading ? <CardsWrapper>
-                {serviceCategories.map(item => ({...item, offer: mockOffer})).map(card => {
+                {serviceCategories.map(card => {
                     return <ServiceCard
                         selected={getCardState(card)}
                         active={selectedService?.id === card.id}
