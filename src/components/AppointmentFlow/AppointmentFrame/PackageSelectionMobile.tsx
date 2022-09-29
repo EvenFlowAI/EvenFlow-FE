@@ -293,7 +293,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                 }
                             </div>
 
-                            { (isBmWService || isSanfordInfinity)
+                            { (isBmWService || isSanfordInfinity || scProfile?.showPriceDetails)
                             && <div className={classes.totalMaintenance}>
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
                                   {t("Total Maintenance Value)")}:
@@ -323,29 +323,33 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                 })}
                             </div>
 
-                            <div className={classes.complimentaryTotal}>
+                            {scProfile?.showPriceDetails
+                                ? <div className={classes.complimentaryTotal}>
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
                                     {t("Total Complimentary Value")}:
                                 </span>
-                                {isBmWService || isSanfordInfinity
-                                    ? <span style={{ fontSize: 20 }}>
+                                    {isBmWService || isSanfordInfinity
+                                        ? <span style={{ fontSize: 20 }}>
                                         {item.marketPriceComplimentaryServices
                                             ? `$${scProfile?.isRoundPrice
                                                 ? item.marketPriceComplimentaryServices
                                                 : item.marketPriceComplimentaryServices.toFixed(2)}`
                                             : ''}
                                 </span>
-                                    : <span style={{ fontSize: 20 }}>
+                                        : <span style={{ fontSize: 20 }}>
                                         {getPrice(item.complimentaryServices)
                                             ? `$${scProfile?.isRoundPrice
                                                 ? getPrice(item.complimentaryServices)
                                                 : getPrice(item.complimentaryServices).toFixed(2)}`
                                             : ''}
                                     </span>
-                                }
-                            </div>
+                                    }
+                                </div>
+                                : null
+                            }
                             <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
-                                {(isBmWService || isSanfordInfinity) &&
+                                {/*todo scProfile?.showPriceDetails only*/}
+                                {(isBmWService || isSanfordInfinity || scProfile?.showPriceDetails) &&
                                 <div className={classes.prevPrice}>
                                   ${scProfile?.isRoundPrice
                                     ? item.price + item.marketPriceComplimentaryServices

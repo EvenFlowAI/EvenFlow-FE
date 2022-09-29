@@ -25,7 +25,7 @@ export interface IServiceCenterProfile {
     isRoundPrice: boolean;
     isAuthRequired: boolean;
     maintenancePackageDisclaimer?: string;
-    showStrikethroughPrice?: boolean;
+    showPriceDetails?: boolean;
 }
 export interface ISR {
     id: number;
