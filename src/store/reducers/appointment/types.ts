@@ -221,7 +221,3 @@ export interface IServiceRequestPrice {
     pricingDisplayType: EPricingDisplayType;
     priceValue?: number;
 }
-
-export enum EAppointmentType {
-    MaintenanceOnly, RepairOnly, Mixed
-}

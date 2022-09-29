@@ -22,6 +22,7 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "Models", val: e => e.vehicleModels?.map(s => s.name).join(", ") || "", xsHidden: true},
     {header: "Job Type", val: e => typeof e.jobType !== "undefined" && Number.isInteger(+e.jobType) ? EJobType[e.jobType] : "", xsHidden: true},
     {header: "Mobile Zones", val: e => e.mobileZones?.map(zone => zone.name).join(", ") || "", xsHidden: true},
+    {header: "Appointment Type", val: e => typeof e.appointmentType !== "undefined" && Number.isInteger(+e.appointmentType) ? EJobType[e.appointmentType] : "", xsHidden: true},
 ]
 
 export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {

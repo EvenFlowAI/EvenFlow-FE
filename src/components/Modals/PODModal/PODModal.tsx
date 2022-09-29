@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
 import {DialogProps} from "../types";
-import {EJobType, IPod, IPodForm} from "../../../store/reducers/pods/types";
+import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {Button, Grid} from "@material-ui/core";
@@ -61,6 +61,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
     const [mobileZones, setMobileZones] = useState<TZone[]>([]);
     const [jobType, setJobType] = useState<TOption|null>(null);
+    const [appointmentType, setAppointmentType] = useState<TOption|null>(null);
     const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
     const showMessage = useMessage();
@@ -88,6 +89,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         return baysList.filter(b => !b?.podId).map(b => b.id);
     }, [baysList, payload]);
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
+    const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
 
     useEffect(() => {
         if (props.open) {
@@ -122,6 +124,12 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 selectedJobType && setJobType(selectedJobType);
             } else {
                 setJobType(null);
+            }
+            if (typeof payload?.appointmentType !== "undefined") {
+                const selectedAppointmentType = appointmentTypeOptions.find(item => item.value === payload.appointmentType);
+                selectedAppointmentType && setAppointmentType(selectedAppointmentType);
+            } else {
+                setAppointmentType(null)
             }
             if (payload?.mobileZones) {
                 setMobileZones(zones.filter(zone => payload?.mobileZones?.find(item => item.id === zone.id)))
@@ -184,6 +192,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     mobileZones: mobileZones.map(zone => zone.id),
                 };
                 if (jobType) data.jobType = jobType.value;
+                if (appointmentType) data.appointmentType = appointmentType.value;
 
                 if (payload) {
                     await dispatch(updatePod(data, payload.id));
@@ -225,6 +234,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
 
     const onJobTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
         setJobType(value)
+    }, [])
+    const onAppointmentTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setAppointmentType(value)
     }, [])
 
     return <BaseModal {...props} maxWidth="md">
@@ -375,6 +387,18 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         renderInput={autocompleteRender({
                             label: "Job Type",
                             placeholder: 'Job Type'
+                        })}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <Autocomplete
+                        options={appointmentTypeOptions}
+                        getOptionLabel={i => i.name}
+                        value={appointmentType}
+                        onChange={onAppointmentTypeChange}
+                        renderInput={autocompleteRender({
+                            label: "Appointment Type",
+                            placeholder: 'Appointment Type'
                         })}
                     />
                 </Grid>
