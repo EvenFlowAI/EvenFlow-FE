@@ -91,13 +91,12 @@ export const MaintenancePackages = () => {
         <div className={classes.topLineWrapper}>
             <LaborRate/>
             <div className={classes.toggleWrapper}>
-                <h4>Show Maintenance Value</h4>
+                <h4>Show Price Details</h4>
                 <Switch
                     onChange={handleSwitch}
                     checked={selectedSc?.showStrikethroughPrice}
                     color="primary"
                 />
-                <h4>Show Strikethrough Price</h4>
             </div>
             <div style={{display: "flex", alignItems: "center"}}>
                 <Button

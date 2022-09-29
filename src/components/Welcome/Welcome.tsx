@@ -148,14 +148,16 @@ export const Welcome = () => {
     const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : t("welcome");
     const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
 
+    // todo uncomment language switcher
+
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
                 <FrameWelcomeLayout>
-                    <LanguageSwitcher/>
+                    {/*<LanguageSwitcher/>*/}
                     {getComponent()}
                 </FrameWelcomeLayout>
             </MuiThemeProvider> :
             <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
-                <LanguageSwitcher/>
+                {/*<LanguageSwitcher/>*/}
                 {getComponent()}
             </WelcomeLayout>
     );
