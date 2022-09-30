@@ -19,6 +19,7 @@ import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
+    width: 287,
     minHeight: 264,
     fontSize: 22,
     cursor: "pointer",
@@ -86,10 +87,13 @@ type TTransportationProps = {
     onSelectOption: TArgCallback<ITransportation>;
 }
 const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportation, transportation, active, options, onSelectOption, onSelect}) => {
+    const {t} = useTranslation();
+
     const handleClick = (t: ITransportation) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         e.stopPropagation();
         onSelectOption(t);
     }
+
     return <CardWrapper onClick={onSelect} active={active}>
         {transportation}
         {(active && options)
@@ -100,7 +104,7 @@ const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportat
                         className={isActive ? "active" : undefined}
                         key={option.type}>
                         {isActive ? <RadioButtonChecked fontSize={'small'} /> : <RadioButtonUnchecked fontSize={'small'} />}
-                        {option.description}
+                        {t(option.description)}
                     </li>;
                 }
             )}</CardOptions>
