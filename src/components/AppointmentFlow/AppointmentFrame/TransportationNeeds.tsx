@@ -113,6 +113,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {t} = useTranslation();
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [selectedLocally, setSelectedLocally] = useState<ITransportation|null>(null);
     const transportation = useSelector((state: RootState) => state.appointmentFrame.transportation);
     const [
         s, ss,
@@ -127,18 +128,22 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointment.appointment?.appointmentDate,
         state.appointmentFrame.hashKey,
     ]);
-
-    const [tOptions, customOption]: [ITransportation[], ITransportation|null] = useMemo(() => {
-        if (transportations.length) {
-            const last = transportations[transportations.length - 1];
-            const rest = transportations.slice(0, transportations.length - 1);
-            return [rest, last];
-        }
-        return [[], null];
-    }, [transportations]);
+    //
+    // const [tOptions, customOption]: [ITransportation[], ITransportation|null] = useMemo(() => {
+    //     if (transportations.length) {
+    //         const last = transportations[transportations.length - 1];
+    //         const rest = transportations.slice(0, transportations.length - 1);
+    //         return [rest, last];
+    //     }
+    //     return [[], null];
+    // }, [transportations]);
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
+    const localOptions = useMemo(() => ([
+        {type:0, name: '', description: t("Wait at the dealership")},
+        {type: 1, name: '', description: t("Drop off my vehicle and have a ride")}
+    ]), [])
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -166,10 +171,21 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(setTransportation(o));
     }
 
+    const handleSelectNo = (o: ITransportation) => {
+        dispatch(setTransportation(null));
+        setSelectedLocally(o);
+    }
+
     const handleSelectGeneric = () => {
-        if (tOptions && (transportation === null || transportation.type === customOption?.type)) {
-            dispatch(setTransportation(tOptions[0]));
+        setSelectedLocally(null);
+        if (transportations?.length && (transportation === null)) {
+            dispatch(setTransportation(transportations[0]));
         }
+    }
+
+    const handleSelectLocal = () => {
+        setSelectedLocally(localOptions[0]);
+        dispatch(setTransportation(null));
     }
 
     const handleNext = (): void => {
@@ -186,28 +202,28 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             : <TransportationWrapper>
                 <TransportationCard
                     active={transportation === null}
-                    selectedTransportation={transportation}
-                    transportation={t("Yes, I will be waiting")}
-                    options={null}
-                    onSelect={() => handleSelectOption(null)}
-                    onSelectOption={handleSelectOption}
+                    selectedTransportation={selectedLocally}
+                    transportation={`${t("No, I will")}:`}
+                    options={localOptions}
+                    onSelect={handleSelectLocal}
+                    onSelectOption={handleSelectNo}
                 />
-                {tOptions.length ? <TransportationCard
-                    active={Boolean(transportation && transportation.type !== customOption?.type)}
-                    options={tOptions}
+                {transportations.length ? <TransportationCard
+                    active={Boolean(transportation)}
+                    options={transportations}
                     selectedTransportation={transportation}
-                    transportation={t("No, I would like transportation options")}
+                    transportation={`${t("Yes, I would like")}:`}
                     onSelect={handleSelectGeneric}
                     onSelectOption={handleSelectOption}
                 /> : null}
-                {customOption ? <TransportationCard
-                    active={transportation?.type === customOption.type}
-                    transportation={customOption.description}
-                    selectedTransportation={transportation}
-                    options={null}
-                    onSelect={() => handleSelectOption(customOption)}
-                    onSelectOption={handleSelectOption}
-                /> : null}
+                {/*{customOption ? <TransportationCard*/}
+                {/*    active={transportation?.type === customOption.type}*/}
+                {/*    transportation={customOption.description}*/}
+                {/*    selectedTransportation={transportation}*/}
+                {/*    options={null}*/}
+                {/*    onSelect={() => handleSelectOption(customOption)}*/}
+                {/*    onSelectOption={handleSelectOption}*/}
+                {/*/> : null}*/}
             </TransportationWrapper>
         }
         <Actions onBack={onBack} onNext={handleNext} />

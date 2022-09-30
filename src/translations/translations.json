@@ -177,7 +177,11 @@
       "View Price": "View Price",
       "package": "package",
       "Your Address": "Your Address",
-      "Do you need assistance with transportation?": "Do you need assistance with transportation?"
+      "Do you need assistance with transportation?": "Do you need assistance with transportation?",
+      "Yes, I would like": "Yes, I would like",
+      "No, I will": "No, I will",
+      "Wait at the dealership": "Wait at the dealership",
+      "Drop off my vehicle and have a ride": "Drop off my vehicle and have a ride"
     }
   },
   "es": {
