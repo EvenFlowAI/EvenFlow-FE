@@ -261,6 +261,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                 aria-label="icon tabs example">
                   {data.map((item, index) => (
                       <Tab style={isBmWService ? {fontSize: 16} : {}}
+                           key={item.id}
                            className={index === +value ? classes.selectedTab : classes.tabWrapper}
                            value={`${index}`}
                            label={<TabLabel text={item.name} isSelected={index === +value}/>}/>)
@@ -268,7 +269,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
               </Tabs>
 
                 {data.map((item, index) => (
-                    <TabPanel value={`${index}`}>
+                    <TabPanel value={`${index}`} key={item.name}>
                         <div>
                             <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
                             <div className={classes.serviceRequests}>
@@ -276,6 +277,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                     // todo change to detailedDescription
                                   return item.description
                                       ? <HtmlTooltip
+                                          key={item.id}
                                           placement="top"
                                           enterTouchDelay={0}
                                           title={<div>{item.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
@@ -286,6 +288,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                           </p>
                                       </HtmlTooltip>
                                       :  <p className={classes.serviceRequest}
+                                            key={item.id}
                                             style={isBmWService ? {fontSize: 18} : {}}>
                                           {item.description}
                                       </p>
@@ -293,7 +296,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                 }
                             </div>
 
-                            { (isBmWService || isSanfordInfinity || scProfile?.showPriceDetails)
+                            { scProfile?.isShowPriceDetails
                             && <div className={classes.totalMaintenance}>
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
                                   {t("Total Maintenance Value)")}:
@@ -310,20 +313,22 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                     // todo change to detailedDescription
                                     return item.name
                                         ? <HtmlTooltip
+                                            key={item.id}
                                             placement="top"
                                             enterTouchDelay={0}
-                                            title={<div>{item.name.split('\n').map(line => <p
+                                            title={<div key={item.id}>{item.name.split('\n').map(line => <p
                                                 key={line}>{line}</p>)}</div>}
                                         >
                                             <p className={classes.serviceRequestUnderlined}
                                                 style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
                                         </HtmlTooltip>
                                         : <p className={classes.serviceRequest}
+                                             key={item.id}
                                              style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
                                 })}
                             </div>
 
-                            {scProfile?.showPriceDetails
+                            {scProfile?.isShowPriceDetails
                                 ? <div className={classes.complimentaryTotal}>
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
                                     {t("Total Complimentary Value")}:
@@ -348,8 +353,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                 : null
                             }
                             <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
-                                {/*todo scProfile?.showPriceDetails only*/}
-                                {(isBmWService || isSanfordInfinity || scProfile?.showPriceDetails) &&
+                                {scProfile?.isShowPriceDetails &&
                                 <div className={classes.prevPrice}>
                                   ${scProfile?.isRoundPrice
                                     ? item.price + item.marketPriceComplimentaryServices
