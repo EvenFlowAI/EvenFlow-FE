@@ -61,7 +61,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
 
     const onSave = (description: string) => {
         const trimmed = description.trim();
-        if (trimmed.length > 300) return showError("The description can`t include more than 150 characters")
+        if (trimmed.length > 300) return showError("The description can`t include more than 300 characters")
         if (currentPackage && editingElement) {
             if (trimmed.length) {
                 if (editingElementType === "service") {
