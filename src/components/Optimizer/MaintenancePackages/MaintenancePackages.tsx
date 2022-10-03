@@ -94,7 +94,7 @@ export const MaintenancePackages = () => {
                 <h4>Show Price Details</h4>
                 <Switch
                     onChange={handleSwitch}
-                    checked={selectedSc?.showStrikethroughPrice}
+                    checked={selectedSc?.isShowPriceDetails}
                     color="primary"
                 />
             </div>
