@@ -351,3 +351,15 @@ export const updatePackageDisclaimer = (id: number, maintenancePackageDisclaimer
             console.log('update package disclaimer error', error)
         })
 }
+
+export const updatePackagePriceDetails = (id: number, isShowPriceDetails: boolean, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(loading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdatePackagePriceDetails, {urlParams:{id}, data: {isShowPriceDetails}})
+        .then(result => {
+            if (result) dispatch(loadAllSCs())
+        })
+        .catch(err => {
+            onError(err)
+        })
+        .finally(() => dispatch(loading(false)))
+}

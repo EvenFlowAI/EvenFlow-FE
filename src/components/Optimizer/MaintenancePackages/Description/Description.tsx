@@ -67,7 +67,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <h4>Description</h4>
                         <h4 className={classes.title}>Edit</h4>
                     </div>
-                    {currentPackage?.serviceRequests.map(item => <div className={classes.wrapper}>
+                    {currentPackage?.serviceRequests.map(item => <div className={classes.wrapper} key={item.id}>
                         <p>{item.code}</p>
                         <p>{item.description}</p>
                         <div>
@@ -87,7 +87,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <h4>Description</h4>
                         <h4>Edit</h4>
                     </div>
-                    {currentPackage?.complimentaryServices.map(item => <div className={classes.wrapper}>
+                    {currentPackage?.complimentaryServices.map(item => <div className={classes.wrapper} key={item.id}>
                         <div/>
                         <p>{item.name}</p>
                         <div>

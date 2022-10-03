@@ -6,10 +6,12 @@ import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {IPackageByQuery} from "../../../api/types";
 import {getPackageById, loadPackages} from "../../../store/reducers/packages/actions";
+import {updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal, useSCs} from "../../../utils/hooks";
 import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
+import {Loading} from "../../UI/Loading";
 
 type TExpandedState = {
     id?: number;
@@ -37,25 +39,27 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const MaintenancePackages = () => {
-    const selectedSc = useSelector((state: RootState) => state.serviceCenters.selectedSC);
     const {packages: allPackages} = useSelector((state: RootState) => state.packages);
+    const {loading} = useSelector((state: RootState) => state.serviceCenters);
     const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isDisclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
     const classes = useStyles();
     const dispatch = useDispatch();
+    const showError = useException();
     const {onOpen, onClose, isOpen} = useModal();
     const {onOpen: onOpenEdit, onClose: onCloseEdit, isOpen: isOpenEdit} = useModal();
+    const {selectedSC} = useSCs();
 
     useEffect(() => {
-        if (selectedSc) {
-            dispatch(loadPackages(selectedSc.id))
+        if (selectedSC) {
+            dispatch(loadPackages(selectedSC.id))
         }
         return () => {
             dispatch(getPackageById(null));
         }
-    }, [selectedSc])
+    }, [selectedSC])
 
     useEffect(() => {
         if (allPackages) setPackages(allPackages);
@@ -82,7 +86,9 @@ export const MaintenancePackages = () => {
     const handleAddDisclaimer = () => setDisclaimerOpen(!isDisclaimerOpen);
 
     const handleSwitch = (e: any, value: boolean) => {
-        // todo request
+        if (selectedSC) {
+            dispatch(updatePackagePriceDetails(selectedSC.id, value, showError))
+        }
     }
 
 
@@ -91,12 +97,16 @@ export const MaintenancePackages = () => {
         <div className={classes.topLineWrapper}>
             <LaborRate/>
             <div className={classes.toggleWrapper}>
-                <h4>Show Price Details</h4>
-                <Switch
-                    onChange={handleSwitch}
-                    checked={selectedSc?.showStrikethroughPrice}
-                    color="primary"
-                />
+                {loading
+                    ? <Loading/>
+                    : <React.Fragment>
+                        <h4>Show Price Details</h4>
+                        <Switch
+                            onChange={handleSwitch}
+                            checked={selectedSC?.isShowPriceDetails}
+                            color="primary"
+                        />
+                    </React.Fragment>}
             </div>
             <div style={{display: "flex", alignItems: "center"}}>
                 <Button
