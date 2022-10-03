@@ -81,14 +81,12 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         state.mobileService.zones,
     ]);
 
-    console.log(form.bays)
-
-    const disabledBays: number[] = useMemo(() => {
-        if (payload) {
-            return baysList.filter(b => !b?.podId || b.podId === payload.id).map(b => b.id);
-        }
-        return baysList.filter(b => !b?.podId).map(b => b.id);
-    }, [baysList, payload]);
+    // const disabledBays: number[] = useMemo(() => {
+    //     if (payload) {
+    //         return baysList.filter(b => !b?.podId || b.podId === payload.id).map(b => b.id);
+    //     }
+    //     return baysList.filter(b => !b?.podId).map(b => b.id);
+    // }, [baysList, payload]);
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
@@ -423,7 +421,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         getOptionSelected={(o, v) => o.id === v.id}
                         renderOption={autocompleteOptionsRender((e) => e.name)}
                         loading={false}
-                        getOptionDisabled={(o) => disabledBays.includes(o.id)}
                         value={form.bays}
                         renderInput={autocompleteRender({label: "Bays", fullWidth: true, placeholder: "Select Bays"})}
                     />
