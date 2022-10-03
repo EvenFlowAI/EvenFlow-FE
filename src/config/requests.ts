@@ -155,7 +155,8 @@ type ApiRoutes = {
         | "RemoveZipCode" | "Remove" | "GetById",  TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
-        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType", TApiRoute>,
+        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
+        | "UpdateSRDescription" | "UpdateComplimentaryDescription", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -254,7 +255,6 @@ export class Api {
             GetShort: {route: "/bays/short-by-query", method: "post"},
         },
         BookingFlowConfig: {
-            // todo change to real routes
             Get: {route: "/booking-flow/{id}/settings", method: "get"},
             Update: {route: "/booking-flow/{id}/settings", method: "put"},
         },
@@ -309,6 +309,8 @@ export class Api {
             GetShortByQuery: {route: "/maintenance-packages/short-by-query", method: "post"},
             GetOptionsByQuery: {route: "/maintenance-packages/options-by-query", method: "post"},
             ChangePricingDisplayType: {route: "/maintenance-packages/{id}/pricing-display-type", method: "patch"},
+            UpdateSRDescription: {route: "/maintenance-packages/{id}/set-service-request-description", method: "patch"},
+            UpdateComplimentaryDescription: {route: "/maintenance-packages/{id}/set-complimentary-service-description", method: "patch"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

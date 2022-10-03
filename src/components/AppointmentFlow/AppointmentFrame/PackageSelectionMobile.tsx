@@ -274,13 +274,12 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                             <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
                             <div className={classes.serviceRequests}>
                                 {item.serviceRequests.map(item => {
-                                    // todo change to detailedDescription
-                                  return item.description
+                                  return item.detailedDescription
                                       ? <HtmlTooltip
                                           key={item.id}
                                           placement="top"
                                           enterTouchDelay={0}
-                                          title={<div>{item.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                                          title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
                                       >
                                           <p className={classes.serviceRequestUnderlined}
                                              style={isBmWService ? {fontSize: 18} : {}}>
@@ -310,14 +309,12 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
 
                             <div className={classes.complimentaryServices}>
                                 {item.complimentaryServices.map(item => {
-                                    // todo change to detailedDescription
-                                    return item.name
+                                    return item.detailedDescription
                                         ? <HtmlTooltip
                                             key={item.id}
                                             placement="top"
                                             enterTouchDelay={0}
-                                            title={<div key={item.id}>{item.name.split('\n').map(line => <p
-                                                key={line}>{line}</p>)}</div>}
+                                            title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
                                         >
                                             <p className={classes.serviceRequestUnderlined}
                                                 style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
