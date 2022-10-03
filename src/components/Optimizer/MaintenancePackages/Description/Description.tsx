@@ -1,15 +1,19 @@
 import React, {useState} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../../../Modals/BaseModal";
 import {DialogProps} from "../../../Modals/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
 import {EditOutlined} from "@material-ui/icons";
 import {Divider, IconButton} from "@material-ui/core";
-import {useModal} from "../../../../utils/hooks";
+import {useException, useModal} from "../../../../utils/hooks";
 import HtmlEditor from "../../../Modals/HTMLEditor/HTMLEditor";
 import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
 import {Loading} from "../../../UI/Loading";
+import {
+    updatePackageComplimentaryDescription,
+    updatePackageSRDescription
+} from "../../../../store/reducers/packages/actions";
 
 type TDescriptionProps = DialogProps;
 
@@ -32,8 +36,11 @@ const useStyles = makeStyles({
 const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
     const { isPackageLoading, currentPackage } = useSelector((state: RootState) => state.packages);
     const [editingElement, setEditingElement] = useState<TExtendedService|TExtendedComplimentary|null>(null);
-    const classes = useStyles();
+    const [editingElementType, setEditingElementType] = useState<"service"|"complimentary"|null>(null);
     const {onOpen: onEditorOpen, isOpen: isEditorOpen, onClose: onEditorClose} = useModal();
+    const dispatch = useDispatch();
+    const showError = useException();
+    const classes = useStyles();
 
     const onCancel = () => {
         setEditingElement(null);
@@ -42,16 +49,30 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
 
     const onEditSR = async(item: TExtendedService) => {
         await setEditingElement(item)
+        await setEditingElementType("service");
         onEditorOpen()
     }
 
     const onEditComplimentary = async (item: TExtendedComplimentary) => {
         await setEditingElement(item)
+        await setEditingElementType("complimentary");
         onEditorOpen()
     }
 
-    const onSave = () => {
-        // todo request
+    const onSave = (description: string) => {
+        const trimmed = description.trim();
+        if (trimmed.length > 300) return showError("The description can`t include more than 150 characters")
+        if (currentPackage && editingElement) {
+            if (trimmed.length) {
+                if (editingElementType === "service") {
+                    dispatch(updatePackageSRDescription(currentPackage.id, editingElement.id, trimmed, showError, () => onEditorClose()))
+                } else if (editingElementType === "complimentary") {
+                    dispatch(updatePackageComplimentaryDescription(currentPackage.id, editingElement.id, trimmed, showError, () => onEditorClose()))
+                } else {
+                    return;
+                }
+            } else showError("Please enter the description text")
+        }
     }
 
     return (
@@ -72,7 +93,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <p>{item.description}</p>
                         <div>
                             {item.detailedDescription ?
-                                item.detailedDescription?.split('\n').map(line => <p>{line}</p>)
+                                <div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>
                                 : <h3>_</h3> }
                         </div>
                         <div className={classes.iconWrapper}>
@@ -92,7 +113,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <p>{item.name}</p>
                         <div>
                             {item.detailedDescription
-                                ? item.detailedDescription.split('\n').map(line => <p>{line}</p>)
+                                ? <div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>
                                 : <h3>_</h3>}
                         </div>
                         <div className={classes.iconWrapper}>

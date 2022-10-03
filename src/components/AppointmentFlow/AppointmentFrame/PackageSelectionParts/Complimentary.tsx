@@ -31,10 +31,10 @@ const Complimentary: React.FC<TComplimentaryProps> =
 
             {complimentary.map(c => <React.Fragment key={c.name}>
                 <div className="serviceWithInfo" style={isBmWService ? {fontSize: 18} : {}}>
-                    {c.name} {c.name
+                    {c.name} {c.detailedDescription
                     ? <HtmlTooltip
                         placement="right-end"
-                        title={<div>{c.name.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                        title={<div dangerouslySetInnerHTML={{__html: c.detailedDescription}}/>}
                     >
                         <InfoOutlined style={{cursor: 'pointer', marginLeft: 20}}/>
                     </HtmlTooltip>

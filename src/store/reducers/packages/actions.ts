@@ -155,3 +155,47 @@ export const loadComplimentary = (serviceCenterId: number): AppThunk => async (d
         })
         .finally(() => dispatch(setComplimentaryLoading(false)));
 }
+
+export const updatePackageSRDescription = (
+    id: number,
+    serviceRequestId: number,
+    description: string,
+    onError: (err: string) => void,
+    onSuccess: () => void
+): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true));
+    Api.call(Api.endpoints.MaintenancePackages.UpdateSRDescription, {urlParams: {id}, data: {serviceRequestId, description}})
+        .then(result => {
+            if (result) {
+                dispatch(loadPackageById(id))
+                onSuccess()
+            }
+        })
+        .catch(err => {
+            console.log('update package SR description err', err)
+            onError(err)
+        })
+        .finally(() => dispatch(setPackageLoading(false)))
+}
+
+export const updatePackageComplimentaryDescription = (
+    id: number,
+    complimentaryServiceId: number,
+    description: string,
+    onError: (err: string) => void,
+    onSuccess: () => void
+): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true));
+    Api.call(Api.endpoints.MaintenancePackages.UpdateComplimentaryDescription, {urlParams: {id}, data: {complimentaryServiceId, description}})
+        .then(result => {
+            if (result) {
+                dispatch(loadPackageById(id))
+                onSuccess()
+            }
+        })
+        .catch(err => {
+            console.log('update package complimentary description err', err)
+            onError(err)
+        })
+        .finally(() => dispatch(setPackageLoading(false)))
+}
