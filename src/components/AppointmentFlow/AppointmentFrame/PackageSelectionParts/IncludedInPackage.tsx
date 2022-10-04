@@ -26,7 +26,7 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
             const cls = `service${isLast ? ' last' : ''}`;
             return <React.Fragment key={s.id}>
                 <div className={`serviceWithInfo${isLast ? ' last' : ''}`} style={isBmWService ? {fontSize: 18} : {}}>
-                    {s.description} {s.detailedDescription
+                    {s.description} {s.detailedDescription?.length
                     ? <HtmlTooltip
                         placement="right-end"
                         title={<div dangerouslySetInnerHTML={{__html: s.detailedDescription}}/>}
