@@ -91,7 +91,14 @@ const PriceWrapper = styled('div')(({ theme }) => ({
         }
     },
     "& .info": {
-        color: "#27AE60",
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        color: "#142EA1",
+        fontSize: 14,
+        fontWeight: "bold",
+        textTransform: 'uppercase',
         [theme.breakpoints.down("sm")]: {
             marginTop: 5
         }
@@ -171,7 +178,9 @@ export const SelectedAppointment = () => {
     }, [config, serviceType])
 
     const price = appointment?.price.value ?? 0;
-    const isDynamicPricing = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic) : false;
+    const isDynamicPricing = appointmentSlots.length
+        ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
+        : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
@@ -257,8 +266,8 @@ export const SelectedAppointment = () => {
                           <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>
                         </div> : null}
                         {isDynamicPricing && (
-                            <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
-                                {t("Save by booking at off peak times!")}
+                            <div className="info">
+                                {!appointment?.price?.amountOfSavingMoney ? t("Save by booking at off peak times!") : `${t("Off Peak Savings Of")}$${appointment.price.amountOfSavingMoney.toFixed(2)}`}
                             </div>
                         )}
                     </>
