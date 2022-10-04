@@ -64,7 +64,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
         const trimmed = description.trim();
         if (trimmed.length > 300) return showError("The description can`t include more than 300 characters")
         if (currentPackage && editingElement) {
-            if (trimmed.length) {
+            if (trimmed.length && trimmed !== '<p></p>') {
                 if (editingElementType === "service") {
                     dispatch(updatePackageSRDescription(currentPackage.id, editingElement.id, trimmed, showError, () => onEditorClose()))
                 } else if (editingElementType === "complimentary") {

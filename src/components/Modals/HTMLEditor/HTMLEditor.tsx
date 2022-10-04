@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {Editor} from "react-draft-wysiwyg";
-import {EditorState} from "draft-js";
+import {convertToRaw, EditorState} from "draft-js";
 import {convertToHTML, convertFromHTML} from "draft-convert";
 import {Button} from "@material-ui/core";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {LoadingButton} from "../../UI/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import classnames from 'classnames';
+import {useException} from "../../../utils/hooks";
 
 type THTMLEditor = DialogProps & {
     onSave: (value: string) => void;
@@ -24,6 +25,7 @@ const useStyles = makeStyles(({
 
 const HtmlEditor: React.FC<THTMLEditor> = ({open, onClose, title, onSave, isLoading, payload}) => {
     const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty())
+    const showError = useException();
     const styles = useStyles();
 
     useEffect(() => {
@@ -44,7 +46,20 @@ const HtmlEditor: React.FC<THTMLEditor> = ({open, onClose, title, onSave, isLoad
         onClose()
     };
 
-    const onSubmit = () => onSave(convertToHTML(editorState.getCurrentContent()))
+    const checkEditorState = () => {
+        const data = convertToRaw(editorState.getCurrentContent());
+        return !!data.blocks.find(item => item.text)
+    }
+
+    const onSubmit = () => {
+        if (checkEditorState()) {
+            console.log(convertToRaw(editorState.getCurrentContent()))
+            onSave(convertToHTML(editorState.getCurrentContent()))
+        }
+        else {
+            showError("Please enter the text")
+        }
+    }
 
     return (
         <BaseModal onClose={onCancel} open={open}>
