@@ -48,7 +48,7 @@ const HtmlEditor: React.FC<THTMLEditor> = ({open, onClose, title, onSave, isLoad
 
     const checkEditorState = () => {
         const data = convertToRaw(editorState.getCurrentContent());
-        return !!data.blocks.find(item => item.text)
+        return !!data.blocks.map(item => ({...item, text: item.text.trim()})).find(item => item.text)
     }
 
     const onSubmit = () => {
