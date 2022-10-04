@@ -79,6 +79,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-end",
+    justifyContent: "space-between",
     textAlign: "right",
     [theme.breakpoints.down("sm")]: {
         alignItems: "flex-start",
@@ -141,6 +142,12 @@ const useStyles = makeStyles(theme => ({
                 backgroundColor: 'transparent'
             }
         },
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: "bold",
+        margin: '0 0 10px 0',
+        textTransform: 'uppercase'
     }
 }))
 
@@ -205,8 +212,9 @@ export const SelectedAppointment = () => {
 
     return (
         <div>
-            {!isSm && <h4>{t("Your selections")}</h4>}
             <Wrapper>
+                <div>
+                    {!isSm && <p className={classes.title}>{t("Your selections")}</p>}
                 <List>
                     <li className={"service-item"} key="service-item">
                         <div className="service-list">
@@ -252,6 +260,7 @@ export const SelectedAppointment = () => {
                     </li>
 
                 </List>
+                </div>
                 <PriceWrapper>
                     {appointment && !isSm
                         ? <DateWrapper>
@@ -267,7 +276,7 @@ export const SelectedAppointment = () => {
                         </div> : null}
                         {isDynamicPricing && (
                             <div className="info">
-                                {!appointment?.price?.amountOfSavingMoney ? t("Save by booking at off peak times!") : `${t("Off Peak Savings Of")}$${appointment.price.amountOfSavingMoney.toFixed(2)}`}
+                                {!appointment?.price?.amountOfSavingMoney ? t("Save by booking at off peak times!") : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
                             </div>
                         )}
                     </>
