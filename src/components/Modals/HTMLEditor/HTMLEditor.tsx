@@ -27,19 +27,20 @@ const HtmlEditor: React.FC<THTMLEditor> = ({open, onClose, title, onSave, isLoad
     const styles = useStyles();
 
     useEffect(() => {
-        if (payload) {
-            setEditorState(EditorState.createWithContent(convertFromHTML(payload)))
-        } else {
-            setEditorState(EditorState.createEmpty())
+        if (open) {
+            if (payload) {
+                setEditorState(EditorState.createWithContent(convertFromHTML(payload)))
+            } else {
+                setEditorState(EditorState.createEmpty())
+            }
         }
-    }, [payload, convertFromHTML, setEditorState])
+    }, [payload, convertFromHTML, setEditorState, open])
 
     const onEditorStateChange = (value: EditorState) => {
         setEditorState(value)
     };
 
     const onCancel = () => {
-        setEditorState(EditorState.createEmpty())
         onClose()
     };
 
