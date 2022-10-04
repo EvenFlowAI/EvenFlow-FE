@@ -22,14 +22,15 @@ const useStyles = makeStyles({
         display: "grid",
         gridGap: 10,
         gridTemplateColumns: "1fr 3fr 4fr 1fr",
+        alignItems: "baseline",
     },
     iconWrapper: {
-        display: 'flex',
+        display: "flex",
         justifyContent: "center",
-        alignItems: 'center',
+        alignItems: "center",
     },
     title: {
-        textAlign: 'center'
+        textAlign: "center"
     }
 })
 
