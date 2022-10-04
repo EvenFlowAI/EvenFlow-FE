@@ -26,13 +26,12 @@ const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isS
             const priceBefore = p.marketPriceComplimentaryServices + p.price;
                 return <div
                     onClick={handleClick(p)}
-                    className={setClasses(p.id, `total ${isBmWService || isSanfordInfinity ? 'priceWithBefore' : 'price'} end`)}
+                    className={setClasses(p.id, `total ${scProfile?.isShowPriceDetails ? 'priceWithBefore' : 'price'} end`)}
                     key={p.id}>
-                    {   // todo scProfile.showStrikethroughPrice
-                        (isBmWService || isSanfordInfinity) &&
+                    { scProfile?.isShowPriceDetails &&
                     <div className="before">
                       ${scProfile?.isRoundPrice ? priceBefore : priceBefore.toFixed(2)}
-                    </div>}
+                    </div> }
                     <div className="currentWrp">
                         <div className="triangle"/>
                         <div className="current">${scProfile?.isRoundPrice ? p.price : p.price.toFixed(2)}</div>

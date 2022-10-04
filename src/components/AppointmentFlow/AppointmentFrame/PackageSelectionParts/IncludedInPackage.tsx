@@ -24,14 +24,12 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
         {services.map((s, idx) => {
             const isLast = idx + 1 === services.length;
             const cls = `service${isLast ? ' last' : ''}`;
-            // todo change description to detailedDescription
-            // todo insertHTML into div
             return <React.Fragment key={s.id}>
                 <div className={`serviceWithInfo${isLast ? ' last' : ''}`} style={isBmWService ? {fontSize: 18} : {}}>
-                    {s.description} {s.description
+                    {s.description} {s.detailedDescription
                     ? <HtmlTooltip
                         placement="right-end"
-                        title={<div>{s.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                        title={<div dangerouslySetInnerHTML={{__html: s.detailedDescription}}/>}
                     ><InfoOutlined style={{cursor: 'pointer', marginLeft: 20}}/></HtmlTooltip> : null}
                 </div>
 

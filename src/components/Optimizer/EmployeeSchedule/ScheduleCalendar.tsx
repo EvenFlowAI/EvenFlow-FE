@@ -114,12 +114,14 @@ export const ScheduleCalendar = () => {
     useEffect(() => {
         if (selectedSC) {
             if (start && end) dispatch(loadEmployeesSchedule(start, end, selectedSC.id));
-            dispatch(loadWorkingDays(selectedSC.id));
         }
     }, [dispatch, selectedSC, selectedDate, filters, isXS, start, end]);
 
     useEffect(() => {
-        dispatch(loadWeeklyHolidaysList(daysOfWeek[0].toISOString(), daysOfWeek[daysOfWeek.length-1].toISOString()));
+        if (selectedSC) {
+            dispatch(loadWorkingDays(selectedSC.id));
+            dispatch(loadWeeklyHolidaysList(daysOfWeek[0].toISOString(), daysOfWeek[daysOfWeek.length-1].toISOString()));
+        }
     }, [daysOfWeek, selectedSC]);
 
     const handleChange = (date: moment.Moment) => {

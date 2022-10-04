@@ -361,7 +361,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             isRiverviewFord={isRiverviewFord}
                         />
 
-                        {(isSanfordInfinity || isBmWService)
+                        {scProfile?.isShowPriceDetails
                         && <TotalMaintenance
                           isBmWService={isBmWService}
                           setClasses={setClasses}
@@ -377,13 +377,13 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             isBmWService={isBmWService}
                             isRiverviewFord={isRiverviewFord}/>
 
-                        <TotalComplimentary
+                        {scProfile?.isShowPriceDetails ? <TotalComplimentary
                             packages={packages}
                             handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                             isSanfordInfinity={isSanfordInfinity}
-                        />
+                        /> : null}
 
                         <Total
                             packages={packages}

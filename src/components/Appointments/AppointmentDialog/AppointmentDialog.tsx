@@ -181,7 +181,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 });
                 payload.serviceRequests && setSelectedSR(payload.serviceRequests);
                 payload.serviceCategories && setSelectedCategories(payload.serviceCategories);
-                if (payload.jobType) {
+                if (typeof payload.jobType !== 'undefined') {
                     const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
                     selectedJobType && setJobType(selectedJobType);
                 }
@@ -241,6 +241,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceCategoryIds: selectedCategories.map(item => item.id),
                     serviceCenterId: selectedSC.id,
                     jobType: jobType?.value ?? null,
+                    appointmentHashKey: payload?.hashKey ?? undefined,
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,
@@ -469,17 +470,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     srLoading={srLoading}
                 />
 
-                <SlotSelection
-                    selectedSlot={selectedSlot}
-                    setSelectedSlot={setSelectedSlot}
-                    filterDate={filterDate}
-                    setDate={setDate}
-                    slots={slots}
-                    slotsLoading={slotsLoading}
-                    errors={errors}
-                    setErrors={setErrors}
-                />
-
                 <Grid item xs={12}>
                     <Autocomplete
                         options={jobTypeOptions}
@@ -492,6 +482,17 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                         })}
                     />
                 </Grid>
+
+                <SlotSelection
+                    selectedSlot={selectedSlot}
+                    setSelectedSlot={setSelectedSlot}
+                    filterDate={filterDate}
+                    setDate={setDate}
+                    slots={slots}
+                    slotsLoading={slotsLoading}
+                    errors={errors}
+                    setErrors={setErrors}
+                />
 
                 <Grid item xs={12}>
                     <Divider />
