@@ -161,14 +161,14 @@ export const updatePackageSRDescription = (
     serviceRequestId: number,
     description: string,
     onError: (err: string) => void,
-    onSuccess: () => void
+    onSuccess?: () => void
 ): AppThunk => dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.UpdateSRDescription, {urlParams: {id}, data: {serviceRequestId, description}})
         .then(result => {
             if (result) {
                 dispatch(loadPackageById(id))
-                onSuccess()
+                onSuccess && onSuccess()
             }
         })
         .catch(err => {
@@ -183,14 +183,14 @@ export const updatePackageComplimentaryDescription = (
     complimentaryServiceId: number,
     description: string,
     onError: (err: string) => void,
-    onSuccess: () => void
+    onSuccess?: () => void
 ): AppThunk => dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.UpdateComplimentaryDescription, {urlParams: {id}, data: {complimentaryServiceId, description}})
         .then(result => {
             if (result) {
                 dispatch(loadPackageById(id))
-                onSuccess()
+                onSuccess && onSuccess()
             }
         })
         .catch(err => {
