@@ -53,7 +53,6 @@ const HtmlEditor: React.FC<THTMLEditor> = ({open, onClose, title, onSave, isLoad
 
     const onSubmit = () => {
         if (checkEditorState()) {
-            console.log(convertToRaw(editorState.getCurrentContent()))
             onSave(convertToHTML(editorState.getCurrentContent()))
         }
         else {
