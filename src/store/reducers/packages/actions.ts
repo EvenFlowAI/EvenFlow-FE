@@ -159,7 +159,7 @@ export const loadComplimentary = (serviceCenterId: number): AppThunk => async (d
 export const updatePackageSRDescription = (
     id: number,
     serviceRequestId: number,
-    description: string,
+    description: string|null,
     onError: (err: string) => void,
     onSuccess?: () => void
 ): AppThunk => dispatch => {
@@ -181,7 +181,7 @@ export const updatePackageSRDescription = (
 export const updatePackageComplimentaryDescription = (
     id: number,
     complimentaryServiceId: number,
-    description: string,
+    description: string|null,
     onError: (err: string) => void,
     onSuccess?: () => void
 ): AppThunk => dispatch => {

@@ -61,11 +61,11 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
     }
 
     const onDeleteSR = (item: TExtendedService) => {
-        if (currentPackage) dispatch(updatePackageSRDescription(currentPackage.id, item.id, '', showError));
+        if (currentPackage) dispatch(updatePackageSRDescription(currentPackage.id, item.id, null, showError));
     }
 
     const onDeleteComplimentary = (item: TExtendedComplimentary) => {
-        if (currentPackage) dispatch(updatePackageComplimentaryDescription(currentPackage.id, item.id, '', showError));
+        if (currentPackage) dispatch(updatePackageComplimentaryDescription(currentPackage.id, item.id, null, showError));
     }
 
     const onSave = (description: string) => {
@@ -86,7 +86,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
 
     return (
         <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle>Describe Maintenance Package's OPS Codes</DialogTitle>
+            <DialogTitle onClose={onCancel}>Describe Maintenance Package's OPS Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent>
