@@ -4,7 +4,7 @@ import {DialogProps} from "../../../Modals/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
-import {EditOutlined} from "@material-ui/icons";
+import {Delete, EditOutlined} from "@material-ui/icons";
 import {Divider, IconButton} from "@material-ui/core";
 import {useException, useModal} from "../../../../utils/hooks";
 import HtmlEditor from "../../../Modals/HTMLEditor/HTMLEditor";
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     wrapper: {
         display: "grid",
         gridGap: 10,
-        gridTemplateColumns: "1fr 3fr 4fr 1fr",
+        gridTemplateColumns: "1fr 3fr 4fr 1fr 1fr",
         alignItems: "baseline",
     },
     iconWrapper: {
@@ -60,11 +60,19 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
         onEditorOpen()
     }
 
+    const onDeleteSR = (item: TExtendedService) => {
+        if (currentPackage) dispatch(updatePackageSRDescription(currentPackage.id, item.id, null, showError));
+    }
+
+    const onDeleteComplimentary = (item: TExtendedComplimentary) => {
+        if (currentPackage) dispatch(updatePackageComplimentaryDescription(currentPackage.id, item.id, null, showError));
+    }
+
     const onSave = (description: string) => {
         const trimmed = description.trim();
         if (trimmed.length > 300) return showError("The description can`t include more than 300 characters")
         if (currentPackage && editingElement) {
-            if (trimmed.length) {
+            if (trimmed.length && trimmed !== '<p></p>') {
                 if (editingElementType === "service") {
                     dispatch(updatePackageSRDescription(currentPackage.id, editingElement.id, trimmed, showError, () => onEditorClose()))
                 } else if (editingElementType === "complimentary") {
@@ -78,7 +86,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
 
     return (
         <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle>Describe Maintenance Package's OPS Codes</DialogTitle>
+            <DialogTitle onClose={onCancel}>Describe Maintenance Package's OPS Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent>
@@ -88,6 +96,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <h4>Title</h4>
                         <h4>Description</h4>
                         <h4 className={classes.title}>Edit</h4>
+                        <h4 className={classes.title}>Delete</h4>
                     </div>
                     {currentPackage?.serviceRequests.map(item => <div className={classes.wrapper} key={item.id}>
                         <p>{item.code}</p>
@@ -100,6 +109,9 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <div className={classes.iconWrapper}>
                             <IconButton size="small" onClick={() => onEditSR(item)}><EditOutlined/></IconButton>
                         </div>
+                        <div className={classes.iconWrapper}>
+                            <IconButton size="small" onClick={() => onDeleteSR(item)}><Delete/></IconButton>
+                        </div>
                     </div>)}
                     <Divider/>
                     <h3 className={classes.title}>Complimentary Services</h3>
@@ -107,7 +119,8 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <h4/>
                         <h4>Title</h4>
                         <h4>Description</h4>
-                        <h4>Edit</h4>
+                        <h4 className={classes.title}>Edit</h4>
+                        <h4 className={classes.title}>Delete</h4>
                     </div>
                     {currentPackage?.complimentaryServices.map(item => <div className={classes.wrapper} key={item.id}>
                         <div/>
@@ -119,6 +132,9 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         </div>
                         <div className={classes.iconWrapper}>
                             <IconButton size="small" onClick={() => onEditComplimentary(item)}><EditOutlined/></IconButton>
+                        </div>
+                        <div className={classes.iconWrapper}>
+                            <IconButton size="small" onClick={() => onDeleteComplimentary(item)}><Delete/></IconButton>
                         </div>
                     </div>)}
                 </DialogContent>
