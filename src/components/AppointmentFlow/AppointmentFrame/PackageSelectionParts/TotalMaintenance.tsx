@@ -21,7 +21,7 @@ const TotalMaintenance: React.FC<TTotalMaintenanceProps> = ({ packages, isBmWSer
                 {t("Total Maintenance Value")}:
             </div>
             {packages.map(p => (
-                <div className={setClasses(p.id, '')}>
+                <div className={setClasses(p.id, '')} key={p.id}>
                 <span style={{ fontSize: 20 }}>${scProfile?.isRoundPrice ? p.price : p.price.toFixed(2)}</span>
             </div>
             ))}

@@ -167,6 +167,13 @@ export const appointmentStatuses: TEnumKeyLabel<AppointmentStatus> = {
     [AppointmentStatus.Cancelled]: "Canceled"
 }
 
+export const jobTypes: TEnumKeyLabel<EJobType> = {
+    [EJobType.Internal]: "Internal",
+    [EJobType.Warranty]: "Warranty",
+    [EJobType.CustomerPay]: "Customer Pay",
+    [EJobType.Recall]: "Recall",
+}
+
 export interface IMaintenancePackageOption {
     name: string;
     maintenancePackageName: string;
@@ -301,11 +308,13 @@ export type TServiceRequestShort = {
 export type TExtendedComplimentary = {
     laborAmount: number;
     partsAmount: number;
+    detailedDescription?: string;
 } & IComplimentaryService;
 
 export type TExtendedService = {
     laborAmount: number;
     partsAmount: number;
+    detailedDescription?: string;
 } & TServiceRequestShort;
 
 export interface IPackageOptions {

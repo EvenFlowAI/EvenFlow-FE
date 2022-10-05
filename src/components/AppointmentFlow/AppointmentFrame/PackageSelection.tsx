@@ -126,6 +126,12 @@ const Wrapper = styled('div')(({theme}) => ({
         "&.service": {
             padding: "6px 8px",
         },
+        "&.serviceWithInfo": {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            padding: "6px 8px",
+        },
         "&.green": {
             background: "#E6FCEC"
         },
@@ -355,7 +361,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             isRiverviewFord={isRiverviewFord}
                         />
 
-                        {(isSanfordInfinity || isBmWService)
+                        {scProfile?.isShowPriceDetails
                         && <TotalMaintenance
                           isBmWService={isBmWService}
                           setClasses={setClasses}
@@ -371,13 +377,13 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                             isBmWService={isBmWService}
                             isRiverviewFord={isRiverviewFord}/>
 
-                        <TotalComplimentary
+                        {scProfile?.isShowPriceDetails ? <TotalComplimentary
                             packages={packages}
                             handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                             isSanfordInfinity={isSanfordInfinity}
-                        />
+                        /> : null}
 
                         <Total
                             packages={packages}
@@ -388,7 +394,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
                         />
                         <Info>
                             {scProfile?.maintenancePackageDisclaimer
-                                ? scProfile?.maintenancePackageDisclaimer
+                                ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
                                 :  isBmWService
                                     ? t("Please ask your service advisor")
                                     : t("The maintenance packages may not be available")

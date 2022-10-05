@@ -155,7 +155,8 @@ type ApiRoutes = {
         | "RemoveZipCode" | "Remove" | "GetById",  TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
-        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType", TApiRoute>,
+        | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
+        | "UpdateSRDescription" | "UpdateComplimentaryDescription", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -173,7 +174,7 @@ type ApiRoutes = {
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
-        | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType", TApiRoute>,
+        | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -254,7 +255,6 @@ export class Api {
             GetShort: {route: "/bays/short-by-query", method: "post"},
         },
         BookingFlowConfig: {
-            // todo change to real routes
             Get: {route: "/booking-flow/{id}/settings", method: "get"},
             Update: {route: "/booking-flow/{id}/settings", method: "put"},
         },
@@ -309,6 +309,8 @@ export class Api {
             GetShortByQuery: {route: "/maintenance-packages/short-by-query", method: "post"},
             GetOptionsByQuery: {route: "/maintenance-packages/options-by-query", method: "post"},
             ChangePricingDisplayType: {route: "/maintenance-packages/{id}/pricing-display-type", method: "patch"},
+            UpdateSRDescription: {route: "/maintenance-packages/{id}/set-service-request-description", method: "patch"},
+            UpdateComplimentaryDescription: {route: "/maintenance-packages/{id}/set-complimentary-service-description", method: "patch"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
@@ -406,6 +408,7 @@ export class Api {
             UpdatePackageDisclaimer: {route: "/service-centers/{id}/set-package-disclaimer", method: "patch"},
             GetAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "post"},
             UpdateAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "put"},
+            UpdatePackagePriceDetails: {route: "/service-centers/{id}/maintenance-package-price-details", method: "patch"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

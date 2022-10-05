@@ -181,7 +181,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 });
                 payload.serviceRequests && setSelectedSR(payload.serviceRequests);
                 payload.serviceCategories && setSelectedCategories(payload.serviceCategories);
-                if (payload.jobType) {
+                if (typeof payload.jobType !== 'undefined') {
                     const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
                     selectedJobType && setJobType(selectedJobType);
                 }
@@ -239,7 +239,16 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceRequestIds: selectedSR.map(sr => sr.id),
                     maintenancePackageOptionId: selectedPackageOption?.id ?? null,
                     serviceCategoryIds: selectedCategories.map(item => item.id),
-                    serviceCenterId: selectedSC.id
+                    serviceCenterId: selectedSC.id,
+                    jobType: jobType?.value ?? null,
+                    appointmentHashKey: payload?.hashKey ?? undefined,
+                    vehicle: {
+                        make: form.vehicleMake,
+                        model: form.vehicleModel,
+                        year: +form.vehicleYear,
+                        mileage: +form.vehicleMileage,
+                        vin: form.vehicleVin,
+                    }
                 })
                 .then(({data: {items}}) => {
                     if (waiting) {
@@ -273,7 +282,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         return () => {
             waiting = false;
         };
-    }, [selectedSC, props.open, filterDate, selectedSR, showError, preloadedSlot, selectedPackageOption, selectedCategories]);
+    }, [form, selectedSC, props.open, filterDate, selectedSR, showError,
+        preloadedSlot, selectedPackageOption, selectedCategories, jobType]);
 
     useEffect(() => {
         if (preloadedSlot && initialRef.current) {
@@ -416,6 +426,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     }
 
     const onJobTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setSelectedSlot(null);
         setJobType(value)
     }, [])
 
@@ -459,17 +470,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     srLoading={srLoading}
                 />
 
-                <SlotSelection
-                    selectedSlot={selectedSlot}
-                    setSelectedSlot={setSelectedSlot}
-                    filterDate={filterDate}
-                    setDate={setDate}
-                    slots={slots}
-                    slotsLoading={slotsLoading}
-                    errors={errors}
-                    setErrors={setErrors}
-                />
-
                 <Grid item xs={12}>
                     <Autocomplete
                         options={jobTypeOptions}
@@ -482,6 +482,17 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                         })}
                     />
                 </Grid>
+
+                <SlotSelection
+                    selectedSlot={selectedSlot}
+                    setSelectedSlot={setSelectedSlot}
+                    filterDate={filterDate}
+                    setDate={setDate}
+                    slots={slots}
+                    slotsLoading={slotsLoading}
+                    errors={errors}
+                    setErrors={setErrors}
+                />
 
                 <Grid item xs={12}>
                     <Divider />
