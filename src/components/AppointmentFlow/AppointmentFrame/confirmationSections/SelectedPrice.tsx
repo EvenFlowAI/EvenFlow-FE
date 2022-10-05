@@ -18,7 +18,7 @@ export const SpecialLabel = styled('div')({
     display: "flex",
     justifyContent: 'space-between',
     alignItems: 'center',
-    color: "#008331",
+    color: "#142EA1",
     fontWeight: 'bold',
     fontSize: 16,
     "& .icon": {

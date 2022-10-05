@@ -96,14 +96,14 @@ const PriceWrapper = styled('div')(({ theme }) => ({
         display: 'flex',
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
-        color: "#142EA1",
+        color: "#008331",
         fontSize: 14,
         fontWeight: "bold",
         textTransform: 'uppercase',
         [theme.breakpoints.down("sm")]: {
             marginTop: 5
         }
-    }
+    },
 }));
 
 const DateWrapper = styled('div')(({theme}) => ({
