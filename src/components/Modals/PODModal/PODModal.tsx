@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
 import {DialogProps} from "../types";
-import {EJobType, IPod, IPodForm} from "../../../store/reducers/pods/types";
+import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {Button, Grid} from "@material-ui/core";
@@ -21,7 +21,6 @@ import {
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 import {createPod, updatePod} from "../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../store/reducers/bays/actions";
-import {ConfigButton} from "../../UI/ConfigButton";
 import {IMakeExtended, IModel} from "../../../api/types";
 import {getOptions} from "../../../utils/utils";
 import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
@@ -34,7 +33,7 @@ type TForm = {
     description: string;
     advisor: IAdvisorShort | null;
     technicians: IAdvisorShort[];
-    bays: number[];
+    bays: IBayShort[];
     serviceRequests: IAssignedServiceRequestShort[];
 }
 
@@ -61,6 +60,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
     const [mobileZones, setMobileZones] = useState<TZone[]>([]);
     const [jobType, setJobType] = useState<TOption|null>(null);
+    const [appointmentType, setAppointmentType] = useState<TOption|null>(null);
     const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
     const showMessage = useMessage();
@@ -81,20 +81,22 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         state.mobileService.zones,
     ]);
 
-    const disabledBays: number[] = useMemo(() => {
-        if (payload) {
-            return baysList.filter(b => !b?.podId || b.podId === payload.id).map(b => b.id);
-        }
-        return baysList.filter(b => !b?.podId).map(b => b.id);
-    }, [baysList, payload]);
+    // const disabledBays: number[] = useMemo(() => {
+    //     if (payload) {
+    //         return baysList.filter(b => !b?.podId || b.podId === payload.id).map(b => b.id);
+    //     }
+    //     return baysList.filter(b => !b?.podId).map(b => b.id);
+    // }, [baysList, payload]);
+
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
+    const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
 
     useEffect(() => {
         if (props.open) {
             setForm({
                 ...initialForm,
                 ...payload,
-                bays: payload?.bays?.map(b => b.id) || []
+                bays: payload?.bays ?? []
             });
             if (payload?.vehicleMakes?.length) {
                 const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
@@ -122,6 +124,12 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 selectedJobType && setJobType(selectedJobType);
             } else {
                 setJobType(null);
+            }
+            if (typeof payload?.appointmentType !== "undefined") {
+                const selectedAppointmentType = appointmentTypeOptions.find(item => item.value === payload.appointmentType);
+                selectedAppointmentType && setAppointmentType(selectedAppointmentType);
+            } else {
+                setAppointmentType(null)
             }
             if (payload?.mobileZones) {
                 setMobileZones(zones.filter(zone => payload?.mobileZones?.find(item => item.id === zone.id)))
@@ -157,12 +165,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const handleZoneChange = (e: any, val: TZone[]) => {
         setMobileZones(val);
     }
-    const handleBaySelect = (b: IBayShort) => () => {
-        if (form.bays.includes(b.id)) {
-            setForm({...form, bays: form.bays.filter(bayId => bayId !== b.id)});
-        } else {
-            setForm({...form, bays: [...form.bays, b.id]});
-        }
+
+    const handleBaysChange = (e: any, val: IBayShort[]) => {
+        setForm({...form, bays: val});
     }
 
     const handleSave = async () => {
@@ -173,7 +178,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             try {
                 const data: IPodForm = {
                     advisorId: form.advisor?.id || null,
-                    bays: form.bays,
+                    bays: form.bays.map(item => item.id),
                     description: form.description,
                     name: form.name,
                     serviceCenterId: selectedSC.id,
@@ -184,6 +189,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     mobileZones: mobileZones.map(zone => zone.id),
                 };
                 if (jobType) data.jobType = jobType.value;
+                if (appointmentType) data.appointmentType = appointmentType.value;
 
                 if (payload) {
                     await dispatch(updatePod(data, payload.id));
@@ -225,6 +231,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
 
     const onJobTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
         setJobType(value)
+    }, [])
+    const onAppointmentTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setAppointmentType(value)
     }, [])
 
     return <BaseModal {...props} maxWidth="md">
@@ -268,38 +277,17 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         renderInput={autocompleteRender({label: "Advisor", fullWidth: true, placeholder: "Select Advisor"})}
                     />
                 </Grid>
-                <Grid item xs={12}>
-                    {baysList.map(bay => {
-                            const checked = form.bays.includes(bay.id);
-                            return <ConfigButton
-                                onClick={handleBaySelect(bay)}
-                                disabled={!disabledBays.includes(bay.id)}
-                                color={checked ? "primary" : undefined}
-                                variant="contained"
-                                key={bay.id}
-                            >
-                                {bay.name}
-                            </ConfigButton>;
-                        }
-                    )}
-                </Grid>
+
                 <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
-                        options={techniciansList}
-                        multiple
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        disableCloseOnSelect
-                        onChange={handleTechniciansChange}
-                        getOptionLabel={i => i.fullName}
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        renderOption={autocompleteOptionsRender((e) => e.fullName)}
-                        loading={false}
-                        value={form.technicians}
-                        renderInput={autocompleteRender({label: "Technicians", fullWidth: true, placeholder: "Select Technicians"})}
+                        options={appointmentTypeOptions}
+                        getOptionLabel={i => i.name}
+                        value={appointmentType}
+                        onChange={onAppointmentTypeChange}
+                        renderInput={autocompleteRender({
+                            label: "Appointment Type",
+                            placeholder: 'Appointment Type'
+                        })}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
@@ -378,6 +366,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         })}
                     />
                 </Grid>
+
                 <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
                         options={zones}
@@ -396,6 +385,44 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         loading={false}
                         value={mobileZones}
                         renderInput={autocompleteRender({label: "Mobile Zones", fullWidth: true, placeholder: "Select Mobile Zones"})}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <Autocomplete
+                        options={techniciansList}
+                        multiple
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        onChange={handleTechniciansChange}
+                        getOptionLabel={i => i.fullName}
+                        getOptionSelected={(o, v) => o.id === v.id}
+                        renderOption={autocompleteOptionsRender((e) => e.fullName)}
+                        loading={false}
+                        value={form.technicians}
+                        renderInput={autocompleteRender({label: "Technicians", fullWidth: true, placeholder: "Select Technicians"})}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <Autocomplete
+                        options={baysList}
+                        multiple
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        onChange={handleBaysChange}
+                        getOptionLabel={i => i.name}
+                        getOptionSelected={(o, v) => o.id === v.id}
+                        renderOption={autocompleteOptionsRender((e) => e.name)}
+                        loading={false}
+                        value={form.bays}
+                        renderInput={autocompleteRender({label: "Bays", fullWidth: true, placeholder: "Select Bays"})}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>

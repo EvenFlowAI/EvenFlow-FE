@@ -25,6 +25,7 @@ export interface IServiceCenterProfile {
     isRoundPrice: boolean;
     isAuthRequired: boolean;
     maintenancePackageDisclaimer?: string;
+    isShowPriceDetails?: boolean;
 }
 export interface ISR {
     id: number;
@@ -163,6 +164,7 @@ export interface IAppointmentSlotsRequest {
     vehicle?: IVehicleForSlots;
     searchTerm?: string;
     appointmentHashKey?: string;
+    jobType?: number|null;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;

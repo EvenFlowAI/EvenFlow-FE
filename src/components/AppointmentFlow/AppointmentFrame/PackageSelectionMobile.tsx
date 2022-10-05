@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {TExtendedComplimentary} from "../../../api/types";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
+import {HtmlTooltip} from "./ServiceCard";
 
 const style = withStyles(() => ({
     root: {
@@ -91,9 +92,6 @@ const useStyles = makeStyles(() => ({
         position: "absolute",
         top: '30%',
         left: 7
-    },
-    contentWrapper: {
-
     },
     packageName: {
         display: 'flex',
@@ -180,6 +178,12 @@ const useStyles = makeStyles(() => ({
         textAlign: 'center',
         padding: 5,
     },
+    serviceRequestUnderlined: {
+        margin: 0,
+        textAlign: 'center',
+        padding: 5,
+        textDecoration: 'underline'
+    },
     prevPrice: {
         color: '#828282',
         textDecoration: "line-through",
@@ -250,39 +254,53 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
         <div className={classes.wrapper}>
             {data?.length &&
             <TabContext value={value}>
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    variant="fullWidth"
-                    aria-label="icon tabs example">
-                    {data.map((item, index) => (
-                        <Tab style={isBmWService ? {fontSize: 16} : {}}
-                        className={index === +value ? classes.selectedTab : classes.tabWrapper}
-                        value={`${index}`}
-                        label={<TabLabel text={item.name} isSelected={index === +value}/>}/>)
-                    )}
-                </Tabs>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                variant="fullWidth"
+                aria-label="icon tabs example">
+                  {data.map((item, index) => (
+                      <Tab style={isBmWService ? {fontSize: 16} : {}}
+                           key={item.id}
+                           className={index === +value ? classes.selectedTab : classes.tabWrapper}
+                           value={`${index}`}
+                           label={<TabLabel text={item.name} isSelected={index === +value}/>}/>)
+                  )}
+              </Tabs>
 
                 {data.map((item, index) => (
-                    <TabPanel value={`${index}`}>
-                        <div className={classes.contentWrapper}>
+                    <TabPanel value={`${index}`} key={item.name}>
+                        <div>
                             <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
-
                             <div className={classes.serviceRequests}>
-                                {item.serviceRequests.map(item => (
-                                    <p className={classes.serviceRequest}
-                                    style={isBmWService ? {fontSize: 18} : {}}>
-                                    {item.description}
-                                    </p>
-                                ))}
+                                {item.serviceRequests.map(item => {
+                                  return item.detailedDescription?.length
+                                      ? <HtmlTooltip
+                                          key={item.id}
+                                          placement="top"
+                                          enterTouchDelay={0}
+                                          title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                      >
+                                          <p className={classes.serviceRequestUnderlined}
+                                             style={isBmWService ? {fontSize: 18} : {}}>
+                                              {item.description}
+                                          </p>
+                                      </HtmlTooltip>
+                                      :  <p className={classes.serviceRequest}
+                                            key={item.id}
+                                            style={isBmWService ? {fontSize: 18} : {}}>
+                                          {item.description}
+                                      </p>
+                                })
+                                }
                             </div>
 
-                            { (isBmWService || isSanfordInfinity)
+                            { scProfile?.isShowPriceDetails
                             && <div className={classes.totalMaintenance}>
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
                                   {t("Total Maintenance Value)")}:
                                 </span>
-                                <span style={{ fontSize: 20 }}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
+                              <span style={{ fontSize: 20 }}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
                             </div>}
 
                             <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
@@ -290,34 +308,49 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                             </div>
 
                             <div className={classes.complimentaryServices}>
-                                {item.complimentaryServices.map(item => (
-                                    <p className={classes.serviceRequest} style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
-                                ))}
+                                {item.complimentaryServices.map(item => {
+                                    return item.detailedDescription?.length
+                                        ? <HtmlTooltip
+                                            key={item.id}
+                                            placement="top"
+                                            enterTouchDelay={0}
+                                            title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                        >
+                                            <p className={classes.serviceRequestUnderlined}
+                                                style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                                        </HtmlTooltip>
+                                        : <p className={classes.serviceRequest}
+                                             key={item.id}
+                                             style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                                })}
                             </div>
 
-                            <div className={classes.complimentaryTotal}>
+                            {scProfile?.isShowPriceDetails
+                                ? <div className={classes.complimentaryTotal}>
                                 <span style={isBmWService ? {fontSize: 16} : {}}>
                                     {t("Total Complimentary Value")}:
                                 </span>
-                                {isBmWService || isSanfordInfinity
-                                    ? <span style={{ fontSize: 20 }}>
+                                    {isBmWService || isSanfordInfinity
+                                        ? <span style={{ fontSize: 20 }}>
                                         {item.marketPriceComplimentaryServices
-                                            ? `$${scProfile?.isRoundPrice 
+                                            ? `$${scProfile?.isRoundPrice
                                                 ? item.marketPriceComplimentaryServices
                                                 : item.marketPriceComplimentaryServices.toFixed(2)}`
                                             : ''}
                                 </span>
-                                    : <span style={{ fontSize: 20 }}>
+                                        : <span style={{ fontSize: 20 }}>
                                         {getPrice(item.complimentaryServices)
-                                            ? `$${scProfile?.isRoundPrice 
-                                                ? getPrice(item.complimentaryServices) 
+                                            ? `$${scProfile?.isRoundPrice
+                                                ? getPrice(item.complimentaryServices)
                                                 : getPrice(item.complimentaryServices).toFixed(2)}`
                                             : ''}
                                     </span>
-                                }
-                            </div>
+                                    }
+                                </div>
+                                : null
+                            }
                             <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
-                                {(isBmWService || isSanfordInfinity) &&
+                                {scProfile?.isShowPriceDetails &&
                                 <div className={classes.prevPrice}>
                                   ${scProfile?.isRoundPrice
                                     ? item.price + item.marketPriceComplimentaryServices

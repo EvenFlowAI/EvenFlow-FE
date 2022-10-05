@@ -36,6 +36,7 @@ export interface IPod {
     vehicleModels?: IPodVehicleModel[];
     jobType?: EJobType;
     mobileZones?: TPodZone[];
+    appointmentType?: EAppointmentType;
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -53,9 +54,14 @@ export interface IPodForm {
     vehicleMakes: number[];
     vehicleModels: number[];
     jobType?: EJobType;
+    appointmentType?: EAppointmentType;
     mobileZones?: number[];
 }
 
 export enum EJobType {
     Internal, Warranty, CustomerPay, Recall
+}
+
+export enum EAppointmentType {
+    MaintenanceOnly, RepairOnly, Mixed
 }

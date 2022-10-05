@@ -16,6 +16,7 @@ export interface IServiceCenter {
     isUpdateAdvisorInAppointments?: boolean;
     isValueServiceAvailable?: boolean;
     maintenancePackageDisclaimer?: string;
+    isShowPriceDetails?: boolean;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
