@@ -59,7 +59,7 @@ const ComplimentaryServices = () => {
         {header: "Service Ops Code", val: el => el.code, align: "center", orderId: "code"},
         {header: "Service Description", val: el => el.name, width: '57%', orderId: "name"},
         {header: "Duration (hours)", val: el => `${el.durationInHours}`, align: "center", width: 85, orderId: "durationInHours"},
-        {header: "Regular invoice", val: el => `$${el.price}`, align: "center", width: 85, orderId: "price" },
+        {header: "Regular invoice", val: el => `$${el.price.toFixed(2)}`, align: "center", width: 85, orderId: "price" },
     ]
 
     useEffect(() => {
