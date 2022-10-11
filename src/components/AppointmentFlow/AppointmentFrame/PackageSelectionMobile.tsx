@@ -273,7 +273,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                         <div>
                             <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
                             <div className={classes.serviceRequests}>
-                                {item.serviceRequests.map(item => {
+                                {item.serviceRequests
+                                    .slice()
+                                    .sort((a, b) => a.description.localeCompare(b.description))
+                                    .map(item => {
                                   return item.detailedDescription?.length
                                       ? <HtmlTooltip
                                           key={item.id}
@@ -308,7 +311,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                             </div>
 
                             <div className={classes.complimentaryServices}>
-                                {item.complimentaryServices.map(item => {
+                                {item.complimentaryServices
+                                    .slice()
+                                    .sort((a, b) => a.name.localeCompare(b.name))
+                                    .map(item => {
                                     return item.detailedDescription?.length
                                         ? <HtmlTooltip
                                             key={item.id}
