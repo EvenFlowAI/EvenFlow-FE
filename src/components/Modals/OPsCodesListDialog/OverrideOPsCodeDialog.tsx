@@ -55,10 +55,10 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                 description: override?.description || "",
                 countOfTechnicians: override?.countOfTechnicians?.toString() || "",
                 durationInHours: override?.durationInHours?.toString() || "",
-                invoiceAmount: override?.invoiceAmount?.toString() || "",
-                warrantyInvoiceAmount: override?.warrantyInvoiceAmount?.toString() || "",
+                invoiceAmount: override?.invoiceAmount?.toFixed(2) || "",
+                warrantyInvoiceAmount: override?.warrantyInvoiceAmount?.toFixed(2) || "",
                 skillLevelOfTechnicians: override?.skillLevelOfTechnicians || 0,
-                partsUnitCost: override?.partsUnitCost?.toString() ?? request?.partsUnitCost?.toString() ?? "",
+                partsUnitCost: override?.partsUnitCost?.toFixed(2) ?? request?.partsUnitCost?.toFixed(2) ?? "",
                 numberOfParts: override?.numberOfParts?.toString() ?? request?.numberOfParts?.toString() ?? "",
             })
         }
@@ -67,6 +67,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     }
+
     const handleLevelChange = (e: any, val: number) => {
         setForm({...form, skillLevelOfTechnicians: val});
     }
@@ -177,7 +178,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         placeholder={payload ? String(payload.serviceRequest.warrantyInvoiceAmount) : ""}
                         onChange={handleChange}
                         type="number"
-                        inputProps={{min: 1}}
+                        inputProps={{min: 1, step: 0.01}}
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -192,7 +193,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         placeholder={payload ? String(payload.serviceRequest.invoiceAmount) : ""}
                         onChange={handleChange}
                         type="number"
-                        inputProps={{min: 1}}
+                        inputProps={{min: 1, step: 0.01}}
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -207,7 +208,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         placeholder={payload?.serviceRequestOverride?.partsUnitCost?.toString() ||  payload?.serviceRequest?.partsUnitCost?.toString() || ""}
                         onChange={handleChange}
                         type="number"
-                        inputProps={{min: 1}}
+                        inputProps={{min: 1, step: 0.01}}
                     />
                 </Grid>
                 <Grid item xs={6}>
