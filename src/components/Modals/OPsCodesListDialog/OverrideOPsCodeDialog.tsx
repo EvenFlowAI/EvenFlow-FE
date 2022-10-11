@@ -67,9 +67,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     }
-    const handleNumbersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({...form, [e.target.name]: Number(e.target.value).toFixed(2)});
-    }
+
     const handleLevelChange = (e: any, val: number) => {
         setForm({...form, skillLevelOfTechnicians: val});
     }
@@ -176,9 +174,9 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         name="warrantyInvoiceAmount"
                         id="warrantyInvoiceAmount"
                         autoComplete="warranty-invoice-amount invoice-amount"
-                        value={Number(form.warrantyInvoiceAmount).toFixed(2)}
+                        value={form.warrantyInvoiceAmount}
                         placeholder={payload ? String(payload.serviceRequest.warrantyInvoiceAmount) : ""}
-                        onChange={handleNumbersChange}
+                        onChange={handleChange}
                         type="number"
                         inputProps={{min: 1, step: 0.01}}
                     />
@@ -191,9 +189,9 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         name="invoiceAmount"
                         id="invoiceAmount"
                         autoComplete="invoice-amount"
-                        value={Number(form.invoiceAmount).toFixed(2)}
+                        value={form.invoiceAmount}
                         placeholder={payload ? String(payload.serviceRequest.invoiceAmount) : ""}
-                        onChange={handleNumbersChange}
+                        onChange={handleChange}
                         type="number"
                         inputProps={{min: 1, step: 0.01}}
                     />
@@ -206,9 +204,9 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         name="partsUnitCost"
                         id="partsUnitCost"
                         autoComplete="parts-unit-cost"
-                        value={Number(form.partsUnitCost).toFixed(2)}
+                        value={form.partsUnitCost}
                         placeholder={payload?.serviceRequestOverride?.partsUnitCost?.toString() ||  payload?.serviceRequest?.partsUnitCost?.toString() || ""}
-                        onChange={handleNumbersChange}
+                        onChange={handleChange}
                         type="number"
                         inputProps={{min: 1, step: 0.01}}
                     />
