@@ -71,7 +71,7 @@ const AddServiceManually: React.FC<TAddServiceProps> = ({ title, onClose, edited
         if (editedItem) {
             setDuration(+editedItem.durationInHours);
             setDescription(editedItem.name);
-            setTotal(+editedItem.price);
+            setTotal(editedItem.price.toFixed(2));
         }
     }, [editedItem])
 
@@ -137,7 +137,7 @@ const AddServiceManually: React.FC<TAddServiceProps> = ({ title, onClose, edited
                     type="number"
                     label='Total'
                     placeholder='Total'
-                    inputProps={{min: 0}}
+                    inputProps={{min: 0, step: 0.01}}
                     value={total}
                     className={classes.halfWidth}
                     onChange={onTotalChange}
