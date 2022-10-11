@@ -81,7 +81,7 @@ const AddServiceManually: React.FC<TAddServiceProps> = ({ title, onClose, edited
     }, [])
 
     const onTotalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTotal(+e.target.value);
+        setTotal(e.target.value);
         setFormIsChecked(false);
     }
 
@@ -137,7 +137,7 @@ const AddServiceManually: React.FC<TAddServiceProps> = ({ title, onClose, edited
                     type="number"
                     label='Total'
                     placeholder='Total'
-                    inputProps={{min: 0, step: 0.01}}
+                    inputProps={{min: 1, step: 0.01}}
                     value={total}
                     className={classes.halfWidth}
                     onChange={onTotalChange}
