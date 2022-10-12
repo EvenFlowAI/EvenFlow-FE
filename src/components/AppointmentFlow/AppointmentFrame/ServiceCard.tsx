@@ -165,7 +165,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
             ? <React.Fragment>
                 <div className="priceWrapper">
                     <span className="text">{t("Special")}</span>
-                    <span className="price">{getOfferString(card.offer)}</span>
+                    <span className="price">{getOfferString(card.offer, Boolean(scProfile?.isRoundPrice))}</span>
                 </div>
                 <div className="expiringDate">{t("Expires")}{moment(card.offer.expiringDate).format('MM/DD/YY')}</div>
             </React.Fragment>

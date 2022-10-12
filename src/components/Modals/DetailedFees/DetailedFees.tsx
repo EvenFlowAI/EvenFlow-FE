@@ -135,7 +135,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                             <div className={classes.pricesBlock}>
                                 {item.offer
                                     ? <span className={item?.offer?.type === EOfferType.FreeService ? classes.offersText : classes.offersPrice}>
-                                       {getOfferString(item.offer)}
+                                       {getOfferString(item.offer, Boolean(scProfile?.isRoundPrice))}
                                 </span>
                                     : null}
                                 {Object(item).hasOwnProperty('priceValue') && item.priceValue

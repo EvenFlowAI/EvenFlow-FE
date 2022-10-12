@@ -310,13 +310,11 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                             </Code>
                             <PricesWrapper>
                                 {s.offer ? <OfferPrice style={{fontWeight: s.offer.type === EOfferType.FreeService ? 400 : 600}}>
-                                    {getOfferString(s.offer)}
+                                    {getOfferString(s.offer, Boolean(scProfile?.isRoundPrice))}
                                 </OfferPrice> : null}
                             {Boolean(s.price)
                                 ? <Price style={isSm ? {width: '20%'} : {}}>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
                                 : <InfoOutlined style={{paddingRight: 8, fontSize: '2rem'}}/>}
-                                ? <Price style={isSm ? {width: '20%'} : {}}>${s.price}</Price>
-                                : <InfoOutlined style={{fontSize: '2rem'}}/>}
                             </PricesWrapper>
                         </CodeWrapper>
                     })}

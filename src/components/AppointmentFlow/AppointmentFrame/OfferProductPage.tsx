@@ -59,6 +59,7 @@ const PriceAndDate = styled('div')(() => ({
 
 const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeVehicle, onBack, onNext, lastCategory}) => {
     const {selectedVehicle, categoriesIds, subService, service} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {t} = useTranslation();
 
@@ -118,8 +119,10 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
             <SubTitle>{category?.name ?? ''}</SubTitle>
             <PriceAndDate>
                 <div className="innerWrapper">
-                    {category?.price ? <span className="price">{t("Price")}: ${category?.price}</span> : null}
-                    {category?.offer ? <div className="greenText">{getOfferString(category.offer)}</div> : null}
+                    {category?.price
+                        ? <span className="price">{t("Price")}: ${scProfile?.isRoundPrice ? category.price : category.price.toFixed(2)}</span>
+                        : null}
+                    {category?.offer ? <div className="greenText">{getOfferString(category.offer, Boolean(scProfile?.isRoundPrice))}</div> : null}
                     {category?.offer?.expiringDate
                         ? <div className="date">{t("Exp.date")} {moment(category.offer.expiringDate).format('MM/DD/YY')}</div>
                         : null

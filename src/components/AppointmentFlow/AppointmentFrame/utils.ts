@@ -105,10 +105,10 @@ export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TServi
 }
 
 
-export const getOfferString = (offer: IOfferForCategory): string => {
+export const getOfferString = (offer: IOfferForCategory, isRoundPrice: boolean): string => {
     switch (offer.type) {
         case EOfferType.AmountOff:
-            return `$${offer.valueOff} Off`;
+            return `$${isRoundPrice ? offer.valueOff : offer.valueOff?.toFixed(2)} Off`;
         case EOfferType.PercentOff:
             return `${offer.valueOff}% Off`;
         case EOfferType.FreeService:
