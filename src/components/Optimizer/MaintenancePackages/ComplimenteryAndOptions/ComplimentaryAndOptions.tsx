@@ -50,7 +50,8 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
     return <TableContainer style={{ overflowX: 'unset' }}>
         <Table>
             <TableBody>
-                {props.packageData?.complimentaryServices.map((request, rowIndex) => {
+                {props.packageData?.complimentaryServices
+                    .map((request, rowIndex) => {
                     return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.name}>
                         <TableCell className={classes.requestCell} key={`${request.name}_nameCell`}>
                             {request.name}

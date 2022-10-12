@@ -29,7 +29,8 @@ const Complimentary: React.FC<TComplimentaryProps> =
                     className={setClasses(p.id, "green subtitle")}/>
             )}
 
-            {complimentary.map(c => <React.Fragment key={c.name}>
+            {complimentary
+                .map(c => <React.Fragment key={c.name}>
                 <div className="serviceWithInfo" style={isBmWService ? {fontSize: 18} : {}}>
                     {c.name} {c.detailedDescription?.length
                     ? <HtmlTooltip

@@ -23,11 +23,13 @@ export const Review = () => {
     const [
         consultant,
         transportation,
+        localTransportation,
         serviceType,
         config
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
+        state.appointmentFrame.localTransportation,
         state.appointmentFrame.serviceType,
         state.bookingFlowConfig.config,
     ]);
@@ -44,6 +46,10 @@ export const Review = () => {
         t("I would like vehicle pick up / drop off services"),
         t("I will drop off my vehicle and have a ride")
     ]
+    const LOCAL_TRANSPORTATION_SHORT_DESCRIPTION = [
+        t("I will wait at the dealership"),
+        t("I will drop off my vehicle and have a ride"),
+    ]
 
     return (
         <div>
@@ -51,8 +57,11 @@ export const Review = () => {
             <Wrapper>
                 <li>Transportation needs: {
                     typeof transportation?.type === 'number'
-                    ? TRANSPORTATION_SHORT_DESCRIPTION[transportation.type]
-                    : t("I will wait at the dealership")}
+                        ? TRANSPORTATION_SHORT_DESCRIPTION[transportation.type]
+                        : localTransportation
+                            ? LOCAL_TRANSPORTATION_SHORT_DESCRIPTION[localTransportation.type]
+                            : t("I will wait at the dealership")
+                }
                 </li>
                 {currentConfig?.advisorSelection
                     ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}</li>
