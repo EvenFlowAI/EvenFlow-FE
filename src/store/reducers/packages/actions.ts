@@ -200,9 +200,9 @@ export const updatePackageComplimentaryDescription = (
         .finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updateSROrderIndex = (id: number, data: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
+export const updateSROrderIndex = (id: number, items: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setPackageLoading(true))
-    Api.call(Api.endpoints.MaintenancePackages.UpdateSROrder, {urlParams: {id}, data})
+    Api.call(Api.endpoints.MaintenancePackages.UpdateSROrder, {urlParams: {id}, data: {items}})
         .then(result => {
             if (result) dispatch(loadPackageById(id))
         })
@@ -213,9 +213,9 @@ export const updateSROrderIndex = (id: number, data: TOrderIndex[], onError: (er
     dispatch(setPackageLoading(false))
 }
 
-export const updateComplimentaryOrderIndex = (id: number, data: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
+export const updateComplimentaryOrderIndex = (id: number, items: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setPackageLoading(true))
-    Api.call(Api.endpoints.MaintenancePackages.UpdateComplimentaryOrder, {urlParams: {id}, data})
+    Api.call(Api.endpoints.MaintenancePackages.UpdateComplimentaryOrder, {urlParams: {id}, data: {items}})
         .then(result => {
             if (result) dispatch(loadPackageById(id))
         })

@@ -311,8 +311,8 @@ export class Api {
             ChangePricingDisplayType: {route: "/maintenance-packages/{id}/pricing-display-type", method: "patch"},
             UpdateSRDescription: {route: "/maintenance-packages/{id}/set-service-request-description", method: "patch"},
             UpdateComplimentaryDescription: {route: "/maintenance-packages/{id}/set-complimentary-service-description", method: "patch"},
-            UpdateComplimentaryOrder: {route: "/maintenance-packages/{id}/set-complimentary-service-order", method: "patch"},
-            UpdateSROrder: {route: "/maintenance-packages/{id}/set-service-request-order", method: "patch"},
+            UpdateComplimentaryOrder: {route: "/maintenance-packages/{id}/set-list-complimentary-service-order-index", method: "patch"},
+            UpdateSROrder: {route: "/maintenance-packages/{id}/set-list-service-request-order-index", method: "patch"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
