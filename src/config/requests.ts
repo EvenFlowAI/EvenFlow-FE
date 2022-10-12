@@ -156,7 +156,7 @@ type ApiRoutes = {
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
-        | "UpdateSRDescription" | "UpdateComplimentaryDescription", TApiRoute>,
+        | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -311,6 +311,8 @@ export class Api {
             ChangePricingDisplayType: {route: "/maintenance-packages/{id}/pricing-display-type", method: "patch"},
             UpdateSRDescription: {route: "/maintenance-packages/{id}/set-service-request-description", method: "patch"},
             UpdateComplimentaryDescription: {route: "/maintenance-packages/{id}/set-complimentary-service-description", method: "patch"},
+            UpdateComplimentaryOrder: {route: "/maintenance-packages/{id}/set-complimentary-service-order", method: "patch"},
+            UpdateSROrder: {route: "/maintenance-packages/{id}/set-service-request-order", method: "patch"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

@@ -63,3 +63,8 @@ export interface IPackageOptionShort {
     maintenancePackageName: string;
     type: EMaintenanceOptionType;
 }
+
+export type TOrderIndex = {
+    id: number;
+    orderIndex: number;
+}
