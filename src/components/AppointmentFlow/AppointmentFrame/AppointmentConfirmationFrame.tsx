@@ -221,13 +221,13 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 <ServiceRequests/>
                 <Address/>
                 <SelectedPrice/>
-                <ServiceType/>
                 <div
                     role="presentation"
                     style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
                     onClick={onFeesOpen}>
                     {t("View itemized fees of services")}
                 </div>
+                <ServiceType/>
                 {appointmentFrame.serviceType === EServiceType.VisitCenter ? <Review/> : null}
             </div>
             <div>

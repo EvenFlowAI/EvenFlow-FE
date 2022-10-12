@@ -64,8 +64,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         align: "center",
         val: el => <CellData
             prefix="$"
-            data={el.serviceRequest.warrantyInvoiceAmount.toString()}
-            override={el.serviceRequestOverride?.warrantyInvoiceAmount?.toString()}
+            data={el.serviceRequest.warrantyInvoiceAmount.toFixed(2)}
+            override={el.serviceRequestOverride?.warrantyInvoiceAmount?.toFixed(2)}
         />,
         orderId: "warrantyInvoiceAmount"
     },
@@ -74,8 +74,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         align: "center",
         val: el => <CellData
             prefix="$"
-            data={el.serviceRequest.invoiceAmount.toString()}
-            override={el.serviceRequestOverride?.invoiceAmount?.toString()}
+            data={el.serviceRequest.invoiceAmount.toFixed(2)}
+            override={el.serviceRequestOverride?.invoiceAmount?.toFixed(2)}
         />,
         orderId: "invoiceAmount"
     },
@@ -84,8 +84,8 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         align: "center",
         val: el => <CellData
             prefix="$"
-            data={el.serviceRequest.partsUnitCost?.toString()}
-            override={el.serviceRequestOverride?.partsUnitCost?.toString()}
+            data={el.serviceRequest.partsUnitCost?.toFixed(2)}
+            override={el.serviceRequestOverride?.partsUnitCost?.toFixed(2)}
         />,
         orderId: "partsUnitCost"
     },

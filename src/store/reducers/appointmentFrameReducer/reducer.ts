@@ -38,7 +38,7 @@ import {
     setSideBarSteps,
     setMobileServiceAvailability,
     setPickUpDropOffAvailability,
-    setValueServiceAvailability, setWelcomeScreenView, switchLanguage,
+    setValueServiceAvailability, setWelcomeScreenView, switchLanguage, setLocalTransportation,
 } from "./actions";
 import {
     ICustomer,
@@ -66,6 +66,7 @@ type TState = {
     customer: ICustomer;
     reminders: EReminderType[];
     transportation: ITransportation|null;
+    localTransportation: ITransportation|null;
     maintenanceDetails: TMaintenanceDetails;
     packages: IPackage[];
     isPackagesLoading: boolean;
@@ -112,6 +113,7 @@ const initialState: TState = {
     },
     reminders: [],
     transportation: null,
+    localTransportation: null,
     maintenanceDetails: {},
     packages: [],
     isPackagesLoading: false,
@@ -288,5 +290,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(switchLanguage, (state, {payload}) => {
         return {...state, language: payload}
+    })
+    .addCase(setLocalTransportation, (state, {payload}) => {
+        return {...state, localTransportation: payload}
     })
 )

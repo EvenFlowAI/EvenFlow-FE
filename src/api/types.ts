@@ -305,6 +305,7 @@ export interface IComplimentaryService {
     name: string;
     price: number;
     durationInHours: number;
+    orderIndex: number;
 }
 
 export type TServiceRequestShort = {
@@ -313,6 +314,7 @@ export type TServiceRequestShort = {
     description: string;
     durationInHours: number;
     price: number;
+    orderIndex: number;
 }
 
 export type TExtendedComplimentary = {
