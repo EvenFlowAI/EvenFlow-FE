@@ -30,6 +30,8 @@ const Complimentary: React.FC<TComplimentaryProps> =
             )}
 
             {complimentary
+                .slice()
+                .sort((a, b) => a.orderIndex - b.orderIndex)
                 .map(c => <React.Fragment key={c.name}>
                 <div className="serviceWithInfo" style={isBmWService ? {fontSize: 18} : {}}>
                     {c.name} {c.detailedDescription?.length
