@@ -99,8 +99,6 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <h4 className={classes.title}>Delete</h4>
                     </div>
                     {currentPackage?.serviceRequests
-                        .slice()
-                        .sort((a, b) => a.description.localeCompare(b.description))
                         .map(item => <div className={classes.wrapper} key={item.id}>
                         <p>{item.code}</p>
                         <p>{item.description}</p>
@@ -126,8 +124,6 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <h4 className={classes.title}>Delete</h4>
                     </div>
                     {currentPackage?.complimentaryServices
-                        .slice()
-                        .sort((a, b) => a.name.localeCompare(b.name))
                         .map(item => <div className={classes.wrapper} key={item.id}>
                         <div/>
                         <p>{item.name}</p>
