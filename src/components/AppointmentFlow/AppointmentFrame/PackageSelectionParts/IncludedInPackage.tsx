@@ -22,8 +22,6 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
         <div className="gray subtitle">{t("Included in package")}</div>
         {packages.map(p => <div className={setClasses(p.id, "gray subtitle")} key={p.id}/>)}
         {services
-            .slice()
-            .sort((a, b) => a.description.localeCompare(b.description))
             .map((s, idx) => {
             const isLast = idx + 1 === services.length;
             const cls = `service${isLast ? ' last' : ''}`;

@@ -108,8 +108,6 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
             <TableBody>
                 <TableRow className={classes.emptyRow} key="empty"/>
                 {props.packageData?.serviceRequests
-                    .slice()
-                    .sort((a, b) => a.description.localeCompare(b.description))
                     .map((request, rowIndex) => {
                     return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.code}>
                         <TableCell className={classes.requestCell} key="1">{request.description}</TableCell>
