@@ -367,19 +367,24 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                     <div style={{ fontSize: 16 }}>Package ID: {id}</div>
                 </div>
                 <div className={classes.iconsWrapper}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.addOrderButton}
-                        onClick={onOrderOpen}>
-                        Add Order
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={onDescriptionOpen}>
-                        To Describe OPS Codes
-                    </Button>
+                    {expanded
+                        ? <>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.addOrderButton}
+                                onClick={onOrderOpen}>
+                                Add Order
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={onDescriptionOpen}>
+                                To Describe OPS Codes
+                            </Button>
+                        </>
+                        : null
+                    }
                     <IconButton
                         className={classes.button}
                         onClick={onMoreIconClick}
