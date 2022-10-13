@@ -229,7 +229,10 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
                             </TableHead>
                             <TableBody>
                                 <TableRow className={classes.emptyRow} key="empty"/>
-                                {newRequests.map((request, rowIndex) => {
+                                {newRequests
+                                    .slice()
+                                    .sort((a, b) => a.orderIndex - b.orderIndex)
+                                    .map((request, rowIndex) => {
                                     return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.code}>
                                         <TableCell className={classes.requestCell} key={request.description}>{request.description}</TableCell>
                                         {temporaryData?.options.map((option, cellIndex) => {
