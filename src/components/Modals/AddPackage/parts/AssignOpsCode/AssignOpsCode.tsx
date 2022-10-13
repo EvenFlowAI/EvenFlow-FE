@@ -137,7 +137,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
            setSelectedCodes(prev => {
                 const code = prev.find(code => code.type === selectedOption.type);
                 if (code) {
-                    return prev.filter(item => item.type !== selectedOption.type).concat([{...code, serviceRequestId: el.id}])
+                    return prev.filter(item => item.type !== selectedOption.type).concat([{...code, serviceRequestId: el.id, code: el.code}])
                 } else {
                     return [...prev, { type: selectedOption.type, serviceRequestId: el.id, code: el.code}]
                 }

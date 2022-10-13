@@ -41,7 +41,7 @@ const AssignedOpsCodes:React.FC<TAssignedOpsCodesProps> = ({codes}) => {
 
     return (
         <>
-            {codes.map(item => {
+            {codes.slice().sort((a, b) => +a.type - +b.type).map(item => {
                 return <div className={classes.wrapper}>Option {getOptionName(item.serviceRequestId)} - {item.code}</div>
             })}
         </>
