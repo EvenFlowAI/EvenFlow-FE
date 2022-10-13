@@ -24,7 +24,7 @@ import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../store/red
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {
-    loadAllAssignedServiceRequests, loadNonSelectedServiceRequests, setNonSelectedPageData,
+    loadAllAssignedServiceRequests,
 } from "../../../store/reducers/serviceRequests/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import Mileage from "./parts/Mileage/Mileage";
@@ -239,8 +239,6 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id))
             isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
-            dispatch(setNonSelectedPageData({pageIndex: 0, pageSize: 0}))
-            dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
     }, [dispatch, selectedSC, isEditing])
 
@@ -335,10 +333,9 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             return false
         }
         return selectedModels.length
-            && selectedMakes.length
-            && selectedMileages.length
-            && yearFrom
-            && yearTo;
+            || selectedMakes.length
+            || selectedMileages.length
+            || (yearFrom && yearTo);
     }
 
     const isValid = () => {
