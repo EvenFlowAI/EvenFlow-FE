@@ -24,10 +24,11 @@ import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../store/red
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {
-    loadAllAssignedServiceRequests,
+    loadAllAssignedServiceRequests, loadNonSelectedServiceRequests, setNonSelectedPageData,
 } from "../../../store/reducers/serviceRequests/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import Mileage from "./parts/Mileage/Mileage";
+import AssignedOpsCodes from "./parts/AssignedOpsCodes/AssignedOpsCodes";
 
 
 type TModalProps = DialogProps & {
@@ -238,6 +239,8 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id))
             isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
+            dispatch(setNonSelectedPageData({pageIndex: 0, pageSize: 0}))
+            dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
     }, [dispatch, selectedSC, isEditing])
 
@@ -423,6 +426,21 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             <AddCircleOutline/>
                         </IconButton>
                         <span> Add New Existing Maintenance Package</span>
+                    </div>
+
+                    <div className={classes.label}>Assigned Ops Codes</div>
+                    <div className={assignedOpsCodes?.length
+                        ? classes.opsCodesWrapper
+                        : formIsChecked
+                            ? assignedOpsCodes?.length < 3
+                                ? classes.errorOpsCodes
+                                : classes.emptyOpsCodes
+                            : classes.emptyOpsCodes
+                    }>
+                    { assignedOpsCodes?.length
+                        ? <AssignedOpsCodes codes={assignedOpsCodes}/>
+                        : <p>There are no ops codes in this list yet</p>
+                    }
                     </div>
 
                     <Button
