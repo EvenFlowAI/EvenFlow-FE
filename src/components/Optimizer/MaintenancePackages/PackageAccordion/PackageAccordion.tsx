@@ -155,7 +155,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
     const getOptionsData = useCallback((packageData: IPackageById) => {
         if (packageData?.serviceRequests) {
-            const rows = packageData.serviceRequests.map((request) => ({
+            const rows = packageData.serviceRequests
+                .slice()
+                .sort((a, b) => a.orderIndex - b.orderIndex)
+                .map((request) => ({
                 requestId: request.id,
                 cellData: packageData.options
                     .map((option: IPackageOptionDetailed)  => ({
@@ -167,7 +170,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             setDetailsData(() => getOptionsTableData(packageData))
         }
         if (packageData?.complimentaryServices) {
-            const rows = packageData.complimentaryServices.map((request) => ({
+            const rows = packageData.complimentaryServices
+                .slice()
+                .sort((a, b) => a.orderIndex - b.orderIndex)
+                .map((request) => ({
                 requestId: request.id,
                 cellData: packageData.options
                     .map((option: IPackageOptionDetailed)  => ({ optionType: option.type, isSelected: option.complimentaryServices.includes(request.id)}))
