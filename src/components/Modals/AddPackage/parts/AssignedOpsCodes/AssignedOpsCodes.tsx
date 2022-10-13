@@ -1,9 +1,7 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {TAssignedRequest} from "../../../../../store/reducers/packages/types";
-import {TExtendedService} from "../../../../../api/types";
-import {IServiceRequest} from "../../../../../store/reducers/serviceRequests/types";
 import {MaintenanceOptions} from "../../../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -27,14 +25,8 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AssignedOpsCodes:React.FC<TAssignedOpsCodesProps> = ({codes}) => {
-    const {nonSelectedList} = useSelector((state: RootState) => state.serviceRequests);
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
-
-    const selectedCodes: IServiceRequest[]|TExtendedService[] = useMemo(() => {
-        const codesIds = codes.map(item => item.serviceRequestId);
-        return nonSelectedList.filter(item => codesIds.includes(item.id))
-    }, [nonSelectedList, codes])
 
     const getOptionName = (codeId: number) => {
         const option = codes.find(item => item.serviceRequestId === codeId);
@@ -49,8 +41,8 @@ const AssignedOpsCodes:React.FC<TAssignedOpsCodesProps> = ({codes}) => {
 
     return (
         <>
-            {selectedCodes.map(item => {
-                return <div className={classes.wrapper}>Option {getOptionName(item.id)} - {item.code}</div>
+            {codes.map(item => {
+                return <div className={classes.wrapper}>Option {getOptionName(item.serviceRequestId)} - {item.code}</div>
             })}
         </>
     );

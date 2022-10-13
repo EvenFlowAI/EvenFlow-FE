@@ -139,7 +139,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
                 if (code) {
                     return prev.filter(item => item.type !== selectedOption.type).concat([{...code, serviceRequestId: el.id}])
                 } else {
-                    return [...prev, { type: selectedOption.type, serviceRequestId: el.id}]
+                    return [...prev, { type: selectedOption.type, serviceRequestId: el.id, code: el.code}]
                 }
             });
         } else {
@@ -156,7 +156,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
     const handleSearch = useCallback(async () => {
         if (selectedSC) {
             changePage(null, 0)
-            await dispatch(setNonSelectedPageData({pageIndex: 0}))
+            await dispatch(setNonSelectedPageData({pageIndex: 0, pageSize: 10}))
             await dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
     }, [dispatch, selectedSC]);
