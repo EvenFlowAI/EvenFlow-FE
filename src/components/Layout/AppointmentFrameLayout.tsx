@@ -192,13 +192,15 @@ export const AppointmentFrameLayout = () => {
     }, [window.location, document.referrer, document.location])
 
     useEffect(() => {
-        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-            const uid = uuidv4();
-            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        if (typeof sessionStorage !== 'undefined') {
+            if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+                const uid = uuidv4();
+                sessionStorage.setItem(LocalTokens.sessionId, uid);
+            }
+            window.addEventListener('unload', () => {
+                sessionStorage.setItem(LocalTokens.sessionId, '')
+            })
         }
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
     }, [sessionStorage])
 
     const handleNewCustomer = () => {

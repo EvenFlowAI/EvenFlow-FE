@@ -99,8 +99,10 @@ export const endUserRequest = axios.create({
 });
 
 request.interceptors.request.use(request => {
-    const sessionId = sessionStorage.getItem(LocalTokens.sessionId);
-    if (sessionId?.length) request.headers['SessionId'] = sessionId;
+    if (typeof sessionStorage !== 'undefined') {
+        const sessionId = sessionStorage.getItem(LocalTokens.sessionId);
+        if (sessionId?.length) request.headers['SessionId'] = sessionId;
+    }
     return request;
 })
 
