@@ -165,12 +165,14 @@ const _selectSc = (payload: IServiceCenter|undefined): TServiceCenterActions => 
     return {type: "ServiceCenters/SelectSC", payload};
 }
 export const selectSC = (payload: IServiceCenter): AppThunk => dispatch => {
-    localStorage.setItem(LocalItems.selectedSC, String(payload.id));
+    if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(LocalItems.selectedSC, String(payload.id));
+    }
     dispatch(_selectSc(payload));
     dispatch(setSelectedPod(null));
 };
 export const clearSC = (): AppThunk => dispatch => {
-    localStorage.removeItem(LocalItems.selectedSC);
+    if (typeof localStorage !== 'undefined') localStorage.removeItem(LocalItems.selectedSC);
     dispatch(_selectSc(undefined));
 }
 export const loadAllSCs = (): AppThunk => async (dispatch, getState) => {
@@ -178,7 +180,8 @@ export const loadAllSCs = (): AppThunk => async (dispatch, getState) => {
     if (result.length) {
         dispatch(_loadAllSCS(result));
         if (!getState().users.currentUser?.isSuperUser) {
-            const prevSelected = localStorage.getItem(LocalItems.selectedSC);
+            let prevSelected: string|null = null;
+            if (typeof localStorage !== 'undefined') prevSelected = localStorage.getItem(LocalItems.selectedSC);
             if (prevSelected) {
                 const selected = result.find(i => i.id === Number(prevSelected));
                 if (selected) {
