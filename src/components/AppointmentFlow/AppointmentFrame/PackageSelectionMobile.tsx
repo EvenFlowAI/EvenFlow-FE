@@ -274,6 +274,8 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                             <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
                             <div className={classes.serviceRequests}>
                                 {item.serviceRequests
+                                    .slice()
+                                    .sort((a, b) => a.orderIndex - b.orderIndex)
                                     .map(item => {
                                   return item.detailedDescription?.length
                                       ? <HtmlTooltip
@@ -310,6 +312,8 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
 
                             <div className={classes.complimentaryServices}>
                                 {item.complimentaryServices
+                                    .slice()
+                                    .sort((a, b) => a.orderIndex - b.orderIndex)
                                     .map(item => {
                                     return item.detailedDescription?.length
                                         ? <HtmlTooltip

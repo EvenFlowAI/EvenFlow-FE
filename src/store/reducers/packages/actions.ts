@@ -5,7 +5,7 @@ import {Api} from "../../../config/requests";
 import {
     IComplimentaryServiceByQuery,
     INewPackage,
-    IUpdatedPackage
+    IUpdatedPackage, TOrderIndex
 } from "./types";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
@@ -198,4 +198,30 @@ export const updatePackageComplimentaryDescription = (
             onError(err)
         })
         .finally(() => dispatch(setPackageLoading(false)))
+}
+
+export const updateSROrderIndex = (id: number, items: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true))
+    Api.call(Api.endpoints.MaintenancePackages.UpdateSROrder, {urlParams: {id}, data: {items}})
+        .then(result => {
+            if (result) dispatch(loadPackageById(id))
+        })
+        .catch(err => {
+            console.log('update package service requests order index err', err)
+            onError(err)
+        })
+    dispatch(setPackageLoading(false))
+}
+
+export const updateComplimentaryOrderIndex = (id: number, items: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true))
+    Api.call(Api.endpoints.MaintenancePackages.UpdateComplimentaryOrder, {urlParams: {id}, data: {items}})
+        .then(result => {
+            if (result) dispatch(loadPackageById(id))
+        })
+        .catch(err => {
+            console.log('update package complimentary order index err', err)
+            onError(err)
+        })
+    dispatch(setPackageLoading(false))
 }

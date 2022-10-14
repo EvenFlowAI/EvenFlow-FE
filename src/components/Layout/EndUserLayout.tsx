@@ -64,14 +64,18 @@ export const EndUserLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
-            window.addEventListener('message', function(event) {
-                if (!prodParentLinks.includes(event.origin)) return;
-                let originSite = event.origin;
-                if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-                if (originSite) createTracker(event.data, originSite, trackerCreated);
-            });
+            if (window?.parent?.navigator?.cookieEnabled) {
+                window.addEventListener('message', function(event) {
+                    if (!prodParentLinks.includes(event?.origin)) return;
+                    let originSite = event.origin;
+                    if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
+                    if (originSite) createTracker(event.data, originSite, trackerCreated);
+                });
+            } else {
+                alert('In order to see this page you need to enable cookie')
+            }
         }
-    }, [trackerCreated, window.location?.ancestorOrigins]);
+    }, [trackerCreated, window.location?.ancestorOrigins, window?.parent?.navigator?.cookieEnabled]);
 
     useEffect(() => {
         if (!trackerCreated) {

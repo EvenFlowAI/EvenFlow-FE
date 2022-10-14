@@ -51,6 +51,8 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
         <Table>
             <TableBody>
                 {props.packageData?.complimentaryServices
+                    .slice()
+                    .sort((a, b) => a.orderIndex - b.orderIndex)
                     .map((request, rowIndex) => {
                     return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.name}>
                         <TableCell className={classes.requestCell} key={`${request.name}_nameCell`}>
