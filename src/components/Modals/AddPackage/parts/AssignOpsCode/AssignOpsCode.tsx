@@ -171,7 +171,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
         if (isEditing && currentPackage && value) {
             const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === value.type)
             if (assignedCode) setSelectedCodes(prev => {
-                const request = {type: value.type, serviceRequestId: assignedCode.serviceRequestId};
+                const request = {type: value.type, serviceRequestId: assignedCode.serviceRequestId, code: assignedCode.code};
                 if (prev.find(item => item.type === value.type)) {
                     const data = prev.filter(item => item.type !== value.type);
                     return [...data, request]
