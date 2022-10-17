@@ -30,7 +30,6 @@ import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameRedu
 import {API} from "../../api/api";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
-import LanguageSwitcher from "../AppointmentFlow/AppointmentFrame/LanguageSwitcher/LanguageSwitcher";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
@@ -47,13 +46,15 @@ export const Welcome = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-            const uid = uuidv4();
-            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        if (typeof sessionStorage !== 'undefined') {
+            if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+                const uid = uuidv4();
+                sessionStorage.setItem(LocalTokens.sessionId, uid);
+            }
+            window.addEventListener('unload', () => {
+                sessionStorage.setItem(LocalTokens.sessionId, '')
+            })
         }
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
     }, [sessionStorage])
 
     useEffect(() => {

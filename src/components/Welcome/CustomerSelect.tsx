@@ -113,11 +113,13 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading}) => {
 
     useEffect(() => {
         const uid = uuidv4();
-        sessionStorage.setItem(LocalTokens.sessionId, uid);
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
-    }, [])
+        if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
+            window.addEventListener('unload', () => {
+                sessionStorage.setItem(LocalTokens.sessionId, '')
+            })
+        }
+    }, [sessionStorage])
 
     const createBlankCar = () => {
         const c = getBlankCustomer();
