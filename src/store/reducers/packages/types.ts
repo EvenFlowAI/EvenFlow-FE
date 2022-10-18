@@ -14,6 +14,7 @@ export interface IPackageOption {
 export type TAssignedRequest = {
     type: string | number;
     serviceRequestId: number;
+    code?: string;
 }
 
 export interface IUpdatedPackage {
@@ -62,4 +63,9 @@ export interface IPackageOptionShort {
     maintenancePackageId: number;
     maintenancePackageName: string;
     type: EMaintenanceOptionType;
+}
+
+export type TOrderIndex = {
+    id: number;
+    orderIndex: number;
 }

@@ -137,9 +137,9 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
            setSelectedCodes(prev => {
                 const code = prev.find(code => code.type === selectedOption.type);
                 if (code) {
-                    return prev.filter(item => item.type !== selectedOption.type).concat([{...code, serviceRequestId: el.id}])
+                    return prev.filter(item => item.type !== selectedOption.type).concat([{...code, serviceRequestId: el.id, code: el.code}])
                 } else {
-                    return [...prev, { type: selectedOption.type, serviceRequestId: el.id}]
+                    return [...prev, { type: selectedOption.type, serviceRequestId: el.id, code: el.code}]
                 }
             });
         } else {
@@ -156,7 +156,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
     const handleSearch = useCallback(async () => {
         if (selectedSC) {
             changePage(null, 0)
-            await dispatch(setNonSelectedPageData({pageIndex: 0}))
+            await dispatch(setNonSelectedPageData({pageIndex: 0, pageSize: 10}))
             await dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
     }, [dispatch, selectedSC]);
@@ -171,7 +171,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
         if (isEditing && currentPackage && value) {
             const assignedCode = currentPackage?.serviceRequestsAssigned?.find(item => item.type === value.type)
             if (assignedCode) setSelectedCodes(prev => {
-                const request = {type: value.type, serviceRequestId: assignedCode.serviceRequestId};
+                const request = {type: value.type, serviceRequestId: assignedCode.serviceRequestId, code: assignedCode.code};
                 if (prev.find(item => item.type === value.type)) {
                     const data = prev.filter(item => item.type !== value.type);
                     return [...data, request]

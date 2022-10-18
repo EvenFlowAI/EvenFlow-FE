@@ -28,6 +28,7 @@ import {
 } from "../../../store/reducers/serviceRequests/actions";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import Mileage from "./parts/Mileage/Mileage";
+import AssignedOpsCodes from "./parts/AssignedOpsCodes/AssignedOpsCodes";
 
 
 type TModalProps = DialogProps & {
@@ -332,10 +333,9 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             return false
         }
         return selectedModels.length
-            && selectedMakes.length
-            && selectedMileages.length
-            && yearFrom
-            && yearTo;
+            || selectedMakes.length
+            || selectedMileages.length
+            || (yearFrom && yearTo);
     }
 
     const isValid = () => {
@@ -423,6 +423,21 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             <AddCircleOutline/>
                         </IconButton>
                         <span> Add New Existing Maintenance Package</span>
+                    </div>
+
+                    <div className={classes.label}>Assigned Ops Codes</div>
+                    <div className={assignedOpsCodes?.length
+                        ? classes.opsCodesWrapper
+                        : formIsChecked
+                            ? assignedOpsCodes?.length < 3
+                                ? classes.errorOpsCodes
+                                : classes.emptyOpsCodes
+                            : classes.emptyOpsCodes
+                    }>
+                    { assignedOpsCodes?.length
+                        ? <AssignedOpsCodes codes={assignedOpsCodes}/>
+                        : <p>There are no ops codes in this list yet</p>
+                    }
                     </div>
 
                     <Button

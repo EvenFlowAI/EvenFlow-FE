@@ -115,7 +115,6 @@ export const prodParentLinks = [
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
-    const [origin, setOrigin] = useState<string>('');
 
     const {
         selectedVehicle,
@@ -168,17 +167,18 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
-            window.addEventListener('message', function(event) {
-                if (!prodParentLinks.includes(event.origin)) return;
-                let originSite = event.origin;
-                if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-                if (originSite) {
-                    createTracker(event.data, originSite, trackerCreated);
-                    setOrigin(originSite);
-                }
-            });
+            if (window?.parent?.navigator?.cookieEnabled) {
+                window.addEventListener('message', function(event) {
+                    if (!prodParentLinks.includes(event?.origin)) return;
+                    let originSite = event.origin;
+                    if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
+                    if (originSite) createTracker(event.data, originSite, trackerCreated);
+                });
+            } else {
+                alert('In order to see this page you need to enable cookie')
+            }
         }
-    }, [trackerCreated, window.location?.ancestorOrigins]);
+    }, [trackerCreated, window.location?.ancestorOrigins, window?.parent?.navigator?.cookieEnabled]);
 
     useEffect(() => {
         if (!trackerCreated) {
@@ -192,13 +192,15 @@ export const AppointmentFrameLayout = () => {
     }, [window.location, document.referrer, document.location])
 
     useEffect(() => {
-        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-            const uid = uuidv4();
-            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        if (typeof sessionStorage !== 'undefined') {
+            if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+                const uid = uuidv4();
+                sessionStorage.setItem(LocalTokens.sessionId, uid);
+            }
+            window.addEventListener('unload', () => {
+                sessionStorage.setItem(LocalTokens.sessionId, '')
+            })
         }
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
     }, [sessionStorage])
 
     const handleNewCustomer = () => {
@@ -222,7 +224,7 @@ export const AppointmentFrameLayout = () => {
                 history.push(Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1");
             }
         }
-    }, [id, history, dispatch, origin, scProfile]);
+    }, [id, history, dispatch, scProfile]);
 
     useEffect(() => {
         if (!customerLoadedData) {
@@ -234,7 +236,7 @@ export const AppointmentFrameLayout = () => {
                 if (!valueService) handleLogin();
             }
         }
-    }, [customerLoadedData, dispatch, handleLogin, origin]);
+    }, [customerLoadedData, dispatch, handleLogin]);
 
     useEffect(() => {
         if (currentFrameScreen === currentScreen) {

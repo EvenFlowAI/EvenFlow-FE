@@ -98,7 +98,10 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <h4 className={classes.title}>Edit</h4>
                         <h4 className={classes.title}>Delete</h4>
                     </div>
-                    {currentPackage?.serviceRequests.map(item => <div className={classes.wrapper} key={item.id}>
+                    {currentPackage?.serviceRequests
+                        .slice()
+                        .sort((a, b) => a.orderIndex - b.orderIndex)
+                        .map(item => <div className={classes.wrapper} key={item.id}>
                         <p>{item.code}</p>
                         <p>{item.description}</p>
                         <div>
@@ -122,7 +125,10 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
                         <h4 className={classes.title}>Edit</h4>
                         <h4 className={classes.title}>Delete</h4>
                     </div>
-                    {currentPackage?.complimentaryServices.map(item => <div className={classes.wrapper} key={item.id}>
+                    {currentPackage?.complimentaryServices
+                        .slice()
+                        .sort((a, b) => a.orderIndex - b.orderIndex)
+                        .map(item => <div className={classes.wrapper} key={item.id}>
                         <div/>
                         <p>{item.name}</p>
                         <div>

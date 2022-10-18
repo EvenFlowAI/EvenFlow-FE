@@ -7,25 +7,35 @@ import {API} from "../api/api";
 
 class AuthService {
     getLocalToken (): string {
-        return localStorage.getItem(LocalTokens.authToken) || '';
+        if (typeof localStorage !== undefined) {
+            return localStorage.getItem(LocalTokens.authToken) || '';
+        }
+        return '';
     }
     getRefreshToken (): string {
-        return localStorage.getItem(LocalTokens.refreshToken) || '';
+        if (typeof localStorage !== undefined) {
+            return localStorage.getItem(LocalTokens.refreshToken) || '';
+        }
+        return '';
     }
 
     setTokens ({accessToken, refreshToken}: ITokens): void {
-        localStorage.setItem(LocalTokens.authToken, accessToken);
-        localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+        if (typeof localStorage !== undefined) {
+            localStorage.setItem(LocalTokens.authToken, accessToken);
+            localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+        }
     }
 
     setDealershipTokens({accessToken, refreshToken}: ITokens) {
-        const tokens: ITokens = {
-            accessToken: this.getLocalToken(),
-            refreshToken: this.getRefreshToken()
-        };
-        localStorage.setItem(LocalTokens.suToken, JSON.stringify(tokens));
-        localStorage.setItem(LocalTokens.authToken, accessToken);
-        localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+        if (typeof localStorage !== undefined) {
+            const tokens: ITokens = {
+                accessToken: this.getLocalToken(),
+                refreshToken: this.getRefreshToken()
+            };
+            localStorage.setItem(LocalTokens.suToken, JSON.stringify(tokens));
+            localStorage.setItem(LocalTokens.authToken, accessToken);
+            localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+        }
     }
 
     isAuthenticated (): boolean {
@@ -78,14 +88,16 @@ class AuthService {
     }
 
     logout (): void {
-        localStorage.removeItem(LocalTokens.authToken);
-        localStorage.removeItem(LocalTokens.refreshToken);
-        const suTokens = localStorage.getItem(LocalTokens.suToken);
-        if (suTokens) {
-            localStorage.removeItem(LocalTokens.suToken);
-            this.setTokens(JSON.parse(suTokens) as ITokens);
+        if (typeof localStorage !== undefined) {
+            localStorage.removeItem(LocalTokens.authToken);
+            localStorage.removeItem(LocalTokens.refreshToken);
+            const suTokens = localStorage.getItem(LocalTokens.suToken);
+            if (suTokens) {
+                localStorage.removeItem(LocalTokens.suToken);
+                this.setTokens(JSON.parse(suTokens) as ITokens);
+            }
+            this.refreshRequest();
         }
-        this.refreshRequest();
     }
 }
 
@@ -99,8 +111,10 @@ export const endUserRequest = axios.create({
 });
 
 request.interceptors.request.use(request => {
-    const sessionId = sessionStorage.getItem(LocalTokens.sessionId);
-    if (sessionId?.length) request.headers['SessionId'] = sessionId;
+    if (typeof sessionStorage !== 'undefined') {
+        const sessionId = sessionStorage.getItem(LocalTokens.sessionId);
+        if (sessionId?.length) request.headers['SessionId'] = sessionId;
+    }
     return request;
 })
 
@@ -156,7 +170,7 @@ type ApiRoutes = {
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
-        | "UpdateSRDescription" | "UpdateComplimentaryDescription", TApiRoute>,
+        | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -213,12 +227,12 @@ export class Api {
             Dealership: {route: "/accounts/dealership", method: "get"},
         },
         AncillaryPricing: {
-          GetZones: {route: "/ancillary-price/geographic-zone/by-query", method: "post"},
-          UpdateZone: {route: "/ancillary-price/geographic-zone/{id}", method: "put"},
-          GetDistances: {route: "/ancillary-price/distance/by-query", method: "post"},
-          CreateDistance: {route: "/ancillary-price/distance", method: "post"},
-          UpdateDistance: {route: "/ancillary-price/distance/{id}", method: "put"},
-          DeleteDistance: {route: "/ancillary-price/distance/{id}", method: "delete"},
+            GetZones: {route: "/ancillary-price/geographic-zone/by-query", method: "post"},
+            UpdateZone: {route: "/ancillary-price/geographic-zone/{id}", method: "put"},
+            GetDistances: {route: "/ancillary-price/distance/by-query", method: "post"},
+            CreateDistance: {route: "/ancillary-price/distance", method: "post"},
+            UpdateDistance: {route: "/ancillary-price/distance/{id}", method: "put"},
+            DeleteDistance: {route: "/ancillary-price/distance/{id}", method: "delete"},
         },
         Appointments: {
             Create: {route: "/appointments", method: "post"},
@@ -311,6 +325,8 @@ export class Api {
             ChangePricingDisplayType: {route: "/maintenance-packages/{id}/pricing-display-type", method: "patch"},
             UpdateSRDescription: {route: "/maintenance-packages/{id}/set-service-request-description", method: "patch"},
             UpdateComplimentaryDescription: {route: "/maintenance-packages/{id}/set-complimentary-service-description", method: "patch"},
+            UpdateComplimentaryOrder: {route: "/maintenance-packages/{id}/set-list-complimentary-service-order-index", method: "patch"},
+            UpdateSROrder: {route: "/maintenance-packages/{id}/set-list-service-request-order-index", method: "patch"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

@@ -4,6 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
     paper: {
+        height: "100%",
         borderRadius: 0,
         padding: 20,
         position: "relative"
