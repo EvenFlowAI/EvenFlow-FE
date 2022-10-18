@@ -1,6 +1,8 @@
 import React from 'react';
 import {Divider, Grid, styled, Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import {useTranslation} from "react-i18next";
+import {ReactComponent as DealershipLogo} from "../../../assets/img/logo_dealership_example.svg";
 
 const Wrapper = styled('div')({
     display: "flex",
@@ -181,23 +183,27 @@ const useStyles = makeStyles(() => ({
         borderLeft: '1px solid #DADADA',
         borderRight: '1px solid #DADADA',
         borderBottom: '1px solid #202021',
+    },
+    detailsRow:{
+        marginBottom: 10
     }
 }))
 
 const BillHeader = () => {
     const classes = useStyles();
+    const {t} = useTranslation();
 
     return <Grid container>
         <Grid item xs={12} sm={6}>
-            <h2 className={classes.headerTitle}>Detailed Invoice</h2>
+            <h2 className={classes.headerTitle}>{t("Detailed Invoice")}</h2>
         </Grid>
         <Grid  item xs={12} sm={6}>
             <Grid container>
                 <Grid item xs={4}>
-                    Logo
+                    <DealershipLogo/>
                 </Grid>
                 <Grid item xs={8}>
-                    <p className={classes.departmentHours}>Service Department Hours</p>
+                    <p className={classes.departmentHours}>{t("Service Department Hours")}</p>
                     <p>{data.serviceCenter.hoursOfOperation}</p>
                 </Grid>
             </Grid>
@@ -219,76 +225,78 @@ const BillHeader = () => {
 
 const VehicleData = () => {
     const classes = useStyles();
+    const {t} = useTranslation();
+
     return <Grid container>
         <Grid item xs={12} sm={6} container>
             <Grid item xs={4}>
-                <p className={classes.label}>Year:</p>
+                <p className={classes.label}>{t("Year")}:</p>
                 <p className={classes.data}>{data.vehicleData.year}</p>
             </Grid>
             <Grid item xs={4}>
-                <p className={classes.label}>Make:</p>
+                <p className={classes.label}>{t("Make")}:</p>
                 <p className={classes.data}>{data.vehicleData.make}</p>
             </Grid>
             <Grid item xs={4}>
-                <p className={classes.label}>Model:</p>
+                <p className={classes.label}>{t("Model")}:</p>
                 <p className={classes.data}>{data.vehicleData.model}</p>
             </Grid>
             <Grid item xs={12}>
-                <p className={classes.label}>VIN:</p>
+                <p className={classes.label}>{t("VIN")}:</p>
                 <p className={classes.data}>{data.vehicleData.vin}</p>
             </Grid>
             <Grid item xs={4}>
-                <p className={classes.label}>Mileage In:</p>
+                <p className={classes.label}>{t("Mileage In")}:</p>
                 <p className={classes.data}>{data.vehicleData.mileageIn}</p>
             </Grid>
             <Grid item xs={8}>
-                <p className={classes.label}>Mileage Out:</p>
+                <p className={classes.label}>{t("Mileage Out")}:</p>
                 <p className={classes.data}>{data.vehicleData.mileageOut}</p>
             </Grid>
             <Grid item xs={4}>
-                <p className={classes.label}>License:</p>
+                <p className={classes.label}>{t("License")}:</p>
                 <p className={classes.data}>{data.vehicleData.license}</p>
             </Grid>
             <Grid item xs={4}>
-                <p className={classes.label}>Body:</p>
+                <p className={classes.label}>{t("Body")}:</p>
                 <p className={classes.data}>{data.vehicleData.body}</p>
             </Grid>
             <Grid item xs={4}>
-                <p className={classes.label}>Color:</p>
+                <p className={classes.label}>{t("Color")}:</p>
                 <p className={classes.data}>{data.vehicleData.color}</p>
             </Grid>
         </Grid>
         <Grid item xs={12} sm={6} container>
             <Grid item xs={6}>
-                <p className={classes.label}>Repair Order:</p>
+                <p className={classes.label}>{t("Repair Order")}:</p>
                 <p className={classes.data}>{data.repairOrder.number}</p>
             </Grid>
             <Grid item xs={6}>
-                <p className={classes.label}>Opened Date:</p>
+                <p className={classes.label}>{t("Opened Date")}:</p>
                 <p className={classes.data}>{data.repairOrder.openedDate}</p>
             </Grid>
             <Grid item xs={6}>
-                <p className={classes.label}>Promised Date:</p>
+                <p className={classes.label}>{t("Promised Date")}:</p>
                 <p className={classes.data}>{data.repairOrder.promisedDate}</p>
             </Grid>
             <Grid item xs={6}>
-                <p className={classes.label}>Closed Date:</p>
+                <p className={classes.label}>{t("Closed Date")}:</p>
                 <p className={classes.data}>{data.repairOrder.closedDate}</p>
             </Grid>
             <Grid item xs={6}>
-                <p className={classes.label}>Service Advisor:</p>
+                <p className={classes.label}>{t("Service Advisor")}:</p>
                 <p className={classes.data}>{data.repairOrder.serviceAdvisor}</p>
             </Grid>
             <Grid item xs={6}>
-                <p className={classes.label}>Tag #:</p>
+                <p className={classes.label}>{t("Tag")} #:</p>
                 <p className={classes.data}>{data.repairOrder.tagNumber}</p>
             </Grid>
             <Grid item xs={6}>
-                <p className={classes.label}>Rate:</p>
+                <p className={classes.label}>{t("Rate")}:</p>
                 <p className={classes.data}>{data.repairOrder.rate}</p>
             </Grid>
             <Grid item xs={6}>
-                <p className={classes.label}>Closed Rate:</p>
+                <p className={classes.label}>{t("Closed Rate")}:</p>
                 <p className={classes.data}>{data.repairOrder.payment}</p>
             </Grid>
         </Grid>
@@ -302,6 +310,7 @@ const getAlphabeticalIndexes = () => {
 const RepairTable = () => {
     const indexes = getAlphabeticalIndexes();
     const classes = useStyles();
+    const {t} = useTranslation();
 
     return <TableContainer>
         <Table>
@@ -311,16 +320,16 @@ const RepairTable = () => {
                         #
                     </TableCell>
                     <TableCell key="#" className={classes.headerCell}>
-                        DESCRIPTION OF SERVICE AND PARTS
+                        {t("Description of Service And Parts")}
                     </TableCell>
                     <TableCell key="#" className={classes.headerCell} align="center">
-                        PARTS
+                        {t("Parts")}
                     </TableCell>
                     <TableCell key="#" className={classes.headerCell} align="center">
-                        LABOR
+                        {t("Labor")}
                     </TableCell>
                     <TableCell key="#" className={classes.headerCell} align="center">
-                        TOTAL
+                        {t("Total")}
                     </TableCell>
                 </TableRow>
             </TableHead>
@@ -362,41 +371,45 @@ const RepairTable = () => {
 
 const Disclaimer = () => {
     const classes = useStyles();
+    const {t} = useTranslation();
+
     return <Grid item xs={12} sm={6} className={classes.disclaimer}>
-        <p className={classes.disclaimerTitle}>Disclaimer Of Warranties</p>
+        <p className={classes.disclaimerTitle}>{t("Disclaimer Of Warranties")}</p>
         <p className={classes.disclaimerText}>{data.disclaimerOfWarranties}</p>
     </Grid>
 }
 
 const DetailedPayments = () => {
     const classes = useStyles();
-    return <Grid item xs={12} sm={6} container spacing={2}>
-        <Grid item xs={12} justify="space-between" container>
-            <Grid item xs={8} className={classes.greyDetails}>SUBLET AMOUNT</Grid>
+    const {t} = useTranslation();
+
+    return <Grid item xs={12} sm={6} container style={{marginTop: -12}}>
+        <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
+            <Grid item xs={8} className={classes.greyDetails}>{t("Sublet Amount")}</Grid>
             <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.subletAmount}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between" container>
-            <Grid item xs={8}  className={classes.greyDetails}>SHOP SUPPLIES</Grid>
+        <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
+            <Grid item xs={8}  className={classes.greyDetails}>{t("Shop Supplies")}</Grid>
             <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.shopSupplies}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between" container>
-            <Grid item xs={8} className={classes.greyDetails}>HAZARDOUS MATERIALS</Grid>
+        <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
+            <Grid item xs={8} className={classes.greyDetails}>{t("Hazardous Materials")}</Grid>
             <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.hazardousMaterailes}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between" container>
-            <Grid item xs={8} className={classes.greyDetails}>TOTAL CHARGES</Grid>
+        <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
+            <Grid item xs={8} className={classes.greyDetails}>{t("Total Charges")}</Grid>
             <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.totalCharges}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between" container>
-            <Grid item xs={8} className={classes.greyDetails}>LESS ADJUSTMENTS</Grid>
+        <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
+            <Grid item xs={8} className={classes.greyDetails}>{t("Less Adjustments")}</Grid>
             <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.lessAdjustments}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between" container>
-            <Grid item xs={8} className={classes.greyDetails}>SALES TAX</Grid>
+        <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
+            <Grid item xs={8} className={classes.greyDetails}>{t("Sales Tax")}</Grid>
             <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.salesTax}</Grid>
         </Grid>
         <Grid item xs={12} justify="space-between" container>
-            <Grid item xs={8} className={classes.totalDue}>TOTAL DUE</Grid>
+            <Grid item xs={8} className={classes.totalDue}>{t("Total Due")}</Grid>
             <Grid item xs={4} justify="flex-end" container className={classes.totalDue}>${
                 data.priceWithTaxes.subletAmount +
                 data.priceWithTaxes.shopSupplies +
