@@ -77,6 +77,7 @@ enum EndUser {
     Confirmation = "/confirmation/:id",
     ConfirmationBase = "/confirmation",
     ValueService = "/f/appointment/:id/valueService",
+    PaymentBill = "/f/appointment/:id/payment-bill"
 }
 
 export const Routes = {

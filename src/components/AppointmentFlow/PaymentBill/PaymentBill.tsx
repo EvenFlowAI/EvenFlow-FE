@@ -1,15 +1,25 @@
 import React from 'react';
-import {Divider, Grid} from "@material-ui/core";
+import {Divider, Grid, styled, Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {TableRowDataType} from "../../UI/types";
-import {Table} from "../../UI/Table";
 
-type TServiceCompleted = {
-    name: string;
-    labor: number;
-    parts: number;
-    total: number;
-}
+const Wrapper = styled('div')({
+    display: "flex",
+    justifyContent: "center",
+    padding: 36,
+    background: "#E5E5E5"
+})
+
+const Paper = styled('div')({
+    width: '60%',
+    padding: 28,
+    border: '1px solid #DADADA',
+    background: "#FFFFFF",
+})
+
+const TableContainer = styled('div')({
+    // border: '1px solid #DADADA',
+    marginBottom: 20,
+})
 
 const data = {
     customerData: {
@@ -31,15 +41,15 @@ const data = {
         hoursOfOperation: "Monday to Friday: 8:00 a.m. to 6:00 p.m. " + "Saturday: 9:00 a.m. to 4:00 p.m."
     },
     vehicleData: {
-        year: "",
-        make: "",
-        model: "",
-        vin: "",
-        mileageIn: "",
-        mileageOut: "",
-        license: "",
-        body: "",
-        color: ""
+        year: "2021",
+        make: "FORD",
+        model: "BRONCO",
+        vin: "JY9095495069345",
+        mileageIn: "2000",
+        mileageOut: "2000",
+        license: "JJ900",
+        body: "HJ749",
+        color: "NAVY"
     },
     repairOrder: {
         number: "6167",
@@ -118,12 +128,13 @@ const useStyles = makeStyles(() => ({
     },
     disclaimer: {
         border: '1px solid #DADADA',
-        padding: 12
+        padding: 12,
     },
     disclaimerTitle: {
         fontSize: 10,
         fontWeight: 600,
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        marginBottom: 8
     },
     disclaimerText: {
         fontSize: 10,
@@ -138,6 +149,38 @@ const useStyles = makeStyles(() => ({
         fontSize: 16,
         fontWeight: 600,
         textTransform: 'uppercase'
+    },
+    headerCell: {
+        fontWeight: 700,
+        fontSize: 20,
+        textTransform: 'uppercase',
+        borderTop: '1px solid #DADADA',
+        borderLeft: '1px solid #DADADA',
+        borderRight: '1px solid #DADADA',
+    },
+    cell: {
+        borderLeft: '1px solid #DADADA',
+        borderRight: '1px solid #DADADA',
+    },
+    greyRow: {
+        width: "100%",
+        background: '#DADADA',
+        height: 24,
+        border: '1px solid #DADADA',
+    },
+    totalRow: {
+        borderBottom: '1px solid #202021',
+    },
+    totalCell: {
+        fontWeight: 700,
+        borderLeft: '1px solid #DADADA',
+        borderRight: '1px solid #DADADA',
+        borderBottom: '1px solid #202021',
+    },
+    lastRowCell: {
+        borderLeft: '1px solid #DADADA',
+        borderRight: '1px solid #DADADA',
+        borderBottom: '1px solid #202021',
     }
 }))
 
@@ -147,12 +190,8 @@ const BillHeader = () => {
     return <Grid container>
         <Grid item xs={12} sm={6}>
             <h2 className={classes.headerTitle}>Detailed Invoice</h2>
-            <p className={classes.name}>{data.customerData.name}</p>
-            <p>{data.customerData.address}</p>
-            {data.customerData.phones.map(phone => <p key={phone}>{phone}</p>)}
-            <p className={classes.link}>{data.customerData.email}</p>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid  item xs={12} sm={6}>
             <Grid container>
                 <Grid item xs={4}>
                     Logo
@@ -162,9 +201,17 @@ const BillHeader = () => {
                     <p>{data.serviceCenter.hoursOfOperation}</p>
                 </Grid>
             </Grid>
+        </Grid>
+        <Grid item xs={12} sm={6} container direction="column" justify="space-between">
+            <p className={classes.name}>{data.customerData.name}</p>
+            <div>{data.customerData.address}</div>
+            {data.customerData.phones.map(phone => <div key={phone}>{phone}</div>)}
+            <p className={classes.link}>{data.customerData.email}</p>
+        </Grid>
+        <Grid item xs={12} sm={6} container direction="column" justify="space-between">
             <p className={classes.name}>{data.serviceCenter.name}</p>
-            <p>{data.serviceCenter.address}</p>
-            {data.serviceCenter.phones.map(phone => <p key={phone}>{phone}</p>)}
+            <div>{data.serviceCenter.address}</div>
+            {data.serviceCenter.phones.map(phone => <div key={phone}>{phone}</div>)}
             <p className={classes.link}>{data.serviceCenter.link}</p>
         </Grid>
     </Grid>
@@ -254,82 +301,128 @@ const getAlphabeticalIndexes = () => {
 
 const RepairTable = () => {
     const indexes = getAlphabeticalIndexes();
-    const rowData: TableRowDataType<TServiceCompleted>[] = [
-        {val: (el, i) => indexes[i], header: "#", align: "center"},
-        {val: el => el.name, header: "DESCRIPTION OF SERVICE AND PARTS"},
-        {val: el => `$${el.parts}`, header: "PARTS", align: "center"},
-        {val: el => `$${el.labor}`, header: "LABOR", align: "center"},
-        {val: el => `$${el.total}`, header: "TOTAL", align: "center"},
-    ];
+    const classes = useStyles();
 
-    return <Table<TServiceCompleted>
-        data={data.servicesCompleted}
-        index={"name"}
-        rowData={rowData}
-    />
+    return <TableContainer>
+        <Table>
+            <TableHead>
+                <TableRow>
+                    <TableCell key="#" className={classes.headerCell} align="center">
+                        #
+                    </TableCell>
+                    <TableCell key="#" className={classes.headerCell}>
+                        DESCRIPTION OF SERVICE AND PARTS
+                    </TableCell>
+                    <TableCell key="#" className={classes.headerCell} align="center">
+                        PARTS
+                    </TableCell>
+                    <TableCell key="#" className={classes.headerCell} align="center">
+                        LABOR
+                    </TableCell>
+                    <TableCell key="#" className={classes.headerCell} align="center">
+                        TOTAL
+                    </TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                <TableRow className={classes.greyRow}>
+                    <TableCell/>
+                    <TableCell/>
+                    <TableCell/>
+                    <TableCell/>
+                    <TableCell/>
+                </TableRow>
+                {data.servicesCompleted.map((service, i) => {
+                    const lastRow = i === data.servicesCompleted.length - 1;
+                    return <TableRow key={i.toString()}>
+                        <TableCell key="index" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>{indexes[i]}</TableCell>
+                        <TableCell key={service.name} className={lastRow ? classes.lastRowCell : classes.cell}>{service.name}</TableCell>
+                        <TableCell key="parts" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.parts}</TableCell>
+                        <TableCell key="labor" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.labor}</TableCell>
+                        <TableCell key="total" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.total}</TableCell>
+                    </TableRow>
+                })}
+                <TableRow className={classes.totalRow}>
+                    <TableCell key="totalName" className={classes.totalCell}>Total</TableCell>
+                    <TableCell key="totalEmpty" className={classes.totalCell}/>
+                    <TableCell key="totalParts" className={classes.totalCell} align="center">
+                        ${data.servicesCompleted.reduce((a, v) => a + v.parts, 0)}
+                    </TableCell>
+                    <TableCell key="totalLabor" className={classes.totalCell} align="center">
+                        ${data.servicesCompleted.reduce((a, v) => a + v.labor, 0)}
+                    </TableCell>
+                    <TableCell key="total" className={classes.totalCell} align="center">
+                        ${data.servicesCompleted.reduce((a, v) => a + v.total, 0)}
+                    </TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+    </TableContainer>
 }
 
 const Disclaimer = () => {
     const classes = useStyles();
     return <Grid item xs={12} sm={6} className={classes.disclaimer}>
-        <h5 className={classes.disclaimerTitle}>Disclaimer Of Warranties</h5>
+        <p className={classes.disclaimerTitle}>Disclaimer Of Warranties</p>
         <p className={classes.disclaimerText}>{data.disclaimerOfWarranties}</p>
     </Grid>
 }
 
 const DetailedPayments = () => {
     const classes = useStyles();
-    return <Grid item xs={12} sm={6} container>
-        <Grid item xs={12} justify="space-between">
-            <div className={classes.greyDetails}>SUBLET AMOUNT</div>
-            <div>${data.priceWithTaxes.subletAmount}</div>
+    return <Grid item xs={12} sm={6} container spacing={2}>
+        <Grid item xs={12} justify="space-between" container>
+            <Grid item xs={8} className={classes.greyDetails}>SUBLET AMOUNT</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.subletAmount}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between">
-            <div className={classes.greyDetails}>SHOP SUPPLIES</div>
-            <div>${data.priceWithTaxes.shopSupplies}</div>
+        <Grid item xs={12} justify="space-between" container>
+            <Grid item xs={8}  className={classes.greyDetails}>SHOP SUPPLIES</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.shopSupplies}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between">
-            <div className={classes.greyDetails}>HAZARDOUS MATERIALS</div>
-            <div>${data.priceWithTaxes.hazardousMaterailes}</div>
+        <Grid item xs={12} justify="space-between" container>
+            <Grid item xs={8} className={classes.greyDetails}>HAZARDOUS MATERIALS</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.hazardousMaterailes}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between">
-            <div className={classes.greyDetails}>TOTAL CHARGES</div>
-            <div>${data.priceWithTaxes.totalCharges}</div>
+        <Grid item xs={12} justify="space-between" container>
+            <Grid item xs={8} className={classes.greyDetails}>TOTAL CHARGES</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.totalCharges}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between">
-            <div className={classes.greyDetails}>LESS ADJUSTMENTS</div>
-            <div>${data.priceWithTaxes.lessAdjustments}</div>
+        <Grid item xs={12} justify="space-between" container>
+            <Grid item xs={8} className={classes.greyDetails}>LESS ADJUSTMENTS</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.lessAdjustments}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between">
-            <div className={classes.greyDetails}>SALES TAX</div>
-            <div>${data.priceWithTaxes.salesTax}</div>
+        <Grid item xs={12} justify="space-between" container>
+            <Grid item xs={8} className={classes.greyDetails}>SALES TAX</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.salesTax}</Grid>
         </Grid>
-        <Grid item xs={12} justify="space-between">
-            <div className={classes.greyDetails}>TOTAL DUE</div>
-            <div>${
+        <Grid item xs={12} justify="space-between" container>
+            <Grid item xs={8} className={classes.totalDue}>TOTAL DUE</Grid>
+            <Grid item xs={4} justify="flex-end" container className={classes.totalDue}>${
                 data.priceWithTaxes.subletAmount +
                 data.priceWithTaxes.shopSupplies +
                 data.priceWithTaxes.hazardousMaterailes +
                 data.priceWithTaxes.lessAdjustments +
                 data.priceWithTaxes.salesTax +
                 data.priceWithTaxes.totalCharges
-            }</div>
+            }</Grid>
         </Grid>
     </Grid>
 }
 
 const PaymentBill = () => {
     return (
-        <div>
-            <BillHeader/>
-            <Divider/>
-            <VehicleData/>
-            <RepairTable/>
-            <Grid container>
-                <Disclaimer/>
-                <DetailedPayments/>
-            </Grid>
-        </div>
+        <Wrapper>
+            <Paper>
+                <BillHeader/>
+                <Divider/>
+                <VehicleData/>
+                <RepairTable/>
+                <Grid container spacing={3}>
+                    <Disclaimer/>
+                    <DetailedPayments/>
+                </Grid>
+            </Paper>
+        </Wrapper>
     );
 };
 
