@@ -197,6 +197,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         window.open(url);
     }
 
+    const onMakeNew = () => {
+
+    }
 
     return <StepWrapper>
         <Wrapper>
@@ -218,6 +221,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 {t("Add to Calendar")}
             </Button>
             <Divider />
+            <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew}>
+                {t("Make New Appointment")}
+            </Button>
             <h3>{t("We will see you soon!")}</h3>
         </Wrapper>
     </StepWrapper>
