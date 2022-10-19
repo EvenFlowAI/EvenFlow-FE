@@ -63,15 +63,13 @@ export const CancelAppointment = () => {
         if (appointment?.serviceCenterId) {
             dispatch(loadSCProfile(appointment.serviceCenterId));
         }
-        if (typeof sessionStorage !== 'undefined') {
-            if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-                const uid = uuidv4();
-                sessionStorage.setItem(LocalTokens.sessionId, uid);
-            }
-            window.addEventListener('unload', () => {
-                sessionStorage.setItem(LocalTokens.sessionId, '')
-            })
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
         }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
     }, [appointment, dispatch, sessionStorage]);
 
 
