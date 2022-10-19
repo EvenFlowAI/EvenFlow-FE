@@ -7,35 +7,25 @@ import {API} from "../api/api";
 
 class AuthService {
     getLocalToken (): string {
-        if (typeof localStorage !== undefined) {
-            return localStorage.getItem(LocalTokens.authToken) || '';
-        }
-        return '';
+        return localStorage.getItem(LocalTokens.authToken) || '';
     }
     getRefreshToken (): string {
-        if (typeof localStorage !== undefined) {
-            return localStorage.getItem(LocalTokens.refreshToken) || '';
-        }
-        return '';
+        return localStorage.getItem(LocalTokens.refreshToken) || '';
     }
 
     setTokens ({accessToken, refreshToken}: ITokens): void {
-        if (typeof localStorage !== undefined) {
-            localStorage.setItem(LocalTokens.authToken, accessToken);
-            localStorage.setItem(LocalTokens.refreshToken, refreshToken);
-        }
+        localStorage.setItem(LocalTokens.authToken, accessToken);
+        localStorage.setItem(LocalTokens.refreshToken, refreshToken);
     }
 
     setDealershipTokens({accessToken, refreshToken}: ITokens) {
-        if (typeof localStorage !== undefined) {
-            const tokens: ITokens = {
-                accessToken: this.getLocalToken(),
-                refreshToken: this.getRefreshToken()
-            };
-            localStorage.setItem(LocalTokens.suToken, JSON.stringify(tokens));
-            localStorage.setItem(LocalTokens.authToken, accessToken);
-            localStorage.setItem(LocalTokens.refreshToken, refreshToken);
-        }
+        const tokens: ITokens = {
+            accessToken: this.getLocalToken(),
+            refreshToken: this.getRefreshToken()
+        };
+        localStorage.setItem(LocalTokens.suToken, JSON.stringify(tokens));
+        localStorage.setItem(LocalTokens.authToken, accessToken);
+        localStorage.setItem(LocalTokens.refreshToken, refreshToken);
     }
 
     isAuthenticated (): boolean {
@@ -88,16 +78,14 @@ class AuthService {
     }
 
     logout (): void {
-        if (typeof localStorage !== undefined) {
-            localStorage.removeItem(LocalTokens.authToken);
-            localStorage.removeItem(LocalTokens.refreshToken);
-            const suTokens = localStorage.getItem(LocalTokens.suToken);
-            if (suTokens) {
-                localStorage.removeItem(LocalTokens.suToken);
-                this.setTokens(JSON.parse(suTokens) as ITokens);
-            }
-            this.refreshRequest();
+        localStorage.removeItem(LocalTokens.authToken);
+        localStorage.removeItem(LocalTokens.refreshToken);
+        const suTokens = localStorage.getItem(LocalTokens.suToken);
+        if (suTokens) {
+            localStorage.removeItem(LocalTokens.suToken);
+            this.setTokens(JSON.parse(suTokens) as ITokens);
         }
+        this.refreshRequest();
     }
 }
 
@@ -111,10 +99,8 @@ export const endUserRequest = axios.create({
 });
 
 request.interceptors.request.use(request => {
-    if (typeof sessionStorage !== 'undefined') {
-        const sessionId = sessionStorage.getItem(LocalTokens.sessionId);
-        if (sessionId?.length) request.headers['SessionId'] = sessionId;
-    }
+    const sessionId = sessionStorage.getItem(LocalTokens.sessionId);
+    if (sessionId?.length) request.headers['SessionId'] = sessionId;
     return request;
 })
 

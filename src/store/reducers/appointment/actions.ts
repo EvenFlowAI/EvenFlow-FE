@@ -88,39 +88,32 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: mo
 export const setLoadedReducer = createAction<TAppointmentState>("Appointment/ReloadState");
 export const saveAppointmentReducer = (): AppThunk => (d, getState) => {
     const state = JSON.stringify({...getState().appointment});
-    if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(APPOINTMENT_STATE_KEY, state);
-        localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
-    }
+    localStorage.setItem(APPOINTMENT_STATE_KEY, state);
+    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
 }
 export const clearStorage = () => {
-    if (typeof localStorage !== 'undefined') {
-        localStorage.removeItem(APPOINTMENT_STATE_KEY);
-        localStorage.removeItem(APPOINTMENT_STATE_SAVED_KEY);
-    }
+    localStorage.removeItem(APPOINTMENT_STATE_KEY);
+    localStorage.removeItem(APPOINTMENT_STATE_SAVED_KEY);
 }
 export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
-    let date: string|null = null;
-    if (typeof localStorage !== 'undefined') date = localStorage.getItem(APPOINTMENT_STATE_SAVED_KEY);
+    const date = localStorage.getItem(APPOINTMENT_STATE_SAVED_KEY);
     if (!date) {
         clearStorage();
     } else {
         if (moment().diff(moment(date), "hours") >= 1) {
             clearStorage();
         } else {
-            if (typeof localStorage !== 'undefined') {
-                try {
-                    const i = localStorage.getItem(APPOINTMENT_STATE_KEY);
-                    if (!i) {
-                        clearStorage();
-                    } else {
-                        const data: TAppointmentState = JSON.parse(i);
-                        await dispatch(setLoadedReducer(data));
-                        localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
-                    }
-                } catch {
+            try {
+                const i = localStorage.getItem(APPOINTMENT_STATE_KEY);
+                if (!i) {
                     clearStorage();
+                } else {
+                    const data: TAppointmentState = JSON.parse(i);
+                    await dispatch(setLoadedReducer(data));
+                    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
                 }
+            } catch {
+                clearStorage();
             }
         }
     }
@@ -204,7 +197,7 @@ export const loadEditAppointment = (appointment: IAppointmentByQuery): AppThunk 
 
 const CUSTOMER_CACHE = 'fCC';
 export const saveCustomerCache = (data: ICustomerLoadedData): void => {
-    if (typeof localStorage !== 'undefined') localStorage.setItem(CUSTOMER_CACHE, JSON.stringify(data));
+    localStorage.setItem(CUSTOMER_CACHE, JSON.stringify(data));
 }
 export const getBlankVehicle = (): ILoadedVehicle => ({
     year: null,
@@ -228,7 +221,7 @@ export const getBlankCustomer = (sessionId?: string): ICustomerLoadedData => {
     };
 }
 export const clearCustomerCache = (): void => {
-    if (typeof localStorage !== 'undefined') localStorage.removeItem(CUSTOMER_CACHE);
+    localStorage.removeItem(CUSTOMER_CACHE);
 }
 export const getCustomerCache = (): ICustomerLoadedData|null => {
     try {
