@@ -71,7 +71,7 @@ export const EndUserLayout = () => {
                 if (originSite) createTracker(event.data, originSite, trackerCreated);
             });
         }
-    }, [trackerCreated, window.location?.ancestorOrigins, window?.parent?.navigator?.cookieEnabled]);
+    }, [trackerCreated, window.location?.ancestorOrigins]);
 
     useEffect(() => {
         if (!trackerCreated) {
