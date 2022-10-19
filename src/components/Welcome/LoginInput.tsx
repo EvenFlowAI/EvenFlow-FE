@@ -101,15 +101,13 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const isDominion = useMemo(() => serviceCenter?.serviceCenterFlag === EServiceCenterName.Dominion, [serviceCenter])
 
     useEffect(() => {
-        if (typeof sessionStorage !== 'undefined') {
-            if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-                const uid = uuidv4();
-                sessionStorage.setItem(LocalTokens.sessionId, uid);
-            }
-            window.addEventListener('unload', () => {
-                sessionStorage.setItem(LocalTokens.sessionId, '')
-            })
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
         }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
     }, [sessionStorage])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
