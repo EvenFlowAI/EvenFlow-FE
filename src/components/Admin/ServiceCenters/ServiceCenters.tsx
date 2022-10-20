@@ -99,7 +99,7 @@ export const ServiceCenters = () => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Remove service center ${editedItem?.name}?`,
+            title: `Please confirm you want to remove Service Center ${editedItem?.name}?`,
             onConfirm: handleRemove
         });
     }

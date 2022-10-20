@@ -115,7 +115,7 @@ export const ServiceRequests = () => {
         } else {
             askConfirm({
                 isRemove: true,
-                title: `Remove service request ${editedItem.code}?`,
+                title: `Please confirm you want to remove Service Request ${editedItem.code}?`,
                 onConfirm: handleRemove
             });
         }

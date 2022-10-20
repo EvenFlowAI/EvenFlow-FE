@@ -90,7 +90,7 @@ export const Holidays: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) 
         if (editedItem) {
             askConfirm({
                 isRemove: true,
-                title: `Remove ${editedItem.description}?`,
+                title: `Please confirm you want to remove Holiday ${editedItem.description}?`,
                 onConfirm: handleRemove
             })
         }
