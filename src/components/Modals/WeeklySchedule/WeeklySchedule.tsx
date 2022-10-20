@@ -179,7 +179,7 @@ export const WeeklySchedule: React.FC<DialogProps&TViewMode> = ({viewMode, ...pr
                 };
                 await Api.call(Api.endpoints.ServiceCenters.SetWS, {urlParams: {id: selectedSC.id}, data})
                     .then(res => {
-                    if (res) showMessage("Weekly schedule updated.")
+                    if (res) showMessage("Weekly Schedule updated.")
                 });
                 props.onClose();
             } catch (e) {

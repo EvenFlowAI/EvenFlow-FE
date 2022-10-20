@@ -70,7 +70,7 @@ export const DealershipGroups = () => {
         const d = editedItem
         try {
             await dispatch(removeDealership(d.id));
-            showMessage(`Successfully removed ${d.name}`);
+            showMessage(`Dealership ${d.name} removed`);
         } catch (e) {
             showError(e);
         }

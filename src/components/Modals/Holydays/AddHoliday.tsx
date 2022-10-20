@@ -123,12 +123,12 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
                         Api.endpoints.Holidays.Update,
                         {data, urlParams: {id: data?.id}}
                     ).then(res => {
-                        if (res) showMessage("Holiday saved");
+                        if (res) showMessage("Holiday updated");
                     })
                 } else {
                     await Api.call(Api.endpoints.Holidays.Create, {data})
                         .then(res => {
-                            if (res) showMessage("Holiday saved");
+                            if (res) showMessage("Holiday created");
                         })
                 }
                 if (onAction) {

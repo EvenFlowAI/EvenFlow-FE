@@ -204,7 +204,7 @@ export const OPsCodesPage = () => {
         }
     }
     const onSuccessAssign = useCallback((selectedCodes: number[]) => {
-        showMessage(`Successfully added ${selectedCodes.length} codes`)
+        showMessage(`Codes ${selectedCodes.length} added`)
     }, [])
 
     const onRequestAssign = useCallback((selectedCodes: number[], serviceCenterId: number) => {

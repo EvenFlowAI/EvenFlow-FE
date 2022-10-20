@@ -126,7 +126,7 @@ export const CreateServiceCenter:
                 } else {
                     await dispatch(createSC(data, avatar));
                 }
-                showMessage(`${data.name} successfully ${isEdit ? "updated" : "created"}`);
+                showMessage(`Service Center ${data.name} ${isEdit ? "updated" : "created"}`);
                 setFormState(initialFormState);
                 props.onClose();
             } catch (e) {

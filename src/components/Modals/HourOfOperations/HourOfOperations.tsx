@@ -150,7 +150,7 @@ export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...
             try {
                 await Api.call(Api.endpoints.ServiceCenters.SetHOO, {data: {hoursOfOperations: fd}, urlParams: {id: selectedSC.id}});
                 setSaving(false);
-                showMessage("Successfully saved");
+                showMessage("Hours of Operation updated");
                 props.onClose();
             } catch (e) {
                 showError(e);

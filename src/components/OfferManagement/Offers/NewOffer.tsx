@@ -163,7 +163,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         } else {
             try {
                 await dispatch(removeOffer(payload, archive));
-                showMessage(`Successfully removed ${payload?.title}`);
+                showMessage(`Offer ${payload?.title} removed`);
                 props.onClose();
             } catch (e) {
                 showError(e);

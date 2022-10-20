@@ -73,7 +73,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
     }
 
     const onSuccess = () => {
-        showMessage('Labor Rate Updated Successfully')
+        showMessage('Labor Rate updated')
         onCancel();
     }
 

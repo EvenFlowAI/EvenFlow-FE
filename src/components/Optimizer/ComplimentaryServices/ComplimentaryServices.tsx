@@ -146,7 +146,7 @@ const ComplimentaryServices = () => {
                 newCodes,
                 serviceCenterId,
                 (e) => showError(e),
-                () => showMessage(`Successfully added ${newCodes.length} codes`)
+                () => showMessage(`Codes ${newCodes.length} added`)
             ));
         } catch (e) {
             showError(e);

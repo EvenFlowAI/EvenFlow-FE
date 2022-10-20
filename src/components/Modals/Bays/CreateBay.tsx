@@ -112,7 +112,7 @@ export const CreateBay: React.FC<DialogProps<IBay>> = ({payload, onAction, ...pr
                 } else {
                     await dispatch(updateBay(data, payload.id));
                 }
-                showMessage("Bay saved.");
+                showMessage(payload ? "Bay updated" : "Bay created");
                 props.onClose();
             } catch (e) {
                 showError(e);
