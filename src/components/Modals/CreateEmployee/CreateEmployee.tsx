@@ -189,7 +189,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
 
     return <BaseModal {...props} width={700}>
         <DialogTitle onClose={props.onClose}>
-            {isEdit ? `Edit ${payload?.role}` : "I want to add new"}
+            {isEdit ? `Edit ${payload?.role}` : "Add Emloyee"}
         </DialogTitle>
         <DialogContent>
             {!isEdit ? <Grid container spacing={3}>

@@ -143,7 +143,7 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
         }
     }
     return <BaseModal {...props} width={600}>
-        <DialogTitle onClose={props.onClose}>Add New Holiday</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{payload ? "Edit" : "Add"} Holiday</DialogTitle>
         <DialogContent>
             <HForm
                 onChange={handleChange}

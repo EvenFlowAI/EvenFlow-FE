@@ -168,7 +168,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
     }, [employee, form, date, getRequestDate, getStartEndDates, selectedDate, isXS, showError, handleClose, setSaving])
 
     return <BaseModal {...props} width={750} onClose={handleClose}>
-        <DialogTitle onClose={handleClose}>Edit employee schedule</DialogTitle>
+        <DialogTitle onClose={handleClose}>Edit Employee Schedule</DialogTitle>
         <DialogContent>
             <Grid container alignItems="flex-end" spacing={2}>
                 <Grid item xs={12}>

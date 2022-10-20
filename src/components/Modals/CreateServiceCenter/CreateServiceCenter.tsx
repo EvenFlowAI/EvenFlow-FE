@@ -138,7 +138,7 @@ export const CreateServiceCenter:
             <DialogTitle onClose={props.onClose}>
                 {readOnly
                     ? "View" : isEdit
-                        ? "Update" : "Add"} service center
+                        ? "Update" : "Add"} Service Center
             </DialogTitle>
             <DialogContent>
                 <AvatarContainer disabled={readOnly} dataUrl={payload?.avatarPath} onChange={(f: File) => setAvatar(f)} />

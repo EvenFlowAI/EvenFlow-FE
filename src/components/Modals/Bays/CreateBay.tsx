@@ -121,7 +121,7 @@ export const CreateBay: React.FC<DialogProps<IBay>> = ({payload, onAction, ...pr
     }
 
     return <BaseModal {...props} maxWidth="xs">
-        <DialogTitle onClose={props.onClose}>{!payload ? "Add new" : "Edit"} bay</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Edit"} Bay</DialogTitle>
         <DialogContent>
             <Form
                 form={form}

@@ -160,7 +160,7 @@ export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...
     }
 
     return <BaseModal {...props} maxWidth="sm">
-        <DialogTitle onClose={props.onClose}>{viewMode ? "View" : "Edit"} Hours of Operations</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{viewMode ? "View" : "Edit"} Hours of Operation</DialogTitle>
         <DialogContent>
             <HOOForm
                 viewMode={viewMode}
