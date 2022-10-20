@@ -13,7 +13,6 @@ import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/type
 import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
-import {useLayout} from "../../../utils/hooks";
 import {setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const Paper = styled('div')(({theme}) => ({
@@ -116,7 +115,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
 
     const {t} = useTranslation();
     const history = useHistory();
-    const isFrame = useLayout();
+    const isFrame = window.top !== window.self;
     const {id} = useParams();
     const dispatch = useDispatch();
     const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
