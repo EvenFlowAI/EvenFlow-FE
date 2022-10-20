@@ -3,7 +3,7 @@ import ReactGA from 'react-ga';
 import {StepWrapper} from "./StepWrapper";
 import {Button, styled} from "@material-ui/core";
 import moment from "moment";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
@@ -11,25 +11,16 @@ import {TCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
+import {Routes} from "../../../config/routes";
+import {useHistory, useParams} from "react-router-dom";
+import {setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 
-const Wrapper = styled('div')(({theme}) => ({
+const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
     padding: 20,
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "15px",
     fontSize: 15,
     [theme.breakpoints.up('sm')]: {
         minWidth: 545,
-    },
-    "& h2": {
-        textTransform: "uppercase",
-        gridColumnStart: 1,
-        gridColumnEnd: 3,
-        margin: "0 0 10px",
-        padding: 0,
-        fontSize: 19,
-        textAlign: 'center'
     },
     "& h3": {
         textTransform: "uppercase",
@@ -38,6 +29,22 @@ const Wrapper = styled('div')(({theme}) => ({
         margin: "10px 0 0",
         padding: 0,
         fontSize: 24,
+        textAlign: 'center'
+    },
+}))
+
+const Wrapper = styled('div')(({theme}) => ({
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: "15px",
+    marginBottom: 20,
+    "& h2": {
+        textTransform: "uppercase",
+        gridColumnStart: 1,
+        gridColumnEnd: 3,
+        margin: "0 0 10px",
+        padding: 0,
+        fontSize: 19,
         textAlign: 'center'
     },
     "&>div": {
@@ -107,6 +114,10 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     ]);
 
     const {t} = useTranslation();
+    const history = useHistory();
+    const isFrame = window.top !== window.self;
+    const {id} = useParams();
+    const dispatch = useDispatch();
     const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
     const vehicleData = vehicle?.year
@@ -121,7 +132,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             action: 'Created Appointment',
             nonInteraction: true,
         })
-    }, [])
+        dispatch(setWelcomeScreenView("select"));
+    }, [dispatch])
 
     const data: TItem[] = useMemo(() => {
         return [
@@ -197,28 +209,36 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         window.open(url);
     }
 
+    const onMakeNew = () => {
+        history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+    }
 
     return <StepWrapper>
-        <Wrapper>
-            <h2>Appointment Confirmed!</h2>
-            {data.map(item => {
-                if (!selectedPackage && item.label === t("Selected Price")) {
-                    return null;
-                }
-                return <React.Fragment key={item.label}>
-                    <div className="label">{item.label}</div>
-                    <div>{item.content}</div>
-                </React.Fragment>;
-            })}
+        <Paper>
+            <Wrapper>
+                <h2>Appointment Confirmed!</h2>
+                {data.map(item => {
+                    if (!selectedPackage && item.label === t("Selected Price")) {
+                        return null;
+                    }
+                    return <React.Fragment key={item.label}>
+                        <div className="label">{item.label}</div>
+                        <div>{item.content}</div>
+                    </React.Fragment>;
+                })}
 
-            <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
-                {t("Modify Appointment")}
-            </Button>
-            <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained">
-                {t("Add to Calendar")}
-            </Button>
-            <Divider />
+                <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
+                    {t("Modify Appointment")}
+                </Button>
+                <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained">
+                    {t("Add to Calendar")}
+                </Button>
+                <Divider />
+            </Wrapper>
+            { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew}>
+                {t("Make New Appointment")}
+            </Button> : null}
             <h3>{t("We will see you soon!")}</h3>
-        </Wrapper>
+        </Paper>
     </StepWrapper>
 };
