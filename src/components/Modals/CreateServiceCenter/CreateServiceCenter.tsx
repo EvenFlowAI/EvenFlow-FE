@@ -11,7 +11,7 @@ import {createSC, updateSC} from "../../../store/reducers/serviceCenters/actions
 import {LoadingButton} from "../../UI/Button";
 import {RootState} from "../../../store/rootReducer";
 import {API} from "../../../api/api";
-import {validatePhoneNumber} from "../../../utils/utils";
+import {checkEmail, validatePhoneNumber} from "../../../utils/utils";
 
 type TSCFormState = {
     scName: string;
@@ -56,6 +56,7 @@ export const CreateServiceCenter:
         const [timeZones, setTimeZones] = useState<string[]>([]);
         const [formState, setFormState] = useState<TSCFormState>(initialState);
         const [avatar, setAvatar] = useState<File | null>( null);
+        const [errors, setErrors] = useState<string[]>([]);
 
         const formItems: TFormItem<TSCFormState>[][] = useMemo(() => [
             [
@@ -106,31 +107,64 @@ export const CreateServiceCenter:
             setFormState({...formState, [name]: val || ""});
         }, [formState]);
 
-        const handleCreate = async () => {
-            const data: IServiceCenterForm = {
-                name: formState.scName,
-                serviceCenterEmail: formState.scEmail,
-                contactPersonalEmail: formState.cpEmail,
-                phoneNumber: formState.scPhoneNumber,
-                address: {
-                    street: formState.street,
-                    city: formState.city,
-                    state: formState.state,
-                    zipCode: formState.zipCode
-                },
-                timeZoneId: formState.timeZoneId
+        const validateData = (): boolean => {
+            let err: string[] = [];
+            if (!formState.scEmail.length) {
+                err = [...err, "Service Center Email must not be empty"];
+            } else {
+                if (!checkEmail(formState.scEmail)) err = [...err, "Service Center Email is not valid"]
             }
-            try {
-                if (payload?.id) {
-                    await dispatch(updateSC(data, payload.id, avatar));
-                } else {
-                    await dispatch(createSC(data, avatar));
+            if (!formState.cpEmail.length) {
+                err = [...err, "Contact Person Email must not be empty"];
+            } else {
+                if (!checkEmail(formState.scEmail)) err = [...err, "Contact Person Email is not valid"];
+            }
+            if (!formState.zipCode.length) err = [...err, "Zip Code must not be empty"];
+            if (!formState.timeZoneId) err = [...err, "Time Zone must not be empty"]
+            if (!formState.scPhoneNumber.length) err = [...err, "Service Center Phone Number must not be empty"];
+            if (!formState.state.length) err = [...err, "State must not be empty"];
+            if (!formState.city.length) err = [...err, "City must not be empty"];
+            if (!formState.scName) err = [...err, "Service Center Name must not be empty"];
+            setErrors(err)
+            return !!formState.scPhoneNumber.length
+                && !!formState.zipCode.length
+                && !!formState.timeZoneId
+                && !!formState.scEmail.length
+                && !!formState.cpEmail.length
+                && !!formState.state.length
+                && !!formState.city.length
+                && !!formState.scName.length;
+        }
+
+        const handleCreate = async () => {
+            if (validateData()) {
+                const data: IServiceCenterForm = {
+                    name: formState.scName,
+                    serviceCenterEmail: formState.scEmail,
+                    contactPersonalEmail: formState.cpEmail,
+                    phoneNumber: formState.scPhoneNumber,
+                    address: {
+                        street: formState.street,
+                        city: formState.city,
+                        state: formState.state,
+                        zipCode: formState.zipCode
+                    },
+                    timeZoneId: formState.timeZoneId
                 }
-                showMessage(`Service Center ${data.name} ${isEdit ? "updated" : "created"}`);
-                setFormState(initialFormState);
-                props.onClose();
-            } catch (e) {
-                showError(e);
+                try {
+                    if (payload?.id) {
+                        await dispatch(updateSC(data, payload.id, avatar));
+                    } else {
+                        await dispatch(createSC(data, avatar));
+                    }
+                    showMessage(`Service Center ${data.name} ${isEdit ? "updated" : "created"}`);
+                    setFormState(initialFormState);
+                    props.onClose();
+                } catch (e) {
+                    showError(e);
+                }
+            } else {
+                errors.map(err => showError(err))
             }
         }
 
