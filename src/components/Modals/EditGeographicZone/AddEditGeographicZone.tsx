@@ -245,7 +245,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                 setCurrentZip(codeObject);
                 if (zonesList.length > 1) onOpen();
             } else {
-                showError('This code has not been saved to the ZIP codes list of the current zone')
+                showError('This code is not saved to the ZIP codes list of the current zone')
             }
         }
     }

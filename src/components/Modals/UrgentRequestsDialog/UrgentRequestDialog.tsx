@@ -78,7 +78,7 @@ export const UrgentRequestDialog: React.FC<DialogProps> = ({onAction, payload, .
             try {
                 await dispatch(setUrgentRequests(selected, selectedSC.id, selectedPod?.id));
                 setSaving(false);
-                showMessage("Saved");
+                showMessage("Urgent Request updated");
             } catch (e) {
                 setSaving(false);
                 showError(e);
@@ -87,7 +87,7 @@ export const UrgentRequestDialog: React.FC<DialogProps> = ({onAction, payload, .
     }
 
     return <BaseModal {...props} maxWidth={"md"}>
-        <DialogTitle onClose={props.onClose}>Add urgent request</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Add Urgent Request</DialogTitle>
         <DialogContent>
             <Table<IAssignedServiceRequestShort>
                 data={data}

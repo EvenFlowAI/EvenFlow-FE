@@ -42,7 +42,7 @@ export const EndOfWarrantyDialog: React.FC<DialogProps<IEndOfWarranty>> = ({payl
                     periodInMonth: Number(months)
                 }));
                 setSaving(false);
-                showMessage("Saved");
+                showMessage("End of Warranty updated");
                 props.onClose();
             } catch (e) {
                 setSaving(false);

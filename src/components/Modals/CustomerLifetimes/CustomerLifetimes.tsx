@@ -80,7 +80,7 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
             }
             try {
                 await dispatch(setCustomerLifetimes(data))
-                showMessage("Saved");
+                showMessage("Customer Lifetime Value Range updated");
                 setSaving(false);
                 props.onClose();
             } catch (e) {
