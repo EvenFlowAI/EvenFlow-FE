@@ -40,9 +40,10 @@ type THOOFormProps = TViewMode & {
     onApply: () => void;
     onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void;
     onCheck: (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+    formIsChecked: boolean;
 }
 
-const HOOForm: React.FC<THOOFormProps> = ({form, onApply, onChange, onCheck, viewMode}) => {
+const HOOForm: React.FC<THOOFormProps> = ({form, onApply, onChange, onCheck, viewMode, formIsChecked}) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const classes = useStyles();
@@ -61,6 +62,7 @@ const HOOForm: React.FC<THOOFormProps> = ({form, onApply, onChange, onCheck, vie
                         placeholder={!data.checked ? "Closed" : ""}
                         fullWidth
                         value={data.from}
+                        error={!data.from && data.checked && formIsChecked}
                         onChange={onChange(idx, "from")}
                         label={day}
                         id={`from-${day}`}
@@ -74,6 +76,7 @@ const HOOForm: React.FC<THOOFormProps> = ({form, onApply, onChange, onCheck, vie
                         fullWidth
                         value={data.to}
                         disabled={!data.checked || viewMode}
+                        error={!data.to && data.checked && formIsChecked}
                         onChange={onChange(idx, "to")}
                         id={`to-${day}`}
                     />
@@ -104,6 +107,7 @@ export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...
     const {selectedSC} = useSCs();
     const [form, setForm] = useState<THOOForm[]>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const showError = useException();
     const showMessage = useMessage();
     useEffect(() => {
@@ -126,43 +130,61 @@ export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...
     }, [selectedSC, setForm, props.open]);
 
     const handleChange = (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => {
+        setFormIsChecked(false);
         const idx = form.findIndex(v => v.dayOfWeek === day);
         form[idx] = {...form[idx], [t]: date};
         setForm([...form]);
     }
     const handleApplyToAll = (): void => {
+        setFormIsChecked(false);
         const el = form[0];
         setForm(form.map((_, idx) => ({...el, dayOfWeek: idx})));
     }
     const handleCheck = (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        setFormIsChecked(false);
         const idx = form.findIndex(v => v.dayOfWeek === day);
         form[idx] = {...form[idx], checked};
         setForm([...form]);
     }
+
+    const isValid = () => {
+        return !form.find(item => item.checked && (!item.from || !item.to))
+    }
     const handleUpdate = async () => {
-        if (!selectedSC) {
-            showError("Service center is not selected");
-        } else {
-            setSaving(true);
-            const fd: IHOODataForm[] = form.filter(e => e.checked).map(e => ({
-                ...e, from: moment(e.from).format(timeSpanString), to: moment(e.to).format(timeSpanString)
-            })) as IHOODataForm[];
-            try {
-                await Api.call(Api.endpoints.ServiceCenters.SetHOO, {data: {hoursOfOperations: fd}, urlParams: {id: selectedSC.id}});
-                setSaving(false);
-                showMessage("Hours of Operation updated");
-                props.onClose();
-            } catch (e) {
-                showError(e);
-                setSaving(false);
+        setFormIsChecked(true);
+        if (isValid()) {
+            if (!selectedSC) {
+                showError("Service center is not selected");
+            } else {
+                setSaving(true);
+                const fd: IHOODataForm[] = form.filter(e => e.checked).map(e => ({
+                    ...e, from: moment(e.from).format(timeSpanString), to: moment(e.to).format(timeSpanString)
+                })) as IHOODataForm[];
+                try {
+                    await Api.call(Api.endpoints.ServiceCenters.SetHOO, {data: {hoursOfOperations: fd}, urlParams: {id: selectedSC.id}});
+                    setSaving(false);
+                    showMessage("Hours of Operation updated");
+                    props.onClose();
+                } catch (e) {
+                    showError(e);
+                    setSaving(false);
+                }
             }
+        } else {
+            showError('"Hours of Operation" must not be empty')
         }
     }
 
-    return <BaseModal {...props} maxWidth="sm">
-        <DialogTitle onClose={props.onClose}>{viewMode ? "View" : "Edit"} Hours of Operation</DialogTitle>
+    const onClose = () => {
+        props.onClose();
+        setFormIsChecked(false);
+    }
+
+    return <BaseModal {...props} maxWidth="sm" onClose={onClose}>
+        <DialogTitle onClose={onClose}>{viewMode ? "View" : "Edit"} Hours of Operation</DialogTitle>
         <DialogContent>
             <HOOForm
+                formIsChecked={formIsChecked}
                 viewMode={viewMode}
                 onApply={handleApplyToAll}
                 onCheck={handleCheck}
@@ -171,7 +193,7 @@ export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={onClose}>Close</Button>
             {!viewMode ? <LoadingButton
                 variant="contained"
                 color="primary"

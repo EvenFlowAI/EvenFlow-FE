@@ -112,21 +112,21 @@ export const CreateServiceCenter:
         const validateData = (): boolean => {
             let err: string[] = [];
             if (!formState.scEmail.length) {
-                err = [...err, "Service Center Email must not be empty"];
+                err = [...err, '"Service Center Email" must not be empty'];
             } else {
                 if (!checkEmail(formState.scEmail)) err = [...err, "Service Center Email is not valid"]
             }
             if (!formState.cpEmail.length) {
-                err = [...err, "Contact Person Email must not be empty"];
+                err = [...err, '"Contact Person Email" must not be empty'];
             } else {
-                if (!checkEmail(formState.scEmail)) err = [...err, "Contact Person Email is not valid"];
+                if (!checkEmail(formState.scEmail)) err = [...err, 'Contact Person Email is not valid'];
             }
-            if (!formState.zipCode.length) err = [...err, "Zip Code must not be empty"];
-            if (!formState.timeZoneId) err = [...err, "Time Zone must not be empty"]
-            if (!formState.scPhoneNumber.length) err = [...err, "Service Center Phone Number must not be empty"];
-            if (!formState.state.length) err = [...err, "State must not be empty"];
-            if (!formState.city.length) err = [...err, "City must not be empty"];
-            if (!formState.scName) err = [...err, "Service Center Name must not be empty"];
+            if (!formState.zipCode.length) err = [...err, '"Zip Code" must not be empty'];
+            if (!formState.timeZoneId) err = [...err, '"Time Zone" must not be empty']
+            if (!formState.scPhoneNumber.length) err = [...err, '"Service Center Phone Number" must not be empty'];
+            if (!formState.state.length) err = [...err, '"State" must not be empty'];
+            if (!formState.city.length) err = [...err, '"City" must not be empty'];
+            if (!formState.scName) err = [...err, '"Service Center Name" must not be empty'];
             err.map(err => showError(err))
             return !!formState.scPhoneNumber.length
                 && !!formState.zipCode.length

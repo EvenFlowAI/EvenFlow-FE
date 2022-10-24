@@ -149,22 +149,22 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     const checkIsValid = (): boolean => {
         let err: string[] = [];
         if (role === Roles.Technician) {
-            if (!technicianForm.firstName.length) err = [...err, 'First Name must not be empty'];
-            if (!technicianForm.lastName.length) err = [...err, 'Last Name must not by empty'];
-            if (!technicianForm.serviceCenter) err = [...err, 'Service Center must not by empty'];
-            if (!technicianForm.phoneNumber?.length) err = [...err, 'Phone Number must not by empty'];
+            if (!technicianForm.firstName.length) err = [...err, '"First Name" must not be empty'];
+            if (!technicianForm.lastName.length) err = [...err, '"Last Name" must not by empty'];
+            if (!technicianForm.serviceCenter) err = [...err, '"Service Center" must not by empty'];
+            if (!technicianForm.phoneNumber?.length) err = [...err, '"Phone Number" must not by empty'];
             if (technicianForm.email?.length) {
                 if (!checkEmail(technicianForm.email)) err = [...err, 'Email is not valid']
             }
-            if (!technicianForm.hourlyRate) err = [...err, 'Hourly Rate must not by empty'];
-            if (!technicianForm.overtimeRate) err = [...err, 'Overtime Rate must not by empty'];
+            if (!technicianForm.hourlyRate) err = [...err, '"Hourly Rate" must not by empty'];
+            if (!technicianForm.overtimeRate) err = [...err, '"Overtime Rate" must not by empty'];
         } else {
-            if (!advisorForm.firstName.length) err = [...err, 'First Name must not be empty'];
-            if (!advisorForm.lastName.length) err = [...err, 'Last Name must not by empty'];
-            if (!advisorForm.serviceCenter) err = [...err, 'Service Center must not by empty'];
-            if (!advisorForm.phoneNumber?.length) err = [...err, 'Phone Number must not by empty'];
+            if (!advisorForm.firstName.length) err = [...err, '"First Name" must not be empty'];
+            if (!advisorForm.lastName.length) err = [...err, '"Last Name" must not by empty'];
+            if (!advisorForm.serviceCenter) err = [...err, '"Service Center" must not by empty'];
+            if (!advisorForm.phoneNumber?.length) err = [...err, '"Phone Number" must not by empty'];
             if (!advisorForm.email?.length) {
-                err = [...err, 'Email must not by empty'];
+                err = [...err, '"Email" must not by empty'];
             } else {
                 if (!checkEmail(advisorForm.email)) err = [...err, 'Email is not valid']
             }
