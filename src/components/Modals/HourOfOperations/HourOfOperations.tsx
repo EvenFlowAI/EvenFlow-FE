@@ -148,7 +148,9 @@ export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...
     }
 
     const isValid = () => {
-        return !form.find(item => item.checked && (!item.from || !item.to))
+        const emptyFields = form.find(item => item.checked && (!item.from || !item.to))
+        if (emptyFields) showError('"Hours of Operation" must not be empty')
+        return !emptyFields;
     }
     const handleUpdate = async () => {
         setFormIsChecked(true);
