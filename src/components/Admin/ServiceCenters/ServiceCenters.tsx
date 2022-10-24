@@ -88,7 +88,7 @@ export const ServiceCenters = () => {
     const handleRemove = async () => {
         try {
             await dispatch(removeSC(editedItem?.id));
-            showMessage(`Service Center ${editedItem?.name} removed`);
+            showMessage(`Service Center removed`);
             setEditedItem(undefined);
         } catch (e) {
             showError(e);

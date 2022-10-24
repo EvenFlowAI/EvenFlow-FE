@@ -74,7 +74,7 @@ export const Employees = () => {
     const handleRemove = async () => {
         try {
             await dispatch(removeEmployee(editedItem?.id || ''))
-            showMessage(`Employee ${editedItem?.fullName} removed`);
+            showMessage(`Employee removed`);
             setEditedItem(undefined);
         } catch (e) {
             showError(e);
