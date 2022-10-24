@@ -114,12 +114,12 @@ export const CreateServiceCenter:
             if (!formState.scEmail.length) {
                 err = [...err, '"Service Center Email" must not be empty'];
             } else {
-                if (!checkEmail(formState.scEmail)) err = [...err, "Service Center Email is not valid"]
+                if (!checkEmail(formState.scEmail)) err = [...err, '"Service Center Email" is not valid']
             }
             if (!formState.cpEmail.length) {
                 err = [...err, '"Contact Person Email" must not be empty'];
             } else {
-                if (!checkEmail(formState.scEmail)) err = [...err, 'Contact Person Email is not valid'];
+                if (!checkEmail(formState.scEmail)) err = [...err, '"Contact Person Email" is not valid'];
             }
             if (!formState.zipCode.length) err = [...err, '"Zip Code" must not be empty'];
             if (!formState.timeZoneId) err = [...err, '"Time Zone" must not be empty']

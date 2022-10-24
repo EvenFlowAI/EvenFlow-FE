@@ -62,6 +62,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
     const [isCleared, setCleared] = useState<boolean>(false);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const pods = useSelector((state: RootState) => state.pods.shortPodsList);
 
     const {isOpen, onClose, onOpen} = useModal();
@@ -94,17 +95,21 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
 
     const handleClose = () => {
         setCleared(false);
+        setFormIsChecked(false);
         props.onClose();
     }
 
     const handleUpdate = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
+        setFormIsChecked(false);
         setForm({...form, [name]: moment(date)});
     }
     const handleSelectPod = (e: React.ChangeEvent<{value: unknown, name?: string}>) => {
+        setFormIsChecked(false);
         setForm({...form, podId: e.target.value ? Number(e.target.value) : undefined});
     }
 
     const handleClear = (t: keyof TIds) => async () => {
+        setFormIsChecked(false);
         setSaving(true);
         try {
             await API.employeeSchedules.remove((t === "customId" ? customId : recursiveId) || 0);
@@ -117,54 +122,68 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
         }
     }
 
+    const checkIsValid = (): boolean => {
+        let err: string[] = [];
+        if (!form.timeStart) err = [...err, '"Starts At" must not be empty'];
+        if (!form.timeEnd) err = [...err, '"Finishes At" must not be empty'];
+        err.map(e => showError(e));
+        return !Boolean(err.length)
+    }
+
     const handleSave = (isRecurring: boolean) => async () => {
-        setSaving(true);
-        try {
-            const data: IScheduleForm = {
-                ...payload,
-                date: date.toISOString(),
-                employeeId: employee.id,
-                startAt: form.timeStart?.format(timeSpanString),
-                finishAt: form.timeEnd?.format(timeSpanString),
-                serviceCenterId: employee.serviceCenterId,
-                podId: form.podId,
-                isRecurring,
-                id: isRecurring ? recursiveId : customId
+        setFormIsChecked(true);
+        if (checkIsValid()) {
+            setSaving(true);
+            try {
+                const data: IScheduleForm = {
+                    ...payload,
+                    date: date.toISOString(),
+                    employeeId: employee.id,
+                    startAt: form.timeStart?.format(timeSpanString),
+                    finishAt: form.timeEnd?.format(timeSpanString),
+                    serviceCenterId: employee.serviceCenterId,
+                    podId: form.podId,
+                    isRecurring,
+                    id: isRecurring ? recursiveId : customId
+                }
+                await dispatch(setEmployeesSchedule(data, isXS));
+                setSaving(false);
+                showMessage("Saved");
+                handleClose();
+            } catch (e) {
+                setSaving(false);
+                showError(e);
             }
-            await dispatch(setEmployeesSchedule(data, isXS));
-            setSaving(false);
-            showMessage("Saved");
-            handleClose();
-        } catch (e) {
-            setSaving(false);
-            showError(e);
         }
     }
 
     const handleSetForWeek = useCallback(() => {
-        setSaving(true);
-        const data: IScheduleForWeek = {
-            serviceCenterId: employee.serviceCenterId,
-            employeeId: employee.id,
-            startAt: form.timeStart?.format(timeSpanString),
-            finishAt: form.timeEnd?.format(timeSpanString),
-            podId: form.podId,
-            status: 0,
-            ...getRequestDate(date),
-        }
+        setFormIsChecked(true);
+        if (checkIsValid()) {
+            setSaving(true);
+            const data: IScheduleForWeek = {
+                serviceCenterId: employee.serviceCenterId,
+                employeeId: employee.id,
+                startAt: form.timeStart?.format(timeSpanString),
+                finishAt: form.timeEnd?.format(timeSpanString),
+                podId: form.podId,
+                status: 0,
+                ...getRequestDate(date),
+            }
 
-        Api.call(Api.endpoints.EmployeeSchedule.SetForWeek, {data})
-            .then(() => {
-                const [start, end] = getStartEndDates(selectedDate, isXS);
-                dispatch(loadEmployeesSchedule(start, end, employee.serviceCenterId));
-            })
-            .catch(err => {
-                showError(err);
-            })
-            .finally(() => {
-                setSaving(false);
-                handleClose();
-            })
+            Api.call(Api.endpoints.EmployeeSchedule.SetForWeek, {data})
+                .then(() => {
+                    const [start, end] = getStartEndDates(selectedDate, isXS);
+                    dispatch(loadEmployeesSchedule(start, end, employee.serviceCenterId));
+                })
+                .catch(err => {
+                    showError(err);
+                })
+                .finally(() => {
+                    setSaving(false);
+                    handleClose();
+                })
+        }
     }, [employee, form, date, getRequestDate, getStartEndDates, selectedDate, isXS, showError, handleClose, setSaving])
 
     return <BaseModal {...props} width={750} onClose={handleClose}>
@@ -193,6 +212,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                         label="Starts at"
                         fullWidth
                         onChange={handleUpdate("timeStart")}
+                        error={!form.timeStart && formIsChecked}
                         id="timeStart"
                         name="timeStart"
                     />
@@ -202,6 +222,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                         value={form.timeEnd}
                         label="Finishes at"
                         fullWidth
+                        error={!form.timeEnd && formIsChecked}
                         onChange={handleUpdate("timeEnd")}
                         id="timeEnd"
                         name="timeEnd"

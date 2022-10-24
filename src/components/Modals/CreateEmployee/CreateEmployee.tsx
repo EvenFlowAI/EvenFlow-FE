@@ -154,7 +154,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             if (!technicianForm.serviceCenter) err = [...err, '"Service Center" must not by empty'];
             if (!technicianForm.phoneNumber?.length) err = [...err, '"Phone Number" must not by empty'];
             if (technicianForm.email?.length) {
-                if (!checkEmail(technicianForm.email)) err = [...err, 'Email is not valid']
+                if (!checkEmail(technicianForm.email)) err = [...err, '"Email" is not valid']
             }
             if (!technicianForm.hourlyRate) err = [...err, '"Hourly Rate" must not by empty'];
             if (!technicianForm.overtimeRate) err = [...err, '"Overtime Rate" must not by empty'];
@@ -166,7 +166,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             if (!advisorForm.email?.length) {
                 err = [...err, '"Email" must not by empty'];
             } else {
-                if (!checkEmail(advisorForm.email)) err = [...err, 'Email is not valid']
+                if (!checkEmail(advisorForm.email)) err = [...err, '"Email" is not valid']
             }
         }
         err.map(e => showError(e));
