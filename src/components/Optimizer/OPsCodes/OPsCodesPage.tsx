@@ -51,7 +51,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         orderId: "countOfTechnicians"
     },
     {
-        header: "Skill level of technicians",
+        header: "Skill Level of technicians",
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.skillLevelOfTechnicians.toString()}
@@ -60,7 +60,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         orderId: "skillLevelOfTechnicians"
     },
     {
-        header: "Warranty invoice",
+        header: "Warranty Invoice",
         align: "center",
         val: el => <CellData
             prefix="$"
@@ -70,7 +70,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         orderId: "warrantyInvoiceAmount"
     },
     {
-        header: "Regular invoice",
+        header: "Regular Invoice",
         align: "center",
         val: el => <CellData
             prefix="$"
@@ -90,7 +90,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         orderId: "partsUnitCost"
     },
     {
-        header: "Number Of Parts",
+        header: "Number of Parts",
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.numberOfParts?.toString()}
