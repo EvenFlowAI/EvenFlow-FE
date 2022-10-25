@@ -82,7 +82,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 placeholder="Type Email"
                 value={props.form.email}
                 onChange={props.onChange}
-                error={(props.form.email?.length && props.formIsChecked) || (!checkEmail(props.form.email) && props.formIsChecked)}
+                error={(!props.form.email?.length && props.formIsChecked) || (!checkEmail(props.form.email) && props.formIsChecked)}
                 fullWidth
             />
         </Grid>
