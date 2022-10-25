@@ -23,7 +23,8 @@ export type TFormItem<DataType> = {
     inputType?: "email" | "password" | "number";
     variant?: "input" | "textarea" | "select"
     inputProps?: TextInputProps;
-    selectOptions?: any
+    selectOptions?: any;
+    required?: boolean;
 }
 export type TModalFormProps<D> = {
     items: TFormItem<D>[][]
@@ -31,6 +32,7 @@ export type TModalFormProps<D> = {
     onChange: TInputChange;
     onSelectChange?: (name: string) => TSelectChange;
     readOnly?: boolean;
+    formIsChecked: boolean;
 }
 
 export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.Element => {
@@ -50,6 +52,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                                     disabled={props.readOnly}
                                     fullWidth
                                     {...item.inputProps}
+                                    error={item.required && props.formIsChecked && !item.value(props.values)}
                                 />
                                 : item.variant === 'select'
                                     ? <Autocomplete
@@ -57,7 +60,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                                         onChange={props?.onSelectChange ? props.onSelectChange(item.name || item.id) : noop}
                                         value={item.value(props.values) || null}
                                         disabled={props.readOnly}
-                                        renderInput={autocompleteRender({label: item.label || ""})}
+                                        renderInput={autocompleteRender({label: item.label || "", error: item.required && props.formIsChecked && !item.value(props.values)})}
                                     />
                                     : null}
                         </Grid>

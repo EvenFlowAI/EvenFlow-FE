@@ -58,7 +58,7 @@ export const DealershipGroups = () => {
     const handleRemoveAction = () => {
         setAnchorEl(null);
         askConfirm({
-            title: `Are you sure you want to remove dealership group ${editedItem?.name}?`,
+            title: `Please confirm you want to remove dealership group ${editedItem?.name}?`,
             isRemove: true,
             onConfirm: async () => {
                 await handleRemove();
@@ -70,7 +70,7 @@ export const DealershipGroups = () => {
         const d = editedItem
         try {
             await dispatch(removeDealership(d.id));
-            showMessage(`Successfully removed ${d.name}`);
+            showMessage(`Dealership ${d.name} removed`);
         } catch (e) {
             showError(e);
         }

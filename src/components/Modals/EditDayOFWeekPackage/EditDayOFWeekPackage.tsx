@@ -115,7 +115,7 @@ const EditDayOFWeekPackage: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
         setValues(prev => ({...prev, [type]: e.target.value}))
     }
     return <BaseModal  {...props} width={440} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Edit Day Of Week Maintenance Package</DialogTitle>
+        <DialogTitle onClose={onCancel}>Edit Day of Week Maintenance Package</DialogTitle>
         <DialogContent>
             <TextField
                 fullWidth

@@ -112,7 +112,7 @@ export const CreateBay: React.FC<DialogProps<IBay>> = ({payload, onAction, ...pr
                 } else {
                     await dispatch(updateBay(data, payload.id));
                 }
-                showMessage("Bay saved.");
+                showMessage(payload ? "Bay updated" : "Bay created");
                 props.onClose();
             } catch (e) {
                 showError(e);
@@ -121,7 +121,7 @@ export const CreateBay: React.FC<DialogProps<IBay>> = ({payload, onAction, ...pr
     }
 
     return <BaseModal {...props} maxWidth="xs">
-        <DialogTitle onClose={props.onClose}>{!payload ? "Add new" : "Edit"} bay</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Edit"} Bay</DialogTitle>
         <DialogContent>
             <Form
                 form={form}

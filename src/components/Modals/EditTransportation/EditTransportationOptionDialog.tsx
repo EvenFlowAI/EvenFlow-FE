@@ -219,7 +219,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         setTimeOfDay((prev) => {
             if (prev) {
                 if (prev.start && type === 'end' && moment(date).diff(prev.start) < 0) {
-                    showError('The End Time Needs To Be More than The Start Time')
+                    showError('The End Time needs to be more than the Start Time')
                     return prev;
                 }
                 return {...prev, [type as keyof TTimeObject]: moment(date)};

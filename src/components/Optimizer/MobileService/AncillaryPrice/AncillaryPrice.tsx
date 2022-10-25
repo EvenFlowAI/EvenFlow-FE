@@ -98,7 +98,7 @@ const AncillaryPrice = () => {
     }
 
     const onSuccess = () => {
-        showMessage('New Distance Range Has Been Created')
+        showMessage('Distance Range created')
     }
 
     const onError = (err:string) => {

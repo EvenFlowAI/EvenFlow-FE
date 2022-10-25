@@ -34,7 +34,8 @@ const BForm: React.FC<{
     form: TBreak[],
     workDays: number[],
     onCheck: (day: number, check: boolean) => () => void;
-    onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void
+    onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void;
+    formIsChecked: boolean;
 }&TViewMode> = props => {
     const classes = useStyles();
     const theme = useTheme();
@@ -66,6 +67,7 @@ const BForm: React.FC<{
                         disabled={!data.checked || props.viewMode}
                         placeholder={isClosed(dayOfWeek) ? "Closed" : ""}
                         value={data.from}
+                        error={!data.from && data.checked && props.formIsChecked}
                         onChange={props.onChange(dayOfWeek, "from")}
                         id={`${d}Start`}
                         name={`${d}Start`}
@@ -80,6 +82,7 @@ const BForm: React.FC<{
                         id={`${d}End`}
                         name={`${d}End`}
                         value={data.to}
+                        error={!data.to && data.checked && props.formIsChecked}
                         disabled={props.viewMode}
                         onChange={props.onChange(dayOfWeek, "to")}
                     /> : null}
@@ -110,6 +113,7 @@ const initialBreaks: TBreak[] = moment.weekdays().map((day, dayOfWeek) => ({
 }));
 export const Break: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [form, setForm] = useState<TBreak[]>(initialBreaks);
     const [wd, setWD] = useState<number[]>([]);
     const {selectedSC} = useSCs();
@@ -145,51 +149,68 @@ export const Break: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => 
     }, [props.open, setForm, selectedSC, setWD]);
 
     const handleCheck = (dayOfWeek: number, checked: boolean) => () => {
+        setFormIsChecked(false);
         const idx = form.findIndex(d => d.dayOfWeek === dayOfWeek);
         form[idx] = {...form[idx], checked};
         setForm([...form]);
     }
     const handleChange = (dayOfWeek: number, v: "from" | "to") => (date: MaterialUiPickersDate) => {
+        setFormIsChecked(false);
         const idx = form.findIndex(d => d.dayOfWeek === dayOfWeek);
         form[idx] = {...form[idx], [v]: date};
         setForm([...form]);
     }
 
+    const checkIsValid = () => {
+        const emptyFields = form.find(item => item.checked && (!item.from || !item.to))
+        if (emptyFields) showError('"Breaks" must not be empty')
+        return !emptyFields;
+    }
+
     const handleSave = async () => {
-        if (!selectedSC) {
-            showError("Service center is not selected");
-        } else {
-            setSaving(true);
-            const data: IBreakFrom = {breaks: form
-                .filter(el => {
-                    return el.checked;
-                }).map(fe => {
-                    return {
-                        ...fe,
-                        from: moment(fe.from).format(timeSpanString),
-                        to: moment(fe.to).format(timeSpanString)
-                    };
-                })};
-            try {
-                await Api.call(
-                    Api.endpoints.ServiceCenters.SetBreaks,
-                    {urlParams: {id: selectedSC.id}, data}
-                ).then(res => {
-                    if (res) showMessage("Breaks updated.");
-                })
-                props.onClose();
-            } catch (e) {
-                showError(e);
-            } finally {
-                setSaving(false);
+        setFormIsChecked(true);
+        if (checkIsValid()) {
+            if (!selectedSC) {
+                showError("Service center is not selected");
+            } else {
+                setSaving(true);
+                const data: IBreakFrom = {breaks: form
+                        .filter(el => {
+                            return el.checked;
+                        }).map(fe => {
+                            return {
+                                ...fe,
+                                from: moment(fe.from).format(timeSpanString),
+                                to: moment(fe.to).format(timeSpanString)
+                            };
+                        })};
+                try {
+                    await Api.call(
+                        Api.endpoints.ServiceCenters.SetBreaks,
+                        {urlParams: {id: selectedSC.id}, data}
+                    ).then(res => {
+                        if (res) showMessage("Breaks updated.");
+                    })
+                    props.onClose();
+                } catch (e) {
+                    showError(e);
+                } finally {
+                    setSaving(false);
+                }
             }
         }
     }
 
-    return <BaseModal {...props} width={780}>
-        <DialogTitle onClose={props.onClose}>{viewMode ? "View" : "Edit"} Breaks</DialogTitle>
+    const onClose = () => {
+        setFormIsChecked(false);
+        props.onClose();
+    }
+
+    return <BaseModal {...props} width={780} onClose={onClose}>
+        <DialogTitle onClose={onClose}>{viewMode ? "View" : "Edit"} Breaks</DialogTitle>
         <DialogContent>
             <BForm
+                formIsChecked={formIsChecked}
                 viewMode={viewMode}
                 workDays={wd}
                 onChange={handleChange}
@@ -197,7 +218,7 @@ export const Break: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => 
                 form={form} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={onClose}>Close</Button>
             {!viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"

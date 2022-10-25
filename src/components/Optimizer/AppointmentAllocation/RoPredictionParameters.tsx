@@ -86,7 +86,7 @@ const RoPredictionParameters = () => {
 
     const onSuccess = () => {
         setEdit(false);
-        showMessage('RO Prediction Params Updated Successfully')
+        showMessage('RO Prediction Params updated')
     }
 
     const onError = (err: string) => {

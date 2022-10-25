@@ -40,7 +40,7 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
     }
 
     return <BaseModal {...props} maxWidth={"sm"}>
-        <DialogTitle onClose={props.onClose}>Booking info</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Booking Info</DialogTitle>
         <DialogContent>
             <TextField
                 label={"Direct link"}

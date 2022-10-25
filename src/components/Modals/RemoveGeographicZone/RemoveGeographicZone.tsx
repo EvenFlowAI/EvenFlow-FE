@@ -76,7 +76,7 @@ const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType
     return  <BaseModal {...props} width={540} onClose={onCancel}>
         <DialogTitle onClose={onCancel}>Remove Zone</DialogTitle>
         <DialogContent>
-            <div className={classes.text}>Are you sure you want to remove selected zone from the list?</div>
+            <div className={classes.text}>Please confirm you want to remove selected zone from the list</div>
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
         <DialogActions>

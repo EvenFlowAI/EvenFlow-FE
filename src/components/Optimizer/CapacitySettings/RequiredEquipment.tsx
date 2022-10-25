@@ -74,7 +74,7 @@ export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
         if (editedItem) {
             askConfirm({
                 isRemove: true,
-                title: `Are you sure you want to remove ${editedItem.name}?`,
+                title: `Please confirm you want to remove ${editedItem.name}?`,
                 onConfirm: handleRemove
             })
         }

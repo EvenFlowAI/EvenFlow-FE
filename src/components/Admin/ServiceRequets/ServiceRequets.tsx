@@ -32,17 +32,17 @@ const rowData: TableRowDataType<ISRAdmin>[] = [
         val: el => String(el.countOfTechnicians)
     },
     {
-        header: "Skill level of technicians",
+        header: "Skill Level of technicians",
         align: "center",
         val: el => String(el.skillLevelOfTechnicians)
     },
     {
-        header: "Warranty invoice",
+        header: "Warranty Invoice",
         align: "center",
         val: el => `$${el.warrantyInvoiceAmount}`
     },
     {
-        header: "Regular invoice",
+        header: "Regular Invoice",
         align: "center",
         val: el => `$${el.invoiceAmount}`
     },
@@ -52,7 +52,7 @@ const rowData: TableRowDataType<ISRAdmin>[] = [
         val: el => `$${el.partsUnitCost}`
     },
     {
-        header: "Number Of Parts",
+        header: "Number of Parts",
         align: "center",
         val: el => `${el.numberOfParts}`
     },
@@ -115,7 +115,7 @@ export const ServiceRequests = () => {
         } else {
             askConfirm({
                 isRemove: true,
-                title: `Remove service request ${editedItem.code}?`,
+                title: `Please confirm you want to remove Service Request ${editedItem.code}?`,
                 onConfirm: handleRemove
             });
         }

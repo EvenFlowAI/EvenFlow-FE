@@ -71,7 +71,7 @@ const CustomerVerification: React.FC<DialogProps> = (props) => {
     }
 
     const onSuccess = () => {
-        showMessage('Customer Verification Updated')
+        showMessage('Customer Verification updated')
     }
 
     const onError = (err: string) => {

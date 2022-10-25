@@ -109,7 +109,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                         Order Index
                                     </TableCell>
                                     <TableCell className={classes.headerCell} key="1">
-                                        Included In Package
+                                        Included in Package
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -144,7 +144,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                         Order
                                     </TableCell>
                                     <TableCell className={classes.headerCell} key="2">
-                                        Included In Package
+                                        Included in Package
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
