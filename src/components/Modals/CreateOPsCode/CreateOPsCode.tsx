@@ -92,7 +92,7 @@ export const CreateOPsCode: React.FC<DialogProps<ISRAdmin>> = ({onAction, payloa
                 ));
             }
             setLoading(false);
-            showMessage("Saved");
+            showMessage(`Service Request ${payload ? "updated" : "created"}`);
             props.onClose();
         } catch (e) {
             setLoading(false);

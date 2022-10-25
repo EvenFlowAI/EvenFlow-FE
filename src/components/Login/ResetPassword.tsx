@@ -39,7 +39,7 @@ export const ResetPassword = () => {
         setLoading(true);
         try {
             await API.accounts.setNewPassword({newPassword, token: token as string, userId: userId as string});
-            showMessage("Password successfully set");
+            showMessage("Password set");
             setLoading(false)
             history.push(Routes.Login.Base);
         } catch (e) {

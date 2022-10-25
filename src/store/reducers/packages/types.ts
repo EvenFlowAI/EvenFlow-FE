@@ -14,6 +14,7 @@ export interface IPackageOption {
 export type TAssignedRequest = {
     type: string | number;
     serviceRequestId: number;
+    code?: string;
 }
 
 export interface IUpdatedPackage {

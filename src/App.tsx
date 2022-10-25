@@ -20,6 +20,7 @@ import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointme
 import {TScreen} from "./components/Layout/types";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions";
+import PaymentBill from "./components/AppointmentFlow/PaymentBill/PaymentBill";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -79,6 +80,7 @@ const App = () => {
                     <Route path={Routes.EndUser.CancelAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
+                    <Route path={Routes.EndUser.PaymentBill} exact component={PaymentBill} />
                     <Route
                         path={Routes.EndUser.ValueService}
                         exact

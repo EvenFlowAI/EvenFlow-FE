@@ -67,7 +67,7 @@ export const PricingSettingsPage = () => {
     }
 
     const onSuccessUpdate = () => {
-        showMessage('Max Price Updated Successfully!')
+        showMessage('Max Price updated')
     }
 
     const onErrorUpdate = (err: string) => {

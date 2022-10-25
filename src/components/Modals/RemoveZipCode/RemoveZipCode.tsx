@@ -69,7 +69,7 @@ const RemoveZipCode: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zip, 
     return  <BaseModal {...props} width={540} onClose={onCancel}>
         <DialogTitle onClose={onCancel}>Remove ZIP code</DialogTitle>
         <DialogContent>
-            <div className={classes.text}>Are you sure you want to remove ZIP code from the {zone?.name}?</div>
+            <div className={classes.text}>Please confirm you want to remove ZIP code from the {zone?.name}</div>
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
         <DialogActions>

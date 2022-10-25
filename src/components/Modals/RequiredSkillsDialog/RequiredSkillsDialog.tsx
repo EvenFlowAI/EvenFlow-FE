@@ -51,7 +51,7 @@ export const RequiredSkillsDialog: React.FC<DialogProps<IAssignedServiceRequest>
                     serviceRequestId: payload.id
                 }, payload.serviceCenterId));
                 setLoading(false);
-                showMessage("Saved");
+                showMessage("Required Skills updated");
                 props.onClose();
             } catch (e) {
                 setLoading(false);

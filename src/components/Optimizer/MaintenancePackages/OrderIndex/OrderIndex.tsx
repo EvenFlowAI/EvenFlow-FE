@@ -48,9 +48,10 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
     }, [currentPackage, open])
 
     const onSROrderChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist()
         setServiceRequests(prev => {
             let itemToUpdate = prev.find(el => el.id === id);
-            if (itemToUpdate && e.target?.value) {
+            if (itemToUpdate && e?.target?.value) {
                 itemToUpdate = {...itemToUpdate, orderIndex: +e.target.value};
                 return prev
                     .filter(el => el.id !== id)
@@ -62,9 +63,10 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
     }
 
     const onComplimentaryOrderChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist()
         setComplimentary(prev => {
             let itemToUpdate = prev.find(el => el.id === id);
-            if (itemToUpdate) {
+            if (itemToUpdate && e?.target?.value) {
                 itemToUpdate = {...itemToUpdate, orderIndex: +e.target.value};
                 return prev
                     .filter(el => el.id !== id)
@@ -107,7 +109,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                         Order Index
                                     </TableCell>
                                     <TableCell className={classes.headerCell} key="1">
-                                        Included In Package
+                                        Included in Package
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -119,8 +121,8 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                         return <TableRow key={item.id}>
                                             <TableCell key="3">
                                                 <TextField
-                                                    inputProps={{min: 1, step: 1, max: serviceRequests.length + 1}}
                                                     type="number"
+                                                    inputProps={{min: 1, step: 1, max: serviceRequests.length + 1}}
                                                     name={item.id.toString()}
                                                     value={item.orderIndex}
                                                     onChange={onSROrderChange(item.id)}
@@ -141,8 +143,8 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                     <TableCell className={classes.headerCell} key="1">
                                         Order
                                     </TableCell>
-                                    <TableCell className={classes.headerCell} key="1">
-                                        Included In Package
+                                    <TableCell className={classes.headerCell} key="2">
+                                        Included in Package
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -154,8 +156,8 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                         return <TableRow key={item.id}>
                                             <TableCell key="3">
                                                 <TextField
-                                                    inputProps={{min: 1, step: 1, max: complimentary.length + 1}}
                                                     type="number"
+                                                    inputProps={{min: 1, step: 1, max: complimentary.length + 1}}
                                                     name={item.id.toString()}
                                                     value={item.orderIndex}
                                                     onChange={onComplimentaryOrderChange(item.id)}

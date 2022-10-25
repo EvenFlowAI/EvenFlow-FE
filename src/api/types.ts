@@ -19,7 +19,7 @@ export type TApiView = Record<string, TApiEndpoint>;
 
 export type TApi = Record<string, TApiView>;
 
-export type serviceRequestAssigned = {
+export type TServiceRequestAssigned = {
     type: number;
     serviceRequestId: number;
     description?: string;
@@ -384,7 +384,7 @@ export interface IPackageById {
     isApplyPricingOptimization: boolean;
     isApplyBusinessRules: boolean;
     options: IPackageOptionDetailed[];
-    serviceRequestsAssigned: serviceRequestAssigned[];
+    serviceRequestsAssigned: TServiceRequestAssigned[];
     name: string;
     id: number;
     serviceRequests: TExtendedService[];

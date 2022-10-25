@@ -166,7 +166,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     }
 
     const onSuccess = () => {
-        showMessage(`The Zone ${currentZone?.name} was ${isEdit ? 'updated' : 'created'} successfully`);
+        showMessage(`Zone ${currentZone?.name} ${isEdit ? 'updated' : 'created'}`);
         onCancel();
     }
 
@@ -245,7 +245,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                 setCurrentZip(codeObject);
                 if (zonesList.length > 1) onOpen();
             } else {
-                showError('This code has not been saved to the ZIP codes list of the current zone')
+                showError('This code is not saved to the ZIP codes list of the current zone')
             }
         }
     }

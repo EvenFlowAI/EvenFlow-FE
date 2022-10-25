@@ -21,7 +21,7 @@ import {IUserForm, TRole} from "../../../store/reducers/users/types";
 import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
 import {Roles} from "../../../config/constants";
-import {validatePhoneNumber} from "../../../utils/utils";
+import {checkEmail, validatePhoneNumber} from "../../../utils/utils";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
     const [shortSC, shortLoading, savingE, savingU, DmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [
@@ -36,6 +36,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     const [avatar, setAvatar] = useState<File | undefined>();
     const [advisorForm, setAdvisorForm] = useState<TAdvisorForm>(initialAdvisorForm);
     const [technicianForm, setTechnicianForm] = useState<TTechnicianForm>(initialTechnicianForm);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -91,10 +92,12 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     })
 
     const handleChangeRole = (role: string) => {
+        setFormIsChecked(false);
         setRole(role as Roles);
     }
 
     const handleChange = (r: Roles.Advisor | Roles.Technician): React.ChangeEventHandler<HTMLInputElement> => ({target: {name, value}}) => {
+        setFormIsChecked(false);
         if (name === "phoneNumber") {
             value = validatePhoneNumber(value);
         }
@@ -105,6 +108,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         }
     }
     const handleSelectChange = (r: Roles.Advisor | Roles.Technician): TSelectChange => (e, value) => {
+        setFormIsChecked(false);
         if (typeof value !== 'string' && value?.id) {
             dispatch(loadDMSAdvisors(value.id))
         }
@@ -116,20 +120,24 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     }
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        setFormIsChecked(false);
         setAdvisorForm(prev => ({...prev, showOnBooking: checked}));
     }
 
     const handleDMSConsultantChange =  (r: Roles.Advisor | Roles.Technician): TDMSConsultantChange => (e, value) => {
+        setFormIsChecked(false);
         if (r === Roles.Advisor) {
             setAdvisorForm(prev => ({...prev, dmsId: value ? value.id : null}));
         }
     }
 
     const handleRoleChange = (e: any, value: TRole) => {
+        setFormIsChecked(false);
         setAdvisorForm({...advisorForm, role: value});
     }
 
     const handleSwitchChange = (e: React.ChangeEvent<{}>, newVal: number) => {
+        setFormIsChecked(false);
         if (newVal) {
             setTechnicianForm({
                 ...technicianForm,
@@ -138,58 +146,94 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         }
     }
 
-    const handleCreate = async () => {
-        let data: IEmployeeForm | IUserForm;
-        if (role !== Roles.Technician) {
-            data = {
-                ...advisorForm,
-                dmsId: advisorForm?.dmsId ?? null,
-                serviceCenterId: advisorForm.serviceCenter?.id || null
-            } as IUserForm;
+    const checkIsValid = (): boolean => {
+        let err: string[] = [];
+        if (role === Roles.Technician) {
+            if (!technicianForm.firstName.length) err = [...err, '"First Name" must not be empty'];
+            if (!technicianForm.lastName.length) err = [...err, '"Last Name" must not by empty'];
+            if (!technicianForm.serviceCenter) err = [...err, '"Service Center" must not by empty'];
+            if (!technicianForm.phoneNumber?.length) err = [...err, '"Phone Number" must not by empty'];
+            if (technicianForm.email?.length) {
+                if (!checkEmail(technicianForm.email)) err = [...err, '"Email" is not valid']
+            }
+            if (!technicianForm.hourlyRate) err = [...err, '"Hourly Rate" must not by empty'];
+            if (!technicianForm.overtimeRate) err = [...err, '"Overtime Rate" must not by empty'];
         } else {
-            data = {
-                firstName: technicianForm.firstName,
-                lastName: technicianForm.lastName,
-                email: technicianForm.email || undefined,
-                phoneNumber: technicianForm.phoneNumber,
-                serviceCenterId: technicianForm.serviceCenter?.id || null,
-                employeeInfo: {
-                    hourlyRate: technicianForm.hourlyRate || 0,
-                    overtimeRate: technicianForm.overtimeRate || 0,
-                    skillLevel: technicianForm.technicianLevel
-                }
-            } as IEmployeeForm;
-        }
-        try {
-            if (role !== Roles.Technician) {
-                if (payload?.id) {
-                    await dispatch(updateUser(data as IUserForm, payload.id, avatar));
-                } else {
-                    await dispatch(createUser(data as IUserForm, avatar));
-                }
+            if (!advisorForm.firstName.length) err = [...err, '"First Name" must not be empty'];
+            if (!advisorForm.lastName.length) err = [...err, '"Last Name" must not by empty'];
+            if (!advisorForm.serviceCenter) err = [...err, '"Service Center" must not by empty'];
+            if (!advisorForm.phoneNumber?.length) err = [...err, '"Phone Number" must not by empty'];
+            if (!advisorForm.email?.length) {
+                err = [...err, '"Email" must not by empty'];
             } else {
-                if (payload?.id) {
-                    await dispatch(updateEmployee(data as IEmployeeForm, payload.id, avatar));
+                if (!checkEmail(advisorForm.email)) err = [...err, '"Email" is not valid']
+            }
+        }
+        err.map(e => showError(e));
+        return !Boolean(err.length)
+    }
+
+    const handleCreate = async () => {
+        setFormIsChecked(true);
+        const isValid = checkIsValid();
+        if (isValid) {
+            let data: IEmployeeForm | IUserForm;
+            if (role !== Roles.Technician) {
+                data = {
+                    ...advisorForm,
+                    dmsId: advisorForm?.dmsId ?? null,
+                    serviceCenterId: advisorForm.serviceCenter?.id || null
+                } as IUserForm;
+            } else {
+                data = {
+                    firstName: technicianForm.firstName,
+                    lastName: technicianForm.lastName,
+                    email: technicianForm.email || undefined,
+                    phoneNumber: technicianForm.phoneNumber,
+                    serviceCenterId: technicianForm.serviceCenter?.id || null,
+                    employeeInfo: {
+                        hourlyRate: technicianForm.hourlyRate || 0,
+                        overtimeRate: technicianForm.overtimeRate || 0,
+                        skillLevel: technicianForm.technicianLevel
+                    }
+                } as IEmployeeForm;
+            }
+            try {
+                if (role !== Roles.Technician) {
+                    if (payload?.id) {
+                        await dispatch(updateUser(data as IUserForm, payload.id, avatar));
+                    } else {
+                        await dispatch(createUser(data as IUserForm, avatar));
+                    }
                 } else {
-                    await dispatch(createEmployee(data as IEmployeeForm, avatar));
+                    if (payload?.id) {
+                        await dispatch(updateEmployee(data as IEmployeeForm, payload.id, avatar));
+                    } else {
+                        await dispatch(createEmployee(data as IEmployeeForm, avatar));
+                    }
                 }
+                dispatch(loadAll());
+                showMessage(`Employee ${isEdit ? "updated" : "created"}`);
+                setTechnicianForm(initialTechnicianForm);
+                setAdvisorForm(initialAdvisorForm);
+                if (onAction) {
+                    onAction();
+                }
+                props.onClose();
+            } catch (e) {
+                showError(e);
             }
-            dispatch(loadAll());
-            showMessage(`Employee ${isEdit ? "updated" : "created"}`);
-            setTechnicianForm(initialTechnicianForm);
-            setAdvisorForm(initialAdvisorForm);
-            if (onAction) {
-                onAction();
-            }
-            props.onClose();
-        } catch (e) {
-            showError(e);
         }
     }
 
-    return <BaseModal {...props} width={700}>
-        <DialogTitle onClose={props.onClose}>
-            {isEdit ? `Edit ${payload?.role}` : "I want to add new"}
+    const onClose = () => {
+        props.onClose();
+        setFormIsChecked(false);
+    }
+
+    return <BaseModal {...props} width={700} onClose={onClose}>
+        <DialogTitle onClose={onClose}>
+            {isEdit ? `Edit ${payload?.role}` : "Add Employee"}
         </DialogTitle>
         <DialogContent>
             {!isEdit ? <Grid container spacing={3}>
@@ -218,6 +262,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             <AvatarContainer onChange={(f) => setAvatar(f)} dataUrl={payload?.avatarPath} />
             {role === Roles.Advisor
                 ? <AdvisorForm
+                    formIsChecked={formIsChecked}
                     onShowOnBookingChange={handleShowOnBookingChange}
                     dmsConsultants={DmsAdvisors}
                     form={advisorForm}
@@ -229,6 +274,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                     loading={shortLoading ?? loadingDMSAdvisors}
                     onChange={handleChange(Roles.Advisor)} />
                 : <TechnicianForm
+                    formIsChecked={formIsChecked}
                     form={technicianForm}
                     isEdit={isEdit}
                     loading={shortLoading}
@@ -241,7 +287,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             <Divider />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={onClose}>Cancel</Button>
             <LoadingButton
                 loading={saving}
                 color="primary"

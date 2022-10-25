@@ -30,7 +30,6 @@ import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameRedu
 import {API} from "../../api/api";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
-import LanguageSwitcher from "../AppointmentFlow/AppointmentFrame/LanguageSwitcher/LanguageSwitcher";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);

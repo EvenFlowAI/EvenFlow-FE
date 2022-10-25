@@ -117,7 +117,6 @@ export const prodParentLinks = [
 export const AppointmentFrameLayout = () => {
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
-    const [origin, setOrigin] = useState<string>('');
 
     const {
         selectedVehicle,
@@ -172,13 +171,10 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                if (!prodParentLinks.includes(event.origin)) return;
+                if (!prodParentLinks.includes(event?.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-                if (originSite) {
-                    createTracker(event.data, originSite, trackerCreated);
-                    setOrigin(originSite);
-                }
+                if (originSite) createTracker(event.data, originSite, trackerCreated);
             });
         }
     }, [trackerCreated, window.location?.ancestorOrigins]);
@@ -225,7 +221,7 @@ export const AppointmentFrameLayout = () => {
                 history.push(Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1");
             }
         }
-    }, [id, history, dispatch, origin, scProfile]);
+    }, [id, history, dispatch, scProfile]);
 
     useEffect(() => {
         if (!customerLoadedData) {
@@ -237,7 +233,7 @@ export const AppointmentFrameLayout = () => {
                 if (!valueService) handleLogin();
             }
         }
-    }, [customerLoadedData, dispatch, handleLogin, origin]);
+    }, [customerLoadedData, dispatch, handleLogin]);
 
     useEffect(() => {
         if (currentFrameScreen === currentScreen) {

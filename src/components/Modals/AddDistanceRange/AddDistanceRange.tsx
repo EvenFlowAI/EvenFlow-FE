@@ -86,7 +86,7 @@ const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRang
 
     return (
         <BaseModal open={props.open} width={440} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>ADD RANGE</DialogTitle>
+            <DialogTitle onClose={onCancel}>Add Range</DialogTitle>
             <DialogContent>
                 <TextField
                     type="number"

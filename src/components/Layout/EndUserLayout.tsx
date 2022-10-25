@@ -65,7 +65,7 @@ export const EndUserLayout = () => {
     useEffect(() => {
         if (!trackerCreated) {
             window.addEventListener('message', function(event) {
-                if (!prodParentLinks.includes(event.origin)) return;
+                if (!prodParentLinks.includes(event?.origin)) return;
                 let originSite = event.origin;
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
                 if (originSite) createTracker(event.data, originSite, trackerCreated);

@@ -117,7 +117,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading}) => {
         window.addEventListener('unload', () => {
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
-    }, [])
+    }, [sessionStorage])
 
     const createBlankCar = () => {
         const c = getBlankCustomer();

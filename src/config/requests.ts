@@ -213,12 +213,12 @@ export class Api {
             Dealership: {route: "/accounts/dealership", method: "get"},
         },
         AncillaryPricing: {
-          GetZones: {route: "/ancillary-price/geographic-zone/by-query", method: "post"},
-          UpdateZone: {route: "/ancillary-price/geographic-zone/{id}", method: "put"},
-          GetDistances: {route: "/ancillary-price/distance/by-query", method: "post"},
-          CreateDistance: {route: "/ancillary-price/distance", method: "post"},
-          UpdateDistance: {route: "/ancillary-price/distance/{id}", method: "put"},
-          DeleteDistance: {route: "/ancillary-price/distance/{id}", method: "delete"},
+            GetZones: {route: "/ancillary-price/geographic-zone/by-query", method: "post"},
+            UpdateZone: {route: "/ancillary-price/geographic-zone/{id}", method: "put"},
+            GetDistances: {route: "/ancillary-price/distance/by-query", method: "post"},
+            CreateDistance: {route: "/ancillary-price/distance", method: "post"},
+            UpdateDistance: {route: "/ancillary-price/distance/{id}", method: "put"},
+            DeleteDistance: {route: "/ancillary-price/distance/{id}", method: "delete"},
         },
         Appointments: {
             Create: {route: "/appointments", method: "post"},

@@ -130,7 +130,7 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = ({ isEditing, onClose, ...prop
                 setModels(prev => [...prev, newModel]);
                 setNewModel('');
             } else {
-                showError('This Model has been added already')
+                showError('This Model already exists')
             }
         }
     }
@@ -154,7 +154,7 @@ const AddMakeModel:React.FC<TAddMakeModalProps> = ({ isEditing, onClose, ...prop
 
     return (
         <BaseModal {...props} width={540} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} MAKE AND MODEL</DialogTitle>
+            <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} Make and Model</DialogTitle>
             <DialogContent>
                     <TextField
                         fullWidth
