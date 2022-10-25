@@ -275,7 +275,7 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
                 loading={saving}
                 onClick={handleSave(false)}
             >
-                Set for {date.format("MMM, DD YYYY")}
+                Set for {date.format("MMM DD, YYYY")}
             </LoadingButton>
             <LoadingButton
                 loading={saving}

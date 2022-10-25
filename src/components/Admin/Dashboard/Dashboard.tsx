@@ -141,7 +141,7 @@ const overallData: TDataMap[] = [
     {label: "Technicians", value: "technicians"},
     {label: "Bays", value: "bays"},
     {label: "Pods", value: "pods"},
-    {label: "Appointments today", value: "appointments"},
+    {label: "Appointments Today", value: "appointments"},
 ];
 
 export const AdminDashboard: React.FC = () => {

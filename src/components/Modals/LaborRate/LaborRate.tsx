@@ -118,7 +118,7 @@ const LaborRate: React.FC<DialogProps> = (props) => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Job Type</TableCell>
-                                <TableCell>Labor Rate, $</TableCell>
+                                <TableCell style={{textTransform: 'none'}}>LABOR RATE ($ per hour)</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

@@ -76,7 +76,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
         </Grid>
         <Grid item xs={12} sm={6}>
             <TextField
-                label="Email address"
+                label="Email"
                 id="email"
                 name="email"
                 placeholder="Type Email"
