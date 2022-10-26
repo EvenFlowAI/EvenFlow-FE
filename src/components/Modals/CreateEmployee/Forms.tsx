@@ -9,7 +9,8 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {TRole} from "../../../store/reducers/users/types";
 import {userRoles} from "../../../config/constants";
 import {checkEmail} from "../../../utils/utils";
-
+import 'react-phone-number-input/style.css'
+import {isValidPhoneNumber} from 'react-phone-number-input'
 
 export const initialAdvisorForm: TAdvisorForm = {
     firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null, role: "Manager", position: '',
@@ -94,7 +95,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 placeholder="Type Phone Number"
                 name="phoneNumber"
                 onChange={props.onChange}
-                error={!props.form.phoneNumber?.length && props.formIsChecked}
+                error={props.formIsChecked && (!props.form.phoneNumber?.length || !isValidPhoneNumber(props.form.phoneNumber))}
                 fullWidth
             />
         </Grid>
@@ -213,7 +214,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 name="phoneNumber"
                 placeholder="Type Phone Number"
                 fullWidth
-                error={!props.form.phoneNumber?.length && props.formIsChecked}
+                error={props.formIsChecked && (!props.form.phoneNumber?.length || !isValidPhoneNumber(props.form.phoneNumber))}
                 value={props.form.phoneNumber}
                 onChange={props.onChange}
                 label="Phone Number"
