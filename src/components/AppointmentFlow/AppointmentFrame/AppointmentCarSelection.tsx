@@ -22,7 +22,7 @@ const CarsWrapper = styled('div')({
 });
 
 const Info = styled('div')({
-    fontSize: 14,
+    fontSize: 18,
     "& span": {
         fontWeight: "bold",
         textDecoration: "underline",
