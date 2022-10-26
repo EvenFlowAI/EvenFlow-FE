@@ -22,6 +22,7 @@ import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
 import {Roles} from "../../../config/constants";
 import {checkEmail, validatePhoneNumber} from "../../../utils/utils";
+import {isValidPhoneNumber} from "react-phone-number-input";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
     const [shortSC, shortLoading, savingE, savingU, DmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [
@@ -152,7 +153,11 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             if (!technicianForm.firstName.length) err = [...err, '"First Name" must not be empty'];
             if (!technicianForm.lastName.length) err = [...err, '"Last Name" must not by empty'];
             if (!technicianForm.serviceCenter) err = [...err, '"Service Center" must not by empty'];
-            if (!technicianForm.phoneNumber?.length) err = [...err, '"Phone Number" must not by empty'];
+            if (!technicianForm.phoneNumber?.length) {
+                err = [...err, '"Phone Number" must not by empty'];
+            } else {
+                if (!isValidPhoneNumber(technicianForm.phoneNumber)) err = [...err, '"Phone NUmber is not valid"']
+            }
             if (technicianForm.email?.length) {
                 if (!checkEmail(technicianForm.email)) err = [...err, '"Email" is not valid']
             }
@@ -162,7 +167,11 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             if (!advisorForm.firstName.length) err = [...err, '"First Name" must not be empty'];
             if (!advisorForm.lastName.length) err = [...err, '"Last Name" must not by empty'];
             if (!advisorForm.serviceCenter) err = [...err, '"Service Center" must not by empty'];
-            if (!advisorForm.phoneNumber?.length) err = [...err, '"Phone Number" must not by empty'];
+            if (!advisorForm.phoneNumber?.length) {
+                err = [...err, '"Phone Number" must not by empty'];
+            } else {
+                if (!isValidPhoneNumber(advisorForm.phoneNumber)) err = [...err, '"Phone NUmber is not valid"']
+            }
             if (!advisorForm.email?.length) {
                 err = [...err, '"Email" must not by empty'];
             } else {
