@@ -104,6 +104,7 @@ export interface ICustomerLoadedData {
     sessionId?: string;
     phoneNumbers: string[];
     vehicles: ILoadedVehicle[];
+    city?:string;
 }
 
 export interface IVehicle {
@@ -269,6 +270,7 @@ export interface ICustomer {
     fullName: string;
     phoneNumber: string;
     email: string;
+    city?: string;
 }
 
 export interface ITransportation {
