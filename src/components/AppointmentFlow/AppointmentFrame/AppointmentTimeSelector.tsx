@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
@@ -56,12 +56,17 @@ type TProps = {
 }
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
-    const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {selectedTiming, gap} = useSelector((state : RootState) => state.appointmentFrame);
-    const {slotRange} = useSelector((state : RootState) => state.slotScoring);
-    const dispatch = useDispatch();
-    const classes = useStyles();
-    const {t} = useTranslation();
+        const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
+        const {selectedTiming, gap} = useSelector((state : RootState) => state.appointmentFrame);
+        const {slotRange} = useSelector((state : RootState) => state.slotScoring);
+        const dispatch = useDispatch();
+        const firstCardRef = useRef<HTMLDivElement|null>(null);
+        const classes = useStyles();
+        const {t} = useTranslation();
+
+        useEffect(() => {
+            if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView();
+        }, [date, firstCardRef])
 
         useEffect(() => {
             if (scProfile) {
@@ -71,54 +76,54 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             }
         }, [scProfile])
 
-    const slots: TSlot[] = useMemo(() => {
-        const slots: TSlot[] = [];
-        if (gap && slotRange) {
-            const [startHours, startMinutes] = slotRange.start.split(':');
-            const [endHours, endMinutes] = slotRange.end.split(':');
-            let start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
-            const end  = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
-            let cDate = moment.utc(start);
-            while (cDate.isSameOrBefore(end, 'minute')) {
-                slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
-                cDate = moment.utc(cDate).add(gap, 'minutes');
+        const slots: TSlot[] = useMemo(() => {
+            const slots: TSlot[] = [];
+            if (gap && slotRange) {
+                const [startHours, startMinutes] = slotRange.start.split(':');
+                const [endHours, endMinutes] = slotRange.end.split(':');
+                let start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
+                const end  = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
+                let cDate = moment.utc(start);
+                while (cDate.isSameOrBefore(end, 'minute')) {
+                    slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
+                    cDate = moment.utc(cDate).add(gap, 'minutes');
+                }
             }
+            return slots;
+        }, [date, appointments, slotRange, gap]);
+
+        const handleSelect = (a: IRemappedAppointmentSlot|null) => {
+            const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+            ReactGA.event({
+                category: 'EvenFlow User',
+                action: 'Clicked on Appointment Slot',
+                label: a?.price?.value ? `With Price $${a.price.value}` : '',
+            });
+            dispatch(selectAppointment(data));
         }
-        return slots;
-    }, [date, appointments, slotRange, gap]);
 
-    const handleSelect = (a: IRemappedAppointmentSlot|null) => {
-        const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: 'Clicked on Appointment Slot',
-            label: a?.price?.value ? `With Price $${a.price.value}` : '',
-        });
-        dispatch(selectAppointment(data));
-    }
-
-    return (
-        <div className={classes.wrapper}>
-            <h4>{t("Select Time")}</h4>
-            {!loading
-                ? <TimeSlotsWrapper>
-                    {slots.map(timeSlot => {
-                        const appointment = appointments?.appointments.find(
-                            a => a.date.isSame(timeSlot.date, 'minute')
-                        );
-                        return <TimeSlotCard
-                            date={date}
-                            slot={appointment}
-                            onSelect={handleSelect}
-                            selected={Boolean(
-                                selectedAppointment && appointment?.id === selectedAppointment.id
-                            )}
-                            timeSlot={timeSlot}
-                            key={timeSlot.label}
-                        />
-                    })}
-                </TimeSlotsWrapper>
-                : <Loading/>}
-        </div>
-    );
-};
+        return (
+            <div className={classes.wrapper}>
+                <h4 ref={firstCardRef}>{t("Select Time")}</h4>
+                {!loading
+                    ? <TimeSlotsWrapper>
+                        {slots.map((timeSlot) => {
+                            const appointment = appointments?.appointments.find(
+                                a => a.date.isSame(timeSlot.date, 'minute')
+                            );
+                            return <TimeSlotCard
+                                date={date}
+                                slot={appointment}
+                                onSelect={handleSelect}
+                                selected={Boolean(
+                                    selectedAppointment && appointment?.id === selectedAppointment.id
+                                )}
+                                timeSlot={timeSlot}
+                                key={timeSlot.label}
+                            />
+                        })}
+                    </TimeSlotsWrapper>
+                    : <Loading/>}
+            </div>
+        );
+    };
