@@ -22,7 +22,6 @@ import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
 import {Roles} from "../../../config/constants";
 import {checkEmail, validatePhoneNumber} from "../../../utils/utils";
-import {isValidPhoneNumber} from "react-phone-number-input";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
     const [shortSC, shortLoading, savingE, savingU, DmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [
@@ -156,7 +155,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             if (!technicianForm.phoneNumber?.length) {
                 err = [...err, '"Phone Number" must not by empty'];
             } else {
-                if (!isValidPhoneNumber(technicianForm.phoneNumber)) err = [...err, '"Phone NUmber is not valid"']
+                if (technicianForm.phoneNumber.length < 10) err = [...err, '"Phone NUmber is not valid"']
             }
             if (technicianForm.email?.length) {
                 if (!checkEmail(technicianForm.email)) err = [...err, '"Email" is not valid']
@@ -170,7 +169,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             if (!advisorForm.phoneNumber?.length) {
                 err = [...err, '"Phone Number" must not by empty'];
             } else {
-                if (!isValidPhoneNumber(advisorForm.phoneNumber)) err = [...err, '"Phone NUmber is not valid"']
+                if (advisorForm.phoneNumber.length < 10) err = [...err, '"Phone NUmber is not valid"']
             }
             if (!advisorForm.email?.length) {
                 err = [...err, '"Email" must not by empty'];
