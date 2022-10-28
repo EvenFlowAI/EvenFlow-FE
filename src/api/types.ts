@@ -157,6 +157,7 @@ export interface IDriverInfo {
     fullName: string;
     phoneNumber: string;
     email: string;
+    city?: string;
 }
 
 export enum AppointmentStatus {
