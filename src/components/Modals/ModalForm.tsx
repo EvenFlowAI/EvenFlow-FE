@@ -4,7 +4,6 @@ import {TextField, TextInputProps} from "../UI/TextField";
 import {Divider, Grid, GridSize} from "@material-ui/core";
 import {checkEmail, noop} from "../../utils/utils";
 import {autocompleteRender} from "../UI/AutocompleteRender";
-import {isValidPhoneNumber} from "react-phone-number-input";
 
 export type TInputChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
 export type TSelectChange = (
@@ -44,7 +43,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                 <Grid container spacing={2}>
                     {itemGroup.map(item => {
                         const error = item.inputType === "number"
-                            ? item.required && props.formIsChecked && (!isValidPhoneNumber(item.value(props.values)) || !item.value(props.values))
+                            ? item.required && props.formIsChecked && (item.value(props.values).length < 11)
                             : item.inputType === "email"
                                 ?item.required && props.formIsChecked && (!checkEmail(item.value(props.values)) || !item.value(props.values))
                                 : item.required && props.formIsChecked && !item.value(props.values)

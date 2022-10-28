@@ -43,7 +43,6 @@ import {RootState} from "../../../store/rootReducer";
 import {EJobType} from "../../../store/reducers/pods/types";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
-import {isValidPhoneNumber} from "react-phone-number-input";
 
 export type TForm = {
     date: string;
@@ -315,9 +314,9 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             isValid = false;
             showError("Please choose at least one Service Request or Service Category or Package Option")
         }
-        if (!isValidPhoneNumber(form.driverPhoneNumber)) {
+        if (form.driverPhoneNumber.length < 11) {
             isValid = false;
-            showError('"Phone Number" is not valid')
+            showError(`"Phone Number" ${form.driverPhoneNumber.length ? 'is not valid' : 'must not be empty'}`)
             setErrors(prev => [...prev, "driverPhoneNumber"])
         }
         for (let field in form) {

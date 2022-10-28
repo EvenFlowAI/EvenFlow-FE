@@ -12,7 +12,6 @@ import {LoadingButton} from "../../UI/Button";
 import {RootState} from "../../../store/rootReducer";
 import {API} from "../../../api/api";
 import {checkEmail, validatePhoneNumber} from "../../../utils/utils";
-import {isValidPhoneNumber} from 'react-phone-number-input'
 
 type TSCFormState = {
     scName: string;
@@ -127,7 +126,7 @@ export const CreateServiceCenter:
             if (!formState.scPhoneNumber.length) {
                 err = [...err, '"Service Center Phone Number" must not be empty'];
             } else {
-                if (!isValidPhoneNumber(formState.scPhoneNumber)) err = [...err, '"Service Center Phone Number" is not valid'];
+                if (formState.scPhoneNumber.length < 11) err = [...err, '"Service Center Phone Number" is not valid'];
             }
             if (!formState.state.length) err = [...err, '"State" must not be empty'];
             if (!formState.city.length) err = [...err, '"City" must not be empty'];
