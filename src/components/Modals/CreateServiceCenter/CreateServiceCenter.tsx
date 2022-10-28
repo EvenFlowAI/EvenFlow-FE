@@ -126,7 +126,7 @@ export const CreateServiceCenter:
             if (!formState.scPhoneNumber.length) {
                 err = [...err, '"Service Center Phone Number" must not be empty'];
             } else {
-                if (formState.scPhoneNumber.length < 10) err = [...err, '"Service Center Phone Number" is not valid'];
+                if (formState.scPhoneNumber.length < 11) err = [...err, '"Service Center Phone Number" is not valid'];
             }
             if (!formState.state.length) err = [...err, '"State" must not be empty'];
             if (!formState.city.length) err = [...err, '"City" must not be empty'];

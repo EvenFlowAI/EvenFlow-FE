@@ -94,7 +94,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 placeholder="Type Phone Number"
                 name="phoneNumber"
                 onChange={props.onChange}
-                error={props.formIsChecked && (!props.form.phoneNumber?.length || props.form.phoneNumber?.length < 10)}
+                error={props.formIsChecked && (!props.form.phoneNumber?.length || props.form.phoneNumber?.length < 11)}
                 fullWidth
             />
         </Grid>
@@ -213,7 +213,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 name="phoneNumber"
                 placeholder="Type Phone Number"
                 fullWidth
-                error={props.formIsChecked && (!props.form.phoneNumber?.length || props.form.phoneNumber?.length < 10)}
+                error={props.formIsChecked && (!props.form.phoneNumber?.length || props.form.phoneNumber?.length < 11)}
                 value={props.form.phoneNumber}
                 onChange={props.onChange}
                 label="Phone Number"

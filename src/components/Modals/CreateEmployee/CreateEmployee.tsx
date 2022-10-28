@@ -155,7 +155,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             if (!technicianForm.phoneNumber?.length) {
                 err = [...err, '"Phone Number" must not by empty'];
             } else {
-                if (technicianForm.phoneNumber.length < 10) err = [...err, '"Phone NUmber is not valid"']
+                if (technicianForm.phoneNumber.length < 11) err = [...err, '"Phone NUmber is not valid"']
             }
             if (technicianForm.email?.length) {
                 if (!checkEmail(technicianForm.email)) err = [...err, '"Email" is not valid']
@@ -169,7 +169,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
             if (!advisorForm.phoneNumber?.length) {
                 err = [...err, '"Phone Number" must not by empty'];
             } else {
-                if (advisorForm.phoneNumber.length < 10) err = [...err, '"Phone NUmber is not valid"']
+                if (advisorForm.phoneNumber.length < 11) err = [...err, '"Phone NUmber is not valid"']
             }
             if (!advisorForm.email?.length) {
                 err = [...err, '"Email" must not by empty'];

@@ -43,7 +43,7 @@ export const ModalForm = <Item extends {}>(props: TModalFormProps<Item>): JSX.El
                 <Grid container spacing={2}>
                     {itemGroup.map(item => {
                         const error = item.inputType === "number"
-                            ? item.required && props.formIsChecked && (item.value(props.values).length < 10)
+                            ? item.required && props.formIsChecked && (item.value(props.values).length < 11)
                             : item.inputType === "email"
                                 ?item.required && props.formIsChecked && (!checkEmail(item.value(props.values)) || !item.value(props.values))
                                 : item.required && props.formIsChecked && !item.value(props.values)
