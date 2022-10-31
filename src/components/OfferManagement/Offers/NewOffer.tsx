@@ -163,7 +163,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         } else {
             try {
                 await dispatch(removeOffer(payload, archive));
-                showMessage(`Offer ${payload?.title} removed`);
+                showMessage(`Offer removed`);
                 props.onClose();
             } catch (e) {
                 showError(e);
@@ -226,7 +226,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                 } else {
                     await dispatch(createOffer(data));
                 }
-                showMessage("Saved");
+                showMessage(`Offer ${payload ? "updated" : "created"}`);
                 setSaving(false);
                 props.onClose();
             } catch (e) {

@@ -102,7 +102,7 @@ const DayOfWeekPackage = () => {
     const deletePackageOption = useCallback((item: TMPackage) => {
         if (selectedSC) {
             askConfirm({
-                title: `Please confirm you want to remove maintenance package level ${item.optionName} with Package ID ${item.id}?`,
+                title: `Please confirm you want to remove Maintenance Package Level ${item.optionName} with Package ID ${item.id}?`,
                 isRemove: true,
                 onConfirm: () => {
                     try {

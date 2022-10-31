@@ -107,7 +107,7 @@ const ComplimentaryServices = () => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Remove ${editedItem?.code} from Complimentary Services List?`,
+            title: `Please confirm you want to remove Ops Code ${editedItem?.code}`,
             onConfirm: handleRemove
         });
     }

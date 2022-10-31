@@ -71,7 +71,7 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
         askConfirm({
             onConfirm: handleRemoveSegment(el),
             isRemove: true,
-            title: "Please confirm you want to remove this Demand Segment",
+            title: `Please confirm you want to remove this Demand Segment`,
         });
     }
     const handleRemoveSegment = (el: IDemandSegment) => async () => {

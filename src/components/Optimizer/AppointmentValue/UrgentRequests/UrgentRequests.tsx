@@ -62,7 +62,7 @@ export const UrgentRequests = () => {
         if (selectedSC) {
             askConfirm({
                 isRemove: true,
-                title: `Remove ${el.code} from prioritized list?`,
+                title: `Please confirm you want to remove Ops Code ${el.code}`,
                 onConfirm: handleRemove(el)
             });
         }
