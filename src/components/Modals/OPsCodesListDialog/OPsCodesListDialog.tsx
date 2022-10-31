@@ -154,7 +154,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
                 color="primary"
                 variant="contained"
             >
-                Add OPs Codes
+                Add Ops Codes
             </LoadingButton>
         </DialogActions>
     </BaseModal>

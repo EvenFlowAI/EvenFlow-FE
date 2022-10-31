@@ -302,7 +302,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                     />
                     <FileInput setState={setFileState}/>
                     <div className={classes.inputWrapper}>
-                        <label className={classes.label}>Add ops Codes</label>
+                        <label className={classes.label}>Add Ops Codes</label>
                         <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={assignedFilter.searchTerm} />
                     </div>
                     <Autocomplete

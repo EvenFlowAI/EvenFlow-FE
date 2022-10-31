@@ -15,7 +15,7 @@ import {TableRowDataType} from "../../UI/types";
 import {Api} from "../../../config/requests";
 
 const rowData: TableRowDataType<IDemandSegment>[] = [
-    {header: "Demand segments",
+    {header: "Demand Segments",
         val: (el, idx) => String(idx + 1), align: "center"},
     {header: "Window 1", val: el => `${el.window1Point} %`, align: "center"},
     {header: "Window 2", val: el => `${el.window2Point} %`, align: "center"},
@@ -71,7 +71,7 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
         askConfirm({
             onConfirm: handleRemoveSegment(el),
             isRemove: true,
-            title: "Please confirm you want to remove this Demand Segment?",
+            title: "Please confirm you want to remove this Demand Segment",
         });
     }
     const handleRemoveSegment = (el: IDemandSegment) => async () => {
@@ -80,7 +80,7 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
                 Api.endpoints.AppointmentAllocation.RemoveDemandSegment,
                 {urlParams: {id: el.id}}
                 );
-            showMessage("Segment removed");
+            showMessage("Demand Segment removed");
             dispatch(loadDemandSegments(selectedSC?.id || 0, selectedPod?.id));
         } catch (e) {
             showError(e);
@@ -88,7 +88,7 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
     }
 
     return <BaseModal {...props}>
-        <DialogTitle onClose={props.onClose}>Demand segments settings</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Demand Segments Settings</DialogTitle>
         <DialogContent>
             <div style={{textAlign: "right"}}>
                 <LoadingButton

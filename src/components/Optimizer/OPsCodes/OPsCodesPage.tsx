@@ -192,7 +192,7 @@ export const OPsCodesPage = () => {
                     Api.endpoints.ServiceRequests.RemoveOverride,
                     {urlParams: {id: editedItem.id}}
                 ).then(res => {
-                    if (res) showMessage("Service request removed.")
+                    if (res) showMessage("Service Request removed.")
                 })
                 setEditedItem(undefined);
                 dispatch(loadAssignedServiceRequests(selectedSC.id));
@@ -204,7 +204,7 @@ export const OPsCodesPage = () => {
         }
     }
     const onSuccessAssign = useCallback((selectedCodes: number[]) => {
-        showMessage(`Codes ${selectedCodes.length} added`)
+        showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Codes' : 'Code'} added`)
     }, [])
 
     const onRequestAssign = useCallback((selectedCodes: number[], serviceCenterId: number) => {

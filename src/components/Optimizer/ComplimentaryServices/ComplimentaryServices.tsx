@@ -146,7 +146,7 @@ const ComplimentaryServices = () => {
                 newCodes,
                 serviceCenterId,
                 (e) => showError(e),
-                () => showMessage(`Codes ${newCodes.length} added`)
+                () => showMessage(`${newCodes.length} ${newCodes.length > 1 ? 'Codes' : 'Code'} added`)
             ));
         } catch (e) {
             showError(e);
@@ -221,7 +221,11 @@ const ComplimentaryServices = () => {
                 onClose={onAddOpsCodeClose}
                 onSave={onAddOpsCode}
                 selectedPreviously={selectedOpsCodes}/>
-            <AddServiceManually open={isAddManuallyOpen} onClose={handleAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
+            <AddServiceManually
+                open={isAddManuallyOpen}
+                onClose={handleAddManuallyClose}
+                title={editedItem ? "Edit Complimentary Service" : "Add Service Manually"}
+                editedItem={editedItem}/>
         </div>
     );
 };

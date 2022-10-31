@@ -86,7 +86,7 @@ const Description: React.FC<TDescriptionProps>  = ({open, onClose}) => {
 
     return (
         <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Describe Maintenance Package's OPS Codes</DialogTitle>
+            <DialogTitle onClose={onCancel}>Describe Maintenance Package's Ops Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent>

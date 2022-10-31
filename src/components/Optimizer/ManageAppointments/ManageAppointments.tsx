@@ -73,7 +73,7 @@ const ManageAppointments = () => {
     }
 
     const onSuccess = () => {
-        showMessage('Manage Ex EvenFlow Appointments Updated')
+        showMessage('Manage Ex EvenFlow Appointments updated')
     }
 
     const onError = (err: string) => {

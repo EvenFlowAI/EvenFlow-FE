@@ -78,7 +78,7 @@ export const DemandSegments = () => {
     return <DemandTable>
         <TableHead>
             <TableRow>
-                <TableCell width={200}>Demand segments</TableCell>
+                <TableCell width={200}>Demand Segments</TableCell>
                 <TableCell>Window 1</TableCell>
                 <TableCell>Window 2</TableCell>
                 <TableCell>Window 3</TableCell>

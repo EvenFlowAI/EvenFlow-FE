@@ -56,7 +56,7 @@ const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType
     const showError = useException();
     const showMessage = useMessage();
 
-    const onSuccess = () => showMessage(`Zone ${zone?.name} was removed`)
+    const onSuccess = () => showMessage(`Zone removed`)
     const onError = (err: string) => showError(err)
 
     const onCancel = () => props.onClose();

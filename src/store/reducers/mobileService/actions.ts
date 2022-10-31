@@ -265,6 +265,6 @@ export const changeMobileServicePriceSettings = (id: number, ancillaryPriceType:
         })
 }
 
-export const saveLinkToMobServiceMap = (id: number, link: string): AppThunk => dispatch => {
+export const saveLinkToMobServiceMap = (id: number, link: string, onErr: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
     // todo request
 }
