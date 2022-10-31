@@ -2,11 +2,12 @@ import React, {Dispatch, SetStateAction} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Edit} from "@material-ui/icons";
 import {TSummaryCell} from "../PackageAccordion/PackageAccordion";
+import {TextField} from "../../../UI/TextField";
 
 type TSummaryProps = {
     summaryText: string;
     valuesArray?: TSummaryCell[];
-    onInputChange?: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => void;
+    onInputChange?: (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>, fieldName: string, optionType: string | number) => void;
     isEdit?: boolean;
     setIsEdit?: Dispatch<SetStateAction<boolean>>
     isComplimentary?: boolean;
@@ -80,18 +81,18 @@ const SummaryRow: React.FC<TSummaryProps> = ({ isComplimentary, packageHasCompli
 }) => {
     const classes = useStyles();
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>, item: TSummaryCell): void => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>, item: TSummaryCell): void => {
         if (item.fieldName &&  onInputChange) onInputChange(e, item.fieldName, item.optionType);
     }
 
     const getValue = (item: TSummaryCell) => {
-        if (isEdit) return item.numberValue;
+        if (isEdit) return +item.numberValue;
         if (item.fieldName.toLowerCase().includes('price')) {
-            let value = Number.isInteger(item.numberValue) ? item.numberValue : item.numberValue.toFixed(2)
+            let value = Number.isInteger(+item.numberValue) ? item.numberValue : Number(item.numberValue).toFixed(2)
             return `$${value}`
         }
         if (item.fieldName.toLowerCase().includes('hours')) {
-            let value = Number.isInteger(item.numberValue) ? item.numberValue : item.numberValue.toFixed(1)
+            let value = Number.isInteger(+item.numberValue) ? item.numberValue : Number(item.numberValue).toFixed(1)
             return `${value}h`
         }
          return item.numberValue;
@@ -102,10 +103,10 @@ const SummaryRow: React.FC<TSummaryProps> = ({ isComplimentary, packageHasCompli
             return classes.cell;
         }
         if (item.isEditable) {
-            if (item.fieldName.toLowerCase().includes('hours') && item.numberValue > 100) {
+            if (item.fieldName.toLowerCase().includes('hours') && +item.numberValue > 100) {
                 return classes.errorCell;
             }
-            if (item.numberValue <= 0) {
+            if (+item.numberValue <= 0) {
                 return classes.errorCell;
             }
             return classes.editableCell
@@ -123,12 +124,11 @@ const SummaryRow: React.FC<TSummaryProps> = ({ isComplimentary, packageHasCompli
                     key={index}
                     className={getClassName(item)}>
                         {
-                            item.isEditable && isEdit ? <input
+                            item.isEditable && isEdit ? <TextField
                                 type="number"
-                                min={item.fieldName.toLowerCase().includes('hours') ? "0.1" : "0.01"}
-                                step={item.fieldName.toLowerCase().includes('hours') ? "0.1" : "0.01"}
-                                max={item.fieldName.toLowerCase().includes('hours') ? '100' : undefined}
-                                maxLength={3}
+                                inputProps={{
+                                    min: 0,
+                                }}
                                 className={classes.input}
                                 value={getValue(item)}
                                 disabled={!isEdit}
