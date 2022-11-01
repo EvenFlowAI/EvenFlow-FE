@@ -520,7 +520,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 renderInput={autocompleteRender({
                                     label: '',
                                     placeholder: 'From',
-                                    error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
+                                    // error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
                                 })}
                             />
                             <Autocomplete
@@ -535,7 +535,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 renderInput={autocompleteRender({
                                     label: '',
                                     placeholder: 'To',
-                                    error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
+                                    // error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
                                 })}
                             />
                         </div>
