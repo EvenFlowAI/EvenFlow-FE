@@ -28,9 +28,9 @@ const SURowData: TableRowDataType<IEmployee>[] = [
 const AdminRowData: TableRowDataType<IEmployee>[] = [
     {val: el => el.fullName, header: "Name", orderId: "name"},
     {val: el => el.serviceCenter?.name || '-', header: "Service Center", orderId: "serviceCenterName"},
-    {val: el => el.serviceCenter?.address ? concatAddress(el.serviceCenter.address) : '-', header: "Service center Address"},
+    {val: el => el.serviceCenter?.address ? concatAddress(el.serviceCenter.address) : '-', header: "Service Center Address"},
     {val: el => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role", orderId: "role"},
-    {val: el => el.phoneNumber, header: "Phone Number", orderId: "phoneNumber"}
+    {val: el => el.phoneNumber, header: "Phone Number", orderId: "phoneNumber", width: 170}
 ];
 
 export const Employees = () => {
@@ -74,7 +74,7 @@ export const Employees = () => {
     const handleRemove = async () => {
         try {
             await dispatch(removeEmployee(editedItem?.id || ''))
-            showMessage(`Successfully removed ${editedItem?.fullName}`);
+            showMessage(`Employee removed`);
             setEditedItem(undefined);
         } catch (e) {
             showError(e);
@@ -87,7 +87,7 @@ export const Employees = () => {
         } else {
             askConfirm({
                 isRemove: true,
-                title: `Are you sure you want to remove ${editedItem?.fullName}?`,
+                title: `Please confirm you want to remove ${editedItem?.fullName}?`,
                 onConfirm: handleRemove
             });
         }

@@ -18,22 +18,22 @@ export const pricingRoot: TTitle = {
     title: "Pricing"
 }
 
-const getTotal = (includedRequests: TExtendedService[]): number => {
+const getTotal = (includedRequests: TExtendedService[]): string => {
     const price = includedRequests.reduce((a, b) => a + +b.price, 0);
-    return Number.isInteger(price) ? price : +price.toFixed(2);
+    return Number.isInteger(price) ? price.toString() : (+price.toFixed(2)).toString();
 }
 
-const getComplimentaryTotal = (includedRequests: TExtendedComplimentary[]): number => {
+const getComplimentaryTotal = (includedRequests: TExtendedComplimentary[]): string => {
     const price = includedRequests.reduce((a, b) => a + +b.price, 0);
-    return Number.isInteger(price) ? price : +price.toFixed(2);
+    return Number.isInteger(price) ? price.toString() : (+price.toFixed(2)).toString();
 }
 
-const getHours = (includedRequests: TExtendedService[]): number => {
-    return includedRequests.reduce((a, b) => a + +b.durationInHours, 0);
+const getHours = (includedRequests: TExtendedService[]): string => {
+    return includedRequests.reduce((a, b) => a + +b.durationInHours, 0).toString();
 }
 
-const getComplimentaryHours = (includedRequests: TExtendedComplimentary[]): number => {
-    return includedRequests.reduce((a, b) => a + +b.durationInHours, 0);
+const getComplimentaryHours = (includedRequests: TExtendedComplimentary[]): string => {
+    return includedRequests.reduce((a, b) => a + +b.durationInHours, 0).toString();
 }
 
 export const getOptionsTableData = (pack: IPackageById) => {
@@ -52,25 +52,25 @@ export const getOptionsTableData = (pack: IPackageById) => {
         const includedRequests = serviceRequests.filter(request => option.serviceRequests.find(item => item.serviceRequestId === request.id));
         const includedComplimentary = complimentaryServices.filter(request => option.complimentaryServices.includes(request.id));
         data.invoicedRequestLaborHours.push({
-            numberValue: option.serviceRequestLaborHours,
+            numberValue: option.serviceRequestLaborHours.toString(),
             isEditable: true,
             optionType: option.type,
             fieldName: 'serviceRequestLaborHours',
         });
         data.complimentaryLaborHours.push({
-            numberValue: option.complimentaryServiceLaborHours,
+            numberValue: option.complimentaryServiceLaborHours.toString(),
             isEditable: Boolean(pack.complimentaryServices.length),
             optionType: option.type,
             fieldName: 'complimentaryServiceLaborHours',
         });
         data.requestsPrice.push({
-            numberValue: option.serviceRequestPrice,
+            numberValue: option.serviceRequestPrice.toString(),
             isEditable: true,
             optionType: option.type,
             fieldName: 'serviceRequestPrice',
         });
         data.complimentaryPrice.push({
-            numberValue: option.complimentaryServicePrice,
+            numberValue: option.complimentaryServicePrice.toString(),
             isEditable: Boolean(pack.complimentaryServices.length),
             optionType: option.type,
             fieldName: 'complimentaryServicePrice',

@@ -43,7 +43,7 @@ export const EmployeesActions: React.FC<TEmployeesActions> = ({setFiltersOpen}) 
                 onClick={onOpen}
                 variant="contained"
                 color="primary">
-                New Employee
+                Add Employee
             </Button>
             <CreateEmployee open={isOpen} onClose={onClose} />
         </> : null}

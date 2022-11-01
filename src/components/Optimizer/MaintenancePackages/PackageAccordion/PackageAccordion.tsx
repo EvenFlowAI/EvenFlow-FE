@@ -50,7 +50,7 @@ export interface IDetailsData {
 export type TSummaryCell = {
     isEditable: boolean;
     optionType: number;
-    numberValue: number;
+    numberValue: string;
     fieldName: string;
     error?: boolean;
 }
@@ -238,10 +238,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [])
 
-    const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => {
+    const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>, fieldName: string, optionType: string | number) => {
         if (packageData) {
-            const value = getFixedValue(+e.target.value);
-            if (fieldName.toLowerCase().includes('hours') && value > 100) {
+            const value = Number(e.target.value)
+            if (fieldName.toLowerCase().includes('hours') && Number(value) > 100) {
                 showError('Invoiced Labor Hours must be no more than 100')
             } else {
                 let currentOption = packageData.options.find(option => option.type === optionType);

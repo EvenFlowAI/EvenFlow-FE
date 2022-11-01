@@ -8,7 +8,8 @@ import {ToggleButtons} from "../../UI/ToggleButtons";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {TRole} from "../../../store/reducers/users/types";
 import {userRoles} from "../../../config/constants";
-
+import {checkEmail} from "../../../utils/utils";
+import 'react-phone-number-input/style.css'
 
 export const initialAdvisorForm: TAdvisorForm = {
     firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null, role: "Manager", position: '',
@@ -35,6 +36,7 @@ type TAFormProps = {
     dmsConsultants: TConsultantOption[];
     onDMSConsultantChange: TDMSConsultantChange;
     onShowOnBookingChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+    formIsChecked: boolean;
 };
 type TTFormProps = {
     isEdit: boolean;
@@ -44,6 +46,7 @@ type TTFormProps = {
     shortSC: IServiceCenter[]
     form: TTechnicianForm
     onSwitch: (e: React.ChangeEvent<{}>, newVal: number) => void
+    formIsChecked: boolean;
 };
 export const AdvisorForm: React.FC<TAFormProps> = props => {
     return <Grid container spacing={3} justify="center">
@@ -55,6 +58,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 placeholder="Type First Name"
                 value={props.form.firstName}
                 onChange={props.onChange}
+                error={!props.form.firstName?.length && props.formIsChecked}
                 fullWidth
             />
         </Grid>
@@ -66,17 +70,19 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 placeholder="Type Last Name"
                 value={props.form.lastName}
                 onChange={props.onChange}
+                error={!props.form.lastName?.length && props.formIsChecked}
                 fullWidth
             />
         </Grid>
         <Grid item xs={12} sm={6}>
             <TextField
-                label="Email address"
+                label="Email"
                 id="email"
                 name="email"
                 placeholder="Type Email"
                 value={props.form.email}
                 onChange={props.onChange}
+                error={(!props.form.email?.length && props.formIsChecked) || (!checkEmail(props.form.email) && props.formIsChecked)}
                 fullWidth
             />
         </Grid>
@@ -88,6 +94,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 placeholder="Type Phone Number"
                 name="phoneNumber"
                 onChange={props.onChange}
+                error={props.formIsChecked && (!props.form.phoneNumber?.length || props.form.phoneNumber?.length < 11)}
                 fullWidth
             />
         </Grid>
@@ -99,7 +106,11 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
                 value={props.form.serviceCenter || null}
-                renderInput={autocompleteRender({label: "Service Center", fullWidth: true, placeholder: "Select Service Center"})}
+                renderInput={autocompleteRender({
+                    label: "Service Center",
+                    fullWidth: true,
+                    placeholder: "Select Service Center",
+                    error: !props.form.serviceCenter && props.formIsChecked})}
             />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -170,6 +181,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 placeholder="Type First name"
                 name="firstName"
                 fullWidth
+                error={!props.form.firstName?.length && props.formIsChecked}
                 label="First name" />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -178,6 +190,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 fullWidth
                 value={props.form.lastName}
                 onChange={props.onChange}
+                error={!props.form.lastName?.length && props.formIsChecked}
                 placeholder="Type Last name"
                 name="lastName"
                 label="Last name" />
@@ -189,6 +202,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 fullWidth
                 placeholder="Type Email"
                 value={props.form.email}
+                error={Boolean(props.form.email?.length) && !checkEmail(props.form.email) && props.formIsChecked}
                 onChange={props.onChange}
                 label="Email"
             />
@@ -199,6 +213,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 name="phoneNumber"
                 placeholder="Type Phone Number"
                 fullWidth
+                error={props.formIsChecked && (!props.form.phoneNumber?.length || props.form.phoneNumber?.length < 11)}
                 value={props.form.phoneNumber}
                 onChange={props.onChange}
                 label="Phone Number"
@@ -213,7 +228,12 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 getOptionSelected={(o, s) => o.id === s.id}
                 loading={props.loading}
                 value={props.form.serviceCenter || null}
-                renderInput={autocompleteRender({label: "Service center", fullWidth: true, placeholder: "Select Service Center"})}
+                renderInput={autocompleteRender({
+                    label: "Service center",
+                    fullWidth: true,
+                    placeholder: "Select Service Center",
+                    error: !props.form.serviceCenter && props.formIsChecked
+                })}
             />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -241,6 +261,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                         fullWidth
                         onChange={props.onChange}
                         value={props.form.hourlyRate}
+                        error={!props.form.hourlyRate && props.formIsChecked}
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -252,6 +273,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                         type="number"
                         fullWidth
                         onChange={props.onChange}
+                        error={!props.form.overtimeRate && props.formIsChecked}
                         value={props.form.overtimeRate}
                     />
                 </Grid>

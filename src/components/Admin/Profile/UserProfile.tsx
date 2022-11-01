@@ -154,7 +154,7 @@ export const UserProfile = () => {
                 setSaving(false);
                 setPasswordForm(initialPasswordForm);
                 setEditPassword(false);
-                showMessage("Password saved.")
+                showMessage("Password saved")
             } catch (e) {
                 showError(e);
                 setSaving(false);

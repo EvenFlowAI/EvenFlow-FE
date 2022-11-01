@@ -171,8 +171,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
                 personalInformation: {
                     ...state.personalInformation,
                     fullName: `${payload.firstName} ${payload.lastName}`,
-                    email: payload.emails[0] || state.customerEnteredEmail,
-                    phoneNumber: payload.phoneNumbers[0] || ""
+                    email: payload.emails?.length ? payload.emails[0] : state.customerEnteredEmail,
+                    phoneNumber: payload.phoneNumbers?.length ? payload.phoneNumbers[0] : ""
                 }
             };
             if (payload.vehicles.length === 1) {

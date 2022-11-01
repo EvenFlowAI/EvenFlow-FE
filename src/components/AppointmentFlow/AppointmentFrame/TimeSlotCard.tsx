@@ -46,8 +46,7 @@ type TProps = {
     onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
     date: moment.Moment|null;
 }
-export const TimeSlotCard: React.FC<TProps> =
-    ({timeSlot, slot, onSelect, selected, date}) => {
+export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
         const {scProfile} = useSelector((state: RootState) => state.appointment);
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
