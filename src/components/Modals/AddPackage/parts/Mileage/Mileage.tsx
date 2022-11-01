@@ -83,7 +83,7 @@ const Mileage: React.FC<TMileageProps> = ({
             onChange={onMileageChange}
             renderInput={autocompleteRender({
                 label: "Mileage",
-                error: !selectedMileages.length && isApplyBusinessRules && formIsChecked,
+                //error: !selectedMileages.length && isApplyBusinessRules && formIsChecked,
                 placeholder: 'Select Mileage'
             })}
         />
