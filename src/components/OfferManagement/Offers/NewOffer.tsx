@@ -39,6 +39,7 @@ const clearForm: TOfferForm = {
     timeOfDayTo: moment("23:59:59", "hh:mm:ss"),
     isProductPageOn: false,
 }
+
 export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAction, archive, payload, ...props}) => {
     const [form, setForm] = useState<TOfferForm>(clearForm);
     const [archiving, setArchiving] = useState<boolean>(false);
@@ -285,43 +286,6 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     setSaving(false);
                     showError(e);
                 }
-            setSaving(true);
-            try {
-                const data: IOfferForm = {
-                    id: payload?.id,
-                    title: form.offerTitle || "",
-                    value: Number(form.offerValue),
-                    serviceCenterId: selectedSC.id,
-                    type: form.offerType,
-                    customerPresence: form.customerPresence,
-                    customerSegments: form.customerSegments.map(s => s.id),
-                    dayOfWeeks: form.dayOfWeek.map(d => d.id),
-                    duration: {
-                        start: form.durationFrom?.toISOString(),
-                        end: form.durationTo?.toISOString()
-                    },
-                    timeOfDay: {
-                        start: form.timeOfDayFrom?.format(timeSpanString),
-                        end: form.timeOfDayTo?.format(timeSpanString),
-                    },
-                    isAllServiceRequestsIncluded: Boolean(
-                        form.serviceRequests.find(sr => sr.id === 0)
-                    ),
-                    serviceRequests: Boolean(form.serviceRequests.find(sr => sr.id === 0))
-                        ? null : form.serviceRequests.map(s => s.id),
-                    serviceType: form.serviceType ? {name: form.serviceType} : undefined
-                };
-                if (payload) {
-                    await dispatch(updateOffer(data, archive));
-                } else {
-                    await dispatch(createOffer(data));
-                }
-                showMessage(`Offer ${payload ? "updated" : "created"}`);
-                setSaving(false);
-                props.onClose();
-            } catch (e) {
-                setSaving(false);
-                showError(e);
             }
         }
     }
