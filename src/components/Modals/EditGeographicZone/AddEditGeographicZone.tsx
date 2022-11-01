@@ -203,7 +203,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                         dispatch(addMobServiceZone(selectedSC.id, data, onSuccess, onError))
                     }
                 } else {
-                    showError('ZIP codes list must not be empty')
+                    showError('"Zip Code" must not be empty')
                 }
             }
         }
@@ -222,10 +222,10 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const onAddZip = (): void => {
         if (newZip.toString().length !== 5) {
             setFormIsChecked(true);
-            showError("It's not a valid ZIP code");
+            showError("It's not a valid Zip code");
         } else if (newZip && zipList.includes(newZip)) {
             setFormIsChecked(true);
-            showError("This ZIP code already exists in the list");
+            showError("This Zip code already exists in the list");
         } else {
             if (newZip) {
                 setZipList(prev => ([...prev, newZip]));
@@ -245,7 +245,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                 setCurrentZip(codeObject);
                 if (zonesList.length > 1) onOpen();
             } else {
-                showError('This code is not saved to the ZIP codes list of the current zone')
+                showError('This code is not saved to the Zip codes list of the current zone')
             }
         }
     }

@@ -33,6 +33,8 @@ export const NewCustomerValue: React.FC<DialogProps<INewLostCustomer> & {isNew: 
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
+        } else if (!months.length) {
+            showError('"Time Period" must be greater than "0"')
         } else {
             setSaving(true);
             try {

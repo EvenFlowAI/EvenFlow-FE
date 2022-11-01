@@ -42,7 +42,7 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open, onSave}) =
             if (iframe?.src) onSave(iframe.src);
         } else {
             setError(true);
-            showError('Pasted code is not valid an HTML Snippet')
+            showError('"iFrame Code Snippet" must not be empty')
         }
     }
 
