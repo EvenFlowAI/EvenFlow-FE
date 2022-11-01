@@ -332,10 +332,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             showError('Check the Vehicle Year fields - "To" must be more than "From"')
             return false
         }
-        return selectedModels.length
+        const atLeastOneRule = selectedModels.length
             || selectedMakes.length
             || selectedMileages.length
-            || (yearFrom && yearTo);
+            || (yearFrom && yearTo)
+        if (!atLeastOneRule) showError('At least one Business Rule is required')
+        return atLeastOneRule;
     }
 
     const isValid = () => {
