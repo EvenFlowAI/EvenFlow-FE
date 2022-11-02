@@ -238,9 +238,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [])
 
-    const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>, fieldName: string, optionType: string | number) => {
+    const onInputChange = useCallback((value: string, fieldName: string, optionType: string | number) => {
         if (packageData) {
-            const value = Number(e.target.value)
             if (fieldName.toLowerCase().includes('hours') && Number(value) > 100) {
                 showError('Invoiced Labor Hours must be no more than 100')
             } else {
@@ -257,7 +256,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 }
             }
         }
-    }, [packageData, getFixedValue])
+    }, [packageData])
 
     const onMoreIconClick = () => {
         if (expanded && anchorRef?.current && packageData) setAnchorEl(anchorRef.current);
