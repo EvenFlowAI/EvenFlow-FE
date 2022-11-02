@@ -105,7 +105,7 @@ const SummaryInput: React.FC<TSummaryProps> = ({ isComplimentary, packageHasComp
             className={getClassName(item)}>
             {
                 item.isEditable && isEdit ? <input
-                    type="text"
+                    type="number"
                     className={classes.input}
                     value={value}
                     disabled={!isEdit}
