@@ -228,9 +228,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [packageData])
 
-    const getFixedValue = useCallback((value: number): number => {
+    const getFixedValue = useCallback((value: string): number => {
         if (Number.isInteger(+value)) return +value;
-        const [integer, decimal] = value.toString().split('.');
+        const [integer, decimal] = value.split('.');
         if (decimal.length <= 2) {
             return +value
         } else {
