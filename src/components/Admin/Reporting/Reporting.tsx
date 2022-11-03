@@ -15,7 +15,7 @@ const Reporting = () => {
             <TitleContainer
                 title={Titles.Reporting}
                 pad/>
-            <QrveyEndUser settings={configObject}/>
+            {process.env.REACT_APP_ENV !== "production" ? <QrveyEndUser settings={configObject}/> : null}
         </div>
     );
 };
