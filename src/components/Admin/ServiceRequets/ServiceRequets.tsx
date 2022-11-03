@@ -179,7 +179,7 @@ export const ServiceRequests = () => {
             color="primary"
             onClick={openCreate}
             variant="contained">
-            Add OPs Code
+            Add Ops Code
         </Button>
     </div>;
 

@@ -132,7 +132,7 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
 
     return (
         <BaseModal {...props} width={1150} onClose={handleClose}>
-            <DialogTitle onClose={handleClose}>Add OPS Codes</DialogTitle>
+            <DialogTitle onClose={handleClose}>Add Ops Codes</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />

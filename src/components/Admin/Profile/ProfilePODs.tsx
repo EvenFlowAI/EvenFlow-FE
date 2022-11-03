@@ -60,18 +60,18 @@ export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMo
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Please confirm you want to remove Pod ${editedItem?.name}`,
+            title: `Please confirm you want to remove POD ${editedItem?.name}`,
             onConfirm: handleRemove
         });
     }
 
     const handleRemove = async () => {
         if (!editedItem) {
-            showError("Pod not specified");
+            showError("POD not specified");
         } else {
             try {
                 await dispatch(removePod(editedItem.id, selectedSC?.id));
-                showMessage(`Pod ${editedItem.name} removed`);
+                showMessage(`POD removed`);
                 setEditedItem(undefined);
             } catch (e) {
                 showError(e);

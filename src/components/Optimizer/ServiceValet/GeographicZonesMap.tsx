@@ -2,7 +2,7 @@ import React from 'react';
 import {ButtonsWrapper, TabHeaderWrapper, ZonesWrapper, Title} from "./styledComponents";
 import {Button} from "@material-ui/core";
 import EligibleCustomerSegment from "./EligibleCustomerSegment";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import MapIframeLink from "../../Modals/MapIframeLink/MapIframeLink";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
@@ -28,9 +28,13 @@ const GeographicZonesMap = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const showMessage = useMessage();
+    const showError = useException();
+
+    const onSuccess = (): void => showMessage('Map updated')
 
     const onSaveLink = (link: string) => {
-        if (selectedSC) dispatch(saveLinkToServiceValetMap(selectedSC.id, link))
+        if (selectedSC) dispatch(saveLinkToServiceValetMap(selectedSC.id, link, (err) => showError(err), onSuccess))
     }
 
     return (

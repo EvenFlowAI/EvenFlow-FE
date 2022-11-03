@@ -233,7 +233,7 @@ export const addServiceValetDistanceRange = (id: number, data: TDistanceRange, o
         })
 }
 
-export const saveLinkToServiceValetMap = (id: number, link: string): AppThunk => dispatch => {
+export const saveLinkToServiceValetMap = (id: number, link: string, onErr: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
     // todo request
 }
 

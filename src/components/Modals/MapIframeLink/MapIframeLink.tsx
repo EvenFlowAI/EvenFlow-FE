@@ -4,10 +4,9 @@ import {Button, styled} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {LoadingButton} from "../../UI/Button";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {saveLinkToMobServiceMap} from "../../../store/reducers/mobileService/actions";
-import {useException, useSCs} from "../../../utils/hooks";
+import {useException} from "../../../utils/hooks";
 
 const Textarea = styled(TextField)({
     "& textarea": {
@@ -43,13 +42,13 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open, onSave}) =
             if (iframe?.src) onSave(iframe.src);
         } else {
             setError(true);
-            showError('Pasted code is not valid an HTML Snippet')
+            showError('"iFrame Code Snippet" must not be empty')
         }
     }
 
     return (
         <BaseModal open={open} width={540} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Past IFrame Code with Link to MapLine</DialogTitle>
+            <DialogTitle onClose={onCancel}>Paste IFrame Code with Link to MapLine</DialogTitle>
             <DialogContent>
                 <Textarea
                     fullWidth

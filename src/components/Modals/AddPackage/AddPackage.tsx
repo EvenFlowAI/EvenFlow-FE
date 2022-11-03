@@ -329,7 +329,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const isBusinessRulesValid = () => {
         const { yearFrom, yearTo } = vehiclesData;
         if (yearFrom && yearTo && (+yearFrom > +yearTo)) {
-            showError('Check the Vehicle Year fields - "To" must be more than "From"')
+            showError('"From" must be less than or equal to "To"')
             return false
         }
         const atLeastOneRule = selectedModels.length
