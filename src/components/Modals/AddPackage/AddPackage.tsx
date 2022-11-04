@@ -574,7 +574,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             </DialogActions>
 
             <AssignOpsCode
-                title="ASSIGN MAINTENANCE PACKAGE OPTIONS OPS CODES"
+                title="ASSIGN OPS CODES TO MAINTENANCE PACKAGE OPTIONS"
                 open={isAssignOpsCodeOpen}
                 optionError={optionError}
                 setOptionError={setOptionError}

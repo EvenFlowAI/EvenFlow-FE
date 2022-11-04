@@ -204,7 +204,7 @@ export const OPsCodesPage = () => {
         }
     }
     const onSuccessAssign = useCallback((selectedCodes: number[]) => {
-        showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Codes' : 'Code'} added`)
+        showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Ops Codes' : 'Ops Code'} added`)
     }, [])
 
     const onRequestAssign = useCallback((selectedCodes: number[], serviceCenterId: number) => {
