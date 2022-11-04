@@ -141,7 +141,7 @@ const RoPredictionParameters = () => {
                     <TableBody>
                         <TableRow>
                             <TableCell align="left">
-                                HeavyRepairLaborHour
+                                Heavy Repair Labor Hour
                             </TableCell>
                             <TableCell align="left">
                                 The number of incremental hours added to the appointment if the appointment is predicted a Heavy Repair
@@ -164,7 +164,7 @@ const RoPredictionParameters = () => {
                         </TableRow>
                         <TableRow>
                             <TableCell align="left">
-                                OtherRepairLaborHour
+                                Other Repair Labor Hour
                             </TableCell>
                             <TableCell align="left">
                                 The number of incremental hours added to the appointment if the appointment is <span style={{textDecoration: 'underline'}}>not</span> predicted a Heavy Repair
@@ -188,11 +188,11 @@ const RoPredictionParameters = () => {
                         </TableRow>
                         <TableRow>
                             <TableCell align="left">
-                                DefaultLaborHours
+                                Default Labor Hours
                             </TableCell>
                             <TableCell align="left">
-                                When an Open RO or an appointment booked outside of EvenFlow app uses ops codes that are not
-                                in the Service Requests Page and the Labor Hour value can not be found in the DMS
+                                When an Open RO or an appointment booked outside of EvenFlow app uses Ops Codes that are not
+                                in the Service Requests Page and the Labor Hour value cannot be found in the DMS
                             </TableCell>
                             <TableCell>
                                 {!isEdit

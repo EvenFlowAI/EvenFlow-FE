@@ -97,7 +97,7 @@ export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMo
                 variant="contained"
                 color="primary"
             >
-                Create New POD
+                Create POD
             </Button>
         </div> : null}
         <Table<IPod>

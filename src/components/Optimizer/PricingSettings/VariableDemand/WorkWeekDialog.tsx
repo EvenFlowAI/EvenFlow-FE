@@ -99,7 +99,7 @@ export const WorkWeekDialog: React.FC<DialogProps> = ({onAction, payload, ...pro
         return days;
     }
     return <BaseModal {...props} width={400}>
-        <DialogTitle onClose={props.onClose}>Work week settings</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Work Week Settings</DialogTitle>
         <DialogContent>
             <Box display="grid" gridGap={10} gridTemplateColumns="1fr 220px">
                 <Box component="span" fontWeight="bold" color={"text.disabled"}>Day</Box>

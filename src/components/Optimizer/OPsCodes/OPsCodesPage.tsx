@@ -227,7 +227,7 @@ export const OPsCodesPage = () => {
                     variant="contained"
                     onClick={handleAddOpsCode}
                 >
-                    Add Ops Code
+                    Add Ops Codes
                 </Button>
             </div>}
         />

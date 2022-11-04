@@ -36,7 +36,7 @@ type Tab = {
     component: JSX.Element
 }
 const tabs: Tab[] = [
-    {id: "0", label: "Variable demand", component: <VariableDemand />},
+    {id: "0", label: "Variable Demand", component: <VariableDemand />},
     {id: "1", label: "Eligibility", component: <Eligibility />},
     {id: "2", label: "Pricing Levels", component: <PricingLevels />},
     {id: "3", label: "Pricing Optimization", component: <PricingOptimization />},

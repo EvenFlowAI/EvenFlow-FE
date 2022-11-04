@@ -19,7 +19,7 @@ import {ArchiveOutlined, CheckCircle, MoreHoriz} from "@material-ui/icons";
 import {CreateOPsCode} from "../../Modals/CreateOPsCode/CreateOPsCode";
 
 const rowData: TableRowDataType<ISRAdmin>[] = [
-    {header: "OPs Code", val: el => el.code},
+    {header: "Ops Code", val: el => el.code},
     {header: "Description", val: el => el.description},
     {
         header: "Duration (hours)",
@@ -27,12 +27,12 @@ const rowData: TableRowDataType<ISRAdmin>[] = [
         val: el => String(el.durationInHours)
     },
     {
-        header: "Number of technicians",
+        header: "Number of Technicians",
         align: "center",
         val: el => String(el.countOfTechnicians)
     },
     {
-        header: "Skill Level of technicians",
+        header: "Skill Level of Technicians",
         align: "center",
         val: el => String(el.skillLevelOfTechnicians)
     },
@@ -179,7 +179,7 @@ export const ServiceRequests = () => {
             color="primary"
             onClick={openCreate}
             variant="contained">
-            Add Ops Code
+            Add Ops Codes
         </Button>
     </div>;
 
