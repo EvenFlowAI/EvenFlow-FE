@@ -83,7 +83,7 @@ export const SendOffer: React.FC<DialogProps> = ({onAction, payload, ...props}) 
         }
         if (!form.offer) {
             valid = false;
-            showError('"Offer must not be empty"')
+            showError('"Offer" must not be empty')
         }
         return valid;
     }
@@ -105,7 +105,7 @@ export const SendOffer: React.FC<DialogProps> = ({onAction, payload, ...props}) 
     }
 
     return <BaseModal {...props} width={450}>
-        <DialogTitle onClose={props.onClose}>Send offer</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Send Offer</DialogTitle>
         <DialogContent>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
