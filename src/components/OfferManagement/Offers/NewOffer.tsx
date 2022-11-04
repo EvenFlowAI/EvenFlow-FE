@@ -158,7 +158,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
     }
 
     const askRemove = () => askConfirm({
-        title: `Please confirm you want to remove offer ${payload?.title}?`,
+        title: `Please confirm you want to remove Offer ${payload?.title}?`,
         isRemove: true,
         onConfirm: async () => {
             await handleRemove();
@@ -209,7 +209,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         }
         if (!form.offerValue?.length) {
             valid = false;
-            showError('"Offer Value" must not be empty')
+            showError('"Offer Value" must be greater than "0"')
         }
         if (!form.customerSegments.length) {
             valid = false;

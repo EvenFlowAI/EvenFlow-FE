@@ -225,7 +225,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
             showError("It's not a valid Zip code");
         } else if (newZip && zipList.includes(newZip)) {
             setFormIsChecked(true);
-            showError("This Zip code already exists in the list");
+            showError(`Zip code ${newZip} already exists`);
         } else {
             if (newZip) {
                 setZipList(prev => ([...prev, newZip]));
