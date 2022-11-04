@@ -68,10 +68,11 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
         </Button>
     }
     const askRemove = (el: IDemandSegment) => () => {
+        const segmentIndex = demandSegmentsList.findIndex(item => item.id === el.id);
         askConfirm({
             onConfirm: handleRemoveSegment(el),
             isRemove: true,
-            title: `Please confirm you want to remove this Demand Segment`,
+            title: `Please confirm you want to remove Demand Segment ${segmentIndex + 1}`,
         });
     }
     const handleRemoveSegment = (el: IDemandSegment) => async () => {
