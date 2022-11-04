@@ -59,7 +59,7 @@ export const ToD = () => {
             <Box mt={2}>
                 <Caption
                     title={<>
-                        <span>You can change the Desirability of Appointment Slots on </span>
+                        <span>You can change the desirability of appointment slots on </span>
                         <TextLink
                             to={Routes.Optimizer.AppointmentSlotScoring}>
                             Time of Day Desirability</TextLink>
