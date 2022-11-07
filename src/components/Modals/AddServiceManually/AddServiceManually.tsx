@@ -6,7 +6,7 @@ import {Button, InputAdornment} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {TComplimentary} from "../../../store/reducers/complimentary/types";
-import {useException, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {addComplimentaryManually, editComplimentary} from "../../../store/reducers/complimentary/actions";
 import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/types";
 
@@ -64,6 +64,7 @@ const AddServiceManually: React.FC<TAddServiceProps> = ({ title, onClose, edited
     const [total, setTotal] = useState<number | string>('');
     const dispatch = useDispatch();
     const showError = useException();
+    const showMessage = useMessage();
     const {selectedSC} = useSCs();
     const classes = useStyles();
 
@@ -98,6 +99,11 @@ const AddServiceManually: React.FC<TAddServiceProps> = ({ title, onClose, edited
         onClose();
     }, [])
 
+    const onSuccess = () => {
+        showMessage(editedItem ? 'Ops Code updated' : '1 Ops Code added')
+        onCancel()
+    }
+
     const onSave = useCallback((): void => {
         setFormIsChecked(true);
         if (description.length && selectedSC) {
@@ -108,8 +114,8 @@ const AddServiceManually: React.FC<TAddServiceProps> = ({ title, onClose, edited
                 durationInHours: +duration,
             }
             editedItem
-                ? dispatch(editComplimentary(editedItem.id, data, () => onCancel(), showError))
-                : dispatch(addComplimentaryManually(data, () => onCancel(), showError));
+                ? dispatch(editComplimentary(editedItem.id, data, onSuccess, showError))
+                : dispatch(addComplimentaryManually(data, onSuccess, showError));
         }
     }, [description, selectedSC, duration, total, editedItem])
 
