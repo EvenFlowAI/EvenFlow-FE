@@ -48,14 +48,14 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open, onSave}) =
 
     return (
         <BaseModal open={open} width={540} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Paste IFrame Code with Link to MapLine</DialogTitle>
+            <DialogTitle onClose={onCancel}>Paste iFrame Code with Link to Mapline</DialogTitle>
             <DialogContent>
                 <Textarea
                     fullWidth
                     multiline
                     error={isError}
-                    placeholder="Past here"
-                    label="IFrame Code Snippet"
+                    placeholder="Paste here"
+                    label="iFrame Code Snippet"
                     onChange={handleLinkChange}
                     value={iframeLink}
                     rows={2}

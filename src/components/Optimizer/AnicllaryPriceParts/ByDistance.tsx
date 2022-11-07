@@ -249,7 +249,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                 </HeaderTableCell>
                                 <HeaderTableCell align="left" size="small">
                                     <div className="distanceCell">
-                                        Cost Per Mile, $
+                                        Cost Per Mile ($)
                                     </div>
                                 </HeaderTableCell>
                                 <HeaderTableCell align="left" size="small" width={450}>

@@ -242,6 +242,11 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         return valid;
     }
 
+    const onCancel = () => {
+        setFormIsChecked(false);
+        props.onClose();
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -281,7 +286,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     }
                     showMessage(`Offer ${payload ? "updated" : "created"}`);
                     setSaving(false);
-                    props.onClose();
+                    onCancel()
                 } catch (e) {
                     setSaving(false);
                     showError(e);
@@ -290,8 +295,8 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         }
     }
     return (
-        <BaseModal {...props} width={500}>
-            <DialogTitle onClose={props.onClose}>{
+        <BaseModal {...props} width={500} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>{
                 viewMode ? "" : payload ? "Edit" : "Add"
             } Offer</DialogTitle>
             {(viewMode && payload)
@@ -309,7 +314,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     onSRChange={handleSRChange}
                 />}
             <DialogActions>
-                <Button onClick={props.onClose}>Cancel</Button>
+                <Button onClick={onCancel}>Cancel</Button>
                 {viewMode ?
                     <>
                         <Button onClick={askRemove} color="secondary" variant="outlined">Delete</Button>

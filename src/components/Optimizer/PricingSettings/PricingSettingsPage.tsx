@@ -39,7 +39,7 @@ const tabs: Tab[] = [
     {id: "0", label: "Variable Demand", component: <VariableDemand />},
     {id: "1", label: "Eligibility", component: <Eligibility />},
     {id: "2", label: "Pricing Levels", component: <PricingLevels />},
-    {id: "3", label: "Pricing Optimization", component: <PricingOptimization />},
+    {id: "3", label: "Price Calculations", component: <PricingOptimization />},
 ]
 export const PricingSettingsPage = () => {
     const [selectedTab, selectTab] = useState<string>("0");

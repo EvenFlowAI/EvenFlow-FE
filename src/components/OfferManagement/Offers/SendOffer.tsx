@@ -40,9 +40,9 @@ enum EChannel {
     Text, Email, Both
 }
 const channelLabels: TEnumKeyLabel<EChannel> = {
-    [EChannel.Both]: "both",
-    [EChannel.Email]: "email",
-    [EChannel.Text]: "text"
+    [EChannel.Both]: "Both",
+    [EChannel.Email]: "Email",
+    [EChannel.Text]: "Text"
 }
 
 type TForm = {
@@ -129,7 +129,8 @@ export const SendOffer: React.FC<DialogProps> = ({onAction, payload, ...props}) 
                 <Grid item xs={12}>
                     <Label >Channel</Label>
                     <RadioGroup row value={form.channel} onChange={handleChannel}>
-                        {Object.values(EChannel).filter(v => !isNaN(Number(v))).map(c => {
+                        {Object.values(EChannel).filter(v => !isNaN(Number(v)))
+                            .map(c => {
                             return <FormControlLabel
                                 key={c}
                                 value={c}

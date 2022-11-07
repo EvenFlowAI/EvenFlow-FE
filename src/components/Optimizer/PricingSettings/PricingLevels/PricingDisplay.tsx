@@ -90,7 +90,7 @@ const PricingDisplay: React.FC = () => {
     }
 
     return <SquarePaper variant="outlined">
-        <PaperTitle>Prices Display</PaperTitle>
+        <PaperTitle>Price Display</PaperTitle>
         <Divider />
         {isRoundPriceLoading
             ? <Loading/>

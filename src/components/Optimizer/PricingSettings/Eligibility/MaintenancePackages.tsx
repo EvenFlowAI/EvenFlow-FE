@@ -67,14 +67,14 @@ const MaintenancePackages = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell
-                                    width={530}
+                                    width={430}
                                     style={{...headCellStyles, ...leftAlign}}>
                                     Package Name
                                 </TableCell>
                                 <TableCell style={headCellStyles}>Base Market Price</TableCell>
                                 <TableCell style={headCellStyles}>Value Market Price</TableCell>
                                 <TableCell style={headCellStyles}>Preferred Market Price</TableCell>
-                                <TableCell style={headCellStyles}>Pricing optimization status (Off/ON)</TableCell>
+                                <TableCell style={headCellStyles}>Pricing optimization status</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
