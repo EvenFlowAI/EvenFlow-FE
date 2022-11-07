@@ -81,7 +81,7 @@ export const ServiceCenterActions = () => {
                 color="primary"
                 onClick={onOpen}
                 variant="contained">
-                Add service center
+                Add Service Center
             </Button>
             <CreateServiceCenter open={isOpen} onClose={onClose} />
         </>;

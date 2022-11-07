@@ -30,6 +30,7 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
                 fullName: customerLoadedData?.fullName ?? "",
                 email: customerLoadedData?.emails[0] ?? "",
                 phoneNumber: customerLoadedData?.phoneNumbers[0] ?? "",
+                city: customerLoadedData?.city,
             }));
         }
     }, [customerLoadedData, dispatch]);

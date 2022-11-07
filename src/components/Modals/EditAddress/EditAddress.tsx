@@ -107,7 +107,7 @@ export const EditAddress: React.FC<DialogProps&TViewMode> = ({viewMode, ...props
                     Api.endpoints.ServiceCenters.UpdateAddress,
                     {data: form, urlParams: {id: selectedSC.id}}
                     )
-                showMessage("Updated successfully");
+                showMessage("Address updated");
                 setSave(false);
                 props.onClose();
             } catch (e) {

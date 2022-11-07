@@ -123,12 +123,12 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
                         Api.endpoints.Holidays.Update,
                         {data, urlParams: {id: data?.id}}
                     ).then(res => {
-                        if (res) showMessage("Holiday saved");
+                        if (res) showMessage("Holiday updated");
                     })
                 } else {
                     await Api.call(Api.endpoints.Holidays.Create, {data})
                         .then(res => {
-                            if (res) showMessage("Holiday saved");
+                            if (res) showMessage("Holiday created");
                         })
                 }
                 if (onAction) {
@@ -143,7 +143,7 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
         }
     }
     return <BaseModal {...props} width={600}>
-        <DialogTitle onClose={props.onClose}>Add New Holiday</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{payload ? "Edit" : "Add"} Holiday</DialogTitle>
         <DialogContent>
             <HForm
                 onChange={handleChange}

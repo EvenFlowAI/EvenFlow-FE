@@ -78,12 +78,6 @@ const initialCPState: IContactPersonForm = {
 export const CreateDealershipGroup: React.FC<DialogProps> = props => {
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
     const [contactPerson, setCP] = useState<IContactPersonForm>({...initialCPState});
-
-    useEffect(() => {
-        setDealership({...initialStateDealershipState});
-        setCP({...initialCPState});
-    }, [props.open]);
-
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
     const setException = useException();
@@ -91,6 +85,11 @@ export const CreateDealershipGroup: React.FC<DialogProps> = props => {
     const validate = useValidation(
         requiredFields, {...dealership, ...contactPerson}
     );
+
+    useEffect(() => {
+        setDealership({...initialStateDealershipState});
+        setCP({...initialCPState});
+    }, [props.open]);
 
     const handleChange = (v: "dealership" | "cp") => ({target: {value, name}}: React.ChangeEvent<HTMLInputElement>) => {
         if (name === "phoneNumber") {
@@ -111,7 +110,7 @@ export const CreateDealershipGroup: React.FC<DialogProps> = props => {
         const data: IDealershipGroupForm = {contactPerson, dealership};
         try {
             await dispatch(create(data));
-            showMessage("Created");
+            showMessage("Dealership Created");
             props.onClose();
         } catch (e) {
             setException(e);
@@ -120,7 +119,7 @@ export const CreateDealershipGroup: React.FC<DialogProps> = props => {
     }
 
     return <BaseModal {...props} onClose={props.onClose}>
-        <DialogTitle onClose={props.onClose}>New dealership group</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Add Dealership Group</DialogTitle>
         <DialogContent>
             <AvatarContainer />
 

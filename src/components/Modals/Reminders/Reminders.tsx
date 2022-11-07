@@ -76,7 +76,7 @@ const Reminders: React.FC<DialogProps> = (props) => {
     }
 
     const onSuccess = () => {
-        showMessage('Reminders Settings Updated')
+        showMessage('Appointment Reminders Configuration updated')
     }
 
     const onError = (err: string) => {

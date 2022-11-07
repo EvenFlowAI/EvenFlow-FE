@@ -38,7 +38,7 @@ export const EmailVerification: React.FC = () => {
         } else {
             try {
                 await Api.call(Api.endpoints.Accounts.Verification, {data: {token, userId, password}});
-                showMessage("Password set successfully");
+                showMessage("Password set");
                 history.replace(Routes.Login.Base);
             } catch (e) {
                 showError(e);

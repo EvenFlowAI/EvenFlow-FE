@@ -314,6 +314,11 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             isValid = false;
             showError("Please choose at least one Service Request or Service Category or Package Option")
         }
+        if (form.driverPhoneNumber.length < 11) {
+            isValid = false;
+            showError(`"Phone Number" ${form.driverPhoneNumber.length ? 'is not valid' : 'must not be empty'}`)
+            setErrors(prev => [...prev, "driverPhoneNumber"])
+        }
         for (let field in form) {
             if (field === "date" && !filterDate) {
                 isValid = false;

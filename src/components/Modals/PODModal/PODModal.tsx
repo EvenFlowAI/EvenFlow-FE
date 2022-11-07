@@ -197,7 +197,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     await dispatch(createPod(data));
                 }
                 setLoading(false);
-                showMessage("Saved");
+                showMessage(`Pod ${form.name} ${payload ? "updated" : "created"}`);
                 props.onClose();
             } catch (e) {
                 setLoading(false);

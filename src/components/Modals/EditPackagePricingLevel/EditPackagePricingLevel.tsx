@@ -93,7 +93,7 @@ const EditPackagePricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLev
     }
 
     return <BaseModal  {...props} width={540} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Edit Pricing Levels By Ops Code</DialogTitle>
+        <DialogTitle onClose={onCancel}>Edit Pricing Levels by Ops Code</DialogTitle>
         <DialogContent>
             <TextField
                 fullWidth

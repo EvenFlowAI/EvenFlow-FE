@@ -43,7 +43,7 @@ export const NewCustomerValue: React.FC<DialogProps<INewLostCustomer> & {isNew: 
                     type: isNew ? NewLostEnum.New : NewLostEnum.Lost
                 }));
                 setSaving(false);
-                showMessage("Saved");
+                showMessage(`${isNew ? "New" : "Lost"} Customer updated`);
                 props.onClose();
             } catch (e) {
                 showError(e);

@@ -55,7 +55,7 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
                     podId: selectedPod?.id
                 }));
                 setSaving(false);
-                showMessage("Demand Segment Created");
+                showMessage("Demand Segment created");
             } catch (e) {
                 setSaving(false);
                 showError(e);
@@ -71,7 +71,7 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
         askConfirm({
             onConfirm: handleRemoveSegment(el),
             isRemove: true,
-            title: "Are you sure you want to delete the demand segment?",
+            title: "Please confirm you want to remove this Demand Segment?",
         });
     }
     const handleRemoveSegment = (el: IDemandSegment) => async () => {
@@ -80,7 +80,7 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
                 Api.endpoints.AppointmentAllocation.RemoveDemandSegment,
                 {urlParams: {id: el.id}}
                 );
-            showMessage("Segment Removed");
+            showMessage("Segment removed");
             dispatch(loadDemandSegments(selectedSC?.id || 0, selectedPod?.id));
         } catch (e) {
             showError(e);
@@ -96,7 +96,7 @@ export const DemandSegments: React.FC<DialogProps> = ({onAction, payload, ...pro
                     variant="contained"
                     color="primary"
                     onClick={handleAddSegment}>
-                    Add New Segment
+                    Add Segment
                 </LoadingButton>
             </div>
             <Table<IDemandSegment>

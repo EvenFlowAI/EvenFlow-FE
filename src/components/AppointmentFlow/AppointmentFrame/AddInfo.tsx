@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, {useMemo} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {TextField} from "../UI";
@@ -17,6 +17,7 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
+import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TProps = {
     onFillCar: TCallback;
@@ -36,7 +37,8 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
         selectedSR,
         service,
         categoriesIds,
-        allCategories
+        allCategories,
+        userType
     ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
@@ -46,6 +48,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
         appointmentFrame.service,
         appointmentFrame.categoriesIds,
         categories.allCategories,
+        appointmentFrame.userType
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -58,7 +61,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
     }
 
     const handleNext = () => {
-        if (!checkSelectedCar(vehicle, vehicles)) {
+        if (!checkSelectedCar(vehicle, vehicles) || userType === EUserType.Existing) {
             onFillCar();
         } else {
             onNext();

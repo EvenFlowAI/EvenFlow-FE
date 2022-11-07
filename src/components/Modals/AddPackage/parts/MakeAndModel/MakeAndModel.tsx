@@ -176,7 +176,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     onChange={onMakeChange}
                     renderInput={autocompleteRender({
                         label: "Make",
-                        error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,
+                        //error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,
                         placeholder: 'Select Make'
                     })}
                 />
@@ -192,7 +192,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     onChange={onModelChange}
                     renderInput={autocompleteRender({
                         label: "Model",
-                        error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,
+                        //error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,
                         placeholder: 'Select Model'
                     })}
                 />
