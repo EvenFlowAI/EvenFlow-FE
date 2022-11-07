@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {PODModal} from "../../Modals/PODModal/PODModal";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {EJobType, IPod} from "../../../store/reducers/pods/types";
+import {EAppointmentType, EJobType, IPod} from "../../../store/reducers/pods/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadPods, removePod, setPodsPageData} from "../../../store/reducers/pods/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -10,6 +10,17 @@ import {TableRowDataTypeResp} from "../../UI/types";
 import {Table} from "../../UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {TViewMode} from "../../Modals/types";
+
+const getNameFromEnum = (str: string) => {
+    let array = [];
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === str[i].toUpperCase() && i > 0) {
+            array.push(' ');
+        }
+        array.push(str[i]);
+    }
+    return array.join('')
+}
 
 const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "POD#", val: el => el.name},
@@ -22,7 +33,7 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "Models", val: e => e.vehicleModels?.map(s => s.name).join(", ") || "", xsHidden: true},
     {header: "Job Type", val: e => typeof e.jobType !== "undefined" && Number.isInteger(+e.jobType) ? EJobType[e.jobType] : "", xsHidden: true},
     {header: "Mobile Zones", val: e => e.mobileZones?.map(zone => zone.name).join(", ") || "", xsHidden: true},
-    {header: "Appointment Type", val: e => typeof e.appointmentType !== "undefined" && Number.isInteger(+e.appointmentType) ? EJobType[e.appointmentType] : "", xsHidden: true},
+    {header: "Appointment Type", val: e => typeof e.appointmentType !== "undefined" && Number.isInteger(+e.appointmentType) ? getNameFromEnum(EAppointmentType[e.appointmentType]) : "", xsHidden: true},
 ]
 
 export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {
