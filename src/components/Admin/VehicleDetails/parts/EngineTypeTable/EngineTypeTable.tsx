@@ -1,24 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../../../store/rootReducer";
+import {IEngineType} from "../../../../../store/reducers/vehicleDetails/types";
+import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../../../utils/hooks";
+import {loadEngineType, removeEngineType} from "../../../../../store/reducers/vehicleDetails/actions";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {Table} from "../../../../UI/Table";
-import AddMileage from "../../../../Modals/AddMileage/AddMileage";
 import {IOrder} from "../../../../../types/types";
-import {IMileage} from "../../../../../store/reducers/vehicleDetails/types";
-import {loadMileage, removeMileage} from "../../../../../store/reducers/vehicleDetails/actions";
-import {RootState} from "../../../../../store/rootReducer";
+import {Table} from "../../../../UI/Table";
+import AddEngineType from "../../../../Modals/AddEngineType/AddEngineType";
 
 const RowData = [
-    {val: (el: IMileage) => `${el.value}`, header: "Estimated Mileage", orderId: "value"},
+    {val: (el: IEngineType) => `${el.value}`, header: "Estimated Mileage", orderId: "value"},
 ]
 
-const MileageTable = () => {
-    const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
+const EngineTypeTable = () => {
+    const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [currentMileage, setCurrentMileage] = useState<IMileage | null>(null);
-    const [mileages, setMileages] = useState<IMileage[]>([]);
+    const [currentEngineType, setCurrentEngineType] = useState<IEngineType | null>(null);
+    const [types, setTypes] = useState<IEngineType[]>([]);
     const [isAscending, setIsAscending] = useState<boolean>(true)
     const { selectedSC } = useSCs();
     const showMessage = useMessage();
@@ -29,20 +29,20 @@ const MileageTable = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadMileage(selectedSC.id));
+            dispatch(loadEngineType(selectedSC.id));
         }
     }, [selectedSC])
 
     useEffect(() => {
-        setMileages(mileage);
-    }, [mileage])
+        setTypes(engineTypes);
+    }, [engineTypes])
 
-    const openMenu = (el: IMileage) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        setCurrentMileage(el)
+    const openMenu = (el: IEngineType) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setCurrentEngineType(el)
         setAnchorEl(e.currentTarget);
     }
 
-    const tableActions = (el: IMileage) => {
+    const tableActions = (el: IEngineType) => {
         return <IconButton onClick={openMenu(el)}>
             <MoreHoriz />
         </IconButton>;
@@ -50,10 +50,10 @@ const MileageTable = () => {
 
     const handleRemove = async () => {
         try {
-            if (currentMileage && selectedSC) {
-                dispatch(removeMileage(currentMileage.id, selectedSC.id));
-                setCurrentMileage(null);
-                showMessage("Mileage removed");
+            if (currentEngineType && selectedSC) {
+                dispatch(removeEngineType(currentEngineType.id, selectedSC.id));
+                setCurrentEngineType(null);
+                showMessage("Engine Type removed");
             }
         } catch (e) {
             showError(e);
@@ -62,20 +62,20 @@ const MileageTable = () => {
 
     const askRemove = () => {
         setAnchorEl(null);
-        if (currentMileage) {
+        if (currentEngineType) {
             askConfirm({
                 isRemove: true,
-                title: `Remove Mileage Option ${currentMileage?.value}?`,
+                title: `Remove Engine Type ${currentEngineType?.value}?`,
                 onConfirm: handleRemove
             });
         }
     }
 
-    const handleSort = (d: IOrder<IMileage>) => async () => {
+    const handleSort = (d: IOrder<IEngineType>) => async () => {
         setIsAscending(d.isAscending);
-        setMileages(prev => d.isAscending
-            ? [...prev].sort((a, b) => a.value - b.value)
-            : [...prev].sort((a, b) => b.value - a.value))
+        setTypes(prev => d.isAscending
+            ? [...prev].sort((a, b) => a.id - b.id)
+            : [...prev].sort((a, b) => b.id - a.id))
     }
 
     return (
@@ -86,11 +86,11 @@ const MileageTable = () => {
                     color="primary"
                     onClick={onOpen}
                     variant="contained">
-                    Add Mileage
+                    Add Engine Type
                 </Button>
             </div>
             <Table
-                data={mileages}
+                data={types}
                 index="value"
                 rowData={RowData}
                 actions={tableActions}
@@ -105,9 +105,9 @@ const MileageTable = () => {
             >
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
-            <AddMileage open={isOpen} onClose={onClose}/>
+            <AddEngineType open={isOpen} onClose={onClose}/>
         </div>
     );
 };
 
-export default MileageTable;
+export default EngineTypeTable;

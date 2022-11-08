@@ -7,15 +7,15 @@ import {Button, Divider, IconButton} from "@material-ui/core";
 import {AddCircleOutline} from "@material-ui/icons";
 import {useStyles} from "../AddMakeModel/AddMakeModel";
 import {useDispatch, useSelector} from "react-redux";
-import {createMileage} from "../../../store/reducers/vehicleDetails/actions";
-import {TCreateMileage} from "../../../store/reducers/vehicleDetails/types";
+import {createEngineType} from "../../../store/reducers/vehicleDetails/actions";
+import {TCreateEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {useException, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 
-const AddMileage: React.FC<DialogProps> = (props) => {
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
-    const [newMileage, setNewMileage] = useState<string>('');
-    const [mileages, setMileages] = useState<string[]>([]);
+const AddEngineType: React.FC<DialogProps> = (props) => {
+    const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const [newEngineType, setNewEngineType] = useState<string>('');
+    const [types, setTypes] = useState<string[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -23,68 +23,71 @@ const AddMileage: React.FC<DialogProps> = (props) => {
     const classes = useStyles();
 
     const onCancel = () => {
-        setNewMileage('');
+        setNewEngineType('');
         setFormIsChecked(false);
-        setMileages([]);
+        setTypes([]);
         props.onClose();
     }
 
-    const onMileageChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const onEngineTypeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setFormIsChecked(true);
-        setNewMileage(e.target.value);
+        setNewEngineType(e.target.value);
     }
 
-    const onMileageDelete = (el: string) => {
+    const onEngineTypeDelete = (el: string) => {
         setFormIsChecked(true);
-        setMileages(prev => prev.filter(item => item !== el));
+        setTypes(prev => prev.filter(item => item !== el));
     }
 
-    const addMileage = ():void => {
+    const addEngineType = ():void => {
         setFormIsChecked(true);
-        if (newMileage) setMileages(prev => [...prev, newMileage]);
-        setNewMileage('');
+        if (newEngineType) {
+            if (types.includes(newEngineType)) {
+             return showError(`Mileage "${newEngineType}" already exists`)
+            }
+            setTypes(prev => [...prev, newEngineType]);
+        }
+        setNewEngineType('');
     }
 
     const onKeyDown = (e: React.KeyboardEvent<{}>) => {
-        if (e.key === 'Enter') addMileage();
+        if (e.key === 'Enter') addEngineType();
     }
 
     const onSave = ():void => {
         setFormIsChecked(true);
-        if ((mileages.length || newMileage?.length) && selectedSC) {
-            const existingMileage = mileage.find(item => mileages.includes(`${item.value}`) || item.value === +newMileage)
-            if (existingMileage) {
-                return showError(`Mileage ${newMileage} already exists`)
+        if ((types.length || newEngineType?.length) && selectedSC) {
+            const existingTypes = engineTypes.filter(item => types.includes(item.value) || item.value === newEngineType)
+            if (existingTypes.length) {
+                return showError(`${existingTypes.length > 1 ? 'Mileages' : 'Mileage'} "${existingTypes.map(item => item.value).join(', ')}" already exists`)
             }
-            const data: TCreateMileage = {
-                values: mileages.length ? mileages.map(item => +item) : [+newMileage],
+            const data: TCreateEngineType = {
+                values: types.length ? types : [newEngineType],
                 serviceCenterId: selectedSC.id,
             }
-            dispatch(createMileage(data));
+            dispatch(createEngineType(data));
             onCancel();
         }
     }
 
     return (
         <BaseModal {...props} width={540} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Add Mileage</DialogTitle>
+            <DialogTitle onClose={onCancel}>Add Engine Type</DialogTitle>
             <DialogContent>
-                {Boolean(mileages.length) && <div className={classes.modelsWrapper}>
-                    {mileages.map(mileage => <Model key={mileage} model={mileage} onDelete={onMileageDelete}/>)}
+                {Boolean(types.length) && <div className={classes.modelsWrapper}>
+                    {types.map(type => <Model key={type} model={type} onDelete={onEngineTypeDelete}/>)}
                 </div>}
                 <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>
                     <div style={{width: '90%'}}>
                         <TextField
                             fullWidth
-                            type="number"
-                            inputProps={{min: 0}}
-                            label='Estimated Mileage'
-                            placeholder='Type Mileage'
-                            error={!newMileage && !mileages.length && formIsChecked}
-                            onChange={onMileageChange}
-                            value={newMileage}/>
+                            label='Engine Type'
+                            placeholder='Type Engine Type'
+                            error={!newEngineType && !types.length && formIsChecked}
+                            onChange={onEngineTypeChange}
+                            value={newEngineType}/>
                     </div>
-                    <IconButton onClick={addMileage} className={classes.iconPlus}>
+                    <IconButton onClick={addEngineType} className={classes.iconPlus}>
                         <AddCircleOutline/>
                     </IconButton>
                 </div>
@@ -110,4 +113,4 @@ const AddMileage: React.FC<DialogProps> = (props) => {
     );
 };
 
-export default AddMileage;
+export default AddEngineType;

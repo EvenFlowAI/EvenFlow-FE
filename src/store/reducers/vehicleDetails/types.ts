@@ -10,8 +10,19 @@ export interface IMileage {
    value: number;
 }
 
+export interface IEngineType {
+   id: number;
+   value: string;
+}
+
 export type TCreateMileage = {
    values: number[];
+   serviceCenterId: number;
+   podId?: number;
+}
+
+export type TCreateEngineType = {
+   values: string[];
    serviceCenterId: number;
    podId?: number;
 }
