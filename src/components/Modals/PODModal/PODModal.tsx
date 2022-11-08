@@ -107,18 +107,6 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 setSelectedModels([])
                 setModelsOptions([])
             }
-            if (payload?.vehicleModels?.length) {
-                const models: IModel[][] = [];
-                makesModels.forEach(item => {
-                    const makeIsSelected = payload?.vehicleMakes?.find(make => make.id === item.id);
-                    if (makeIsSelected) {
-                        models.push(item.models)
-                    }
-                });
-                const modelsIDs = models.flat().map(item => item.id);
-                const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
-                setSelectedModels(filteredModels);
-            }
             if (typeof payload?.jobType !== "undefined") {
                 const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
                 selectedJobType && setJobType(selectedJobType);
@@ -138,6 +126,21 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             }
         }
     }, [props.open, payload, makesModels]);
+
+    useEffect(() => {
+        if (payload?.vehicleModels?.length) {
+            const models: IModel[][] = [];
+            makesModels.forEach(item => {
+                const makeIsSelected = payload?.vehicleMakes?.find(make => make.id === item.id);
+                if (makeIsSelected) {
+                    models.push(item.models)
+                }
+            });
+            const modelsIDs = models.flat().map(item => item.id);
+            const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
+            setSelectedModels(filteredModels);
+        }
+    }, [makesModels, props.open, payload])
 
     useEffect(() => {
         if (selectedSC && props.open) {
