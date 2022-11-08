@@ -424,7 +424,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                         <IconButton onClick={onExistingOpen} className={classes.iconPlus}>
                             <AddCircleOutline/>
                         </IconButton>
-                        <span> Add New Existing Maintenance Package</span>
+                        <span> Add Existing Maintenance Package</span>
                     </div>
 
                     <div className={classes.label}>Assigned Ops Codes</div>
@@ -438,7 +438,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     }>
                     { assignedOpsCodes?.length
                         ? <AssignedOpsCodes codes={assignedOpsCodes}/>
-                        : <p>There are no ops codes in this list yet</p>
+                        : <p>There are no Ops Codes in this list yet</p>
                     }
                     </div>
 
@@ -457,11 +457,10 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             : classes.emptyOpsCodes}>
                         { opsCodes?.length
                             ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete} key={item.serviceRequest.id}/>)
-                            : <p>There are no ops codes in this list yet</p>
+                            : <p>There are no Ops Codes in this list yet</p>
                         }
                     </div>
 
-                    <div className={classes.label}>Add Ops Code To Package</div>
                     <div className={classes.btnsWrapper}>
                         <Button
                             color="primary"

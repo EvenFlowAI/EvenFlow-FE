@@ -76,7 +76,7 @@ const PricingDisplay: React.FC = () => {
         if (selectedSC) {
             e.persist();
             askConfirm({
-                title: `Please confirm you want to change the Option`,
+                title: `Please confirm you want to change Pricing Display option`,
                 onConfirm: () => {
                     try {
                         setValue(e.target.value);
@@ -90,7 +90,7 @@ const PricingDisplay: React.FC = () => {
     }
 
     return <SquarePaper variant="outlined">
-        <PaperTitle>Prices Display</PaperTitle>
+        <PaperTitle>Price Display</PaperTitle>
         <Divider />
         {isRoundPriceLoading
             ? <Loading/>

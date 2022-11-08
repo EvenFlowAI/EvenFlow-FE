@@ -142,7 +142,7 @@ const AncillaryPrice = () => {
         e.persist();
         if (selectedSC) {
             askConfirm({
-                title: `Please confirm you want to change the Service Valet Price Setting`,
+                title: `Please confirm you want to change the Service Valet pricing settings`,
                 onConfirm: () => {
                     try {
                         const value = e.target?.value === "byZone" ? EAncillaryPriceType.Zone : EAncillaryPriceType.Distance;

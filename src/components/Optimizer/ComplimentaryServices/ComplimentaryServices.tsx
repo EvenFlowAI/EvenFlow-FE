@@ -182,7 +182,7 @@ const ComplimentaryServices = () => {
                         variant="contained"
                         onClick={handleAddOpsCodeOpen}
                     >
-                        Add Ops Code
+                        Add Ops Codes
                     </Button>
                     <Button
                         style={{marginLeft: 16}}

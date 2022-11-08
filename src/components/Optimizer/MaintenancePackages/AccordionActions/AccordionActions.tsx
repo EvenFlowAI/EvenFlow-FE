@@ -62,12 +62,12 @@ const AccordionActions: React.FC<TAccordionProps> = ({ onAddOpsCode, onCancel, o
                   <Button
                     onClick={onAddOpsCode}
                     className={classes.addButton}>
-                    Assign ops code to option
+                    Assign Ops Code to Option
                   </Button>
                   <Button
                     onClick={onSave}
                     className={classes.saveButton}>
-                    save changes
+                    Save Changes
                   </Button>
             </div>
         </div>

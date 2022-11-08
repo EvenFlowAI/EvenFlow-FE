@@ -43,7 +43,7 @@ export const TimeOfYearDialog: React.FC<DialogProps> = ({onAction, payload, ...p
 
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>
-            Calendar settings <br/>
+            Calendar Settings <br/>
             <small style={{fontWeight: "normal"}}>Select a day and choose its value</small>
         </DialogTitle>
         <DialogContent>

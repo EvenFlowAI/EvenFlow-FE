@@ -124,8 +124,12 @@ export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, rec
 
     const checkIsValid = (): boolean => {
         let err: string[] = [];
-        if (!form.timeStart) err = [...err, '"Starts At" must not be empty'];
-        if (!form.timeEnd) err = [...err, '"Finishes At" must not be empty'];
+        if (!form.timeEnd || !form.timeStart) {
+            if (!form.timeStart) err = [...err, '"Starts At" must not be empty'];
+            if (!form.timeEnd) err = [...err, '"Finishes At" must not be empty'];
+        } else {
+            if (form.timeStart?.diff(form.timeEnd) >=0) err = [...err, '"Starts At" must be less than "Finishes At"']
+        }
         err.map(e => showError(e));
         return !Boolean(err.length)
     }

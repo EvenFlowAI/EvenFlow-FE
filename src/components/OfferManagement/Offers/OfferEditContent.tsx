@@ -216,7 +216,7 @@ export const OfferEditContent: React.FC<TProps> = ({
                     label="Offer value"
                     onChange={onChange}
                     name="offerValue"
-                    endAdornment={
+                    startAdornment={
                         form.offerType === EOfferType.PercentOff
                             ? "%"
                             : "$"
@@ -310,7 +310,7 @@ export const OfferEditContent: React.FC<TProps> = ({
                         loading={false}
                         value={form.dayOfWeek}
                         renderInput={autocompleteRender({
-                            label: "Day of a Week",
+                            label: "Day of Week",
                             fullWidth: true,
                             error: formIsChecked && !form.dayOfWeek.length
                         })}
@@ -346,7 +346,7 @@ export const OfferEditContent: React.FC<TProps> = ({
             <div className={classes.innerContainer}>
                 <DatePicker
                     fullWidth
-                    label={"Duration"}
+                    label={"Start Date"}
                     disablePast
                     maxDate={form.durationTo || undefined}
                     InputProps={{
@@ -361,6 +361,7 @@ export const OfferEditContent: React.FC<TProps> = ({
                 <DatePicker
                     fullWidth
                     disablePast
+                    label={"End Date"}
                     minDate={form.durationFrom || undefined}
                     InputProps={{
                         endAdornment: <DateRange color={"disabled"} />,

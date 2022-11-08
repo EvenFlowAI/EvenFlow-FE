@@ -144,7 +144,7 @@ const AncillaryPrice = () => {
         e.persist();
         if (selectedSC) {
             askConfirm({
-                title: `Please confirm you want to change the Mobile Service Price Setting`,
+                title: `Please confirm you want to change the Mobile Service pricing setting`,
                 onConfirm: () => {
                     try {
                         const value = e.target?.value === "byZone" ? EAncillaryPriceType.Zone : EAncillaryPriceType.Distance;

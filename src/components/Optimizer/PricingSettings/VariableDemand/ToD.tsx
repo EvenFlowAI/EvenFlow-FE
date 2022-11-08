@@ -62,7 +62,7 @@ export const ToD = () => {
                         <span>You can change the desirability of appointment slots on </span>
                         <TextLink
                             to={Routes.Optimizer.AppointmentSlotScoring}>
-                            Time of Day desirability</TextLink>
+                            Time of Day Desirability</TextLink>
                         <span> page</span>
                     </>}
                 />
