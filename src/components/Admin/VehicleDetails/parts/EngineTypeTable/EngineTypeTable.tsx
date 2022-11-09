@@ -11,7 +11,7 @@ import {Table} from "../../../../UI/Table";
 import AddEngineType from "../../../../Modals/AddEngineType/AddEngineType";
 
 const RowData = [
-    {val: (el: IEngineType) => `${el.value}`, header: "Estimated Mileage", orderId: "value"},
+    {val: (el: IEngineType) => `${el.name}`, header: "Estimated Mileage", orderId: "name"},
 ]
 
 const EngineTypeTable = () => {
@@ -65,7 +65,7 @@ const EngineTypeTable = () => {
         if (currentEngineType) {
             askConfirm({
                 isRemove: true,
-                title: `Remove Engine Type ${currentEngineType?.value}?`,
+                title: `Remove Engine Type ${currentEngineType?.name}?`,
                 onConfirm: handleRemove
             });
         }
@@ -91,7 +91,7 @@ const EngineTypeTable = () => {
             </div>
             <Table
                 data={types}
-                index="value"
+                index="name"
                 rowData={RowData}
                 actions={tableActions}
                 isAscending={isAscending}

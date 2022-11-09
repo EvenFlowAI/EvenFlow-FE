@@ -57,9 +57,9 @@ const AddEngineType: React.FC<DialogProps> = (props) => {
     const onSave = ():void => {
         setFormIsChecked(true);
         if ((types.length || newEngineType?.length) && selectedSC) {
-            const existingTypes = engineTypes.filter(item => types.includes(item.value) || item.value === newEngineType)
+            const existingTypes = engineTypes.filter(item => types.includes(item.name) || item.name === newEngineType)
             if (existingTypes.length) {
-                return showError(`${existingTypes.length > 1 ? 'Mileages' : 'Mileage'} "${existingTypes.map(item => item.value).join(', ')}" already exists`)
+                return showError(`${existingTypes.length > 1 ? 'Mileages' : 'Mileage'} "${existingTypes.map(item => item.name).join(', ')}" already exists`)
             }
             const data: TCreateEngineType = {
                 values: types.length ? types : [newEngineType],

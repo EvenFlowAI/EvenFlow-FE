@@ -12,7 +12,7 @@ export interface IMileage {
 
 export interface IEngineType {
    id: number;
-   value: string;
+   name: string;
 }
 
 export type TCreateMileage = {

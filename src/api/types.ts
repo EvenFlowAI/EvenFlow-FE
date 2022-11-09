@@ -115,6 +115,7 @@ export interface IVehicle {
     mileage: number|null;
     serviceInterval?: string;
     modelDetails?: string;
+    engineType?: string;
 }
 
 export interface ILoadedVehicle  extends IVehicle {

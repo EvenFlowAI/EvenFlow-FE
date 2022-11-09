@@ -19,9 +19,10 @@ import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
-import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {yearOptions} from "./MaintenanceDetails";
 import {useTranslation} from "react-i18next";
+import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -67,12 +68,15 @@ const requiredFields: TVehicleKey[] = [
 
 type TProps = {} & TActionProps;
 export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
-    const {selectedVehicle, makes, valueService}= useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, makes, valueService, serviceType}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile}= useSelector((state: RootState) => state.appointment);
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [errors, setErrors] = useState<TVehicleKey[]>([]);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
+    const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
     const {id} = useParams();
     const dispatch = useDispatch();
     const theme = useTheme();
@@ -86,6 +90,10 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     const isNewVehicleView = useMemo(() => {
         return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
     }, [selectedVehicle, customerLoadedData]);
+
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType])
 
     const selects: TSelect[] = [
         {label: t("VIN"), name: "vin", noVehicle: true, isVin: true},
@@ -146,6 +154,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
     useEffect(() => {
         dispatch(loadMakes(decodeSCID(id)));
         dispatch(loadMileage(decodeSCID(id)));
+        dispatch(loadEngineType(decodeSCID(id)));
     }, [id]);
 
     useEffect(() => {
@@ -186,6 +195,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             }
         }
     }
+
+    const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
+        setSelectedEngine(option)
+        setErrors(e => e.filter(err => err !== "engineType"))
+    }
+
     const handleTextChange = (name: keyof IVehicle) =>
         ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(updateVehicle({[name]: value.trim()}));
@@ -202,6 +217,12 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                 errorsArray.push(f);
             }
         }
+
+        if (currentConfig?.engineType && !selectedEngine) {
+            errorsArray.push("Engine Type")
+            setErrors(e => [...e, "engineType"]);
+        }
+
         if (errorsArray.length) {
             const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
             const message = fields.join(', ').concat(fields.length < 2 ? ` ${t("is")}` : ` ${t("are")}`).concat( ` ${t("required")}`);
@@ -263,6 +284,26 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                     />
                 </div>
             })}
+            {currentConfig?.engineType
+                ? <Autocomplete
+                    key="Engine Type"
+                    options={engineTypes}
+                    onChange={handleEngineTypeChange}
+                    fullWidth
+                    getOptionLabel={o => o.name}
+                    getOptionSelected={o => o.id === selectedEngine?.id}
+                    disableClearable
+                    autoComplete={true}
+                    disabled={!isNewVehicleView}
+                    renderInput={autocompleteRender({
+                        label: "Engine Type",
+                        placeholder: errors.includes("engineType") ? "EngineType required" : "Select Engine Type",
+                        error: errors.includes("engineType"),
+                        required: true,
+                    })}
+                    value={selectedEngine ?? undefined}
+                />
+                : null }
         </SelectWrapper>
         <Actions onBack={onBack} onNext={handleNext} />
     </StepWrapper>
