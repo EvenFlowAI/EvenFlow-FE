@@ -124,7 +124,7 @@ const BookingFlowConfig = () => {
         setConfiguration(config);
     }
 
-    const onSuccess = () => showMessage('Updated Booking Flow Configuration')
+    const onSuccess = () => showMessage('Booking Flow Configuration updated')
 
     const onError = (err: string) => showError(err);
 
@@ -153,6 +153,7 @@ const BookingFlowConfig = () => {
                                         for Value Service</TableCell>
                                     <TableCell className={classes.headerCell} align="center" width={200}>Select Advisor
                                         Page</TableCell>
+                                    <TableCell className={classes.headerCell} align="center" width={200}>Engine Type</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -182,6 +183,12 @@ const BookingFlowConfig = () => {
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'advisorSelection')}
                                             checked={visitCenterConfig?.advisorSelection}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'engineType')}
+                                            checked={visitCenterConfig?.engineType}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
@@ -215,6 +222,13 @@ const BookingFlowConfig = () => {
                                             disabled={true}
                                             color="primary"/>
                                     </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            disabled={!mobileServiceConfig?.available}
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'engineType')}
+                                            checked={mobileServiceConfig?.engineType}
+                                            color="primary"/>
+                                    </TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell className={classes.serviceTypeCell}>Pick Up / Drop Off</TableCell>
@@ -244,6 +258,13 @@ const BookingFlowConfig = () => {
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'advisorSelection')}
                                             disabled={!pickUpDropOffConfig?.available}
                                             checked={pickUpDropOffConfig?.advisorSelection}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'engineType')}
+                                            checked={pickUpDropOffConfig?.engineType}
+                                            disabled={!pickUpDropOffConfig?.available}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>

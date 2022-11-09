@@ -8,4 +8,5 @@ export type TServiceTypeSettings = {
     productPageForValueService: boolean;
     advisorSelection: boolean;
     serviceType: EServiceTypeBookingFlow;
+    engineType: boolean;
 }
