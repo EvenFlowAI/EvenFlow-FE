@@ -109,7 +109,8 @@ export const prodParentLinks = [
     "https://www.fremontchryslerdodgejeepcasper.com",
     "https://www.fremontchryslerdodgejeeprocksprings.com",
     "https://www.janssenfordholdrege.com/",
-    "https://www.janssenchryslerjeepdodge.com/"
+    "https://www.janssenchryslerjeepdodge.com/",
+    "https://www.lakepowellford.com/",
 ];
 
 export const AppointmentFrameLayout = () => {
