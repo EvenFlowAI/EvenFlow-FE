@@ -188,16 +188,28 @@ export const copyTextToClipboard = (text: string) => {
     });
 }
 
+export const parentOrigins = {
+    bmwofschererville: "bmwofschererville",
+    riverviewford: "riverviewford",
+    scherervilleEvenflow: "bmw-schererville.evenflow",
+    fremontchryslerdodgejeepcasper: "fremontchryslerdodgejeepcasper",
+    fremontchryslerdodgejeeprocksprings: "fremontchryslerdodgejeeprocksprings",
+    janssenchryslerjeepdodge: "janssenchryslerjeepdodge",
+    janssenfordholdrege: "janssenfordholdrege",
+    lakepowellford: "lakepowellford",
+}
+
 export const getTracker = (origin: string): string => {
     if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
     if (process.env.REACT_APP_ENV === "production") {
-        if (origin.includes("bmwofschererville")) return "UA-210743216-6";
-        if (origin.includes("riverviewford")) return "UA-210743216-3";
-        if (origin.includes("bmw-schererville.evenflow")) return "UA-210743216-8";
-        if (origin.includes("fremontchryslerdodgejeepcasper")) return "UA-210743216-9";
-        if (origin.includes("fremontchryslerdodgejeeprocksprings")) return "UA-210743216-10";
-        if (origin.includes("janssenchryslerjeepdodge")) return "UA-210743216-11";
-        if (origin.includes("janssenfordholdrege")) return "UA-210743216-12";
+        if (origin.includes(parentOrigins.bmwofschererville)) return "UA-210743216-6";
+        if (origin.includes(parentOrigins.riverviewford)) return "UA-210743216-3";
+        if (origin.includes(parentOrigins.scherervilleEvenflow)) return "UA-210743216-8";
+        if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "UA-210743216-9";
+        if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "UA-210743216-10";
+        if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "UA-210743216-11";
+        if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
+        if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
         return "UA-210743216-5";
     } else {
         return "UA-210743216-5";
