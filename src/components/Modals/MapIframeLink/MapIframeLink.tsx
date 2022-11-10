@@ -11,7 +11,7 @@ import {useException} from "../../../utils/hooks";
 const Textarea = styled(TextField)({
     "& textarea": {
         padding: "8px 11px"
-    }
+    },
 });
 
 type TMapIframeLinkProps = DialogProps & {
@@ -51,11 +51,13 @@ const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open, onSave}) =
             <DialogTitle onClose={onCancel}>Paste iFrame Code with Link to Mapline</DialogTitle>
             <DialogContent>
                 <Textarea
+                    isLowerCase
                     fullWidth
                     multiline
                     error={isError}
                     placeholder="Paste here"
-                    label="iFrame Code Snippet"
+                    label="iFRAME CODE SNIPPET"
+                    style={{textTransform: 'none'}}
                     onChange={handleLinkChange}
                     value={iframeLink}
                     rows={2}
