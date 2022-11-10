@@ -31,7 +31,8 @@ const useStyles = makeStyles({
         textAlign: "center",
         "&> h2": {
             fontSize: 19,
-            fontWeight: "bold"
+            fontWeight: "bold",
+            marginTop: 10,
         }
     },
     dialogContent: {
