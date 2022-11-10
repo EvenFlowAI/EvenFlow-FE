@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {styled} from "@material-ui/core";
 import {ConfirmationTitle} from "../Title";
 import {useSelector} from "react-redux";
@@ -14,7 +14,9 @@ const TitleWrapper = styled('div')({
 
 const Vehicle = () => {
     const {selectedVehicle, valueService} = useSelector((state: RootState) => state.appointmentFrame);
+    const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const {t} = useTranslation();
+    const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineType)), [engineTypes, selectedVehicle])
     return (
         <div>
             <TitleWrapper>
@@ -23,7 +25,7 @@ const Vehicle = () => {
             {valueService?.selectedService ? <>
                 {valueService?.year?.year} <span style={{textTransform: 'uppercase'}}>{valueService?.series?.name}</span> {valueService?.model?.name}
             </> : <>
-                {selectedVehicle?.year} <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model}
+                {selectedVehicle?.year} <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model} {engine?.name ?? ""}
             </>}
         </div>
     );

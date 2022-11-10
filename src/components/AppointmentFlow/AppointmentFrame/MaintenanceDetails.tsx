@@ -99,7 +99,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
+                engineType: selectedVehicle.engineType ?? ""
             }));
+            if (selectedVehicle?.engineType) {
+                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineType))
+                option && setSelectedEngine(option);
+            }
         }
     }, [dispatch, selectedVehicle]);
 
@@ -186,6 +191,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
         setSelectedEngine(option)
+        dispatch(updateVehicle({engineType: selectedEngine?.id.toString() ?? ""}));
         setErrors(e => e.filter(err => err !== "engineType"))
     }
 

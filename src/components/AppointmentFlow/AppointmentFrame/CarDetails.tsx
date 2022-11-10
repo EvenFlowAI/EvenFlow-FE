@@ -110,9 +110,14 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
+                engineType: selectedVehicle.engineType ?? ""
             }));
+            if (selectedVehicle?.engineType) {
+                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineType))
+                option && setSelectedEngine(option);
+            }
         }
-    }, [dispatch, selectedVehicle]);
+    }, [dispatch, selectedVehicle, engineTypes]);
 
     useEffect(() => {
         if (valueService && isBmWService) {
@@ -143,7 +148,6 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
             }
         }
     }, [valueService, makes, isBmWService])
-
 
     useEffect(() => {
         if (currentModels.length) {
@@ -198,6 +202,7 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
 
     const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
         setSelectedEngine(option)
+        dispatch(updateVehicle({engineType: selectedEngine?.id.toString() ?? ""}));
         setErrors(e => e.filter(err => err !== "engineType"))
     }
 
