@@ -295,7 +295,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         }
     }
     return (
-        <BaseModal {...props} width={500} onClose={onCancel}>
+        <BaseModal {...props} width={600} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>{
                 viewMode ? "" : payload ? "Edit" : "Add"
             } Offer</DialogTitle>

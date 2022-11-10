@@ -141,7 +141,7 @@ const RoPredictionParameters = () => {
                     <TableBody>
                         <TableRow>
                             <TableCell align="left">
-                                Heavy Repair Labor Hour
+                                Heavy Repair Labor Hours
                             </TableCell>
                             <TableCell align="left">
                                 The number of incremental hours added to the appointment if the appointment is predicted a Heavy Repair
@@ -164,7 +164,7 @@ const RoPredictionParameters = () => {
                         </TableRow>
                         <TableRow>
                             <TableCell align="left">
-                                Other Repair Labor Hour
+                                Other Repair Labor Hours
                             </TableCell>
                             <TableCell align="left">
                                 The number of incremental hours added to the appointment if the appointment is <span style={{textDecoration: 'underline'}}>not</span> predicted a Heavy Repair
