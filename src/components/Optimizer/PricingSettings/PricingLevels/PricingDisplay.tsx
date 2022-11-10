@@ -76,7 +76,7 @@ const PricingDisplay: React.FC = () => {
         if (selectedSC) {
             e.persist();
             askConfirm({
-                title: `Please confirm you want to change Pricing Display option`,
+                title: `Please confirm you want to change Price Display option`,
                 onConfirm: () => {
                     try {
                         setValue(e.target.value);

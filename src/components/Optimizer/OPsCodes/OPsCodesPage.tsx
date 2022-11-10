@@ -42,7 +42,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         orderId: "duration"
     },
     {
-        header: "Number of technicians",
+        header: "Number of Technicians",
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.countOfTechnicians.toString()}
@@ -51,7 +51,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         orderId: "countOfTechnicians"
     },
     {
-        header: "Skill Level of technicians",
+        header: "Skill Level of Technicians",
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.skillLevelOfTechnicians.toString()}
