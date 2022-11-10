@@ -160,7 +160,7 @@ const DayOfWeekOpsCode = () => {
     const deleteOpsCode = useCallback((item: TOpsCode) => {
         if (selectedSC) {
             askConfirm({
-                title: `Please confirm you want to remove ops code ${item?.opsCode}?`,
+                title: `Please confirm you want to remove Ops Code ${item?.opsCode}?`,
                 isRemove: true,
                 onConfirm: () => {
                     try {

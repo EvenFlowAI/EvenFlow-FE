@@ -87,6 +87,7 @@ type TProps = {
     onDOWSelect: (e: any, value: TEnumMap<EDayOfWeek>[]) => void;
     onSegmentSelect: (e: any, value: TEnumMap<ECustomerSegment>[]) => void;
     onSRChange: (e: any, value: IAssignedServiceRequestShort[]) => void;
+    formIsChecked: boolean;
 }
 export const OfferEditContent: React.FC<TProps> = ({
     form,
@@ -98,6 +99,7 @@ export const OfferEditContent: React.FC<TProps> = ({
     onValueChange,
     onSegmentSelect,
     onSRChange,
+    formIsChecked,
 }) => {
     // const [options, setOptions] = useState<TServiceTypeWithCustom[]>([]);
     const serviceRequests = useSelector((state: RootState) => state.serviceRequests.scRequestsShort);
@@ -134,6 +136,7 @@ export const OfferEditContent: React.FC<TProps> = ({
                 label="Offer title"
                 name="offerTitle"
                 id="offerTitle"
+                error={formIsChecked && !form.offerTitle?.length}
                 onChange={onChange}
                 value={form.offerTitle||""}
             />
@@ -213,7 +216,7 @@ export const OfferEditContent: React.FC<TProps> = ({
                     label="Offer value"
                     onChange={onChange}
                     name="offerValue"
-                    endAdornment={
+                    startAdornment={
                         form.offerType === EOfferType.PercentOff
                             ? "%"
                             : "$"
@@ -221,6 +224,7 @@ export const OfferEditContent: React.FC<TProps> = ({
                     id="offerValue"
                     type="number"
                     inputProps={{min: 0}}
+                    error={formIsChecked && !form.offerValue?.length}
                     value={form.offerValue||""}
                 />
             </div>
@@ -243,7 +247,11 @@ export const OfferEditContent: React.FC<TProps> = ({
                 renderOption={autocompleteOptionsRender((e) => e.code)}
                 loading={false}
                 value={form.serviceRequests}
-                renderInput={autocompleteRender({label: "Service request included", fullWidth: true})}
+                renderInput={autocompleteRender({
+                    label: "Service request included",
+                    fullWidth: true,
+                    error: formIsChecked && !form.serviceRequests.length
+                })}
             />
         </div>
         <div className={classes.inputContainer}>
@@ -262,7 +270,11 @@ export const OfferEditContent: React.FC<TProps> = ({
                 renderOption={autocompleteOptionsRender((e) => e.label)}
                 loading={false}
                 value={form.customerSegments}
-                renderInput={autocompleteRender({label: "Applicable customer segment", fullWidth: true})}
+                renderInput={autocompleteRender({
+                    label: "Applicable customer segment",
+                    fullWidth: true,
+                    error: formIsChecked && !form.customerSegments.length
+                })}
             />
         </div>
         <div className={clsx(classes.inputContainer, classes.rowContainer)}>
@@ -297,7 +309,11 @@ export const OfferEditContent: React.FC<TProps> = ({
                         renderOption={autocompleteOptionsRender((e) => e.label)}
                         loading={false}
                         value={form.dayOfWeek}
-                        renderInput={autocompleteRender({label: "Day of a Week", fullWidth: true})}
+                        renderInput={autocompleteRender({
+                            label: "Day of Week",
+                            fullWidth: true,
+                            error: formIsChecked && !form.dayOfWeek.length
+                        })}
                     />
                 </div>
             </div>
@@ -308,7 +324,8 @@ export const OfferEditContent: React.FC<TProps> = ({
                     fullWidth
                     label={"Time of Day"}
                     InputProps={{
-                        endAdornment: <QueryBuilder color={"disabled"} />
+                        endAdornment: <QueryBuilder color={"disabled"} />,
+                        error: formIsChecked && !form.timeOfDayFrom
                     }}
                     value={form.timeOfDayFrom||null}
                     onChange={onChangeDateTime("timeOfDayFrom")} />
@@ -318,7 +335,8 @@ export const OfferEditContent: React.FC<TProps> = ({
                 <TimePicker
                     fullWidth
                     InputProps={{
-                        endAdornment: <QueryBuilder color={"disabled"} />
+                        endAdornment: <QueryBuilder color={"disabled"} />,
+                        error: formIsChecked && !form.timeOfDayTo
                     }}
                     value={form.timeOfDayTo||null}
                     onChange={onChangeDateTime("timeOfDayTo")} />
@@ -328,11 +346,12 @@ export const OfferEditContent: React.FC<TProps> = ({
             <div className={classes.innerContainer}>
                 <DatePicker
                     fullWidth
-                    label={"Duration"}
+                    label={"Start Date"}
                     disablePast
                     maxDate={form.durationTo || undefined}
                     InputProps={{
-                        endAdornment: <DateRange color={"disabled"} />
+                        endAdornment: <DateRange color={"disabled"} />,
+                        error: formIsChecked && !form.durationFrom
                     }}
                     value={form.durationFrom||null}
                     onChange={onChangeDateTime("durationFrom")} />
@@ -342,9 +361,11 @@ export const OfferEditContent: React.FC<TProps> = ({
                 <DatePicker
                     fullWidth
                     disablePast
+                    label={"End Date"}
                     minDate={form.durationFrom || undefined}
                     InputProps={{
-                        endAdornment: <DateRange color={"disabled"} />
+                        endAdornment: <DateRange color={"disabled"} />,
+                        error: formIsChecked && !form.durationTo
                     }}
                     value={form.durationTo||null}
                     onChange={onChangeDateTime("durationTo")} />

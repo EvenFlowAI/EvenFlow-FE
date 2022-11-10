@@ -172,7 +172,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
                     ...state.personalInformation,
                     fullName: `${payload.firstName} ${payload.lastName}`,
                     email: payload.emails?.length ? payload.emails[0] : state.customerEnteredEmail,
-                    phoneNumber: payload.phoneNumbers?.length ? payload.phoneNumbers[0] : ""
+                    phoneNumber: payload.phoneNumbers?.length ?  payload.phoneNumbers[0] : ""
                 }
             };
             if (payload.vehicles.length === 1) {

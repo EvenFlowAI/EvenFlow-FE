@@ -43,8 +43,6 @@ const Wrapper = styled('div')(({ theme }) => ({
     })
 );
 
-
-
 export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [
         slots,

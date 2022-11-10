@@ -173,7 +173,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
 
     return (
         <BaseModal {...props}>
-            <DialogTitle onClose={handleClose}>Assign Maintenance Package Options Ops Codes</DialogTitle>
+            <DialogTitle onClose={handleClose}>ASSIGN OPS CODES TO MAINTENANCE PACKAGE OPTIONS</DialogTitle>
             <div className={classes.subTitle}>{packageName}</div>
             <DialogContent>
                 <div className={classes.wrapper}>

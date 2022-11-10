@@ -284,7 +284,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const askRemove = () => {
         askConfirm({
             isRemove: true,
-            title: `Remove ${packageData?.name} from Packages List?`,
+            title: `Please confirm you want to remove Maintenance Package ${packageData?.name}`,
             onConfirm: handleRemove
         });
     }
@@ -385,7 +385,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={onDescriptionOpen}>
-                                To Describe OPS Codes
+                                To Describe Ops Codes
                             </Button>
                         </>
                         : null

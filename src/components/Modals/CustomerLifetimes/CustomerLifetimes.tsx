@@ -67,25 +67,35 @@ export const CustomerLifetimes: React.FC<DialogProps<ICustomerLifetime>> = ({pay
         setForm({...form, [name]: e.target.value});
     }
 
+    const checkIsValid = () => {
+        if (Number(form.from) > Number(form.to)) {
+            showError('"From" must be less than or equal to "To"')
+            return false;
+        }
+        return true;
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            setSaving(true)
-            const data: ICustomerLifetimeForm = {
-                from: Number(form.from),
-                to: Number(form.to),
-                serviceCenterId: selectedSC.id,
-                podId: selectedPod?.id
-            }
-            try {
-                await dispatch(setCustomerLifetimes(data))
-                showMessage("Customer Lifetime Value Range updated");
-                setSaving(false);
-                props.onClose();
-            } catch (e) {
-                setSaving(false);
-                showError(e);
+            if (checkIsValid()) {
+                setSaving(true)
+                const data: ICustomerLifetimeForm = {
+                    from: Number(form.from),
+                    to: Number(form.to),
+                    serviceCenterId: selectedSC.id,
+                    podId: selectedPod?.id
+                }
+                try {
+                    await dispatch(setCustomerLifetimes(data))
+                    showMessage("Customer Lifetime Value Range updated");
+                    setSaving(false);
+                    props.onClose();
+                } catch (e) {
+                    setSaving(false);
+                    showError(e);
+                }
             }
         }
     }

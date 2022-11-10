@@ -39,11 +39,13 @@ const clearForm: TOfferForm = {
     timeOfDayTo: moment("23:59:59", "hh:mm:ss"),
     isProductPageOn: false,
 }
+
 export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAction, archive, payload, ...props}) => {
     const [form, setForm] = useState<TOfferForm>(clearForm);
     const [archiving, setArchiving] = useState<boolean>(false);
     const [viewMode, setViewMode] = useState<boolean>(false);
     const [isSaving, setSaving] = useState<boolean>(false);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const showMessage = useMessage();
     const showError = useException();
@@ -98,9 +100,11 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
     }, [dispatch, selectedSC]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
+        setFormIsChecked(false);
         setForm({...form, [name]: value})
     }
     const handleRadio = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
+        setFormIsChecked(false);
         const nForm = {...form, offerType: Number(value) as EOfferType};
         if (nForm.offerType === EOfferType.FreeService) {
             nForm.offerValue = undefined;
@@ -125,6 +129,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
     }
 
     const handleSegmentsSelect = (e: any, value: TEnumMap<ECustomerSegment>[]) => {
+        setFormIsChecked(false);
         if (form.customerSegments.find(d => d.id === ECustomerSegment.All && value.length > 1)) {
             setForm({...form, customerSegments: value.filter(s => s.id !== ECustomerSegment.All)});
         } else if (value.find(s => s.id === ECustomerSegment.All)) {
@@ -134,6 +139,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         }
     }
     const handleDOWSelect = (e: any, value: TEnumMap<EDayOfWeek>[]) => {
+        setFormIsChecked(false);
         if (form.dayOfWeek.find(d => d.id === EDayOfWeek.EveryDay) && value.length > 1) {
             setForm({...form, dayOfWeek: value.filter(e => e.id !== EDayOfWeek.EveryDay)});
         } else if (value.find(d => d.id === EDayOfWeek.EveryDay)) {
@@ -143,6 +149,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         }
     }
     const handleChangeDateTime = (name: keyof TOfferForm) => (date: MaterialUiPickersDate) => {
+        setFormIsChecked(false);
         setForm({...form, [name]: date});
     }
 
@@ -151,7 +158,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
     }
 
     const askRemove = () => askConfirm({
-        title: `Please confirm you want to remove offer ${payload?.title}?`,
+        title: `Please confirm you want to remove Offer ${payload?.title}?`,
         isRemove: true,
         onConfirm: async () => {
             await handleRemove();
@@ -163,7 +170,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
         } else {
             try {
                 await dispatch(removeOffer(payload, archive));
-                showMessage(`Offer ${payload?.title} removed`);
+                showMessage(`Offer removed`);
                 props.onClose();
             } catch (e) {
                 showError(e);
@@ -172,6 +179,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
     }
 
     const handleSRChange = (e: any, value: IAssignedServiceRequestShort[]) => {
+        setFormIsChecked(false);
         if (form.serviceRequests.find(sr => sr.id === 0) && value.length > 1) {
             setForm({...form, serviceRequests: value.filter(e => e.id !== 0)});
         } else if (value.find(sr => sr.id === 0)) {
@@ -182,67 +190,119 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
     }
 
     const handleSelect = ({target: {name, value}}: React.ChangeEvent<{name?: string, value: unknown}>) => {
+        setFormIsChecked(false);
         if (name) {
             setForm({...form, [name]: value});
         }
     }
 
     const handleValueChange = (name: keyof TOfferForm, value: unknown) => {
+        setFormIsChecked(false);
         setForm({...form, [name]: value});
+    }
+
+    const checkIsValid = () => {
+        let valid = true;
+        if (!form.offerTitle?.length) {
+            valid = false;
+            showError('"Offer Title" must not be empty')
+        }
+        if (!form.offerValue?.length) {
+            valid = false;
+            showError('"Offer Value" must be greater than "0"')
+        }
+        if (!form.customerSegments.length) {
+            valid = false;
+            showError('"Customer Segment" must not be empty')
+        }
+        if (!form.serviceRequests.length) {
+            valid = false;
+            showError('"Service Request" must not be empty')
+        }
+        if (!form.dayOfWeek.length) {
+            valid = false;
+            showError('"Day of Week" must not be empty')
+        }
+        if (!form.durationFrom) {
+            valid = false;
+            showError('"Start Date" must not be empty')
+        }
+        if (!form.durationTo) {
+            valid = false;
+            showError('"End Date" must not be empty')
+        }
+        if (!form.timeOfDayFrom) {
+            valid = false;
+            showError('"Start Time" must not be empty')
+        }
+        if (!form.timeOfDayTo) {
+            valid = false;
+            showError('"End Time" must not be empty')
+        }
+        return valid;
+    }
+
+    const onCancel = () => {
+        setFormIsChecked(false);
+        props.onClose();
     }
 
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            setSaving(true);
-            try {
-                const data: IOfferForm = {
-                    id: payload?.id,
-                    title: form.offerTitle || "",
-                    value: Number(form.offerValue),
-                    serviceCenterId: selectedSC.id,
-                    type: form.offerType,
-                    customerPresence: form.customerPresence,
-                    customerSegments: form.customerSegments.map(s => s.id),
-                    dayOfWeeks: form.dayOfWeek.map(d => d.id),
-                    duration: {
-                        start: form.durationFrom?.toISOString(),
-                        end: form.durationTo?.toISOString()
-                    },
-                    timeOfDay: {
-                        start: form.timeOfDayFrom?.format(timeSpanString),
-                        end: form.timeOfDayTo?.format(timeSpanString),
-                    },
-                    isAllServiceRequestsIncluded: Boolean(
-                        form.serviceRequests.find(sr => sr.id === 0)
-                    ),
-                    serviceRequests: Boolean(form.serviceRequests.find(sr => sr.id === 0))
-                        ? null : form.serviceRequests.map(s => s.id),
-                    serviceType: form.serviceType ? {name: form.serviceType} : undefined
-                };
-                if (payload) {
-                    await dispatch(updateOffer(data, archive));
-                } else {
-                    await dispatch(createOffer(data));
+            setFormIsChecked(true);
+            if (checkIsValid()) {
+                setSaving(true);
+                try {
+                    const data: IOfferForm = {
+                        id: payload?.id,
+                        title: form.offerTitle || "",
+                        value: Number(form.offerValue),
+                        serviceCenterId: selectedSC.id,
+                        type: form.offerType,
+                        customerPresence: form.customerPresence,
+                        customerSegments: form.customerSegments.map(s => s.id),
+                        dayOfWeeks: form.dayOfWeek.map(d => d.id),
+                        duration: {
+                            start: form.durationFrom?.toISOString(),
+                            end: form.durationTo?.toISOString()
+                        },
+                        timeOfDay: {
+                            start: form.timeOfDayFrom?.format(timeSpanString),
+                            end: form.timeOfDayTo?.format(timeSpanString),
+                        },
+                        isAllServiceRequestsIncluded: Boolean(
+                            form.serviceRequests.find(sr => sr.id === 0)
+                        ),
+                        serviceRequests: Boolean(form.serviceRequests.find(sr => sr.id === 0))
+                            ? null : form.serviceRequests.map(s => s.id),
+                        serviceType: form.serviceType ? {name: form.serviceType} : undefined
+                    };
+                    if (payload) {
+                        await dispatch(updateOffer(data, archive));
+                    } else {
+                        await dispatch(createOffer(data));
+                    }
+                    showMessage(`Offer ${payload ? "updated" : "created"}`);
+                    setSaving(false);
+                    onCancel()
+                } catch (e) {
+                    setSaving(false);
+                    showError(e);
                 }
-                showMessage("Saved");
-                setSaving(false);
-                props.onClose();
-            } catch (e) {
-                setSaving(false);
-                showError(e);
             }
         }
     }
     return (
-        <BaseModal {...props} width={500}>
-            <DialogTitle onClose={props.onClose}>{
-                viewMode ? "" : payload ? "Edit" : "Add new"
+        <BaseModal {...props} width={600} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>{
+                viewMode ? "" : payload ? "Edit" : "Add"
             } Offer</DialogTitle>
             {(viewMode && payload)
                 ? <ViewOfferContent offer={payload} archiving={archiving} onArchive={handleArchive} />
                 : <OfferEditContent
+                    formIsChecked={formIsChecked}
                     form={form}
                     onValueChange={handleValueChange}
                     onChange={handleChange}
@@ -254,7 +314,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     onSRChange={handleSRChange}
                 />}
             <DialogActions>
-                <Button onClick={props.onClose}>Cancel</Button>
+                <Button onClick={onCancel}>Cancel</Button>
                 {viewMode ?
                     <>
                         <Button onClick={askRemove} color="secondary" variant="outlined">Delete</Button>

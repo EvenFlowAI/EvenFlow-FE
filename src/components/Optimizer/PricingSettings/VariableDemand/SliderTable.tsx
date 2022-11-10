@@ -117,7 +117,7 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
         if (val <= -4 || val >= 4) {
             await askConfirm({
                 isRemove: true,
-                title: "Are you sure you want to save this value?",
+                title: "Please confirm you want to save this value",
                 onConfirm: () => handleSave(t),
                 onCancel: handleEdit(null),
                 confirmContent: "Confirm"
@@ -139,7 +139,7 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
                     type
                 }));
                 setEdit(null);
-                showMessage("Saved");
+                showMessage("Pricing Settings updated");
             } catch (e) {
                 showError(e);
             }

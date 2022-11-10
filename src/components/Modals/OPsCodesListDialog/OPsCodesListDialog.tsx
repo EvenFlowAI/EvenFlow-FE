@@ -18,7 +18,7 @@ import {SearchInput} from "../../UI/SearchInput";
 import {IOrder} from "../../../types/types";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
-    {header: "OPs code", val: el => el.code, orderId: "code"},
+    {header: "Ops Code", val: el => el.code, orderId: "code"},
     {header: "Description", val: el => el.description, orderId: "description"},
     {header: "Duration", val: el => el.durationInHours.toFixed(1), orderId: "duration"},
     {header: "Regular Invoice", val: el => `$${el.invoiceAmount}`, orderId: "invoiceAmount"}
@@ -154,7 +154,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
                 color="primary"
                 variant="contained"
             >
-                Add OPs Codes
+                Add Ops Codes
             </LoadingButton>
         </DialogActions>
     </BaseModal>

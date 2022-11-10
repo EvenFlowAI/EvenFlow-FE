@@ -98,7 +98,7 @@ const AncillaryPrice = () => {
     }
 
     const onSuccess = () => {
-        showMessage('Distance Range created')
+        showMessage('New Distance Range created')
     }
 
     const onError = (err:string) => {
@@ -144,7 +144,7 @@ const AncillaryPrice = () => {
         e.persist();
         if (selectedSC) {
             askConfirm({
-                title: `Are you sure you want to change the mobile service price setting?`,
+                title: `Please confirm you want to change the Mobile Service pricing setting`,
                 onConfirm: () => {
                     try {
                         const value = e.target?.value === "byZone" ? EAncillaryPriceType.Zone : EAncillaryPriceType.Distance;
