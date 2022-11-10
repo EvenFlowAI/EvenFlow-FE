@@ -9,15 +9,17 @@ export type TextInputProps = {
     label?: string,
     hideLabel?: boolean,
     spacing?: 'normal' | 'none' | undefined,
-    params?: AutocompleteRenderInputParams
+    params?: AutocompleteRenderInputParams,
+    isLowerCase?: boolean,
 } & InputBaseProps;
 
 type TStyleProps = {
     visible: boolean;
+    lowerCase?: boolean;
 }
 const useStyles = makeStyles(theme => ({
-    label: ({visible}: TStyleProps) =>  ({
-        textTransform: "uppercase",
+    label: ({visible, lowerCase}: TStyleProps) =>  ({
+        textTransform: lowerCase ? "none" : "uppercase",
         marginBottom: theme.spacing(.5),
         fontWeight: theme.typography.fontWeightBold,
         color: theme.palette.text.primary,
@@ -26,8 +28,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const TextField = forwardRef<unknown, TextInputProps>(
-    ({label, params, hideLabel, spacing, ...props}, ref) => {
-    const classes = useStyles({visible: !hideLabel});
+    ({label, params, hideLabel, spacing, isLowerCase, ...props}, ref) => {
+    const classes = useStyles({visible: !hideLabel, lowerCase: isLowerCase});
     const {InputProps={}, InputLabelProps={}, ...p} = params || {};
 
     return <>

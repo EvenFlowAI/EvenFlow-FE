@@ -28,7 +28,7 @@ import {SC_UNDEFINED} from "../../../../config/constants";
 import {DeleteOutline} from "@material-ui/icons";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
-    {header: "Service OPs Code", val: el => el.code},
+    {header: "Service Ops Code", val: el => el.code},
     {header: "Description", val: el => el.description}
 ];
 
@@ -62,7 +62,7 @@ export const UrgentRequests = () => {
         if (selectedSC) {
             askConfirm({
                 isRemove: true,
-                title: `Remove ${el.code} from prioritized list?`,
+                title: `Please confirm you want to remove Ops Code ${el.code}`,
                 onConfirm: handleRemove(el)
             });
         }

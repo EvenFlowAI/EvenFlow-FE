@@ -71,7 +71,7 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
     const onCancel = () => props.onClose();
 
     const onSuccess = () => {
-        showMessage(`ZIP code ${zip?.code} was reassigned to the zone ${selectedZone?.name}`)
+        showMessage(`Zip code ${zip?.code} was reassigned to the zone ${selectedZone?.name}`)
         props.onClose();
     }
 

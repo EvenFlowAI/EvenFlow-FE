@@ -155,7 +155,7 @@ export const CreateOPsCode: React.FC<DialogProps<ISRAdmin>> = ({onAction, payloa
                 <Grid item xs={12}>
                     <ToggleButtons
                         value={form.skillLevelOfTechnicians}
-                        label="Technician level"
+                        label="Technician Level"
                         buttons={[
                             {id: "1", label: "1", value: 1},
                             {id: "2", label: "2", value: 2},

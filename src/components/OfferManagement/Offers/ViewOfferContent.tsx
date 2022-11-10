@@ -75,7 +75,7 @@ export const ViewOfferContent: React.FC<{
                     <TextField
                         fullWidth
                         disabled
-                        label="Applicable Customer"
+                        label="Applicable Customer Segment"
                         value={offer.customerSegments.map(s => customerSegmentsMap[s]).join(", ")}
                     />
                 </Grid>
@@ -83,7 +83,7 @@ export const ViewOfferContent: React.FC<{
                     <TextField
                         fullWidth
                         disabled
-                        label="Duration"
+                        label="Start Date - End Date"
                         value={
                             `${moment(
                                 offer.duration.start

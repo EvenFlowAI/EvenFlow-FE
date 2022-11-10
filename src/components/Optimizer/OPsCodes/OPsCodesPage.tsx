@@ -42,7 +42,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         orderId: "duration"
     },
     {
-        header: "Number of technicians",
+        header: "Number of Technicians",
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.countOfTechnicians.toString()}
@@ -51,7 +51,7 @@ const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
         orderId: "countOfTechnicians"
     },
     {
-        header: "Skill Level of technicians",
+        header: "Skill Level of Technicians",
         align: "center",
         val: el => <CellData
             data={el.serviceRequest.skillLevelOfTechnicians.toString()}
@@ -181,7 +181,7 @@ export const OPsCodesPage = () => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Remove ${editedItem?.serviceRequest.code} from selected?`,
+            title: `Please confirm you want to remove Ops Code ${editedItem?.serviceRequest.code}`,
             onConfirm: handleRemove
         });
     }
@@ -192,7 +192,7 @@ export const OPsCodesPage = () => {
                     Api.endpoints.ServiceRequests.RemoveOverride,
                     {urlParams: {id: editedItem.id}}
                 ).then(res => {
-                    if (res) showMessage("Service request removed.")
+                    if (res) showMessage("Service Request removed.")
                 })
                 setEditedItem(undefined);
                 dispatch(loadAssignedServiceRequests(selectedSC.id));
@@ -204,7 +204,7 @@ export const OPsCodesPage = () => {
         }
     }
     const onSuccessAssign = useCallback((selectedCodes: number[]) => {
-        showMessage(`Codes ${selectedCodes.length} added`)
+        showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Ops Codes' : 'Ops Code'} added`)
     }, [])
 
     const onRequestAssign = useCallback((selectedCodes: number[], serviceCenterId: number) => {
@@ -227,7 +227,7 @@ export const OPsCodesPage = () => {
                     variant="contained"
                     onClick={handleAddOpsCode}
                 >
-                    Add Ops Code
+                    Add Ops Codes
                 </Button>
             </div>}
         />

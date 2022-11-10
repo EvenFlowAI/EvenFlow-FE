@@ -60,8 +60,8 @@ const data = {
         closedDate: "01/06/22",
         serviceAdvisor: "MICHAEL FREENQIA",
         tagNumber: "195",
-        rate: "25 USD",
-        payment: "25 USD",
+        rate: "25",
+        payment: "25",
     },
     servicesCompleted: [
         {
@@ -293,11 +293,11 @@ const VehicleData = () => {
             </Grid>
             <Grid item xs={6}>
                 <p className={classes.label}>{t("Rate")}:</p>
-                <p className={classes.data}>{data.repairOrder.rate}</p>
+                <p className={classes.data}>{Number(data.repairOrder.rate).toFixed(2)} USD</p>
             </Grid>
             <Grid item xs={6}>
                 <p className={classes.label}>{t("Closed Rate")}:</p>
-                <p className={classes.data}>{data.repairOrder.payment}</p>
+                <p className={classes.data}>{Number(data.repairOrder.payment).toFixed(2)} USD</p>
             </Grid>
         </Grid>
     </Grid>
@@ -346,22 +346,22 @@ const RepairTable = () => {
                     return <TableRow key={i.toString()}>
                         <TableCell key="index" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>{indexes[i]}</TableCell>
                         <TableCell key={service.name} className={lastRow ? classes.lastRowCell : classes.cell}>{service.name}</TableCell>
-                        <TableCell key="parts" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.parts}</TableCell>
-                        <TableCell key="labor" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.labor}</TableCell>
-                        <TableCell key="total" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.total}</TableCell>
+                        <TableCell key="parts" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.parts.toFixed(2)}</TableCell>
+                        <TableCell key="labor" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.labor.toFixed(2)}</TableCell>
+                        <TableCell key="total" align="center" className={lastRow ? classes.lastRowCell : classes.cell}>${service.total.toFixed(2)}</TableCell>
                     </TableRow>
                 })}
                 <TableRow className={classes.totalRow}>
                     <TableCell key="totalName" className={classes.totalCell}>Total</TableCell>
                     <TableCell key="totalEmpty" className={classes.totalCell}/>
                     <TableCell key="totalParts" className={classes.totalCell} align="center">
-                        ${data.servicesCompleted.reduce((a, v) => a + v.parts, 0)}
+                        ${data.servicesCompleted.reduce((a, v) => a + v.parts, 0).toFixed(2)}
                     </TableCell>
                     <TableCell key="totalLabor" className={classes.totalCell} align="center">
-                        ${data.servicesCompleted.reduce((a, v) => a + v.labor, 0)}
+                        ${data.servicesCompleted.reduce((a, v) => a + v.labor, 0).toFixed(2)}
                     </TableCell>
                     <TableCell key="total" className={classes.totalCell} align="center">
-                        ${data.servicesCompleted.reduce((a, v) => a + v.total, 0)}
+                        ${data.servicesCompleted.reduce((a, v) => a + v.total, 0).toFixed(2)}
                     </TableCell>
                 </TableRow>
             </TableBody>
@@ -386,37 +386,37 @@ const DetailedPayments = () => {
     return <Grid item xs={12} sm={6} container style={{marginTop: -12}}>
         <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
             <Grid item xs={8} className={classes.greyDetails}>{t("Sublet Amount")}</Grid>
-            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.subletAmount}</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.subletAmount.toFixed(2)}</Grid>
         </Grid>
         <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
             <Grid item xs={8}  className={classes.greyDetails}>{t("Shop Supplies")}</Grid>
-            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.shopSupplies}</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.shopSupplies.toFixed(2)}</Grid>
         </Grid>
         <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
             <Grid item xs={8} className={classes.greyDetails}>{t("Hazardous Materials")}</Grid>
-            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.hazardousMaterailes}</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.hazardousMaterailes.toFixed(2)}</Grid>
         </Grid>
         <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
             <Grid item xs={8} className={classes.greyDetails}>{t("Total Charges")}</Grid>
-            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.totalCharges}</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.totalCharges.toFixed(2)}</Grid>
         </Grid>
         <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
             <Grid item xs={8} className={classes.greyDetails}>{t("Less Adjustments")}</Grid>
-            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.lessAdjustments}</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.lessAdjustments.toFixed(2)}</Grid>
         </Grid>
         <Grid item xs={12} justify="space-between" container className={classes.detailsRow}>
             <Grid item xs={8} className={classes.greyDetails}>{t("Sales Tax")}</Grid>
-            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.salesTax}</Grid>
+            <Grid item xs={4} justify="flex-end" container>${data.priceWithTaxes.salesTax.toFixed(2)}</Grid>
         </Grid>
         <Grid item xs={12} justify="space-between" container>
             <Grid item xs={8} className={classes.totalDue}>{t("Total Due")}</Grid>
             <Grid item xs={4} justify="flex-end" container className={classes.totalDue}>${
-                data.priceWithTaxes.subletAmount +
+                (data.priceWithTaxes.subletAmount +
                 data.priceWithTaxes.shopSupplies +
                 data.priceWithTaxes.hazardousMaterailes +
                 data.priceWithTaxes.lessAdjustments +
                 data.priceWithTaxes.salesTax +
-                data.priceWithTaxes.totalCharges
+                data.priceWithTaxes.totalCharges).toFixed(2)
             }</Grid>
         </Grid>
     </Grid>

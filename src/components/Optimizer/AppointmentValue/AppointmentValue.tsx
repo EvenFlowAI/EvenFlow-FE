@@ -31,10 +31,10 @@ type Tab = {
 }
 
 const tabs: Tab[] = [
-    {label: "Values indicators", id: "0", component: ValueIndicators},
+    {label: "Value Indicators", id: "0", component: ValueIndicators},
     {label: "Customer Lifetime Rules", id: "1", component: CustomerLifetimeRules},
     {label: "Urgent Requests", id: "2", component: UrgentRequests},
-    {label: "New/Lost customer", id: "3", component: NewLostCustomer},
+    {label: "New/Lost Customer", id: "3", component: NewLostCustomer},
     {label: "End of Warranty", id: "4", component: EndOfWarranty},
 ]
 

@@ -36,7 +36,7 @@ const Disclaimer: React.FC<TDisclaimerProps> = ({setDisclaimerOpen}) => {
         setLoading(true);
         if (selectedSC && disclaimer?.length) {
             try {
-                dispatch(updatePackageDisclaimer(selectedSC.id, disclaimer, () => showMessage('Disclaimer has been updated')))
+                dispatch(updatePackageDisclaimer(selectedSC.id, disclaimer, () => showMessage('Disclaimer updated')))
             } catch (e) {
                 showError(e)
             }

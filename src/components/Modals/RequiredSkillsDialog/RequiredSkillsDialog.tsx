@@ -83,7 +83,7 @@ export const RequiredSkillsDialog: React.FC<DialogProps<IAssignedServiceRequest>
             />
             <FormGroup>
                 <FormControlLabel
-                    label="Technician level 1"
+                    label="Technician Level 1"
                     labelPlacement="end"
                     control={<Checkbox
                         color="primary"
@@ -93,7 +93,7 @@ export const RequiredSkillsDialog: React.FC<DialogProps<IAssignedServiceRequest>
                     />}
                 />
                 <FormControlLabel
-                    label="Technician level 2"
+                    label="Technician Level 2"
                     labelPlacement="end"
                     control={<Checkbox
                         color="primary"
@@ -103,7 +103,7 @@ export const RequiredSkillsDialog: React.FC<DialogProps<IAssignedServiceRequest>
                     />}
                 />
                 <FormControlLabel
-                    label="Technician level 3"
+                    label="Technician Level 3"
                     labelPlacement="end"
                     control={<Checkbox
                         color="primary"

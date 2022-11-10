@@ -60,8 +60,8 @@ type TRow = {
 }
 
 const rows: TRow[] = [
-    {id: Indicators.NewCustomer, title: "New customer", tab: "3"},
-    {id: Indicators.LostCustomer, title: "Lost customer", tab: "3"},
+    {id: Indicators.NewCustomer, title: "New Customer", tab: "3"},
+    {id: Indicators.LostCustomer, title: "Lost Customer", tab: "3"},
     {id: Indicators.UrgencyFlag, title: "Urgency Flag", tab: "2"},
     {id: Indicators.EndOfWarranty, title: "End of Warranty", tab: "4"},
     {id: Indicators.CustomerLifetimeLow, title: "Customer Lifetime: Low", tab: "1"},

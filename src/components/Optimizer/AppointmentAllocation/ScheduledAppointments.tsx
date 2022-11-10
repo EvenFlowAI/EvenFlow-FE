@@ -19,7 +19,7 @@ export const ScheduledAppointments = () => {
         <TableContainer><DemandSegments/></TableContainer>
         <div style={{padding: 10}} />
         <Caption title={<>
-            <span>You can change the number of demand segments on </span>
+            <span>You can change the number of Demand Segments on </span>
             <TextLink
                 to={Routes.Optimizer.OptimizationWindows}>
                 Optimization Windows

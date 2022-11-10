@@ -139,7 +139,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
         if (editedItem) {
             const updated = distanceData.find(el => el.id === editedItem.id);
             if (updated && (updated.minValue > updated.maxValue)) {
-                showError('The Max Value of the Distance Range can not be LESS than its Min Value');
+                showError('"Min Value" must to be less than or equal to "Max Value"');
                 return false;
             }
         }
@@ -187,7 +187,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                     let newValue = Number(value);
                     if (nextItem && fieldName === 'maxValue') {
                         if (newValue > nextItem.maxValue) {
-                            showError('The Max Value of the Distance Range can not be GREATER than the Max Value of the next Distance Range');
+                            showError('"Max Value" of the Distance Range must be less than or equal to "Max Value" of the next Distance Range');
                             return prev;
                         }
                         nextUpdated = {...nextItem};
@@ -249,7 +249,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                 </HeaderTableCell>
                                 <HeaderTableCell align="left" size="small">
                                     <div className="distanceCell">
-                                        Cost Per Mile, $
+                                        Cost Per Mile ($)
                                     </div>
                                 </HeaderTableCell>
                                 <HeaderTableCell align="left" size="small" width={450}>

@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogActions, DialogContent} from "../BaseModal";
 import {Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {makeStyles} from "@material-ui/core/styles";
@@ -56,7 +56,7 @@ const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType
     const showError = useException();
     const showMessage = useMessage();
 
-    const onSuccess = () => showMessage(`Zone ${zone?.name} was removed`)
+    const onSuccess = () => showMessage(`Zone removed`)
     const onError = (err: string) => showError(err)
 
     const onCancel = () => props.onClose();
@@ -74,9 +74,8 @@ const RemoveGeographicZone: React.FC<TRemoveGeographicZoneProps> = ({serviceType
     }
 
     return  <BaseModal {...props} width={540} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Remove Zone</DialogTitle>
         <DialogContent>
-            <div className={classes.text}>Please confirm you want to remove selected zone from the list</div>
+            <div className={classes.text}>Please confirm you want to remove Zone {zone?.name ?? ''}</div>
         </DialogContent>
         <Divider style={{ margin: 0 }}/>
         <DialogActions>

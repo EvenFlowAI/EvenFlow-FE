@@ -92,7 +92,7 @@ export const PricingOptimization = () => {
             </Box>
             <Box p={2} mt={1.5} width={300}>
                 <Label style={{color: "#252733"}} htmlFor="timeOfYear">
-                    Select time of a year
+                    Select time of year
                 </Label>
                 <Autocomplete
                     id="timeOfYear"
@@ -114,7 +114,7 @@ export const PricingOptimization = () => {
             </Box>
         </Box>
         <Box mt={2} ml={2}>
-            <PaperTitle noPadding>time of a day</PaperTitle>
+            <PaperTitle noPadding>time of day</PaperTitle>
         </Box>
         <TableContainer>
             <TableWrapper>
