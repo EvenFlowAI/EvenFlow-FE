@@ -83,7 +83,7 @@ export const Employees = () => {
     const deleteEmployee = () => {
         setAnchorEl(null);
         if (editedItem?.role === 'Owner') {
-            showError("You can not remove dealership account");
+            showError("You cannot remove dealership account");
         } else {
             askConfirm({
                 isRemove: true,

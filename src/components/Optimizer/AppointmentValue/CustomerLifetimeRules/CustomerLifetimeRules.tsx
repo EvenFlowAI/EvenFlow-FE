@@ -55,7 +55,7 @@ export const CustomerLifetimeRules = () => {
                 </TableRow>
             </TableBody>
         </AppointmentTable>
-        <Caption title={"You can only edit Medium value and have Low and High automatically adjust"} />
+        <Caption title={"Medium Value can be edited (Low and High Value will automatically adjust)"} />
         <CustomerLifetimes payload={data} open={isOpen} onClose={onClose} />
     </div>
 }

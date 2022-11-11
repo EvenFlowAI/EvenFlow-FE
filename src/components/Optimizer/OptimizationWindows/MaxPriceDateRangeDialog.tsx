@@ -32,7 +32,7 @@ export const MaxPriceDateRangeDialog: React.FC<DialogProps> = ({payload, onActio
             try {
                 setSaving(true)
                 await dispatch(updateMaxPriceDateRange(selectedSC.id, val))
-                showMessage('Max Price Date Range Updated')
+                showMessage('Max Price Date Range updated')
                 props.onClose();
             } catch (e) {
                 showError(e)

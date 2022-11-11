@@ -82,8 +82,8 @@ const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<
             justifyContent: 'flex-end',
             [theme.breakpoints.down("sm")]: {
                 position: 'absolute',
-                top: 10,
-                right: 10,
+                top: 5,
+                right: 5,
             }
         },
         [theme.breakpoints.down('sm')]: {
@@ -136,6 +136,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         selected={selected}
         active={active}>
         {card.description ? <HtmlTooltip
+            enterTouchDelay={0}
             placement="right-end"
             title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
         >

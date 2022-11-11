@@ -13,7 +13,6 @@ import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {timeSpanString} from "../../../config/constants";
 
-
 const useStyles = makeStyles(theme => ({
     row: {
         marginBottom: 16
@@ -172,8 +171,6 @@ export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...
                     setSaving(false);
                 }
             }
-        } else {
-            showError('"Hours of Operation" must not be empty')
         }
     }
 

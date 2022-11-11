@@ -72,25 +72,33 @@ export const EditDemandSegments:React.FC<DialogProps<IOptimizationSetting[]>> = 
         setForm(f);
     }
 
+    const checkIsValid = (): boolean => {
+        const notValidItem = form.find(item => item.from > item.to)
+        if (notValidItem) showError('"From" must be less than or equal to "To"')
+        return !Boolean(notValidItem);
+    }
+
     const handleSave = async() => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            setSaving(true);
-            try {
-                const data: IOptimizationSettingsCreateForm = {
-                    serviceCenterId: selectedSC.id,
-                    podId: selectedPod?.id,
-                    items: [...form],
-                };
-                await dispatch(setOptimizationSettings(data));
+            if (checkIsValid()) {
+                setSaving(true);
+                try {
+                    const data: IOptimizationSettingsCreateForm = {
+                        serviceCenterId: selectedSC.id,
+                        podId: selectedPod?.id,
+                        items: [...form],
+                    };
+                    await dispatch(setOptimizationSettings(data));
 
-                setSaving(false);
-                showMessage("Saved");
-                props.onClose();
-            } catch (e) {
-                setSaving(false);
-                showError(e);
+                    setSaving(false);
+                    showMessage("Saved");
+                    props.onClose();
+                } catch (e) {
+                    setSaving(false);
+                    showError(e);
+                }
             }
         }
     }

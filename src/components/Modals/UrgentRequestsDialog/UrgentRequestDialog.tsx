@@ -18,7 +18,7 @@ import {SC_UNDEFINED} from "../../../config/constants";
 
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
-    {header: "Service OPs Code", val: el => el.code},
+    {header: "Service Ops Code", val: el => el.code},
     {header: "Description", val: el => el.description}
 ];
 

@@ -64,7 +64,7 @@ export const ActiveOffers = () => {
                     onClick={handleNewOffer}
                     variant="outlined"
                     color="primary"
-                >Add New Offer</Button>
+                >Add Offer</Button>
                 <Button
                     onClick={onOfferOpen}
                     style={{marginLeft: 12}}

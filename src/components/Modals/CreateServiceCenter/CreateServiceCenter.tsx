@@ -62,7 +62,7 @@ export const CreateServiceCenter:
             [
                 {id: "scName", label: "Service center name", value: v => v.scName, required: true},
                 {id: "scEmail", label: "Service center email", inputType: "email", value: v => v.scEmail, required: true},
-                {id: "scPhoneNumber", label: "Service center phone number", value: v => v.scPhoneNumber, required: true},
+                {id: "scPhoneNumber", label: "Service center phone number",  inputType: "number", value: v => v.scPhoneNumber, required: true},
                 {id: "cpEmail", label: "Contact person email", inputType: "email", value: v => v.cpEmail, required: true}
             ],
             [
@@ -119,23 +119,21 @@ export const CreateServiceCenter:
             if (!formState.cpEmail.length) {
                 err = [...err, '"Contact Person Email" must not be empty'];
             } else {
-                if (!checkEmail(formState.scEmail)) err = [...err, '"Contact Person Email" is not valid'];
+                if (!checkEmail(formState.cpEmail)) err = [...err, '"Contact Person Email" is not valid'];
             }
             if (!formState.zipCode.length) err = [...err, '"Zip Code" must not be empty'];
             if (!formState.timeZoneId) err = [...err, '"Time Zone" must not be empty']
-            if (!formState.scPhoneNumber.length) err = [...err, '"Service Center Phone Number" must not be empty'];
+            if (!formState.scPhoneNumber.length) {
+                err = [...err, '"Service Center Phone Number" must not be empty'];
+            } else {
+                if (formState.scPhoneNumber.length < 11) err = [...err, '"Service Center Phone Number" is not valid'];
+            }
             if (!formState.state.length) err = [...err, '"State" must not be empty'];
             if (!formState.city.length) err = [...err, '"City" must not be empty'];
             if (!formState.scName) err = [...err, '"Service Center Name" must not be empty'];
+
             err.map(err => showError(err))
-            return !!formState.scPhoneNumber.length
-                && !!formState.zipCode.length
-                && !!formState.timeZoneId
-                && !!formState.scEmail.length
-                && !!formState.cpEmail.length
-                && !!formState.state.length
-                && !!formState.city.length
-                && !!formState.scName.length;
+            return !Boolean(err.length)
         }
 
         const handleCreate = async () => {

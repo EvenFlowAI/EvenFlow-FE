@@ -96,7 +96,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
 
     return (
         <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Describe Maintenance Package's OPS Codes</DialogTitle>
+            <DialogTitle onClose={onCancel}>Describe Maintenance Package's Ops Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent>
@@ -141,7 +141,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell className={classes.headerCell} key="1">
-                                        Order
+                                        Order Index
                                     </TableCell>
                                     <TableCell className={classes.headerCell} key="2">
                                         Included in Package

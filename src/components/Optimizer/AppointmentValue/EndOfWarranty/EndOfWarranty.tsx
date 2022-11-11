@@ -30,8 +30,8 @@ export const EndOfWarranty = () => {
             </TableHead>
             <TableBody>
                 <TableRow>
-                    <TableCell>End of warranty</TableCell>
-                    <TableCell>Considered near the end of warranty within</TableCell>
+                    <TableCell>End of Warranty</TableCell>
+                    <TableCell>Considered near the End of Warranty within</TableCell>
                     <TableCell className="primary">
                         {endOfWarranty
                             ? `${endOfWarranty.periodInMonth} month${endOfWarranty.periodInMonth > 1 ? "s" : ""}`

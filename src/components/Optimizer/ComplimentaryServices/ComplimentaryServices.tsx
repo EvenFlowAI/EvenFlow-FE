@@ -107,7 +107,7 @@ const ComplimentaryServices = () => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Remove ${editedItem?.code} from Complimentary Services List?`,
+            title: `Please confirm you want to remove Ops Code ${editedItem?.code}`,
             onConfirm: handleRemove
         });
     }
@@ -146,7 +146,7 @@ const ComplimentaryServices = () => {
                 newCodes,
                 serviceCenterId,
                 (e) => showError(e),
-                () => showMessage(`Codes ${newCodes.length} added`)
+                () => showMessage(`${newCodes.length} ${newCodes.length > 1 ? 'Codes' : 'Code'} added`)
             ));
         } catch (e) {
             showError(e);
@@ -182,7 +182,7 @@ const ComplimentaryServices = () => {
                         variant="contained"
                         onClick={handleAddOpsCodeOpen}
                     >
-                        Add Ops Code
+                        Add Ops Codes
                     </Button>
                     <Button
                         style={{marginLeft: 16}}
@@ -221,7 +221,11 @@ const ComplimentaryServices = () => {
                 onClose={onAddOpsCodeClose}
                 onSave={onAddOpsCode}
                 selectedPreviously={selectedOpsCodes}/>
-            <AddServiceManually open={isAddManuallyOpen} onClose={handleAddManuallyClose} title="Add Service Manually" editedItem={editedItem}/>
+            <AddServiceManually
+                open={isAddManuallyOpen}
+                onClose={handleAddManuallyClose}
+                title={editedItem ? "Edit Complimentary Service" : "Add Service Manually"}
+                editedItem={editedItem}/>
         </div>
     );
 };

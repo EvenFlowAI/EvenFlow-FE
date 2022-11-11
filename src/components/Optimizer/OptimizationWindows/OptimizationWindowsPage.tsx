@@ -39,7 +39,7 @@ const optContent: TOptContent = {
         title: "Specific Date Search",
     },
     [EOptimizationWindowType.DemandSegments]: {
-        helperText: "Set the number of demand value segments to group service requests of equal value",
+        helperText: "Set the number of demand segments to group service requests of equal value",
         label: "Segments",
         title: "Demand Segments",
     },
@@ -51,8 +51,8 @@ const optContent: TOptContent = {
     },
     [EOptimizationWindowType.AppointmentsPerSlot]: {
         helperText: "Set the number of max scheduled appointments per appointment time slot",
-        label: "appointments",
-        title: "Appointments per slot",
+        label: "Appointments",
+        title: "Appointments per Slot",
     },
     [EOptimizationWindowType.AppointmentCutoff]: {
         helperText: "Set the hour that the last appointment will be accepted",

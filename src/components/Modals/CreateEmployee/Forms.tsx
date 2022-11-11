@@ -9,7 +9,7 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {TRole} from "../../../store/reducers/users/types";
 import {userRoles} from "../../../config/constants";
 import {checkEmail} from "../../../utils/utils";
-
+import 'react-phone-number-input/style.css'
 
 export const initialAdvisorForm: TAdvisorForm = {
     firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null, role: "Manager", position: '',
@@ -82,7 +82,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 placeholder="Type Email"
                 value={props.form.email}
                 onChange={props.onChange}
-                error={(props.form.email?.length && props.formIsChecked) || (!checkEmail(props.form.email) && props.formIsChecked)}
+                error={(!props.form.email?.length && props.formIsChecked) || (!checkEmail(props.form.email) && props.formIsChecked)}
                 fullWidth
             />
         </Grid>
@@ -94,7 +94,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 placeholder="Type Phone Number"
                 name="phoneNumber"
                 onChange={props.onChange}
-                error={!props.form.phoneNumber?.length && props.formIsChecked}
+                error={props.formIsChecked && (!props.form.phoneNumber?.length || props.form.phoneNumber?.length < 11)}
                 fullWidth
             />
         </Grid>
@@ -213,7 +213,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 name="phoneNumber"
                 placeholder="Type Phone Number"
                 fullWidth
-                error={!props.form.phoneNumber?.length && props.formIsChecked}
+                error={props.formIsChecked && (!props.form.phoneNumber?.length || props.form.phoneNumber?.length < 11)}
                 value={props.form.phoneNumber}
                 onChange={props.onChange}
                 label="Phone Number"
@@ -239,7 +239,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
         <Grid item xs={12} sm={6}>
             <ToggleButtons
                 value={props.form.technicianLevel}
-                label="Technician level"
+                label="Technician Level"
                 buttons={[
                     {id: "1", label: "1", value: 1},
                     {id: "2", label: "2", value: 2},

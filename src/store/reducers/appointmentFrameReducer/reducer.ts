@@ -109,7 +109,8 @@ const initialState: TState = {
     customer: {
         fullName: "",
         phoneNumber: "",
-        email: ""
+        email: "",
+        city: "",
     },
     reminders: [],
     transportation: null,

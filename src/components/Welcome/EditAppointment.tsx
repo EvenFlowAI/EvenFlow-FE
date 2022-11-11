@@ -73,8 +73,7 @@ export const EditAppointment = () => {
                     phoneNumbers: [data.driver.phoneNumber],
                     emails: [data.driver.email],
                     fullName: data.driver.fullName,
-                    // firstName: fN,
-                    // lastName: lN,
+                    city: data.driver.city ?? "",
                 }
                 dispatch(setCustomerLoadedData(customer));
                 dispatch(setVehicle({...vehicle}));

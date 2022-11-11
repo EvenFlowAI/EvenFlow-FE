@@ -50,7 +50,7 @@ export interface IDetailsData {
 export type TSummaryCell = {
     isEditable: boolean;
     optionType: number;
-    numberValue: number;
+    numberValue: string;
     fieldName: string;
     error?: boolean;
 }
@@ -228,9 +228,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [packageData])
 
-    const getFixedValue = useCallback((value: number): number => {
+    const getFixedValue = useCallback((value: string): number => {
         if (Number.isInteger(+value)) return +value;
-        const [integer, decimal] = value.toString().split('.');
+        const [integer, decimal] = value.split('.');
         if (decimal.length <= 2) {
             return +value
         } else {
@@ -238,10 +238,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [])
 
-    const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>, fieldName: string, optionType: string | number) => {
+    const onInputChange = useCallback((value: string, fieldName: string, optionType: string | number) => {
         if (packageData) {
-            const value = getFixedValue(+e.target.value);
-            if (fieldName.toLowerCase().includes('hours') && value > 100) {
+            if (fieldName.toLowerCase().includes('hours') && Number(value) > 100) {
                 showError('Invoiced Labor Hours must be no more than 100')
             } else {
                 let currentOption = packageData.options.find(option => option.type === optionType);
@@ -257,7 +256,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 }
             }
         }
-    }, [packageData, getFixedValue])
+    }, [packageData])
 
     const onMoreIconClick = () => {
         if (expanded && anchorRef?.current && packageData) setAnchorEl(anchorRef.current);
@@ -285,7 +284,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const askRemove = () => {
         askConfirm({
             isRemove: true,
-            title: `Remove ${packageData?.name} from Packages List?`,
+            title: `Please confirm you want to remove Maintenance Package ${packageData?.name}`,
             onConfirm: handleRemove
         });
     }
@@ -386,7 +385,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={onDescriptionOpen}>
-                                To Describe OPS Codes
+                                To Describe Ops Codes
                             </Button>
                         </>
                         : null

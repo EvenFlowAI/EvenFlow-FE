@@ -329,13 +329,15 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const isBusinessRulesValid = () => {
         const { yearFrom, yearTo } = vehiclesData;
         if (yearFrom && yearTo && (+yearFrom > +yearTo)) {
-            showError('Check the Vehicle Year fields - "To" must be more than "From"')
+            showError('"From" must be less than or equal to "To"')
             return false
         }
-        return selectedModels.length
+        const atLeastOneRule = selectedModels.length
             || selectedMakes.length
             || selectedMileages.length
-            || (yearFrom && yearTo);
+            || (yearFrom && yearTo)
+        if (!atLeastOneRule) showError('At least one Business Rule is required')
+        return atLeastOneRule;
     }
 
     const isValid = () => {
@@ -422,7 +424,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                         <IconButton onClick={onExistingOpen} className={classes.iconPlus}>
                             <AddCircleOutline/>
                         </IconButton>
-                        <span> Add New Existing Maintenance Package</span>
+                        <span> Add Existing Maintenance Package</span>
                     </div>
 
                     <div className={classes.label}>Assigned Ops Codes</div>
@@ -436,7 +438,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     }>
                     { assignedOpsCodes?.length
                         ? <AssignedOpsCodes codes={assignedOpsCodes}/>
-                        : <p>There are no ops codes in this list yet</p>
+                        : <p>There are no Ops Codes in this list yet</p>
                     }
                     </div>
 
@@ -455,11 +457,10 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             : classes.emptyOpsCodes}>
                         { opsCodes?.length
                             ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete} key={item.serviceRequest.id}/>)
-                            : <p>There are no ops codes in this list yet</p>
+                            : <p>There are no Ops Codes in this list yet</p>
                         }
                     </div>
 
-                    <div className={classes.label}>Add Ops Code To Package</div>
                     <div className={classes.btnsWrapper}>
                         <Button
                             color="primary"
@@ -518,7 +519,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 renderInput={autocompleteRender({
                                     label: '',
                                     placeholder: 'From',
-                                    error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
+                                    // error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
                                 })}
                             />
                             <Autocomplete
@@ -533,7 +534,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 renderInput={autocompleteRender({
                                     label: '',
                                     placeholder: 'To',
-                                    error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
+                                    // error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
                                 })}
                             />
                         </div>
@@ -572,7 +573,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             </DialogActions>
 
             <AssignOpsCode
-                title="ASSIGN MAINTENANCE PACKAGE OPTIONS OPS CODES"
+                title="ASSIGN OPS CODES TO MAINTENANCE PACKAGE OPTIONS"
                 open={isAssignOpsCodeOpen}
                 optionError={optionError}
                 setOptionError={setOptionError}

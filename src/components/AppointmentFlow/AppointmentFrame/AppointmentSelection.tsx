@@ -18,8 +18,6 @@ import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {useTranslation} from "react-i18next";
-
 
 const Wrapper = styled('div')(({ theme }) => ({
     display: "flex",
@@ -44,8 +42,6 @@ const Wrapper = styled('div')(({ theme }) => ({
     }
     })
 );
-
-
 
 export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
     const [
@@ -96,7 +92,6 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     const initRef = useRef<boolean>(false);
     const isMount = useRef(true);
     const dispatch = useDispatch();
-    const {t} = useTranslation();
 
     useEffect(() => {
         if (selectedTime) setMonth(moment.utc(selectedTime))
@@ -145,7 +140,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
 
     const setDateCallback = useCallback((d: moment.Moment) => {
         if (selectedTimingType !== EAppointmentTimingType.FirstAvailable) {
-            setDate(d.startOf('day'));   
+            setDate(d.startOf('day'));
         }
     }, [selectedTimingType]);
 

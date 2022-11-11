@@ -24,7 +24,7 @@ export const AppointmentAllocationPage = () => {
             variant="scrollable"
             scrollButtons="auto"
         >
-            <Tab label="Scheduled appointments" value="0" />
+            <Tab label="Scheduled Appointments" value="0" />
             <Tab label="Unplanned Demand" value="1" />
             <Tab label="RO Prediction Parameters" value="2" />
             <Tab label="Overbooking Factor" value="3" />
