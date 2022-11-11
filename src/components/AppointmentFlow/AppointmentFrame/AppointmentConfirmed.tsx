@@ -129,7 +129,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const dispatch = useDispatch();
     const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
-    const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineType)), [engineTypes, vehicle])
+    const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
     const vehicleData = vehicle?.year
         ? `${vehicle.year} ${vehicle.make} ${vehicle.model} ${engine?.name ?? ""}`
         : valueService?.year

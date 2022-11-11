@@ -496,7 +496,7 @@ export class Api {
             RemoveMileage: {route: "/vehicles/mileage/{id}", method: "delete"},
             CreateMileage: {route: "/vehicles/mileage", method: "post"},
             MakesModels: {route: "/vehicles/makes-models", method: "get"},
-            GetEngineType: {route: "/vehicles/engine-type", method: "get"},
+            GetEngineType: {route: "/vehicles/engine-type/by-query", method: "get"},
             RemoveEngineType: {route: "/vehicles/engine-type/{id}", method: "delete"},
             CreateEngineType: {route: "/vehicles/engine-type", method: "post"},
         },

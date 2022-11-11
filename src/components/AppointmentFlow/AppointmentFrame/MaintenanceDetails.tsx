@@ -99,10 +99,10 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
-                engineType: selectedVehicle.engineType ?? ""
+                engineType: selectedVehicle.engineTypeId ?? ""
             }));
-            if (selectedVehicle?.engineType) {
-                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineType))
+            if (selectedVehicle?.engineTypeId) {
+                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
                 option && setSelectedEngine(option);
             }
         }
@@ -192,7 +192,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
         setSelectedEngine(option)
         dispatch(updateVehicle({engineType: selectedEngine?.id.toString() ?? ""}));
-        setErrors(e => e.filter(err => err !== "engineType"))
+        setErrors(e => e.filter(err => err !== "engineTypeId"))
     }
 
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -217,7 +217,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }
         if (currentConfig?.engineType && !selectedEngine) {
             errorsArray.push("Engine Type")
-            setErrors(e => [...e, "engineType"]);
+            setErrors(e => [...e, "engineTypeId"]);
         }
 
         if (errorsArray.length) {
@@ -303,8 +303,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 disabled={!isNewVehicleView}
                 renderInput={autocompleteRender({
                     label: "Engine Type",
-                    placeholder: errors.includes("engineType") ? "EngineType required" : "Select Engine Type",
-                    error: errors.includes("engineType"),
+                    placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
+                    error: errors.includes("engineTypeId"),
                     required: true,
             })}
                 value={selectedEngine ?? undefined}

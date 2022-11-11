@@ -110,10 +110,10 @@ export const CarDetails: React.FC<TProps> = ({onBack, onNext}) => {
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
-                engineType: selectedVehicle.engineType ?? ""
+                engineType: selectedVehicle.engineTypeId ?? ""
             }));
-            if (selectedVehicle?.engineType) {
-                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineType))
+            if (selectedVehicle?.engineTypeId) {
+                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
                 option && setSelectedEngine(option);
             }
         }

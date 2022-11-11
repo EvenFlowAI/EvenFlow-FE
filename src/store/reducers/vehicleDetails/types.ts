@@ -22,7 +22,7 @@ export type TCreateMileage = {
 }
 
 export type TCreateEngineType = {
-   values: string[];
+   names: string[];
    serviceCenterId: number;
    podId?: number;
 }

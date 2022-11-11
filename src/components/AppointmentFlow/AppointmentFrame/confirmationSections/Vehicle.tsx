@@ -16,7 +16,7 @@ const Vehicle = () => {
     const {selectedVehicle, valueService} = useSelector((state: RootState) => state.appointmentFrame);
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const {t} = useTranslation();
-    const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineType)), [engineTypes, selectedVehicle])
+    const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineTypeId)), [engineTypes, selectedVehicle])
     return (
         <div>
             <TitleWrapper>
