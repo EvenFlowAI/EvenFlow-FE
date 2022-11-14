@@ -7,7 +7,7 @@ import moment from "moment";
 import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
-    ILoadedVehicle,
+    ILoadedVehicle, IOfferForCategory,
     IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
@@ -220,4 +220,5 @@ export interface IServiceRequestPrice {
     requestName: string;
     pricingDisplayType: EPricingDisplayType;
     priceValue?: number;
+    offer?: IOfferForCategory;
 }

@@ -45,7 +45,7 @@ import {
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
-import {ILoadedVehicle} from "../../api/types";
+import {ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
@@ -56,6 +56,7 @@ import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 import {useTranslation} from "react-i18next";
+import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
 
 const Container = styled('div')({
     display: "flex",
@@ -97,6 +98,7 @@ const SCREENS = {
     vehicleData: "vehicleData",
     location: "Your Location",
     payment: "payment",
+    serviceOfferProductPage: "Service Offer Produce Page",
 }
 
 // todo add new parent links while go live with new dealerships
@@ -132,6 +134,7 @@ export const AppointmentFrameLayout = () => {
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -334,12 +337,14 @@ export const AppointmentFrameLayout = () => {
                 onAddNewCarAppointment={handleAddNewCarAppointment}
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
+                setLastSelectedCategory={setLastSelectedCategory}
                 onLogin={handleLogin}
                 onBack={isPromotionPage
                     ? () => {}
                     : handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
+                setLastSelectedCategory={setLastSelectedCategory}
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleSetScreen}
             />,
@@ -415,6 +420,16 @@ export const AppointmentFrameLayout = () => {
                 onLogin={handleLogin}
             />,
             payment: <PaymentScreen/>,
+            serviceOfferProductPage: <OfferProductPage
+                onBack={handleChangeScreen(service?.type === EServiceCategoryType.Diagnose
+                || service?.type === EServiceCategoryType.IndividualServices
+                    ? 'serviceNeeds'
+                    : 'serviceSelection')}
+                onNext={handleSetScreen}
+                category={lastSelectedCategory}
+                lastCategory={lastSelectedCategory}
+                onChangeVehicle={handleChangeScreen('maintenanceDetails')}
+            />,
         }
         return carSelections[currentScreen];
     }, [
@@ -452,6 +467,8 @@ export const AppointmentFrameLayout = () => {
                 return t("Where are you located?");
             case "payment":
                 return t("Please Enter Your Payment Information");
+            case "serviceOfferProductPage":
+                return "Select Service With Special Offer";
             default:
                 return null;
         }

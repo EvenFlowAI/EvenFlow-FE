@@ -6,7 +6,7 @@ import {
     IPersonalInformation,
     IVehicleData
 } from "../store/reducers/appointment/types";
-import {IOffer} from "../store/reducers/offers/types";
+import {EOfferType, IOffer} from "../store/reducers/offers/types";
 import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
@@ -248,6 +248,15 @@ export interface IServiceCategoryShort {
     name: string;
 }
 
+export interface IOfferForCategory {
+    id: number;
+    type: EOfferType;
+    expiringDate: string;
+    description: string;
+    title: string;
+    valueOff?: number;
+}
+
 export interface IServiceCategory extends IServiceCategoryShort {
     page: EServiceCategoryPage;
     serviceRequests: IServiceRequest[];
@@ -256,6 +265,7 @@ export interface IServiceCategory extends IServiceCategoryShort {
     loadedIcon?: JSX.Element | string;
     iconPath?: string;
     description?: string;
+    offer?: IOfferForCategory;
 }
 
 export interface IServiceConsultant {

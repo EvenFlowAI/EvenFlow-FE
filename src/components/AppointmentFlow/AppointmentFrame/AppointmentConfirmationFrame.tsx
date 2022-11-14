@@ -38,7 +38,7 @@ import {useTranslation} from "react-i18next";
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "20px",
+    gap: "80px",
     "&>div": {
         display: "flex",
         flexDirection: "column",

@@ -1,14 +1,15 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TEnumKeyLabel, TEnumMap} from "../utils";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
+import {ICategory} from "../categories/types";
 
 export enum EOfferType {
     AmountOff, PercentOff, FreeService
 }
 export const offerTypes: TEnumMap<EOfferType>[] = [
-    {id: EOfferType.AmountOff, label: "$ off"},
+    {id: EOfferType.AmountOff, label: "Off"},
+    {id: EOfferType.PercentOff, label: "% Off"},
     {id: EOfferType.FreeService, label: "free service"},
-    {id: EOfferType.PercentOff, label: "% off"},
 ];
 export enum ECustomerSegment {
     All, New, LowValue, MediumValue, HighValue, EndOfWarranty
@@ -103,6 +104,7 @@ export interface IOffer {
     isAllServiceRequestsIncluded: boolean;
     serviceCenterId: number;
     serviceRequests: IAssignedServiceRequestShort[];
+    serviceCategories: ICategory[];
 }
 
 export interface IOfferForm {
