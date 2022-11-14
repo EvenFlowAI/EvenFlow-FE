@@ -12,7 +12,7 @@ import {decodeSCID, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
-import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
+import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
@@ -132,6 +132,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
 
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
+        dispatch(selectAppointment(null));
         if (!d.isSame(month, 'month')
             && selectedTimingType === EAppointmentTimingType.SpecialOffers) {
             setMonth(d);

@@ -210,6 +210,8 @@ export const SelectedAppointment = () => {
         }
     }
 
+    console.log(appointment)
+
     return (
         <div>
             <Wrapper>
