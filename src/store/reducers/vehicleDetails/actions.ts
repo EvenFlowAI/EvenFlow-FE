@@ -125,14 +125,14 @@ export const loadEngineType = (serviceCenterId: number): AppThunk => async dispa
 }
 
 export const removeEngineType = (id: number, serviceCenterId: number): AppThunk => async dispatch => {
-    Api.call(Api.endpoints.Vehicles.RemoveMileage, {urlParams: {id}})
+    Api.call(Api.endpoints.Vehicles.RemoveEngineType, {urlParams: {id}})
         .then(result => {
             if (result?.data) {
-                dispatch(loadMileage(serviceCenterId));
+                dispatch(loadEngineType(serviceCenterId));
             }
         })
         .catch(err => {
-            console.log('remove mileage error', err);
+            console.log('remove engine type error', err);
         })
 }
 
