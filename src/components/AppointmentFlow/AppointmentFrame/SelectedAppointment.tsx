@@ -11,6 +11,8 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {useTranslation} from "react-i18next";
+import {ReactComponent as SpecialServiceIcon} from "../../../assets/img/specail_label.svg";
+import {SpecialLabel} from "./confirmationSections/SelectedPrice";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -77,6 +79,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-end",
+    justifyContent: "space-between",
     textAlign: "right",
     [theme.breakpoints.down("sm")]: {
         alignItems: "flex-start",
@@ -89,11 +92,18 @@ const PriceWrapper = styled('div')(({ theme }) => ({
         }
     },
     "& .info": {
-        color: "#27AE60",
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        color: "#008331",
+        fontSize: 14,
+        fontWeight: "bold",
+        textTransform: 'uppercase',
         [theme.breakpoints.down("sm")]: {
             marginTop: 5
         }
-    }
+    },
 }));
 
 const DateWrapper = styled('div')(({theme}) => ({
@@ -132,6 +142,12 @@ const useStyles = makeStyles(theme => ({
                 backgroundColor: 'transparent'
             }
         },
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: "bold",
+        margin: '0 0 10px 0',
+        textTransform: 'uppercase'
     }
 }))
 
@@ -169,7 +185,9 @@ export const SelectedAppointment = () => {
     }, [config, serviceType])
 
     const price = appointment?.price.value ?? 0;
-    const isDynamicPricing = appointmentSlots.length ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic) : false;
+    const isDynamicPricing = appointmentSlots.length
+        ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
+        : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
@@ -194,8 +212,9 @@ export const SelectedAppointment = () => {
 
     return (
         <div>
-            {!isSm && <h4>{t("Your selections")}</h4>}
             <Wrapper>
+                <div>
+                    {!isSm && <p className={classes.title}>{t("Your selections")}</p>}
                 <List>
                     <li className={"service-item"} key="service-item">
                         <div className="service-list">
@@ -241,6 +260,7 @@ export const SelectedAppointment = () => {
                     </li>
 
                 </List>
+                </div>
                 <PriceWrapper>
                     {appointment && !isSm
                         ? <DateWrapper>
@@ -251,9 +271,12 @@ export const SelectedAppointment = () => {
                         {!isSm && Boolean(price) && <div className="price">
                           ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
                         </div>}
+                        {!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">
+                          <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>
+                        </div> : null}
                         {isDynamicPricing && (
-                            <div className="info" style={{ fontSize: isSm ? 14: 28 }}>
-                                {t("Save by booking at off peak times!")}
+                            <div className="info">
+                                {!appointment?.price?.amountOfSavingMoney ? t("Save by booking at off peak times!") : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
                             </div>
                         )}
                     </>
