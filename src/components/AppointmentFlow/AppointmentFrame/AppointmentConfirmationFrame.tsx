@@ -162,7 +162,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             vehicle: {
                 dmsId: null,
                 driveType: "",
-                engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId,
+                engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
                 ...(appointmentFrame.selectedVehicle ?? {}),
                 model,
                 make,

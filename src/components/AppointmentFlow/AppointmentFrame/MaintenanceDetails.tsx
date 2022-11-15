@@ -106,7 +106,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 option && setSelectedEngine(option);
             }
         }
-    }, [dispatch, selectedVehicle]);
+    }, [dispatch, selectedVehicle, engineTypes]);
 
     const setDataFromValueService = useCallback(() => {
         const vehicle: ILoadedVehicle = {
@@ -191,7 +191,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
         setSelectedEngine(option)
-        dispatch(updateVehicle({engineType: selectedEngine?.id.toString() ?? ""}));
+        dispatch(updateVehicle({engineTypeId: option?.id.toString() ?? ""}));
+        dispatch(setMaintenanceDetails({engineType: option?.id.toString() ?? ""}));
         setErrors(e => e.filter(err => err !== "engineTypeId"))
     }
 

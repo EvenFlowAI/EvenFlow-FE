@@ -248,6 +248,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                         year: +form.vehicleYear,
                         mileage: +form.vehicleMileage,
                         vin: form.vehicleVin,
+                        // todo field for engineType
+                        engineTypeId: null,
                     }
                 })
                 .then(({data: {items}}) => {
