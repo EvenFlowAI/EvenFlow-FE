@@ -26,7 +26,7 @@ import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {
     loadAllAssignedServiceRequests,
 } from "../../../store/reducers/serviceRequests/actions";
-import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import Mileage from "./parts/Mileage/Mileage";
 import AssignedOpsCodes from "./parts/AssignedOpsCodes/AssignedOpsCodes";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
@@ -241,6 +241,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id))
+            dispatch(loadEngineType(selectedSC.id))
             isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
         }
     }, [dispatch, selectedSC, isEditing])
@@ -287,6 +288,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         setSelectedMakes([]);
         setApplyBusinessRules(false);
         setSelectedMileages([]);
+        setEngineType(null);
         props.onClose();
     }, [initialValues, props.onClose])
 
@@ -309,6 +311,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     }, [])
 
     const onEngineTypeChange = (e: React.ChangeEvent<{}>, value: IEngineType|null) => {
+        setFormIsChecked(false);
         setEngineType(value);
     }
 
@@ -347,6 +350,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             || selectedMakes.length
             || selectedMileages.length
             || (yearFrom && yearTo)
+            || engineType
         if (!atLeastOneRule) showError('At least one Business Rule is required')
         return atLeastOneRule;
     }
