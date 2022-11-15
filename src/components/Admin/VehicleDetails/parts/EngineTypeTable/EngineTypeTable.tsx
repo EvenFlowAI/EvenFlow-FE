@@ -48,12 +48,15 @@ const EngineTypeTable = () => {
         </IconButton>;
     }
 
+    const onRemoveSuccess = () => {
+        setCurrentEngineType(null);
+        showMessage("Engine Type removed");
+    }
+
     const handleRemove = async () => {
         try {
             if (currentEngineType && selectedSC) {
-                dispatch(removeEngineType(currentEngineType.id, selectedSC.id));
-                setCurrentEngineType(null);
-                showMessage("Engine Type removed");
+                dispatch(removeEngineType(currentEngineType.id, selectedSC.id, onRemoveSuccess));
             }
         } catch (e) {
             showError(e);

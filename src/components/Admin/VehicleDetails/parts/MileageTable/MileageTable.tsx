@@ -48,12 +48,15 @@ const MileageTable = () => {
         </IconButton>;
     }
 
+    const onRemoveSuccess = () => {
+        setCurrentMileage(null);
+        showMessage("Mileage removed");
+    }
+
     const handleRemove = async () => {
         try {
             if (currentMileage && selectedSC) {
-                dispatch(removeMileage(currentMileage.id, selectedSC.id));
-                setCurrentMileage(null);
-                showMessage("Mileage removed");
+                dispatch(removeMileage(currentMileage.id, selectedSC.id, onRemoveSuccess));
             }
         } catch (e) {
             showError(e);
