@@ -44,7 +44,6 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
 import {ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga";
@@ -349,7 +348,9 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleSetScreen}
             />,
             maintenanceDetails: <MaintenanceDetails
-                onBack={handleChangeScreen('serviceNeeds')}
+                onBack={handleChangeScreen(
+                    service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+                        ? 'opsCode' : 'serviceNeeds')}
                 onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
                     ? 'packageSelection'
                     : !currentConfig?.advisorSelection
@@ -408,12 +409,17 @@ export const AppointmentFrameLayout = () => {
             appointmentConfirmed: <AppointmentConfirmed
                 onModify={handleChangeScreen("serviceNeeds")}
             />,
-            carDetails: <CarDetails
-                onBack={handleChangeScreen(
-                    service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
-                    ? 'opsCode' : 'describeMore')}
-                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
-            />,
+            // carDetails: <MaintenanceDetails
+            //     onBack={handleChangeScreen(
+            //         service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+            //             ? 'opsCode' : 'serviceNeeds')}
+            //     onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
+            //         ? 'packageSelection'
+            //         : !currentConfig?.advisorSelection
+            //             ? 'appointmentTiming'
+            //             : 'consultantSelection')
+            //     }
+            // />,
             location: <YourLocation
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
@@ -461,8 +467,8 @@ export const AppointmentFrameLayout = () => {
                 return t("Do you need assistance with transportation?");
             case "appointmentConfirmation":
                 return t("Appointment Confirmation Title");
-            case "carDetails":
-                return t("Please tell us about your vehicle");
+            // case "carDetails":
+            //     return t("Please tell us about your vehicle");
             case "location":
                 return t("Where are you located?");
             case "payment":

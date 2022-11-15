@@ -32,6 +32,7 @@ export type TMaintenanceDetails = {
     oilType?: string;
     serviceInterval?: string;
     mileage?:string;
+    engineType?: string;
 }
 
 export interface IFrameScreens {

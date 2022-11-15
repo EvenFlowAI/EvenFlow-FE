@@ -115,6 +115,7 @@ export interface IVehicle {
     mileage: number|null;
     serviceInterval?: string;
     modelDetails?: string;
+    engineTypeId?: string;
 }
 
 export interface ILoadedVehicle  extends IVehicle {
@@ -301,6 +302,7 @@ export interface IBusinessRule {
     vehicleYearRange: IYearRange;
     vehicleMileageValues: string[];
     customerCriteria: ECustomerCriteria;
+    engineTypeId: number|null;
 }
 
 export interface IComplimentaryService {

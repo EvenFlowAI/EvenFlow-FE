@@ -22,7 +22,6 @@ import {collectServiceRequestIds} from "./utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {Loading} from "../../UI/Loading";
 import {useTranslation} from "react-i18next";
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({

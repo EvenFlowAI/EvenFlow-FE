@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
-import {SelectWrapper} from "./CarDetails";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {Actions} from "./Actions";
@@ -13,6 +12,23 @@ import {makeStyles} from "@material-ui/core/styles";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
+import {styled} from "@material-ui/core";
+
+export const SelectWrapper = styled('div')(({theme}) => ({
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+    width: "100%",
+    "& .label": {
+        fontWeight: 700,
+        margin: '0 0 4px 0',
+        textTransform: 'uppercase',
+        fontSize: 12,
+    },
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateColumns: "1fr"
+    }
+}));
 
 type TOption = {
     value: string;

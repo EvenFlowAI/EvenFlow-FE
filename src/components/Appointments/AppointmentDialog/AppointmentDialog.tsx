@@ -30,7 +30,7 @@ import {Api} from "../../../config/requests";
 import {getOptions, validatePhoneNumber} from "../../../utils/utils";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 import {loadMakes} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {useDispatch, useSelector} from "react-redux";
 import VehicleInfo from "./parts/VehicleInfo";
 import DriverInfo from "./parts/DriverInfo";
@@ -43,6 +43,7 @@ import {RootState} from "../../../store/rootReducer";
 import {EJobType} from "../../../store/reducers/pods/types";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
+import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 
 export type TForm = {
     date: string;
@@ -112,6 +113,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const [preloadedSlot, setPreloadedSlot] = useState<IAppointmentSlot|null>(null);
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
     const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
+    const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
     const showError = useException();
@@ -141,6 +143,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id));
+            dispatch(loadEngineType(selectedSC.id));
         }
     }, [selectedSC]);
 
@@ -455,6 +458,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     isDataValid={isVehicleDataValid}
                     vinLoading={vinLoading}
                     onVehicleDetailsChange={onVehicleDetailsChange}
+                    selectedEngine={selectedEngine}
+                    setSelectedEngine={setSelectedEngine}
                 />
 
                 <Grid item xs={12}>

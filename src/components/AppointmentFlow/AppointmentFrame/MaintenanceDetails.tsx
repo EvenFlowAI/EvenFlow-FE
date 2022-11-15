@@ -19,9 +19,10 @@ import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
-import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
+import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
+import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -56,12 +57,14 @@ const blankOptions: TOptionsState = {};
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
 export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, serviceType}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
+    const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
     const dispatch = useDispatch();
     const showError = useException();
     const theme = useTheme();
@@ -69,11 +72,17 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     const {t} = useTranslation();
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
+
     const isNewVehicleView = useMemo(() => {
         return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
-    }, [selectedVehicle, customerLoadedData]);
+    }, [selectedVehicle, customerLoadedData])
+
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType])
 
     const selects: TSelect[] = [
         {label: t("VIN"), name: "vin", noVehicle: true},
@@ -90,9 +99,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
+                engineType: selectedVehicle.engineTypeId ?? ""
             }));
+            if (selectedVehicle?.engineTypeId) {
+                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
+                option && setSelectedEngine(option);
+            }
         }
-    }, [dispatch, selectedVehicle]);
+    }, [dispatch, selectedVehicle, engineTypes]);
 
     const setDataFromValueService = useCallback(() => {
         const vehicle: ILoadedVehicle = {
@@ -151,6 +165,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
     useEffect(() => {
         dispatch(loadMakes(decodeSCID(id)));
         dispatch(loadMileage(decodeSCID(id)));
+        dispatch(loadEngineType(decodeSCID(id)));
     }, [id]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
@@ -174,6 +189,13 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         }
     }
 
+    const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
+        setSelectedEngine(option)
+        dispatch(updateVehicle({engineTypeId: option?.id.toString() ?? ""}));
+        dispatch(setMaintenanceDetails({engineType: option?.id.toString() ?? ""}));
+        setErrors(e => e.filter(err => err !== "engineTypeId"))
+    }
+
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(updateVehicle({[name]: value.trim()}));
         if (name === "model") {
@@ -193,6 +215,10 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                     errorsArray.push(f);
                 }
             }
+        }
+        if (currentConfig?.engineType && !selectedEngine) {
+            errorsArray.push("Engine Type")
+            setErrors(e => [...e, "engineTypeId"]);
         }
 
         if (errorsArray.length) {
@@ -265,6 +291,26 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                     />
                 </div>
             })}
+            {currentConfig?.engineType
+                ? <Autocomplete
+                key="Engine Type"
+                options={engineTypes}
+                onChange={handleEngineTypeChange}
+                fullWidth
+                getOptionLabel={o => o.name}
+                getOptionSelected={o => o.id === selectedEngine?.id}
+                disableClearable
+                autoComplete={true}
+                disabled={!isNewVehicleView}
+                renderInput={autocompleteRender({
+                    label: "Engine Type",
+                    placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
+                    error: errors.includes("engineTypeId"),
+                    required: true,
+            })}
+                value={selectedEngine ?? undefined}
+                />
+            : null }
         </SelectWrapper>
         <Actions onBack={handleBack} onNext={handleNext} />
     </StepWrapper>);
