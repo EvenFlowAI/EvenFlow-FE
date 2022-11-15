@@ -144,7 +144,6 @@ export interface IVehicleForSlots {
     year: number|null;
     model: string;
     mileage: number|null;
-    engineTypeId: number|null;
 }
 
 export interface IAppointmentSlotsRequest {

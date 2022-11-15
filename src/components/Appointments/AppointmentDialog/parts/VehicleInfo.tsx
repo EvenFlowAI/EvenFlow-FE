@@ -11,6 +11,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {TForm, TKey} from "../AppointmentDialog";
 import {useSCs} from "../../../../utils/hooks";
 import {loadPackageByVehicle} from "../../../../store/reducers/appointments/actions";
+import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
 
 type TSelect = {
     label: string;
@@ -30,11 +31,13 @@ type TVehicleInfoProps = {
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
     isDataValid: boolean;
     onVehicleDetailsChange: () => void;
+    selectedEngine: IEngineType|null;
+    setSelectedEngine: Dispatch<SetStateAction<IEngineType|null>>;
 }
 
-const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, errors, setErrors, setForm, form, vinLoading, handleChange, isDataValid }) => {
+const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedEngine, onVehicleDetailsChange, errors, setErrors, setForm, form, vinLoading, handleChange, isDataValid }) => {
     const {makes}= useSelector((state: RootState) => state.appointmentFrame);
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -77,6 +80,12 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, erro
         }
     }, [makes, onVehicleDetailsChange])
 
+    const onEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
+        setSelectedEngine(option)
+        setForm(prev => ({...prev, vehicleEngineType: option?.id.toString() ?? ""}))
+        setErrors(e => e.filter(err => err !== "engineTypeId"))
+    }
+
     const getPackage = useCallback(() => {
         if (selectedSC && isDataValid) {
             dispatch(loadPackageByVehicle({
@@ -87,6 +96,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, erro
                     model: form.vehicleModel,
                     mileage: +form.vehicleMileage,
                     year: +form.vehicleYear,
+                    engineTypeId: form.vehicleEngineType,
                 }
             }))
         }
@@ -137,6 +147,23 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ onVehicleDetailsChange, erro
                     }
                 }
             )}
+            <Autocomplete
+                key="Engine Type"
+                options={engineTypes}
+                onChange={onEngineTypeChange}
+                fullWidth
+                getOptionLabel={o => o.name}
+                getOptionSelected={o => o.id === selectedEngine?.id}
+                disableClearable
+                autoComplete={true}
+                renderInput={autocompleteRender({
+                    label: "Engine Type",
+                    placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
+                    error: errors.includes("engineTypeId"),
+                    required: true,
+                })}
+                value={selectedEngine ?? undefined}
+            />
         </React.Fragment>
     );
 };

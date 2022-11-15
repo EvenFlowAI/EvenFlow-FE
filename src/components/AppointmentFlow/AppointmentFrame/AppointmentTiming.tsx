@@ -238,7 +238,6 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                 make: vehicle.make,
                 model: vehicle.model,
                 mileage: vehicle.mileage,
-                engineTypeId: vehicle.engineTypeId ? Number(vehicle.engineTypeId) : null,
             }
         }
         if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;

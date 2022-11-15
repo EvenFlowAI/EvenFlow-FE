@@ -189,7 +189,6 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                             make: vehicle.make,
                             model: vehicle.model,
                             mileage: vehicle.mileage,
-                            engineTypeId: vehicle.engineTypeId ? Number(vehicle.engineTypeId) : null,
                         }
                     }
                     if (hashKey) dd.appointmentHashKey = hashKey;
