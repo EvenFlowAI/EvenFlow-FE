@@ -40,9 +40,10 @@ export const SelectedPrice = () => {
                     </span>
                     : t('Service items will be quoted at dealership')
                 }
-                {appointment?.serviceRequestPrices?.find(item => !!item.offer)
-                    ? <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>
-                    : null}
+                {/*todo uncomment for offer new functionality*/}
+                {/*{appointment?.serviceRequestPrices?.find(item => !!item.offer)*/}
+                {/*    ? <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
+                {/*    : null}*/}
             </Price>
         </div>
     );
