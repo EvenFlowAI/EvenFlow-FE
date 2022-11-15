@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
-    const {userType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {userType, isMobileServiceOn, isPickUpDropOffServiceOn, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const classes = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation();
@@ -84,7 +84,8 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     }
 
     const handleSelect = (service: EServiceType) => {
-        dispatch(clearAppointmentData());
+        // todo service type from the appointment by key
+        if (serviceType !== service) dispatch(clearAppointmentData());
         dispatch(setServiceType(service));
         handleUser(service);
     }
