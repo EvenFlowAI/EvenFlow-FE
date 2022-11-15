@@ -88,11 +88,12 @@ export const createMileage = (data: TCreateMileage): AppThunk => async dispatch 
 }
 
 
-export const removeMileage = (id: number, serviceCenterId: number): AppThunk => async dispatch => {
+export const removeMileage = (id: number, serviceCenterId: number, onRemoveSuccess: () => void): AppThunk => async dispatch => {
     Api.call(Api.endpoints.Vehicles.RemoveMileage, {urlParams: {id}})
         .then(result => {
             if (result?.data) {
                 dispatch(loadMileage(serviceCenterId));
+                onRemoveSuccess();
             }
         })
         .catch(err => {
@@ -124,11 +125,12 @@ export const loadEngineType = (serviceCenterId: number): AppThunk => async dispa
         .finally(() => dispatch(setLoading(false)));
 }
 
-export const removeEngineType = (id: number, serviceCenterId: number): AppThunk => async dispatch => {
+export const removeEngineType = (id: number, serviceCenterId: number, onRemove: () => void): AppThunk => async dispatch => {
     Api.call(Api.endpoints.Vehicles.RemoveEngineType, {urlParams: {id}})
         .then(result => {
             if (result?.data) {
                 dispatch(loadEngineType(serviceCenterId));
+                onRemove();
             }
         })
         .catch(err => {
