@@ -162,15 +162,16 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
             </span>
                 </div>
             : null}
-        {card.offer
-            ? <React.Fragment>
-                <div className="priceWrapper">
-                    <span className="text">{t("Special")}</span>
-                    <span className="price">{getOfferString(card.offer, Boolean(scProfile?.isRoundPrice))}</span>
-                </div>
-                <div className="expiringDate">{t("Expires")}{moment(card.offer.expiringDate).format('MM/DD/YY')}</div>
-            </React.Fragment>
-            : <div/>
-        }
+        {/*todo uncomment for offer new functionality*/}
+        {/*{card.offer*/}
+        {/*    ? <React.Fragment>*/}
+        {/*        <div className="priceWrapper">*/}
+        {/*            <span className="text">{t("Special")}</span>*/}
+        {/*            <span className="price">{getOfferString(card.offer, Boolean(scProfile?.isRoundPrice))}</span>*/}
+        {/*        </div>*/}
+        {/*        <div className="expiringDate">{t("Expires")}{moment(card.offer.expiringDate).format('MM/DD/YY')}</div>*/}
+        {/*    </React.Fragment>*/}
+        {/*    : <div/>*/}
+        {/*}*/}
     </CardWrapper>
 }
