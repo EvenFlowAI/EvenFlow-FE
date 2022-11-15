@@ -273,6 +273,7 @@ export const AppointmentFrameLayout = () => {
     }, []);
 
     const handleAddNewVehicle = useCallback(() => {
+        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         dispatch(setVehicle(getBlankVehicle()));
         dispatch(setPackage(null));
         dispatch(selectAppointment(null));
@@ -282,7 +283,11 @@ export const AppointmentFrameLayout = () => {
         dispatch(setTiming(null));
         dispatch(setAdvisor(null));
         dispatch(selectSR(null));
-        handleSetScreen('serviceNeeds');
+        if (needToShowServiceSelection) {
+            handleServiceTypeSelection()
+        } else {
+            handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+        }
     }, [dispatch, handleSetScreen]);
 
     const handleAddNewCarAppointment = useCallback((vehicle: ILoadedVehicle) => {
