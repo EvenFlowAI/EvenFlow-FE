@@ -27,7 +27,7 @@ import {
     getCustomerCache,
     loadSCProfile,
     loadSRs,
-    saveCustomerCache,
+    saveCustomerCache, selectAppointment,
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
@@ -37,8 +37,9 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
+    selectCategoriesIds, selectService, selectSubService, setAdvisor,
     setCurrentFrameScreen,
-    setPackage,
+    setPackage, setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
@@ -273,6 +274,14 @@ export const AppointmentFrameLayout = () => {
 
     const handleAddNewVehicle = useCallback(() => {
         dispatch(setVehicle(getBlankVehicle()));
+        dispatch(setPackage(null));
+        dispatch(selectAppointment(null));
+        dispatch(selectCategoriesIds([]));
+        dispatch(selectService(null));
+        dispatch(selectSubService(null));
+        dispatch(setTiming(null));
+        dispatch(setAdvisor(null));
+        dispatch(selectSR(null));
         handleSetScreen('serviceNeeds');
     }, [dispatch, handleSetScreen]);
 
