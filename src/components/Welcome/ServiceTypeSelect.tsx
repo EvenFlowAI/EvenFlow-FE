@@ -85,9 +85,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
 
     const handleSelect = (service: EServiceType) => {
         // todo service type from the appointment by key
-        // todo uncomment if block
-        // if (serviceType !== service)
-        dispatch(clearAppointmentData());
+        if (serviceType !== service) dispatch(clearAppointmentData());
         dispatch(setServiceType(service));
         handleUser(service);
     }
