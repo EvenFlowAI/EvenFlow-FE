@@ -113,26 +113,26 @@ export const decodeSCID = (id: string): number => {
 
 export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAppointments => {
     const appointments: TGroupedAppointments = {};
-    for (let appointment of slots) {
-        const date = moment(appointment.date);
-        const idx = appointment.id.split("|")[0];
+    for (let slot of slots) {
+        const date = moment(slot.date);
+        const idx = slot.id.split("|")[0];
         if (appointments[idx]) {
-            appointments[idx].appointments.push(appointment);
-            if (appointment.offer) {
-                appointments[idx].offers = appointments[idx].offers || Boolean(appointment.offer);
+            appointments[idx].appointments.push(slot);
+            if (slot.offer) {
+                appointments[idx].offers = appointments[idx].offers || Boolean(slot.offer);
             }
-            if ((appointment.priceWithOffer?.value || appointment.price.value) < appointments[idx].lowestPrice) {
-                appointments[idx].lowestPrice = appointment.priceWithOffer?.value || appointment.price.value;
+            if ((slot.priceWithOffer?.value || slot.price.value) < appointments[idx].lowestPrice) {
+                appointments[idx].lowestPrice = slot.priceWithOffer?.value || slot.price.value;
             }
         } else {
-            const lowestPrice = appointment.priceWithOffer?.value ?? appointment.price.value;
-            const amountOfSavingMoney = appointment?.price?.amountOfSavingMoney;
+            const lowestPrice = slot.priceWithOffer?.value ?? slot.price.value;
+            const amountOfSavingMoney = slot?.price?.amountOfSavingMoney;
             appointments[idx] = {
                 date,
                 idx,
                 lowestPrice,
-                appointments: [appointment],
-                offers: Boolean(appointment.offer),
+                appointments: [slot],
+                offers: Boolean(slot.offer),
                 amountOfSavingMoney: amountOfSavingMoney,
             };
         }
