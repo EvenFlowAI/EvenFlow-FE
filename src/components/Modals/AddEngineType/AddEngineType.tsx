@@ -41,9 +41,11 @@ const AddEngineType: React.FC<DialogProps> = (props) => {
 
     const addEngineType = ():void => {
         setFormIsChecked(true);
-        if (newEngineType) {
-            if (types.includes(newEngineType)) {
-             return showError(`Mileage "${newEngineType}" already exists`)
+        const value = newEngineType.trim();
+        if (value?.length) {
+            const lowerCaseTypes = types.map(item => item.toLowerCase());
+            if (lowerCaseTypes.includes(value.toLowerCase())) {
+             return showError(`Engine Type "${value}" already exists`)
             }
             setTypes(prev => [...prev, newEngineType]);
         }
