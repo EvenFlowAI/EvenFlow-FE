@@ -103,3 +103,7 @@ export interface IServiceOffer  {
 }
 
 export type TLanguage = "en" | "es";
+
+export interface ICreateAppointmentRequestData {
+
+}
