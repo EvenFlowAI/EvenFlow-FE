@@ -76,6 +76,7 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
             {to: Routes.Optimizer.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Optimizer.ManageEXEvenFlowAppointments, name: "Manage Ex EvenFlow Appointments", sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Optimizer.CapacitySettings, name: "Capacity Settings", sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Optimizer.PartsAvailability, name: "Parts Availability", sub: true, roles: ["Owner", "Manager"]},
         ]},
     {to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"], subLinks: [
             {to: Routes.Pricing.ServicePricingSettings, name: "Service Price Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
