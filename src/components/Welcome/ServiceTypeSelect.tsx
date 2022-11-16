@@ -10,7 +10,7 @@ import {
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {clearAppointmentData, setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga";
 import {Loading} from "../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
@@ -84,8 +84,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     }
 
     const handleSelect = (service: EServiceType) => {
-        // todo service type from the appointment by key
-        if (serviceType !== service) dispatch(clearAppointmentData());
         dispatch(setServiceType(service));
         handleUser(service);
     }
