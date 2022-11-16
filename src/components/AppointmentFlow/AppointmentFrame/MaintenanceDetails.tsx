@@ -299,8 +299,6 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 fullWidth
                 getOptionLabel={o => o.name}
                 getOptionSelected={o => o.id === selectedEngine?.id}
-                disableClearable
-                autoComplete={true}
                 disabled={!isNewVehicleView}
                 renderInput={autocompleteRender({
                     label: "Engine Type",
@@ -308,7 +306,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                     error: errors.includes("engineTypeId"),
                     required: true,
             })}
-                value={selectedEngine ?? undefined}
+                value={selectedEngine}
                 />
             : null }
         </SelectWrapper>
