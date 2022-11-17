@@ -127,7 +127,9 @@ export const Welcome = () => {
 
     const onServiceTypeSelect = (service: EServiceType) => {
         // todo service type from the appointment by key
-        if (serviceType !== service) dispatch(clearAppointmentData());
+        if (serviceType !== service) {
+            dispatch(clearAppointmentData());
+        }
         handleConfig(service);
         dispatch(setCurrentFrameScreen(service === EServiceType.VisitCenter ? 'serviceNeeds' : 'location'));
         redirect();

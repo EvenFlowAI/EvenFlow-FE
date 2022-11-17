@@ -5,7 +5,7 @@ import {getMaintenanceList} from "./uiUtils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
-import {selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {loadSRs, selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
@@ -89,11 +89,11 @@ const CartTable = () => {
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
     const {t} = useTranslation();
 
-
     useEffect(() => {
         if (scProfile) {
             dispatch(loadCategoriesByQuery(scProfile.id))
             dispatch(loadMakes(scProfile.id))
+            dispatch(loadSRs(scProfile.id))
         }
     }, [scProfile, dispatch])
 
