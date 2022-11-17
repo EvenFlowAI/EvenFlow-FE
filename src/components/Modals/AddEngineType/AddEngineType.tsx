@@ -61,13 +61,13 @@ const AddEngineType: React.FC<DialogProps> = (props) => {
         if ((types.length || newEngineType?.length) && selectedSC) {
             const existingTypes = engineTypes.filter(item => types.includes(item.name) || item.name === newEngineType)
             if (existingTypes.length) {
-                return showError(`${existingTypes.length > 1 ? 'Mileages' : 'Mileage'} "${existingTypes.map(item => item.name).join(', ')}" already exists`)
+                return showError(`${existingTypes.length > 1 ? 'Engine Types' : 'Engine Type'} "${existingTypes.map(item => item.name).join(', ')}" already exists`)
             }
             const data: TCreateEngineType = {
                 names: types.length ? types : [newEngineType],
                 serviceCenterId: selectedSC.id,
             }
-            dispatch(createEngineType(data));
+            dispatch(createEngineType(data, err => showError(err)));
             onCancel();
         }
     }
