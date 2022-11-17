@@ -56,7 +56,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const mockZip = [{value: '123456', name: "123456"}]
+const mockZip = [{value: '123456', name: "123456"}, {value: '57865', name: "57865"}, {value: '40065', name: "40065"}]
 
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
     const [addressValue, setAddressValue] = useState<any>(null);
