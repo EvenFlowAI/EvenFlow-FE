@@ -13,6 +13,9 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {styled} from "@material-ui/core";
+import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
+import {useException, useModal} from "../../../utils/hooks";
+import UnavailableService from "../../Modals/InavailableService/UnavailableService";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -61,7 +64,10 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const {zipCode: zipCodeValue, address, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isOpen, onClose, onOpen} = useModal();
+    const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
+    const showError = useException();
     const classes = useStyles();
     const {t} = useTranslation();
 
@@ -112,19 +118,30 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         }
     }
 
+    const onSuccess = () => {
+        onOpen();
+    }
+
+    const onError = () => {
+        onUnavailableOpen()
+    }
+
     const handleNext = () => {
         setFormChecked(true);
-        onNext()
+        if (!address) return showError('"Address" is required');
+        if (!zip) return showError('"Zip Code" is required');
         if (address && zip) {
-            // todo checking request
-
+            // todo request
+            onSuccess()
+        } else {
+            onError()
         }
     }
 
     return (
         <StepWrapper>
             <SelectWrapper>
-                <div>
+                <div style={{width: '100%'}}>
                     <p className="label">{t("Your Address")}</p>
                     <GooglePlacesAutocomplete
                         apiKey="AIzaSyCTy-LeuU4m1uoh1nhbUVZBC2G4HDUQQ04"
@@ -141,7 +158,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             placeholder: address?.label ?? t('Start To Type'),
                             isClearable: true,
                             isSearchable: true,
-                            defaultInputValue: addressValue?.label || "",
+                            defaultInputValue: address?.label || "",
                             key: address?.label || 'label'
                         }}
                     />
@@ -165,6 +182,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
 
             </SelectWrapper>
             <Actions onBack={handleBack} onNext={handleNext} />
+            <DisplayAncillaryPrice onNext={onNext} open={isOpen} onClose={onClose}/>
+            <UnavailableService open={isUnavailableOpen} onClose={onUnavailableClose}/>
         </StepWrapper>
     );
 };

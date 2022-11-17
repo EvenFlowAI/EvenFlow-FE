@@ -72,7 +72,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const useDialogStyles = makeStyles({
+export const useDialogStyles = makeStyles({
     root: {
         "& hr": {
             margin: "28px 0",
