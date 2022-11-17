@@ -311,6 +311,7 @@ export const AppointmentFrameLayout = () => {
     }
 
     const handleSelectCar = useCallback(async () => {
+        dispatch(selectSR(null));
         const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
