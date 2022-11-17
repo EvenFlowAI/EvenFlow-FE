@@ -140,7 +140,7 @@ export const removeEngineType = (id: number, serviceCenterId: number, onRemove: 
         })
 }
 
-export const createEngineType = (data: TCreateEngineType): AppThunk => async dispatch => {
+export const createEngineType = (data: TCreateEngineType, onError: (err: string) => void): AppThunk => async dispatch => {
     Api.call(Api.endpoints.Vehicles.CreateEngineType, {data})
         .then(result => {
             if (result?.data) {
@@ -148,6 +148,7 @@ export const createEngineType = (data: TCreateEngineType): AppThunk => async dis
             }
         })
         .catch(err => {
+            onError(err)
             console.log('create engine type error', err);
         })
 }
