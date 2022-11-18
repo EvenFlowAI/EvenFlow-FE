@@ -7,7 +7,12 @@ import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
-import {setAddress, setSideBarSteps, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    loadAncillaryPriceByZip, loadFilteredZip,
+    setAddress,
+    setSideBarSteps,
+    setZipCode
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
@@ -33,11 +38,6 @@ export const SelectWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-type TOption = {
-    value: string;
-    name: string;
-}
-
 type TYourLocationProps = TActionProps & {
     onLogin: () => void
 }
@@ -56,14 +56,14 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const mockZip = [{value: '123456', name: "123456"}, {value: '57865', name: "57865"}, {value: '40065', name: "40065"}]
+const mockZip = ["00501","00544","00601","00602","00603","00604","00605","00606","00610","00611","00612","00613","00614","00616","00617"]
 
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
     const [addressValue, setAddressValue] = useState<any>(null);
-    const [zip, setZip] = useState<TOption | null>(null);
+    const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
-    const {zipCode: zipCodeValue, address, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {zipCode: zipCodeValue, address, serviceType, filteredZipCodes} = useSelector((state: RootState) => state.appointmentFrame);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -72,8 +72,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const {t} = useTranslation();
 
     useEffect(() => {
-        const selectedZip = mockZip.find(item => item.value === zipCodeValue);
-        setZip(selectedZip ?? null);
+        const selectedZip = mockZip.find(item => item === zipCodeValue);
+        setZip(selectedZip ?? "");
         setAddressValue(address);
     }, [zipCodeValue, mockZip, address])
 
@@ -84,7 +84,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
 
     const clearAddress = () => {
         dispatch(setAddress(null));
-        dispatch(setZipCode(null));
+        dispatch(setZipCode(""));
     }
 
     const handleChangeAddress = async (e: any) => {
@@ -101,11 +101,15 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
             dispatch(setAddress(null));
         }
     }
-    const handleChangeZip = (e: React.ChangeEvent<{}>, option: TOption | null) => {
+    const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         clearSelectedData();
         setFormChecked(false);
-        setZip(option);
-        option ? dispatch(setZipCode(option?.value)) : dispatch(setZipCode(null));
+        setZip(option ?? "");
+        if (scProfile &&  option && option.length >= 2) {
+            dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: option}))
+        }
+
+        dispatch(setZipCode(option ?? ""));
     }
 
     const handleBack = () => {
@@ -138,6 +142,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         }
     }
 
+    const getOptionsZip = (e: React.KeyboardEvent<HTMLDivElement>) => {
+
+    }
+    // todo filteredZipCodes instead of mockZip
+
     return (
         <StepWrapper>
             <SelectWrapper>
@@ -169,7 +178,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     onChange={handleChangeZip}
                     fullWidth
                     autoComplete={true}
-                    getOptionLabel={(option) => option.name}
+                    onKeyUp={getOptionsZip}
                     renderInput={autocompleteRender({
                         label: t('Your ZIP'),
                         placeholder: isFormChecked && !zip ? t("ZIP required") : t("Your ZIP"),

@@ -51,7 +51,7 @@ const UnavailableService: React.FC<DialogProps> = ({onClose, open}) => {
 
     const onTryAnother = () => {
         dispatch(setAddress(null));
-        dispatch(setZipCode(null));
+        dispatch(setZipCode(""));
         onClose()
     }
 

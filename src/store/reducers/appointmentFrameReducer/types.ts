@@ -104,6 +104,18 @@ export interface IServiceOffer  {
 
 export type TLanguage = "en" | "es";
 
-export interface ICreateAppointmentRequestData {
+export interface IAncillaryByZipRequest {
+    address: string;
+    zipCode: string;
+    serviceType: EServiceType;
+    serviceCenterId: number;
+}
 
+export enum EAncillaryType {
+    FixedPrice, Percent
+}
+
+export type TAncillaryPriceByZip = {
+    price: number;
+    type: EAncillaryType
 }
