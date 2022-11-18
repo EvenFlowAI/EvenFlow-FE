@@ -185,7 +185,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setTransportation(null));
 }
 
-export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onError: (err: string) => void): AppThunk => dispatch => {
+export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onError: (err?: string) => void): AppThunk => dispatch => {
     dispatch(setAncillaryPriceLoading(true))
     Api.call(Api.endpoints.AncillaryPricing.GetByZip, {data})
         .then(result => {

@@ -1,13 +1,12 @@
 import React from 'react';
 import {useDialogStyles} from "../DetailedFees/DetailedFees";
-import {DialogContent, DialogTitle} from "../BaseModal";
+import {DialogContent, DialogTitle, BaseModal, DialogActions} from "../BaseModal";
 import {DialogProps} from "../types";
-import {Dialog} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EAncillaryType, EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {setCurrentFrameScreen, setServiceType} from "../../../store/reducers/appointmentFrameReducer/actions";
 
@@ -33,17 +32,16 @@ const useStyles = makeStyles(() => ({
 }))
 
 const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext}) => {
-    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, ancillaryPrice} = useSelector((state: RootState) => state.appointmentFrame);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
+    const price = ancillaryPrice?.feeType === EAncillaryType.Amount ? `${ancillaryPrice?.feeAmount.toFixed(2)}` : `${ancillaryPrice?.feeAmount}%`
 
     const serviceString = serviceType === EServiceType.MobileService
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");
-    // todo price display
-    const price = 18;
 
     const onBack = () => {
         dispatch(setServiceType(EServiceType.VisitCenter));
@@ -57,24 +55,26 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
     }
 
     return (
-        <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
+        <BaseModal open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}} width={700}>
             <DialogTitle onClose={onClose}/>
             <DialogContent>
                 <div className={classes.info}>
-                    {t("For the location you entered, a convenience fee of")} ${price.toFixed(2)} {t("will be added to your service bill for the")} {" "}
+                    {t("For the location you entered, a convenience fee of")} ${price} {t("will be added to your service bill for the")} {" "}
                     {serviceString}.
                     <span className={classes.question}>
                         {t("Do you wish to proceed with the")} {serviceString}?
                     </span>
                 </div>
             </DialogContent>
-            <Actions
-                onBack={onBack}
-                onNext={onSubmit}
-                nextLabel={`${t("Continue with")} ${serviceString}`}
-                prevLabel={t("Visit Center instead")}
-            />
-        </Dialog>
+            <DialogActions>
+                <Actions
+                    onBack={onBack}
+                    onNext={onSubmit}
+                    nextLabel={`${t("Continue with")} ${serviceString}`}
+                    prevLabel={t("Visit Center instead")}
+                />
+            </DialogActions>
+        </BaseModal>
     );
 };
 

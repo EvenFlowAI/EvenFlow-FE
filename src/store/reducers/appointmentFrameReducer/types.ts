@@ -112,10 +112,10 @@ export interface IAncillaryByZipRequest {
 }
 
 export enum EAncillaryType {
-    FixedPrice, Percent
+    Amount, Percent
 }
 
 export type TAncillaryPriceByZip = {
-    price: number;
-    type: EAncillaryType
+    feeAmount: number;
+    feeType: EAncillaryType;
 }

@@ -221,7 +221,7 @@ export class Api {
             CreateDistance: {route: "/ancillary-price/distance", method: "post"},
             UpdateDistance: {route: "/ancillary-price/distance/{id}", method: "put"},
             DeleteDistance: {route: "/ancillary-price/distance/{id}", method: "delete"},
-            GetByZip: {route: "/ancillary-price/by-address-zip-code", method: "post"},
+            GetByZip: {route: "/ancillary-price/get-convenience-fee", method: "post"},
         },
         Appointments: {
             Create: {route: "/appointments", method: "post"},

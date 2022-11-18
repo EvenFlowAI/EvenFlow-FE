@@ -15,7 +15,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, IAncillaryByZipRequest} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {styled} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
@@ -56,7 +56,8 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const mockZip = ["00501","00544","00601","00602","00603","00604","00605","00606","00610","00611","00612","00613","00614","00616","00617"]
+const mockZip = ["32401", "32402", "32403"];
+//const mockZip = ["00501","00544","00601","00602","00603","00604","00605","00606","00610","00611","00612","00613","00614","00616","00617"]
 
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
     const [addressValue, setAddressValue] = useState<any>(null);
@@ -126,24 +127,32 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         onOpen();
     }
 
-    const onError = () => {
+    const onError = (err?: string): void => {
         onUnavailableOpen()
     }
 
     const handleNext = () => {
         setFormChecked(true);
         if (!address) return showError('"Address" is required');
-        if (!zip) return showError('"Zip Code" is required');
-        if (address && zip) {
-            // todo request
+        if (!zip?.length) return showError('"Zip Code" is required');
+        if (address?.label && zip.length && scProfile) {
+            const data: IAncillaryByZipRequest = {
+                address: address.label,
+                zipCode: zip,
+                serviceCenterId: scProfile?.id,
+                serviceType
+            }
+            dispatch(loadAncillaryPriceByZip(data, onError))
             onSuccess()
         } else {
             onError()
         }
     }
 
-    const getOptionsZip = (e: React.KeyboardEvent<HTMLDivElement>) => {
-
+    const onInputChange = (e: React.ChangeEvent<{}>, value: string) => {
+        if (scProfile) {
+            dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
+        }
     }
     // todo filteredZipCodes instead of mockZip
 
@@ -178,7 +187,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     onChange={handleChangeZip}
                     fullWidth
                     autoComplete={true}
-                    onKeyUp={getOptionsZip}
+                    onInputChange={onInputChange}
                     renderInput={autocompleteRender({
                         label: t('Your ZIP'),
                         placeholder: isFormChecked && !zip ? t("ZIP required") : t("Your ZIP"),
