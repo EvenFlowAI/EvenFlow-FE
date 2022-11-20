@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDialogStyles} from "../DetailedFees/DetailedFees";
-import {DialogContent, DialogTitle, BaseModal, DialogActions} from "../BaseModal";
+import {DialogContent, DialogTitle, BaseModal} from "../BaseModal";
 import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
@@ -28,6 +28,11 @@ const useStyles = makeStyles(() => ({
     question: {
         marginTop: 20,
         textAlign: "center",
+    },
+    actionsWrapper: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: 30
     }
 }))
 
@@ -55,7 +60,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
     }
 
     return (
-        <BaseModal open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}} width={700}>
+        <BaseModal open={open} fullWidth  style={{paddingBottom: 20}} onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}} width={700}>
             <DialogTitle onClose={onClose}/>
             <DialogContent>
                 <div className={classes.info}>
@@ -66,14 +71,14 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
                     </span>
                 </div>
             </DialogContent>
-            <DialogActions>
+            <div className={classes.actionsWrapper}>
                 <Actions
                     onBack={onBack}
                     onNext={onSubmit}
                     nextLabel={`${t("Continue with")} ${serviceString}`}
                     prevLabel={t("Visit Center instead")}
                 />
-            </DialogActions>
+            </div>
         </BaseModal>
     );
 };

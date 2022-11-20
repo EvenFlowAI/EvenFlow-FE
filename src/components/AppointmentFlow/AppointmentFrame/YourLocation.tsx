@@ -8,14 +8,20 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
 import {
-    loadAncillaryPriceByZip, loadFilteredZip,
+    loadAncillaryPriceByZip,
+    loadFilteredZip,
     setAddress,
     setSideBarSteps,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
-import {EServiceType, IAncillaryByZipRequest} from "../../../store/reducers/appointmentFrameReducer/types";
+import {
+    EAncillaryType,
+    EServiceType,
+    IAncillaryByZipRequest,
+    TAncillaryPriceByZip
+} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {styled} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
@@ -57,7 +63,6 @@ const useStyles = makeStyles(() => ({
 }))
 
 const mockZip = ["32401", "32402", "32403"];
-//const mockZip = ["00501","00544","00601","00602","00603","00604","00605","00606","00610","00611","00612","00613","00614","00616","00617"]
 
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
     const [addressValue, setAddressValue] = useState<any>(null);
@@ -73,10 +78,10 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const {t} = useTranslation();
 
     useEffect(() => {
-        const selectedZip = mockZip.find(item => item === zipCodeValue);
-        setZip(selectedZip ?? "");
+        // todo set Selected Zip for returning customer
+        setZip(zipCodeValue ?? "")
         setAddressValue(address);
-    }, [zipCodeValue, mockZip, address])
+    }, [zipCodeValue, address])
 
     const clearSelectedData = () => {
         dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
@@ -106,11 +111,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         clearSelectedData();
         setFormChecked(false);
         setZip(option ?? "");
-        if (scProfile &&  option && option.length >= 2) {
-            dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: option}))
-        }
-
-        dispatch(setZipCode(option ?? ""));
     }
 
     const handleBack = () => {
@@ -123,12 +123,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         }
     }
 
-    const onSuccess = () => {
-        onOpen();
-    }
-
-    const onError = (err?: string): void => {
-        onUnavailableOpen()
+    const onSuccess = (data: TAncillaryPriceByZip) => {
+        if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
+            onUnavailableOpen()
+        } else {
+            onOpen();
+        }
     }
 
     const handleNext = () => {
@@ -136,16 +136,16 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         if (!address) return showError('"Address" is required');
         if (!zip?.length) return showError('"Zip Code" is required');
         if (address?.label && zip.length && scProfile) {
+            dispatch(setZipCode(zip));
             const data: IAncillaryByZipRequest = {
                 address: address.label,
                 zipCode: zip,
                 serviceCenterId: scProfile?.id,
                 serviceType
             }
-            dispatch(loadAncillaryPriceByZip(data, onError))
-            onSuccess()
+            dispatch(loadAncillaryPriceByZip(data, onSuccess, showError))
         } else {
-            onError()
+            showError(t("Please select your Address and Zip code"))
         }
     }
 
@@ -154,7 +154,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
             dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
         }
     }
-    // todo filteredZipCodes instead of mockZip
 
     return (
         <StepWrapper>
@@ -183,7 +182,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 </div>
 
                 <Autocomplete
-                    options={mockZip}
+                    options={filteredZipCodes}
                     onChange={handleChangeZip}
                     fullWidth
                     autoComplete={true}

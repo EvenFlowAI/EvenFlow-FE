@@ -185,11 +185,14 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setTransportation(null));
 }
 
-export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onError: (err?: string) => void): AppThunk => dispatch => {
+export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void): AppThunk => dispatch => {
     dispatch(setAncillaryPriceLoading(true))
     Api.call(Api.endpoints.AncillaryPricing.GetByZip, {data})
         .then(result => {
-            if (result?.data) dispatch(setAncillaryPriceByZip(result.data))
+            if (result?.data) {
+                dispatch(setAncillaryPriceByZip(result.data))
+                onSuccess(result.data)
+            }
         })
         .catch(err => {
             onError(err)
@@ -202,7 +205,7 @@ export const loadFilteredZip = (data: {serviceCenterId: number; search: string})
     dispatch(setAncillaryPriceLoading(true))
     Api.call(Api.endpoints.ZipCodes.GetFiltered, {data})
         .then(result => {
-            if (result?.data) dispatch(setFilteredZipCodes(result.data))
+            if (result?.data?.zipCodes) dispatch(setFilteredZipCodes(result.data.zipCodes))
         })
         .catch(err => {
             console.log('get zip codes by filter error', err)
