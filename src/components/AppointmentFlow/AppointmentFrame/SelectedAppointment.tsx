@@ -182,6 +182,7 @@ export const SelectedAppointment = () => {
 
     const price = appointment?.price.value ?? 0;
     const ancillaryPrice = appointment?.price.ancillaryPrice ?? 0;
+    console.log(ancillaryPrice)
     const isDynamicPricing = appointmentSlots.length
         ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
         : false;
@@ -223,12 +224,6 @@ export const SelectedAppointment = () => {
                         </div> }
                     </li>
                     <li key="advisor">
-                        {serviceType !== EServiceType.VisitCenter
-                            ? <div className="service-list" style={{marginBottom: 10}}>
-                                <div>{t("PROVIDED BY OUR")}: {getServiceName()}</div>
-                            </div>
-                            : null
-                        }
                         {currentConfig?.advisorSelection
                             ? <div className={classes.selectWrapper}>
                                 <div className={classes.selectWrapper}>
@@ -245,12 +240,19 @@ export const SelectedAppointment = () => {
                                 </div>
                             </div>
                             : null}
-                        {serviceType !== EServiceType.VisitCenter && address
-                            ? <div className="service-list">
-                                <h4> {t("YOUR ADDRESS")}: </h4>
-                                <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
+                        {serviceType !== EServiceType.VisitCenter
+                            ? <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
+                                <div>{t("PROVIDED BY OUR")}: {getServiceName()}</div>
                             </div>
-                            : null}
+                            : null
+                        }
+                        {/*todo ask if we need this info*/}
+                        {/*{serviceType !== EServiceType.VisitCenter && address*/}
+                        {/*    ? <div className="service-list">*/}
+                        {/*        <h4> {t("YOUR ADDRESS")}: </h4>*/}
+                        {/*        <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>*/}
+                        {/*    </div>*/}
+                        {/*    : null}*/}
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper> : null}
@@ -266,7 +268,7 @@ export const SelectedAppointment = () => {
                         : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
-                          ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
+                          ${scProfile?.isRoundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}
                         </div>}
                         {/*todo uncomment for offer new functionality*/}
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}

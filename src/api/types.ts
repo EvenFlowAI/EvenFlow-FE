@@ -216,6 +216,7 @@ export interface IBaseAppointment {
     serviceType: EServiceType;
     address?: string;
     zipCode?: string;
+    ancillaryPrice: number;
 }
 
 export interface IListAppointment extends IBaseAppointment {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Dialog} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -39,7 +39,11 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const UnavailableService: React.FC<DialogProps> = ({onClose, open}) => {
+type TUnavailableServiceProps = DialogProps & {
+    setFormChecked: Dispatch<SetStateAction<boolean>>;
+}
+
+const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, setFormChecked}) => {
     const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
@@ -50,6 +54,7 @@ const UnavailableService: React.FC<DialogProps> = ({onClose, open}) => {
         : t("Pick Up / Drop Off Service");
 
     const onTryAnother = () => {
+        setFormChecked(false);
         dispatch(setAddress(null));
         dispatch(setZipCode(""));
         onClose()
