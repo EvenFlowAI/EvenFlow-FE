@@ -216,7 +216,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, [
         dispatch, id, selectedTimingType, month,
         selectedVehicle, customerData, service, handleDateRangeSet, vehicle,
-        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService
+        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService, serviceType
     ]);
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
