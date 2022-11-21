@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDialogStyles} from "../DetailedFees/DetailedFees";
-import {DialogContent, DialogTitle, BaseModal} from "../BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
@@ -64,7 +64,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
             <DialogTitle onClose={onClose}/>
             <DialogContent>
                 <div className={classes.info}>
-                    {t("For the location you entered, a convenience fee of")} ${price} {t("will be added to your service bill for the")} {" "}
+                    {t("For the location you entered, a convenience fee of")} {ancillaryPrice?.feeType === EAncillaryType.Amount ? "$" : ""}{price} {t("will be added to your service bill for the")} {" "}
                     {serviceString}.
                     <span className={classes.question}>
                         {t("Do you wish to proceed with the")} {serviceString}?
