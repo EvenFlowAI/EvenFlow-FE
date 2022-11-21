@@ -1,6 +1,7 @@
 import moment from "moment";
-import {ILoadedVehicle, IPackage, IPackageOptions, IServiceCategory} from "../../../api/types";
+import {ILoadedVehicle, IOfferForCategory, IPackage, IPackageOptions, IServiceCategory} from "../../../api/types";
 import {TComplimentary, TPackage, TService} from "./PackageSelection";
+import {EOfferType} from "../../../store/reducers/offers/types";
 
 export const getAppointmentDate = (date: moment.Moment, d: number) => {
     return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
@@ -101,4 +102,18 @@ export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TServi
         return [packages, services, complimentary];
     }
     return [[], [], []];
+}
+
+
+export const getOfferString = (offer: IOfferForCategory, isRoundPrice: boolean): string => {
+    switch (offer.type) {
+        case EOfferType.AmountOff:
+            return `$${isRoundPrice ? offer.valueOff : offer.valueOff?.toFixed(2)} Off`;
+        case EOfferType.PercentOff:
+            return `${offer.valueOff}% Off`;
+        case EOfferType.FreeService:
+            return offer.title;
+        default:
+            return '';
+    }
 }

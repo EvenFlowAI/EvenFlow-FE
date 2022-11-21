@@ -1,4 +1,5 @@
 import {EPricingDisplayType} from "../pricingSettings/types";
+import {IOfferForCategory} from "../../../api/types";
 
 export interface IServiceRequest {
     id: number;
@@ -13,6 +14,7 @@ export interface IServiceRequest {
     price: number;
     partsUnitCost: number;
     numberOfParts: number;
+    offer?: IOfferForCategory;
 }
 export interface IServiceRequestShort {
     id: number;

@@ -12,7 +12,7 @@ import {decodeSCID, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
-import {loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
+import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
@@ -63,6 +63,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         userType,
         vehicle,
         hashKey,
+        serviceType,
+        zipCode,
+        address,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -82,6 +85,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.userType,
         state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.hashKey,
+        state.appointmentFrame.serviceType,
+        state.appointmentFrame.zipCode,
+        state.appointmentFrame.address,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -132,6 +138,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
 
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
+        dispatch(selectAppointment(null));
         if (!d.isSame(month, 'month')
             && selectedTimingType === EAppointmentTimingType.SpecialOffers) {
             setMonth(d);
@@ -177,10 +184,13 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                         countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration,
+                        serviceType,
                     }
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
                     }
+                    if (zipCode?.length) dd.zipCode = zipCode;
+                    if (address?.label) dd.address = address.label;
                     if (vehicle) {
                         dd.vehicle = {
                             vin: vehicle.vin,
@@ -206,7 +216,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
     }, [
         dispatch, id, selectedTimingType, month,
         selectedVehicle, customerData, service, handleDateRangeSet, vehicle,
-        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService
+        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService, serviceType
     ]);
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);

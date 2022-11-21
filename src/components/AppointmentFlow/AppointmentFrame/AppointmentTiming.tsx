@@ -22,7 +22,6 @@ import {collectServiceRequestIds} from "./utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {Loading} from "../../UI/Loading";
 import {useTranslation} from "react-i18next";
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
@@ -192,6 +191,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         selectedOpsCodes,
         categoriesIds,
         allCategories,
+        serviceType,
     ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
@@ -210,6 +210,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.appointment.selectedSR,
             state.appointmentFrame.categoriesIds,
             state.categories.allCategories,
+            state.appointmentFrame.serviceType,
         ]);
 
     useEffect(() => {
@@ -228,6 +229,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             countOfDays: 21,
             customerId: customerData?.id,
             warrantyExpiration: selectedVehicle?.warrantyExpiration,
+            serviceType,
         }
         if (valueService?.selectedService) {
             dd.valueServiceOfferIds = [valueService.selectedService.id];

@@ -32,6 +32,7 @@ export type TMaintenanceDetails = {
     oilType?: string;
     serviceInterval?: string;
     mileage?:string;
+    engineType?: string;
 }
 
 export interface IFrameScreens {
@@ -102,3 +103,19 @@ export interface IServiceOffer  {
 }
 
 export type TLanguage = "en" | "es";
+
+export interface IAncillaryByZipRequest {
+    address: string;
+    zipCode: string;
+    serviceType: EServiceType;
+    serviceCenterId: number;
+}
+
+export enum EAncillaryType {
+    Amount, Percent
+}
+
+export type TAncillaryPriceByZip = {
+    feeAmount: number;
+    feeType: EAncillaryType;
+}

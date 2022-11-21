@@ -38,7 +38,7 @@ import {useTranslation} from "react-i18next";
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "20px",
+    gap: "80px",
     "&>div": {
         display: "flex",
         flexDirection: "column",
@@ -162,7 +162,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             vehicle: {
                 dmsId: null,
                 driveType: "",
-                engineType: "",
+                engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
                 ...(appointmentFrame.selectedVehicle ?? {}),
                 model,
                 make,
@@ -185,6 +185,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,
+            serviceType: appointmentFrame.serviceType,
+            zipCode: appointmentFrame.zipCode ?? null,
+            address: appointmentFrame.address?.label ?? null,
         };
 
         const endpoint = data?.hashKey

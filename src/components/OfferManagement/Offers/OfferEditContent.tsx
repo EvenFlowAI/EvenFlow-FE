@@ -23,6 +23,7 @@ import {RootState} from "../../../store/rootReducer";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TEnumMap} from "../../../store/reducers/utils";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
+import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 import {useModal} from "../../../utils/hooks";
 import HtmlEditor from "../../Modals/HTMLEditor/HTMLEditor";
 
@@ -87,6 +88,7 @@ type TProps = {
     onDOWSelect: (e: any, value: TEnumMap<EDayOfWeek>[]) => void;
     onSegmentSelect: (e: any, value: TEnumMap<ECustomerSegment>[]) => void;
     onSRChange: (e: any, value: IAssignedServiceRequestShort[]) => void;
+    onCategoryChange: (e: any, value: ICategory[]) => void;
     formIsChecked: boolean;
 }
 export const OfferEditContent: React.FC<TProps> = ({
@@ -98,11 +100,13 @@ export const OfferEditContent: React.FC<TProps> = ({
     onDOWSelect,
     onValueChange,
     onSegmentSelect,
+    onCategoryChange,
     onSRChange,
     formIsChecked,
 }) => {
     // const [options, setOptions] = useState<TServiceTypeWithCustom[]>([]);
     const serviceRequests = useSelector((state: RootState) => state.serviceRequests.scRequestsShort);
+    const {allCategories} = useSelector((state: RootState) => state.categories);
     const srWithAll: IAssignedServiceRequestShort[] = useMemo(() => {
         return [selectAllSR, ...serviceRequests];
     }, [serviceRequests]);
@@ -252,6 +256,27 @@ export const OfferEditContent: React.FC<TProps> = ({
                     fullWidth: true,
                     error: formIsChecked && !form.serviceRequests.length
                 })}
+            />
+        </div>
+        <div className={classes.inputContainer}>
+            <Autocomplete
+                options={allCategories.filter(category => category.type === EServiceCategoryType.GeneralCategory)}
+                multiple
+                ChipProps={{
+                    color: "primary",
+                    style: {borderRadius: 4},
+                    size: "small"
+                }}
+                disableCloseOnSelect
+                onChange={onCategoryChange}
+                getOptionLabel={i => i.name}
+                getOptionSelected={(option, value) => {
+                    return option.id === value.id;
+                }}
+                renderOption={autocompleteOptionsRender((e) => e.name)}
+                loading={false}
+                value={form.serviceCategories}
+                renderInput={autocompleteRender({label: "Service categories included", fullWidth: true})}
             />
         </div>
         <div className={classes.inputContainer}>

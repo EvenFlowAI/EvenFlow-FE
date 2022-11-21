@@ -6,12 +6,13 @@ import {
     IPersonalInformation,
     IVehicleData
 } from "../store/reducers/appointment/types";
-import {IOffer} from "../store/reducers/offers/types";
+import {EOfferType, IOffer} from "../store/reducers/offers/types";
 import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EJobType} from "../store/reducers/pods/types";
+import {EServiceType} from "../store/reducers/appointmentFrameReducer/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -83,6 +84,9 @@ export interface ICreateAppointment {
     serviceRequestIds: number[];
     searchTerm?: string;
     jobType?: EJobType;
+    serviceType: EServiceType;
+    address?: string;
+    zipCode?: string;
 }
 
 export interface IUpdateAppointment extends ICreateAppointment {
@@ -115,6 +119,7 @@ export interface IVehicle {
     mileage: number|null;
     serviceInterval?: string;
     modelDetails?: string;
+    engineTypeId?: string;
 }
 
 export interface ILoadedVehicle  extends IVehicle {
@@ -211,6 +216,10 @@ export interface IBaseAppointment {
     serviceRequests: IServiceRequestShort[];
     createdBy: string;
     user?: ICurrentUser;
+    serviceType: EServiceType;
+    address?: string;
+    zipCode?: string;
+    ancillaryPrice: number;
 }
 
 export interface IListAppointment extends IBaseAppointment {
@@ -248,6 +257,15 @@ export interface IServiceCategoryShort {
     name: string;
 }
 
+export interface IOfferForCategory {
+    id: number;
+    type: EOfferType;
+    expiringDate: string;
+    description: string;
+    title: string;
+    valueOff?: number;
+}
+
 export interface IServiceCategory extends IServiceCategoryShort {
     page: EServiceCategoryPage;
     serviceRequests: IServiceRequest[];
@@ -256,6 +274,7 @@ export interface IServiceCategory extends IServiceCategoryShort {
     loadedIcon?: JSX.Element | string;
     iconPath?: string;
     description?: string;
+    offer?: IOfferForCategory;
 }
 
 export interface IServiceConsultant {
@@ -291,6 +310,7 @@ export interface IBusinessRule {
     vehicleYearRange: IYearRange;
     vehicleMileageValues: string[];
     customerCriteria: ECustomerCriteria;
+    engineTypeId: number|null;
 }
 
 export interface IComplimentaryService {

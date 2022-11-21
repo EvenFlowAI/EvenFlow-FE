@@ -27,7 +27,7 @@ import {
     getCustomerCache,
     loadSCProfile,
     loadSRs,
-    saveCustomerCache,
+    saveCustomerCache, selectAppointment,
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
@@ -37,15 +37,15 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
+    selectCategoriesIds, selectService, selectSubService, setAdvisor,
     setCurrentFrameScreen,
-    setPackage,
+    setPackage, setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {CarDetails} from "../AppointmentFlow/AppointmentFrame/CarDetails";
-import {ILoadedVehicle} from "../../api/types";
+import {ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
@@ -56,6 +56,7 @@ import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 import {useTranslation} from "react-i18next";
+import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
 
 const Container = styled('div')({
     display: "flex",
@@ -97,6 +98,7 @@ const SCREENS = {
     vehicleData: "vehicleData",
     location: "Your Location",
     payment: "payment",
+    serviceOfferProductPage: "Service Offer Produce Page",
 }
 
 // todo add new parent links while go live with new dealerships
@@ -132,6 +134,7 @@ export const AppointmentFrameLayout = () => {
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -270,8 +273,21 @@ export const AppointmentFrameLayout = () => {
     }, []);
 
     const handleAddNewVehicle = useCallback(() => {
+        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         dispatch(setVehicle(getBlankVehicle()));
-        handleSetScreen('serviceNeeds');
+        dispatch(setPackage(null));
+        dispatch(selectAppointment(null));
+        dispatch(selectCategoriesIds([]));
+        dispatch(selectService(null));
+        dispatch(selectSubService(null));
+        dispatch(setTiming(null));
+        dispatch(setAdvisor(null));
+        dispatch(selectSR(null));
+        if (needToShowServiceSelection) {
+            handleServiceTypeSelection()
+        } else {
+            handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+        }
     }, [dispatch, handleSetScreen]);
 
     const handleAddNewCarAppointment = useCallback((vehicle: ILoadedVehicle) => {
@@ -295,6 +311,7 @@ export const AppointmentFrameLayout = () => {
     }
 
     const handleSelectCar = useCallback(async () => {
+        dispatch(selectSR(null));
         const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
@@ -334,17 +351,21 @@ export const AppointmentFrameLayout = () => {
                 onAddNewCarAppointment={handleAddNewCarAppointment}
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
+                setLastSelectedCategory={setLastSelectedCategory}
                 onLogin={handleLogin}
                 onBack={isPromotionPage
                     ? () => {}
                     : handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
+                setLastSelectedCategory={setLastSelectedCategory}
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleSetScreen}
             />,
             maintenanceDetails: <MaintenanceDetails
-                onBack={handleChangeScreen('serviceNeeds')}
+                onBack={handleChangeScreen(
+                    service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+                        ? 'opsCode' : 'serviceNeeds')}
                 onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
                     ? 'packageSelection'
                     : !currentConfig?.advisorSelection
@@ -403,18 +424,33 @@ export const AppointmentFrameLayout = () => {
             appointmentConfirmed: <AppointmentConfirmed
                 onModify={handleChangeScreen("serviceNeeds")}
             />,
-            carDetails: <CarDetails
-                onBack={handleChangeScreen(
-                    service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
-                    ? 'opsCode' : 'describeMore')}
-                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
-            />,
+            // carDetails: <MaintenanceDetails
+            //     onBack={handleChangeScreen(
+            //         service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+            //             ? 'opsCode' : 'serviceNeeds')}
+            //     onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
+            //         ? 'packageSelection'
+            //         : !currentConfig?.advisorSelection
+            //             ? 'appointmentTiming'
+            //             : 'consultantSelection')
+            //     }
+            // />,
             location: <YourLocation
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
                 onLogin={handleLogin}
             />,
             payment: <PaymentScreen/>,
+            serviceOfferProductPage: <OfferProductPage
+                onBack={handleChangeScreen(service?.type === EServiceCategoryType.Diagnose
+                || service?.type === EServiceCategoryType.IndividualServices
+                    ? 'serviceNeeds'
+                    : 'serviceSelection')}
+                onNext={handleSetScreen}
+                category={lastSelectedCategory}
+                lastCategory={lastSelectedCategory}
+                onChangeVehicle={handleChangeScreen('maintenanceDetails')}
+            />,
         }
         return carSelections[currentScreen];
     }, [
@@ -446,12 +482,14 @@ export const AppointmentFrameLayout = () => {
                 return t("Do you need assistance with transportation?");
             case "appointmentConfirmation":
                 return t("Appointment Confirmation Title");
-            case "carDetails":
-                return t("Please tell us about your vehicle");
+            // case "carDetails":
+            //     return t("Please tell us about your vehicle");
             case "location":
                 return t("Where are you located?");
             case "payment":
                 return t("Please Enter Your Payment Information");
+            case "serviceOfferProductPage":
+                return "Select Service With Special Offer";
             default:
                 return null;
         }
