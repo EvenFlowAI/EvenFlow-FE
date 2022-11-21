@@ -84,6 +84,9 @@ export interface ICreateAppointment {
     serviceRequestIds: number[];
     searchTerm?: string;
     jobType?: EJobType;
+    serviceType: EServiceType;
+    address?: string;
+    zipCode?: string;
 }
 
 export interface IUpdateAppointment extends ICreateAppointment {

@@ -121,7 +121,8 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         privacy,
         reminders,
         appointmentId,
-        forms
+        forms,
+        serviceType,
     ] = useSelector((state: RootState) => [
         state.appointment.customerEnteredEmail,
         state.appointment.serviceRequests,
@@ -133,6 +134,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
         state.appointment.reminders,
         state.appointment.appointmentId,
         state.appointment,
+        state.appointmentFrame.serviceType,
     ]);
 
     const dispatch = useDispatch();
@@ -181,6 +183,7 @@ export const AppointmentConfirmationS6: React.FC<TStepProps> = ({prev, isComplet
             offerId: forms?.appointment?.offer?.id ?? null,
             reminderTypes,
             serviceCenterId: decodeSCID(id),
+            serviceType,
             vehicle: {
                 ...forms.s1Data,
                 dmsId: forms.customerSelectedVehicle
