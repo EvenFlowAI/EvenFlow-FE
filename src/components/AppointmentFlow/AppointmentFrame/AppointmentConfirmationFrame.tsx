@@ -186,8 +186,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,
             serviceType: appointmentFrame.serviceType,
-            zipCode: appointmentFrame.zipCode,
-            address: appointmentFrame.address?.label ?? "",
+            zipCode: appointmentFrame.zipCode ?? null,
+            address: appointmentFrame.address?.label ?? null,
         };
 
         const endpoint = data?.hashKey
