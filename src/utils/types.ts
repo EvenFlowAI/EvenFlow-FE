@@ -21,7 +21,8 @@ export type TGroupedAppointment = {
     idx: string;
     offers: boolean;
     appointments: IRemappedAppointmentSlot[];
-    amountOfSavingMoney?: number,
+    amountOfSavingMoney?: number;
+    ancillaryPrice: number;
 }
 export type TGroupedAppointments = {
     [k: string]: TGroupedAppointment

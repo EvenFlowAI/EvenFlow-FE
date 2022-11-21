@@ -4,14 +4,11 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals
 import {
     IAppointmentByQuery,
     ICreateAppointment,
-    IPackageAppointments, IPackageOptions,
+    IPackageAppointments,
+    IPackageOptions,
     ITransportation
 } from "../../../api/types";
-import {
-    Button,
-    Divider,
-    Grid,
-} from "@material-ui/core";
+import {Button, Divider, Grid,} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {
@@ -44,6 +41,7 @@ import {EJobType} from "../../../store/reducers/pods/types";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 export type TForm = {
     date: string;
@@ -194,7 +192,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     time: payload.timeSlot,
                     price: {
                         value: payload.transactionValue,
-                        category: EDemandCategory.Average
+                        category: EDemandCategory.Average,
+                        ancillaryPrice: payload.ancillaryPrice,
                     },
                     isShorterWaitTime: false
                 }
@@ -236,6 +235,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 setSlots([]);
                 setSlotsLoading(false);
             } else {
+                // todo serviceTYpe, address, zipCode
                 API.timeSlots.list({
                     appointmentTimingType: EAppointmentTimingType.PreferredDate,
                     fromDate: moment(filterDate).toISOString(),
@@ -245,6 +245,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceCenterId: selectedSC.id,
                     jobType: jobType?.value ?? null,
                     appointmentHashKey: payload?.hashKey ?? undefined,
+                    serviceType: EServiceType.VisitCenter,
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,

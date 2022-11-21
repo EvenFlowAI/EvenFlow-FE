@@ -12,10 +12,10 @@ import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
 import {
     EServiceType,
-    EUserType,
+    EUserType, IAncillaryByZipRequest,
     IAppointmentId,
     IServiceOffer,
-    IValueService,
+    IValueService, TAncillaryPriceByZip,
     TLanguage,
     TMaintenanceDetails,
     TYear
@@ -57,7 +57,7 @@ export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCa
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
 export const setServiceType = createAction<EServiceType>('fAppointment/SetServiceType');
-export const setZipCode = createAction<string | null>('fAppointment/SetZipCode');
+export const setZipCode = createAction<string>('fAppointment/SetZipCode');
 export const setAddress = createAction<any>('fAppointment/SetAddress');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
 export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesModels');
@@ -69,6 +69,9 @@ export const setPickUpDropOffAvailability = createAction<boolean>('fAppointment/
 export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability');
 export const setWelcomeScreenView = createAction<TView>('fAppointment/SetWelcomeScreenView');
 export const switchLanguage = createAction<TLanguage>('fAppointment/ChangeLanguage');
+export const setAncillaryPriceByZip = createAction<TAncillaryPriceByZip>('fAppointment/SetAncillaryPriceByZip');
+export const setAncillaryPriceLoading = createAction<boolean>('fAppointment/SetAncillaryPriceLoading');
+export const setFilteredZipCodes = createAction<string[]>('fAppointment/SetFilteredZipCodes');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -180,4 +183,32 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setTiming(null));
     dispatch(setAdvisor(null));
     dispatch(setTransportation(null));
+}
+
+export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void): AppThunk => dispatch => {
+    dispatch(setAncillaryPriceLoading(true))
+    Api.call(Api.endpoints.AncillaryPricing.GetByZip, {data})
+        .then(result => {
+            if (result?.data) {
+                dispatch(setAncillaryPriceByZip(result.data))
+                onSuccess(result.data)
+            }
+        })
+        .catch(err => {
+            onError(err)
+            console.log('get ancillary price by zip code error', err)
+        })
+        .finally(() => dispatch(setAncillaryPriceLoading(false)))
+}
+
+export const loadFilteredZip = (data: {serviceCenterId: number; search: string}): AppThunk => dispatch => {
+    dispatch(setAncillaryPriceLoading(true))
+    Api.call(Api.endpoints.ZipCodes.GetFiltered, {data})
+        .then(result => {
+            if (result?.data?.zipCodes) dispatch(setFilteredZipCodes(result.data.zipCodes))
+        })
+        .catch(err => {
+            console.log('get zip codes by filter error', err)
+        })
+        .finally(() => dispatch(setAncillaryPriceLoading(false)))
 }
