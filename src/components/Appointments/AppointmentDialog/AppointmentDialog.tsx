@@ -306,7 +306,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             waiting = false;
         };
     }, [form, selectedSC, props.open, filterDate, selectedSR, showError,
-        preloadedSlot, selectedPackageOption, selectedCategories, jobType]);
+        preloadedSlot, selectedPackageOption, selectedCategories, jobType, serviceType]);
 
     useEffect(() => {
         if (preloadedSlot && initialRef.current) {

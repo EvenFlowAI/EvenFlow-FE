@@ -240,19 +240,17 @@ export const SelectedAppointment = () => {
                                 </div>
                             </div>
                             : null}
+                        {serviceType !== EServiceType.VisitCenter && address
+                            ? <div className="service-list">
+                                <h4> {t("YOUR ADDRESS")}: <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div></h4>
+                            </div>
+                            : null}
                         {serviceType !== EServiceType.VisitCenter
                             ? <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
                                 <div>{t("PROVIDED BY OUR")}: {getServiceName()}</div>
                             </div>
                             : null
                         }
-                        {/*todo ask if we need this info*/}
-                        {/*{serviceType !== EServiceType.VisitCenter && address*/}
-                        {/*    ? <div className="service-list">*/}
-                        {/*        <h4> {t("YOUR ADDRESS")}: </h4>*/}
-                        {/*        <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>*/}
-                        {/*    </div>*/}
-                        {/*    : null}*/}
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper> : null}
