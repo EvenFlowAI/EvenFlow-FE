@@ -123,6 +123,7 @@ export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAp
             }
             if ((slot.priceWithOffer?.value || slot.price.value) < appointments[idx].lowestPrice) {
                 appointments[idx].lowestPrice = slot.priceWithOffer?.value || slot.price.value;
+                appointments[idx].ancillaryPrice = slot.price.ancillaryPrice;
             }
         } else {
             const lowestPrice = slot.priceWithOffer?.value ?? slot.price.value;
@@ -134,6 +135,7 @@ export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAp
                 appointments: [slot],
                 offers: Boolean(slot.offer),
                 amountOfSavingMoney: amountOfSavingMoney,
+                ancillaryPrice: slot.price.ancillaryPrice,
             };
         }
     }

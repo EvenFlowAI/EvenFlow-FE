@@ -63,6 +63,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         userType,
         vehicle,
         hashKey,
+        serviceType,
+        zipCode,
+        address,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -82,6 +85,9 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
         state.appointmentFrame.userType,
         state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.hashKey,
+        state.appointmentFrame.serviceType,
+        state.appointmentFrame.zipCode,
+        state.appointmentFrame.address,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -178,10 +184,13 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                         countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration,
+                        serviceType,
                     }
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
                     }
+                    if (zipCode?.length) dd.zipCode = zipCode;
+                    if (address?.label) dd.address = address.label;
                     if (vehicle) {
                         dd.vehicle = {
                             vin: vehicle.vin,

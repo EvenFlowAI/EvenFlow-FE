@@ -11,6 +11,7 @@ import {
     IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
+import {EServiceType} from "../appointmentFrameReducer/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -117,6 +118,7 @@ export interface IPrice {
     value: number;
     category: EDemandCategory;
     amountOfSavingMoney?: number;
+    ancillaryPrice: number;
 }
 export interface IAppointmentSlot {
     date: ParsableDate;
@@ -165,6 +167,9 @@ export interface IAppointmentSlotsRequest {
     searchTerm?: string;
     appointmentHashKey?: string;
     jobType?: number|null;
+    serviceType: EServiceType;
+    zipCode?: string;
+    address?: string;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
