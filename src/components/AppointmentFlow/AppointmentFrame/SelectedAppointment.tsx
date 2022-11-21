@@ -182,7 +182,7 @@ export const SelectedAppointment = () => {
 
     const price = appointment?.price.value ?? 0;
     const ancillaryPrice = appointment?.price.ancillaryPrice ?? 0;
-    console.log(ancillaryPrice)
+
     const isDynamicPricing = appointmentSlots.length
         ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
         : false;

@@ -42,6 +42,8 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
+import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
 
 export type TForm = {
     date: string;
@@ -96,6 +98,7 @@ const requiredFields = ['driverName', 'driverPhoneNumber', 'driverEmail', 'vehic
 
 export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({onAction, payload, ...props}) => {
     const { packages } = useSelector((state: RootState) => state.appointments);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [form, setForm] = useState<TForm>(initialForm);
     const initialRef = useRef(false);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
@@ -112,8 +115,11 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
     const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
     const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
+    const [serviceType, setServiceType] = useState<TOption|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
+    const [address, setAddress] = useState<any>({value: 0, name: "Visit Center"});
+    const [zipCode, setZipCode] = useState<string>("");
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
@@ -123,6 +129,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         return Boolean(form.vehicleMake) && Boolean(form.vehicleYear) && Boolean(form.vehicleModel) && Boolean(form.vehicleMileage)
     }, [form])
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
+    const serviceTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EServiceType).filter(key => Number.isNaN(+key))), []);
+    const otherServiceTypesAvailable = config.find(item => item.serviceType !== EServiceTypeBookingFlow.VisitCenter && item.available)
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
@@ -142,6 +150,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id));
             dispatch(loadEngineType(selectedSC.id));
+            dispatch(loadBookingFlowConfig(selectedSC.id))
         }
     }, [selectedSC]);
 
@@ -155,6 +164,9 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setDate("");
         setSelectedSlot(null);
         setJobType(null);
+        setServiceType({value: 0, name: "Visit Center"});
+        setAddress(null);
+        setZipCode("");
     }
 
     useEffect(() => {
@@ -180,6 +192,12 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     transportationOption: payload.transportationOption,
                     serviceRequestIds: payload.serviceRequests.map(sr => sr.id)
                 });
+                if (payload.serviceType) {
+                    const option = serviceTypeOptions.find(item => item.value === payload.serviceType)
+                    option && setServiceType(option)
+                }
+                if (payload.address) setAddress(payload.address);
+                if (payload.zipCode) setZipCode(payload.zipCode);
                 payload.serviceRequests && setSelectedSR(payload.serviceRequests);
                 payload.serviceCategories && setSelectedCategories(payload.serviceCategories);
                 if (typeof payload.jobType !== 'undefined') {
@@ -235,7 +253,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 setSlots([]);
                 setSlotsLoading(false);
             } else {
-                // todo serviceTYpe, address, zipCode
                 API.timeSlots.list({
                     appointmentTimingType: EAppointmentTimingType.PreferredDate,
                     fromDate: moment(filterDate).toISOString(),
@@ -245,7 +262,9 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceCenterId: selectedSC.id,
                     jobType: jobType?.value ?? null,
                     appointmentHashKey: payload?.hashKey ?? undefined,
-                    serviceType: EServiceType.VisitCenter,
+                    serviceType: serviceType?.value ?? EServiceType.VisitCenter,
+                    address: address?.label ?? null,
+                    zipCode: zipCode?.length ? zipCode : undefined,
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,
@@ -323,6 +342,16 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             showError(`"Phone Number" ${form.driverPhoneNumber.length ? 'is not valid' : 'must not be empty'}`)
             setErrors(prev => [...prev, "driverPhoneNumber"])
         }
+        if (serviceType && serviceType?.value !== EServiceType.VisitCenter) {
+            if (!address){
+                isValid = false;
+                setErrors(prev => ([...prev, "address"]))
+            }
+            if (!zipCode){
+                isValid = false;
+                setErrors(prev => ([...prev, "zipCode"]))
+            }
+        }
         for (let field in form) {
             if (field === "date" && !filterDate) {
                 isValid = false;
@@ -381,6 +410,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 reminderTypes: form.reminderTypes,
                 appointmentTimingType: EAppointmentTimingType.PreferredDate,
                 transportationType: form.transportationOption?.type,
+                serviceType: serviceType ? serviceType.value : EServiceType.VisitCenter,
             }
             if (jobType) data.jobType = jobType.value;
             if (payload) {
@@ -439,12 +469,44 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setJobType(value)
     }, [])
 
+    const onServiceTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setSelectedSlot(null);
+        setServiceType(value)
+    }, [])
+
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Update"} Appointment</DialogTitle>
         <DialogContent>
             <Grid alignItems="center" container spacing={2}>
 
-                <DriverInfo form={form} handleChange={handleChange} errors={errors}/>
+                {otherServiceTypesAvailable ? <Grid item xs={12}>
+                    <Autocomplete
+                        options={serviceTypeOptions}
+                        getOptionLabel={i => i.name}
+                        value={serviceType}
+                        onChange={onServiceTypeChange}
+                        renderInput={autocompleteRender({
+                            label: "Location of Service",
+                            placeholder: 'Select Location of Service'
+                        })}
+                    />
+                </Grid> : null}
+
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+
+                <DriverInfo
+                    form={form}
+                    handleChange={handleChange}
+                    errors={errors}
+                    serviceType={serviceType}
+                    setAddress={setAddress}
+                    address={address}
+                    zipCode={zipCode}
+                    otherServiceTypesAvailable={Boolean(otherServiceTypesAvailable)}
+                    setZipCode={setZipCode}
+                />
 
                 <Grid item xs={12}>
                     <Divider />
