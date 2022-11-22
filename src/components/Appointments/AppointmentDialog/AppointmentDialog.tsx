@@ -145,15 +145,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         }))
     }, []);
 
-    useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadMakes(selectedSC.id));
-            dispatch(loadMileage(selectedSC.id));
-            dispatch(loadEngineType(selectedSC.id));
-            dispatch(loadBookingFlowConfig(selectedSC.id))
-        }
-    }, [selectedSC]);
-
     const clearForm = () => {
         initialRef.current = false;
         setForm(initialForm);
@@ -168,6 +159,15 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setAddress(null);
         setZipCode("");
     }
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadMakes(selectedSC.id));
+            dispatch(loadMileage(selectedSC.id));
+            dispatch(loadEngineType(selectedSC.id));
+            dispatch(loadBookingFlowConfig(selectedSC.id))
+        }
+    }, [selectedSC]);
 
     useEffect(() => {
         if (props.open) {
@@ -346,10 +346,12 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             if (!address){
                 isValid = false;
                 setErrors(prev => ([...prev, "address"]))
+                showError('"Address" must not be empty')
             }
             if (!zipCode){
                 isValid = false;
                 setErrors(prev => ([...prev, "zipCode"]))
+                showError('"Zip Code" must not be empty')
             }
         }
         for (let field in form) {
@@ -412,6 +414,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 transportationType: form.transportationOption?.type,
                 serviceType: serviceType ? serviceType.value : EServiceType.VisitCenter,
             }
+            if (zipCode) data.zipCode = zipCode;
+            if (address) data.address = address.label;
             if (jobType) data.jobType = jobType.value;
             if (payload) {
                 data.id = payload.id;
@@ -470,6 +474,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     }, [])
 
     const onServiceTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setAddress("");
+        setZipCode("");
         setSelectedSlot(null);
         setServiceType(value)
     }, [])
@@ -577,6 +583,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     setForm={setForm}
                     selectedSR={selectedSR}
                     slot={selectedSlot}
+                    open={props.open}
                     serviceCategoryIds={selectedCategories.map(item => item.id)}
                     maintenancePackageOptionId={selectedPackageOption?.id || payload?.maintenancePackageOptionId || undefined}
                 />
