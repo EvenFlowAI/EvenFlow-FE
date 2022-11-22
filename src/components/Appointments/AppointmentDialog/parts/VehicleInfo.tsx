@@ -147,23 +147,25 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
                     }
                 }
             )}
-            <Autocomplete
-                key="Engine Type"
-                options={engineTypes}
-                onChange={onEngineTypeChange}
-                fullWidth
-                getOptionLabel={o => o.name}
-                getOptionSelected={o => o.id === selectedEngine?.id}
-                disableClearable
-                autoComplete={true}
-                renderInput={autocompleteRender({
-                    label: "Engine Type",
-                    placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
-                    error: errors.includes("engineTypeId"),
-                    required: true,
-                })}
-                value={selectedEngine ?? undefined}
-            />
+            <Grid item xs={12} key="engineType">
+                <Autocomplete
+                    key="Engine Type"
+                    options={engineTypes}
+                    onChange={onEngineTypeChange}
+                    fullWidth
+                    getOptionLabel={o => o.name}
+                    getOptionSelected={o => o.id === selectedEngine?.id}
+                    disableClearable
+                    autoComplete={true}
+                    renderInput={autocompleteRender({
+                        label: "Engine Type",
+                        placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
+                        error: errors.includes("engineTypeId"),
+                        required: true,
+                    })}
+                    value={selectedEngine ?? undefined}
+                />
+            </Grid>
         </React.Fragment>
     );
 };
