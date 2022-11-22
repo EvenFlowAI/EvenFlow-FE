@@ -60,7 +60,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
 
     useEffect(() => {
         if (selectedSC && isDataValid) getPackage();
-    }, [selectedSC, isDataValid, form.vehicleMake, form.vehicleModel, form.vehicleYear, form.vehicleMileage])
+    }, [selectedSC, isDataValid, form.vehicleMake, form.vehicleModel, form.vehicleYear, form.vehicleMileage, selectedEngine])
 
     const handleSelectChange = useCallback((name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
@@ -80,12 +80,6 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
         }
     }, [makes, onVehicleDetailsChange])
 
-    const onEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
-        setSelectedEngine(option)
-        setForm(prev => ({...prev, vehicleEngineType: option?.id.toString() ?? ""}))
-        setErrors(e => e.filter(err => err !== "engineTypeId"))
-    }
-
     const getPackage = useCallback(() => {
         if (selectedSC && isDataValid) {
             dispatch(loadPackageByVehicle({
@@ -96,11 +90,17 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
                     model: form.vehicleModel,
                     mileage: +form.vehicleMileage,
                     year: +form.vehicleYear,
-                    engineTypeId: form.vehicleEngineType,
+                    engineTypeId: form.vehicleEngineType ?? selectedEngine?.id,
                 }
             }))
         }
-    }, [selectedSC, isDataValid, dispatch, form])
+    }, [selectedSC, isDataValid, dispatch, form, selectedEngine])
+
+    const onEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
+        setSelectedEngine(option)
+        setForm(prev => ({...prev, vehicleEngineType: option?.id.toString() ?? ""}))
+        setErrors(e => e.filter(err => err !== "engineTypeId"))
+    }
 
     return (
         <React.Fragment>
