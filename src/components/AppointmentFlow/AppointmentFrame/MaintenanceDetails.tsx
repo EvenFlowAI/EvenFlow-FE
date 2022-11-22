@@ -77,7 +77,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const isNewVehicleView = useMemo(() => {
-        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
+        return !Boolean(customerLoadedData?.vehicles.find(v => {
+            return v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin
+            || (v.make === selectedVehicle?.make
+            && v.model === selectedVehicle?.model
+            && v.year === selectedVehicle?.year)
+        }));
     }, [selectedVehicle, customerLoadedData])
 
     const currentConfig = useMemo(() => {

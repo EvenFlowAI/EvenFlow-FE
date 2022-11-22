@@ -49,11 +49,11 @@ const EditPackagePricingLevel: React.FC<TEditPricingLevelsProps> = ({ prisingLev
 
     const onSave = useCallback(() => {
         setFormIsChecked(true);
-        if (discount && (+discount > 100 || +discount < 0)) {
-            return showError('Discount value must not be less than 0 and more than 100')
+        if (discount && (+discount > 100 || +discount <= 0)) {
+            return showError('"Discount" must be more than 0 and less than 100')
         }
         if (premium && (+premium > 200 || +premium < 100)) {
-            return showError('Premium value must not be less than 100 and more than 200')
+            return showError('"Premium" must be between 100 and 200')
         }
         if ((discount && !discount.match(/(^\d*\.?\d{1,3}?)$/)) || (premium && !premium.match(/(^\d*\.?\d{1,3}?)$/))) {
             return showError('Value must be a number with maximum 3 decimal digits')
