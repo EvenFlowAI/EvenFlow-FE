@@ -16,7 +16,12 @@ import {useHistory, useParams} from "react-router-dom";
 import {
     selectCategoriesIds,
     selectService,
-    selectSubService, setAdditionalServicesChosen, setAdvisor, setPackage, setTiming, setTransportation,
+    selectSubService,
+    setAdditionalServicesChosen,
+    setAdvisor,
+    setPackage,
+    setTiming,
+    setTransportation,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -102,6 +107,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         address,
         zipCode,
         valueService,
+        engineTypes,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceRequests,
@@ -118,6 +124,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.address,
         state.appointmentFrame.zipCode,
         state.appointmentFrame.valueService,
+        state.vehicleDetails.engineTypes,
     ]);
 
     const {t} = useTranslation();
@@ -127,8 +134,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const dispatch = useDispatch();
     const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
     const vehicleData = vehicle?.year
-        ? `${vehicle.year} ${vehicle.make} ${vehicle.model}`
+        ? `${vehicle.year} ${vehicle.make} ${vehicle.model} ${engine?.name ?? ""}`
         : valueService?.year
             ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
             : ''
@@ -142,12 +150,27 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         dispatch(setWelcomeScreenView("select"));
     }, [dispatch])
 
+    const getServiceName = () => {
+        switch (serviceType) {
+            case EServiceType.MobileService:
+                return t("Mobile Service");
+            case EServiceType.PikUpDropOff:
+                return t("Pick Up / Drop Off Service");
+            default:
+                return t("Visit Center");
+        }
+    }
+
     const data: TItem[] = useMemo(() => {
         return [
             {
                 label: t("Date and time"),
                 content: appointment?.date.format('ddd, MMM D, h:mm A')
                     ?? moment.utc().format('ddd, MMM D, h:mm A'),
+            },
+            {
+                label: serviceType !== EServiceType.VisitCenter ? t("Location of service") : "",
+                content: serviceType !== EServiceType.VisitCenter ? getServiceName() : ""
             },
             {
                 label: serviceType === EServiceType.VisitCenter || address ? t("Address") : '',
@@ -185,7 +208,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             {
                 label: t("Email"),
                 content: customer.email
-            }
+            },
         ]
     }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR]);
 
@@ -238,6 +261,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                     if (!selectedPackage && item.label === t("Selected Price")) {
                         return null;
                     }
+                    if (!item.label.length && item.content.length) return null;
                     return <React.Fragment key={item.label}>
                         <div className="label">{item.label}</div>
                         <div>{item.content}</div>

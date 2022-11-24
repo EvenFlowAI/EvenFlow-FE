@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {TArgCallback, TCallback} from "../../../types/types";
@@ -25,8 +25,9 @@ import {Routes} from "../../../config/routes";
 type TProps = {
     onNext: TArgCallback<TScreen>;
     onBack: TCallback;
+    setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
 }
-export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
+export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelectedCategory}) => {
     const {subService, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [loading, setLoading] = useState<boolean>(false);
@@ -78,17 +79,22 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack}) => {
 
     const handleSubmit = () => {
         if (subService) {
-            handleGA();
-            handleCategories();
-            dispatch(setAdditionalServicesChosen(false));
+            setLastSelectedCategory(subService);
+            if (subService.offer?.description) {
+                onNext('serviceOfferProductPage')
+            } else {
+                handleGA();
+                handleCategories();
+                dispatch(setAdditionalServicesChosen(false));
 
-            switch (subService.type) {
-                case 2:
-                    return onNext('opsCode');
-                case 5:
-                    return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
-                default:
-                    return onNext('describeMore');
+                switch (subService.type) {
+                    case 2:
+                        return onNext('opsCode');
+                    case 5:
+                        return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
+                    default:
+                        return onNext('describeMore');
+                }
             }
         }
     }

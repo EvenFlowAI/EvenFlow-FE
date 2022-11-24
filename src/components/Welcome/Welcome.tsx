@@ -19,6 +19,7 @@ import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
+    clearAppointmentData,
     setCurrentFrameScreen,
     setSideBarSteps,
     setValueServiceAvailability, setWelcomeScreenView
@@ -33,7 +34,7 @@ import {useTranslation} from "react-i18next";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -124,9 +125,13 @@ export const Welcome = () => {
         }
     }
 
-    const onServiceTypeSelect = (serviceType: EServiceType) => {
-        handleConfig(serviceType);
-        dispatch(setCurrentFrameScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location'));
+    const onServiceTypeSelect = (service: EServiceType) => {
+        // todo service type from the appointment by key
+        if (serviceType !== service) {
+            dispatch(clearAppointmentData());
+        }
+        handleConfig(service);
+        dispatch(setCurrentFrameScreen(service === EServiceType.VisitCenter ? 'serviceNeeds' : 'location'));
         redirect();
     }
 

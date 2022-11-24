@@ -7,6 +7,9 @@ import {Dialog, styled} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ErrorOutline} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
+import {EOfferType} from "../../../store/reducers/offers/types";
+import {getOfferString} from "../../AppointmentFlow/AppointmentFrame/utils";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const List = styled('ul')({
     display: "flex",
@@ -50,10 +53,27 @@ const useStyles = makeStyles(() => ({
         fontWeight: 600,
         fontSize: 16,
         textAlign: 'end',
+    },
+    pricesBlock: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    offersPrice: {
+        color: '#008331',
+        fontSize: 16,
+        fontWeight: 600,
+        marginLeft: 12,
+    },
+    offersText: {
+        color: '#008331',
+        fontSize: 14,
+        fontWeight: 400,
+        marginLeft: 12,
     }
 }))
 
-const useDialogStyles = makeStyles({
+export const useDialogStyles = makeStyles({
     root: {
         "& hr": {
             margin: "28px 0",
@@ -87,17 +107,30 @@ const useDialogStyles = makeStyles({
 
 const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const {appointment, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
     const price = useMemo(() => appointment?.price?.value && appointment.price.value > 0
-        ? `$${scProfile?.isRoundPrice
-            ? appointment.price.value 
-            : appointment.price.value.toFixed(2)}`
-        : '',
+            ? `$${scProfile?.isRoundPrice
+                ? appointment.price.value + appointment.price.ancillaryPrice
+                : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}`
+            : '',
         [appointment])
     const noDefinedPriceExists = useMemo(() => appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0),
         [appointment])
+
+    const getServiceName = () => {
+        switch (serviceType) {
+            case EServiceType.MobileService:
+                return t("Mobile Service");
+            case EServiceType.PikUpDropOff:
+                return t("Pick Up / Drop Off Service");
+            default:
+                return t("Visit Center");
+        }
+    }
+
 
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
@@ -110,17 +143,38 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                         <li className={classes.item} key={item.requestName}>
                             <span>
                                 {item.requestName.includes("Going")
-                                ? t("My Description of Needs")
-                                : item.requestName}
+                                    ? t("My Description of Needs")
+                                    : item.requestName}
                             </span>
-                            {Object(item).hasOwnProperty('priceValue') && item.priceValue
-                                ? <span className={classes.price}>
+                            <div className={classes.pricesBlock}>
+                                {item.offer
+                                    ? <span className={item?.offer?.type === EOfferType.FreeService ? classes.offersText : classes.offersPrice}>
+                                       {getOfferString(item.offer, Boolean(scProfile?.isRoundPrice))}
+                                </span>
+                                    : null}
+                                {Object(item).hasOwnProperty('priceValue') && item.priceValue
+                                    ? <span className={classes.price}>
                                     ${scProfile?.isRoundPrice
-                                    ? item.priceValue
-                                    : item.priceValue.toFixed(2)}
+                                        ? item.priceValue
+                                        : item.priceValue.toFixed(2)}
                             </span>
-                                : <ErrorOutline/>}
-                    </li>))}
+                                    : <ErrorOutline/>}
+                            </div>
+                        </li>))}
+                    {appointment?.price.ancillaryPrice && serviceType !== EServiceType.VisitCenter
+                        ? <li className={classes.item} key="serviceType">
+                            <span>
+                               {getServiceName()}
+                            </span>
+                            <div className={classes.pricesBlock}>
+                                    <span className={classes.price}>
+                                    ${scProfile?.isRoundPrice
+                                        ? appointment?.price.ancillaryPrice
+                                        : appointment?.price.ancillaryPrice.toFixed(2)}
+                            </span>
+                            </div>
+                        </li>
+                        : null}
                 </List>
                 {noDefinedPriceExists && <Info>
                   <ErrorOutline/>

@@ -4,17 +4,13 @@ import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useModal} from "../../../utils/hooks";
-import {
-    handleSearch,
-    selectAppointment,
-    selectSR, selectSRMultiple
-} from "../../../store/reducers/appointment/actions";
+import {handleSearch, selectAppointment, selectSR, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {checkSelectedCar} from "./utils";
+import {checkSelectedCar, getOfferString} from "./utils";
 import ReactGA from "react-ga";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -22,11 +18,13 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {
     selectCategoriesIds,
-    selectService, selectSubService,
+    selectService,
+    selectSubService,
     setAdditionalServicesChosen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {Caption} from "../../UI/Caption";
 import {useTranslation} from "react-i18next";
+import {EOfferType} from "../../../store/reducers/offers/types";
 
 
 const Wrapper = styled('div')({
@@ -59,11 +57,27 @@ const Price = styled('span')({
     alignItems: "center",
     fontSize: 14,
     fontWeight: "bold",
+})
+
+const PricesWrapper = styled('div')({
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingRight: 8,
 })
 
+const OfferPrice = styled('div')({
+    display: "flex",
+    flexWrap: "nowrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginRight: 28,
+    fontSize: 14,
+    color: '#008331',
+})
+
 const Code = styled(FormControlLabel)({
-    width: "100%",
+    width: "80%",
     padding: 0,
     margin: 0,
     textTransform: "uppercase",
@@ -294,9 +308,15 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
                             }
                             >
                             </Code>
+                            <PricesWrapper>
+                                {/*todo uncomment for offer new functionality*/}
+                                {/*{s.offer ? <OfferPrice style={{fontWeight: s.offer.type === EOfferType.FreeService ? 400 : 600}}>*/}
+                                {/*    {getOfferString(s.offer, Boolean(scProfile?.isRoundPrice))}*/}
+                                {/*</OfferPrice> : null}*/}
                             {Boolean(s.price)
                                 ? <Price style={isSm ? {width: '20%'} : {}}>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
                                 : <InfoOutlined style={{paddingRight: 8, fontSize: '2rem'}}/>}
+                            </PricesWrapper>
                         </CodeWrapper>
                     })}
                 </CodesWrapper>

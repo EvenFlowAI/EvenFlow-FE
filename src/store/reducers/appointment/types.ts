@@ -7,10 +7,11 @@ import moment from "moment";
 import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
-    ILoadedVehicle,
+    ILoadedVehicle, IOfferForCategory,
     IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
+import {EServiceType} from "../appointmentFrameReducer/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -66,7 +67,7 @@ export interface IVehicleShort {
 export interface IVehicle extends IVehicleShort {
     transmission: string;
     driveType: string;
-    engineType: string;
+    engineTypeId: string;
     // serviceInterval: string;
 }
 
@@ -117,6 +118,7 @@ export interface IPrice {
     value: number;
     category: EDemandCategory;
     amountOfSavingMoney?: number;
+    ancillaryPrice: number;
 }
 export interface IAppointmentSlot {
     date: ParsableDate;
@@ -165,6 +167,9 @@ export interface IAppointmentSlotsRequest {
     searchTerm?: string;
     appointmentHashKey?: string;
     jobType?: number|null;
+    serviceType: EServiceType;
+    zipCode?: string;
+    address?: string;
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
@@ -220,4 +225,5 @@ export interface IServiceRequestPrice {
     requestName: string;
     pricingDisplayType: EPricingDisplayType;
     priceValue?: number;
+    offer?: IOfferForCategory;
 }

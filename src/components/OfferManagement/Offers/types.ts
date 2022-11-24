@@ -8,6 +8,7 @@ import {
 import {IAssignedServiceRequestShort, IServiceRequestPriority} from "../../../store/reducers/serviceRequests/types";
 import {TEnumMap} from "../../../store/reducers/utils";
 import moment from "moment";
+import {ICategory} from "../../../store/reducers/categories/types";
 
 export type TServiceTypeWithCustom = IServiceType & {inputValue?: string};
 export type TOfferForm = {
@@ -15,6 +16,7 @@ export type TOfferForm = {
     offerTitle?: string;
     offerType: EOfferType;
     serviceRequests: IAssignedServiceRequestShort[];
+    serviceCategories: ICategory[];
     customerSegments: TEnumMap<ECustomerSegment>[];
     customerPresence: ECustomerPresence;
     dayOfWeek: TEnumMap<EDayOfWeek>[];
