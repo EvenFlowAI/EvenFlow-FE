@@ -78,6 +78,7 @@ export interface ICreateAppointment {
         transmission: string;
         driveType: string;
         engineType: string;
+        engineTypeId?: number;
     },
     isNeedCall: boolean;
     comment: string;
