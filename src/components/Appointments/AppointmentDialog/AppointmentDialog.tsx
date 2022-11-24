@@ -395,7 +395,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     mileage: form.vehicleMileage ? String(form.vehicleMileage) : "",
                     transmission: form.vehicleTransmission,
                     vin: form.vehicleVin,
-                    dmsId: null
+                    dmsId: null,
                 },
                 serviceCenterId: selectedSC.id,
                 isNeedCall: form.isNeedCall,
@@ -417,6 +417,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             if (zipCode) data.zipCode = zipCode;
             if (address) data.address = address.label;
             if (jobType) data.jobType = jobType.value;
+            if (selectedEngine) data.vehicle.engineTypeId = selectedEngine.id;
             if (payload) {
                 data.id = payload.id;
                 // todo search term
