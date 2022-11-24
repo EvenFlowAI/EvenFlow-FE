@@ -54,6 +54,7 @@ export interface IVehicleData {
     transmission: string;
     driveType: string;
     engineType: string;
+    engineTypeId?: number;
 }
 
 export interface IVehicleShort {
@@ -67,7 +68,7 @@ export interface IVehicleShort {
 export interface IVehicle extends IVehicleShort {
     transmission: string;
     driveType: string;
-    engineTypeId: string;
+    engineTypeId: number|null;
     // serviceInterval: string;
 }
 

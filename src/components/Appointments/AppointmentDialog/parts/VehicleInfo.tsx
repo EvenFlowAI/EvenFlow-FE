@@ -12,6 +12,7 @@ import {TForm, TKey} from "../AppointmentDialog";
 import {useSCs} from "../../../../utils/hooks";
 import {loadPackageByVehicle} from "../../../../store/reducers/appointments/actions";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
+import {IPackageAppointments} from "../../../../api/types";
 
 type TSelect = {
     label: string;
@@ -90,7 +91,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
                     model: form.vehicleModel,
                     mileage: +form.vehicleMileage,
                     year: +form.vehicleYear,
-                    engineTypeId: form.vehicleEngineType ?? selectedEngine?.id,
+                    engineTypeId: selectedEngine?.id ?? null,
                 }
             }))
         }
@@ -98,7 +99,8 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
 
     const onEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
         setSelectedEngine(option)
-        setForm(prev => ({...prev, vehicleEngineType: option?.id.toString() ?? ""}))
+        onVehicleDetailsChange();
+        setForm(prev => ({...prev, vehicleEngineTypeId: option?.id ?? null}))
         setErrors(e => e.filter(err => err !== "engineTypeId"))
     }
 
