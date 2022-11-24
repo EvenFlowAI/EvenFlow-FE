@@ -64,6 +64,7 @@ export type TForm = {
     isNeedCall: boolean;
     comment: string;
     serviceRequestIds: number[];
+    vehicleEngineTypeId: number|null;
 };
 
 const initialForm: TForm = {
@@ -85,6 +86,7 @@ const initialForm: TForm = {
     isNeedCall: false,
     comment: "",
     serviceRequestIds: [],
+    vehicleEngineTypeId: null,
 };
 
 export type TKey = keyof TForm;
@@ -99,6 +101,7 @@ const requiredFields = ['driverName', 'driverPhoneNumber', 'driverEmail', 'vehic
 export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({onAction, payload, ...props}) => {
     const { packages } = useSelector((state: RootState) => state.appointments);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
     const [form, setForm] = useState<TForm>(initialForm);
     const initialRef = useRef(false);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
@@ -158,6 +161,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setServiceType({value: 0, name: "Visit Center"});
         setAddress(null);
         setZipCode("");
+        setSelectedEngine(null);
     }
 
     useEffect(() => {
@@ -190,11 +194,16 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     reminderTypes: payload.reminderTypes,
                     comment: payload.comment,
                     transportationOption: payload.transportationOption,
-                    serviceRequestIds: payload.serviceRequests.map(sr => sr.id)
+                    serviceRequestIds: payload.serviceRequests.map(sr => sr.id),
+                    vehicleEngineTypeId: payload.vehicle.engineTypeId ?? null,
                 });
                 if (payload.serviceType) {
                     const option = serviceTypeOptions.find(item => item.value === payload.serviceType)
                     option && setServiceType(option)
+                }
+                if (payload.vehicle?.engineTypeId) {
+                    const engine = engineTypes.find(item => item.id === payload.vehicle.engineTypeId)
+                    engine && setSelectedEngine(engine);
                 }
                 if (payload.address) setAddress(payload.address);
                 if (payload.zipCode) setZipCode(payload.zipCode);
@@ -217,17 +226,20 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 }
                 setSelectedSlot(slot);
                 setPreloadedSlot(slot);
-                const selectedPackage = packages.find(item => item.options.find(option => option.id === payload?.maintenancePackageOption?.id))
-                if (selectedPackage) {
-                    const option = selectedPackage.options.find(option => option.id === payload?.maintenancePackageOption?.id);
-                    option && setSelectedPackageOption(option);
-                    setSelectedPackage(selectedPackage);
-                }
             }
         } else {
             clearForm();
         }
-    }, [props.open, payload, packages]);
+    }, [props.open, payload, engineTypes]);
+
+    useEffect(() => {
+        const selectedPackage = packages.find(item => item.options.find(option => option.id === payload?.maintenancePackageOption?.id))
+        if (selectedPackage) {
+            const option = selectedPackage.options.find(option => option.id === payload?.maintenancePackageOption?.id);
+            option && setSelectedPackageOption(option);
+            setSelectedPackage(selectedPackage);
+        }
+    }, [packages])
 
     useEffect(() => {
         if (props.open && selectedSC) {
@@ -392,6 +404,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     year: form.vehicleYear,
                     driveType: form.vehicleDriveType,
                     engineType: form.vehicleEngineType,
+                    engineTypeId: form.vehicleEngineTypeId,
                     mileage: form.vehicleMileage ? String(form.vehicleMileage) : "",
                     transmission: form.vehicleTransmission,
                     vin: form.vehicleVin,
