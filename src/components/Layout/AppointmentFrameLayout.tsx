@@ -113,6 +113,7 @@ export const prodParentLinks = [
     "https://www.janssenfordholdrege.com/",
     "https://www.janssenchryslerjeepdodge.com/",
     "https://www.lakepowellford.com/",
+    "https://www.morrissmithfordoflarned.com/"
 ];
 
 export const AppointmentFrameLayout = () => {
