@@ -53,9 +53,14 @@ export const loadPackageByVehicle = (data: IPackageRequestData): AppThunk => dis
     dispatch(setAppointmentsModalLoading(true));
     Api.call<IPackageAppointments[]>(Api.endpoints.MaintenancePackages.ByVehicle, {data})
         .then(({data}) => {
-            data && data[0] && dispatch(getPackageByVehicle([data[0]]))
+            if (data && data[0]) {
+                dispatch(getPackageByVehicle([data[0]]))
+            } else {
+               dispatch(getPackageByVehicle([]));
+            }
         })
         .catch(err => {
+            dispatch(getPackageByVehicle([]));
             console.log('load package by vehicle', err)
         })
         .finally(() => dispatch(setAppointmentsModalLoading(false)))
