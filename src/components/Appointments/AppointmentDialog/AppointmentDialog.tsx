@@ -132,8 +132,16 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         return Boolean(form.vehicleMake) && Boolean(form.vehicleYear) && Boolean(form.vehicleModel) && Boolean(form.vehicleMileage)
     }, [form])
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
-    const serviceTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EServiceType).filter(key => Number.isNaN(+key))), []);
-    const otherServiceTypesAvailable = config.find(item => item.serviceType !== EServiceTypeBookingFlow.VisitCenter && item.available)
+    const serviceTypeOptions: TOption[] = useMemo(() => {
+        let allOptions = getOptions(Object.keys(EServiceType).filter(key => Number.isNaN(+key)))
+        const unavailableServices = config.filter(item => !item.available);
+        if (unavailableServices.length) {
+            const unavailableServiceTypes = unavailableServices.map(el => el.serviceType);
+            allOptions = allOptions.filter(item => !unavailableServiceTypes.includes(item.value))
+        }
+        return allOptions
+    }, [config]);
+    const otherServiceTypesAvailable = config.find(item => item.serviceType !== EServiceTypeBookingFlow.VisitCenter && item.available);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
