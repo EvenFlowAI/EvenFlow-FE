@@ -60,7 +60,6 @@ export type TForm = {
     vehicleMileage: string;
     vehicleTransmission: string;
     vehicleDriveType: string;
-    vehicleEngineType: string;
     isNeedCall: boolean;
     comment: string;
     serviceRequestIds: number[];
@@ -82,7 +81,6 @@ const initialForm: TForm = {
     vehicleMileage: "",
     vehicleTransmission: "",
     vehicleDriveType: "",
-    vehicleEngineType: "",
     isNeedCall: false,
     comment: "",
     serviceRequestIds: [],
@@ -148,7 +146,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             ...f,
             vehicleModel: d.model || f.vehicleModel,
             vehicleMake: d.make || f.vehicleMake,
-            vehicleEngineType: d.engineType || f.vehicleEngineType,
             vehicleTransmission: d.transmission || f.vehicleTransmission,
             vehicleDriveType: d.driveType || f.vehicleDriveType,
             vehicleYear: d.year ? String(d.year) : f.vehicleYear,
@@ -194,7 +191,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     vehicleDriveType: payload.vehicle.driveType,
                     vehicleTransmission: payload.vehicle.transmission,
                     vehicleYear: String(payload.vehicle.year),
-                    vehicleEngineType: payload.vehicle.engineType,
                     driverName: payload.driver.fullName,
                     driverEmail: payload.driver.email,
                     driverPhoneNumber: payload.driver.phoneNumber,
@@ -411,7 +407,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     model: form.vehicleModel,
                     year: form.vehicleYear,
                     driveType: form.vehicleDriveType,
-                    engineType: form.vehicleEngineType,
                     engineTypeId: form.vehicleEngineTypeId,
                     mileage: form.vehicleMileage ? String(form.vehicleMileage) : "",
                     transmission: form.vehicleTransmission,

@@ -51,7 +51,6 @@ const initialS1Form: TS1Form = {
     vin: "",
     mileage: null,
     driveType: "",
-    engineType: "",
     make: "",
     model: "",
     transmission: ""
