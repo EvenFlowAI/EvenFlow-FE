@@ -43,7 +43,6 @@ export type TS1Form = {
     make: string;
     transmission: string;
     driveType: string;
-    engineType: string;
 }
 export interface IVehicleData {
     vin: string;
@@ -53,7 +52,6 @@ export interface IVehicleData {
     mileage: number;
     transmission: string;
     driveType: string;
-    engineType: string;
     engineTypeId?: number;
 }
 

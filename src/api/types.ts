@@ -77,7 +77,6 @@ export interface ICreateAppointment {
         mileage: string | null;
         transmission: string;
         driveType: string;
-        engineType: string;
         engineTypeId?: number|null;
     },
     isNeedCall: boolean;
