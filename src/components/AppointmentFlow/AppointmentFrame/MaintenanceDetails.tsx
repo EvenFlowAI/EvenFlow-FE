@@ -6,7 +6,7 @@ import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
-import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
+import {IMaintenanceDetailsShort, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     loadMakes, selectService,
     setMaintenanceDetails, setPackage, setVehicle,
@@ -77,7 +77,12 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const isNewVehicleView = useMemo(() => {
-        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
+        return !Boolean(customerLoadedData?.vehicles.find(v => {
+            return v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin
+            || (v.make === selectedVehicle?.make
+            && v.model === selectedVehicle?.model
+            && v.year === selectedVehicle?.year)
+        }));
     }, [selectedVehicle, customerLoadedData])
 
     const currentConfig = useMemo(() => {
@@ -99,7 +104,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
-                engineType: selectedVehicle.engineTypeId ?? ""
+                engineTypeId: selectedVehicle.engineTypeId,
             }));
             if (selectedVehicle?.engineTypeId) {
                 const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
@@ -191,8 +196,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
         setSelectedEngine(option)
-        dispatch(updateVehicle({engineTypeId: option?.id.toString() ?? ""}));
-        dispatch(setMaintenanceDetails({engineType: option?.id.toString() ?? ""}));
+        dispatch(updateVehicle({engineTypeId: option?.id ?? null}));
+        dispatch(setMaintenanceDetails({engineTypeId: option?.id ?? null}));
         setErrors(e => e.filter(err => err !== "engineTypeId"))
     }
 
@@ -268,7 +273,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                             required: requiredFields.includes(select.name)
                         })}
                         value={!select.allOverride
-                            ? maintenanceDetails[select.name as keyof TMaintenanceDetails] ?? ""
+                            ? maintenanceDetails[select.name as keyof IMaintenanceDetailsShort] ?? ""
                             : "All"
                         }
                     />

@@ -106,10 +106,10 @@ const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment}) => {
     }
     return <ActionButtons>
         <ButtonGroup variant="contained" color="primary" ref={anchorRef}>
-            <Button onClick={handleSelect}>
+            <Button onClick={handleSelect} style={hasAppointments ? {backgroundColor: "#27AE60", borderRightColor: "#27AE60"} : {}}>
                 {getLabel()}
             </Button>
-            {hasAppointments ? <Button onClick={() => setOpen(true)} size="small" color="primary">
+            {hasAppointments ? <Button onClick={() => setOpen(true)} size="small" color="primary" style={hasAppointments ? {backgroundColor: "#27AE60"} : {}}>
                 <MoreVert/>
             </Button> : null}
         </ButtonGroup>

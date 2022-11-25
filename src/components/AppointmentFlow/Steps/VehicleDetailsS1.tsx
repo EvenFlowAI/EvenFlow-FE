@@ -300,14 +300,6 @@ export const VehicleDetailsS1: React.FC<TStepProps> = ({next, prev, isCompleted}
                                 engine type
                             </Label>
                         </LabelGrid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                id="engineType"
-                                name="engineType"
-                                value={form.engineType}
-                                onChange={handleTextChange}
-                            />
-                        </Grid>
                         {!isXS ? <Grid item xs={3} /> : null}
                     </Grid>
                 </ScrollableContainer>

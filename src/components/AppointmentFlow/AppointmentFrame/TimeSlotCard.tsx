@@ -22,8 +22,8 @@ const Wrapper = styled(({available, offPeak, selected, ...props}) => <div {...pr
     flexDirection: "column",
     gap: "6px",
     opacity: available ? 1 : .3,
+    cursor: "pointer",
     '& .availability': {
-        cursor: "pointer",
         border: `1px solid ${(offPeak && selected)
             ? "#237243" : offPeak
                 ? "#89E5AB" : selected
@@ -76,9 +76,14 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
 
         const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
         return (
-            <Wrapper available={Boolean(slot) && !timePassed} selected={selected} offPeak={isOffPeak}>
+            <Wrapper
+                available={Boolean(slot) && !timePassed}
+                selected={selected}
+                offPeak={isOffPeak}
+                onClick={() => timePassed ? {} : onSelect(slot ?? null)}
+            >
                 <div>{timeSlot.label}</div>
-                <div onClick={() => timePassed ? {} : onSelect(slot ?? null)} className="availability">{getContent(timePassed)}</div>
+                <div className="availability">{getContent(timePassed)}</div>
             </Wrapper>
         );
     };
