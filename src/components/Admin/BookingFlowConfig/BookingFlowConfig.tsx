@@ -144,7 +144,7 @@ const BookingFlowConfig = () => {
                         : <DenseTable>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.headerCell} width={200} key="1">Service Type</TableCell>
+                                    <TableCell className={classes.headerCell} width={200} key="1">Service Option</TableCell>
                                     <TableCell className={classes.headerCell} align="center"
                                                width={200} key="2">Visit Center</TableCell>
                                     <TableCell className={classes.headerCell} align="center" width={200} key="3">Mobile Service</TableCell>
@@ -302,7 +302,7 @@ const BookingFlowConfig = () => {
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
-                                            disabled={!mobileServiceConfig?.available}
+                                            disabled
                                             onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'transportationNeeds')}
                                             checked={mobileServiceConfig?.transportationNeeds}
                                             color="primary"/>
@@ -311,7 +311,7 @@ const BookingFlowConfig = () => {
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'transportationNeeds')}
                                             checked={pickUpDropOffConfig?.transportationNeeds}
-                                            disabled={!pickUpDropOffConfig?.available}
+                                            disabled
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
