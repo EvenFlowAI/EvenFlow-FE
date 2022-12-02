@@ -304,7 +304,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 fullWidth
                 getOptionLabel={o => o.name}
                 getOptionSelected={o => o.id === selectedEngine?.id}
-                disabled={!isNewVehicleView && Boolean(selectedEngine)}
+                // disabled={!isNewVehicleView && Boolean(selectedEngine)}
                 renderInput={autocompleteRender({
                     label: "Engine Type",
                     placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
