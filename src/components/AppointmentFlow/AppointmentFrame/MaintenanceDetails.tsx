@@ -4,7 +4,6 @@ import {Autocomplete} from "@material-ui/lab";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
-import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {IMaintenanceDetailsShort, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
@@ -23,6 +22,9 @@ import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetail
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
+import {TArgCallback} from "../../../types/types";
+import {TScreen} from "../../Layout/types";
+import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -56,11 +58,16 @@ const blankOptions: TOptionsState = {};
 
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
-export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, serviceType}= useSelector((state: RootState) => state.appointmentFrame);
+type TMaintenanceDetailsProps = {
+    onBack: TArgCallback<TScreen>;
+    onNext: TArgCallback<TScreen>;
+    currentConfig: TServiceTypeSettings|undefined;
+}
+
+export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
@@ -84,10 +91,6 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             && v.year === selectedVehicle?.year)
         }));
     }, [selectedVehicle, customerLoadedData])
-
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
-    }, [config, serviceType])
 
     const selects: TSelect[] = [
         {label: t("VIN"), name: "vin", noVehicle: true},
@@ -236,7 +239,13 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     const handleNext = () => {
         if (isValid()) {
-            onNext();
+            onNext(service?.type === EServiceCategoryType.MaintenancePackage
+                ? 'packageSelection'
+                : !currentConfig?.advisorSelection
+                    ? currentConfig?.appointmentSelection
+                        ? 'appointmentTiming'
+                        : "appointmentSelection"
+                    : 'consultantSelection');
         }
     }
 
@@ -245,7 +254,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             dispatch(setPackage(null))
             dispatch(selectService(null));
         }
-        onBack();
+        onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+            ? 'opsCode' : 'serviceNeeds');
     }
 
     return (<StepWrapper>
