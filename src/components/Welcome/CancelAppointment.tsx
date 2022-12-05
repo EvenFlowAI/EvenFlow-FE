@@ -45,8 +45,7 @@ export const CancelAppointment = () => {
     useEffect(() => {
         setLoading(true);
         const lastIndex = id.lastIndexOf('==');
-        const trimmedKey = id.slice(0, lastIndex);
-        console.log(id, trimmedKey)
+        const trimmedKey = lastIndex > 0 ? id.slice(0, lastIndex) : id;
         API.appointment.getByKey(trimmedKey)
             .then(({data}) => {
                 setAppointment(data);
