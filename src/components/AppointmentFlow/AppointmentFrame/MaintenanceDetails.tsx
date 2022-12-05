@@ -106,12 +106,15 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 mileage: selectedVehicle?.mileage?.toString() || "",
                 engineTypeId: selectedVehicle.engineTypeId,
             }));
-            if (selectedVehicle?.engineTypeId) {
-                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
-                option && setSelectedEngine(option);
-            }
         }
-    }, [dispatch, selectedVehicle, engineTypes]);
+    }, [dispatch, selectedVehicle]);
+
+    useEffect(() => {
+        if (selectedVehicle?.engineTypeId && engineTypes.length) {
+            const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
+            option && setSelectedEngine(option);
+        }
+    }, [selectedVehicle, engineTypes])
 
     const setDataFromValueService = useCallback(() => {
         const vehicle: ILoadedVehicle = {
