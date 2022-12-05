@@ -318,6 +318,7 @@ export const AppointmentFrameLayout = () => {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
             const lastIndex = key.lastIndexOf('==');
             const trimmedKey = key.slice(0, lastIndex);
+            console.log(key, trimmedKey)
             setLoadingCar(true);
             try {
                 const {data} = await API.appointment.getByKey(trimmedKey);
