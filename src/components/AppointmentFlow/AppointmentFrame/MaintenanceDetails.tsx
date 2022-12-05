@@ -106,12 +106,15 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 mileage: selectedVehicle?.mileage?.toString() || "",
                 engineTypeId: selectedVehicle.engineTypeId,
             }));
-            if (selectedVehicle?.engineTypeId) {
-                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
-                option && setSelectedEngine(option);
-            }
         }
-    }, [dispatch, selectedVehicle, engineTypes]);
+    }, [dispatch, selectedVehicle]);
+
+    useEffect(() => {
+        if (selectedVehicle?.engineTypeId && engineTypes.length) {
+            const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
+            option && setSelectedEngine(option);
+        }
+    }, [selectedVehicle, engineTypes])
 
     const setDataFromValueService = useCallback(() => {
         const vehicle: ILoadedVehicle = {
@@ -304,7 +307,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 fullWidth
                 getOptionLabel={o => o.name}
                 getOptionSelected={o => o.id === selectedEngine?.id}
-                disabled={!isNewVehicleView && Boolean(selectedEngine)}
+                // disabled={!isNewVehicleView && Boolean(selectedEngine)}
                 renderInput={autocompleteRender({
                     label: "Engine Type",
                     placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
