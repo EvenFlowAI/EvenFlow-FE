@@ -18,9 +18,9 @@ export const Login = () => {
                     <Grid item xs={10} sm={10} md={6} style={{padding: "16px 0"}}>
                         <Switch>
                             <Route path={Routes.Login.Base} exact component={CustomerLogin}/>
-                            <Route path={Routes.Login.ForgotPassword} component={ForgotPassword}/>
-                            <Route path={Routes.Account.ResetPassword} component={ResetPassword}/>
-                            <Route path={Routes.Account.Verification} component={EmailVerification} />
+                            <Route path={Routes.Login.ForgotPassword} exact component={ForgotPassword}/>
+                            <Route path={Routes.Account.ResetPassword} exact component={ResetPassword}/>
+                            <Route path={Routes.Account.Verification} exact component={EmailVerification} />
                             <Redirect to="/login"/>
                         </Switch>
                     </Grid>
