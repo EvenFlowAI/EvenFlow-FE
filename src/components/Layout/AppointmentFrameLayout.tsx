@@ -316,9 +316,11 @@ export const AppointmentFrameLayout = () => {
         const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
+            const lastIndex = key.lastIndexOf('==');
+            const trimmedKey = key.slice(0, lastIndex);
             setLoadingCar(true);
             try {
-                const {data} = await API.appointment.getByKey(key);
+                const {data} = await API.appointment.getByKey(trimmedKey);
                 dispatch(setUpdateAppointment(data));
                 data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
                 if (data.maintenancePackageOption) {
