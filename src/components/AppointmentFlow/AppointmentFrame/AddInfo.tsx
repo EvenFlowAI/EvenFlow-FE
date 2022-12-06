@@ -9,7 +9,7 @@ import {
     setAdditionalServicesChosen,
     setFrameDescription
 } from '../../../store/reducers/appointmentFrameReducer/actions';
-import {TArgCallback, TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../Layout/types";
 import {useModal} from "../../../utils/hooks";
@@ -18,17 +18,17 @@ import {selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 
 type TProps = {
-    onFillCar: TCallback;
-    onBack: TArgCallback<TScreen>;
-    onNext: () => void;
+    handleSetScreen:TArgCallback<TScreen>;
     nextDisabled?: boolean;
     nextLabel?: string;
     loading?: boolean;
     onAddServices: () => void;
+    currentConfig: TServiceTypeSettings|undefined;
 };
-export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServices}) => {
+export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, currentConfig}) => {
     const [
         subService,
         vehicle,
@@ -38,7 +38,8 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
         service,
         categoriesIds,
         allCategories,
-        userType
+        userType,
+        isAdditionalServices,
     ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
@@ -48,7 +49,8 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
         appointmentFrame.service,
         appointmentFrame.categoriesIds,
         categories.allCategories,
-        appointmentFrame.userType
+        appointmentFrame.userType,
+        appointmentFrame.isAdditionalServices,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -62,9 +64,19 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
 
     const handleNext = () => {
         if (!checkSelectedCar(vehicle, vehicles) || userType === EUserType.Existing) {
-            onFillCar();
+            handleSetScreen(isAdditionalServices
+                ? !currentConfig?.advisorSelection
+                    ? currentConfig?.appointmentSelection
+                        ? 'appointmentTiming'
+                        : "appointmentSelection"
+                    : 'consultantSelection'
+                : 'maintenanceDetails');
         } else {
-            onNext();
+            handleSetScreen(!currentConfig?.advisorSelection
+                ? currentConfig?.appointmentSelection
+                    ? 'appointmentTiming'
+                    : "appointmentSelection"
+                : 'consultantSelection');
         }
     }
 
@@ -111,7 +123,7 @@ export const AddInfo: React.FC<TProps> = ({onNext, onBack, onFillCar, onAddServi
     const handleBack = () => {
         handleCategories();
         handleServiceRequests();
-        onBack(screenToReturn);
+        handleSetScreen(screenToReturn);
     }
 
     return (

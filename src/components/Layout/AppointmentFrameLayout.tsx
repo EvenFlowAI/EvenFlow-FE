@@ -51,7 +51,6 @@ import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
-import {EServiceCategoryType} from "../../store/reducers/categories/types";
 import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
@@ -123,9 +122,6 @@ export const AppointmentFrameLayout = () => {
     const {
         selectedVehicle,
         trackerCreated,
-        isAdditionalServices,
-        service,
-        subService,
         valueService,
         serviceType,
         currentScreen: currentFrameScreen,
@@ -366,78 +362,54 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleSetScreen}
             />,
             maintenanceDetails: <MaintenanceDetails
-                onBack={handleChangeScreen(
-                    service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
-                        ? 'opsCode' : 'serviceNeeds')}
-                onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
-                    ? 'packageSelection'
-                    : !currentConfig?.advisorSelection
-                        ? 'appointmentTiming'
-                        : 'consultantSelection')
-                }
+                onBack={handleSetScreen}
+                onNext={handleSetScreen}
+                currentConfig={currentConfig}
             />,
             packageSelection: <PackageSelection
+                currentConfig={currentConfig}
                 onBack={handleChangeScreen('maintenanceDetails')}
-                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
+                onNext={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             describeMore: <AddInfo
-                onBack={handleSetScreen}
-                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
-                onFillCar={handleChangeScreen(isAdditionalServices
-                    ? !currentConfig?.advisorSelection
-                        ? 'appointmentTiming'
-                        : 'consultantSelection'
-                    : 'maintenanceDetails')}
+                handleSetScreen={handleSetScreen}
+                currentConfig={currentConfig}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             opsCode: <SelectOpsCode
                 onAddServices={handleChangeScreen('serviceNeeds')}
-                onBack={handleChangeScreen(service?.type === EServiceCategoryType.Diagnose
-                || service?.type === EServiceCategoryType.IndividualServices
-                    ? 'serviceNeeds'
-                    : 'serviceSelection')}
-                onNext={handleSetScreen}
+                handleSetScreen={handleSetScreen}
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
-                onNext={handleChangeScreen(!currentConfig?.advisorSelection ? 'appointmentTiming' : 'consultantSelection')}
+                currentConfig={currentConfig}
+                onNext={handleSetScreen}
             />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleChangeScreen('appointmentTiming')}
+                onNext={handleChangeScreen(currentConfig?.appointmentSelection ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTiming
                 onBack={handleChangeScreen(!currentConfig?.advisorSelection ? 'serviceNeeds' : 'consultantSelection')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection
-                onBack={handleChangeScreen('appointmentTiming')}
-                onNext={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'transportationNeeds' : 'appointmentConfirmation')}
+                handleSetScreen={handleSetScreen}
+                currentConfig={currentConfig}
             />,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,
             appointmentConfirmation: <AppointmentConfirmationFrame
-                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'transportationNeeds' : 'appointmentSelection')}
+                onBack={handleChangeScreen(currentConfig?.transportationNeeds ? 'transportationNeeds' : 'appointmentSelection')}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed
                 onModify={handleChangeScreen("serviceNeeds")}
             />,
-            // carDetails: <MaintenanceDetails
-            //     onBack={handleChangeScreen(
-            //         service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
-            //             ? 'opsCode' : 'serviceNeeds')}
-            //     onNext={handleChangeScreen(service?.type === EServiceCategoryType.MaintenancePackage
-            //         ? 'packageSelection'
-            //         : !currentConfig?.advisorSelection
-            //             ? 'appointmentTiming'
-            //             : 'consultantSelection')
-            //     }
-            // />,
             location: <YourLocation
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
@@ -445,11 +417,7 @@ export const AppointmentFrameLayout = () => {
             />,
             payment: <PaymentScreen/>,
             serviceOfferProductPage: <OfferProductPage
-                onBack={handleChangeScreen(service?.type === EServiceCategoryType.Diagnose
-                || service?.type === EServiceCategoryType.IndividualServices
-                    ? 'serviceNeeds'
-                    : 'serviceSelection')}
-                onNext={handleSetScreen}
+                handleSetScreen={handleSetScreen}
                 category={lastSelectedCategory}
                 lastCategory={lastSelectedCategory}
                 onChangeVehicle={handleChangeScreen('maintenanceDetails')}
