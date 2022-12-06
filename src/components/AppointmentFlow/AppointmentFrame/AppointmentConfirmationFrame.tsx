@@ -101,15 +101,16 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             const d = {
                 ...appointment.customerLoadedData
             };
-            const vehicle = d.vehicles.find(
+            let vehicle = d.vehicles.find(
                 c => c.vin === data.vehicle.vin
             );
             if (vehicle) {
+                vehicle = {...vehicle};
                 vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
             } else {
                 d.vehicles = [...d.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
             }
-            if (!d.emails.length) {
+            if (!d.emails?.length) {
                 d.emails = [appointmentFrame.customer.email];
                 d.fullName = data.driver?.fullName;
                 d.id = data.customerId;
