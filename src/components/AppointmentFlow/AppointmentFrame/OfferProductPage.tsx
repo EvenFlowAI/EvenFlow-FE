@@ -19,8 +19,7 @@ import {getOfferString} from "./utils";
 type TOfferProductPageProps = {
     category: IServiceCategory|null;
     onChangeVehicle: () => void;
-    onBack: () => void;
-    onNext: (screen: TScreen) => void;
+    handleSetScreen: (screen: TScreen) => void;
     lastCategory: IServiceCategory|null;
 }
 const Description = styled('div')(() => ({
@@ -57,7 +56,7 @@ const PriceAndDate = styled('div')(() => ({
     }
 }))
 
-const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeVehicle, onBack, onNext, lastCategory}) => {
+const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeVehicle, handleSetScreen, lastCategory}) => {
     const {selectedVehicle, categoriesIds, subService, service} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
@@ -102,14 +101,21 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
         switch (type) {
             case 2:
             case 4:
-                return onNext('opsCode');
+                return handleSetScreen('opsCode');
             case 1:
-                return onNext('maintenanceDetails');
+                return handleSetScreen('maintenanceDetails');
             case 3:
-                return onNext('serviceSelection');
+                return handleSetScreen('serviceSelection');
             default:
-                return onNext('describeMore');
+                return handleSetScreen('describeMore');
         }
+    }
+
+    const handleBack = () => {
+        handleSetScreen(service?.type === EServiceCategoryType.Diagnose
+        || service?.type === EServiceCategoryType.IndividualServices
+            ? 'serviceNeeds'
+            : 'serviceSelection')
     }
 
     return (
@@ -132,7 +138,7 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
             </PriceAndDate>
             {category?.offer?.description ? <Description dangerouslySetInnerHTML={{ __html: category.offer.description}}/> : null }
             <Actions
-                onBack={onBack}
+                onBack={handleBack}
                 onNext={onSubmit}
             />
         </PageWrapper>

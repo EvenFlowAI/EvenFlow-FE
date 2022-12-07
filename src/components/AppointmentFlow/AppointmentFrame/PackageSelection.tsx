@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
@@ -33,6 +32,9 @@ import Complimentary from "./PackageSelectionParts/Complimentary";
 import TotalComplimentary from "./PackageSelectionParts/TotalComplimentary";
 import Total from "./PackageSelectionParts/Total";
 import {useTranslation} from "react-i18next";
+import {TArgCallback} from "../../../types/types";
+import {TScreen} from "../../Layout/types";
+import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 
 const border = '1px solid #DADADA';
 
@@ -200,7 +202,15 @@ const Info = styled("p")({
     marginTop: 18,
 })
 
-export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddServices}) => {
+type TPackageSelectionProps = {
+    onNext: TArgCallback<TScreen>;
+    onBack: () => void;
+    currentConfig: TServiceTypeSettings|undefined;
+    onAddServices: () => void;
+}
+
+
+export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices, currentConfig}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadedPackages, setPackages] = useState<IPackage[]>([]);
     const {selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -285,13 +295,21 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
         await askAdditionalServices();
     }
 
+    const handleNextScreen = () => {
+        onNext(!currentConfig?.advisorSelection
+            ? currentConfig?.appointmentSelection
+                ? 'appointmentTiming'
+                : "appointmentSelection"
+            : 'consultantSelection')
+    }
+
     const askAdditionalServices = () => {
         selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
         const categoryChosen = service?.type === 0 || subService?.type === 0;
         if (!categoryChosen || !selectedSR.length) {
             onAdditionalOpen();
         } else {
-            onNext();
+            handleNextScreen();
         }
     }
 
@@ -331,7 +349,7 @@ export const PackageSelection: React.FC<TActionProps> = ({onBack, onNext, onAddS
 
     const handleNo = () => {
         onAdditionalClose();
-        onNext();
+        handleNextScreen();
     }
 
     return (

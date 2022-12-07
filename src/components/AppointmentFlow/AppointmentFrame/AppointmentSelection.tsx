@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {TActionProps} from "./types";
 import {StepWrapper} from './StepWrapper';
 import {Actions} from './Actions';
 import {SelectedAppointment} from "./SelectedAppointment";
@@ -18,6 +17,9 @@ import {collectServiceRequestIds} from "./utils";
 import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {TArgCallback} from "../../../types/types";
+import {TScreen} from "../../Layout/types";
+import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 
 const Wrapper = styled('div')(({ theme }) => ({
     display: "flex",
@@ -43,7 +45,12 @@ const Wrapper = styled('div')(({ theme }) => ({
     })
 );
 
-export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) => {
+type TAppointmentSelectionProps = {
+    handleSetScreen: TArgCallback<TScreen>;
+    currentConfig: TServiceTypeSettings|undefined;
+}
+
+export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({handleSetScreen, currentConfig}) => {
     const [
         slots,
         selectedTimingType,
@@ -230,7 +237,7 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
                 label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('hh:mm A')}`,
             });
         }
-        onNext();
+        handleSetScreen(currentConfig?.transportationNeeds ? 'transportationNeeds' : 'appointmentConfirmation');
     }
 
     const handleBack = (): void => {
@@ -239,7 +246,11 @@ export const AppointmentSelection: React.FC<TActionProps> = ({onBack, onNext}) =
             action: 'Went back',
             label: 'From Selection Date & Time Page',
         });
-        onBack();
+        handleSetScreen(currentConfig?.appointmentSelection
+                    ? 'appointmentTiming'
+                    : currentConfig?.advisorSelection
+                        ? 'consultantSelection'
+                        : "serviceNeeds");
     }
 
     return (

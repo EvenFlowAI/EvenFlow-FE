@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     serviceTypeCell: {
-        fontSize: "20px !important",
+        fontSize: "18px !important",
         fontWeight: "bold",
     },
     wrapper: {
@@ -144,21 +144,16 @@ const BookingFlowConfig = () => {
                         : <DenseTable>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.headerCell} width={200}>Service Option</TableCell>
+                                    <TableCell className={classes.headerCell} width={200} key="1">Service Option</TableCell>
                                     <TableCell className={classes.headerCell} align="center"
-                                               width={200}>Available</TableCell>
-                                    <TableCell className={classes.headerCell} align="center" width={200}>Value
-                                        Service</TableCell>
-                                    <TableCell className={classes.headerCell} align="center" width={200}>Product Page
-                                        for Value Service</TableCell>
-                                    <TableCell className={classes.headerCell} align="center" width={200}>Select Advisor
-                                        Page</TableCell>
-                                    <TableCell className={classes.headerCell} align="center" width={200}>Engine Type</TableCell>
+                                               width={200} key="2">Visit Center</TableCell>
+                                    <TableCell className={classes.headerCell} align="center" width={200} key="3">Mobile Service</TableCell>
+                                    <TableCell className={classes.headerCell} align="center" width={200} key="4">Pick Up / Drop Off</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 <TableRow>
-                                    <TableCell className={classes.serviceTypeCell}>Visit Center</TableCell>
+                                    <TableCell className={classes.serviceTypeCell}>Available</TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'available')}
@@ -168,36 +163,23 @@ const BookingFlowConfig = () => {
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
-                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'valueService')}
-                                            checked={visitCenterConfig?.valueService}
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'available')}
+                                            checked={mobileServiceConfig?.available}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
-                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'productPageForValueService')}
-                                            disabled={!visitCenterConfig?.valueService}
-                                            checked={visitCenterConfig?.productPageForValueService}
-                                            color="primary"/>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Switch
-                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'advisorSelection')}
-                                            checked={visitCenterConfig?.advisorSelection}
-                                            color="primary"/>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Switch
-                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'engineType')}
-                                            checked={visitCenterConfig?.engineType}
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'available')}
+                                            checked={pickUpDropOffConfig?.available}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell className={classes.serviceTypeCell}>Mobile Service</TableCell>
+                                    <TableCell className={classes.serviceTypeCell}>Value Service</TableCell>
                                     <TableCell align="center">
                                         <Switch
-                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'available')}
-                                            checked={mobileServiceConfig?.available}
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'valueService')}
+                                            checked={visitCenterConfig?.valueService}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
@@ -205,6 +187,23 @@ const BookingFlowConfig = () => {
                                             onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'valueService')}
                                             disabled={!mobileServiceConfig?.available}
                                             checked={mobileServiceConfig?.valueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'valueService')}
+                                            disabled={!pickUpDropOffConfig?.available}
+                                            checked={pickUpDropOffConfig?.valueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Product Page for Value Service</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'productPageForValueService')}
+                                            disabled={!visitCenterConfig?.valueService}
+                                            checked={visitCenterConfig?.productPageForValueService}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
@@ -217,40 +216,26 @@ const BookingFlowConfig = () => {
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
-                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'advisorSelection')}
-                                            checked={mobileServiceConfig?.advisorSelection}
-                                            disabled={true}
-                                            color="primary"/>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Switch
-                                            disabled={!mobileServiceConfig?.available}
-                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'engineType')}
-                                            checked={mobileServiceConfig?.engineType}
-                                            color="primary"/>
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell className={classes.serviceTypeCell}>Pick Up / Drop Off</TableCell>
-                                    <TableCell align="center">
-                                        <Switch
-                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'available')}
-                                            checked={pickUpDropOffConfig?.available}
-                                            color="primary"/>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Switch
-                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'valueService')}
-                                            disabled={!pickUpDropOffConfig?.available}
-                                            checked={pickUpDropOffConfig?.valueService}
-                                            color="primary"/>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'productPageForValueService')}
                                             disabled={!pickUpDropOffConfig?.valueService
                                             || !pickUpDropOffConfig?.available}
                                             checked={pickUpDropOffConfig?.productPageForValueService}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Advisor Selection</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'advisorSelection')}
+                                            checked={visitCenterConfig?.advisorSelection}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'advisorSelection')}
+                                            checked={mobileServiceConfig?.advisorSelection}
+                                            disabled={true}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
@@ -260,11 +245,73 @@ const BookingFlowConfig = () => {
                                             checked={pickUpDropOffConfig?.advisorSelection}
                                             color="primary"/>
                                     </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Engine Type</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'engineType')}
+                                            checked={visitCenterConfig?.engineType}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            disabled={!mobileServiceConfig?.available}
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'engineType')}
+                                            checked={mobileServiceConfig?.engineType}
+                                            color="primary"/>
+                                    </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'engineType')}
                                             checked={pickUpDropOffConfig?.engineType}
                                             disabled={!pickUpDropOffConfig?.available}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Appointment Selection</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'appointmentSelection')}
+                                            checked={visitCenterConfig?.appointmentSelection}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            disabled={!mobileServiceConfig?.available}
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'appointmentSelection')}
+                                            checked={mobileServiceConfig?.appointmentSelection}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'appointmentSelection')}
+                                            checked={pickUpDropOffConfig?.appointmentSelection}
+                                            disabled={!pickUpDropOffConfig?.available}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Transportation Needs</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'transportationNeeds')}
+                                            checked={visitCenterConfig?.transportationNeeds}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            disabled
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'transportationNeeds')}
+                                            checked={mobileServiceConfig?.transportationNeeds}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'transportationNeeds')}
+                                            checked={pickUpDropOffConfig?.transportationNeeds}
+                                            disabled
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
