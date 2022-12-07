@@ -43,8 +43,6 @@ export const Review = () => {
         t("I would like a loaner vehicle"),
         t("I would like a rental car"),
         t("I would like you to book me a ride"),
-        t("I would like vehicle pick up / drop off services"),
-        t("I will drop off my vehicle and have a ride")
     ]
     const LOCAL_TRANSPORTATION_SHORT_DESCRIPTION = [
         t("I will wait at the dealership"),

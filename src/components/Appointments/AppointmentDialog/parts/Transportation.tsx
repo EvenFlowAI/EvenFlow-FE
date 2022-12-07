@@ -15,14 +15,15 @@ type TTransportationProps = {
     slot: IAppointmentSlot | null;
     serviceCategoryIds: number[];
     payload: IAppointmentByQuery | undefined;
+    open: boolean;
 }
 
-const Transportation: React.FC<TTransportationProps> = ({ payload, form , setForm, selectedSR, maintenancePackageOptionId, slot, serviceCategoryIds }) => {
+const Transportation: React.FC<TTransportationProps> = ({ open, payload, form , setForm, selectedSR, maintenancePackageOptionId, slot, serviceCategoryIds }) => {
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const {selectedSC} = useSCs();
 
     useEffect(() => {
-        if (selectedSC && slot && (selectedSR.length || serviceCategoryIds.length || maintenancePackageOptionId)) {
+        if ( open && selectedSC && slot && (selectedSR.length || serviceCategoryIds.length || maintenancePackageOptionId)) {
             Api.call<ITransportation[]>(
                 Api.endpoints.TransportationOptions.GetActive,
                 {

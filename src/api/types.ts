@@ -77,7 +77,7 @@ export interface ICreateAppointment {
         mileage: string | null;
         transmission: string;
         driveType: string;
-        engineType: string;
+        engineTypeId?: number|null;
     },
     isNeedCall: boolean;
     comment: string;
@@ -119,7 +119,7 @@ export interface IVehicle {
     mileage: number|null;
     serviceInterval?: string;
     modelDetails?: string;
-    engineTypeId?: string;
+    engineTypeId?: number|null;
 }
 
 export interface ILoadedVehicle  extends IVehicle {

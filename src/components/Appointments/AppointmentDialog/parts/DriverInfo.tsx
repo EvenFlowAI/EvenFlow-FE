@@ -139,7 +139,8 @@ const DriverInfo: React.FC<TDriverInfoProps> = ({
                                 isSearchable: true,
                                 defaultInputValue: address?.label || "",
                                 key: address?.label || 'label',
-                                error: errors.includes("address")
+                                error: errors.includes("address"),
+                                styles: {control: (base: any) => ({...base, border: "1 px solid red"})}
                             }}
                         />
                     </Grid>

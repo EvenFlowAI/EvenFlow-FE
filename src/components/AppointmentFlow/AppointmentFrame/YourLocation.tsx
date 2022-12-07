@@ -78,9 +78,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const {t} = useTranslation();
 
     useEffect(() => {
-        // todo set Selected Zip for returning customer
-        setZip(zipCodeValue ?? "")
-        setAddressValue(address);
+        // todo logic for returning customer
+        // setZip(zipCodeValue ?? "")
+        // setAddressValue(address);
     }, [zipCodeValue, address])
 
     const clearSelectedData = () => {

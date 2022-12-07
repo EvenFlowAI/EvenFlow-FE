@@ -113,6 +113,7 @@ export const prodParentLinks = [
     "https://www.janssenfordholdrege.com/",
     "https://www.janssenchryslerjeepdodge.com/",
     "https://www.lakepowellford.com/",
+    "https://www.morrissmithfordoflarned.com/"
 ];
 
 export const AppointmentFrameLayout = () => {
@@ -315,9 +316,11 @@ export const AppointmentFrameLayout = () => {
         const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
+            const lastIndex = key.lastIndexOf('==');
+            const trimmedKey = lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
             setLoadingCar(true);
             try {
-                const {data} = await API.appointment.getByKey(key);
+                const {data} = await API.appointment.getByKey(trimmedKey);
                 dispatch(setUpdateAppointment(data));
                 data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
                 if (data.maintenancePackageOption) {

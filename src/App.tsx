@@ -72,8 +72,6 @@ const App = () => {
                 height: "100vh", maxHeight: "-webkit-fill-available"}}>
                 <ConfirmDialog/>
                 <Switch>
-                    <Route path={Routes.Login.Base} exact component={Login} />
-                    <Route path={Routes.Account.Base} exact component={Login} />
                     <Route path={Routes.EndUser.Appointment} exact component={AppointmentLayout} />
                     <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFrameLayout} />
                     <Route path={Routes.EndUser.Confirmation} exact component={AppointmentConfirmation} />
@@ -81,6 +79,8 @@ const App = () => {
                     <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.PaymentBill} exact component={PaymentBill} />
+                    <Route path={Routes.Login.Base} component={Login} />
+                    <Route path={Routes.Account.Base} component={Login} />
                     <Route
                         path={Routes.EndUser.ValueService}
                         exact
