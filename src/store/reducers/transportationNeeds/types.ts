@@ -89,5 +89,5 @@ export enum ETransportationDays {
 }
 
 export enum ETransportColumn {
-    Yes, Now
+    Yes, No
 }
