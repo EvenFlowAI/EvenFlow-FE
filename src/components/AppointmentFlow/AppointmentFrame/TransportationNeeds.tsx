@@ -136,6 +136,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
+    const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
+    const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
 
     const dispatch = useDispatch();
 
@@ -183,17 +185,17 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     return <StepWrapper>
         {loading ? <Loading/>
             : <TransportationWrapper>
-                {transportations.filter(item => item.column === ETransportColumn.No).length ? <TransportationCard
-                    active={Boolean(transportation)}
+                {transportationNo.length ? <TransportationCard
+                    active={Boolean(transportationNo.find(item => item.id === transportation?.id))}
                     selectedTransportation={transportation}
                     transportation={`${t("No, I will")}:`}
-                    options={transportations.filter(item => item.column === ETransportColumn.No)}
+                    options={transportationNo}
                     onSelect={() => handleSelectGeneric(ETransportColumn.No)}
                     onSelectOption={handleSelectOption}
                 /> : null}
-                {transportations.filter(item => item.column === ETransportColumn.Yes).length ? <TransportationCard
-                    active={Boolean(transportation)}
-                    options={transportations.filter(item => item.column === ETransportColumn.Yes)}
+                {transportationYes.length ? <TransportationCard
+                    active={Boolean(transportationYes.find(item => item.id === transportation?.id))}
+                    options={transportationYes}
                     selectedTransportation={transportation}
                     transportation={`${t("Yes, I would like")}:`}
                     onSelect={() => handleSelectGeneric(ETransportColumn.Yes)}
