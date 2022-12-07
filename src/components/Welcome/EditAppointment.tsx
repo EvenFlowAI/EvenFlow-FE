@@ -50,7 +50,7 @@ export const EditAppointment = () => {
 
     useEffect(() => {
         const lastIndex = id.lastIndexOf('==');
-        const trimmedKey = lastIndex > 0 ? id.slice(0, lastIndex) : id;
+        const trimmedKey = lastIndex > 0 ? id.slice(0, lastIndex).concat('==') : id;
         API.appointment.getByKey(trimmedKey)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
