@@ -98,11 +98,20 @@ export const TransportationOptions: React.FC<DialogProps> = props => {
         }
     }
 
-    const openMenu = (el: ITransportationOptionFull) =>
-        (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-            setEditingElement(el);
-            setAnchorEl(e.currentTarget);
-        }
+    const openMenu = (el: ITransportationOptionFull) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setEditingElement(el);
+        setAnchorEl(e.currentTarget);
+    }
+
+    const onManageRules = () => {
+        setAnchorEl(null);
+        onOpen();
+    }
+
+    const onManageOption = () => {
+        setAnchorEl(null);
+        onOptionOpen();
+    }
 
     return <div style={{width: '100%'}}>
         <TitleContainer title="Transportation Options" pad parent={bookingFlowRoot}/>
@@ -143,7 +152,7 @@ export const TransportationOptions: React.FC<DialogProps> = props => {
                                     <TableCell key="5">
                                         <Switch
                                             disabled={isLoading}
-                                            onChange={handleSwitch(+el.type)}
+                                            onChange={handleSwitch(el.id)}
                                             checked={Boolean(el.state)}
                                             color="primary"
                                         />
@@ -156,8 +165,8 @@ export const TransportationOptions: React.FC<DialogProps> = props => {
             </TableContainer>
         </SquarePaper>
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
-            <MenuItem onClick={() => onOpen()}>Manage Rules</MenuItem>
-            <MenuItem onClick={() => onOptionOpen()}>Manage Option</MenuItem>
+            <MenuItem onClick={() => onManageRules()}>Manage Rules</MenuItem>
+            <MenuItem onClick={() => onManageOption()}>Manage Option</MenuItem>
         </Menu>
         <EditTransportationOptionDialog open={isOpen} onClose={onClose} editingElement={editingElement}/>
         <EditTransportationDescription open={isOptionOpen} editingElement={editingElement} onClose={onOptionClose}/>

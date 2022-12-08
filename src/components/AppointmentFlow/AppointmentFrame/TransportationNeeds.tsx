@@ -168,7 +168,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleSelectGeneric = (column: ETransportColumn) => {
         const options = transportations.filter(item => item.column === column);
-        if (options.length && (transportation === null)) {
+        if (options.length) {
             dispatch(setTransportation(options[0]));
         }
     }

@@ -59,14 +59,12 @@ const EditTransportationDescription: React.FC<DialogProps & {editingElement: ITr
     const showError = useException();
 
     useEffect(() => {
-        if (props.editingElement) {
-            setDescription(props.editingElement.description)
-            setColumn(() => {
-                const selected = columnOptions.find(el => el.value === props.editingElement?.column)
-                return selected || initialColumn;
-            })
+        if (props.editingElement && props.open) {
+            props.editingElement.description && setDescription(props.editingElement.description)
+            const selected = columnOptions.find(el => el.value === props.editingElement?.column)
+            if (selected) setColumn(selected)
         }
-    }, [props.editingElement, columnOptions])
+    }, [props.editingElement, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
