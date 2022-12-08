@@ -309,7 +309,7 @@ export const AppointmentFrameLayout = () => {
 
     const handleSelectCar = useCallback(async () => {
         dispatch(selectSR(null));
-        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
+        let needToShowServiceSelection: boolean = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
             const lastIndex = key.lastIndexOf('==');
@@ -322,6 +322,7 @@ export const AppointmentFrameLayout = () => {
                 if (data.maintenancePackageOption) {
                     dispatch(setPackage(data.maintenancePackageOption))
                 }
+                if (data.serviceType) needToShowServiceSelection = false;
                 if (needToShowServiceSelection) {
                     handleServiceTypeSelection()
                 } else {
