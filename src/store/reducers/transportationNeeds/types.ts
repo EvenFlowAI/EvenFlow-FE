@@ -74,7 +74,9 @@ export enum ETransportationType {
     Shuttle,
     Loaner,
     Rental,
-    BookRide,
+    Ride,
+    WaitAtDealership,
+    DropOffVehicle
 }
 
 export enum ETransportationDays {

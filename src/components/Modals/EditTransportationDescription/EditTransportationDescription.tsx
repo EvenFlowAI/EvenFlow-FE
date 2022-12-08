@@ -12,6 +12,7 @@ import {Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {updateTransportationDescription} from "../../../store/reducers/transportationNeeds/actions";
+import {useException} from "../../../utils/hooks";
 
 type TOption = {
     value: number;
@@ -51,9 +52,11 @@ const useStyles = makeStyles(() => ({
 const EditTransportationDescription: React.FC<DialogProps & {editingElement: ITransportationOptionFull|null}> = (props) => {
     const [description, setDescription] = useState<string>('')
     const [column, setColumn] = useState<TOption>(initialColumn);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const classes = useStyles();
     const columnOptions = Object.keys(ETransportColumn).filter(key => Number.isNaN(+key)).map((op, index) => ({name: op, value: index}));
     const dispatch = useDispatch();
+    const showError = useException();
 
     useEffect(() => {
         if (props.editingElement) {
@@ -66,26 +69,34 @@ const EditTransportationDescription: React.FC<DialogProps & {editingElement: ITr
     }, [props.editingElement, columnOptions])
 
     const onCancel = () => {
-        props.onClose();
+        setFormIsChecked(false);
         setColumn(initialColumn);
         setDescription('');
+        props.onClose();
     }
 
     const onColumnChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
+        setFormIsChecked(false);
         setColumn(value ?? initialColumn);
     }
 
     const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setFormIsChecked(false);
         setDescription(e.target.value)
     }
 
     const onSave = () => {
+        setFormIsChecked(true);
         if (props.editingElement) {
-            dispatch(updateTransportationDescription(
-                props.editingElement.id,
-                {...props.editingElement, column: column.value, description},
-                onCancel
-            ))
+            if (description.length) {
+                dispatch(updateTransportationDescription(
+                    props.editingElement.id,
+                    {...props.editingElement, column: column.value, description},
+                    onCancel
+                ))
+            } else {
+                showError('"Description" must not be empty')
+            }
         }
     }
 
@@ -98,6 +109,7 @@ const EditTransportationDescription: React.FC<DialogProps & {editingElement: ITr
                     style={{ marginBottom: 20 }}
                     getOptionLabel={option => option.name}
                     options={columnOptions}
+                    disableClearable
                     getOptionSelected={(option, value) => option.name === ETransportColumn[+value]}
                     value={column}
                     onChange={onColumnChange}
@@ -110,6 +122,7 @@ const EditTransportationDescription: React.FC<DialogProps & {editingElement: ITr
                     fullWidth
                     label='Description'
                     placeholder='Type Description'
+                    error={formIsChecked && !description.length}
                     onChange={onDescriptionChange}
                     value={description}/>
             </DialogContent>
