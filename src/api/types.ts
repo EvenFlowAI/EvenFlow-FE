@@ -13,6 +13,7 @@ import {TEnumKeyLabel} from "../store/reducers/utils";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EJobType} from "../store/reducers/pods/types";
 import {EServiceType} from "../store/reducers/appointmentFrameReducer/types";
+import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -294,9 +295,11 @@ export interface ICustomer {
 }
 
 export interface ITransportation {
+    id: number;
     type: number;
     name: string;
     description: string;
+    column: ETransportColumn;
 }
 
 export interface IYearRange {
