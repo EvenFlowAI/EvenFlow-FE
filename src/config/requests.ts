@@ -135,7 +135,7 @@ type TApiRoute = {
 
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
-    AncillaryPricing: Record<"GetZones" | "UpdateZone" | "GetDistances" | "UpdateDistance" | "CreateDistance" | "DeleteDistance", TApiRoute>,
+    AncillaryPricing: Record<"GetZones" | "UpdateZone" | "GetDistances" | "UpdateDistance" | "CreateDistance" | "DeleteDistance" | "GetByZip", TApiRoute>,
     Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey", TApiRoute>,
     AppointmentAllocation: Record<"SetTimeWindows" | "GetTimeWindows"
         | "CreateDemandSegment" | "GetDemandSegments"
@@ -184,14 +184,15 @@ type ApiRoutes = {
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
-    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules", TApiRoute>,
+    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
     Vehicles: Record<"GetByVIN" | "GetByQuery" | "Models" | "Makes" | "RemoveMake" | "UpdateMake" | "CreateMake"
         | "GetMileage" | "RemoveMileage" | "CreateMileage" | "MakesModels" | "GetEngineType" | "RemoveEngineType"
         | "CreateEngineType", TApiRoute>,
-    ValueService: Record<"GetSeriesModels" | "GetValueServiceOffers", TApiRoute>
+    ValueService: Record<"GetSeriesModels" | "GetValueServiceOffers", TApiRoute>,
+    ZipCodes: Record<"GetFiltered", TApiRoute>
 }
 
 export type TOptions = {
@@ -220,6 +221,7 @@ export class Api {
             CreateDistance: {route: "/ancillary-price/distance", method: "post"},
             UpdateDistance: {route: "/ancillary-price/distance/{id}", method: "put"},
             DeleteDistance: {route: "/ancillary-price/distance/{id}", method: "delete"},
+            GetByZip: {route: "/ancillary-price/get-convenience-fee", method: "post"},
         },
         Appointments: {
             Create: {route: "/appointments", method: "post"},
@@ -457,6 +459,7 @@ export class Api {
             Get: {route: "/transportation-options", method: "get"},
             GetActive: {route: "/transportation-options/active/by-query", method: "post"},
             Rules: {route: "/transportation-options/{id}/rules", method: "put"},
+            UpdateById: {route: "/transportation-options/{id}", method: "put"},
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},
@@ -503,7 +506,11 @@ export class Api {
         ValueService: {
             GetSeriesModels: {route: "/value-service-offers/vehicle-models", method: "get"},
             GetValueServiceOffers: {route: "/value-service-offers", method: "get"},
+        },
+        ZipCodes: {
+            GetFiltered: {route: "/zip-codes/by-query/", method: "post"}
         }
+
     };
     static async call<RValue=any>(r: TApiRoute, options?: TOptions) {
         const path = pathReplace(r.route, options?.urlParams);

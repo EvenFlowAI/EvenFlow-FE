@@ -123,6 +123,7 @@ export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAp
             }
             if ((slot.priceWithOffer?.value || slot.price.value) < appointments[idx].lowestPrice) {
                 appointments[idx].lowestPrice = slot.priceWithOffer?.value || slot.price.value;
+                appointments[idx].ancillaryPrice = slot.price.ancillaryPrice;
             }
         } else {
             const lowestPrice = slot.priceWithOffer?.value ?? slot.price.value;
@@ -134,6 +135,7 @@ export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAp
                 appointments: [slot],
                 offers: Boolean(slot.offer),
                 amountOfSavingMoney: amountOfSavingMoney,
+                ancillaryPrice: slot.price.ancillaryPrice,
             };
         }
     }
@@ -197,6 +199,7 @@ export const parentOrigins = {
     janssenchryslerjeepdodge: "janssenchryslerjeepdodge",
     janssenfordholdrege: "janssenfordholdrege",
     lakepowellford: "lakepowellford",
+    larnedford: "morrissmithfordoflarned",
 }
 
 export const getTracker = (origin: string): string => {
@@ -210,6 +213,7 @@ export const getTracker = (origin: string): string => {
         if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "UA-210743216-11";
         if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
         if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
+        if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14"
         return "UA-210743216-5";
     } else {
         return "UA-210743216-5";

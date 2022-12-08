@@ -11,8 +11,6 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {useTranslation} from "react-i18next";
-import {ReactComponent as SpecialServiceIcon} from "../../../assets/img/specail_label.svg";
-import {SpecialLabel} from "./confirmationSections/SelectedPrice";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -161,8 +159,6 @@ export const SelectedAppointment = () => {
         address,
         zipCode,
         valueService,
-        isMobileServiceOn,
-        isPickUpDropOffServiceOn,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
@@ -185,6 +181,8 @@ export const SelectedAppointment = () => {
     }, [config, serviceType])
 
     const price = appointment?.price.value ?? 0;
+    const ancillaryPrice = appointment?.price.ancillaryPrice ?? 0;
+
     const isDynamicPricing = appointmentSlots.length
         ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
         : false;
@@ -204,7 +202,7 @@ export const SelectedAppointment = () => {
             case EServiceType.MobileService:
                 return t("Mobile Service");
             case EServiceType.PikUpDropOff:
-                return t("Pick Up / Drop Off");
+                return t("Pick Up / Drop Off Service");
             default:
                 return t("Visit Center");
         }
@@ -222,16 +220,10 @@ export const SelectedAppointment = () => {
                         </div>
                         { isSm && Boolean(price) &&
                         <div className="price">
-                          ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
+                          ${scProfile?.isRoundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}
                         </div> }
                     </li>
                     <li key="advisor">
-                        {isMobileServiceOn || isPickUpDropOffServiceOn
-                            ? <div className="service-list" style={{marginBottom: 10}}>
-                                <div>{t("LOCATION OF SERVICE")}: {getServiceName()}</div>
-                            </div>
-                            : null
-                        }
                         {currentConfig?.advisorSelection
                             ? <div className={classes.selectWrapper}>
                                 <div className={classes.selectWrapper}>
@@ -250,10 +242,15 @@ export const SelectedAppointment = () => {
                             : null}
                         {serviceType !== EServiceType.VisitCenter && address
                             ? <div className="service-list">
-                                <h4> {t("YOUR ADDRESS")}: </h4>
-                                <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
+                                <h4> {t("YOUR ADDRESS")}: <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div></h4>
                             </div>
                             : null}
+                        {serviceType !== EServiceType.VisitCenter
+                            ? <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
+                                <div>{t("PROVIDED BY OUR")}: {getServiceName()}</div>
+                            </div>
+                            : null
+                        }
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper> : null}
@@ -269,7 +266,7 @@ export const SelectedAppointment = () => {
                         : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
-                          ${scProfile?.isRoundPrice ? price : price.toFixed(2)}
+                          ${scProfile?.isRoundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}
                         </div>}
                         {/*todo uncomment for offer new functionality*/}
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}

@@ -23,16 +23,20 @@ export interface IAppointmentId {
     id: number;
     hashKey: string;
 }
-export type TMaintenanceDetails = {
+
+export interface IMaintenanceDetailsShort {
     year?: string;
     make?: string;
     model?: string;
+    serviceInterval?: string;
+    mileage?:string;
+}
+
+export interface TMaintenanceDetails extends IMaintenanceDetailsShort {
     trim?: string;
     powertrain?: string;
     oilType?: string;
-    serviceInterval?: string;
-    mileage?:string;
-    engineType?: string;
+    engineTypeId?: number|null;
 }
 
 export interface IFrameScreens {
@@ -103,3 +107,19 @@ export interface IServiceOffer  {
 }
 
 export type TLanguage = "en" | "es";
+
+export interface IAncillaryByZipRequest {
+    address: string;
+    zipCode: string;
+    serviceType: EServiceType;
+    serviceCenterId: number;
+}
+
+export enum EAncillaryType {
+    Amount, Percent
+}
+
+export type TAncillaryPriceByZip = {
+    feeAmount: number;
+    feeType: EAncillaryType;
+}

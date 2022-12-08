@@ -59,7 +59,7 @@ const SlotSelection: React.FC<TSlotSelectionProps> = ({ setErrors, errors, slots
                     getOptionSelected={(option, value) => option.date === value.date && option.time === value.time}
                     getOptionLabel={option =>
                         `${getDate(option)} - $${
-                            option.priceWithOffer?.value ? option.priceWithOffer.value.toFixed(2) : option.price.value.toFixed(2)
+                            option.priceWithOffer?.value ? option.priceWithOffer.value.toFixed(2) : (option.price.value + option.price.ancillaryPrice).toFixed(2)
                         }`
                     }
                     onChange={handleSlotChange}

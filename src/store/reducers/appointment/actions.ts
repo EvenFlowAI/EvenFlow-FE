@@ -158,11 +158,13 @@ export const loadEditAppointment = (appointment: IAppointmentByQuery): AppThunk 
         time: appointment.timeSlot,
         price: {
             value: appointment.transactionValue,
-            category: EDemandCategory.Average
+            category: EDemandCategory.Average,
+            ancillaryPrice: appointment.ancillaryPrice,
         },
         priceWithOffer: {
             value: appointment.transactionValue,
-            category: EDemandCategory.Average
+            category: EDemandCategory.Average,
+            ancillaryPrice: appointment.ancillaryPrice,
         },
         isShorterWaitTime: false,
     };

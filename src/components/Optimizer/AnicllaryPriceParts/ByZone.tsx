@@ -17,6 +17,7 @@ import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";
 import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
 import {NoData} from "../../UI/NoData";
 import {Loading} from "../../UI/Loading";
+import {useException} from "../../../utils/hooks";
 
 export const TablesWrapper = styled('div')({
     padding: 24,
@@ -88,6 +89,7 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IZonePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const showError = useException();
 
     useEffect(() => {
         const sortedOut = data.slice().sort((a, b) => a.id - b.id);
@@ -140,7 +142,15 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
 
     const onSave = () => {
         setIsEdit(false)
-        if (editedItem) onUpdate(editedItem)
+        if (editedItem) {
+            if (editedItem.serviceMultiplier === 0 && editedItem.flatFee === 0) {
+                showError( "Service Multiplier' or 'Flat Fee' must be greater than 0")
+            } else if (editedItem.serviceMultiplier > 0 && editedItem.flatFee > 0) {
+                showError("Only one value can be greater than 0: 'Service Multiplier' or 'Flat Fee'")
+            } else {
+                onUpdate(editedItem)
+            }
+        }
     }
 
     return isLoading

@@ -8,7 +8,7 @@ import {handleSearch, selectAppointment, selectSR, selectSRMultiple} from "../..
 import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
-import {TArgCallback, TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {checkSelectedCar, getOfferString} from "./utils";
 import ReactGA from "react-ga";
@@ -91,12 +91,11 @@ const Code = styled(FormControlLabel)({
 });
 
 type TProps = {
-    onNext: TArgCallback<TScreen>;
-    onBack: TCallback;
+    handleSetScreen: TArgCallback<TScreen>;
     onAddServices?: () => void;
 }
 
-export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices}) => {
+export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const [searchInput, setSearch] = useState<string>("");
     const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
     const [
@@ -191,12 +190,12 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
 
     const goNext = () => {
         if (!checkSelectedCar(vehicle, vehicles)) {
-            onNext("maintenanceDetails");
+            handleSetScreen("maintenanceDetails");
         } else {
             const nextScreen: TScreen = config.find(item => item.serviceType.toString() === serviceType.toString())?.advisorSelection
                 ? "consultantSelection"
                 : "appointmentTiming";
-            onNext(nextScreen);
+            handleSetScreen(nextScreen);
         }
     }
 
@@ -256,7 +255,10 @@ export const SelectOpsCode: React.FC<TProps> = ({onNext, onBack, onAddServices})
             dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
         }
         dispatch(selectSRMultiple(codes));
-        onBack();
+        handleSetScreen(service?.type === EServiceCategoryType.Diagnose
+        || service?.type === EServiceCategoryType.IndividualServices
+            ? 'serviceNeeds'
+            : 'serviceSelection');
     }
 
     const addServices = () => {

@@ -2,6 +2,8 @@ import moment from "moment";
 import {ILoadedVehicle, IOfferForCategory, IPackage, IPackageOptions, IServiceCategory} from "../../../api/types";
 import {TComplimentary, TPackage, TService} from "./PackageSelection";
 import {EOfferType} from "../../../store/reducers/offers/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {TScreen} from "../../Layout/types";
 
 export const getAppointmentDate = (date: moment.Moment, d: number) => {
     return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
@@ -116,4 +118,78 @@ export const getOfferString = (offer: IOfferForCategory, isRoundPrice: boolean):
         default:
             return '';
     }
+}
+
+type TData = { [K in TScreen]: number };
+
+export const getCurrentMenu = (serviceType: EServiceType, advisor: boolean, transportation: boolean): string[] => {
+    const menu = {
+        yourLocation: "Your Location",
+        serviceNeeds: "Service Needs",
+        advisorSelection: "Advisor Selection",
+        appointmentSelection: "Appointment Selection",
+        transportationNeeds: "Transportation Needs",
+        appointmentConfirmation: "Appointment Confirmation",
+    }
+    if (!advisor) delete menu.advisorSelection;
+    if (!transportation) delete menu.transportationNeeds;
+    if (serviceType === EServiceType.VisitCenter) delete menu.yourLocation;
+    return Object.values(menu);
+}
+
+export const getStepsScreen = (serviceType: EServiceType, advisorSelection: boolean, appointmentSelection: boolean, transportationNeeds: boolean): TScreen[] => {
+    const screens: {[key: string]: TScreen} = {
+        location: "location",
+        serviceNeeds: "serviceNeeds",
+        consultantSelection: "consultantSelection",
+        appointmentSelection: appointmentSelection ? "appointmentTiming" : "appointmentSelection",
+        transportationNeeds: "transportationNeeds",
+        appointmentConfirmation: "appointmentConfirmation",
+    }
+    if (!advisorSelection) delete screens.consultantSelection;
+    if (!transportationNeeds) delete screens.transportationNeeds;
+    if (serviceType === EServiceType.VisitCenter) delete screens.location;
+    return Object.values(screens);
+}
+
+export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boolean, isAppointmentSelection: boolean, isTransportationNeeds: boolean): {[K in TScreen]: number} => {
+    const data: { [K in TScreen]: number } = {
+        carSelection: 0,
+        serviceNeeds: serviceType === EServiceType.VisitCenter ? 1 : 2,
+        maintenanceDetails: serviceType === EServiceType.VisitCenter ? 1 : 2,
+        serviceSelection: serviceType === EServiceType.VisitCenter ? 1 : 2,
+        packageSelection: serviceType === EServiceType.VisitCenter ? 1 : 2,
+        describeMore: serviceType === EServiceType.VisitCenter ? 1 : 2,
+        opsCode: serviceType === EServiceType.VisitCenter ? 1 : 2,
+        vehicleData: serviceType === EServiceType.VisitCenter ? 1 : 2,
+        serviceOfferProductPage: serviceType === EServiceType.VisitCenter ? 1 : 2,
+        consultantSelection: serviceType === EServiceType.VisitCenter ? 2 : serviceType === EServiceType.MobileService ? -1 : 3,
+        appointmentTiming: serviceType === EServiceType.PikUpDropOff ? 4 : 3,
+        appointmentSelection: serviceType === EServiceType.PikUpDropOff ? 4 : 3,
+        transportationNeeds: serviceType === EServiceType.VisitCenter ? 4 : -1,
+        appointmentConfirmation: serviceType === EServiceType.MobileService ? 4 : 5,
+        appointmentConfirmed: serviceType === EServiceType.MobileService ? 4 : 5,
+        location: 1,
+        payment: 5,
+    }
+    if (!isAdvisorAvailable && data.consultantSelection > -1) {
+        for (let key in data) {
+            if (data[key as keyof TData] > data.consultantSelection) {
+                data[key as keyof TData] = data[key as keyof TData] - 1
+            }
+        }
+        data.consultantSelection = -1;
+    }
+    if (!isAppointmentSelection) {
+        data.appointmentTiming = -1;
+    }
+    if (!isTransportationNeeds && data.transportationNeeds > -1) {
+        for (let key in data) {
+            if (data[key as keyof TData] > data.transportationNeeds) {
+                data[key as keyof TData] = data[key as keyof TData] - 1
+            }
+        }
+        data.transportationNeeds = -1;
+    }
+    return data
 }

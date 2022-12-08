@@ -4,14 +4,11 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals
 import {
     IAppointmentByQuery,
     ICreateAppointment,
-    IPackageAppointments, IPackageOptions,
+    IPackageAppointments,
+    IPackageOptions,
     ITransportation
 } from "../../../api/types";
-import {
-    Button,
-    Divider,
-    Grid,
-} from "@material-ui/core";
+import {Button, Divider, Grid,} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {
@@ -44,6 +41,9 @@ import {EJobType} from "../../../store/reducers/pods/types";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
+import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
 
 export type TForm = {
     date: string;
@@ -60,10 +60,10 @@ export type TForm = {
     vehicleMileage: string;
     vehicleTransmission: string;
     vehicleDriveType: string;
-    vehicleEngineType: string;
     isNeedCall: boolean;
     comment: string;
     serviceRequestIds: number[];
+    vehicleEngineTypeId: number|null;
 };
 
 const initialForm: TForm = {
@@ -81,10 +81,10 @@ const initialForm: TForm = {
     vehicleMileage: "",
     vehicleTransmission: "",
     vehicleDriveType: "",
-    vehicleEngineType: "",
     isNeedCall: false,
     comment: "",
     serviceRequestIds: [],
+    vehicleEngineTypeId: null,
 };
 
 export type TKey = keyof TForm;
@@ -98,6 +98,8 @@ const requiredFields = ['driverName', 'driverPhoneNumber', 'driverEmail', 'vehic
 
 export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({onAction, payload, ...props}) => {
     const { packages } = useSelector((state: RootState) => state.appointments);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
     const [form, setForm] = useState<TForm>(initialForm);
     const initialRef = useRef(false);
     const [vinLoading, setVinLoading] = useState<boolean>(false);
@@ -114,8 +116,11 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
     const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
     const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
+    const [serviceType, setServiceType] = useState<TOption|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
+    const [address, setAddress] = useState<any>({value: 0, name: "Visit Center"});
+    const [zipCode, setZipCode] = useState<string>("");
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
@@ -125,27 +130,28 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         return Boolean(form.vehicleMake) && Boolean(form.vehicleYear) && Boolean(form.vehicleModel) && Boolean(form.vehicleMileage)
     }, [form])
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
+    const serviceTypeOptions: TOption[] = useMemo(() => {
+        let allOptions = getOptions(Object.keys(EServiceType).filter(key => Number.isNaN(+key)))
+        const unavailableServices = config.filter(item => !item.available);
+        if (unavailableServices.length) {
+            const unavailableServiceTypes = unavailableServices.map(el => el.serviceType);
+            allOptions = allOptions.filter(item => !unavailableServiceTypes.includes(item.value))
+        }
+        return allOptions
+    }, [config]);
+    const otherServiceTypesAvailable = config.find(item => item.serviceType !== EServiceTypeBookingFlow.VisitCenter && item.available);
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
             ...f,
             vehicleModel: d.model || f.vehicleModel,
             vehicleMake: d.make || f.vehicleMake,
-            vehicleEngineType: d.engineType || f.vehicleEngineType,
             vehicleTransmission: d.transmission || f.vehicleTransmission,
             vehicleDriveType: d.driveType || f.vehicleDriveType,
             vehicleYear: d.year ? String(d.year) : f.vehicleYear,
             vehicleMileage: d.mileage ? String(d.mileage) : f.vehicleMileage
         }))
     }, []);
-
-    useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadMakes(selectedSC.id));
-            dispatch(loadMileage(selectedSC.id));
-            dispatch(loadEngineType(selectedSC.id));
-        }
-    }, [selectedSC]);
 
     const clearForm = () => {
         initialRef.current = false;
@@ -157,7 +163,20 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setDate("");
         setSelectedSlot(null);
         setJobType(null);
+        setServiceType({value: 0, name: "Visit Center"});
+        setAddress(null);
+        setZipCode("");
+        setSelectedEngine(null);
     }
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadMakes(selectedSC.id));
+            dispatch(loadMileage(selectedSC.id));
+            dispatch(loadEngineType(selectedSC.id));
+            dispatch(loadBookingFlowConfig(selectedSC.id))
+        }
+    }, [selectedSC]);
 
     useEffect(() => {
         if (props.open) {
@@ -172,7 +191,6 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     vehicleDriveType: payload.vehicle.driveType,
                     vehicleTransmission: payload.vehicle.transmission,
                     vehicleYear: String(payload.vehicle.year),
-                    vehicleEngineType: payload.vehicle.engineType,
                     driverName: payload.driver.fullName,
                     driverEmail: payload.driver.email,
                     driverPhoneNumber: payload.driver.phoneNumber,
@@ -180,8 +198,19 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     reminderTypes: payload.reminderTypes,
                     comment: payload.comment,
                     transportationOption: payload.transportationOption,
-                    serviceRequestIds: payload.serviceRequests.map(sr => sr.id)
+                    serviceRequestIds: payload.serviceRequests.map(sr => sr.id),
+                    vehicleEngineTypeId: payload.vehicle.engineTypeId ?? null,
                 });
+                if (payload.serviceType) {
+                    const option = serviceTypeOptions.find(item => item.value === payload.serviceType)
+                    option && setServiceType(option)
+                }
+                if (payload.vehicle?.engineTypeId) {
+                    const engine = engineTypes.find(item => item.id === payload.vehicle.engineTypeId)
+                    engine && setSelectedEngine(engine);
+                }
+                if (payload.address) setAddress(payload.address);
+                if (payload.zipCode) setZipCode(payload.zipCode);
                 payload.serviceRequests && setSelectedSR(payload.serviceRequests);
                 payload.serviceCategories && setSelectedCategories(payload.serviceCategories);
                 if (typeof payload.jobType !== 'undefined') {
@@ -194,23 +223,27 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     time: payload.timeSlot,
                     price: {
                         value: payload.transactionValue,
-                        category: EDemandCategory.Average
+                        category: EDemandCategory.Average,
+                        ancillaryPrice: payload.ancillaryPrice,
                     },
                     isShorterWaitTime: false
                 }
                 setSelectedSlot(slot);
                 setPreloadedSlot(slot);
-                const selectedPackage = packages.find(item => item.options.find(option => option.id === payload?.maintenancePackageOption?.id))
-                if (selectedPackage) {
-                    const option = selectedPackage.options.find(option => option.id === payload?.maintenancePackageOption?.id);
-                    option && setSelectedPackageOption(option);
-                    setSelectedPackage(selectedPackage);
-                }
             }
         } else {
             clearForm();
         }
-    }, [props.open, payload, packages]);
+    }, [props.open, payload, engineTypes]);
+
+    useEffect(() => {
+        const selectedPackage = packages.find(item => item.options.find(option => option.id === payload?.maintenancePackageOption?.id))
+        if (selectedPackage) {
+            const option = selectedPackage.options.find(option => option.id === payload?.maintenancePackageOption?.id);
+            option && setSelectedPackageOption(option);
+            setSelectedPackage(selectedPackage);
+        }
+    }, [packages])
 
     useEffect(() => {
         if (props.open && selectedSC) {
@@ -245,6 +278,9 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceCenterId: selectedSC.id,
                     jobType: jobType?.value ?? null,
                     appointmentHashKey: payload?.hashKey ?? undefined,
+                    serviceType: serviceType?.value ?? EServiceType.VisitCenter,
+                    address: address?.label ?? null,
+                    zipCode: zipCode?.length ? zipCode : undefined,
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,
@@ -286,7 +322,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             waiting = false;
         };
     }, [form, selectedSC, props.open, filterDate, selectedSR, showError,
-        preloadedSlot, selectedPackageOption, selectedCategories, jobType]);
+        preloadedSlot, selectedPackageOption, selectedCategories, jobType, serviceType]);
 
     useEffect(() => {
         if (preloadedSlot && initialRef.current) {
@@ -321,6 +357,18 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             isValid = false;
             showError(`"Phone Number" ${form.driverPhoneNumber.length ? 'is not valid' : 'must not be empty'}`)
             setErrors(prev => [...prev, "driverPhoneNumber"])
+        }
+        if (serviceType && serviceType?.value !== EServiceType.VisitCenter) {
+            if (!address){
+                isValid = false;
+                setErrors(prev => ([...prev, "address"]))
+                showError('"Address" must not be empty')
+            }
+            if (!zipCode){
+                isValid = false;
+                setErrors(prev => ([...prev, "zipCode"]))
+                showError('"Zip Code" must not be empty')
+            }
         }
         for (let field in form) {
             if (field === "date" && !filterDate) {
@@ -359,11 +407,11 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     model: form.vehicleModel,
                     year: form.vehicleYear,
                     driveType: form.vehicleDriveType,
-                    engineType: form.vehicleEngineType,
+                    engineTypeId: form.vehicleEngineTypeId,
                     mileage: form.vehicleMileage ? String(form.vehicleMileage) : "",
                     transmission: form.vehicleTransmission,
                     vin: form.vehicleVin,
-                    dmsId: null
+                    dmsId: null,
                 },
                 serviceCenterId: selectedSC.id,
                 isNeedCall: form.isNeedCall,
@@ -380,8 +428,12 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 reminderTypes: form.reminderTypes,
                 appointmentTimingType: EAppointmentTimingType.PreferredDate,
                 transportationType: form.transportationOption?.type,
+                serviceType: serviceType ? serviceType.value : EServiceType.VisitCenter,
             }
+            if (zipCode) data.zipCode = zipCode;
+            if (address) data.address = address.label;
             if (jobType) data.jobType = jobType.value;
+            if (selectedEngine) data.vehicle.engineTypeId = selectedEngine.id;
             if (payload) {
                 data.id = payload.id;
                 // todo search term
@@ -438,12 +490,46 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setJobType(value)
     }, [])
 
+    const onServiceTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
+        setAddress("");
+        setZipCode("");
+        setSelectedSlot(null);
+        setServiceType(value)
+    }, [])
+
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>{!payload ? "Add" : "Update"} Appointment</DialogTitle>
         <DialogContent>
             <Grid alignItems="center" container spacing={2}>
 
-                <DriverInfo form={form} handleChange={handleChange} errors={errors}/>
+                {otherServiceTypesAvailable ? <Grid item xs={12}>
+                    <Autocomplete
+                        options={serviceTypeOptions}
+                        getOptionLabel={i => i.name}
+                        value={serviceType}
+                        onChange={onServiceTypeChange}
+                        renderInput={autocompleteRender({
+                            label: "Location of Service",
+                            placeholder: 'Select Location of Service'
+                        })}
+                    />
+                </Grid> : null}
+
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+
+                <DriverInfo
+                    form={form}
+                    handleChange={handleChange}
+                    errors={errors}
+                    serviceType={serviceType}
+                    setAddress={setAddress}
+                    address={address}
+                    zipCode={zipCode}
+                    otherServiceTypesAvailable={Boolean(otherServiceTypesAvailable)}
+                    setZipCode={setZipCode}
+                />
 
                 <Grid item xs={12}>
                     <Divider />
@@ -514,6 +600,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     setForm={setForm}
                     selectedSR={selectedSR}
                     slot={selectedSlot}
+                    open={props.open}
                     serviceCategoryIds={selectedCategories.map(item => item.id)}
                     maintenancePackageOptionId={selectedPackageOption?.id || payload?.maintenancePackageOptionId || undefined}
                 />

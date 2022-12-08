@@ -38,7 +38,11 @@ import {
     setSideBarSteps,
     setMobileServiceAvailability,
     setPickUpDropOffAvailability,
-    setValueServiceAvailability, setWelcomeScreenView, switchLanguage, setLocalTransportation,
+    setValueServiceAvailability,
+    setWelcomeScreenView,
+    switchLanguage,
+    setAncillaryPriceLoading,
+    setAncillaryPriceByZip, setFilteredZipCodes,
 } from "./actions";
 import {
     ICustomer,
@@ -50,7 +54,16 @@ import {
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
-import {IServiceOffer, IValueService, TMaintenanceDetails, TYear, EServiceType, EUserType, TLanguage} from "./types";
+import {
+    IServiceOffer,
+    IValueService,
+    TMaintenanceDetails,
+    TYear,
+    EServiceType,
+    EUserType,
+    TLanguage,
+    TAncillaryPriceByZip
+} from "./types";
 import {TScreen} from "../../../components/Layout/types";
 import {TView} from "../../../components/Welcome/types";
 
@@ -66,7 +79,6 @@ type TState = {
     customer: ICustomer;
     reminders: EReminderType[];
     transportation: ITransportation|null;
-    localTransportation: ITransportation|null;
     maintenanceDetails: TMaintenanceDetails;
     packages: IPackage[];
     isPackagesLoading: boolean;
@@ -85,7 +97,7 @@ type TState = {
     userType: EUserType | undefined;
     serviceType: EServiceType;
     address: any;
-    zipCode: string | null;
+    zipCode: string;
     valueService: IValueService | null;
     seriesModels: TYear[];
     offersLoading: boolean;
@@ -96,6 +108,9 @@ type TState = {
     sideBarSteps: TScreen[];
     welcomeScreenView: TView;
     language: TLanguage;
+    ancillaryPriceLoading: boolean;
+    ancillaryPrice: TAncillaryPriceByZip|null;
+    filteredZipCodes: string[];
 }
 const initialState: TState = {
     service: null,
@@ -114,7 +129,6 @@ const initialState: TState = {
     },
     reminders: [],
     transportation: null,
-    localTransportation: null,
     maintenanceDetails: {},
     packages: [],
     isPackagesLoading: false,
@@ -131,7 +145,7 @@ const initialState: TState = {
     userType: undefined,
     serviceType: EServiceType.VisitCenter,
     address: null,
-    zipCode: null,
+    zipCode: "",
     valueService: null,
     seriesModels: [],
     offersLoading: false,
@@ -142,6 +156,9 @@ const initialState: TState = {
     sideBarSteps: [],
     welcomeScreenView: "select",
     language: "en",
+    ancillaryPriceLoading: false,
+    ancillaryPrice: null,
+    filteredZipCodes: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -211,6 +228,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             reminders: payload.reminderTypes,
             categoriesIds: payload.serviceCategories ? payload.serviceCategories?.map(item => item.id) : [],
             description: payload.comment,
+            serviceType: payload.serviceType,
             // selectedPackage: payload.maintenancePackageOption ?? null,
         };
     })
@@ -292,7 +310,13 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     .addCase(switchLanguage, (state, {payload}) => {
         return {...state, language: payload}
     })
-    .addCase(setLocalTransportation, (state, {payload}) => {
-        return {...state, localTransportation: payload}
+    .addCase(setAncillaryPriceLoading, (state, {payload}) => {
+        return {...state, ancillaryPriceLoading: payload}
+    })
+    .addCase(setAncillaryPriceByZip, (state, {payload}) => {
+        return {...state, ancillaryPrice: payload}
+    })
+    .addCase(setFilteredZipCodes, (state, {payload}) => {
+        return {...state, filteredZipCodes: payload}
     })
 )

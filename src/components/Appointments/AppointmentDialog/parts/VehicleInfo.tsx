@@ -12,6 +12,7 @@ import {TForm, TKey} from "../AppointmentDialog";
 import {useSCs} from "../../../../utils/hooks";
 import {loadPackageByVehicle} from "../../../../store/reducers/appointments/actions";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
+import {IPackageAppointments} from "../../../../api/types";
 
 type TSelect = {
     label: string;
@@ -60,7 +61,7 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
 
     useEffect(() => {
         if (selectedSC && isDataValid) getPackage();
-    }, [selectedSC, isDataValid, form.vehicleMake, form.vehicleModel, form.vehicleYear, form.vehicleMileage])
+    }, [selectedSC, isDataValid, form.vehicleMake, form.vehicleModel, form.vehicleYear, form.vehicleMileage, selectedEngine])
 
     const handleSelectChange = useCallback((name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
@@ -80,12 +81,6 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
         }
     }, [makes, onVehicleDetailsChange])
 
-    const onEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
-        setSelectedEngine(option)
-        setForm(prev => ({...prev, vehicleEngineType: option?.id.toString() ?? ""}))
-        setErrors(e => e.filter(err => err !== "engineTypeId"))
-    }
-
     const getPackage = useCallback(() => {
         if (selectedSC && isDataValid) {
             dispatch(loadPackageByVehicle({
@@ -96,11 +91,18 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
                     model: form.vehicleModel,
                     mileage: +form.vehicleMileage,
                     year: +form.vehicleYear,
-                    engineTypeId: form.vehicleEngineType,
+                    engineTypeId: selectedEngine?.id ?? null,
                 }
             }))
         }
-    }, [selectedSC, isDataValid, dispatch, form])
+    }, [selectedSC, isDataValid, dispatch, form, selectedEngine])
+
+    const onEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
+        setSelectedEngine(option)
+        onVehicleDetailsChange();
+        setForm(prev => ({...prev, vehicleEngineTypeId: option?.id ?? null}))
+        setErrors(e => e.filter(err => err !== "engineTypeId"))
+    }
 
     return (
         <React.Fragment>
@@ -147,23 +149,25 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
                     }
                 }
             )}
-            <Autocomplete
-                key="Engine Type"
-                options={engineTypes}
-                onChange={onEngineTypeChange}
-                fullWidth
-                getOptionLabel={o => o.name}
-                getOptionSelected={o => o.id === selectedEngine?.id}
-                disableClearable
-                autoComplete={true}
-                renderInput={autocompleteRender({
-                    label: "Engine Type",
-                    placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
-                    error: errors.includes("engineTypeId"),
-                    required: true,
-                })}
-                value={selectedEngine ?? undefined}
-            />
+            <Grid item xs={12} key="engineType">
+                <Autocomplete
+                    key="Engine Type"
+                    options={engineTypes}
+                    onChange={onEngineTypeChange}
+                    fullWidth
+                    getOptionLabel={o => o.name}
+                    getOptionSelected={o => o.id === selectedEngine?.id}
+                    disableClearable
+                    autoComplete={true}
+                    renderInput={autocompleteRender({
+                        label: "Engine Type",
+                        placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
+                        error: errors.includes("engineTypeId"),
+                        required: true,
+                    })}
+                    value={selectedEngine ?? undefined}
+                />
+            </Grid>
         </React.Fragment>
     );
 };

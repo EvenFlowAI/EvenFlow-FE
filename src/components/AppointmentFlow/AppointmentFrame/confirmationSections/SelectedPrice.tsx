@@ -35,8 +35,8 @@ export const SelectedPrice = () => {
             <Price>
                 {appointment?.price.value ?
                     <span>${scProfile?.isRoundPrice
-                        ? appointment.price.value
-                        : appointment.price.value.toFixed(2)}
+                        ? appointment.price.value + appointment.price.ancillaryPrice
+                        : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}
                     </span>
                     : t('Service items will be quoted at dealership')
                 }

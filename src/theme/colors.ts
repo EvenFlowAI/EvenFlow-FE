@@ -8,9 +8,10 @@ export const colors: PaletteOptions = {
     background: {
         default: "#F7F8FB",
         paper: "#FFFFFF"
+    },
+    success: {
+        main: '#89E5AB',
+        contrastText: "#202021"
     }
-    // success: {
-    //     main: '',
-    // }
 };
 

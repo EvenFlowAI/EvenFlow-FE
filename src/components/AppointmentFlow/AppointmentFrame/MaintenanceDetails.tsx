@@ -4,9 +4,8 @@ import {Autocomplete} from "@material-ui/lab";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
-import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
-import {TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
+import {IMaintenanceDetailsShort, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     loadMakes, selectService,
     setMaintenanceDetails, setPackage, setVehicle,
@@ -23,6 +22,9 @@ import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetail
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
+import {TArgCallback} from "../../../types/types";
+import {TScreen} from "../../Layout/types";
+import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -56,11 +58,16 @@ const blankOptions: TOptionsState = {};
 
 type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 
-export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, serviceType}= useSelector((state: RootState) => state.appointmentFrame);
+type TMaintenanceDetailsProps = {
+    onBack: TArgCallback<TScreen>;
+    onNext: TArgCallback<TScreen>;
+    currentConfig: TServiceTypeSettings|undefined;
+}
+
+export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
@@ -77,12 +84,13 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const isNewVehicleView = useMemo(() => {
-        return !Boolean(customerLoadedData?.vehicles.find(v => v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin));
+        return !Boolean(customerLoadedData?.vehicles.find(v => {
+            return v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin
+            || (v.make === selectedVehicle?.make
+            && v.model === selectedVehicle?.model
+            && v.year === selectedVehicle?.year)
+        }));
     }, [selectedVehicle, customerLoadedData])
-
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
-    }, [config, serviceType])
 
     const selects: TSelect[] = [
         {label: t("VIN"), name: "vin", noVehicle: true},
@@ -99,14 +107,17 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedVehicle?.mileage?.toString() || "",
-                engineType: selectedVehicle.engineTypeId ?? ""
+                engineTypeId: selectedVehicle.engineTypeId,
             }));
-            if (selectedVehicle?.engineTypeId) {
-                const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
-                option && setSelectedEngine(option);
-            }
         }
-    }, [dispatch, selectedVehicle, engineTypes]);
+    }, [dispatch, selectedVehicle]);
+
+    useEffect(() => {
+        if (selectedVehicle?.engineTypeId && engineTypes.length) {
+            const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
+            option && setSelectedEngine(option);
+        }
+    }, [selectedVehicle, engineTypes])
 
     const setDataFromValueService = useCallback(() => {
         const vehicle: ILoadedVehicle = {
@@ -191,8 +202,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
         setSelectedEngine(option)
-        dispatch(updateVehicle({engineTypeId: option?.id.toString() ?? ""}));
-        dispatch(setMaintenanceDetails({engineType: option?.id.toString() ?? ""}));
+        dispatch(updateVehicle({engineTypeId: option?.id ?? null}));
+        dispatch(setMaintenanceDetails({engineTypeId: option?.id ?? null}));
         setErrors(e => e.filter(err => err !== "engineTypeId"))
     }
 
@@ -231,7 +242,13 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
 
     const handleNext = () => {
         if (isValid()) {
-            onNext();
+            onNext(service?.type === EServiceCategoryType.MaintenancePackage
+                ? 'packageSelection'
+                : !currentConfig?.advisorSelection
+                    ? currentConfig?.appointmentSelection
+                        ? 'appointmentTiming'
+                        : "appointmentSelection"
+                    : 'consultantSelection');
         }
     }
 
@@ -240,7 +257,8 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
             dispatch(setPackage(null))
             dispatch(selectService(null));
         }
-        onBack();
+        onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+            ? 'opsCode' : 'serviceNeeds');
     }
 
     return (<StepWrapper>
@@ -268,7 +286,7 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                             required: requiredFields.includes(select.name)
                         })}
                         value={!select.allOverride
-                            ? maintenanceDetails[select.name as keyof TMaintenanceDetails] ?? ""
+                            ? maintenanceDetails[select.name as keyof IMaintenanceDetailsShort] ?? ""
                             : "All"
                         }
                     />
@@ -299,16 +317,14 @@ export const MaintenanceDetails: React.FC<TActionProps> = ({onNext, onBack}) => 
                 fullWidth
                 getOptionLabel={o => o.name}
                 getOptionSelected={o => o.id === selectedEngine?.id}
-                disableClearable
-                autoComplete={true}
-                disabled={!isNewVehicleView}
+                // disabled={!isNewVehicleView && Boolean(selectedEngine)}
                 renderInput={autocompleteRender({
                     label: "Engine Type",
                     placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
                     error: errors.includes("engineTypeId"),
                     required: true,
             })}
-                value={selectedEngine ?? undefined}
+                value={selectedEngine}
                 />
             : null }
         </SelectWrapper>

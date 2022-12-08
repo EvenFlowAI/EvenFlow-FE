@@ -12,6 +12,8 @@ import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EJobType} from "../store/reducers/pods/types";
+import {EServiceType} from "../store/reducers/appointmentFrameReducer/types";
+import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -76,13 +78,16 @@ export interface ICreateAppointment {
         mileage: string | null;
         transmission: string;
         driveType: string;
-        engineType: string;
+        engineTypeId?: number|null;
     },
     isNeedCall: boolean;
     comment: string;
     serviceRequestIds: number[];
     searchTerm?: string;
     jobType?: EJobType;
+    serviceType: EServiceType;
+    address?: string;
+    zipCode?: string;
 }
 
 export interface IUpdateAppointment extends ICreateAppointment {
@@ -115,7 +120,7 @@ export interface IVehicle {
     mileage: number|null;
     serviceInterval?: string;
     modelDetails?: string;
-    engineTypeId?: string;
+    engineTypeId?: number|null;
 }
 
 export interface ILoadedVehicle  extends IVehicle {
@@ -212,6 +217,10 @@ export interface IBaseAppointment {
     serviceRequests: IServiceRequestShort[];
     createdBy: string;
     user?: ICurrentUser;
+    serviceType: EServiceType;
+    address?: string;
+    zipCode?: string;
+    ancillaryPrice: number;
 }
 
 export interface IListAppointment extends IBaseAppointment {
@@ -286,9 +295,11 @@ export interface ICustomer {
 }
 
 export interface ITransportation {
+    id: number;
     type: number;
     name: string;
     description: string;
+    column: ETransportColumn;
 }
 
 export interface IYearRange {

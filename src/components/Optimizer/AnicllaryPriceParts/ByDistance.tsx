@@ -142,6 +142,13 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                 showError('"Min Value" must to be less than or equal to "Max Value"');
                 return false;
             }
+            if (updated && updated.costPerMile === 0 && updated.serviceMultiplier === 0) {
+                showError( "Service Multiplier' or 'Cost Per Mile' must be greater than 0")
+            }
+            if (updated && updated.costPerMile > 0 && updated.serviceMultiplier > 0) {
+                showError("Only one value can be greater than 0: 'Service Multiplier' or 'Cost Per Mile'");
+                return false;
+            }
         }
         return true;
     }
@@ -163,9 +170,8 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     }
 
     const handleSlide = (t: number) => (e: any, value: number|number[]) => {
-        if (typeof value === 'number') {
-            const item = distanceData.find(item => item.id === t);
-            if (item) {
+        const item = distanceData.find(item => item.id === t);
+        if (typeof value === 'number' && item) {
                 const updated = {...item, serviceMultiplier: value};
                 setEditedItem(updated);
                 setDistanceData(prev => {
@@ -173,7 +179,6 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                     return [...filtered, updated]
                         .sort((a, b) => a.orderIndex - b.orderIndex);
                 })
-            }
         }
     }
 

@@ -55,7 +55,9 @@ export interface INewTransportationOption {
 }
 
 export interface ITransportationOptionFull extends INewTransportationOption {
-    id?: number;
+    id: number;
+    description: string
+    column: ETransportColumn;
     rules?: ITransportationOptionRule;
 }
 
@@ -72,9 +74,9 @@ export enum ETransportationType {
     Shuttle,
     Loaner,
     Rental,
-    BookRide,
-    VehiclePickUpDropOff,
-    VehicleDropOffRide,
+    Ride,
+    WaitAtDealership,
+    DropOffVehicle
 }
 
 export enum ETransportationDays {
@@ -86,4 +88,8 @@ export enum ETransportationDays {
     Friday,
     Saturday,
     EveryDay,
+}
+
+export enum ETransportColumn {
+    Yes, No
 }
