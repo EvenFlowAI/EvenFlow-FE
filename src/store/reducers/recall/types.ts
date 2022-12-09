@@ -1,4 +1,4 @@
-export type TMakeModel = {
+export type TIdName = {
     id: number;
     name: string;
 }
@@ -6,15 +6,14 @@ export type TMakeModel = {
 export interface IRecall {
     id: number;
     recallCampaignNumber: string;
-    make: TMakeModel;
-    model: TMakeModel;
+    make: TIdName;
+    model: TIdName;
     year: number;
     recallComponent: string;
     recallSummary: string;
     partLeadDaysCount: number;
     dailyPartsCount: number;
-    serviceRequestId: number;
-    serviceRequestCode: string;
+    serviceRequest: TIdName;
     serviceCenterId: number;
 }
 

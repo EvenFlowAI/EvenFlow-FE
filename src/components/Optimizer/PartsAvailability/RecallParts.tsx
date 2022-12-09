@@ -29,7 +29,7 @@ const RecallParts = () => {
                     </Button>
                 </div>}
             />
-        <RecallTable/>
+        <RecallTable onOpenModal={handleAddRecall}/>
             <AddRecall open={isOpen} editingItem={null} onClose={onClose}/>
         </>
     );

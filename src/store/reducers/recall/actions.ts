@@ -12,3 +12,6 @@ export const createRecall = (data: ICreateUpdateRecall, onError: (err: string) =
 
 export const updateRecall = (data: ICreateUpdateRecall, onError: (err: string) => void): AppThunk => dispatch => {
 }
+
+export const deleteRecall = (id: number, onError: (err: string) => void): AppThunk => dispatch => {
+}

@@ -96,6 +96,25 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
         }
     }, [selectedSC, open])
 
+    useEffect(() => {
+        if (open && editingItem) {
+            const make = makesModels.find(el => el.id === editingItem.make?.id);
+            const model = make?.models.find(el => el.id === editingItem.model?.id);
+            const sr = assignedList.find(item => item.id === editingItem.serviceRequest?.id);
+            setForm(() => ({
+                recallCampaignNumber: editingItem.recallCampaignNumber,
+                make: make ?? null,
+                model: model ?? null,
+                year: editingItem.year.toString(),
+                recallComponent: editingItem.recallComponent,
+                recallSummary: editingItem.recallSummary,
+                partLeadDaysCount: editingItem.partLeadDaysCount.toString(),
+                dailyPartsCount: editingItem.dailyPartsCount.toString(),
+                serviceRequest: sr ?? null,
+            }))
+        }
+    }, [open, editingItem, makesModels, assignedList])
+
     const onCancel = () => {
         setForm(initialForm);
         setFormIsChecked(false);

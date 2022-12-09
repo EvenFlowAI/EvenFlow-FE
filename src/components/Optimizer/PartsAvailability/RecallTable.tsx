@@ -6,9 +6,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useModal, useSCs} from "../../../utils/hooks";
 import {BaseModal, DialogContent} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
+import {deleteRecall} from "../../../store/reducers/recall/actions";
 
 const RecallSummary: React.FC<DialogProps & {summary: string}> = ({summary, open, onClose}) => {
     return <BaseModal open={open} onClose={onClose} width={400}>
@@ -18,7 +19,7 @@ const RecallSummary: React.FC<DialogProps & {summary: string}> = ({summary, open
     </BaseModal>
 }
 
-const RecallTable = () => {
+const RecallTable: React.FC<{onOpenModal: () => void}> = ({onOpenModal}) => {
     const {recalls} = useSelector((state: RootState) => state.recalls);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [currentItem, setCurrentItem] = useState<IRecall | null>(null);
@@ -27,7 +28,6 @@ const RecallTable = () => {
     const showError = useException();
     const {askConfirm} = useConfirm();
     const {selectedSC} = useSCs();
-    const {isOpen, onOpen, onClose} = useModal();
     const {isOpen: isSummaryOpen, onOpen: onSummaryOpen, onClose: onSummaryClose} = useModal();
 
     const onSummaryClick = (item: IRecall) => {
@@ -62,7 +62,7 @@ const RecallTable = () => {
         },
         {
             header: "Ops Code Assignment",
-            val: el => el.serviceRequestCode
+            val: el => el.serviceRequest.name,
         },
         {
             header: "Part Lead Time (days)",
@@ -91,7 +91,7 @@ const RecallTable = () => {
 
     const openEdit = () => {
         setAnchorEl(null);
-        onOpen();
+        onOpenModal();
     }
 
     const handleRemove = async () => {
@@ -99,8 +99,7 @@ const RecallTable = () => {
             showError("Make is not chosen");
         } else {
             try {
-                // todo request
-                // showMessage("Removed");
+                dispatch(deleteRecall(currentItem.id, showError))
                 setCurrentItem(null);
             } catch (e) {
                 showError(e);
