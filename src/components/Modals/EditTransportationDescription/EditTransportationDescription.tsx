@@ -86,10 +86,10 @@ const EditTransportationDescription: React.FC<DialogProps & {editingElement: ITr
     const onSave = () => {
         setFormIsChecked(true);
         if (props.editingElement) {
-            if (description.length) {
+            if (description.trim().length) {
                 dispatch(updateTransportationDescription(
                     props.editingElement.id,
-                    {...props.editingElement, column: column.value, description},
+                    {...props.editingElement, column: column.value, description: description.trim()},
                     onCancel
                 ))
             } else {
