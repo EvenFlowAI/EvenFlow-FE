@@ -9,4 +9,6 @@ export type TServiceTypeSettings = {
     advisorSelection: boolean;
     serviceType: EServiceTypeBookingFlow;
     engineType: boolean;
+    appointmentSelection: boolean;
+    transportationNeeds: boolean;
 }
