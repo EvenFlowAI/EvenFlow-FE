@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useModal} from "../../../utils/hooks";
 import RecallTable from "./RecallTable";
 import {optimizerRoot} from "../utils";
 import {Button} from "@material-ui/core";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import AddRecall from "../../Modals/AddRecall/AddRecall";
+import {IRecall} from "../../../store/reducers/recall/types";
 
 const RecallParts = () => {
+    const [currentItem, setCurrentItem] = useState<IRecall | null>(null);
     const {isOpen, onOpen, onClose} = useModal();
 
     const handleAddRecall = () => {
@@ -29,8 +31,8 @@ const RecallParts = () => {
                     </Button>
                 </div>}
             />
-        <RecallTable onOpenModal={handleAddRecall}/>
-            <AddRecall open={isOpen} editingItem={null} onClose={onClose}/>
+        <RecallTable onOpenModal={handleAddRecall} currentItem={currentItem} setCurrentItem={setCurrentItem}/>
+            <AddRecall open={isOpen} editingItem={currentItem} onClose={onClose}/>
         </>
     );
 };

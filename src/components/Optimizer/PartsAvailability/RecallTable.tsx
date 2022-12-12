@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {TableRowDataType} from "../../UI/types";
 import {IRecall} from "../../../store/reducers/recall/types";
 import {Table} from "../../UI/Table";
@@ -6,10 +6,16 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {useConfirm, useException, useModal, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {BaseModal, DialogContent} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
-import {deleteRecall} from "../../../store/reducers/recall/actions";
+import {deleteRecall, loadRecalls, setRecallPageData} from "../../../store/reducers/recall/actions";
+
+type TRecallTableProps = {
+    onOpenModal: () => void;
+    currentItem: IRecall|null;
+    setCurrentItem: Dispatch<SetStateAction<IRecall|null>>;
+}
 
 const RecallSummary: React.FC<DialogProps & {summary: string}> = ({summary, open, onClose}) => {
     return <BaseModal open={open} onClose={onClose} width={400}>
@@ -19,16 +25,24 @@ const RecallSummary: React.FC<DialogProps & {summary: string}> = ({summary, open
     </BaseModal>
 }
 
-const RecallTable: React.FC<{onOpenModal: () => void}> = ({onOpenModal}) => {
-    const {recalls} = useSelector((state: RootState) => state.recalls);
+const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, setCurrentItem}) => {
+    const {recalls, recallsCount} = useSelector((state: RootState) => state.recalls);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [currentItem, setCurrentItem] = useState<IRecall | null>(null);
+
 
     const dispatch = useDispatch();
     const showError = useException();
     const {askConfirm} = useConfirm();
     const {selectedSC} = useSCs();
     const {isOpen: isSummaryOpen, onOpen: onSummaryOpen, onClose: onSummaryClose} = useModal();
+    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+        (s: RootState) => s.recalls.recallPageData,
+        setRecallPageData
+    );
+
+    useEffect(() => {
+        if (selectedSC) dispatch(loadRecalls(selectedSC.id))
+    }, [selectedSC])
 
     const onSummaryClick = (item: IRecall) => {
         setCurrentItem(item);
@@ -58,7 +72,12 @@ const RecallTable: React.FC<{onOpenModal: () => void}> = ({onOpenModal}) => {
         },
         {
             header: "Recall Summary",
-            val: el => <Button variant="text" onClick={() => onSummaryClick(el)}>See Recall Summary</Button>
+            val: el => <Button
+                variant="text"
+                style={{textTransform: "none", textDecoration: "underline"}}
+                onClick={() => onSummaryClick(el)}>
+                See Recall Summary
+            </Button>
         },
         {
             header: "Ops Code Assignment",
@@ -85,10 +104,6 @@ const RecallTable: React.FC<{onOpenModal: () => void}> = ({onOpenModal}) => {
         </IconButton>;
     }
 
-    const onError = (e: string) => {
-        showError(e)
-    }
-
     const openEdit = () => {
         setAnchorEl(null);
         onOpenModal();
@@ -98,11 +113,13 @@ const RecallTable: React.FC<{onOpenModal: () => void}> = ({onOpenModal}) => {
         if (!currentItem) {
             showError("Make is not chosen");
         } else {
-            try {
-                dispatch(deleteRecall(currentItem.id, showError))
-                setCurrentItem(null);
-            } catch (e) {
-                showError(e);
+            if (selectedSC) {
+                try {
+                    dispatch(deleteRecall(currentItem.id, selectedSC.id, showError))
+                    setCurrentItem(null);
+                } catch (e) {
+                    showError(e);
+                }
             }
         }
     }
@@ -127,6 +144,12 @@ const RecallTable: React.FC<{onOpenModal: () => void}> = ({onOpenModal}) => {
                 index={"id"}
                 rowData={rowData}
                 actions={tableActions}
+                rowsPerPage={pageSize}
+                page={pageIndex}
+                onChangePage={changePage}
+                onChangeRowsPerPage={changeRowsPerPage}
+                count={recallsCount}
+                hidePagination={recallsCount < pageSize}
             />
             <Menu
                 open={Boolean(anchorEl)}

@@ -135,7 +135,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
         return form.recallCampaignNumber.length
         && form.make
         && form.model
-        && form.year.length
+        && Number.isInteger(+form.year)
         && form.recallComponent.length
         && form.recallSummary.length
         && Number.isInteger(+form.partLeadDaysCount)
@@ -159,9 +159,9 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                 serviceCenterId: selectedSC.id,
             }
             if (editingItem) {
-                dispatch(updateRecall(data, showError))
+                dispatch(updateRecall(data, editingItem.id, showError, onCancel))
             } else {
-                dispatch(createRecall(data, showError))
+                dispatch(createRecall(data, showError, onCancel))
             }
         }
     }
@@ -236,6 +236,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                 />
                 <TextField
                     fullWidth
+                    type="number"
                     style={{ marginBottom: 10 }}
                     label='Year'
                     id="year"
@@ -280,6 +281,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                 />
                 <TextField
                     fullWidth
+                    type="number"
                     style={{ marginBottom: 10 }}
                     label='Part Lead Days Count'
                     id="partLeadDaysCount"
@@ -290,6 +292,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                     value={form.partLeadDaysCount}/>
                 <TextField
                     fullWidth
+                    type="number"
                     style={{ marginBottom: 10 }}
                     label='Daily Part'
                     id="dailyPartsCount"

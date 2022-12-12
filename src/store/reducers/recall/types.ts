@@ -1,3 +1,5 @@
+import {IPagingResponse} from "../../../types/types";
+
 export type TIdName = {
     id: number;
     name: string;
@@ -28,4 +30,9 @@ export interface ICreateUpdateRecall {
     dailyPartsCount: number;
     serviceRequestId: number|null;
     serviceCenterId: number;
+}
+
+export interface IRecallResponse {
+    result: IRecall[],
+    paging: IPagingResponse,
 }

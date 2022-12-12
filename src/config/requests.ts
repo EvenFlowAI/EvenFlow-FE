@@ -166,7 +166,9 @@ type ApiRoutes = {
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
         | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings"
-        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings" | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
+        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings"
+        | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
+    Recalls: Record<"GetAll" | "GetById" | "GetByVin" | "Create" | "Update" | "Remove", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -368,6 +370,14 @@ export class Api {
             AddPackagePricingSettings: {route: "/pricing-settings/maintenance-package-options", method: "post"},
             RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "delete"},
             UpdateMaxPrice: {route: "/price/max-price/{id}", method: "put"},
+        },
+        Recalls: {
+            GetAll: {route: "/recall/by-query", method: "post"},
+            GetById: {route: "/recall/{id}", method: "get"},
+            GetByVin: {route: "/recall/by-vin", method: "post"},
+            Create: {route: "/recall", method: "post"},
+            Update: {route: "/recall/{id}", method: "put"},
+            Remove: {route: "/recall/{id}", method: "delete"},
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},
