@@ -145,7 +145,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
 
     const onSave = () => {
         setFormIsChecked(true);
-        if (isValid()) {
+        if (isValid() && selectedSC) {
             const data: ICreateUpdateRecall = {
                 recallCampaignNumber: form.recallCampaignNumber,
                 makeId: form.make?.id ?? null,
@@ -156,6 +156,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                 partLeadDaysCount: +form.partLeadDaysCount,
                 dailyPartsCount: +form.dailyPartsCount,
                 serviceRequestId: form.serviceRequest?.id ?? null,
+                serviceCenterId: selectedSC.id,
             }
             if (editingItem) {
                 dispatch(updateRecall(data, showError))

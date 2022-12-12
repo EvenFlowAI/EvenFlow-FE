@@ -14,7 +14,6 @@ export interface IRecall {
     partLeadDaysCount: number;
     dailyPartsCount: number;
     serviceRequest: TIdName;
-    serviceCenterId: number;
 }
 
 export interface ICreateUpdateRecall {
@@ -28,4 +27,5 @@ export interface ICreateUpdateRecall {
     partLeadDaysCount: number;
     dailyPartsCount: number;
     serviceRequestId: number|null;
+    serviceCenterId: number;
 }
