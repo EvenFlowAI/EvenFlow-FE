@@ -12,7 +12,6 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {RootState} from "../../../store/rootReducer";
 import {IMakeExtended, IModel} from "../../../api/types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {loadAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 import {createRecall, updateRecall} from "../../../store/reducers/recall/actions";
 
@@ -80,7 +79,7 @@ const useStyles = makeStyles(() => ({
 
 const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);
-    const {assignedList} = useSelector((state: RootState) => state.serviceRequests);
+    const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const [form, setForm] = useState<TForm>(initialForm);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
@@ -91,7 +90,6 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
 
     useEffect(() => {
         if (open && selectedSC) {
-            dispatch(loadAssignedServiceRequests(selectedSC.id));
             dispatch(loadMakesForPods(selectedSC.id));
         }
     }, [selectedSC, open])
@@ -100,7 +98,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
         if (open && editingItem) {
             const make = makesModels.find(el => el.id === editingItem.make?.id);
             const model = make?.models.find(el => el.id === editingItem.model?.id);
-            const sr = assignedList.find(item => item.id === editingItem.serviceRequest?.id);
+            const sr = allAssignedList.find(item => item.id === editingItem.serviceRequest?.id);
             setForm(() => ({
                 recallCampaignNumber: editingItem.recallCampaignNumber,
                 make: make ?? null,
@@ -113,7 +111,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                 serviceRequest: sr ?? null,
             }))
         }
-    }, [open, editingItem, makesModels, assignedList])
+    }, [open, editingItem, makesModels, allAssignedList])
 
     const onCancel = () => {
         setForm(initialForm);
@@ -268,7 +266,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                 />
                 <Autocomplete
                     style={{ marginBottom: 10 }}
-                    options={assignedList}
+                    options={allAssignedList}
                     getOptionSelected={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.serviceRequest.code}
                     value={form.serviceRequest}

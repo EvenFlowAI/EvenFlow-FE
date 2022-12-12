@@ -17,6 +17,7 @@ export interface IServiceCenter {
     isValueServiceAvailable?: boolean;
     maintenancePackageDisclaimer?: string;
     isShowPriceDetails?: boolean;
+    recallServiceRequestId?: number;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;

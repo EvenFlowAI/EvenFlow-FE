@@ -176,7 +176,8 @@ type ApiRoutes = {
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
-        | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails", TApiRoute>,
+        | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
+        | "UpdateDefaultOpsCode", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -424,6 +425,7 @@ export class Api {
             GetAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "post"},
             UpdateAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "put"},
             UpdatePackagePriceDetails: {route: "/service-centers/{id}/maintenance-package-price-details", method: "patch"},
+            UpdateDefaultOpsCode: {route: "/service-center-settings/{id}/default-recall", method: "put"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},
@@ -450,7 +452,7 @@ export class Api {
             EditSkills: {route: "/service-requests/required-skills", method: "patch"},
             Eligibility: {route: "/service-requests/eligibility", method: "patch"},
             Prioritize: {route: "/service-requests/prioritize", method: "patch"},
-            ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"}
+            ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"},
         },
         SlotScoring: {
             SetProximity: {route: "/slot-scoring/proximity", method: "put"},

@@ -363,3 +363,15 @@ export const updatePackagePriceDetails = (id: number, isShowPriceDetails: boolea
         })
         .finally(() => dispatch(loading(false)))
 }
+
+export const updateDefaultRecallOpsCode = (id: number, serviceRequestId: number): AppThunk => dispatch => {
+    dispatch(loading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateDefaultOpsCode, {urlParams:{id}, data: {serviceRequestId}})
+        .then(result => {
+            if (result) dispatch(loadAllSCs())
+        })
+        .catch(err => {
+            console.log('update default ops code err', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
