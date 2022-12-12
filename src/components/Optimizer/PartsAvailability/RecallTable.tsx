@@ -7,7 +7,7 @@ import {RootState} from "../../../store/rootReducer";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
 import {useConfirm, useException, useModal, usePagination, useSCs} from "../../../utils/hooks";
-import {BaseModal, DialogContent} from "../../Modals/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../store/reducers/recall/actions";
 
@@ -18,8 +18,9 @@ type TRecallTableProps = {
 }
 
 const RecallSummary: React.FC<DialogProps & {summary: string}> = ({summary, open, onClose}) => {
-    return <BaseModal open={open} onClose={onClose} width={400}>
-        <DialogContent>
+    return <BaseModal open={open} onClose={onClose} width={600}>
+        <DialogTitle onClose={onClose}>Recall Summary</DialogTitle>
+        <DialogContent style={{marginBottom: 20}}>
             {summary}
         </DialogContent>
     </BaseModal>
@@ -28,7 +29,6 @@ const RecallSummary: React.FC<DialogProps & {summary: string}> = ({summary, open
 const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, setCurrentItem}) => {
     const {recalls, recallsCount} = useSelector((state: RootState) => state.recalls);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-
 
     const dispatch = useDispatch();
     const showError = useException();
