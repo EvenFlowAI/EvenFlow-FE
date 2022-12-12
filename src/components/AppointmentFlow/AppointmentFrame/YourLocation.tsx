@@ -62,10 +62,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const mockZip = ["32401", "32402", "32403"];
-
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
-    const [addressValue, setAddressValue] = useState<any>(null);
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -78,10 +75,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const {t} = useTranslation();
 
     useEffect(() => {
-        // todo logic for returning customer
-        // setZip(zipCodeValue ?? "")
-        // setAddressValue(address);
-    }, [zipCodeValue, address])
+        setZip(zipCodeValue ?? "")
+    }, [zipCodeValue])
 
     const clearSelectedData = () => {
         dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
@@ -100,10 +95,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         console.log(geoCode)
         setFormChecked(false);
         if (e?.label) {
-            setAddressValue(e);
             dispatch(setAddress(e));
         } else {
-            setAddressValue(null);
             dispatch(setAddress(null));
         }
     }
