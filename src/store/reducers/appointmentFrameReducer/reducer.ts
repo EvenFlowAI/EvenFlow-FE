@@ -229,6 +229,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             categoriesIds: payload.serviceCategories ? payload.serviceCategories?.map(item => item.id) : [],
             description: payload.comment,
             serviceType: payload.serviceType,
+            address: payload.address ?? null,
+            zipCode: payload.zipCode ?? "",
             // selectedPackage: payload.maintenancePackageOption ?? null,
         };
     })
