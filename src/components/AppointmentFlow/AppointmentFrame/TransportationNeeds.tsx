@@ -79,6 +79,15 @@ const TransportationWrapper = styled('div')(({theme}) => ({
     }
 }));
 
+const TextWrapper = styled('div')(() => ({
+    display: "flex",
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    padding: '20px 40px'
+}))
+
 type TTransportationProps = {
     transportation: string;
     selectedTransportation: ITransportation|null;
@@ -184,24 +193,27 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     return <StepWrapper>
         {loading ? <Loading/>
-            : <TransportationWrapper>
-                {transportationNo.length ? <TransportationCard
-                    active={Boolean(transportationNo.find(item => item.id === transportation?.id))}
-                    selectedTransportation={transportation}
-                    transportation={`${t("No, I will")}:`}
-                    options={transportationNo}
-                    onSelect={() => handleSelectGeneric(ETransportColumn.No)}
-                    onSelectOption={handleSelectOption}
-                /> : null}
-                {transportationYes.length ? <TransportationCard
-                    active={Boolean(transportationYes.find(item => item.id === transportation?.id))}
-                    options={transportationYes}
-                    selectedTransportation={transportation}
-                    transportation={`${t("Yes, I would like")}:`}
-                    onSelect={() => handleSelectGeneric(ETransportColumn.Yes)}
-                    onSelectOption={handleSelectOption}
-                /> : null}
+            : transportations.length ? <TransportationWrapper>
+                    {transportationNo.length ? <TransportationCard
+                        active={Boolean(transportationNo.find(item => item.id === transportation?.id))}
+                        selectedTransportation={transportation}
+                        transportation={`${t("No, I will")}:`}
+                        options={transportationNo}
+                        onSelect={() => handleSelectGeneric(ETransportColumn.No)}
+                        onSelectOption={handleSelectOption}
+                    /> : null}
+                    {transportationYes.length ? <TransportationCard
+                        active={Boolean(transportationYes.find(item => item.id === transportation?.id))}
+                        options={transportationYes}
+                        selectedTransportation={transportation}
+                        transportation={`${t("Yes, I would like")}:`}
+                        onSelect={() => handleSelectGeneric(ETransportColumn.Yes)}
+                        onSelectOption={handleSelectOption}
+                    /> : null}}
             </TransportationWrapper>
+                : <TextWrapper>
+                    {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
+                </TextWrapper>
         }
         <Actions onBack={onBack} onNext={handleNext} />
     </StepWrapper>
