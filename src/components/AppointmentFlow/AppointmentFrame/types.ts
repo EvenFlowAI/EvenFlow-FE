@@ -27,3 +27,14 @@ export type TTransportationData = {
     serviceCategoryIds: number[];
     appointmentHashKey?: string;
 }
+
+export interface IRecallByVin {
+    shortDescription: string;
+    recallOpenDate: string;
+    recallComponent: string;
+    nhtsaRecallNumber: string;
+    recallStatus: string;
+    summary: string;
+    safetyRisk: string;
+    serviceRequestId: number;
+}

@@ -16,7 +16,7 @@ import {useParams} from "react-router-dom";
 import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
-import {useException} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -25,6 +25,9 @@ import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
+import RecallsByVin from "../../Modals/RecallsByVin/RecallsByVin";
+import {Api} from "../../../config/requests";
+import {Loading} from "../../UI/Loading";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -35,6 +38,15 @@ const SelectWrapper = styled('div')(({theme}) => ({
         gridTemplateColumns: "1fr"
     }
 }));
+
+const VinWrapper = styled('div')(() => ({
+    '& > label': {
+        textTransform: 'none',
+        fontSize: 14,
+        color: "#142EA1",
+        fontWeight: "normal",
+    }
+}))
 
 type TSelect = {
     label: string;
@@ -72,11 +84,15 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
+    const [recallsAreShown, setRecallsAreShown] = useState<boolean>(false);
+    const [isLoading, setLoading] = useState<boolean>(false);
+
     const dispatch = useDispatch();
     const showError = useException();
     const theme = useTheme();
     const {id} = useParams();
     const {t} = useTranslation();
+    const {isOpen, onOpen, onClose} = useModal();
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
@@ -93,11 +109,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }, [selectedVehicle, customerLoadedData])
 
     const selects: TSelect[] = [
-        {label: t("VIN"), name: "vin", noVehicle: true},
         {label: t("Make"), name: "make", options: 'make'},
         {label: t("Year"), name: "year", options: yearOptions},
         {label: t("Model"), name: "model", options: "model",},
         {label: t("Estimated mileage"), name:"mileage", options: mileage.map(item => item.value.toString())},
+        // {label: t("VIN"), name: "vin", noVehicle: true},
     ];
 
     useEffect(() => {
@@ -208,6 +224,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+        setRecallsAreShown(false);
         dispatch(updateVehicle({[name]: value.trim()}));
         if (name === "model") {
             dispatch(setMaintenanceDetails({[name]: value.trim()}));
@@ -261,8 +278,26 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             ? 'opsCode' : 'serviceNeeds');
     }
 
+    const handleSubmit = async () => {
+        if (selectedVehicle?.vin?.length === 17 && !recallsAreShown) {
+            setLoading(true);
+            const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin}})
+            if (data.length) {
+                await onOpen()
+                setRecallsAreShown(true);
+            } else {
+                handleNext();
+            }
+        } else {
+            handleNext()
+        }
+        setLoading(false);
+    }
+
     return (<StepWrapper>
-        <SelectWrapper>
+        {isLoading
+            ? <Loading/>
+            : <SelectWrapper>
             {selects.map(select => {
                 if (!isNewVehicleView && select.noVehicle) {
                     return null;
@@ -291,9 +326,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         }
                     />
                 }
-                return isBmWService && select.name === 'vin'
-                    ? null
-                    : <div key={select.name}>
+                return <div key={select.name}>
                     <TextField
                         onChange={handleTextChange(select.name)}
                         label={select.label}
@@ -327,7 +360,24 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 value={selectedEngine}
                 />
             : null }
+            <VinWrapper key="vin">
+                <TextField
+                    onChange={handleTextChange("vin")}
+                    label={t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")}
+                    name={"vin"}
+                    error={errors.includes("vin")}
+                    required={requiredFields.includes("vin")}
+                    fullWidth
+                    disabled={!isNewVehicleView}
+                    value={selectedVehicle ? selectedVehicle.vin : ""}
+                    placeholder={errors.includes("vin")
+                        ? `${t("VIN")} ${t("required")}`
+                        : `${t("Type")} ${t("VIN")} (${t("Optional")})`}
+                />
+            </VinWrapper>
         </SelectWrapper>
-        <Actions onBack={handleBack} onNext={handleNext} />
+        }
+        <Actions onBack={handleBack} onNext={handleSubmit} />
+        <RecallsByVin open={isOpen} onClose={onClose}/>
     </StepWrapper>);
 };
