@@ -9,7 +9,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {DialogProps} from "../types";
 import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, FormControlLabel, Switch, withStyles} from "@material-ui/core";
+import {Button, Divider, FormControlLabel, Switch, withStyles} from "@material-ui/core";
 import {IRecallByVin} from "../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";
 
@@ -20,14 +20,15 @@ const useStyles = makeStyles(() => ({
     },
     vinData: {
         fontSize: 20,
-        fontWeight: "bold",
-        color: "#828282",
+        marginBottom: 24,
     },
     title: {
         fontSize: 20,
         color: "#142EA1",
+        textTransform: "uppercase",
     },
     serviceAddedBtn: {
+        width: "30%",
         display: 'flex',
         alignItems: 'center',
         textTransform: 'uppercase',
@@ -52,15 +53,16 @@ const useStyles = makeStyles(() => ({
         display: 'flex',
         justifyContent: "space-between",
         alignItems: "flex-start",
-        marginBottom: 10,
+        marginBottom: 20,
     },
     recallDetailsWrapper: {
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
         gridGap: 10,
+        marginBottom: 20,
     },
     textBox: {
-        marginBottom: 10,
+        marginBottom: 20,
     },
     actionsWrapper: {
         display: "flex",
@@ -114,16 +116,17 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
     }
 
     return (
-        <BaseModal open={open} onClose={onClose} width={600}>
-            <DialogTitle onClose={onClose}>
-                <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
-                <div className={classes.vinData}>{t("associated with this VIN")}: {selectedVehicle?.vin}</div>
+        <BaseModal open={open} onClose={onClose} width={800}>
+            <DialogTitle onClose={onClose} style={{justifyContent: "flex-start"}}>
             </DialogTitle>
             {
                 isLoading
                     ? <Loading/>
                     : <DialogContent>
+                        <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
+                        <div className={classes.vinData}>{t("associated with this VIN")}: {selectedVehicle?.vin}</div>
                         {recallsByVin.map((item, index) => (
+                            <>
                             <div>
                                 <div className={classes.recallTitleWrapper} key={item.recallComponent}>
                                     <div>
@@ -166,15 +169,17 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
                                     <div className={classes.label}>{t("Safety Risk")}</div>
                                     <div>{item.safetyRisk}</div>
                                 </div>
-                            </div>))}
+                            </div>
+                                {recallsByVin.length > 1 && index < recallsByVin.length - 1 ? <Divider style={{marginBottom: 20}}/> : null}
+                            </>))}
                     </DialogContent>
             }
             <DialogActions>
                 <div className={classes.actionsWrapper}>
-                    <Button variant="contained" onClick={onDecline}>
+                    <Button variant="outlined" onClick={onDecline}>
                         {t("Decline")}
                     </Button>
-                    <Button variant="outlined" onClick={onSubmit}>
+                    <Button  variant="contained" onClick={onSubmit} color="primary">
                         {t("Add Service")}
                     </Button>
                 </div>
