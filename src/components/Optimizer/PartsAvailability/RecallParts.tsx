@@ -45,7 +45,7 @@ const RecallParts = () => {
 
     useEffect(() => {
         if (selectedSC && allAssignedList) {
-            const opsCode = allAssignedList.find(item => item.serviceRequestId === selectedSC.recallServiceRequestId)
+            const opsCode = allAssignedList.find(item => item.id === selectedSC.recallServiceRequestId)
             opsCode && setSelectedOpsCode(opsCode);
         }
     }, [allAssignedList, selectedSC])
@@ -84,9 +84,8 @@ const RecallParts = () => {
                     </div>
                     <Autocomplete
                         style={{width: 200}}
-                        disableClearable
                         loading={loading}
-                        value={selectedOpsCode ?? undefined}
+                        value={selectedOpsCode}
                         options={allAssignedList}
                         getOptionSelected={(o, v) => o.id === v.id}
                         getOptionLabel={o => o.serviceRequest.code}
@@ -107,7 +106,7 @@ const RecallParts = () => {
                 </div>}
             />
         <RecallTable onOpenModal={handleAddRecall} currentItem={currentItem} setCurrentItem={setCurrentItem}/>
-            <AddRecall open={isOpen} editingItem={currentItem} onClose={onClose}/>
+            <AddRecall open={isOpen} editingItem={currentItem} onClose={onClose} setEditingItem={setCurrentItem}/>
         </>
     );
 };
