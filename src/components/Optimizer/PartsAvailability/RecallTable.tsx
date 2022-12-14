@@ -129,9 +129,12 @@ const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, set
         if (!currentItem) {
             showError("Recall is not chosen");
         } else {
+            const itemName = currentItem.recallCampaignNumber?.length < 25
+                ? currentItem.recallCampaignNumber
+                : currentItem.recallCampaignNumber.slice(0, 24).concat('...')
             askConfirm({
                 isRemove: true,
-                title: `Please confirm you want to remove Recall ${currentItem.recallCampaignNumber}?`,
+                title: `Please confirm you want to remove Recall ${itemName}?`,
                 onConfirm: handleRemove
             });
         }

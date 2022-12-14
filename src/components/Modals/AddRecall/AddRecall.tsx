@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {ICreateUpdateRecall, IRecall} from "../../../store/reducers/recall/types";
 import {DialogProps} from "../types";
@@ -14,6 +14,7 @@ import {IMakeExtended, IModel} from "../../../api/types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 import {createRecall, updateRecall} from "../../../store/reducers/recall/actions";
+import {yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 
 const Textarea = styled(TextField)({
     "& textarea": {
@@ -23,6 +24,7 @@ const Textarea = styled(TextField)({
 
 type TAddRecallProps = DialogProps & {
     editingItem: IRecall|null;
+    setEditingItem: Dispatch<SetStateAction<IRecall|null>>;
 }
 
 type TForm = {
@@ -77,7 +79,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
+const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEditingItem}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const [form, setForm] = useState<TForm>(initialForm);
@@ -116,6 +118,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
     const onCancel = () => {
         setForm(initialForm);
         setFormIsChecked(false);
+        setEditingItem(null);
         onClose();
     }
 
@@ -127,18 +130,22 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
         if (!form.recallComponent.length) showError('"Recall Component" must not be empty')
         if (!form.recallSummary) showError('"Recall Summary" must not be empty')
         if (!form.partLeadDaysCount.length) showError('"Part Lead Dais Count" must not be empty')
+        if (+form.partLeadDaysCount < 0) showError('"Part Lead Dais Count" must not be more than "0"')
         if (!form.dailyPartsCount.length) showError('"Daily Parts" must not be empty')
+        if (+form.dailyPartsCount < 0) showError('"Daily Parts" must not be more than "0"')
         if (!form.serviceRequest) showError('"Ops Code Assignment" must not be empty')
 
         return form.recallCampaignNumber.length
-        && form.make
-        && form.model
-        && Number.isInteger(+form.year)
-        && form.recallComponent.length
-        && form.recallSummary.length
-        && Number.isInteger(+form.partLeadDaysCount)
-        && Number.isInteger(+form.dailyPartsCount)
-        && form.serviceRequest;
+            && form.make
+            && form.model
+            && Number.isInteger(+form.year)
+            && form.recallComponent.length
+            && form.recallSummary.length
+            && Number.isInteger(+form.partLeadDaysCount)
+            && +form.partLeadDaysCount >= 0
+            && Number.isInteger(+form.dailyPartsCount)
+            && +form.dailyPartsCount >= 0
+            && form.serviceRequest;
     }
 
     const onSave = () => {
@@ -176,12 +183,17 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
 
     const onMakeChange = (e: ChangeEvent<{}>, value: IMakeExtended|null) => {
         setFormIsChecked(false);
-        setForm(prev => ({...prev, make: value}))
+        setForm(prev => ({...prev, make: value, model: null}))
     }
 
     const onModelChange = (e: ChangeEvent<{}>, value: IModel|null) => {
         setFormIsChecked(false);
         setForm(prev => ({...prev, model: value}))
+    }
+
+    const onYearChange = (e: ChangeEvent<{}>, value: string|null) => {
+        setFormIsChecked(false);
+        setForm(prev => ({...prev, year: value ?? ""}))
     }
 
     const onSRChange = (e: ChangeEvent<{}>, value: IAssignedServiceRequest|null) => {
@@ -232,17 +244,17 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                         placeholder: 'Select Model'
                     })}
                 />
-                <TextField
-                    fullWidth
-                    type="number"
+                <Autocomplete
                     style={{ marginBottom: 10 }}
-                    label='Year'
-                    id="year"
-                    name="year"
-                    placeholder='Type Year'
-                    error={formIsChecked && !form.year.length}
-                    onChange={onFormChange}
-                    value={form.year}/>
+                    options={yearOptions}
+                    value={form.year}
+                    onChange={onYearChange}
+                    renderInput={autocompleteRender({
+                        label: "Year",
+                        error: formIsChecked && !form.year,
+                        placeholder: 'Select Year'
+                    })}
+                />
                 <TextField
                     fullWidth
                     style={{ marginBottom: 10 }}
@@ -285,7 +297,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                     id="partLeadDaysCount"
                     name="partLeadDaysCount"
                     placeholder='Type Part Lead Days Count'
-                    error={formIsChecked && !Number.isInteger(+form.partLeadDaysCount)}
+                    error={formIsChecked && (!Number.isInteger(+form.partLeadDaysCount) || +form.partLeadDaysCount < 0) }
                     onChange={onFormChange}
                     value={form.partLeadDaysCount}/>
                 <TextField
@@ -296,7 +308,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose}) => {
                     id="dailyPartsCount"
                     name="dailyPartsCount"
                     placeholder='Type Daily Parts'
-                    error={formIsChecked && !Number.isInteger(+form.dailyPartsCount)}
+                    error={formIsChecked && (!Number.isInteger(+form.dailyPartsCount) || +form.dailyPartsCount < 0)}
                     onChange={onFormChange}
                     value={form.dailyPartsCount}/>
             </DialogContent>
