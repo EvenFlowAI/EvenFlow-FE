@@ -8,6 +8,7 @@ import i18n from "../../../i18n";
 
 export const getMaintenanceDescription = (
     srList: ISR[],
+    selectedRecalls: IRecallByVin[],
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
     allCategories?: ICategory[],
@@ -33,6 +34,7 @@ export const getMaintenanceDescription = (
         })
     }
     if (valueService?.selectedService?.name) services.push(valueService.selectedService.name)
+    selectedRecalls.forEach(el => services.push(el.shortDescription))
    return services;
 }
 
