@@ -209,7 +209,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                         transportation={`${t("Yes, I would like")}:`}
                         onSelect={() => handleSelectGeneric(ETransportColumn.Yes)}
                         onSelectOption={handleSelectOption}
-                    /> : null}}
+                    /> : null}
             </TransportationWrapper>
                 : <TextWrapper>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
