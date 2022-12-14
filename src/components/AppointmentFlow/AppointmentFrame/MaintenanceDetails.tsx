@@ -378,6 +378,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         </SelectWrapper>
         }
         <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isLoading} />
-        <RecallsByVin open={isOpen} onClose={onClose}/>
+        <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext}/>
     </StepWrapper>);
 };

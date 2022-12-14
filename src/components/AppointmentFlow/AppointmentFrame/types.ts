@@ -11,7 +11,7 @@ export type TActionProps = {
     prevLabel?: string;
 };
 
-export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService'
+export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService' | 'recall'
 
 export type IMaintenanceItem = {
     id: number;

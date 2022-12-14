@@ -14,7 +14,7 @@ import {
     selectService,
     selectSubService,
     setMaintenanceDetails,
-    setPackage,
+    setPackage, setSelectedRecalls,
     setSideBarSteps,
     setValueService,
     setVehicle
@@ -74,12 +74,22 @@ const CartItem: React.FC<TCartItemProps> = ({ item, onClick}) => {
 }
 
 const CartTable = () => {
-    const { selectedPackage, categoriesIds, subService, service, valueService, makes, sideBarSteps, serviceType } = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        selectedPackage,
+        categoriesIds,
+        subService,
+        service,
+        valueService,
+        makes,
+        sideBarSteps,
+        serviceType,
+        selectedRecalls,
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
-    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
-        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, selectedRecalls])
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const dispatch = useDispatch();
@@ -164,6 +174,10 @@ const CartTable = () => {
         }
     }
 
+    const handleDeleteRecall = (item: IMaintenanceItem) => {
+        dispatch(setSelectedRecalls(selectedRecalls.filter(el => el.serviceRequestId !== item.id)))
+    }
+
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
             case 'service':
@@ -179,6 +193,9 @@ const CartTable = () => {
                 handleSideBarSteps();
                 deleteValueService();
                return;
+            case 'recall':
+                handleDeleteRecall(item)
+                return;
             default:
                 if (service?.id === item.id) dispatch(selectService(null));
                 if (subService?.id === item.id) dispatch(selectSubService(null));

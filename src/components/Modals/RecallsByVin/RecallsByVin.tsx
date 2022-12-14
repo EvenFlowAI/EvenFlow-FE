@@ -95,7 +95,10 @@ const CustomSwitch = withStyles({
     }
 })(Switch)
 
-const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
+
+type TRecallsByVinProps = DialogProps & {handleNext : () => void}
+
+const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
     const {selectedVehicle, selectedRecalls} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
@@ -110,8 +113,8 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
     }, [selectedVehicle, open])
 
     const onAddService = (item: IRecallByVin) => {
-        const data = selectedRecalls.find(el => el.serviceRequestId === item.serviceRequestId)
-            ? selectedRecalls.filter(el => el.serviceRequestId !== item.serviceRequestId)
+        const data = selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
+            ? selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
             : [...selectedRecalls, item]
         dispatch(setSelectedRecalls(data));
     }
@@ -119,10 +122,6 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
     const onDecline = () => {
         dispatch(setSelectedRecalls([]))
         onClose();
-    }
-
-    const onSubmit = () => {
-
     }
 
     return (
@@ -145,9 +144,9 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
                                     </div>
                                     <div className={classes.serviceAddedBtn}>
                                         <Label
-                                            checked={Boolean(selectedRecalls.find(el => el.serviceRequestId === item.serviceRequestId))}
+                                            checked={Boolean(selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber))}
                                             onChange={() => onAddService(item)}
-                                            label={selectedRecalls.find(el => el.serviceRequestId === item.serviceRequestId)
+                                            label={selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
                                                 ? t("Service Added")
                                                 : t("Service Declined")}
                                             labelPlacement="start"
@@ -191,7 +190,7 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
                     <Button variant="outlined" onClick={onDecline}>
                         {t("Decline")}
                     </Button>
-                    <Button  variant="contained" onClick={onSubmit} color="primary">
+                    <Button  variant="contained" onClick={handleNext} color="primary">
                         {t("Add Service")}
                     </Button>
                 </div>
