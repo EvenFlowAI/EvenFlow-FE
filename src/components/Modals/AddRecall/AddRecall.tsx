@@ -297,7 +297,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                     id="partLeadDaysCount"
                     name="partLeadDaysCount"
                     placeholder='Type Part Lead Days Count'
-                    error={formIsChecked && (!Number.isInteger(+form.partLeadDaysCount) || +form.partLeadDaysCount < 0) }
+                    error={formIsChecked && (!form.partLeadDaysCount || !Number.isInteger(+form.partLeadDaysCount) || +form.partLeadDaysCount < 0) }
                     onChange={onFormChange}
                     value={form.partLeadDaysCount}/>
                 <TextField
@@ -308,7 +308,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                     id="dailyPartsCount"
                     name="dailyPartsCount"
                     placeholder='Type Daily Parts'
-                    error={formIsChecked && (!Number.isInteger(+form.dailyPartsCount) || +form.dailyPartsCount < 0)}
+                    error={formIsChecked && (!form.dailyPartsCount || !Number.isInteger(+form.dailyPartsCount) || +form.dailyPartsCount < 0)}
                     onChange={onFormChange}
                     value={form.dailyPartsCount}/>
             </DialogContent>
