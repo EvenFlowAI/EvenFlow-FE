@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -12,6 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider, FormControlLabel, Switch, withStyles} from "@material-ui/core";
 import {IRecallByVin} from "../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";
+import {setSelectedRecalls} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const useStyles = makeStyles(() => ({
     mainTitle: {
@@ -83,10 +84,20 @@ const Label = withStyles({
     }
 })(FormControlLabel);
 
+const CustomSwitch = withStyles({
+    thumb: {
+        color: 'white',
+        boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1), 0px 3px 4px rgba(0, 0, 0, 0.3)",
+        border: '1px solid #DADADA'
+    },
+    track: {
+        backgroundColor: '#F7F8FB'
+    }
+})(Switch)
+
 const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
-    const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
-    const [selectedRecallsIds, setSelectedRecallsIds] = useState<number[]>([]);
+    const {selectedVehicle, selectedRecalls} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
@@ -99,15 +110,14 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
     }, [selectedVehicle, open])
 
     const onAddService = (item: IRecallByVin) => {
-        setSelectedRecallsIds(prev => {
-            if (prev.includes(item.serviceRequestId)) {
-                return prev.filter(el => el !== item.serviceRequestId)
-            } else return [...prev, item.serviceRequestId]
-        })
+        const data = selectedRecalls.find(el => el.serviceRequestId === item.serviceRequestId)
+            ? selectedRecalls.filter(el => el.serviceRequestId !== item.serviceRequestId)
+            : [...selectedRecalls, item]
+        dispatch(setSelectedRecalls(data));
     }
 
     const onDecline = () => {
-        setSelectedRecallsIds([]);
+        dispatch(setSelectedRecalls([]))
         onClose();
     }
 
@@ -126,20 +136,22 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
                         <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
                         <div className={classes.vinData}>{t("associated with this VIN")}: {selectedVehicle?.vin}</div>
                         {recallsByVin.map((item, index) => (
-                            <>
+                            <React.Fragment key={item.nhtsaRecallNumber}>
                             <div>
-                                <div className={classes.recallTitleWrapper} key={item.recallComponent}>
+                                <div className={classes.recallTitleWrapper}>
                                     <div>
                                         <div className={classes.title}>{index + 1} {t("Recall")}</div>
                                         <div className={classes.recallComponent}>{item.shortDescription}</div>
                                     </div>
                                     <div className={classes.serviceAddedBtn}>
                                         <Label
-                                            checked={selectedRecallsIds.includes(item.serviceRequestId)}
+                                            checked={Boolean(selectedRecalls.find(el => el.serviceRequestId === item.serviceRequestId))}
                                             onChange={() => onAddService(item)}
-                                            label={selectedRecallsIds.includes(item.serviceRequestId) ? t("Service Added") : t("Service Declined")}
+                                            label={selectedRecalls.find(el => el.serviceRequestId === item.serviceRequestId)
+                                                ? t("Service Added")
+                                                : t("Service Declined")}
                                             labelPlacement="start"
-                                            control={<Switch color="primary" />}
+                                            control={<CustomSwitch color="primary" />}
                                         />
                                     </div>
                                 </div>
@@ -171,7 +183,7 @@ const RecallsByVin: React.FC<DialogProps> = ({open, onClose}) => {
                                 </div>
                             </div>
                                 {recallsByVin.length > 1 && index < recallsByVin.length - 1 ? <Divider style={{marginBottom: 20}}/> : null}
-                            </>))}
+                            </React.Fragment>))}
                     </DialogContent>
             }
             <DialogActions>
