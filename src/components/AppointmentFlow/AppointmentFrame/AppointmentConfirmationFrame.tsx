@@ -177,8 +177,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             slot: appointment.appointment?.id.split("|")[1] || "",
             serviceRequestIds: collectServiceRequestIds(
                 appointmentFrame.service,
-                appointmentFrame.selectedRecalls,
                 appointmentFrame.subService,
+                appointmentFrame.selectedRecalls,
                 appointmentFrame.selectedPackage,
                 appointment.selectedSR
             ),
