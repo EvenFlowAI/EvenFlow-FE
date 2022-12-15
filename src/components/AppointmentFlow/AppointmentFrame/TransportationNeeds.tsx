@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps, TTransportationData} from "./types";
 import {StepWrapper} from "./StepWrapper";
-import { Actions } from './Actions';
+import {Actions} from './Actions';
 import {styled, Theme} from "@material-ui/core";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
@@ -9,14 +9,15 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {collectServiceRequestIds} from "./utils";
-import { ITransportation } from '../../../api/types';
+import {ITransportation} from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
-import {setLocalTransportation, setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
+import {ETransportColumn} from "../../../store/reducers/transportationNeeds/types";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     width: 287,
@@ -78,6 +79,15 @@ const TransportationWrapper = styled('div')(({theme}) => ({
     }
 }));
 
+const TextWrapper = styled('div')(() => ({
+    display: "flex",
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    padding: '20px 40px'
+}))
+
 type TTransportationProps = {
     transportation: string;
     selectedTransportation: ITransportation|null;
@@ -117,7 +127,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {t} = useTranslation();
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const {transportation, localTransportation} = useSelector((state: RootState) => state.appointmentFrame);
+    const {transportation} = useSelector((state: RootState) => state.appointmentFrame);
     const [
         s, ss,
         individualOps, categoriesIds, packageOpt, appointmentDate,
@@ -131,22 +141,13 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointment.appointment?.appointmentDate,
         state.appointmentFrame.hashKey,
     ]);
-    //
-    // const [tOptions, customOption]: [ITransportation[], ITransportation|null] = useMemo(() => {
-    //     if (transportations.length) {
-    //         const last = transportations[transportations.length - 1];
-    //         const rest = transportations.slice(0, transportations.length - 1);
-    //         return [rest, last];
-    //     }
-    //     return [[], null];
-    // }, [transportations]);
+
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
-    const localOptions = useMemo(() => ([
-        {type: 0, name: '', description: t("Wait at the dealership")},
-        {type: 1, name: '', description: t("Drop off my vehicle and have a ride")}
-    ]), [])
+    const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
+    const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -172,24 +173,13 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
-        dispatch(setLocalTransportation(null));
     }
 
-    const handleSelectNo = (o: ITransportation) => {
-        dispatch(setTransportation(null));
-        dispatch(setLocalTransportation(o));
-    }
-
-    const handleSelectGeneric = () => {
-        dispatch(setLocalTransportation(null));
-        if (transportations?.length && (transportation === null) && (localTransportation === null)) {
-            dispatch(setTransportation(transportations[0]));
+    const handleSelectGeneric = (column: ETransportColumn) => {
+        const options = transportations.filter(item => item.column === column);
+        if (options.length) {
+            dispatch(setTransportation(options[0]));
         }
-    }
-
-    const handleSelectLocal = () => {
-        dispatch(setLocalTransportation(localOptions[0]));
-        dispatch(setTransportation(null));
     }
 
     const handleNext = (): void => {
@@ -203,32 +193,27 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     return <StepWrapper>
         {loading ? <Loading/>
-            : <TransportationWrapper>
-                <TransportationCard
-                    active={transportation === null}
-                    selectedTransportation={localTransportation}
-                    transportation={`${t("No, I will")}:`}
-                    options={localOptions}
-                    onSelect={handleSelectLocal}
-                    onSelectOption={handleSelectNo}
-                />
-                {transportations.length ? <TransportationCard
-                    active={Boolean(transportation)}
-                    options={transportations}
-                    selectedTransportation={transportation}
-                    transportation={`${t("Yes, I would like")}:`}
-                    onSelect={handleSelectGeneric}
-                    onSelectOption={handleSelectOption}
-                /> : null}
-                {/*{customOption ? <TransportationCard*/}
-                {/*    active={transportation?.type === customOption.type}*/}
-                {/*    transportation={customOption.description}*/}
-                {/*    selectedTransportation={transportation}*/}
-                {/*    options={null}*/}
-                {/*    onSelect={() => handleSelectOption(customOption)}*/}
-                {/*    onSelectOption={handleSelectOption}*/}
-                {/*/> : null}*/}
+            : transportations.length ? <TransportationWrapper>
+                    {transportationNo.length ? <TransportationCard
+                        active={Boolean(transportationNo.find(item => item.id === transportation?.id))}
+                        selectedTransportation={transportation}
+                        transportation={`${t("No, I will")}:`}
+                        options={transportationNo}
+                        onSelect={() => handleSelectGeneric(ETransportColumn.No)}
+                        onSelectOption={handleSelectOption}
+                    /> : null}
+                    {transportationYes.length ? <TransportationCard
+                        active={Boolean(transportationYes.find(item => item.id === transportation?.id))}
+                        options={transportationYes}
+                        selectedTransportation={transportation}
+                        transportation={`${t("Yes, I would like")}:`}
+                        onSelect={() => handleSelectGeneric(ETransportColumn.Yes)}
+                        onSelectOption={handleSelectOption}
+                    /> : null}
             </TransportationWrapper>
+                : <TextWrapper>
+                    {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
+                </TextWrapper>
         }
         <Actions onBack={onBack} onNext={handleNext} />
     </StepWrapper>

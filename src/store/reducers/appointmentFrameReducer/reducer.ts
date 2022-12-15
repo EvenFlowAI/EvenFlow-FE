@@ -41,7 +41,6 @@ import {
     setValueServiceAvailability,
     setWelcomeScreenView,
     switchLanguage,
-    setLocalTransportation,
     setAncillaryPriceLoading,
     setAncillaryPriceByZip, setFilteredZipCodes,
 } from "./actions";
@@ -80,7 +79,6 @@ type TState = {
     customer: ICustomer;
     reminders: EReminderType[];
     transportation: ITransportation|null;
-    localTransportation: ITransportation|null;
     maintenanceDetails: TMaintenanceDetails;
     packages: IPackage[];
     isPackagesLoading: boolean;
@@ -131,7 +129,6 @@ const initialState: TState = {
     },
     reminders: [],
     transportation: null,
-    localTransportation: null,
     maintenanceDetails: {},
     packages: [],
     isPackagesLoading: false,
@@ -231,6 +228,9 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             reminders: payload.reminderTypes,
             categoriesIds: payload.serviceCategories ? payload.serviceCategories?.map(item => item.id) : [],
             description: payload.comment,
+            serviceType: payload.serviceType,
+            address: payload.address ?? null,
+            zipCode: payload.zipCode ?? "",
             // selectedPackage: payload.maintenancePackageOption ?? null,
         };
     })
@@ -311,9 +311,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(switchLanguage, (state, {payload}) => {
         return {...state, language: payload}
-    })
-    .addCase(setLocalTransportation, (state, {payload}) => {
-        return {...state, localTransportation: payload}
     })
     .addCase(setAncillaryPriceLoading, (state, {payload}) => {
         return {...state, ancillaryPriceLoading: payload}

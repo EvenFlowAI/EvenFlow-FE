@@ -40,7 +40,6 @@ export const setCustomer = createAction<ICustomer>("fAppointment/setCustomer");
 export const setReminders = createAction<EReminderType[]>("fAppointment/setReminders");
 export const setAppointmentId = createAction<IAppointmentId>("fAppointment/setAppointmentId");
 export const setTransportation = createAction<ITransportation|null>("fAppointment/setTransportation");
-export const setLocalTransportation = createAction<ITransportation|null>("fAppointment/setLocalTransportation");
 export const setMaintenanceDetails = createAction<Partial<TMaintenanceDetails>>("fAppointment/setMaintenanceDetails");
 export const setUpdateAppointment = createAction<IAppointmentByQuery>("fAppointment/setUpdateAppointment");
 export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPackages");
