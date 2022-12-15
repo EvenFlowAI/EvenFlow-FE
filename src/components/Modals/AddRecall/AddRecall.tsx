@@ -130,9 +130,9 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
         if (!form.recallComponent.length) showError('"Recall Component" must not be empty')
         if (!form.recallSummary) showError('"Recall Summary" must not be empty')
         if (!form.partLeadDaysCount.length) showError('"Part Lead Dais Count" must not be empty')
-        if (+form.partLeadDaysCount < 0) showError('"Part Lead Dais Count" must be more than "0"')
+        if (+form.partLeadDaysCount < 0) showError('"Part Lead Dais Count" must be equal to or more than "0"')
         if (!form.dailyPartsCount.length) showError('"Daily Parts" must not be empty')
-        if (+form.dailyPartsCount < 0) showError('"Daily Parts" must be more than "0"')
+        if (+form.dailyPartsCount < 0) showError('"Daily Parts" must be equal to or more than "0"')
         if (!form.serviceRequest) showError('"Ops Code Assignment" must not be empty')
 
         return form.recallCampaignNumber.length
