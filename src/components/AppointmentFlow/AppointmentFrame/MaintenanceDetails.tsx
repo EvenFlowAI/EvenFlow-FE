@@ -5,7 +5,11 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
-import {IMaintenanceDetailsShort, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
+import {
+    EUserType,
+    IMaintenanceDetailsShort,
+    TMaintenanceDetails
+} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     loadMakes, selectService,
     setMaintenanceDetails, setPackage, setVehicle,
@@ -77,7 +81,7 @@ type TMaintenanceDetailsProps = {
 }
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
@@ -360,21 +364,21 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 value={selectedEngine}
                 />
             : null }
-            <VinWrapper key="vin">
-                <TextField
-                    onChange={handleTextChange("vin")}
-                    label={t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")}
-                    name={"vin"}
-                    error={errors.includes("vin")}
-                    required={requiredFields.includes("vin")}
-                    fullWidth
-                    disabled={!isNewVehicleView}
-                    value={selectedVehicle ? selectedVehicle.vin : ""}
-                    placeholder={errors.includes("vin")
-                        ? `${t("VIN")} ${t("required")}`
-                        : `${t("Type")} ${t("VIN")} (${t("Optional")})`}
-                />
-            </VinWrapper>
+                {userType === EUserType.New || isNewVehicleView ? <VinWrapper key="vin">
+                    <TextField
+                        onChange={handleTextChange("vin")}
+                        label={t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")}
+                        name={"vin"}
+                        error={errors.includes("vin")}
+                        required={requiredFields.includes("vin")}
+                        fullWidth
+                        disabled={!isNewVehicleView}
+                        value={selectedVehicle ? selectedVehicle.vin : ""}
+                        placeholder={errors.includes("vin")
+                            ? `${t("VIN")} ${t("required")}`
+                            : `${t("Type")} ${t("VIN")} (${t("Optional")})`}
+                    />
+                </VinWrapper> : null}
         </SelectWrapper>
         }
         <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isLoading} />
