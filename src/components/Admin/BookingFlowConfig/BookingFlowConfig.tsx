@@ -315,6 +315,48 @@ const BookingFlowConfig = () => {
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Check Open Recalls Existing Customers</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'checkRecallsExisting')}
+                                            checked={visitCenterConfig?.checkRecallsExisting}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'checkRecallsExisting')}
+                                            checked={mobileServiceConfig?.checkRecallsExisting}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'checkRecallsExisting')}
+                                            checked={pickUpDropOffConfig?.checkRecallsExisting}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className={classes.serviceTypeCell}>Check Open Recalls New Customers</TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.VisitCenter, 'checkRecallsNew')}
+                                            checked={visitCenterConfig?.checkRecallsNew}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.MobileService, 'checkRecallsNew')}
+                                            checked={mobileServiceConfig?.checkRecallsNew}
+                                            color="primary"/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Switch
+                                            onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'checkRecallsNew')}
+                                            checked={pickUpDropOffConfig?.checkRecallsNew}
+                                            color="primary"/>
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </DenseTable>}
                 </div>
