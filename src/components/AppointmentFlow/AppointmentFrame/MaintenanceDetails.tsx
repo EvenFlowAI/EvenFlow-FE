@@ -36,6 +36,7 @@ import RecallsByVin from "../../Modals/RecallsByVin/RecallsByVin";
 import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
+import NoRecalls from "../../Modals/RecallsByVin/NoRecalls";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -103,6 +104,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const {id} = useParams();
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
+    const {isOpen: isNoRecallsOpen, onOpen: onNoRecallsOpen, onClose: onNoRecallsClose} = useModal();
     const classes = useStyles();
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
@@ -301,7 +303,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 await onOpen()
             } else {
                 if (userType === EUserType.New) {
-                    showError('Sorry but we did not find any Open Recall by your VIN Code')
+                    onNoRecallsOpen()
                 } else {
                     handleNext();
                 }
@@ -378,7 +380,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         value={selectedEngine}
                     />
                     : null }
-                {userType === EUserType.New || isNewVehicleView
+                {(userType === EUserType.New || isNewVehicleView) && recallsToggledOn
                     ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""}>
                         <TextField
                             onChange={handleTextChange("vin")}
@@ -401,5 +403,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         }
         <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isLoading} />
         <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext}/>
+        <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleNext}/>
     </StepWrapper>);
 };
