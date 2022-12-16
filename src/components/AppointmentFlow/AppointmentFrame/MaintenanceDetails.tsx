@@ -35,6 +35,7 @@ import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/ty
 import RecallsByVin from "../../Modals/RecallsByVin/RecallsByVin";
 import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";
+import {makeStyles} from "@material-ui/core/styles";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -46,12 +47,14 @@ const SelectWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-const VinWrapper = styled('div')(() => ({
-    '& > label': {
-        textTransform: 'none',
-        fontSize: 14,
-        color: "#142EA1",
-        fontWeight: "normal",
+const useStyles = makeStyles(() => ({
+    vinWrapper: {
+        '& > label': {
+            textTransform: 'none',
+            fontSize: 14,
+            color: "#142EA1",
+            fontWeight: "normal",
+        }
     }
 }))
 
@@ -100,6 +103,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const {id} = useParams();
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
+    const classes = useStyles();
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
@@ -371,12 +375,12 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     />
                     : null }
                 {userType === EUserType.New || isNewVehicleView
-                    ? <VinWrapper key="vin">
+                    ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""}>
                         <TextField
                             onChange={handleTextChange("vin")}
                             label={recallsToggledOn
                                 ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
-                                : `${t("Type")} ${t("VIN")} (${t("Optional")})`
+                                : `${t("VIN")} (${t("Optional")})`
                             }
                             name={"vin"}
                             error={errors.includes("vin")}
@@ -388,7 +392,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                                 ? `${t("VIN")} ${t("required")}`
                                 : `${t("Type")} ${t("VIN")} (${t("Optional")})`}
                         />
-                    </VinWrapper> : null}
+                    </div> : null}
             </SelectWrapper>
         }
         <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isLoading} />
