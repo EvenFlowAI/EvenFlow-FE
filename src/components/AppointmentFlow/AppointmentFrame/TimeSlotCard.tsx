@@ -5,8 +5,6 @@ import {TArgCallback} from "../../../types/types";
 import moment from "moment";
 import {TSlot} from "./AppointmentTimeSelector";
 import {useTranslation} from "react-i18next";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
 
 type TSlotsWrapperProps = {
     available?: boolean,
@@ -47,7 +45,6 @@ type TProps = {
     date: moment.Moment|null;
 }
 export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
-        const {scProfile} = useSelector((state: RootState) => state.appointment);
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
 
@@ -69,7 +66,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
                 return t("Not Available");
             }
             if (slot.price.amountOfSavingMoney) {
-                return `${t("Save")} $${scProfile?.isRoundPrice ? slot.price.amountOfSavingMoney : slot.price.amountOfSavingMoney.toFixed(2)}`;
+                return `${t("Save")} $${slot.price.amountOfSavingMoney}`;
             }
             return t("Available");
         }

@@ -166,7 +166,9 @@ type ApiRoutes = {
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
         | "ChangeServiceRequestPricingLevels" | "GetServiceRequestsPricingSettings" | "UpdateServiceRequestPricingSettings"
         | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings"
-        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings" | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
+        | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings"
+        | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
+    Recalls: Record<"GetAll" | "GetById" | "GetByVin" | "Create" | "Update" | "Remove", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
@@ -174,7 +176,8 @@ type ApiRoutes = {
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
-        | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails", TApiRoute>,
+        | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
+        | "UpdateDefaultOpsCode", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -184,7 +187,7 @@ type ApiRoutes = {
         | "EditSkills" | "Prioritize", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
-    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules", TApiRoute>,
+    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiRoute>,
@@ -369,6 +372,14 @@ export class Api {
             RemovePackagePricingSettings: {route: "/pricing-settings/maintenance-package-options/{id}", method: "delete"},
             UpdateMaxPrice: {route: "/price/max-price/{id}", method: "put"},
         },
+        Recalls: {
+            GetAll: {route: "/recall/by-query", method: "post"},
+            GetById: {route: "/recall/{id}", method: "get"},
+            GetByVin: {route: "/recall/by-vin", method: "post"},
+            Create: {route: "/recall", method: "post"},
+            Update: {route: "/recall/{id}", method: "put"},
+            Remove: {route: "/recall/{id}", method: "delete"},
+        },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},
             UpdateIcon: {route: "/service-categories/{id}/icon", method: "patch"},
@@ -414,6 +425,7 @@ export class Api {
             GetAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "post"},
             UpdateAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "put"},
             UpdatePackagePriceDetails: {route: "/service-centers/{id}/maintenance-package-price-details", method: "patch"},
+            UpdateDefaultOpsCode: {route: "/service-center-settings/{id}/default-recall", method: "put"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},
@@ -440,7 +452,7 @@ export class Api {
             EditSkills: {route: "/service-requests/required-skills", method: "patch"},
             Eligibility: {route: "/service-requests/eligibility", method: "patch"},
             Prioritize: {route: "/service-requests/prioritize", method: "patch"},
-            ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"}
+            ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"},
         },
         SlotScoring: {
             SetProximity: {route: "/slot-scoring/proximity", method: "put"},
@@ -459,6 +471,7 @@ export class Api {
             Get: {route: "/transportation-options", method: "get"},
             GetActive: {route: "/transportation-options/active/by-query", method: "post"},
             Rules: {route: "/transportation-options/{id}/rules", method: "put"},
+            UpdateById: {route: "/transportation-options/{id}", method: "put"},
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},

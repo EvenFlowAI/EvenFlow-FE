@@ -7,7 +7,6 @@ import {DemandTable, TableCell, TableRow} from "../../Optimizer/AppointmentAlloc
 import {TableContainer} from "../../Optimizer/PricingSettings/UI";
 import {
     ETransportationType,
-    INewTransportationOption,
     ITransportationOptionFull
 } from "../../../store/reducers/transportationNeeds/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -70,27 +69,15 @@ export const TransportationOptions: React.FC<DialogProps> = props => {
     }, [selectedSC])
 
     useEffect(() => {
-        if (selectedSC) {
-            setInitialOptions(() => {
-                return Object.keys(ETransportationType).filter(item => Number.isNaN(+item)).map(key => {
-                    // @ts-ignore
-                    const type = ETransportationType[key];
-                    const option = options.find(item => item.type === type);
-                    return option || {
-                        type,
-                        state: 0,
-                        serviceCenterId: selectedSC.id,
-                    } as INewTransportationOption
-                })
-            })
-        }
+        if (selectedSC) setInitialOptions(options)
     }, [selectedSC, options])
 
-    const handleSwitch = (type: number) => async (e: any, value: boolean) => {
-        if (selectedSC) {
+    const handleSwitch = (id: number) => async (e: any, value: boolean) => {
+        const option = options.find(item => item.id === id)
+        if (selectedSC && option) {
             try {
                 dispatch(updateTransportationOption({
-                    type,
+                    ...option,
                     state: value ? 1 : 0,
                     serviceCenterId: selectedSC.id
                 }))

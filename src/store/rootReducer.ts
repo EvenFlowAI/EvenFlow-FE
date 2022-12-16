@@ -25,6 +25,7 @@ import {appointmentsReducer} from "./reducers/appointments/reducer";
 import {bookingFlowConfigReducer} from "./reducers/bookingFlowConfig/reducer";
 import {mobileServiceReducer} from "./reducers/mobileService/reducer";
 import {serviceValetReducer} from "./reducers/serviceValet/reducer";
+import {recallsReducer} from "./reducers/recall/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -54,5 +55,6 @@ export const rootReducer = combineReducers({
     bookingFlowConfig: bookingFlowConfigReducer,
     mobileService: mobileServiceReducer,
     serviceValet: serviceValetReducer,
+    recalls: recallsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IEditedTransportationOption, ITransportationOptionFull, ITransportationOptionRules} from "./types";
+import {ITransportationOptionFull, ITransportationOptionRules} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
@@ -20,7 +20,7 @@ export const loadTransportationOptions = (serviceCenterId: number): AppThunk => 
         .finally(() => dispatch(setTransportationLoading(false)));
 }
 
-export const updateTransportationOption = (data: IEditedTransportationOption): AppThunk => dispatch => {
+export const updateTransportationOption = (data: ITransportationOptionFull): AppThunk => dispatch => {
     Api.call(Api.endpoints.TransportationOptions.Edit, {data})
         .then(result => {
             if (result) {
@@ -28,7 +28,7 @@ export const updateTransportationOption = (data: IEditedTransportationOption): A
             }
         })
         .catch(err => {
-            console.log('load transportation needs error', err)
+            console.log('update transportation option error', err)
         })
 }
 
@@ -49,5 +49,18 @@ export const editTransportationOptionRules = (
         .catch(err => {
             errorCallback(err);
             console.log('edit transportation option rules error', err)
+        })
+}
+
+export const updateTransportationDescription = (optionId: number, data: ITransportationOptionFull, onSuccess: () => void): AppThunk => dispatch => {
+    Api.call(Api.endpoints.TransportationOptions.UpdateById, {urlParams: {id: optionId}, data})
+        .then(result => {
+            if (result) {
+                dispatch(loadTransportationOptions(data.serviceCenterId))
+                onSuccess();
+            }
+        })
+        .catch(err => {
+            console.log('update transportation description error', err)
         })
 }
