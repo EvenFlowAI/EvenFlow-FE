@@ -2,11 +2,13 @@ import {createAction} from "@reduxjs/toolkit";
 import {ICreateUpdateRecall, IRecall, IRecallResponse} from "./types";
 import {AppThunk, IPageRequest} from "../../../types/types";
 import {Api} from "../../../config/requests";
+import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 
 export const getRecalls  = createAction<IRecall[]>('Recall/GetRecalls');
 export const setLoading  = createAction<boolean>('Recall/SetLoading');
 export const setRecallPageData = createAction<Partial<IPageRequest>>("Recall/SetRecallPageData");
 export const setRecallsCount = createAction<number>("Recall/SetRecallsCount");
+export const getRecallsByVin = createAction<IRecallByVin[]>("Recall/GetRecallsByVin");
 
 export const loadRecalls = (serviceCenterId: number): AppThunk => (dispatch, getState) => {
     dispatch(setLoading(true));
@@ -67,4 +69,16 @@ export const deleteRecall = (id: number, serviceCenterId: number,onError: (err: 
             onError(err)
             dispatch(setLoading(false));
         })
+}
+
+export const loadRecallsByVin = (serviceCenterId: number, vin: string): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin}})
+        .then(result => {
+            if (result.data) dispatch(getRecallsByVin(result.data))
+        })
+        .catch(err => {
+            console.log('get recalls by vin err', err)
+        })
+        .finally(() => dispatch(setLoading(false)))
 }

@@ -178,6 +178,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             serviceRequestIds: collectServiceRequestIds(
                 appointmentFrame.service,
                 appointmentFrame.subService,
+                appointmentFrame.selectedRecalls,
                 appointmentFrame.selectedPackage,
                 appointment.selectedSR
             ),

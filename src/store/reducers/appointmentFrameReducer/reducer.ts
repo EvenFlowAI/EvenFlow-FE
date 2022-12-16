@@ -42,7 +42,7 @@ import {
     setWelcomeScreenView,
     switchLanguage,
     setAncillaryPriceLoading,
-    setAncillaryPriceByZip, setFilteredZipCodes,
+    setAncillaryPriceByZip, setFilteredZipCodes, setSelectedRecalls,
 } from "./actions";
 import {
     ICustomer,
@@ -66,6 +66,7 @@ import {
 } from "./types";
 import {TScreen} from "../../../components/Layout/types";
 import {TView} from "../../../components/Welcome/types";
+import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -111,6 +112,7 @@ type TState = {
     ancillaryPriceLoading: boolean;
     ancillaryPrice: TAncillaryPriceByZip|null;
     filteredZipCodes: string[];
+    selectedRecalls: IRecallByVin[];
 }
 const initialState: TState = {
     service: null,
@@ -159,6 +161,7 @@ const initialState: TState = {
     ancillaryPriceLoading: false,
     ancillaryPrice: null,
     filteredZipCodes: [],
+    selectedRecalls: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -320,5 +323,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setFilteredZipCodes, (state, {payload}) => {
         return {...state, filteredZipCodes: payload}
+    })
+    .addCase(setSelectedRecalls, (state, {payload}) => {
+        return {...state, selectedRecalls: payload}
     })
 )

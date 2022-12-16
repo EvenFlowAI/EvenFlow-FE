@@ -4,18 +4,22 @@ import {TComplimentary, TPackage, TService} from "./PackageSelection";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../Layout/types";
+import {IRecallByVin} from "./types";
 
 export const getAppointmentDate = (date: moment.Moment, d: number) => {
     return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
 }
 
 export const collectServiceRequestIds = (
-    s: IServiceCategory|null, sub: IServiceCategory|null, selectedPackage?: IPackageOptions|null
-, individualOpsCodes?: number[]): number[] => {
+    s: IServiceCategory|null,
+    sub: IServiceCategory|null,
+    selectedRecalls: IRecallByVin[],
+    selectedPackage?: IPackageOptions|null,
+    individualOpsCodes?: number[]): number[] => {
     let ids = [];
 
-    if (selectedPackage) {
-
+    if (selectedRecalls.length) {
+        selectedRecalls.forEach(item => ids.push(item.serviceRequestId))
     }
     if (individualOpsCodes?.length) {
         for (let c of individualOpsCodes) {

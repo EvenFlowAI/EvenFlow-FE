@@ -11,7 +11,7 @@ export type TActionProps = {
     prevLabel?: string;
 };
 
-export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService'
+export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService' | 'recall'
 
 export type IMaintenanceItem = {
     id: number;
@@ -26,4 +26,15 @@ export type TTransportationData = {
     slot: ParsableDate;
     serviceCategoryIds: number[];
     appointmentHashKey?: string;
+}
+
+export interface IRecallByVin {
+    shortDescription: string;
+    recallOpenDate: string;
+    recallComponent: string;
+    nhtsaRecallNumber: string;
+    recallStatus: string;
+    summary: string;
+    safetyRisk: string;
+    serviceRequestId: number;
 }

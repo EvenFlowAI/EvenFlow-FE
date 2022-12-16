@@ -192,6 +192,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         categoriesIds,
         allCategories,
         serviceType,
+        selectedRecalls
     ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
@@ -211,6 +212,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.appointmentFrame.categoriesIds,
             state.categories.allCategories,
             state.appointmentFrame.serviceType,
+            state.appointmentFrame.selectedRecalls,
         ]);
 
     useEffect(() => {
@@ -223,7 +225,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             fromDate: date.toISOString(),
             maintenancePackageOptionId: selectedPackage?.id ?? null,
             serviceRequestIds: collectServiceRequestIds(
-                service, subService, selectedPackage, selectedOpsCodes
+                service, subService, selectedRecalls, selectedPackage, selectedOpsCodes
             ),
             serviceCategoryIds: getCategories(),
             countOfDays: 21,
