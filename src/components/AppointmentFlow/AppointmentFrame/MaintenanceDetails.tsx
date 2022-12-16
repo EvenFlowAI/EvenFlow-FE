@@ -296,11 +296,15 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && !recallsAreShown) {
             setLoading(true);
             const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin}})
+            setRecallsAreShown(true);
             if (data.length) {
                 await onOpen()
-                setRecallsAreShown(true);
             } else {
-                handleNext();
+                if (userType === EUserType.New) {
+                    showError('Sorry but we did not find any Open Recall by your VIN Code')
+                } else {
+                    handleNext();
+                }
             }
         } else {
             handleNext()
