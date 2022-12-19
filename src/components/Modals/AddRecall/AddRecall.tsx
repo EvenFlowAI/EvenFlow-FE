@@ -293,7 +293,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                     fullWidth
                     type="number"
                     style={{ marginBottom: 10 }}
-                    label='Part Lead Days Count'
+                    label='Part Lead Time (Days)'
                     id="partLeadDaysCount"
                     name="partLeadDaysCount"
                     placeholder='Type Part Lead Days Count'
@@ -304,7 +304,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                     fullWidth
                     type="number"
                     style={{ marginBottom: 10 }}
-                    label='Daily Part'
+                    label='Daily Parts'
                     id="dailyPartsCount"
                     name="dailyPartsCount"
                     placeholder='Type Daily Parts'
