@@ -3,8 +3,58 @@ import {createReducer} from "@reduxjs/toolkit";
 import {getZonesRouting, setLoading} from "./actions";
 
 const mockZonesRouting: IZonesRoutingByDay[] = [
-    {   id: 1,
+    {   id: 61,
         day: 0,
+        zones: [
+            {
+                name: "Zone 1",
+                id: 1,
+            },
+            {
+                name: "Zone 2",
+                id: 2,
+            },
+            {
+                name: "Zone 3",
+                id: 3,
+            },
+            {
+                name: "Zone 4",
+                id: 4,
+            },
+            {
+                name: "Zone 5",
+                id: 5,
+            },
+        ]
+    },
+    {   id: 62,
+        day: 1,
+        zones: [
+            {
+                name: "Zone 1",
+                id: 1,
+            },
+            {
+                name: "Zone 2",
+                id: 2,
+            },
+            {
+                name: "Zone 3",
+                id: 3,
+            },
+            {
+                name: "Zone 4",
+                id: 4,
+            },
+            {
+                name: "Zone 5",
+                id: 5,
+            },
+        ]
+    },
+    {   id: 5,
+        day: 2,
         zones: [
             {
                 name: "Zone 1",
@@ -45,8 +95,38 @@ const mockZonesRouting: IZonesRoutingByDay[] = [
             },
         ]
     },
+    {   id: 6,
+        day: 4,
+        zones: [
+            {
+                name: "Zone 1",
+                id: 1,
+            },
+            {
+                name: "Zone 4",
+                id: 4,
+            },
+            {
+                name: "Zone 5",
+                id: 5,
+            },
+        ]
+    },
     {   id: 3,
         day: 5,
+        zones: [
+            {
+                name: "Zone 1",
+                id: 1,
+            },
+            {
+                name: "Zone 5",
+                id: 5,
+            },
+        ]
+    },
+    {   id: 8,
+        day: 6,
         zones: [
             {
                 name: "Zone 1",

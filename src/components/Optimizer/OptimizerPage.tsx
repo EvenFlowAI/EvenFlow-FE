@@ -12,6 +12,7 @@ import {ServiceRequests} from "./ServiceRequests/ServiceRequests";
 import ManageAppointments from "./ManageAppointments/ManageAppointments";
 import Pods from "./Pods/Pods";
 import PartsAvailability from "./PartsAvailability/PartsAvailability";
+import CapacityServiceValet from "./CapacityServiceValet/CapacityServiceValet";
 
 export const OptimizerPage = () => {
     return <ContentContainer>
@@ -25,6 +26,7 @@ export const OptimizerPage = () => {
             <PrivateRoute path={Routes.Optimizer.Pods} component={Pods} />
             <PrivateRoute path={Routes.Optimizer.ManageEXEvenFlowAppointments} component={ManageAppointments} />
             <PrivateRoute path={Routes.Optimizer.PartsAvailability} component={PartsAvailability} />
+            <PrivateRoute path={Routes.Optimizer.ServiceValet} component={CapacityServiceValet} />
             <Redirect to={Routes.Optimizer.ServiceRequests} />
         </Switch>
     </ContentContainer>

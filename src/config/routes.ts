@@ -48,6 +48,7 @@ enum OptimizerRoutes {
     Pods = "/optimizer/pods",
     ManageEXEvenFlowAppointments = "/optimizer/manage-ex-evenflow-appointments",
     PartsAvailability = "/optimizer/parts-availability",
+    ServiceValet = "/optimizer/service-valet",
 }
 
 enum BookingFlowConfigRoutes {
