@@ -220,7 +220,7 @@ export const getTracker = (origin: string): string => {
     }
 }
 
-export const getOptions = (optionsArray: string[]) => {
+export const getOptions = (optionsArray: string[]): TOption[] => {
     const options: TOption[] = [];
     optionsArray.forEach((option, index) => {
         const array = [];

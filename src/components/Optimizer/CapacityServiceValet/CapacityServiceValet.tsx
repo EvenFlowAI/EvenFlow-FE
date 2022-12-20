@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
@@ -7,9 +7,18 @@ import {Tab} from "@material-ui/core";
 import ZoneRouting from "./ZoneRouting";
 import ZoneTimeWindows from "./ZoneTimeWindows";
 import ZoneCapacity from "./ZoneCapacity";
+import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
+import {useSCs} from "../../../utils/hooks";
+import {useDispatch} from "react-redux";
 
 const CapacityServiceValet = () => {
     const [selectedTab, setTab] = useState<string>("0");
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        selectedSC && dispatch(loadServiceValetZones(selectedSC.id))
+    }, [selectedSC])
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
