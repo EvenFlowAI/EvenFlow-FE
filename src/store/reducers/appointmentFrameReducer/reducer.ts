@@ -42,7 +42,7 @@ import {
     setWelcomeScreenView,
     switchLanguage,
     setAncillaryPriceLoading,
-    setAncillaryPriceByZip, setFilteredZipCodes, setSelectedRecalls,
+    setAncillaryPriceByZip, setFilteredZipCodes, setSelectedRecalls, setRecallsAreShown,
 } from "./actions";
 import {
     ICustomer,
@@ -113,6 +113,7 @@ type TState = {
     ancillaryPrice: TAncillaryPriceByZip|null;
     filteredZipCodes: string[];
     selectedRecalls: IRecallByVin[];
+    recallsAreShown: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -162,6 +163,7 @@ const initialState: TState = {
     ancillaryPrice: null,
     filteredZipCodes: [],
     selectedRecalls: [],
+    recallsAreShown: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -326,5 +328,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSelectedRecalls, (state, {payload}) => {
         return {...state, selectedRecalls: payload}
+    })
+    .addCase(setRecallsAreShown, (state, {payload}) => {
+        return {...state, recallsAreShown: payload}
     })
 )
