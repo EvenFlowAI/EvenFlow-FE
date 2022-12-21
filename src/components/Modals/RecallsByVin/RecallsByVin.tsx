@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
         textTransform: "uppercase",
     },
     serviceAddedBtn: {
-        width: "30%",
+        width: "35%",
         display: 'flex',
         alignItems: 'center',
         textTransform: 'uppercase',
@@ -91,7 +91,7 @@ const CustomSwitch = withStyles({
         border: '1px solid #DADADA'
     },
     track: {
-        backgroundColor: '#F7F8FB'
+        backgroundColor: '#D3D3D3'
     }
 })(Switch)
 
@@ -157,7 +157,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext})
                                 <div className={classes.recallDetailsWrapper}>
                                     <div>
                                         <div className={classes.label}>{t("Recall Open Date")}</div>
-                                        <div className={classes.data}>{moment(item.recallOpenDate).format("MM DD, YYYY")}</div>
+                                        <div className={classes.data}>{moment(item.recallOpenDate).format("MMM DD, YYYY")}</div>
                                     </div>
                                     <div>
                                         <div className={classes.label}>{t("NHTSA Recall Number")}</div>
@@ -169,7 +169,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext})
                                     </div>
                                     <div>
                                         <div className={classes.label}>{t("Recall Status")}</div>
-                                        <div className={classes.data}>{item.recallStatus}</div>
+                                        <div className={classes.data} style={{color: 'red'}}>{item.recallStatus}</div>
                                     </div>
                                 </div>
                                 <div className={classes.textBox}>
