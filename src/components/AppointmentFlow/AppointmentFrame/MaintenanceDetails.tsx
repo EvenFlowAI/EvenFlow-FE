@@ -124,6 +124,14 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const recallsToggledOn = useMemo(() => (currentConfig?.checkRecallsNew && userType === EUserType.New)
         || (currentConfig?.checkRecallsExisting && userType === EUserType.Existing), [currentConfig, userType])
 
+    const isNextDisabled = useMemo(() => {
+        return !Boolean(maintenanceDetails.make
+            && maintenanceDetails.model
+            && maintenanceDetails.year
+            && maintenanceDetails.mileage
+            && (currentConfig?.engineType ? maintenanceDetails.engineTypeId : true))
+    }, [maintenanceDetails, currentConfig])
+
     const selects: TSelect[] = [
         {label: t("Make"), name: "make", options: 'make'},
         {label: t("Year"), name: "year", options: yearOptions},
@@ -401,7 +409,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     </div> : null}
             </SelectWrapper>
         }
-        <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isLoading} />
+        <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isNextDisabled || isLoading} />
         <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext}/>
         <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleNext}/>
     </StepWrapper>);

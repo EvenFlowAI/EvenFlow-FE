@@ -115,6 +115,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                                 <CarCard
                                     onAddNewAppointment={onAddNewCarAppointment}
                                     selected={isSelected(vehicle)}
+                                    onAddNew={onAddNew}
                                     car={vehicle}
                                     key={vehicle.vin}/>
                             )}
