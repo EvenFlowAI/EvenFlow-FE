@@ -148,8 +148,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
         dispatch(selectAppointment(null));
-        if (!d.isSame(month, 'month')
-            && selectedTimingType === EAppointmentTimingType.SpecialOffers) {
+        if (!d.isSame(month, 'month')) {
             setMonth(d);
         }
     }, [month, selectedTimingType]);
@@ -184,7 +183,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         appointmentTimingType: selectedTimingType ?? EAppointmentTimingType.FirstAvailable,
                         serviceCenterId: decodeSCID(id),
                         consultantId: consultant?.id ?? null,
-                        fromDate: sd.toISOString(),
+                        fromDate: moment(month).toISOString(),
                         maintenancePackageOptionId: selectedPackage?.id ?? null,
                         serviceRequestIds: collectServiceRequestIds(
                             service, subService, selectedRecalls, selectedPackage, selectedOpsCodes
@@ -225,7 +224,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [
         dispatch, id, selectedTimingType, month,
         selectedVehicle, customerData, service, handleDateRangeSet, vehicle,
-        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService, serviceType
+        subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService, serviceType, selectedTime
     ]);
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
