@@ -14,7 +14,7 @@ import {
     loadMakes,
     selectService,
     setMaintenanceDetails,
-    setPackage,
+    setPackage, setRecallsAreShown,
     setVehicle,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -88,14 +88,13 @@ type TMaintenanceDetailsProps = {
 }
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
-    const [recallsAreShown, setRecallsAreShown] = useState<boolean>(false);
     const [isLoading, setLoading] = useState<boolean>(false);
 
     const dispatch = useDispatch();
@@ -248,7 +247,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        setRecallsAreShown(false);
+        dispatch(setRecallsAreShown(false));
         dispatch(updateVehicle({[name]: value.trim()}));
         if (name === "model") {
             dispatch(setMaintenanceDetails({[name]: value.trim()}));
@@ -306,7 +305,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && !recallsAreShown) {
             setLoading(true);
             const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin}})
-            setRecallsAreShown(true);
+            dispatch(setRecallsAreShown(true));
             if (data.length) {
                 await onOpen()
             } else {

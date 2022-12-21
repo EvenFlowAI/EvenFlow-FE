@@ -73,6 +73,7 @@ export const setAncillaryPriceByZip = createAction<TAncillaryPriceByZip>('fAppoi
 export const setAncillaryPriceLoading = createAction<boolean>('fAppointment/SetAncillaryPriceLoading');
 export const setFilteredZipCodes = createAction<string[]>('fAppointment/SetFilteredZipCodes');
 export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/SetSelectedRecalls');
+export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
