@@ -1,6 +1,6 @@
-import {IZonesRoutingByDay} from "./types";
+import {IZonesRoutingByDay, IZoneTimeWindow} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {getZonesRouting, setLoading} from "./actions";
+import {getZonesRouting, setLoading, setZoneTimeWindows} from "./actions";
 
 const mockZonesRouting: IZonesRoutingByDay[] = [
     {   id: 61,
@@ -142,11 +142,13 @@ const mockZonesRouting: IZonesRoutingByDay[] = [
 
 interface InitialState {
     zonesRouting: IZonesRoutingByDay[],
+    zoneTimeWindows: IZoneTimeWindow[],
     isLoading: boolean;
 }
 
 const initialState: InitialState = {
     zonesRouting: mockZonesRouting,
+    zoneTimeWindows: [],
     isLoading: false,
 }
 
@@ -156,5 +158,8 @@ export const capacityServiceValetReducer = createReducer(initialState, builder =
     })
     .addCase(setLoading, (state, {payload}) => {
         return {...state, isLoading: payload};
+    })
+    .addCase(setZoneTimeWindows, (state, {payload}) => {
+        return {...state, zoneTimeWindows: payload};
     })
 )

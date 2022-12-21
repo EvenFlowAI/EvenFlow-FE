@@ -225,7 +225,7 @@ export const getOptions = (optionsArray: string[]): TOption[] => {
     optionsArray.forEach((option, index) => {
         const array = [];
         for (let i = 0; i < option.length; i++) {
-            if (option[i] === option[i].toUpperCase() && i > 0) {
+            if (option[i] === option[i].toUpperCase() && i > 0 && Number.isNaN(+option[i-1])) {
                 array.push(' ');
             }
             array.push(option[i]);

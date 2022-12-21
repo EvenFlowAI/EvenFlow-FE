@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
     ETimeWindows,
     EZoneTimeGap,
-    IZonesRoutingByDay,
     IZoneTimeWindow
 } from "../../../store/reducers/capacityServiceValet/types";
 import moment from "moment";
@@ -10,39 +9,34 @@ import {generateZoneSlots} from "./utils";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {TableRowDataType} from "../../UI/types";
-import Checkbox from "../../UI/Checkbox";
 import {MenuItem, Select} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {getOptions} from "../../../utils/utils";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {Table} from "../../UI/Table";
 
 const timeWindowOptions = getOptions(Object.keys(ETimeWindows).filter(key => Number.isNaN(+key)))
 
 const ZoneTimeWindows = () => {
     const {zones, isLoading: isZonesLoading} = useSelector((state: RootState) => state.serviceValet);
+    const {zoneTimeWindows, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
+    const {slotRange} = useSelector((state: RootState) => state.slotScoring);
     const [gap, setGap] = useState<EZoneTimeGap>(EZoneTimeGap.Medium);
-    const [timeSlots, setTimeSlots] = useState<moment.Moment[]>([])
-    const [data, setData] = useState<TableRowDataType<IZoneTimeWindow>[]>([]);
+    const [data, setData] = useState<IZoneTimeWindow[]>([]);
 
-    useEffect(() => {
-        getRowData()
-    }, [timeSlots, zones])
-
-    const handleSelect = (zoneId: number, slotId: number) => (e: React.ChangeEvent<{value: unknown}>) => {
-
+    const handleSelect = (zoneId: number, start: string) => (e: React.ChangeEvent<{value: unknown}>) => {
+        console.log(zoneId, start, e.target.value)
     }
 
     useEffect(() => {
-        setTimeSlots(generateZoneSlots(gap));
-    }, [gap])
-
+        setData(generateZoneSlots(gap, zoneTimeWindows, slotRange?.start, slotRange?.end));
+    }, [gap, zoneTimeWindows, slotRange])
 
     const getRowData = (): TableRowDataType<IZoneTimeWindow>[] => {
         const data: TableRowDataType<IZoneTimeWindow>[] = [
             {
                 header: "TIME OF DAY",
                 width: 200,
-                val: (el, index) => moment(el.start).format('HH:MM ')
+                val: (el, index) => moment(el.start).format('HH:mm A')
             }
         ]
         const zonesData: TableRowDataType<IZoneTimeWindow>[] = zones.map(item => {
@@ -53,7 +47,7 @@ const ZoneTimeWindows = () => {
                     fullWidth
                     style={{ marginRight: 20}}
                     placeholder='Role'
-                    onChange={handleSelect(el.zoneId, el.id)}
+                    onChange={handleSelect(item.id, el.start)}
                     value={el.timeWindow}
                     input={
                         <TextField />
@@ -69,9 +63,7 @@ const ZoneTimeWindows = () => {
     }
 
     return (
-        <div>
-            Zone Time Windows
-        </div>
+            <Table data={data} index="start" rowData={getRowData()} hidePagination isLoading={isLoading || isZonesLoading}/>
     );
 };
 

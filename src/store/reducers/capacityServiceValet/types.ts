@@ -18,18 +18,18 @@ export enum EZoneTimeGap {
 }
 
 export enum ETimeWindows {
-    TimeWindowOne,
-    TimeWindowTwo,
-    TimeWindowThree,
-    TimeWindowFour,
-    TimeWindowFive,
-    TimeWindowSix,
-    TimeWindowSeven,
-    TimeWindowEight,
-    TimeWindowNine,
-    TimeWindowTen,
-    TimeWindowEleven,
-    TimeWindowTwelve,
+    Timewindow1,
+    Timewindow2,
+    Timewindow3,
+    Timewindow4,
+    Timewindow5,
+    Timewindow6,
+    Timewindow7,
+    Timewindow8,
+    Timewindow9,
+    Timewindow10,
+    Timewindow11,
+    Timewindow12,
     DropOffPeriod,
     NotAvailable
 
@@ -42,5 +42,4 @@ export interface IZoneTimeWindow {
     timeSlotType: EZoneTimeGap;
     timeWindow: ETimeWindows;
     start: string;
-    end: string;
 }
