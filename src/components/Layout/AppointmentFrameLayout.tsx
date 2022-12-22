@@ -269,8 +269,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCurrentFrameScreen(screen));
     }, []);
 
-    const handleAddNewVehicle = useCallback(() => {
-        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
+    const clearData = useCallback(() => {
         dispatch(setVehicle(getBlankVehicle()));
         dispatch(setPackage(null));
         dispatch(selectAppointment(null));
@@ -281,6 +280,11 @@ export const AppointmentFrameLayout = () => {
         dispatch(setAdvisor(null));
         dispatch(selectSR(null));
         dispatch(setSelectedRecalls([]));
+    }, [])
+
+    const handleAddNewVehicle = useCallback(() => {
+        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
+        clearData()
         if (needToShowServiceSelection) {
             handleServiceTypeSelection()
         } else {
@@ -348,6 +352,7 @@ export const AppointmentFrameLayout = () => {
             carSelection: <AppointmentCarSelection
                 onBack={handleLogin}
                 loading={loadingCar}
+                clearData={clearData}
                 onAddNew={handleAddNewVehicle}
                 onAddNewCarAppointment={handleAddNewCarAppointment}
                 onNext={handleSelectCar} />,

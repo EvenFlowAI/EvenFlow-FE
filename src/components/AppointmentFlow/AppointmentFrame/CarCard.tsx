@@ -24,6 +24,7 @@ type TProps = {
     selected?: boolean;
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
     onAddNew: TCallback;
+    clearData: () => void;
 }
 const Wrapper = styled('div')<Theme, {active?: boolean}>(({theme}) => ({
     display: "flex",
@@ -78,8 +79,9 @@ type TCarActionProps = {
     selected?: boolean;
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
     onAddNew: TCallback;
+    clearData: () => void;
 }
-const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, onAddNew}) => {
+const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, onAddNew, clearData}) => {
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
@@ -104,7 +106,7 @@ const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, onAddNew})
         return hasAppointments ? t("Manage Appointment") : t("Schedule Appointment");
     }
     const handleSelect = () => {
-        onAddNew()
+        clearData()
         dispatch(setVehicle(car));
     }
     return <ActionButtons>
@@ -155,10 +157,12 @@ export const CarCard: React.FC<TProps> = ({
     car,
     selected,
     onAddNewAppointment,
-    onAddNew
+    onAddNew, clearData,
 }) => {
     const dispatch = useDispatch();
-    const onClick = () => dispatch(setVehicle(car));
+    const onClick = () => {
+        dispatch(setVehicle(car));
+    }
     return (
         <Wrapper
             active={selected}
@@ -170,7 +174,7 @@ export const CarCard: React.FC<TProps> = ({
                 <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
                 <li>VIN: <span>{car.vin}</span></li>
             </CarInfo>
-            <Action onAddNewAppointment={onAddNewAppointment} selected={selected} car={car} onAddNew={onAddNew}/>
+            <Action onAddNewAppointment={onAddNewAppointment} selected={selected} car={car} onAddNew={onAddNew} clearData={clearData}/>
         </Wrapper>
     );
 };
