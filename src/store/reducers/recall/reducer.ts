@@ -1,13 +1,15 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {IRecall} from "./types";
-import {getRecalls, setLoading, setRecallPageData} from "./actions";
+import {getRecalls, getRecallsByVin, setLoading, setRecallPageData} from "./actions";
 import {IPageRequest} from "../../../types/types";
+import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 
 type TState = {
     recalls: IRecall[];
     isLoading: boolean;
     recallPageData: IPageRequest;
     recallsCount: number,
+    recallsByVin: IRecallByVin[];
 }
 const initialState: TState = {
     recalls: [],
@@ -16,7 +18,8 @@ const initialState: TState = {
     recallPageData: {
         pageIndex: 0,
         pageSize: 10,
-    }
+    },
+    recallsByVin: [],
 }
 
 export const recallsReducer = createReducer(initialState, builder => builder
@@ -28,5 +31,8 @@ export const recallsReducer = createReducer(initialState, builder => builder
     })
     .addCase(setRecallPageData, (state, {payload}) => {
         return {...state, recallPageData: {...state.recallPageData, ...payload}};
+    })
+    .addCase(getRecallsByVin, (state, {payload}) => {
+        return {...state, recallsByVin: payload};
     })
 )

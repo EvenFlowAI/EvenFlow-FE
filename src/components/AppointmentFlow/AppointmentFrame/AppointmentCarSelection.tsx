@@ -50,9 +50,10 @@ type TProps = {
     onAddNew: TCallback;
     onAddNewCarAppointment: TArgCallback<ILoadedVehicle>;
     loading: boolean;
+    clearData: () => void;
 }
 export const AppointmentCarSelection: React.FC<TProps> = ({
-    onNext, onBack, loading, onAddNew, onAddNewCarAppointment}) => {
+    onNext, onBack, loading, onAddNew, onAddNewCarAppointment, clearData}) => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
     const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
@@ -115,6 +116,8 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                                 <CarCard
                                     onAddNewAppointment={onAddNewCarAppointment}
                                     selected={isSelected(vehicle)}
+                                    onAddNew={onAddNew}
+                                    clearData={clearData}
                                     car={vehicle}
                                     key={vehicle.vin}/>
                             )}

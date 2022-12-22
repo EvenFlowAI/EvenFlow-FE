@@ -16,13 +16,15 @@ import {ILoadedVehicle} from "../../../api/types";
 import {useDispatch} from "react-redux";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {MoreVert} from "@material-ui/icons";
-import {TArgCallback} from "../../../types/types";
+import {TArgCallback, TCallback} from "../../../types/types";
 import {useTranslation} from "react-i18next";
 
 type TProps = {
     car: ILoadedVehicle;
     selected?: boolean;
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
+    onAddNew: TCallback;
+    clearData: () => void;
 }
 const Wrapper = styled('div')<Theme, {active?: boolean}>(({theme}) => ({
     display: "flex",
@@ -76,8 +78,10 @@ type TCarActionProps = {
     car: ILoadedVehicle;
     selected?: boolean;
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
+    onAddNew: TCallback;
+    clearData: () => void;
 }
-const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment}) => {
+const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, onAddNew, clearData}) => {
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
@@ -102,6 +106,7 @@ const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment}) => {
         return hasAppointments ? t("Manage Appointment") : t("Schedule Appointment");
     }
     const handleSelect = () => {
+        clearData()
         dispatch(setVehicle(car));
     }
     return <ActionButtons>
@@ -151,10 +156,13 @@ const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment}) => {
 export const CarCard: React.FC<TProps> = ({
     car,
     selected,
-    onAddNewAppointment
+    onAddNewAppointment,
+    onAddNew, clearData,
 }) => {
     const dispatch = useDispatch();
-    const onClick = () => dispatch(setVehicle(car));
+    const onClick = () => {
+        dispatch(setVehicle(car));
+    }
     return (
         <Wrapper
             active={selected}
@@ -166,7 +174,7 @@ export const CarCard: React.FC<TProps> = ({
                 <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
                 <li>VIN: <span>{car.vin}</span></li>
             </CarInfo>
-            <Action onAddNewAppointment={onAddNewAppointment} selected={selected} car={car} />
+            <Action onAddNewAppointment={onAddNewAppointment} selected={selected} car={car} onAddNew={onAddNew} clearData={clearData}/>
         </Wrapper>
     );
 };
