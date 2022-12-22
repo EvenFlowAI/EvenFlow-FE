@@ -39,7 +39,7 @@ import {useException} from "../../utils/hooks";
 import {
     selectCategoriesIds, selectService, selectSubService, setAdvisor,
     setCurrentFrameScreen,
-    setPackage, setTiming,
+    setPackage, setSelectedRecalls, setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
@@ -280,6 +280,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(setTiming(null));
         dispatch(setAdvisor(null));
         dispatch(selectSR(null));
+        dispatch(setSelectedRecalls([]));
         if (needToShowServiceSelection) {
             handleServiceTypeSelection()
         } else {
