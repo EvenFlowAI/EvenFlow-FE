@@ -399,7 +399,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             error={errors.includes("vin")}
                             required={requiredFields.includes("vin")}
                             fullWidth
-                            disabled={!isNewVehicleView}
+                            disabled={!isNewVehicleView || recallsAreShown}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
                                 ? `${t("VIN")} ${t("required")}`
