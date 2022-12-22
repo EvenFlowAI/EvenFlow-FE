@@ -22,14 +22,30 @@ const ZoneTimeWindows = () => {
     const {slotRange} = useSelector((state: RootState) => state.slotScoring);
     const [gap, setGap] = useState<EZoneTimeGap>(EZoneTimeGap.Medium);
     const [data, setData] = useState<IZoneTimeWindow[]>([]);
+    const [localZoneWindows, setLocalZoneWindows] = useState<IZoneTimeWindow[]>([])
 
     const handleSelect = (zoneId: number, start: string) => (e: React.ChangeEvent<{value: unknown}>) => {
-        console.log(zoneId, start, e.target.value)
+        if (e.target.value && typeof e.target.value === 'number') {
+            setLocalZoneWindows(prev => {
+                let itemToUpdate = prev.find(el => el.zoneId === zoneId && el.start === start);
+                if (itemToUpdate) {
+                    itemToUpdate = {...itemToUpdate, timeWindow: e.target.value as ETimeWindows};
+                    return prev.filter(item => item.id !== itemToUpdate?.id).concat(itemToUpdate)
+                } else {
+                    const zone = zones.find(el => el.id === zoneId)
+                    if (zone) {
+                        return [...prev, {zoneId, start, timeWindow: e.target.value as ETimeWindows, timeSlotType: gap, id: 0, zoneName: zone.name}]
+                    } else return prev
+                }
+            })
+        }
     }
 
+    useEffect(() => setLocalZoneWindows(zoneTimeWindows), [zoneTimeWindows])
+
     useEffect(() => {
-        setData(generateZoneSlots(gap, zoneTimeWindows, slotRange?.start, slotRange?.end));
-    }, [gap, zoneTimeWindows, slotRange])
+        setData(generateZoneSlots(gap, localZoneWindows, zones, slotRange?.start, slotRange?.end));
+    }, [gap, localZoneWindows, slotRange])
 
     const getRowData = (): TableRowDataType<IZoneTimeWindow>[] => {
         const data: TableRowDataType<IZoneTimeWindow>[] = [

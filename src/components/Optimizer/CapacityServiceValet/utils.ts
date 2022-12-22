@@ -1,7 +1,8 @@
 import {ETimeWindows, EZoneTimeGap, IZoneTimeWindow} from "../../../store/reducers/capacityServiceValet/types";
 import moment from "moment";
+import {TZone} from "../../../store/reducers/mobileService/types";
 
-export const generateZoneSlots = (gap: EZoneTimeGap, zoneTimeWindows: IZoneTimeWindow[], startHour?: string|undefined, endHour?: string|undefined): IZoneTimeWindow[] => {
+export const generateZoneSlots = (gap: EZoneTimeGap, zoneTimeWindows: IZoneTimeWindow[], zones: TZone[], startHour?: string|undefined, endHour?: string|undefined): IZoneTimeWindow[] => {
     const slots: moment.Moment[] = [];
 
     if (!startHour) {
@@ -23,15 +24,20 @@ export const generateZoneSlots = (gap: EZoneTimeGap, zoneTimeWindows: IZoneTimeW
         time = moment(time).add(gap, 'minute');
     }
 
-    return slots.map(item => {
-        const window = zoneTimeWindows.find(el => moment(el.start).format('HH:mm A') === moment(item).format('HH:mm A'))
-        return window ?? {
-            id: 0,
-            zoneId: 0,
-            zoneName: '',
-            timeSlotType: gap,
-            timeWindow: ETimeWindows.NotAvailable,
-            start: item.toISOString(),
-        }
-    });
+    const data: IZoneTimeWindow[] = [];
+    zones.forEach(zone => {
+       slots.forEach(item => {
+            const window = zoneTimeWindows.find(el => moment(el.start).format('HH:mm A') === moment(item).format('HH:mm A') && zone.id === el.zoneId)
+            data.push(window ?? {
+                id: 0,
+                zoneId: zone.id,
+                zoneName: zone.name,
+                timeSlotType: gap,
+                timeWindow: ETimeWindows.NotAvailable,
+                start: item.toISOString(),
+            })
+        });
+    })
+
+    return data;
 }
