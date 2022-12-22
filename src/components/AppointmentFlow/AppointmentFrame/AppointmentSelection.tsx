@@ -175,8 +175,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         async function loadData () {
             if (id) {
                 setLoading(true);
-                const sd: moment.Moment = month
-                    ? moment(month)
+                const sd: moment.Moment = selectedTime
+                    ? moment(selectedTime).utc()
                     : moment.utc().startOf("day");
                 try {
                     const dd: IAppointmentSlotsRequest = {
@@ -222,7 +222,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
         loadData().finally();
     }, [
-        dispatch, id, selectedTimingType, month,
+        dispatch, id, selectedTimingType, selectedTime,
         selectedVehicle, customerData, service, handleDateRangeSet, vehicle,
         subService, selectedPackage, setDateCallback, selectedOpsCodes, consultant, valueService, serviceType, selectedTime
     ]);
