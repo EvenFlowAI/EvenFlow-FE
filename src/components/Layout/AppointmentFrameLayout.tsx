@@ -37,9 +37,9 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    selectCategoriesIds, selectService, selectSubService, setAdvisor,
+    selectCategoriesIds, selectService, selectSubService, setAdditionalServicesChosen, setAdvisor,
     setCurrentFrameScreen,
-    setPackage, setSelectedRecalls, setTiming,
+    setPackage, setRecallsAreShown, setSelectedRecalls, setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
@@ -280,6 +280,8 @@ export const AppointmentFrameLayout = () => {
         dispatch(setAdvisor(null));
         dispatch(selectSR(null));
         dispatch(setSelectedRecalls([]));
+        dispatch(setRecallsAreShown(false));
+        dispatch(setAdditionalServicesChosen(false));
     }, [])
 
     const handleAddNewVehicle = useCallback(() => {
@@ -314,6 +316,7 @@ export const AppointmentFrameLayout = () => {
 
     const handleSelectCar = useCallback(async () => {
         dispatch(selectSR(null));
+        clearData();
         let needToShowServiceSelection: boolean = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
