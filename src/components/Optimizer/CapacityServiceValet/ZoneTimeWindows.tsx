@@ -8,11 +8,22 @@ import {generateZoneSlots} from "./utils";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {TableRowDataType} from "../../UI/types";
-import {MenuItem, Select, withStyles} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
+import {
+    Button,
+    CircularProgress,
+    FormControlLabel, InputBase,
+    MenuItem,
+    Paper,
+    Radio,
+    RadioGroup,
+    Select,
+    styled,
+    withStyles
+} from "@material-ui/core";
 import {getOptions} from "../../../utils/utils";
 import {Table} from "../../UI/Table";
 import {KeyboardArrowDown} from "@material-ui/icons";
+import {makeStyles} from "@material-ui/core/styles";
 
 const timeWindowOptions = getOptions(Object.keys(ETimeWindows).filter(key => Number.isNaN(+key)))
 
@@ -22,15 +33,74 @@ const CustomSelect = withStyles(() => ({
         display: 'flex',
         alignItems: 'center',
         background: 'transparent'
-    }
+    },
 }))(Select);
 
 const CustomInput = withStyles(() => ({
     root: {
         border: 'none',
-        background: 'transparent'
+        background: 'transparent',
+        '&$disabled': {
+            background: 'transparent'
+        },
+    },
+    disabled: {}
+}))(InputBase);
+
+const CustomRadioGroup = withStyles(() => ({
+    root: {
+        flexDirection: 'row'
     }
-}))(TextField);
+}))(RadioGroup)
+
+const CustomPaper = withStyles(() => ({
+    root: {
+        marginBottom: 20,
+        borderRadius: 0,
+        padding: 16,
+    }
+}))(Paper)
+
+const ControlsWrapper = styled('div')(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+}));
+
+const RadioLabel = styled('span')(() => ({
+    fontSize: 14,
+    textTransform: 'uppercase',
+    fontWeight: "bold",
+    marginRight: 26,
+}))
+
+const RadioWrapper = styled('div')(() => ({
+    display: 'flex',
+    alignItems: 'center'
+}))
+
+const useStyles = makeStyles(() => ({
+    progress: {
+        padding: 10,
+    },
+    editButton: {
+        textTransform: "none",
+        fontSize: 14
+    },
+    editSaveButtons: {
+        display: 'flex',
+        alignItems: 'center',
+        '& > button:first-child': {
+            marginRight: 20
+        }
+    },
+    tableWrapper: {
+        width: 'fit-content',
+        overflowX: 'auto',
+        border: '1px solid #DADADA'
+    }
+}))
 
 const ZoneTimeWindows = () => {
     const {zones, isLoading: isZonesLoading} = useSelector((state: RootState) => state.serviceValet);
@@ -39,6 +109,8 @@ const ZoneTimeWindows = () => {
     const [gap, setGap] = useState<EZoneTimeGap>(EZoneTimeGap.Medium);
     const [data, setData] = useState<IZoneTimeSlot[]>([]);
     const [localZoneWindows, setLocalZoneWindows] = useState<IZoneTimeSlot[]>([])
+    const [isEdit, setEdit] = useState<boolean>(false);
+    const classes = useStyles();
 
     useEffect(() => setLocalZoneWindows(zoneTimeWindows), [zoneTimeWindows])
 
@@ -99,7 +171,7 @@ const ZoneTimeWindows = () => {
             {
                 header: "TIME OF DAY",
                 width: 136,
-                val: (el, index) => <span style={{fontWeight: 'bold'}}>{moment(el.start).format('HH:mm a')}</span>
+                val: (el) => <span style={{fontWeight: 'bold'}}>{moment(el.start).format('HH:mm a')}</span>
             }
         ]
         const zonesData: TableRowDataType<IZoneTimeSlot>[] = zones.map(item => {
@@ -108,29 +180,100 @@ const ZoneTimeWindows = () => {
                 width: 170,
                 val: el =>
                     <CustomSelect
-                    fullWidth
-                    IconComponent={KeyboardArrowDown}
-                    placeholder='Select Time Window'
-                    onChange={handleSelect(item.id, el.start)}
-                    value={el.zones.find(zone => zone.zoneId === item.id)?.timeWindow}
-                    input={
-                        <CustomInput />
-                    }
-                >
-                    {timeWindowOptions.map(op => {
-                        return <MenuItem key={op.name} value={op.value}>
-                            {op.name}</MenuItem>
-                    })}
-                </CustomSelect>
+                        fullWidth
+                        IconComponent={KeyboardArrowDown}
+                        disabled={!isEdit || isZonesLoading || isLoading}
+                        placeholder='Select Time Window'
+                        onChange={handleSelect(item.id, el.start)}
+                        value={el.zones.find(zone => zone.zoneId === item.id)?.timeWindow}
+                        input={
+                            <CustomInput />
+                        }
+                    >
+                        {timeWindowOptions.map(op => {
+                            return <MenuItem key={op.name} value={op.value}>
+                                {op.name}</MenuItem>
+                        })}
+                    </CustomSelect>
             }
         })
         return [...data, ...zonesData];
     }
 
+    const handleGapChange = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
+        setEdit && setGap(Number(value) as EZoneTimeGap)
+    }
+
+    const handleEditCancel = () => {
+        setEdit(false)
+    }
+
+    const handleSave = () => {
+        setEdit(false)
+    }
+
     return (
-        <div style={{width: 'fit-content', overflowX: 'auto'}}>
-            <Table data={data} index="start" rowData={getRowData()} hidePagination isLoading={isLoading || isZonesLoading}/>
-        </div>
+        <CustomPaper variant="outlined">
+            <ControlsWrapper>
+                <RadioWrapper>
+                    <RadioLabel>Gap Slots:</RadioLabel>
+                    <CustomRadioGroup
+                        value={gap}
+                        onChange={handleGapChange}
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="controlled-radio-buttons-group">
+                        <FormControlLabel
+                            value={EZoneTimeGap.Small}
+                            disabled={isLoading || isZonesLoading}
+                            control={<Radio color="primary" size="small"/>}
+                            label="15 min" />
+                        <FormControlLabel
+                            value={EZoneTimeGap.Medium}
+                            disabled={isLoading || isZonesLoading}
+                            control={<Radio color="primary" size="small"/>}
+                            label="30 min" />
+                        <FormControlLabel
+                            value={EZoneTimeGap.Large}
+                            disabled={isLoading || isZonesLoading}
+                            control={<Radio color="primary" size="small"/>}
+                            label="60 min" />
+                    </CustomRadioGroup>
+                </RadioWrapper>
+                {isEdit
+                    ? isLoading ? <CircularProgress color="primary" className={classes.progress} />
+                        : <div className={classes.editSaveButtons}>
+                            <Button
+                                className={classes.editButton}
+                                color="secondary"
+                                onClick={handleEditCancel}>
+                                Cancel
+                            </Button>
+                            <Button
+                                className={classes.editButton}
+                                color="primary"
+                                onClick={handleSave}>
+                                Save
+                            </Button>
+                        </div>
+                    : <Button
+                        color="primary"
+                        className={classes.editButton}
+                        onClick={() => setEdit(true)}>
+                        Edit
+                    </Button>
+                }
+            </ControlsWrapper>
+            <div className={classes.tableWrapper}>
+                <Table
+                    data={data}
+                    index="start"
+                    rowData={getRowData()}
+                    hidePagination
+                    isLoading={isLoading || isZonesLoading}
+                    borderHeader
+                />
+            </div>
+        </CustomPaper>
     );
 };
 
