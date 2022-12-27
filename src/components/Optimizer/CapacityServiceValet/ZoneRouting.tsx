@@ -34,11 +34,10 @@ const ZoneRouting = () => {
         })
         return [...data, ...zonesData];
     }
-
-
+    
     return isLoading || isZonesLoading
         ? <Loading/>
-        : <div style={{width: 'fit-content', overflowX: 'scroll'}}>
+        : <div style={{width: 'fit-content', overflowX: 'auto'}}>
             <Table<IZonesRoutingByDay>
                 data={zonesRouting}
                 index={"id"}

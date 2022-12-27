@@ -1,4 +1,4 @@
-import {IZonesRoutingByDay, IZoneTimeWindow} from "./types";
+import {IZonesRoutingByDay, IZoneTimeSlot} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {getZonesRouting, setLoading, setZoneTimeWindows} from "./actions";
 
@@ -142,7 +142,7 @@ const mockZonesRouting: IZonesRoutingByDay[] = [
 
 interface InitialState {
     zonesRouting: IZonesRoutingByDay[],
-    zoneTimeWindows: IZoneTimeWindow[],
+    zoneTimeWindows: IZoneTimeSlot[],
     isLoading: boolean;
 }
 

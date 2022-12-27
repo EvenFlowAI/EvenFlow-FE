@@ -43,3 +43,16 @@ export interface IZoneTimeWindow {
     timeWindow: ETimeWindows;
     start: string;
 }
+
+export interface IZoneForTimeSlot {
+    zoneId: number;
+    zoneName: string;
+    timeSlotType: EZoneTimeGap;
+    timeWindow: ETimeWindows;
+}
+
+export interface IZoneTimeSlot {
+    id: number;
+    start: string;
+    zones: IZoneForTimeSlot[];
+}
