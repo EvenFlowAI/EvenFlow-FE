@@ -11,96 +11,24 @@ import {TableRowDataType} from "../../UI/types";
 import {
     Button,
     CircularProgress,
-    FormControlLabel, InputBase,
+    FormControlLabel,
     MenuItem,
-    Paper,
     Radio,
-    RadioGroup,
-    Select,
-    styled,
-    withStyles
 } from "@material-ui/core";
 import {getOptions} from "../../../utils/utils";
 import {Table} from "../../UI/Table";
 import {KeyboardArrowDown} from "@material-ui/icons";
-import {makeStyles} from "@material-ui/core/styles";
+import {
+    ControlsWrapper,
+    CustomInput,
+    CustomPaper, CustomRadioGroup,
+    CustomSelect,
+    RadioLabel,
+    RadioWrapper,
+    useZoneStyles
+} from "./styledComponents";
 
 const timeWindowOptions = getOptions(Object.keys(ETimeWindows).filter(key => Number.isNaN(+key)))
-
-const CustomSelect = withStyles(() => ({
-    root: {
-        border: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        background: 'transparent'
-    },
-}))(Select);
-
-const CustomInput = withStyles(() => ({
-    root: {
-        border: 'none',
-        background: 'transparent',
-        '&$disabled': {
-            background: 'transparent'
-        },
-    },
-    disabled: {}
-}))(InputBase);
-
-const CustomRadioGroup = withStyles(() => ({
-    root: {
-        flexDirection: 'row'
-    }
-}))(RadioGroup)
-
-const CustomPaper = withStyles(() => ({
-    root: {
-        marginBottom: 20,
-        borderRadius: 0,
-        padding: 16,
-    }
-}))(Paper)
-
-const ControlsWrapper = styled('div')(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 10,
-}));
-
-const RadioLabel = styled('span')(() => ({
-    fontSize: 14,
-    textTransform: 'uppercase',
-    fontWeight: "bold",
-    marginRight: 26,
-}))
-
-const RadioWrapper = styled('div')(() => ({
-    display: 'flex',
-    alignItems: 'center'
-}))
-
-const useStyles = makeStyles(() => ({
-    progress: {
-        padding: 10,
-    },
-    editButton: {
-        textTransform: "none",
-        fontSize: 14
-    },
-    editSaveButtons: {
-        display: 'flex',
-        alignItems: 'center',
-        '& > button:first-child': {
-            marginRight: 20
-        }
-    },
-    tableWrapper: {
-        width: 'fit-content',
-        overflowX: 'auto',
-        border: '1px solid #DADADA'
-    }
-}))
 
 const ZoneTimeWindows = () => {
     const {zones, isLoading: isZonesLoading} = useSelector((state: RootState) => state.serviceValet);
@@ -110,7 +38,7 @@ const ZoneTimeWindows = () => {
     const [data, setData] = useState<IZoneTimeSlot[]>([]);
     const [localZoneWindows, setLocalZoneWindows] = useState<IZoneTimeSlot[]>([])
     const [isEdit, setEdit] = useState<boolean>(false);
-    const classes = useStyles();
+    const classes = useZoneStyles();
 
     useEffect(() => setLocalZoneWindows(zoneTimeWindows), [zoneTimeWindows])
 

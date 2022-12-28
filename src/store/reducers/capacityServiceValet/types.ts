@@ -56,3 +56,17 @@ export interface IZoneTimeSlot {
     start: string;
     zones: IZoneForTimeSlot[];
 }
+
+export interface ITimeWindowReservation {
+    start: string;
+    end: string;
+    timeWindowType: ETimeWindows;
+    reservationsCount: number;
+}
+
+export interface IZoneTimeReservation {
+    id: number;
+    zoneId: number;
+    zoneName: string;
+    timeWindows: ITimeWindowReservation[];
+}
