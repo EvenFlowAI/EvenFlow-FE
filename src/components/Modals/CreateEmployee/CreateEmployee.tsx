@@ -128,6 +128,8 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         setFormIsChecked(false);
         if (r === Roles.Advisor) {
             setAdvisorForm(prev => ({...prev, dmsId: value ? value.id : null}));
+        } else {
+            setTechnicianForm(prev => ({...prev, dmsId: value ? value.id : null}));
         }
     }
 
@@ -199,6 +201,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                     email: technicianForm.email || undefined,
                     phoneNumber: technicianForm.phoneNumber,
                     serviceCenterId: technicianForm.serviceCenter?.id || null,
+                    dmsId: technicianForm?.dmsId ?? null,
                     employeeInfo: {
                         hourlyRate: technicianForm.hourlyRate || 0,
                         overtimeRate: technicianForm.overtimeRate || 0,
@@ -290,6 +293,8 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                     onSwitch={handleSwitchChange}
                     onChange={handleChange(Roles.Technician)}
                     onSelectChange={handleSelectChange(Roles.Technician)}
+                    onDMSConsultantChange={handleDMSConsultantChange(Roles.Technician)}
+                    dmsConsultants={DmsAdvisors}
                 />
             }
             <Divider />
