@@ -8,6 +8,4 @@ export const setZoneCapacity = createAction<IZoneTimeReservation[]>('ServiceVale
 export const setLoading = createAction<boolean>('ServiceValetCapacity/SetLoading');
 
 export const loadZonesRouting = (serviceCenterId: number): AppThunk => dispatch => {
-    dispatch(setLoading(true))
-    dispatch(setLoading(false))
 }

@@ -1,5 +1,6 @@
 import {InputBase, Paper, RadioGroup, Select, styled, withStyles} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+
 export const CustomSelect = withStyles(() => ({
     root: {
         border: 'none',
@@ -70,8 +71,33 @@ export const useZoneStyles = makeStyles(() => ({
     },
     tableWrapper: {
         width: 'fit-content',
-        display: 'grid',
         overflowX: 'auto',
         border: '1px solid #DADADA'
     }
+}))
+
+export const TimeOfDayWrapper = styled('div')(() => ({
+    gridColumnStart: 1,
+    gridColumnEnd: 2,
+    gridRowStart: 1,
+    gridRowEnd: 2,
+    padding: 24,
+    fontSize: 12,
+    textTransform: 'uppercase',
+    fontWeight: 700,
+    color: '#9FA2B4',
+    borderRight: '1px solid #DADADA'
+}))
+
+export const TimeWindowName = styled('div')(() => ({
+    fontSize: 17,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    padding: 16,
+}))
+
+export const TableWrapper = styled('div')(() => ({
+    width: 'fit-content',
+    overflowX: 'auto',
+    border: '1px solid #DADADA'
 }))
