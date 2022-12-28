@@ -10,7 +10,7 @@ import ZoneCapacity from "./ZoneCapacity";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
 import {useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
-import {loadHorsOfOperations} from "../../../store/reducers/slotScoring/actions";
+import {loadHoursOfOperations} from "../../../store/reducers/slotScoring/actions";
 
 const CapacityServiceValet = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -20,7 +20,7 @@ const CapacityServiceValet = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadServiceValetZones(selectedSC.id))
-            dispatch(loadHorsOfOperations(selectedSC.id))
+            dispatch(loadHoursOfOperations(selectedSC.id))
         }
     }, [selectedSC])
 

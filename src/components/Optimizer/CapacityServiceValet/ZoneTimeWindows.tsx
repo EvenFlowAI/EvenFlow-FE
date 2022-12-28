@@ -28,7 +28,7 @@ import {
     useZoneStyles
 } from "./styledComponents";
 
-const timeWindowOptions = getOptions(Object.keys(ETimeWindows).filter(key => Number.isNaN(+key)))
+export const timeWindowOptions = getOptions(Object.keys(ETimeWindows).filter(key => Number.isNaN(+key)))
 
 const ZoneTimeWindows = () => {
     const {zones, isLoading: isZonesLoading} = useSelector((state: RootState) => state.serviceValet);

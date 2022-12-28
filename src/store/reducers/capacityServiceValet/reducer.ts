@@ -1,4 +1,4 @@
-import {IZonesRoutingByDay, IZoneTimeSlot} from "./types";
+import {ETimeWindows, IZonesRoutingByDay, IZoneTimeReservation, IZoneTimeSlot} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {getZonesRouting, setLoading, setZoneTimeWindows} from "./actions";
 
@@ -140,15 +140,59 @@ const mockZonesRouting: IZonesRoutingByDay[] = [
     }
 ]
 
+const mockReservations = [
+    {
+        id: 1,
+        zoneId: 1,
+        zoneName: 'Zone 1',
+        timeWindows: [
+            {
+                start: '8:00',
+                end: '12:00',
+                timeWindowType: ETimeWindows.NotAvailable,
+                reservationsCount: 0,
+            }
+        ]
+    },
+    {
+        id: 2,
+        zoneId: 1,
+        zoneName: 'Zone 1',
+        timeWindows: [
+            {
+                start: '12:00',
+                end: '14:00',
+                timeWindowType: ETimeWindows.Timewindow1,
+                reservationsCount: 4,
+            }
+        ]
+    },
+    {
+        id: 3,
+        zoneId: 2,
+        zoneName: 'Zone 2',
+        timeWindows: [
+            {
+                start: '8:00',
+                end: '12:00',
+                timeWindowType: ETimeWindows.Timewindow1,
+                reservationsCount: 4,
+            }
+        ]
+    }
+]
+
 interface InitialState {
     zonesRouting: IZonesRoutingByDay[],
     zoneTimeWindows: IZoneTimeSlot[],
+    zoneCapacity: IZoneTimeReservation[],
     isLoading: boolean;
 }
 
 const initialState: InitialState = {
     zonesRouting: mockZonesRouting,
     zoneTimeWindows: [],
+    zoneCapacity: mockReservations,
     isLoading: false,
 }
 

@@ -70,6 +70,7 @@ export const useZoneStyles = makeStyles(() => ({
     },
     tableWrapper: {
         width: 'fit-content',
+        display: 'grid',
         overflowX: 'auto',
         border: '1px solid #DADADA'
     }
