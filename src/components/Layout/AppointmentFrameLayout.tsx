@@ -269,8 +269,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCurrentFrameScreen(screen));
     }, []);
 
-    const clearData = useCallback(() => {
-        dispatch(setVehicle(getBlankVehicle()));
+    const clearAppointmentData = useCallback(() => {
         dispatch(setPackage(null));
         dispatch(selectAppointment(null));
         dispatch(selectCategoriesIds([]));
@@ -282,6 +281,11 @@ export const AppointmentFrameLayout = () => {
         dispatch(setSelectedRecalls([]));
         dispatch(setRecallsAreShown(false));
         dispatch(setAdditionalServicesChosen(false));
+    },[])
+
+    const clearData = useCallback(() => {
+        dispatch(setVehicle(getBlankVehicle()));
+        clearAppointmentData()
     }, [])
 
     const handleAddNewVehicle = useCallback(() => {
@@ -316,7 +320,7 @@ export const AppointmentFrameLayout = () => {
 
     const handleSelectCar = useCallback(async () => {
         dispatch(selectSR(null));
-        clearData();
+        clearAppointmentData()
         let needToShowServiceSelection: boolean = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
