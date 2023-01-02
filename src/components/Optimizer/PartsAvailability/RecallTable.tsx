@@ -56,15 +56,15 @@ const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, set
         },
         {
             header: "Make",
-            val: el => el.make.name
+            val: el => el.make?.name ?? ''
         },
         {
             header: "Model",
-            val: el => el.model.name
+            val: el => el.model?.name ?? ''
         },
         {
             header: "Year",
-            val: el => el.year.toString()
+            val: el => el.year?.toString() ?? '',
         },
         {
             header: "Recall Component",
@@ -81,15 +81,15 @@ const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, set
         },
         {
             header: "Ops Code Assignment",
-            val: el => el.serviceRequest.name,
+            val: el => el.serviceRequest?.name ?? '',
         },
         {
             header: "Part Lead Time (days)",
-            val: el => el.partLeadDaysCount.toString()
+            val: el => el.partLeadDaysCount?.toString() ?? '',
         },
         {
             header: "Daily Parts",
-            val: el => el.dailyPartsCount.toString()
+            val: el => el.dailyPartsCount?.toString() ?? ''
         }
     ]
 
