@@ -31,7 +31,8 @@ type TForm = {
     recallCampaignNumber: string;
     make: IMakeExtended|null;
     model: IModel|null;
-    year: string;
+    yearTo: string;
+    yearFrom: string;
     recallComponent: string;
     recallSummary: string;
     partLeadDaysCount: string;
@@ -43,7 +44,8 @@ const initialForm: TForm = {
     recallCampaignNumber: '',
     make: null,
     model: null,
-    year: '',
+    yearTo: '',
+    yearFrom: '',
     recallComponent: '',
     recallSummary: '',
     partLeadDaysCount: '',
@@ -105,7 +107,8 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                 recallCampaignNumber: editingItem.recallCampaignNumber,
                 make: make ?? null,
                 model: model ?? null,
-                year: editingItem.year.toString(),
+                yearFrom: editingItem.yearRange?.from?.toString() ?? '',
+                yearTo: editingItem.yearRange?.to?.toString() ?? '',
                 recallComponent: editingItem.recallComponent,
                 recallSummary: editingItem.recallSummary,
                 partLeadDaysCount: editingItem.partLeadDaysCount.toString(),
@@ -126,7 +129,8 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
         if (!form.recallCampaignNumber.length) showError('"Recall Campaign Number" must not be empty')
         if (!form.make) showError('"Make" must not be empty')
         if (!form.model) showError('"Model" must not be empty')
-        if (!form.year.length) showError('"Year" must not be empty')
+        if (!form.yearTo?.length) showError('"Year To" must not be empty')
+        if (!form.yearFrom?.length) showError('"Year From" must not be empty')
         if (!form.recallComponent.length) showError('"Recall Component" must not be empty')
         if (!form.recallSummary) showError('"Recall Summary" must not be empty')
         if (!form.partLeadDaysCount.length) showError('"Part Lead Dais Count" must not be empty')
@@ -138,7 +142,6 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
         return form.recallCampaignNumber.length
             && form.make
             && form.model
-            && Number.isInteger(+form.year)
             && form.recallComponent.length
             && form.recallSummary.length
             && Number.isInteger(+form.partLeadDaysCount)
@@ -155,7 +158,10 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                 recallCampaignNumber: form.recallCampaignNumber,
                 makeId: form.make?.id ?? null,
                 modelId: form.model?.id ?? null,
-                year: +form.year,
+                yearRange: {
+                    from: form.yearFrom?.length ? +form.yearFrom : null,
+                    to: form.yearTo?.length ? +form.yearTo : null,
+                },
                 recallComponent: form.recallComponent,
                 recallSummary: form.recallSummary,
                 partLeadDaysCount: +form.partLeadDaysCount,
@@ -176,6 +182,11 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
         setForm((form) => ({...form, [name]: value}))
     }
 
+    const onYearChange = (name: "yearFrom"|"yearTo") => (e: ChangeEvent<{}>, value: string) => {
+        setFormIsChecked(false);
+        setForm((form) => ({...form, [name]: value}))
+    }
+
     const onSummaryChange: React.ChangeEventHandler<HTMLTextAreaElement> = ({target: {value}}) => {
         setFormIsChecked(false);
         setForm((form) => ({...form, recallSummary: value}))
@@ -189,11 +200,6 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
     const onModelChange = (e: ChangeEvent<{}>, value: IModel|null) => {
         setFormIsChecked(false);
         setForm(prev => ({...prev, model: value}))
-    }
-
-    const onYearChange = (e: ChangeEvent<{}>, value: string|null) => {
-        setFormIsChecked(false);
-        setForm(prev => ({...prev, year: value ?? ""}))
     }
 
     const onSRChange = (e: ChangeEvent<{}>, value: IAssignedServiceRequest|null) => {
@@ -245,16 +251,34 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                     })}
                 />
                 <Autocomplete
+                    disableClearable
                     style={{ marginBottom: 10 }}
                     options={yearOptions}
-                    value={form.year}
-                    onChange={onYearChange}
+                    getOptionSelected={(option, value) => option === value}
+                    value={form?.yearFrom}
+                    onChange={onYearChange("yearFrom")}
                     renderInput={autocompleteRender({
-                        label: "Year",
-                        error: formIsChecked && !form.year,
-                        placeholder: 'Select Year'
+                        label: 'Year From',
+                        placeholder: 'Select Year From',
+                        error: (form.yearFrom && form.yearTo && (form.yearFrom > form.yearTo))
+                            || formIsChecked && !form.yearFrom
                     })}
                 />
+                <Autocomplete
+                    disableClearable
+                    style={{ marginBottom: 10 }}
+                    options={yearOptions}
+                    getOptionSelected={(option, value) => option === value}
+                    value={form?.yearTo}
+                    onChange={onYearChange("yearTo")}
+                    renderInput={autocompleteRender({
+                        label: 'Year To',
+                        placeholder: 'Select Year To',
+                        error: (form.yearFrom && form.yearTo && (form.yearFrom > form.yearTo))
+                        || formIsChecked && !form.yearTo
+                    })}
+                />
+
                 <TextField
                     fullWidth
                     style={{ marginBottom: 10 }}
