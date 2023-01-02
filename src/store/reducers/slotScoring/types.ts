@@ -23,7 +23,8 @@ export interface ISlotRange {
 export enum ETimeSlotType {
     TenMinutes,
     FifteenMinutes,
-    ThirtyMinutes
+    ThirtyMinutes,
+    SixtyMinutes
 }
 export enum EDesirabilityState {
     Neutral, Desirable, Undesirable
