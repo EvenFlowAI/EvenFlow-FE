@@ -63,8 +63,12 @@ const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, set
             val: el => el.model?.name ?? ''
         },
         {
-            header: "Year",
-            val: el => el.year?.toString() ?? '',
+            header: "Year From",
+            val: el => el.yearRange?.from?.toString() ?? '',
+        },
+        {
+            header: "Year To",
+            val: el => el.yearRange?.to?.toString() ?? '',
         },
         {
             header: "Recall Component",
