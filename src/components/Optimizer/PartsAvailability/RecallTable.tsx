@@ -42,7 +42,7 @@ const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, set
 
     useEffect(() => {
         if (selectedSC) dispatch(loadRecalls(selectedSC.id))
-    }, [selectedSC])
+    }, [selectedSC, pageIndex, pageSize])
 
     const onSummaryClick = (item: IRecall) => {
         setCurrentItem(item);
