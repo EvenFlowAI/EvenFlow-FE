@@ -65,6 +65,7 @@ const initialState: TServiceCenterState = {
         heavyRepairLaborHours: 0,
         otherRepairLaborHours: 0,
         defaultLaborHours: 0,
+        pickUpDropOffHours: 0,
     },
     laborRate: {
         customerPay: 0,
