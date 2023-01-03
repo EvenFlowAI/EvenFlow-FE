@@ -216,7 +216,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                 <TextField
                     style={{ marginBottom: 10 }}
                     fullWidth
-                    label='Description'
+                    label='Recall Campaign Number'
                     id="recallCampaignNumber"
                     name="recallCampaignNumber"
                     placeholder='Type Recall Campaign Number'
