@@ -11,6 +11,8 @@ const gapToMin = (gap: ETimeSlotType): number => {
             return 15;
         case ETimeSlotType.ThirtyMinutes:
             return 30;
+        case ETimeSlotType.SixtyMinutes:
+            return 60;
         default:
             return 30;
     }
