@@ -14,7 +14,7 @@ import {
     loadMakes,
     selectService,
     setMaintenanceDetails,
-    setPackage,
+    setPackage, setRecallsAreShown,
     setVehicle,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -88,14 +88,13 @@ type TMaintenanceDetailsProps = {
 }
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
-    const [recallsAreShown, setRecallsAreShown] = useState<boolean>(false);
     const [isLoading, setLoading] = useState<boolean>(false);
 
     const dispatch = useDispatch();
@@ -123,6 +122,14 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
 
     const recallsToggledOn = useMemo(() => (currentConfig?.checkRecallsNew && userType === EUserType.New)
         || (currentConfig?.checkRecallsExisting && userType === EUserType.Existing), [currentConfig, userType])
+
+    const isNextDisabled = useMemo(() => {
+        return !Boolean(maintenanceDetails.make
+            && maintenanceDetails.model
+            && maintenanceDetails.year
+            && maintenanceDetails.mileage
+            && (currentConfig?.engineType ? maintenanceDetails.engineTypeId : true))
+    }, [maintenanceDetails, currentConfig])
 
     const selects: TSelect[] = [
         {label: t("Make"), name: "make", options: 'make'},
@@ -240,7 +247,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        setRecallsAreShown(false);
+        dispatch(setRecallsAreShown(false));
         dispatch(updateVehicle({[name]: value.trim()}));
         if (name === "model") {
             dispatch(setMaintenanceDetails({[name]: value.trim()}));
@@ -298,7 +305,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && !recallsAreShown) {
             setLoading(true);
             const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin}})
-            setRecallsAreShown(true);
+            dispatch(setRecallsAreShown(true));
             if (data.length) {
                 await onOpen()
             } else {
@@ -392,7 +399,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             error={errors.includes("vin")}
                             required={requiredFields.includes("vin")}
                             fullWidth
-                            disabled={!isNewVehicleView}
+                            disabled={!isNewVehicleView || recallsAreShown}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
                                 ? `${t("VIN")} ${t("required")}`
@@ -401,7 +408,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     </div> : null}
             </SelectWrapper>
         }
-        <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isLoading} />
+        <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isNextDisabled || isLoading} />
         <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext}/>
         <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleNext}/>
     </StepWrapper>);

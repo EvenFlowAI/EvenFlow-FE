@@ -151,7 +151,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
             appointmentTimingType: appointmentFrame.selectedTiming ?? EAppointmentTimingType.FirstAvailable,
-            customerId: appointment.customerLoadedData?.id,
+            customerId: appointment.customerLoadedData?.id ?? null,
             comment: appointmentFrame.description,
             driver: appointmentFrame.customer,
             gmt: moment().utcOffset(),

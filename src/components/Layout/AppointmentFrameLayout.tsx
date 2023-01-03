@@ -37,9 +37,9 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    selectCategoriesIds, selectService, selectSubService, setAdvisor,
+    selectCategoriesIds, selectService, selectSubService, setAdditionalServicesChosen, setAdvisor,
     setCurrentFrameScreen,
-    setPackage, setTiming,
+    setPackage, setRecallsAreShown, setSelectedRecalls, setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
@@ -269,9 +269,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCurrentFrameScreen(screen));
     }, []);
 
-    const handleAddNewVehicle = useCallback(() => {
-        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
-        dispatch(setVehicle(getBlankVehicle()));
+    const clearAppointmentData = useCallback(() => {
         dispatch(setPackage(null));
         dispatch(selectAppointment(null));
         dispatch(selectCategoriesIds([]));
@@ -280,6 +278,19 @@ export const AppointmentFrameLayout = () => {
         dispatch(setTiming(null));
         dispatch(setAdvisor(null));
         dispatch(selectSR(null));
+        dispatch(setSelectedRecalls([]));
+        dispatch(setRecallsAreShown(false));
+        dispatch(setAdditionalServicesChosen(false));
+    },[])
+
+    const clearData = useCallback(() => {
+        dispatch(setVehicle(getBlankVehicle()));
+        clearAppointmentData()
+    }, [])
+
+    const handleAddNewVehicle = useCallback(() => {
+        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
+        clearData()
         if (needToShowServiceSelection) {
             handleServiceTypeSelection()
         } else {
@@ -309,6 +320,7 @@ export const AppointmentFrameLayout = () => {
 
     const handleSelectCar = useCallback(async () => {
         dispatch(selectSR(null));
+        clearAppointmentData()
         let needToShowServiceSelection: boolean = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
@@ -347,6 +359,7 @@ export const AppointmentFrameLayout = () => {
             carSelection: <AppointmentCarSelection
                 onBack={handleLogin}
                 loading={loadingCar}
+                clearData={clearData}
                 onAddNew={handleAddNewVehicle}
                 onAddNewCarAppointment={handleAddNewCarAppointment}
                 onNext={handleSelectCar} />,

@@ -25,6 +25,7 @@ export type TTechnicianForm = {
     email?: string;
     phoneNumber?: string;
     technicianLevel: TTechnicianLevel;
+    dmsId: string | null;
 }
 export type TSelectChange = (e: React.ChangeEvent<{}>, value: Value<IServiceCenter, false, any, any>) => void;
 export type TDMSConsultantChange = (e: React.ChangeEvent<{}>, value: TConsultantOption | null) => void;

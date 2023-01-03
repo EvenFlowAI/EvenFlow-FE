@@ -73,6 +73,7 @@ export const setAncillaryPriceByZip = createAction<TAncillaryPriceByZip>('fAppoi
 export const setAncillaryPriceLoading = createAction<boolean>('fAppointment/SetAncillaryPriceLoading');
 export const setFilteredZipCodes = createAction<string[]>('fAppointment/SetFilteredZipCodes');
 export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/SetSelectedRecalls');
+export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -184,6 +185,8 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setTiming(null));
     dispatch(setAdvisor(null));
     dispatch(setTransportation(null));
+    dispatch(setRecallsAreShown(false));
+    dispatch(setSelectedRecalls([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void): AppThunk => dispatch => {

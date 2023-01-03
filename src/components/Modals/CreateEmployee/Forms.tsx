@@ -17,7 +17,7 @@ export const initialAdvisorForm: TAdvisorForm = {
 }
 export const initialTechnicianForm: TTechnicianForm = {
     firstName: '', lastName: '', serviceCenter: null, phoneNumber: "",
-    hourlyRate: '', overtimeRate: '', email: "", technicianLevel: 1
+    hourlyRate: '', overtimeRate: '', email: "", technicianLevel: 1, dmsId: '',
 }
 
 export type TConsultantOption = {
@@ -46,6 +46,8 @@ type TTFormProps = {
     shortSC: IServiceCenter[]
     form: TTechnicianForm
     onSwitch: (e: React.ChangeEvent<{}>, newVal: number) => void
+    dmsConsultants: TConsultantOption[];
+    onDMSConsultantChange: TDMSConsultantChange;
     formIsChecked: boolean;
 };
 export const AdvisorForm: React.FC<TAFormProps> = props => {
@@ -121,14 +123,14 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                     fullWidth
                     label="Role"
                 />
-            : <Autocomplete
-                options={userRoles}
-                onChange={props.onRoleChange}
-                loading={props.loading}
-                disableClearable
-                value={props.form.role || null}
-                renderInput={autocompleteRender({label: "Role", fullWidth: true, placeholder: "Select Role"})}
-            />}
+                : <Autocomplete
+                    options={userRoles}
+                    onChange={props.onRoleChange}
+                    loading={props.loading}
+                    disableClearable
+                    value={props.form.role || null}
+                    renderInput={autocompleteRender({label: "Role", fullWidth: true, placeholder: "Select Role"})}
+                />}
         </Grid>
         <Grid item xs={12}>
             <Divider color="#DADADA" style={{ margin: 0 }}/>
@@ -278,6 +280,18 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                     />
                 </Grid>
             </Grid>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+            <Autocomplete
+                options={props.dmsConsultants}
+                onChange={props.onDMSConsultantChange}
+                getOptionLabel={i => i.name}
+                getOptionSelected={(o, s) => o.id === s.id}
+                disabled={props.loading}
+                loading={props.loading}
+                value={props.form?.dmsId ? props.dmsConsultants.find(item => item.id.toString() === props.form.dmsId) : null}
+                renderInput={autocompleteRender({label: "Assign Technician from DMS", fullWidth: true, placeholder: "Select Technician"})}
+            />
         </Grid>
     </Grid>
 }
