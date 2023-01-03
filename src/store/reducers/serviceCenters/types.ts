@@ -122,6 +122,7 @@ export interface IPredictionParams {
     heavyRepairLaborHours: number;
     otherRepairLaborHours: number;
     defaultLaborHours: number;
+    pickUpDropOffHours: number;
     podId?: number;
 }
 
