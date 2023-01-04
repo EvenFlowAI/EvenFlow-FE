@@ -19,7 +19,7 @@ import {
     selectSubService,
     setAdditionalServicesChosen,
     setAdvisor,
-    setPackage,
+    setPackage, setSelectedRecalls,
     setTiming,
     setTransportation,
     setVehicle,
@@ -108,6 +108,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         zipCode,
         valueService,
         engineTypes,
+        selectedRecalls,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceRequests,
@@ -125,6 +126,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.zipCode,
         state.appointmentFrame.valueService,
         state.vehicleDetails.engineTypes,
+        state.appointmentFrame.selectedRecalls,
     ]);
 
     const {t} = useTranslation();
@@ -132,7 +134,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const isFrame = window.top !== window.self;
     const {id} = useParams();
     const dispatch = useDispatch();
-    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
     const vehicleData = vehicle?.year
@@ -250,6 +252,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         dispatch(setAdditionalServicesChosen(false));
         dispatch(setPackage(null));
         dispatch(setTiming(null));
+        dispatch(setSelectedRecalls([]));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 

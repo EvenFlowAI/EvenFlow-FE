@@ -26,6 +26,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
 import {selectAppointment, selectSR} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
+import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -71,6 +72,8 @@ export const switchLanguage = createAction<TLanguage>('fAppointment/ChangeLangua
 export const setAncillaryPriceByZip = createAction<TAncillaryPriceByZip>('fAppointment/SetAncillaryPriceByZip');
 export const setAncillaryPriceLoading = createAction<boolean>('fAppointment/SetAncillaryPriceLoading');
 export const setFilteredZipCodes = createAction<string[]>('fAppointment/SetFilteredZipCodes');
+export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/SetSelectedRecalls');
+export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -182,6 +185,8 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setTiming(null));
     dispatch(setAdvisor(null));
     dispatch(setTransportation(null));
+    dispatch(setRecallsAreShown(false));
+    dispatch(setSelectedRecalls([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void): AppThunk => dispatch => {

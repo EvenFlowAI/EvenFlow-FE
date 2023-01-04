@@ -5,10 +5,17 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
-import {IMaintenanceDetailsShort, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
-    loadMakes, selectService,
-    setMaintenanceDetails, setPackage, setVehicle,
+    EUserType,
+    IMaintenanceDetailsShort,
+    TMaintenanceDetails
+} from "../../../store/reducers/appointmentFrameReducer/types";
+import {
+    loadMakes,
+    selectService,
+    setMaintenanceDetails,
+    setPackage, setRecallsAreShown,
+    setVehicle,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -16,7 +23,7 @@ import {useParams} from "react-router-dom";
 import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
-import {useException} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -25,6 +32,11 @@ import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
+import RecallsByVin from "../../Modals/RecallsByVin/RecallsByVin";
+import {Api} from "../../../config/requests";
+import {Loading} from "../../UI/Loading";
+import {makeStyles} from "@material-ui/core/styles";
+import NoRecalls from "../../Modals/RecallsByVin/NoRecalls";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -35,6 +47,17 @@ const SelectWrapper = styled('div')(({theme}) => ({
         gridTemplateColumns: "1fr"
     }
 }));
+
+const useStyles = makeStyles(() => ({
+    vinWrapper: {
+        '& > label': {
+            textTransform: 'none',
+            fontSize: 14,
+            color: "#142EA1",
+            fontWeight: "normal",
+        }
+    }
+}))
 
 type TSelect = {
     label: string;
@@ -65,18 +88,23 @@ type TMaintenanceDetailsProps = {
 }
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
     const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
+    const [isLoading, setLoading] = useState<boolean>(false);
+
     const dispatch = useDispatch();
     const showError = useException();
     const theme = useTheme();
     const {id} = useParams();
     const {t} = useTranslation();
+    const {isOpen, onOpen, onClose} = useModal();
+    const {isOpen: isNoRecallsOpen, onOpen: onNoRecallsOpen, onClose: onNoRecallsClose} = useModal();
+    const classes = useStyles();
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
 
@@ -86,18 +114,29 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const isNewVehicleView = useMemo(() => {
         return !Boolean(customerLoadedData?.vehicles.find(v => {
             return v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin
-            || (v.make === selectedVehicle?.make
-            && v.model === selectedVehicle?.model
-            && v.year === selectedVehicle?.year)
+                || (v.make === selectedVehicle?.make
+                    && v.model === selectedVehicle?.model
+                    && v.year === selectedVehicle?.year)
         }));
     }, [selectedVehicle, customerLoadedData])
 
+    const recallsToggledOn = useMemo(() => (currentConfig?.checkRecallsNew && userType === EUserType.New)
+        || (currentConfig?.checkRecallsExisting && userType === EUserType.Existing), [currentConfig, userType])
+
+    const isNextDisabled = useMemo(() => {
+        return !Boolean(maintenanceDetails.make
+            && maintenanceDetails.model
+            && maintenanceDetails.year
+            && maintenanceDetails.mileage
+            && (currentConfig?.engineType ? maintenanceDetails.engineTypeId : true))
+    }, [maintenanceDetails, currentConfig])
+
     const selects: TSelect[] = [
-        {label: t("VIN"), name: "vin", noVehicle: true},
         {label: t("Make"), name: "make", options: 'make'},
         {label: t("Year"), name: "year", options: yearOptions},
         {label: t("Model"), name: "model", options: "model",},
         {label: t("Estimated mileage"), name:"mileage", options: mileage.map(item => item.value.toString())},
+        // {label: t("VIN"), name: "vin", noVehicle: true},
     ];
 
     useEffect(() => {
@@ -208,6 +247,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setRecallsAreShown(false));
         dispatch(updateVehicle({[name]: value.trim()}));
         if (name === "model") {
             dispatch(setMaintenanceDetails({[name]: value.trim()}));
@@ -261,73 +301,115 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             ? 'opsCode' : 'serviceNeeds');
     }
 
+    const handleSubmit = async () => {
+        if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && !recallsAreShown) {
+            setLoading(true);
+            const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin}})
+            dispatch(setRecallsAreShown(true));
+            if (data.length) {
+                await onOpen()
+            } else {
+                if (userType === EUserType.New) {
+                    onNoRecallsOpen()
+                } else {
+                    handleNext();
+                }
+            }
+        } else {
+            handleNext()
+        }
+        setLoading(false);
+    }
+
     return (<StepWrapper>
-        <SelectWrapper>
-            {selects.map(select => {
-                if (!isNewVehicleView && select.noVehicle) {
-                    return null;
-                }
-                const hasError = errors.includes(select.name);
-                if (select.options) {
-                    return <Autocomplete
-                        key={select.name}
-                        options={typeof select.options === 'string'
-                            ? loadedOptions[select.options] ?? []
-                            : select.options}
-                        onChange={handleChange(select.name, select.allOverride)}
+        {isLoading
+            ? <Loading/>
+            : <SelectWrapper>
+                {selects.map(select => {
+                    if (!isNewVehicleView && select.noVehicle) {
+                        return null;
+                    }
+                    const hasError = errors.includes(select.name);
+                    if (select.options) {
+                        return <Autocomplete
+                            key={select.name}
+                            options={typeof select.options === 'string'
+                                ? loadedOptions[select.options] ?? []
+                                : select.options}
+                            onChange={handleChange(select.name, select.allOverride)}
+                            fullWidth
+                            disableClearable
+                            autoComplete={true}
+                            disabled={select.name !== 'mileage' && !isNewVehicleView}
+                            renderInput={autocompleteRender({
+                                label: select.label,
+                                placeholder: hasError ? `${select.label} ${t("required")}` : `${t("Select")} ${select.label}`,
+                                error: hasError,
+                                required: requiredFields.includes(select.name)
+                            })}
+                            value={!select.allOverride
+                                ? maintenanceDetails[select.name as keyof IMaintenanceDetailsShort] ?? ""
+                                : "All"
+                            }
+                        />
+                    }
+                    return <div key={select.name}>
+                        <TextField
+                            onChange={handleTextChange(select.name)}
+                            label={select.label}
+                            name={select.name}
+                            error={hasError}
+                            required={requiredFields.includes(select.name)}
+                            fullWidth
+                            disabled={select.name !== 'mileage' && !isNewVehicleView}
+                            value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
+                            placeholder={hasError
+                                ? `${select.label} ${t("required")}`
+                                : `${t("Type")} ${select.label} ${select.name === 'vin' ? `(${t("Optional")})` : ''}`}
+                        />
+                    </div>
+                })}
+                {currentConfig?.engineType
+                    ? <Autocomplete
+                        key="Engine Type"
+                        options={engineTypes}
+                        onChange={handleEngineTypeChange}
                         fullWidth
-                        disableClearable
-                        autoComplete={true}
-                        disabled={select.name !== 'mileage' && !isNewVehicleView}
+                        getOptionLabel={o => o.name}
+                        getOptionSelected={o => o.id === selectedEngine?.id}
+                        // disabled={!isNewVehicleView && Boolean(selectedEngine)}
                         renderInput={autocompleteRender({
-                            label: select.label,
-                            placeholder: hasError ? `${select.label} ${t("required")}` : `${t("Select")} ${select.label}`,
-                            error: hasError,
-                            required: requiredFields.includes(select.name)
+                            label: "Engine Type",
+                            placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
+                            error: errors.includes("engineTypeId"),
+                            required: true,
                         })}
-                        value={!select.allOverride
-                            ? maintenanceDetails[select.name as keyof IMaintenanceDetailsShort] ?? ""
-                            : "All"
-                        }
+                        value={selectedEngine}
                     />
-                }
-                return isBmWService && select.name === 'vin'
-                    ? null
-                    : <div key={select.name}>
-                    <TextField
-                        onChange={handleTextChange(select.name)}
-                        label={select.label}
-                        name={select.name}
-                        error={hasError}
-                        required={requiredFields.includes(select.name)}
-                        fullWidth
-                        disabled={select.name !== 'mileage' && !isNewVehicleView}
-                        value={selectedVehicle ? selectedVehicle[select.name as keyof ILoadedVehicle] : ""}
-                        placeholder={hasError
-                            ? `${select.label} ${t("required")}`
-                            : `${t("Type")} ${select.label} ${select.name === 'vin' ? `(${t("Optional")})` : ''}`}
-                    />
-                </div>
-            })}
-            {currentConfig?.engineType
-                ? <Autocomplete
-                key="Engine Type"
-                options={engineTypes}
-                onChange={handleEngineTypeChange}
-                fullWidth
-                getOptionLabel={o => o.name}
-                getOptionSelected={o => o.id === selectedEngine?.id}
-                // disabled={!isNewVehicleView && Boolean(selectedEngine)}
-                renderInput={autocompleteRender({
-                    label: "Engine Type",
-                    placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
-                    error: errors.includes("engineTypeId"),
-                    required: true,
-            })}
-                value={selectedEngine}
-                />
-            : null }
-        </SelectWrapper>
-        <Actions onBack={handleBack} onNext={handleNext} />
+                    : null }
+                {(userType === EUserType.New || isNewVehicleView) && recallsToggledOn
+                    ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""}>
+                        <TextField
+                            onChange={handleTextChange("vin")}
+                            label={recallsToggledOn
+                                ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
+                                : `${t("VIN")} (${t("Optional")})`
+                            }
+                            name={"vin"}
+                            error={errors.includes("vin")}
+                            required={requiredFields.includes("vin")}
+                            fullWidth
+                            disabled={!isNewVehicleView || recallsAreShown}
+                            value={selectedVehicle ? selectedVehicle.vin : ""}
+                            placeholder={errors.includes("vin")
+                                ? `${t("VIN")} ${t("required")}`
+                                : `${t("Type")} ${t("VIN")} (${t("Optional")})`}
+                        />
+                    </div> : null}
+            </SelectWrapper>
+        }
+        <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isNextDisabled || isLoading} />
+        <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext}/>
+        <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleNext}/>
     </StepWrapper>);
 };

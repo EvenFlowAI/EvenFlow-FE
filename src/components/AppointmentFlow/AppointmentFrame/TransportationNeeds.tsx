@@ -131,7 +131,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const [
         s, ss,
         individualOps, categoriesIds, packageOpt, appointmentDate,
-        hashKey
+        hashKey, selectedRecalls
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -140,10 +140,11 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.selectedPackage,
         state.appointment.appointment?.appointmentDate,
         state.appointmentFrame.hashKey,
+        state.appointmentFrame.selectedRecalls,
     ]);
 
     const serviceRequestIds = useMemo(() => {
-        return collectServiceRequestIds(s, ss, null, individualOps);
+        return collectServiceRequestIds(s, ss, selectedRecalls, null, individualOps);
     }, [s, ss, individualOps]);
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])

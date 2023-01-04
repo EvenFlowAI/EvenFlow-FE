@@ -11,4 +11,6 @@ export type TServiceTypeSettings = {
     engineType: boolean;
     appointmentSelection: boolean;
     transportationNeeds: boolean;
+    checkRecallsExisting: boolean;
+    checkRecallsNew: boolean;
 }

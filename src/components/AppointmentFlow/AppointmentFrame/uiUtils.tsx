@@ -1,13 +1,14 @@
 import React from "react";
 import {IPackageOptions} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
-import {IMaintenanceItem} from "./types";
+import {IMaintenanceItem, IRecallByVin} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 import {IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
 import i18n from "../../../i18n";
 
 export const getMaintenanceDescription = (
     srList: ISR[],
+    selectedRecalls: IRecallByVin[],
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
     allCategories?: ICategory[],
@@ -33,11 +34,13 @@ export const getMaintenanceDescription = (
         })
     }
     if (valueService?.selectedService?.name) services.push(valueService.selectedService.name)
+    selectedRecalls.forEach(el => services.push(el.shortDescription))
    return services;
 }
 
 export const getMaintenanceList = (
     srList: ISR[],
+    selectedRecalls: IRecallByVin[],
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
     allCategories?: ICategory[],
@@ -74,6 +77,15 @@ export const getMaintenanceList = (
             id: valueService.selectedService.id,
             name: valueService.selectedService.name,
             type: 'valueService'
+        })
+    }
+    if (selectedRecalls.length) {
+        selectedRecalls.forEach(item => {
+            services.push({
+                id: item.serviceRequestId,
+                name: item.shortDescription,
+                type: "recall",
+            })
         })
     }
     return services;
