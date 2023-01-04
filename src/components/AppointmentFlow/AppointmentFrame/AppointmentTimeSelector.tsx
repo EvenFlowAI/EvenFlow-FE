@@ -13,6 +13,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {loadHoursOfOperations, loadRange} from "../../../store/reducers/slotScoring/actions";
 import {loadSlotsGap} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {PickUpSlotCard} from "./PickUpSlotCard";
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -34,6 +36,14 @@ const TimeSlotsWrapper = styled('div')(({theme}) => ({
     }
 }));
 
+const PickUpSlotsWrapper = styled('div')(() => ({
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: "20px 12px",
+    alignItems: "center",
+    justifyContent: "stretch",
+}));
+
 const useStyles = makeStyles(theme => ({
     wrapper: {
         maxHeight: '40vh',
@@ -49,15 +59,56 @@ export type TSlot = {
     label: string;
 }
 
+export type TPickUpSlot = {
+    date: moment.Moment;
+    label: string;
+    pickUpStart: string;
+    pickUpEnd: string;
+    dropOffStart: string;
+    dropOffEnd: string;
+    available: number;
+}
+
+const mockPickUpSlots = [
+    {
+        date: moment(),
+        label: '',
+        pickUpStart: '8:00',
+        pickUpEnd: '11.00',
+        dropOffStart: '14.00',
+        dropOffEnd: '17.00',
+        available: 4
+    },
+    {
+        date: moment(),
+        label: '',
+        pickUpStart: '8:00',
+        pickUpEnd: '11.00',
+        dropOffStart: '14.00',
+        dropOffEnd: '17.00',
+        available: 0
+    },
+    {
+        date: moment(),
+        label: '',
+        pickUpStart: '8:00',
+        pickUpEnd: '11.00',
+        dropOffStart: '14.00',
+        dropOffEnd: '17.00',
+        available: 6
+    }
+]
+
 type TProps = {
     date: moment.Moment;
     loading: boolean;
     appointments?: TGroupedAppointment;
 }
+
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
         const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, gap} = useSelector((state : RootState) => state.appointmentFrame);
+        const {selectedTiming, gap, serviceType} = useSelector((state : RootState) => state.appointmentFrame);
         const {slotRange} = useSelector((state : RootState) => state.slotScoring);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
@@ -106,7 +157,28 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             <div className={classes.wrapper}>
                 <h4 ref={firstCardRef}>{t("Select Time")}</h4>
                 {!loading
-                    ? <TimeSlotsWrapper>
+                    ? serviceType === EServiceType.PikUpDropOff
+                        ? <PickUpSlotsWrapper>
+                            {
+                                mockPickUpSlots.map(timeSlot => {
+                                    const appointment = appointments?.appointments.find(
+                                        a => a.date.isSame(timeSlot.date, 'minute')
+                                    );
+                                    return <PickUpSlotCard
+                                        date={date}
+                                        slot={appointment}
+                                        onSelect={handleSelect}
+                                        selected
+                                        // selected={Boolean(
+                                        //     selectedAppointment && appointment?.id === selectedAppointment.id
+                                        // )}
+                                        timeSlot={timeSlot}
+                                        key={timeSlot.label}
+                                    />
+                                })
+                            }
+                    </PickUpSlotsWrapper>
+                        : <TimeSlotsWrapper>
                         {slots.map((timeSlot) => {
                             const appointment = appointments?.appointments.find(
                                 a => a.date.isSame(timeSlot.date, 'minute')
