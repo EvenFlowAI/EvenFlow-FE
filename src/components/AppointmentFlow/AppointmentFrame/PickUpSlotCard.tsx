@@ -54,10 +54,16 @@ const PickUpWrapper = styled(({available, selected, ...props}) => <div {...props
     '& .right-part': {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
+        [theme.breakpoints.down("sm")]: {
+            gap: 8,
+        },
         '& .availability': {
-            padding: '25px 0 46px 50px',
+            padding: '25px 0 46px 16px',
             textTransform: 'uppercase',
             fontSize: 16,
+            [theme.breakpoints.up("md")]: {
+                padding: '25px 0 46px 50px',
+            },
             '& .availability-item': {
                 display: 'flex',
                 flexDirection: 'column',
@@ -75,7 +81,10 @@ const PickUpWrapper = styled(({available, selected, ...props}) => <div {...props
             fontSize: 14,
             color:'#202021',
             paddingTop: 25,
-            paddingRight: 60,
+            paddingRight: 16,
+            [theme.breakpoints.up("md")]: {
+                paddingRight: 60,
+            }
         }
     },
 }))
@@ -141,10 +150,8 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selec
                     }
                 </div>
                 <div className="dropOff">
-                    <div>
-                        Drop Off Time:
-                    </div>
-                    <div>
+                    <div>Drop Off Time:</div>
+                    <div style={{textAlign: 'right'}}>
                         {moment(timeSlot.dropOffStart, 'H:mm').format('H:mm A')}
                         <span> to </span>
                         {moment(timeSlot.dropOffEnd, 'H:mm').format('H:mm A')}
