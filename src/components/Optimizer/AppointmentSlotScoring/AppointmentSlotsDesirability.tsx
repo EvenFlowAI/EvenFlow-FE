@@ -150,7 +150,7 @@ const gaps: TGap[] = [
     {label: "10-minutes Gap Slots", type: ETimeSlotType.TenMinutes},
     {label: "15-minutes Gap Slots", type: ETimeSlotType.FifteenMinutes},
     {label: "30-minutes Gap Slots", type: ETimeSlotType.ThirtyMinutes},
-    {label: "60-minutes Gap Slots", type: ETimeSlotType.SixtyMinutes}
+    // {label: "60-minutes Gap Slots", type: ETimeSlotType.SixtyMinutes}
 ];
 const ButtonRow:React.FC<TRowProps> = ({slot, onClick}) => {
     const classes = useStylesBR();
