@@ -46,7 +46,8 @@ export interface IEmployeeForm {
     serviceCenterId: number | null;
     email?: number;
     phoneNumber?: string;
-    employeeInfo?: IEmployeeInfo
+    employeeInfo?: IEmployeeInfo,
+    dmsId: string | null;
 }
 
 export type TGetAll = {type: "Employees/GetAll"; payload: IEmployee[]};

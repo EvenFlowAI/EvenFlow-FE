@@ -5,12 +5,17 @@ export type TIdName = {
     name: string;
 }
 
+export type TYearRange = {
+    from: number|null;
+    to: number|null;
+}
+
 export interface IRecall {
     id: number;
     recallCampaignNumber: string;
     make: TIdName;
     model: TIdName;
-    year: number;
+    yearRange: TYearRange;
     recallComponent: string;
     recallSummary: string;
     partLeadDaysCount: number;
@@ -23,7 +28,7 @@ export interface ICreateUpdateRecall {
     recallCampaignNumber: string;
     makeId: number|null;
     modelId: number|null;
-    year: number;
+    yearRange: TYearRange;
     recallComponent: string;
     recallSummary: string;
     partLeadDaysCount: number;

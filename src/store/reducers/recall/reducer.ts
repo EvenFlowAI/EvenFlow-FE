@@ -1,6 +1,6 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {IRecall} from "./types";
-import {getRecalls, getRecallsByVin, setLoading, setRecallPageData} from "./actions";
+import {getRecalls, getRecallsByVin, setLoading, setRecallPageData, setRecallsCount} from "./actions";
 import {IPageRequest} from "../../../types/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 
@@ -25,6 +25,9 @@ const initialState: TState = {
 export const recallsReducer = createReducer(initialState, builder => builder
     .addCase(getRecalls, (state, {payload}) => {
         return {...state, recalls: payload};
+    })
+    .addCase(setRecallsCount, (state, {payload}) => {
+        return {...state, recallsCount: payload};
     })
     .addCase(setLoading, (state, {payload}) => {
         return {...state, isLoading: payload};
