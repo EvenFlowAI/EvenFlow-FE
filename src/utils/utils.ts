@@ -200,6 +200,8 @@ export const parentOrigins = {
     janssenfordholdrege: "janssenfordholdrege",
     lakepowellford: "lakepowellford",
     larnedford: "morrissmithfordoflarned",
+    performancekingshonda: "performancekingshonda",
+    performancehondastore: "performancehondastore",
 }
 
 export const getTracker = (origin: string): string => {
@@ -213,7 +215,9 @@ export const getTracker = (origin: string): string => {
         if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "UA-210743216-11";
         if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
         if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
-        if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14"
+        if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
+        if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
+        if (origin.includes(parentOrigins.performancehondastore)) return "UA-210743216-16";
         return "UA-210743216-5";
     } else {
         return "UA-210743216-5";
