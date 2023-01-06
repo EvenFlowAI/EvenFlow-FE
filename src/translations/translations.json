@@ -246,7 +246,11 @@
       "Service Declined": "Service Declined",
       "Decline": "Decline",
       "Add Service": "Add Service",
-      "There are no open recalls for your vehicle": "There are no open recalls for your vehicle"
+      "There are no open recalls for your vehicle": "There are no open recalls for your vehicle",
+      "left": "left",
+      "to": "to",
+      "Drop Off Time": "Drop Off Time",
+      "Pick Up Time": "Pick Up Time"
     }
   },
   "es": {

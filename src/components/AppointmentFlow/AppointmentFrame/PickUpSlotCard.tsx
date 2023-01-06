@@ -128,10 +128,10 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selec
                     {!selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}
                 </div>
                 <div className="text">
-                    <div>Pick Up Time:</div>
+                    <div>{t("Pick Up Time")}:</div>
                     <div>
                         {moment(timeSlot.pickUpStart, 'H:mm').format('H:mm A')}
-                        <span> to </span>
+                        <span> {t("to")} </span>
                         {moment(timeSlot.pickUpEnd, 'H:mm').format('H:mm A')}
                     </div>
                 </div>
@@ -140,20 +140,20 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selec
                 <div className="availability">
                     {timeSlot.available > 0
                         ? <div className="availability-item" style={{color: "#008331"}}>
-                            <div className="textWithIcon">Available   <CheckCircleOutlined style={{marginLeft: 8}}/> </div>
-                            <div>{timeSlot.available} left</div>
+                            <div className="textWithIcon">{t("Available")}   <CheckCircleOutlined style={{marginLeft: 8}}/> </div>
+                            <div>{timeSlot.available} {t("left")}</div>
                         </div>
                         : <div className="availability-item">
-                            <div className="textWithIcon" style={{color: '#202021'}}>Not Available   <HighlightOff style={{marginLeft: 8}}/> </div>
-                            <div className="textWithIcon" style={{color: '#DADADA'}}>{timeSlot.available} left</div>
+                            <div className="textWithIcon" style={{color: '#202021'}}>{t("Not Available")}   <HighlightOff style={{marginLeft: 8}}/> </div>
+                            <div className="textWithIcon" style={{color: '#DADADA'}}>{timeSlot.available} {t("left")}</div>
                         </div>
                     }
                 </div>
                 <div className="dropOff">
-                    <div>Drop Off Time:</div>
+                    <div>{t("Drop Off Time")}:</div>
                     <div style={{textAlign: 'right'}}>
                         {moment(timeSlot.dropOffStart, 'H:mm').format('H:mm A')}
-                        <span> to </span>
+                        <span> {t("to")} </span>
                         {moment(timeSlot.dropOffEnd, 'H:mm').format('H:mm A')}
                     </div>
                 </div>
