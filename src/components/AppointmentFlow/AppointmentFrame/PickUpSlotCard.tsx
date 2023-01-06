@@ -11,6 +11,7 @@ import {
     RadioButtonChecked,
     RadioButtonUnchecked
 } from "@material-ui/icons";
+import {makeStyles} from "@material-ui/core/styles";
 
 type TPickUpSlotsWrapperProps = {
     available?: boolean,
@@ -38,55 +39,61 @@ const PickUpWrapper = styled(({available, selected, ...props}) => <div {...props
         gridTemplateColumns: '1fr 5fr',
         backgroundColor: selected ? '#202021' : '#E0E0E0',
         color: selected ? '#FFFFFF' : '#202021',
-        '& .radio': {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        '& .text': {
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            fontWeight: 600,
-            fontSize: 20,
+    },
+}))
+
+const useStyles = makeStyles(theme => ({
+    dropOff: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-start',
+        fontSize: 14,
+        color:'#202021',
+        paddingTop: 25,
+        paddingRight: 16,
+        [theme.breakpoints.up("md")]: {
+            paddingRight: 60,
         }
     },
-    '& .right-part': {
+    rightPart: {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
         [theme.breakpoints.down("sm")]: {
             gap: 8,
         },
-        '& .availability': {
-            padding: '25px 0 46px 16px',
-            textTransform: 'uppercase',
-            fontSize: 16,
-            [theme.breakpoints.up("md")]: {
-                padding: '25px 0 46px 50px',
-            },
-            '& .availability-item': {
-                display: 'flex',
-                flexDirection: 'column',
-                '& .textWithIcon': {
-                    display: 'flex',
-                    alignItems: 'center'
-                },
-            },
-        },
-        '& .dropOff': {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            justifyContent: 'flex-start',
-            fontSize: 14,
-            color:'#202021',
-            paddingTop: 25,
-            paddingRight: 16,
-            [theme.breakpoints.up("md")]: {
-                paddingRight: 60,
-            }
-        }
     },
+    availability: {
+        padding: '25px 0 46px 16px',
+        textTransform: 'uppercase',
+        fontSize: 16,
+        [theme.breakpoints.up("md")]: {
+            padding: '25px 0 46px 50px',
+        },
+    },
+    availabilityItem: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    textWithIcon: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    radio: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    text: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        fontWeight: 600,
+        fontSize: 20,
+    },
+    rightText: {
+        textAlign: 'right'
+    }
 }))
 
 type TProps = {
@@ -99,6 +106,7 @@ type TProps = {
 
 export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
     const [timePassed, setTimePassed] = useState<boolean>(false);
+    const classes = useStyles();
     const {t} = useTranslation();
 
     useEffect(() => {
@@ -124,10 +132,10 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selec
             onClick={() => timePassed ? {} : onSelect(slot ?? null)}
         >
             <div className="pickUp">
-                <div className="radio">
+                <div className={classes.radio}>
                     {!selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}
                 </div>
-                <div className="text">
+                <div className={classes.text}>
                     <div>{t("Pick Up Time")}:</div>
                     <div>
                         {moment(timeSlot.pickUpStart, 'H:mm').format('H:mm A')}
@@ -136,22 +144,22 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selec
                     </div>
                 </div>
             </div>
-            <div className="right-part">
-                <div className="availability">
+            <div className={classes.rightPart}>
+                <div className={classes.availability}>
                     {timeSlot.available > 0
-                        ? <div className="availability-item" style={{color: "#008331"}}>
-                            <div className="textWithIcon">{t("Available")}   <CheckCircleOutlined style={{marginLeft: 8}}/> </div>
+                        ? <div className={classes.availabilityItem} style={{color: "#008331"}}>
+                            <div className={classes.textWithIcon}>{t("Available")}   <CheckCircleOutlined style={{marginLeft: 8}}/> </div>
                             <div>{timeSlot.available} {t("left")}</div>
                         </div>
-                        : <div className="availability-item">
-                            <div className="textWithIcon" style={{color: '#202021'}}>{t("Not Available")}   <HighlightOff style={{marginLeft: 8}}/> </div>
-                            <div className="textWithIcon" style={{color: '#DADADA'}}>{timeSlot.available} {t("left")}</div>
+                        : <div className={classes.availabilityItem}>
+                            <div className={classes.textWithIcon} style={{color: '#202021'}}>{t("Not Available")}   <HighlightOff style={{marginLeft: 8}}/> </div>
+                            <div className={classes.textWithIcon} style={{color: '#DADADA'}}>{timeSlot.available} {t("left")}</div>
                         </div>
                     }
                 </div>
-                <div className="dropOff">
+                <div className={classes.dropOff}>
                     <div>{t("Drop Off Time")}:</div>
-                    <div style={{textAlign: 'right'}}>
+                    <div className={classes.rightText}>
                         {moment(timeSlot.dropOffStart, 'H:mm').format('H:mm A')}
                         <span> {t("to")} </span>
                         {moment(timeSlot.dropOffEnd, 'H:mm').format('H:mm A')}
