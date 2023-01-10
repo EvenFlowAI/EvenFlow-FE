@@ -24,9 +24,11 @@ import {loadBaysShort} from "../../../store/reducers/bays/actions";
 import {IMakeExtended, IModel} from "../../../api/types";
 import {getOptions} from "../../../utils/utils";
 import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
-import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
+import {loadEngineType, loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 import {TZone} from "../../../store/reducers/mobileService/types";
 import {loadMobServiceZones} from "../../../store/reducers/mobileService/actions";
+import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
+import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 
 type TForm = {
     name: string;
@@ -59,6 +61,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
     const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
     const [mobileZones, setMobileZones] = useState<TZone[]>([]);
+    const [selectedServiceValetZones, setSelectedServiceValetZones] = useState<TZone[]>([]);
+    const [selectedEngineTypes, setSelectedEngineTypes] = useState<IEngineType[]>([]);
     const [jobType, setJobType] = useState<TOption|null>(null);
     const [appointmentType, setAppointmentType] = useState<TOption|null>(null);
     const {onOpen, isOpen, onClose} = useModal();
@@ -71,7 +75,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         serviceRequests,
         baysList,
         makesModels,
-        zones
+        zones,
+        serviceValetZones,
+        engineTypes,
     ] = useSelector((state: RootState) => [
         state.scEmployees.advisorsList,
         state.scEmployees.techniciansList,
@@ -79,14 +85,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         state.bays.baysShort,
         state.vehicleDetails.makesModels,
         state.mobileService.zones,
+        state.serviceValet.zones,
+        state.vehicleDetails.engineTypes,
     ]);
-
-    // const disabledBays: number[] = useMemo(() => {
-    //     if (payload) {
-    //         return baysList.filter(b => !b?.podId || b.podId === payload.id).map(b => b.id);
-    //     }
-    //     return baysList.filter(b => !b?.podId).map(b => b.id);
-    // }, [baysList, payload]);
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
@@ -96,17 +97,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             setForm({
                 ...initialForm,
                 ...payload,
-                bays: payload?.bays ?? []
+                bays: payload?.bays ?? [],
             });
-            if (payload?.vehicleMakes?.length) {
-                const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
-                setSelectedMakes(filteredMakes);
-                setModelsOptions(filteredMakes.map(make => make.models).flat())
-            } else {
-                setSelectedMakes([])
-                setSelectedModels([])
-                setModelsOptions([])
-            }
             if (typeof payload?.jobType !== "undefined") {
                 const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
                 selectedJobType && setJobType(selectedJobType);
@@ -124,8 +116,18 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             } else {
                 setMobileZones([]);
             }
+            if (payload?.serviceValetZones) {
+                setSelectedServiceValetZones(serviceValetZones.filter(zone => payload?.serviceValetZones?.find(item => item.id === zone.id)))
+            } else {
+                setSelectedServiceValetZones([]);
+            }
+            if (payload?.engineTypes) {
+                setSelectedEngineTypes(engineTypes.filter(zone => payload?.engineTypes?.find(item => item.id === zone.id)))
+            } else {
+                setSelectedEngineTypes([]);
+            }
         }
-    }, [props.open, payload, makesModels]);
+    }, [props.open, payload, makesModels, engineTypes, serviceValetZones, zones]);
 
     useEffect(() => {
         if (payload?.vehicleModels?.length) {
@@ -138,7 +140,14 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             });
             const modelsIDs = models.flat().map(item => item.id);
             const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
+            const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
+            setSelectedMakes(filteredMakes);
+            setModelsOptions(filteredMakes.map(make => make.models).flat())
             setSelectedModels(filteredModels);
+        } else {
+            setSelectedMakes([])
+            setSelectedModels([])
+            setModelsOptions([])
         }
     }, [makesModels, props.open, payload])
 
@@ -150,6 +159,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             dispatch(loadBaysShort(selectedSC.id));
             dispatch(loadMakesForPods(selectedSC.id));
             dispatch(loadMobServiceZones(selectedSC.id));
+            dispatch(loadServiceValetZones(selectedSC.id));
+            dispatch(loadEngineType(selectedSC.id))
         }
     }, [selectedSC, dispatch, props.open]);
 
@@ -167,6 +178,14 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     }
     const handleZoneChange = (e: any, val: TZone[]) => {
         setMobileZones(val);
+    }
+
+    const handleEngineTypesChange = (e: any, val: IEngineType[]) => {
+        setSelectedEngineTypes(val);
+    }
+
+    const handleServiceValetZoneChange = (e: any, val: TZone[]) => {
+        setSelectedServiceValetZones(val);
     }
 
     const handleBaysChange = (e: any, val: IBayShort[]) => {
@@ -190,6 +209,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     vehicleMakes: selectedMakes.map(item => item.id),
                     vehicleModels: selectedModels.map(item => item.id),
                     mobileZones: mobileZones.map(zone => zone.id),
+                    serviceValetZones: selectedServiceValetZones.map(zone => zone.id),
+                    engineTypes: selectedEngineTypes.map(type => type.id),
                 };
                 if (jobType) data.jobType = jobType.value;
                 if (appointmentType) data.appointmentType = appointmentType.value;
@@ -369,7 +390,46 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         })}
                     />
                 </Grid>
-
+                <Grid item xs={12} sm={12} md={6}>
+                    <Autocomplete
+                        options={engineTypes}
+                        multiple
+                        fullWidth
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        getOptionSelected={(o, v) => o.id === v.id}
+                        onChange={handleEngineTypesChange}
+                        getOptionLabel={i => i.name}
+                        renderOption={autocompleteOptionsRender((e) => e.name)}
+                        loading={false}
+                        value={selectedEngineTypes}
+                        renderInput={autocompleteRender({label: "Engine Types", fullWidth: true, placeholder: "Select Engine Types"})}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <Autocomplete
+                        options={serviceValetZones}
+                        multiple
+                        fullWidth
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        getOptionSelected={(o, v) => o.id === v.id}
+                        onChange={handleServiceValetZoneChange}
+                        getOptionLabel={i => i.name}
+                        renderOption={autocompleteOptionsRender((e) => e.name)}
+                        loading={false}
+                        value={selectedServiceValetZones}
+                        renderInput={autocompleteRender({label: "Service Valet Zones", fullWidth: true, placeholder: "Select Service Valet Zones"})}
+                    />
+                </Grid>
                 <Grid item xs={12} sm={12} md={6}>
                     <Autocomplete
                         options={zones}

@@ -1,6 +1,7 @@
 import {IAdvisorShort} from "../users/types";
 import {IBayShort} from "../bays/types";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
+import {IEngineType} from "../vehicleDetails/types";
 
 export interface IPodVehicleMake {
     id: number;
@@ -36,7 +37,9 @@ export interface IPod {
     vehicleModels?: IPodVehicleModel[];
     jobType?: EJobType;
     mobileZones?: TPodZone[];
+    serviceValetZones?: TPodZone[];
     appointmentType?: EAppointmentType;
+    engineTypes?: IEngineType[];
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -56,6 +59,8 @@ export interface IPodForm {
     jobType?: EJobType;
     appointmentType?: EAppointmentType;
     mobileZones?: number[];
+    serviceValetZones?: number[];
+    engineTypes?:number[];
 }
 
 export enum EJobType {
