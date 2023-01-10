@@ -68,7 +68,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
     }, [payload]);
 
     useEffect(() => {
-        if (props.open && !shortSC.length) dispatch(loadShortSC());
+        if (props.open && !shortSC.length) dispatch(loadShortSC(true));
     }, [props.open, shortSC]);
 
     useEffect(() => {
