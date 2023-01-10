@@ -3,10 +3,10 @@ import {Button, Menu, MenuItem} from "@material-ui/core";
 import {useCurrentUser} from "../../../../utils/hooks";
 import {ArrowDropDown} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
-import {IServiceCenterExtended} from "../../../../store/reducers/serviceCenters/types";
+import {IServiceCenter} from "../../../../store/reducers/serviceCenters/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {loadDealershipSCs} from "../../../../store/reducers/serviceCenters/actions";
+import {loadShortSC} from "../../../../store/reducers/serviceCenters/actions";
 import {useHistory} from "react-router-dom";
 import {Routes} from "../../../../config/routes";
 import {encodeSCID} from "../../../../utils/utils";
@@ -28,9 +28,9 @@ const useStyles = makeStyles(() => ({
 
 export const ServiceCenterSwitcher = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {dealershipSCs, dealershipLoading} = useSelector((state: RootState) => state.serviceCenters);
+    const {shortSC, shortLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const [selectedServiceCenter, setSelectedServiceCenter] = useState<IServiceCenterExtended|null>(null);
+    const [selectedServiceCenter, setSelectedServiceCenter] = useState<IServiceCenter|null>(null);
 
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
@@ -39,17 +39,17 @@ export const ServiceCenterSwitcher = () => {
 
     useEffect(() => {
         if (scProfile) {
-            dispatch(loadDealershipSCs(scProfile.dealershipId, {pageSize: 0, pageIndex: 0}));
+            dispatch(loadShortSC(scProfile.dealershipId));
             dispatch(getCurrentUser());
         }
     }, [scProfile])
 
     useEffect(() => {
-        if (scProfile && dealershipSCs.length) {
-            const sc = dealershipSCs.find(item => item.id === scProfile.id);
+        if (scProfile && shortSC.length) {
+            const sc = shortSC.find(item => item.id === scProfile.id);
             sc && setSelectedServiceCenter(sc);
         }
-    }, [scProfile, dealershipSCs])
+    }, [scProfile, shortSC])
 
     const handleMenuOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(e.currentTarget);
@@ -59,17 +59,17 @@ export const ServiceCenterSwitcher = () => {
         setAnchorEl(null);
     }
 
-    const handleChooseServiceCenter = (sc: IServiceCenterExtended) => () => {
+    const handleChooseServiceCenter = (sc: IServiceCenter) => () => {
         handleMenuClose();
         setSelectedServiceCenter(sc);
         if (scProfile && sc.id !== scProfile.id) {
             history.push(`${Routes.EndUser.Welcome}/${encodeSCID(sc.id)}?frame=1`)
         }
     }
-    // todo roles allowed to see this selector
-    return currentUser && dealershipSCs.length
+
+    return currentUser && shortSC.length
         ? <div className={classes.selectWrapper}>
-            { dealershipLoading
+            { shortLoading
                 ? <Loading/>
                 : <React.Fragment>
                     <Button
@@ -82,7 +82,7 @@ export const ServiceCenterSwitcher = () => {
                         anchorEl={anchorEl}
                         onClose={handleMenuClose}
                         open={Boolean(anchorEl)}>
-                        {dealershipSCs.map(sc => {
+                        {shortSC.map(sc => {
                             return <MenuItem key={sc.id} onClick={handleChooseServiceCenter(sc)}>{sc.name}</MenuItem>
                         })}
                     </Menu>
