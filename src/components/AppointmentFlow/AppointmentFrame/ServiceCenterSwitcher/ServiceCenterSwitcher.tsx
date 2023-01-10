@@ -39,7 +39,7 @@ export const ServiceCenterSwitcher = () => {
 
     useEffect(() => {
         if (scProfile) {
-            dispatch(loadShortSC(scProfile.dealershipId));
+            dispatch(loadShortSC(false, scProfile.dealershipId));
             dispatch(getCurrentUser());
         }
     }, [scProfile])
