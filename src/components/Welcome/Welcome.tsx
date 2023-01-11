@@ -157,14 +157,14 @@ export const Welcome = () => {
 
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
                 <FrameWelcomeLayout>
-                    <ServiceCenterSwitcher/>
+                    {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
                     {getComponent()}
                 </FrameWelcomeLayout>
             </MuiThemeProvider> :
             <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
                 {/*<LanguageSwitcher/>*/}
-                <ServiceCenterSwitcher/>
+                {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                 {getComponent()}
             </WelcomeLayout>
     );
