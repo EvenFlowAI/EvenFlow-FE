@@ -42,7 +42,7 @@ import {
     setWelcomeScreenView,
     switchLanguage,
     setAncillaryPriceLoading,
-    setAncillaryPriceByZip, setFilteredZipCodes, setSelectedRecalls, setRecallsAreShown,
+    setAncillaryPriceByZip, setFilteredZipCodes, setSelectedRecalls, setRecallsAreShown, setHoursOfOperations,
 } from "./actions";
 import {
     ICustomer,
@@ -67,6 +67,7 @@ import {
 import {TScreen} from "../../../components/Layout/types";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {IHOODataForm} from "../serviceCenters/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -114,6 +115,7 @@ type TState = {
     filteredZipCodes: string[];
     selectedRecalls: IRecallByVin[];
     recallsAreShown: boolean;
+    hoursOfOperations: IHOODataForm[];
 }
 const initialState: TState = {
     service: null,
@@ -164,6 +166,7 @@ const initialState: TState = {
     filteredZipCodes: [],
     selectedRecalls: [],
     recallsAreShown: false,
+    hoursOfOperations: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -331,5 +334,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setRecallsAreShown, (state, {payload}) => {
         return {...state, recallsAreShown: payload}
+    })
+    .addCase(setHoursOfOperations, (state, {payload}) => {
+        return {...state, hoursOfOperations: payload}
     })
 )

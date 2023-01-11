@@ -27,6 +27,7 @@ import {TScreen} from "../../../components/Layout/types";
 import {selectAppointment, selectSR} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {IHOODataForm} from "../serviceCenters/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -74,6 +75,7 @@ export const setAncillaryPriceLoading = createAction<boolean>('fAppointment/SetA
 export const setFilteredZipCodes = createAction<string[]>('fAppointment/SetFilteredZipCodes');
 export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/SetSelectedRecalls');
 export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
+export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/SetHorsOfOperations');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -215,4 +217,16 @@ export const loadFilteredZip = (data: {serviceCenterId: number; search: string})
             console.log('get zip codes by filter error', err)
         })
         .finally(() => dispatch(setAncillaryPriceLoading(false)))
+}
+
+export const loadHoursOfOperations = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id: serviceCenterId}})
+        .then(result => {
+            if (result?.data) {
+               dispatch(setHoursOfOperations(result.data));
+            }
+        })
+        .catch(err => {
+            console.log('get hours of operations error', err)
+        })
 }
