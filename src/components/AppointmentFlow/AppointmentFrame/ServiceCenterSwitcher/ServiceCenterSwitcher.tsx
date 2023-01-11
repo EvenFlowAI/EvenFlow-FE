@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Button, Menu, MenuItem} from "@material-ui/core";
-import {useCurrentUser} from "../../../../utils/hooks";
 import {ArrowDropDown} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {IServiceCenter} from "../../../../store/reducers/serviceCenters/types";
@@ -10,7 +9,6 @@ import {loadShortSC} from "../../../../store/reducers/serviceCenters/actions";
 import {useHistory} from "react-router-dom";
 import {Routes} from "../../../../config/routes";
 import {encodeSCID} from "../../../../utils/utils";
-import {getCurrentUser} from "../../../../store/reducers/users/actions";
 import {Loading} from "../../../UI/Loading";
 
 const useStyles = makeStyles(() => ({
@@ -32,7 +30,6 @@ export const ServiceCenterSwitcher = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [selectedServiceCenter, setSelectedServiceCenter] = useState<IServiceCenter|null>(null);
 
-    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const history = useHistory();
     const classes = useStyles();
@@ -40,7 +37,6 @@ export const ServiceCenterSwitcher = () => {
     useEffect(() => {
         if (scProfile) {
             dispatch(loadShortSC(false, scProfile.dealershipId));
-            dispatch(getCurrentUser());
         }
     }, [scProfile])
 
@@ -67,7 +63,7 @@ export const ServiceCenterSwitcher = () => {
         }
     }
 
-    return currentUser && shortSC.length
+    return shortSC.length
         ? <div className={classes.selectWrapper}>
             { shortLoading
                 ? <Loading/>
