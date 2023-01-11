@@ -202,6 +202,7 @@ export const parentOrigins = {
     larnedford: "morrissmithfordoflarned",
     performancekingshonda: "performancekingshonda",
     performancehondastore: "performancehondastore",
+    performancelexus: "performancelexus",
 }
 
 export const getTracker = (origin: string): string => {
@@ -218,6 +219,7 @@ export const getTracker = (origin: string): string => {
         if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
         if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
         if (origin.includes(parentOrigins.performancehondastore)) return "UA-210743216-16";
+        if (origin.includes(parentOrigins.performancelexus)) return "UA-210743216-17";
         return "UA-210743216-5";
     } else {
         return "UA-210743216-5";
