@@ -28,6 +28,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import {EDemandCategory} from "../pricingSettings/types";
+import {getSlotsGap} from "../appointmentFrameReducer/actions";
 
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
 export const loadSCProfile = (id: number): AppThunk => async dispatch => {
@@ -68,11 +69,12 @@ export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
 export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => async dispatch => {
     try {
-        const {data: {items, searchedDateRange}} = await Api.call<IAppointmentResponse>(
+        const {data: {items, searchedDateRange, slotGapMinutes}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
         const res = dispatch(getAppointmentSlots(items));
+        if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
         if (loadCB) {
             loadCB();
         }

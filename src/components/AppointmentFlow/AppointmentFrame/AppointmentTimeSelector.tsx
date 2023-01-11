@@ -11,7 +11,6 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
 import {loadHorsOfOperations, loadRange} from "../../../store/reducers/slotScoring/actions";
-import {loadSlotsGap} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
@@ -72,7 +71,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             if (scProfile) {
                 dispatch(loadHorsOfOperations(scProfile.id))
                 dispatch(loadRange(scProfile.id));
-                dispatch(loadSlotsGap(scProfile.id))
+                // dispatch(loadSlotsGap(scProfile.id))
             }
         }, [scProfile])
 

@@ -23,8 +23,8 @@ type TProps = {
     car: ILoadedVehicle;
     selected?: boolean;
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
-    onAddNew: TCallback;
     clearData: () => void;
+    onNext: TCallback;
 }
 const Wrapper = styled('div')<Theme, {active?: boolean}>(({theme}) => ({
     display: "flex",
@@ -78,10 +78,10 @@ type TCarActionProps = {
     car: ILoadedVehicle;
     selected?: boolean;
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
-    onAddNew: TCallback;
     clearData: () => void;
+    onNext: TCallback;
 }
-const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, onAddNew, clearData}) => {
+const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, clearData, onNext}) => {
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
@@ -105,9 +105,10 @@ const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, onAddNew, 
     const getLabel = (): string => {
         return hasAppointments ? t("Manage Appointment") : t("Schedule Appointment");
     }
-    const handleSelect = () => {
-        clearData()
-        dispatch(setVehicle(car));
+    const handleSelect = async () => {
+        await clearData()
+        await dispatch(setVehicle(car));
+        if (!hasAppointments) onNext();
     }
     return <ActionButtons>
         <ButtonGroup variant="contained" color="primary" ref={anchorRef}>
@@ -154,10 +155,11 @@ const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, onAddNew, 
 };
 
 export const CarCard: React.FC<TProps> = ({
+    onNext,
     car,
     selected,
     onAddNewAppointment,
-    onAddNew, clearData,
+    clearData,
 }) => {
     const dispatch = useDispatch();
     const onClick = () => {
@@ -174,7 +176,13 @@ export const CarCard: React.FC<TProps> = ({
                 <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
                 <li>VIN: <span>{car.vin}</span></li>
             </CarInfo>
-            <Action onAddNewAppointment={onAddNewAppointment} selected={selected} car={car} onAddNew={onAddNew} clearData={clearData}/>
+            <Action
+                onAddNewAppointment={onAddNewAppointment}
+                selected={selected}
+                car={car}
+                clearData={clearData}
+                onNext={onNext}
+            />
         </Wrapper>
     );
 };

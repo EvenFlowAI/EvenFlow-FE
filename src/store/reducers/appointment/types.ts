@@ -134,6 +134,7 @@ export interface ISearchedDateRange {
 export interface IAppointmentResponse {
     items: IAppointmentSlot[];
     searchedDateRange: ISearchedDateRange;
+    slotGapMinutes: number;
 }
 export enum EAppointmentTimingType {
     SpecialOffers, PreferredDate, FirstAvailable
