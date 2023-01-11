@@ -10,6 +10,8 @@ import {useHistory} from "react-router-dom";
 import {Routes} from "../../../../config/routes";
 import {encodeSCID} from "../../../../utils/utils";
 import {Loading} from "../../../UI/Loading";
+import {clearAppointmentData, setVehicle} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -57,6 +59,11 @@ export const ServiceCenterSwitcher = () => {
 
     const handleChooseServiceCenter = (sc: IServiceCenter) => () => {
         handleMenuClose();
+        if (selectedServiceCenter?.id !== sc.id) {
+            dispatch(clearAppointmentData());
+            dispatch(setVehicle(null));
+            dispatch(setCustomerLoadedData(null));
+        }
         setSelectedServiceCenter(sc);
         if (scProfile && sc.id !== scProfile.id) {
             history.push(`${Routes.EndUser.Welcome}/${encodeSCID(sc.id)}?frame=1`)
