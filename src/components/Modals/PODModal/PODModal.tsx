@@ -3,7 +3,7 @@ import {DialogProps} from "../types";
 import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
-import {Button, Grid} from "@material-ui/core";
+import {Button, FormControlLabel, Grid, Switch, withStyles} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -37,6 +37,7 @@ type TForm = {
     technicians: IAdvisorShort[];
     bays: IBayShort[];
     serviceRequests: IAssignedServiceRequestShort[];
+    isVisitCenter: boolean;
 }
 
 const initialForm: TForm = {
@@ -46,12 +47,22 @@ const initialForm: TForm = {
     technicians: [],
     bays: [],
     serviceRequests: [],
+    isVisitCenter: true,
 }
 
 type TOption = {
     value: number;
     name: string;
 }
+
+const Label = withStyles({
+    label: {
+        fontWeight: "bold",
+        color: '#7898FF',
+        textTransform: 'uppercase',
+        fontSize: 14,
+    }
+})(FormControlLabel);
 
 export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
@@ -211,6 +222,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     mobileZones: mobileZones.map(zone => zone.id),
                     serviceValetZones: selectedServiceValetZones.map(zone => zone.id),
                     engineTypes: selectedEngineTypes.map(type => type.id),
+                    isVisitCenter: true,
                 };
                 if (jobType) data.jobType = jobType.value;
                 if (appointmentType) data.appointmentType = appointmentType.value;
@@ -259,6 +271,10 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const onAppointmentTypeChange = useCallback((e: ChangeEvent<{}>, value: TOption|null) => {
         setAppointmentType(value)
     }, [])
+
+    const onIsVisitCenterChange = () => {
+        setForm(prev => ({...prev, isVisitCenter: !form.isVisitCenter}))
+    }
 
     return <BaseModal {...props} maxWidth="md">
         <DialogTitle onClose={props.onClose}>
@@ -494,6 +510,17 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                                 color="primary">
                             Go To Employees Schedule
                         </Button>
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
+                        <Label
+                            checked={form.isVisitCenter}
+                            onChange={() => onIsVisitCenterChange()}
+                            label={"For Visit Center Only"}
+                            labelPlacement="start"
+                            control={<Switch color="primary" />}
+                        />
                     </div>
                 </Grid>
             </Grid>

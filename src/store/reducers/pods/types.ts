@@ -61,6 +61,7 @@ export interface IPodForm {
     mobileZones?: number[];
     serviceValetZones?: number[];
     engineTypes?:number[];
+    isVisitCenter: boolean;
 }
 
 export enum EJobType {
