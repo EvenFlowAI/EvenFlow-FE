@@ -40,6 +40,7 @@ export interface IPod {
     serviceValetZones?: TPodZone[];
     appointmentType?: EAppointmentType;
     engineTypes?: IEngineType[];
+    isVisitCenter?: boolean;
 }
 export interface IPodFilters {
     searchTerm: string;
