@@ -11,7 +11,7 @@ import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {checkSelectedCar, getOfferString} from "./utils";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";

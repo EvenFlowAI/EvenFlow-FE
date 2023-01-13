@@ -47,7 +47,7 @@ import {
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
@@ -160,8 +160,6 @@ export const AppointmentFrameLayout = () => {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
-                debug: false,
-                titleCase: false,
                 gaOptions: options,
             });
             dispatch(setTrackerCreated(true));

@@ -13,7 +13,7 @@ import {
     saveCustomerCache, setCustomerEnteredEmail,
     setCustomerLoadedData,
 } from "../../store/reducers/appointment/actions";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {TextField} from "../UI/EndUserInputs";
 import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";

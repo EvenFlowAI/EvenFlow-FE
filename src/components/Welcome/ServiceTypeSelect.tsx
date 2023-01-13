@@ -11,7 +11,7 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {Loading} from "../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
