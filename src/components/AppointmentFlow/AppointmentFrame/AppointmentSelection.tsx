@@ -203,6 +203,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                             make: vehicle.make,
                             model: vehicle.model,
                             mileage: vehicle.mileage,
+                            engineTypeId: vehicle.engineTypeId,
                         }
                     }
                     if (hashKey) dd.appointmentHashKey = hashKey;
