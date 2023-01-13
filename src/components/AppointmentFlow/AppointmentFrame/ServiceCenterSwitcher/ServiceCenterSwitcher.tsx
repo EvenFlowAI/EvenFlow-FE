@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Button, Menu, MenuItem} from "@material-ui/core";
-import {useCurrentUser} from "../../../../utils/hooks";
 import {ArrowDropDown} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {IServiceCenter} from "../../../../store/reducers/serviceCenters/types";
@@ -10,8 +9,9 @@ import {loadShortSC} from "../../../../store/reducers/serviceCenters/actions";
 import {useHistory} from "react-router-dom";
 import {Routes} from "../../../../config/routes";
 import {encodeSCID} from "../../../../utils/utils";
-import {getCurrentUser} from "../../../../store/reducers/users/actions";
 import {Loading} from "../../../UI/Loading";
+import {clearAppointmentData, setVehicle} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -32,15 +32,13 @@ export const ServiceCenterSwitcher = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [selectedServiceCenter, setSelectedServiceCenter] = useState<IServiceCenter|null>(null);
 
-    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const history = useHistory();
     const classes = useStyles();
 
     useEffect(() => {
         if (scProfile) {
-            dispatch(loadShortSC(scProfile.dealershipId));
-            dispatch(getCurrentUser());
+            dispatch(loadShortSC(false, scProfile.dealershipId));
         }
     }, [scProfile])
 
@@ -61,13 +59,18 @@ export const ServiceCenterSwitcher = () => {
 
     const handleChooseServiceCenter = (sc: IServiceCenter) => () => {
         handleMenuClose();
+        if (selectedServiceCenter?.id !== sc.id) {
+            dispatch(clearAppointmentData());
+            dispatch(setVehicle(null));
+            dispatch(setCustomerLoadedData(null));
+        }
         setSelectedServiceCenter(sc);
         if (scProfile && sc.id !== scProfile.id) {
             history.push(`${Routes.EndUser.Welcome}/${encodeSCID(sc.id)}?frame=1`)
         }
     }
 
-    return currentUser && shortSC.length
+    return shortSC.length
         ? <div className={classes.selectWrapper}>
             { shortLoading
                 ? <Loading/>

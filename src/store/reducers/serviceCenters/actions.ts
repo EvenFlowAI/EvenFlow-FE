@@ -102,13 +102,14 @@ const _loadShortSC = (payload: IServiceCenter[]): TServiceCenterActions => ({
     type: "ServiceCenters/GetShort", payload
 });
 export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServiceCenterActions>>
-    = (dealershipId?: number) => async dispatch => {
+    = (isAdminPanel: boolean, dealershipId?: number) => async dispatch => {
     dispatch(shortLoading(true));
     try {
         const params = {
             pageIndex: 0,
             pageSize: 100,
             dealershipId: dealershipId ?? null,
+            isAdminPanel
         }
         const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params});
         dispatch(_loadShortSC(result));

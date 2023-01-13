@@ -202,6 +202,10 @@ export const parentOrigins = {
     larnedford: "morrissmithfordoflarned",
     performancekingshonda: "performancekingshonda",
     performancehondastore: "performancehondastore",
+    performancelexus: "performancelexus",
+    performancelexusrivercenter: "performancelexusrivercenter",
+    performancechryslerjeepcenterville: "performancechryslerjeepcenterville",
+    performancetoyotastore: "performancetoyotastore",
 }
 
 export const getTracker = (origin: string): string => {
@@ -218,6 +222,10 @@ export const getTracker = (origin: string): string => {
         if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
         if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
         if (origin.includes(parentOrigins.performancehondastore)) return "UA-210743216-16";
+        if (origin.includes(parentOrigins.performancelexusrivercenter)) return "UA-210743216-18";
+        if (origin.includes(parentOrigins.performancelexus)) return "UA-210743216-17";
+        if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "UA-210743216-19";
+        if (origin.includes(parentOrigins.performancetoyotastore)) return "UA-210743216-20";
         return "UA-210743216-5";
     } else {
         return "UA-210743216-5";
