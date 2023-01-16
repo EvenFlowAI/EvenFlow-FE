@@ -112,6 +112,10 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext})
         }
     }, [selectedVehicle, open])
 
+    useEffect(() => {
+        dispatch(setSelectedRecalls(recallsByVin));
+    }, [recallsByVin])
+
     const onAddService = (item: IRecallByVin) => {
         const data = selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
             ? selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
@@ -133,7 +137,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext})
                     ? <Loading/>
                     : <DialogContent>
                         <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
-                        <div className={classes.vinData}>{t("associated with this VIN")}: {selectedVehicle?.vin}</div>
+                        <div className={classes.vinData}>{t("associated with VIN")}: {selectedVehicle?.vin}</div>
                         {recallsByVin.map((item, index) => (
                             <React.Fragment key={item.nhtsaRecallNumber}>
                             <div>

@@ -1,4 +1,5 @@
 import React, {useEffect, useMemo} from 'react';
+//import ReactGA from 'react-ga4';
 import ReactGA from 'react-ga';
 import {StepWrapper} from "./StepWrapper";
 import {Button, styled} from "@material-ui/core";

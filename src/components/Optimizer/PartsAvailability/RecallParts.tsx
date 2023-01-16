@@ -46,7 +46,7 @@ const RecallParts = () => {
     useEffect(() => {
         if (selectedSC && allAssignedList) {
             const opsCode = allAssignedList.find(item => item.id === selectedSC.recallServiceRequestId)
-            opsCode && setSelectedOpsCode(opsCode);
+            setSelectedOpsCode(opsCode ?? null);
         }
     }, [allAssignedList, selectedSC])
 
