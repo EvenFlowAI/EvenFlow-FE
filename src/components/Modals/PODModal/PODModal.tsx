@@ -222,7 +222,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                     mobileZones: mobileZones.map(zone => zone.id),
                     serviceValetZones: selectedServiceValetZones.map(zone => zone.id),
                     engineTypes: selectedEngineTypes.map(type => type.id),
-                    isVisitCenter: true,
+                    isVisitCenter: form.isVisitCenter,
                 };
                 if (jobType) data.jobType = jobType.value;
                 if (appointmentType) data.appointmentType = appointmentType.value;

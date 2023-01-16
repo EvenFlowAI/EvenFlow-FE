@@ -8,6 +8,7 @@ import {
     selectCategoriesIds,
     selectService,
     setAdditionalServicesChosen,
+    setUserType,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
 import {CardsWrapper} from "./styled";
@@ -21,7 +22,7 @@ import ReactGA from "react-ga4";
 import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -37,7 +38,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         categoriesIds,
         selectedPackage,
         valueService,
-        serviceType
+        serviceType,
+        userType
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
@@ -66,6 +68,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
             })
             .finally(() => {setLoading(false)});
     }, [id]);
+
+    useEffect(() => {
+        if (!userType) dispatch(setUserType(EUserType.New))
+    }, [userType])
 
     const handleSelectCard = (card: IServiceCategory) => () => {
         dispatch(selectService(card));
