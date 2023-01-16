@@ -16,7 +16,8 @@ import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReduce
 import moment from "moment";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
 import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
-import ReactGA from "react-ga4";
+import ReactGA from "react-ga";
+//import ReactGA from "react-ga4";
 import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds} from "./utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";

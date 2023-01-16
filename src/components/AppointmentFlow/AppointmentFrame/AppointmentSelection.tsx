@@ -14,7 +14,8 @@ import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/r
 import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
-import ReactGA from "react-ga4";
+//import ReactGA from "react-ga4";
+import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TArgCallback} from "../../../types/types";
