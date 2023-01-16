@@ -8,6 +8,7 @@ import {TGroupedAppointment} from "../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
+//import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
