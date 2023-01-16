@@ -13,7 +13,7 @@ import {
     selectCategoriesIds,
     setAdditionalServicesChosen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {getOfferString} from "./utils";
 
 type TOfferProductPageProps = {

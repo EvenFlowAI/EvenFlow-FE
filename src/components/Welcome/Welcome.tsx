@@ -29,7 +29,7 @@ import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {API} from "../../api/api";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 

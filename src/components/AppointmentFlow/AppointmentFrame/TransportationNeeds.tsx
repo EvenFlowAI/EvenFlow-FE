@@ -15,7 +15,7 @@ import {setTransportation} from "../../../store/reducers/appointmentFrameReducer
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../store/reducers/transportationNeeds/types";
 
