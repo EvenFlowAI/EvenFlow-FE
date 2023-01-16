@@ -47,7 +47,8 @@ import {
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
-import ReactGA from "react-ga4";
+//import ReactGA from "react-ga4";
+import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
