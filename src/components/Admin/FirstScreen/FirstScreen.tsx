@@ -10,17 +10,18 @@ import {deleteServiceTypeById, loadServiceTypesByQuery} from "../../../store/red
 import {Table} from "../../UI/Table";
 import {bookingFlowRoot} from "../../Optimizer/utils";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import AddFirstScreenOption from "../../Modals/AddFirstScreenOption/AddFirstScreenOption";
 
-const optionNames = {
+export const serviceTypeNames = {
     0: 'Visit Center',
     1: 'Mobile Service',
     2: 'Pick Up Drop Off',
 }
 
 const RowData: TableRowDataType<IServiceType>[] = [
-    {val: (el: IServiceType) => el.name, header: "Service Name",  width: 300},
+    {val: (el: IServiceType) => el.name, header: "First Screen Option",  width: 300},
     {val: (el: IServiceType) => el.orderIndex?.toString() ?? '', header: "Order Index", align: 'center', width: 150},
-    {val: (el: IServiceType) => optionNames[el.type] ?? '', header: "Service Option"},
+    {val: (el: IServiceType) => serviceTypeNames[el.type] ?? '', header: "Booking Flow Config"},
 ]
 
 const FirstScreen = () => {
@@ -115,6 +116,7 @@ const FirstScreen = () => {
                 <MenuItem onClick={openEdit}>Edit</MenuItem>
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
+            <AddFirstScreenOption open={isOpen} editingItem={currentItem} onClose={onClose}/>
         </React.Fragment>
     );
 };
