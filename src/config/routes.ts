@@ -56,6 +56,7 @@ enum BookingFlowConfigRoutes {
     TransportationOptions = "/admin/booking-flow-config/transportation-options",
     ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
     VehicleDetails = "/admin/booking-flow-config/vehicle-details",
+    FirstScreen = "/admin/booking-flow-config/first-screen",
 }
 
 enum PricingRoutes {
