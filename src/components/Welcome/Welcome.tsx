@@ -8,21 +8,21 @@ import {RootState} from "../../store/rootReducer";
 import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
 import {
-    clearStorage,
-    saveAppointmentReducer,
+    clearStorage, getBlankCustomer, getBlankVehicle,
+    saveAppointmentReducer, saveCustomerCache, setCustomerEnteredEmail,
     setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
-import {useException, useLayout} from "../../utils/hooks";
+import {useException, useLayout, useModal} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData,
     setCurrentFrameScreen,
-    setSideBarSteps,
-    setValueServiceAvailability, setWelcomeScreenView
+    setSideBarSteps, setUserType,
+    setValueServiceAvailability, setVehicle, setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
@@ -33,6 +33,7 @@ import {API} from "../../api/api";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
+import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
@@ -41,6 +42,7 @@ export const Welcome = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const { t } = useTranslation();
+    const {isOpen, onOpen, onClose} = useModal();
 
     const {id} = useParams();
     const history = useHistory();
@@ -104,11 +106,10 @@ export const Welcome = () => {
             }
         } catch (err) {
             dispatch(setSessionId(""));
+            // todo different logic
             if (err.message) {
-                showError(err)
-            } else {
-                showError(t('could not find your vehicle'));
-            }
+                onOpen()
+            } else showError(err)
         } finally {
             setLoading(false);
         }
@@ -137,6 +138,33 @@ export const Welcome = () => {
         redirect();
     }
 
+    const createBlankCar = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+    }
+
+    const handleReactGA = (userType: string) => {
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Enters Page',
+            label: `As ${userType} Customer`,
+        });
+    }
+
+    const handleNew = () => {
+        dispatch(setUserType(EUserType.New));
+        handleReactGA('A New');
+        dispatch(setCustomerEnteredEmail(''));
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            dispatch(setWelcomeScreenView('serviceSelect'))
+        } else {
+            createBlankCar()
+            onComplete(serviceType, EUserType.New);
+        }
+    }
+
     const getComponent = () => {
         switch (welcomeScreenView) {
             case "search":
@@ -147,9 +175,12 @@ export const Welcome = () => {
                 return <CustomerSelect
                     loading={loading}
                     onComplete={onComplete}
+                    handleNew={handleNew}
                 />;
         }
     }
+
+
 
     const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : t("welcome");
     const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
@@ -157,6 +188,7 @@ export const Welcome = () => {
     // todo uncomment language switcher
 
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
+            <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
                 <FrameWelcomeLayout>
                     {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
@@ -167,6 +199,7 @@ export const Welcome = () => {
                 {/*<LanguageSwitcher/>*/}
                 {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                 {getComponent()}
+                <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
             </WelcomeLayout>
     );
 };
