@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {useDialogStyles} from "../DetailedFees/DetailedFees";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
@@ -15,7 +15,9 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
 
-type TExistingCustomerErrorProps = DialogProps
+type TExistingCustomerErrorProps = DialogProps & {
+    onNext: () => void;
+}
 
 const useStyles = makeStyles(() => ({
     info: {
@@ -39,7 +41,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onClose}) => {
+const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onClose, onNext}) => {
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -48,20 +50,14 @@ const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onC
 
     const onNew = () => {
         if (config.find(item => item.available && item.serviceType !== EServiceTypeBookingFlow.VisitCenter)) {
+            onClose()
             dispatch(setWelcomeScreenView("serviceSelect"))
         } else {
             dispatch(setServiceType(EServiceType.VisitCenter));
             dispatch(setCurrentFrameScreen("serviceNeeds"));
+            onClose()
+            onNext();
         }
-    }
-
-    const onBack = () => {
-        onClose()
-    }
-
-    const onSubmit = () => {
-        onNew()
-        onClose()
     }
 
     return (
@@ -77,8 +73,8 @@ const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onC
             </DialogContent>
             <div className={classes.actionsWrapper}>
                 <Actions
-                    onBack={onBack}
-                    onNext={onSubmit}
+                    onBack={onClose}
+                    onNext={onNew}
                     nextLabel={t("Continue as a new customer")}
                     prevLabel={t("Try another number")}
                 />

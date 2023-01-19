@@ -8,8 +8,8 @@ import {RootState} from "../../store/rootReducer";
 import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
 import {
-    clearStorage,
-    saveAppointmentReducer,
+    clearStorage, getBlankCustomer, getBlankVehicle,
+    saveAppointmentReducer, saveCustomerCache, setCustomerEnteredEmail,
     setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
@@ -21,8 +21,8 @@ import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData,
     setCurrentFrameScreen,
-    setSideBarSteps,
-    setValueServiceAvailability, setWelcomeScreenView
+    setSideBarSteps, setUserType,
+    setValueServiceAvailability, setVehicle, setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
@@ -138,6 +138,33 @@ export const Welcome = () => {
         redirect();
     }
 
+    const createBlankCar = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+    }
+
+    const handleReactGA = (userType: string) => {
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Enters Page',
+            label: `As ${userType} Customer`,
+        });
+    }
+
+    const handleNew = () => {
+        dispatch(setUserType(EUserType.New));
+        handleReactGA('A New');
+        dispatch(setCustomerEnteredEmail(''));
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            dispatch(setWelcomeScreenView('serviceSelect'))
+        } else {
+            createBlankCar()
+            onComplete(serviceType, EUserType.New);
+        }
+    }
+
     const getComponent = () => {
         switch (welcomeScreenView) {
             case "search":
@@ -148,9 +175,12 @@ export const Welcome = () => {
                 return <CustomerSelect
                     loading={loading}
                     onComplete={onComplete}
+                    handleNew={handleNew}
                 />;
         }
     }
+
+
 
     const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : t("welcome");
     const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
@@ -158,7 +188,7 @@ export const Welcome = () => {
     // todo uncomment language switcher
 
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
-            <ExistingCustomerError open={isOpen} onClose={onClose}/>
+            <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
                 <FrameWelcomeLayout>
                     {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
@@ -169,7 +199,7 @@ export const Welcome = () => {
                 {/*<LanguageSwitcher/>*/}
                 {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                 {getComponent()}
-                <ExistingCustomerError open={isOpen} onClose={onClose}/>
+                <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
             </WelcomeLayout>
     );
 };
