@@ -4,8 +4,7 @@ import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
+import {useDispatch} from "react-redux";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {
