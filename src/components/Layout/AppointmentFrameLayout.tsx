@@ -229,7 +229,6 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (!customerLoadedData) {
             const data = getCustomerCache();
-            debugger
             if (data) {
                 dispatch(setCustomerLoadedData(data));
                 dispatch(setVehicle(getBlankVehicle()));
