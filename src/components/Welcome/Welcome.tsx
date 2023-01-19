@@ -14,7 +14,7 @@ import {
     setSessionId
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
-import {useException, useLayout} from "../../utils/hooks";
+import {useException, useLayout, useModal} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
@@ -33,6 +33,7 @@ import {API} from "../../api/api";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
+import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
@@ -41,6 +42,7 @@ export const Welcome = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const { t } = useTranslation();
+    const {isOpen, onOpen, onClose} = useModal();
 
     const {id} = useParams();
     const history = useHistory();
@@ -104,11 +106,10 @@ export const Welcome = () => {
             }
         } catch (err) {
             dispatch(setSessionId(""));
+            // todo different logic
             if (err.message) {
-                showError(err)
-            } else {
-                showError(t('could not find your vehicle'));
-            }
+                onOpen()
+            } else showError(err)
         } finally {
             setLoading(false);
         }
@@ -157,6 +158,7 @@ export const Welcome = () => {
     // todo uncomment language switcher
 
     return (isFrame ? <MuiThemeProvider theme={frameTheme}>
+            <ExistingCustomerError open={isOpen} onClose={onClose}/>
                 <FrameWelcomeLayout>
                     {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
@@ -167,6 +169,7 @@ export const Welcome = () => {
                 {/*<LanguageSwitcher/>*/}
                 {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                 {getComponent()}
+                <ExistingCustomerError open={isOpen} onClose={onClose}/>
             </WelcomeLayout>
     );
 };
