@@ -106,8 +106,7 @@ export const Welcome = () => {
             }
         } catch (err) {
             dispatch(setSessionId(""));
-            // todo different logic
-            if (err.message) {
+            if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
         } finally {
