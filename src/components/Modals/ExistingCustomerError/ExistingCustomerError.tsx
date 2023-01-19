@@ -4,16 +4,13 @@ import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
+import {useDispatch} from "react-redux";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     setCurrentFrameScreen,
     setServiceType,
-    setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
 
 type TExistingCustomerErrorProps = DialogProps & {
     onNext: () => void;
@@ -42,22 +39,16 @@ const useStyles = makeStyles(() => ({
 }))
 
 const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onClose, onNext}) => {
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
 
     const onNew = () => {
-        if (config.find(item => item.available && item.serviceType !== EServiceTypeBookingFlow.VisitCenter)) {
-            onClose()
-            dispatch(setWelcomeScreenView("serviceSelect"))
-        } else {
-            dispatch(setServiceType(EServiceType.VisitCenter));
-            dispatch(setCurrentFrameScreen("serviceNeeds"));
-            onClose()
-            onNext();
-        }
+        dispatch(setServiceType(EServiceType.VisitCenter));
+        dispatch(setCurrentFrameScreen("serviceNeeds"));
+        onClose()
+        onNext();
     }
 
     return (
