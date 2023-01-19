@@ -1,22 +1,22 @@
-import {IServiceType} from "./types";
+import {IFirstScreenOption} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {getServiceTypesByQuery, setServiceTypesLoading} from "./actions";
+import {getFirstScreenOptionsByQuery, setFirstScreenOptionsLoading} from "./actions";
 
 type TState = {
-    serviceTypes: IServiceType[];
+    firstScreenOptions: IFirstScreenOption[];
     isLoading: boolean;
 }
 
 const initialState: TState = {
-    serviceTypes: [],
+    firstScreenOptions: [],
     isLoading: false,
 }
 
-export const serviceTypesReducer = createReducer(initialState, builder => builder
-    .addCase(setServiceTypesLoading, (state, { payload }) => {
+export const firstScreenOptionsReducer = createReducer(initialState, builder => builder
+    .addCase(setFirstScreenOptionsLoading, (state, { payload }) => {
         return {...state, isLoading: payload};
     })
-    .addCase(getServiceTypesByQuery, (state, {payload}) => {
-        return {...state, serviceTypes: payload};
+    .addCase(getFirstScreenOptionsByQuery, (state, {payload}) => {
+        return {...state, firstScreenOptions: payload};
     })
 )

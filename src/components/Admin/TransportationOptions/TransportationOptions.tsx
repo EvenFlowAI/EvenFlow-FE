@@ -43,7 +43,7 @@ const TableWrapper = styled("div")(({theme}) => ({
 }))
 
 
-const getOptionString = (option: string) => {
+export const getOptionString = (option: string) => {
     const string = ETransportationType[+option];
     const array = [];
     if (string) {

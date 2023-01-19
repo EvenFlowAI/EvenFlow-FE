@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {TableRowDataType} from "../../UI/types";
-import {IServiceType} from "../../../store/reducers/serviceTypes/types";
+import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {deleteServiceTypeById, loadServiceTypesByQuery} from "../../../store/reducers/serviceTypes/actions";
+import {deleteFirstScreenOptionById, loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 import {Table} from "../../UI/Table";
 import {bookingFlowRoot} from "../../Optimizer/utils";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
@@ -18,16 +18,16 @@ export const serviceTypeNames = {
     2: 'Pick Up Drop Off',
 }
 
-const RowData: TableRowDataType<IServiceType>[] = [
-    {val: (el: IServiceType) => el.name, header: "First Screen Option",  width: 300},
-    {val: (el: IServiceType) => el.orderIndex?.toString() ?? '', header: "Order Index", align: 'center', width: 150},
-    {val: (el: IServiceType) => serviceTypeNames[el.type] ?? '', header: "Booking Flow Config"},
+const RowData: TableRowDataType<IFirstScreenOption>[] = [
+    {val: (el: IFirstScreenOption) => el.name, header: "First Screen Option",  width: 300},
+    {val: (el: IFirstScreenOption) => el.orderIndex?.toString() ?? '', header: "Order Index", align: 'center', width: 150},
+    {val: (el: IFirstScreenOption) => serviceTypeNames[el.type] ?? '', header: "Booking Flow Config"},
 ]
 
 const FirstScreen = () => {
-    const { serviceTypes, isLoading } = useSelector((state: RootState) => state.serviceTypes);
+    const { firstScreenOptions, isLoading } = useSelector((state: RootState) => state.serviceTypes);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [currentItem, setCurrentItem] = useState<IServiceType | null>(null);
+    const [currentItem, setCurrentItem] = useState<IFirstScreenOption | null>(null);
 
     const dispatch = useDispatch();
     const showMessage = useMessage();
@@ -37,15 +37,15 @@ const FirstScreen = () => {
     const {isOpen, onOpen, onClose} = useModal();
 
     useEffect(() => {
-        selectedSC && dispatch(loadServiceTypesByQuery(selectedSC.id));
+        selectedSC && dispatch(loadFirstScreenOptionsByQuery(selectedSC.id));
     }, [selectedSC])
 
-    const openMenu = (el: IServiceType) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const openMenu = (el: IFirstScreenOption) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setCurrentItem(el);
         setAnchorEl(e.currentTarget);
     }
 
-    const tableActions = (el: IServiceType) => {
+    const tableActions = (el: IFirstScreenOption) => {
         return <IconButton onClick={openMenu(el)}>
             <MoreHoriz />
         </IconButton>;
@@ -56,7 +56,7 @@ const FirstScreen = () => {
             showError("Service Type is not chosen");
         } else {
             try {
-                if (currentItem.id && selectedSC) dispatch(deleteServiceTypeById(currentItem.id, selectedSC.id))
+                if (currentItem.id && selectedSC) dispatch(deleteFirstScreenOptionById(currentItem.id, selectedSC.id))
                 showMessage("Removed");
                 setCurrentItem(null);
             } catch (e) {
@@ -101,7 +101,7 @@ const FirstScreen = () => {
                 </Button>
             </div>
             <Table
-                data={serviceTypes}
+                data={firstScreenOptions}
                 index="name"
                 rowData={RowData}
                 actions={tableActions}

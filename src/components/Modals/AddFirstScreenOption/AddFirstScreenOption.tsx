@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
@@ -6,21 +6,29 @@ import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import FileInput from "../AddServiceCategory/FileInput";
 import {setAssignedFilter} from "../../../store/reducers/serviceRequests/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../utils/hooks";
 import {IIconState} from "../AddServiceCategory/AddServiceCategory";
 import {DialogProps} from "../types";
-import {IServiceType, TNewServiceType, TUpdateServiceTypeData} from "../../../store/reducers/serviceTypes/types";
+import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {TOption} from "../../../types/types";
 import {serviceTypeNames} from "../../Admin/FirstScreen/FirstScreen";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {updateServiceTypeIcon} from "../../../store/reducers/serviceTypes/actions";
+import {
+    createFirstScreenOption,
+    updateFirstScreenOption,
+    updateFirstScreenOptionIcon
+} from "../../../store/reducers/serviceTypes/actions";
+import {ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
+import {RootState} from "../../../store/rootReducer";
+import {loadTransportationOptions} from "../../../store/reducers/transportationNeeds/actions";
+import {getOptionString} from "../../Admin/TransportationOptions/TransportationOptions";
 
 const initialFileState = {file: null, dataUrl: undefined};
 
 type TAddFirstScreenOptionProps = DialogProps & {
-    editingItem: IServiceType | null;
+    editingItem: IFirstScreenOption | null;
 }
 
 const useStyles = makeStyles(() => ({
@@ -66,21 +74,45 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem, ...props}) => {
+    const {options} = useSelector((state: RootState) => state.transportation);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
-    const [serviceTypeName, setServiceTypeName] = useState<string>('');
+    const [firstScreenOptionName, setFirstScreenOptionName] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [description, setDescription] = useState<string>('');
+    const [note, setNote] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<TOption|null>({value: '0', name: 'Visit Center'});
+    const [defaultTransportation, setDefaultTransportation] = useState<ITransportationOptionFull|null>(null);
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
 
+    useEffect(() => {
+        if (selectedSC) dispatch(loadTransportationOptions(selectedSC.id))
+    }, [selectedSC])
+
+    useEffect(() => {
+        if (props.open && editingItem) {
+            setFirstScreenOptionName(editingItem.name);
+            setOrderIndex(editingItem.orderIndex?.toString() ?? '');
+            setDescription(editingItem.description ?? '');
+            setNote(editingItem.note ?? '');
+            if (editingItem.transportationOptionId) {
+                const transportation = options.find(item => item.id === editingItem.transportationOptionId)
+                transportation && setDefaultTransportation(transportation);
+            }
+            if (editingItem.type) {
+                const serviceTypeOption = getServiceTypeOptions().find(item => item.value === editingItem.type.toString());
+                serviceTypeOption && setSelectedServiceType(serviceTypeOption);
+            }
+        }
+    }, [props.open, editingItem, options])
+
     const onCancel = useCallback(() => {
         setFormIsChecked(false);
-        setServiceTypeName('');
+        setFirstScreenOptionName('');
         dispatch(setAssignedFilter({searchTerm: ''}));
         setFileState(initialFileState);
         setOrderIndex('');
@@ -91,15 +123,18 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
     const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDescription(e.target.value)
     }
+    const onNoteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNote(e.target.value)
+    }
 
     const onSuccessCreate = useCallback((serviceTypeId: number) => {
-        if (fileState.file && selectedSC) dispatch(updateServiceTypeIcon(serviceTypeId, selectedSC.id, fileState.file));
+        if (fileState.file && selectedSC) dispatch(updateFirstScreenOptionIcon(serviceTypeId, selectedSC.id, fileState.file));
     }, [fileState])
 
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
-        setServiceTypeName(e.target.value);
+        setFirstScreenOptionName(e.target.value);
     }, [])
 
     const onOrderIndexChange = useCallback((e: React.ChangeEvent<{}>, value: string): void => {
@@ -107,26 +142,32 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
         setOrderIndex(value);
     }, [])
 
+    const onTransportationChange = useCallback((e: React.ChangeEvent<{}>, value: ITransportationOptionFull|null): void => {
+        setFormIsChecked(false);
+        setDefaultTransportation(value)
+    }, [])
+
     const onSave = () => {
         if (!selectedServiceType) return showError('"Booking Flow Config" is required');
         if (!orderIndex) return showError('"Order Index" is required');
-        if (editingItem) {
-        //     const data: TUpdateServiceTypeData = {
-        //         name: serviceTypeName,
-        //         description,
-        //         type: selectedServiceType?.value ? EServiceType[+selectedServiceType.value] : EServiceType.VisitCenter,
-        //         orderIndex: +orderIndex,
-        //     }
-        // } else {
-        //     if (selectedSC) {
-        //         const data: TNewServiceType = {
-        //             name: serviceTypeName,
-        //             description,
-        //             type: selectedServiceType?.value ? EServiceType[+selectedServiceType.value] : EServiceType.VisitCenter,
-        //             orderIndex: +orderIndex,
-        //             serviceCenterId: selectedSC.id
-        //         }
-        //     }
+        const data: TUpdateFirstScreenOption = {
+            name: firstScreenOptionName,
+            description,
+            note,
+            type: selectedServiceType?.value ?? EServiceType.VisitCenter,
+            orderIndex: +orderIndex,
+        }
+        if (selectedSC) {
+            if (defaultTransportation) data.transportationOptionId = defaultTransportation.id;
+            if (editingItem) {
+                dispatch(updateFirstScreenOption(editingItem.id, selectedSC.id, data, onSuccessCreate, showError))
+            } else {
+                const newData: TNewFirstScreenOption = {
+                    ...data,
+                    serviceCenterId: selectedSC.id
+                }
+                dispatch(createFirstScreenOption(newData, selectedSC.id, onSuccessCreate, showError))
+            }
         }
     }
 
@@ -149,9 +190,9 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                             fullWidth
                             label='Option Name'
                             placeholder='Type Option Name'
-                            error={!serviceTypeName && formIsChecked}
+                            error={!firstScreenOptionName && formIsChecked}
                             onChange={onNameChange}
-                            value={serviceTypeName}/>
+                            value={firstScreenOptionName}/>
                     </div>
                     <Autocomplete
                         options={getServiceTypeOptions()}
@@ -175,6 +216,17 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                             error: !orderIndex && formIsChecked,
                         })}
                     />
+                    <Autocomplete
+                        options={options}
+                        getOptionSelected={(option) => option.id === defaultTransportation?.id}
+                        getOptionLabel={o => getOptionString(o.type)}
+                        value={defaultTransportation}
+                        onChange={onTransportationChange}
+                        renderInput={autocompleteRender({
+                            label: 'Default Transportation Option',
+                            placeholder: 'Select Transportation Option',
+                        })}
+                    />
                     <FileInput setState={setFileState}/>
                 </div>
                 <TextField
@@ -182,9 +234,19 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                     multiline
                     rows={4}
                     value={description}
+                    style={{marginBottom: 20}}
                     label="Option Description"
                     placeholder="Enter Description"
                     onChange={onDescriptionChange}
+                />
+                <TextField
+                    fullWidth
+                    multiline
+                    rows={1}
+                    value={note}
+                    label="Option Note for Confirmation Screen"
+                    placeholder="Enter Note"
+                    onChange={onNoteChange}
                 />
             </DialogContent>
             <DialogActions>

@@ -1,16 +1,16 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {IServiceType, TUpdateServiceTypeData} from "./types";
+import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} from "./types";
 
-export const setServiceTypesLoading = createAction<boolean>("ServiceTypes/SetLoading");
-export const getServiceTypesByQuery = createAction<IServiceType[]>("ServiceTypes/GetServiceTypesByQuery");
+export const setFirstScreenOptionsLoading = createAction<boolean>("ServiceTypes/SetLoading");
+export const getFirstScreenOptionsByQuery = createAction<IFirstScreenOption[]>("ServiceTypes/GetServiceTypesByQuery");
 
-export const deleteServiceTypeById = (id: number, serviceCenterId: number): AppThunk => dispatch => {
+export const deleteFirstScreenOptionById = (id: number, serviceCenterId: number): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceTypes.Remove, {urlParams: {id}})
         .then(result => {
             if (result) {
-                dispatch(loadServiceTypesByQuery(serviceCenterId))
+                dispatch(loadFirstScreenOptionsByQuery(serviceCenterId))
             }
         })
         .catch(err => {
@@ -18,38 +18,41 @@ export const deleteServiceTypeById = (id: number, serviceCenterId: number): AppT
         })
 }
 
-export const updateServiceType = (id: number, serviceCenterId: number, data: IServiceType): AppThunk => dispatch => {
+export const updateFirstScreenOption = (id: number, serviceCenterId: number, data: TUpdateFirstScreenOption, onSuccess: (id: number) => void, onError: (err: string) => void): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceTypes.Update, {urlParams: {id}, data})
         .then(result => {
             if (result) {
-                dispatch(loadServiceTypesByQuery(serviceCenterId))
+                dispatch(loadFirstScreenOptionsByQuery(serviceCenterId))
+                onSuccess(id);
             }
         })
         .catch(err => {
+            onError(err)
             console.log('update service type error', err)
         })
 }
 
-export const createCategory = (data: TUpdateServiceTypeData, serviceCenterId: number, callback: () => void): AppThunk => dispatch => {
+export const createFirstScreenOption = (data: TNewFirstScreenOption, serviceCenterId: number, onSuccess: (id: number) => void, onError: (err: string) => void): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceTypes.Create, {data})
         .then(result => {
             if (result) {
-                dispatch(loadServiceTypesByQuery(serviceCenterId))
-                if (result.data?.id) callback();
+                dispatch(loadFirstScreenOptionsByQuery(serviceCenterId))
+                if (result.data?.id) onSuccess(result.data.id);
             }
         })
         .catch(err => {
+            onError(err)
             console.log('create service type error', err)
         })
 }
 
-export const updateServiceTypeIcon = (id: number, serviceCenterId: number, file: File): AppThunk => dispatch => {
+export const updateFirstScreenOptionIcon = (id: number, serviceCenterId: number, file: File): AppThunk => dispatch => {
     const data = new FormData();
     data.append("file", file, file.name);
     Api.call(Api.endpoints.ServiceTypes.UpdateIcon, {urlParams: {id}, data})
         .then(result => {
             if (result) {
-                dispatch(loadServiceTypesByQuery(serviceCenterId))
+                dispatch(loadFirstScreenOptionsByQuery(serviceCenterId))
             }
         })
         .catch(err => {
@@ -57,16 +60,16 @@ export const updateServiceTypeIcon = (id: number, serviceCenterId: number, file:
         })
 }
 
-export const loadServiceTypesByQuery = (id: number): AppThunk => dispatch => {
-    dispatch(setServiceTypesLoading(true));
+export const loadFirstScreenOptionsByQuery = (id: number): AppThunk => dispatch => {
+    dispatch(setFirstScreenOptionsLoading(true));
     Api.call(Api.endpoints.ServiceTypes.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
         .then(result => {
             if (result?.data) {
-                dispatch(getServiceTypesByQuery(result.data.result))
+                dispatch(getFirstScreenOptionsByQuery(result.data.result))
             }
         })
         .catch(err => {
             console.log('get service types by query', err)
         })
-        .finally(() => dispatch(setServiceTypesLoading(false)))
+        .finally(() => dispatch(setFirstScreenOptionsLoading(false)))
 }
