@@ -15,18 +15,10 @@ import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    selectCategoriesIds,
-    selectService,
-    selectSubService,
-    setAdditionalServicesChosen,
-    setAdvisor,
-    setPackage, setSelectedRecalls,
-    setTiming,
-    setTransportation,
+    clearAppointmentData,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -244,16 +236,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
 
     const onMakeNew = () => {
         dispatch(setVehicle(null));
-        dispatch(selectAppointment(null));
-        dispatch(selectService(null));
-        dispatch(selectSubService(null));
-        dispatch(setTransportation(null));
-        dispatch(setAdvisor(null));
-        dispatch(selectCategoriesIds([]));
-        dispatch(setAdditionalServicesChosen(false));
-        dispatch(setPackage(null));
-        dispatch(setTiming(null));
-        dispatch(setSelectedRecalls([]));
+        dispatch(clearAppointmentData());
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 
