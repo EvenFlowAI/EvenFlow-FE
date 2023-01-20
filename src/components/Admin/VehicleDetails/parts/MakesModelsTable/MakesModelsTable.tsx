@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
         marginBottom: 20
     },
     title: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "bold",
         textTransform: "capitalize",
         marginRight: 10
@@ -80,8 +80,8 @@ const MakesModelsTable = () => {
 
     useEffect(() => {
         truncateNames()
-        if (selectedSC?.defaultMakeId) {
-            const defaultMake = makes.find(item => item.id === selectedSC.defaultMakeId)
+        if (selectedSC?.defaultVehicleMakeId) {
+            const defaultMake = makes.find(item => item.id === selectedSC.defaultVehicleMakeId)
             defaultMake && setSelectedMake(defaultMake);
         }
     }, [makes, selectedSC])
@@ -118,7 +118,9 @@ const MakesModelsTable = () => {
         } else {
             askConfirm({
                 isRemove: true,
-                title: `Remove make ${currentMake.name}?`,
+                title: currentMake.id === selectedSC?.defaultVehicleMakeId
+                    ? `The Make ${currentMake.name} is selected as a default. Please confirm that you want to remove make ${currentMake.name}`
+                    : `Please confirm that you want to remove make ${currentMake.name}`,
                 onConfirm: handleRemove
             });
         }
@@ -129,7 +131,7 @@ const MakesModelsTable = () => {
         onOpen();
     }
     const onMakeChange = (e: ChangeEvent<{}>, value: IMake|null) => {
-        if (selectedSC && value?.id) dispatch(updateDefaultMake(selectedSC.id, value.id, showError))
+        if (selectedSC) dispatch(updateDefaultMake(selectedSC.id, value?.id ?? null, showError))
     }
 
     return (

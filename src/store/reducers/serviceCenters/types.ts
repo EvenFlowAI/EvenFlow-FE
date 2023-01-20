@@ -18,7 +18,7 @@ export interface IServiceCenter {
     maintenancePackageDisclaimer?: string;
     isShowPriceDetails?: boolean;
     recallServiceRequestId?: number;
-    defaultMakeId?: number;
+    defaultVehicleMakeId?: number|null;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
