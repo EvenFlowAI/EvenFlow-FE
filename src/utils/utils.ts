@@ -7,9 +7,10 @@ import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
 import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../store/reducers/appointment/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {IAppointmentByQuery} from "../api/types";
+import {IAppointmentByQuery, IMake} from "../api/types";
 import moment from "moment";
 import {encode, decode} from 'url-safe-base64';
+import {ETransportationType} from "../store/reducers/transportationNeeds/types";
 
 export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
     return new Promise(resolve => {
@@ -266,4 +267,35 @@ export const checkEmail = (email: string|undefined): boolean => {
     if (!email) return false;
     const matches = String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
     return Boolean(matches);
+}
+
+export const truncateMakes = (makes: IMake[]): IMake[] => {
+    const formattedData: IMake[] = [];
+    makes.forEach(make => {
+        const formattedMake = {...make};
+
+        if (formattedMake.name.length > 30) {
+            formattedMake.name = formattedMake.name.slice(0, 26).concat('...');
+        }
+        formattedMake.models = formattedMake.models
+            .map(model => model.length > 30
+                ? model.slice(0, 26).concat('...')
+                : model)
+        formattedData.push(formattedMake);
+    })
+    return formattedData;
+}
+
+export const getTransportationOptionString = (option: string) => {
+    const string = ETransportationType[+option];
+    const array = [];
+    if (string) {
+        for (let i = 0; i < string.length; i++) {
+            if (string[i] === string[i].toUpperCase() && i > 0) {
+                array.push(' ')
+            }
+            array.push(string[i])
+        }
+    }
+    return array.join('');
 }
