@@ -64,7 +64,7 @@ const EngineTypeTable = () => {
         if (currentEngineType) {
             askConfirm({
                 isRemove: true,
-                title: `Remove Engine Type ${currentEngineType?.name}?`,
+                title: `Please confirm you want to remove Engine Type ${currentEngineType?.name}?`,
                 onConfirm: handleRemove
             });
         }
