@@ -86,6 +86,9 @@ const BookingFlowConfig = () => {
     }, [config])
 
     const onCheck = (serviceType: EServiceTypeBookingFlow, optionType: keyof TServiceTypeSettings) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        if ((optionType === 'checkRecallsExisting' || optionType === 'checkRecallsNew') && !selectedSC?.recallServiceRequestId) {
+            return showError('To enable Checking Recalls you need to select Default Recall Ops Code')
+        }
         if (!selectedSC?.isValueServiceAvailable && optionType === 'valueService') {
             return showError('No Service Offers are available for current Service Center')
         } else {

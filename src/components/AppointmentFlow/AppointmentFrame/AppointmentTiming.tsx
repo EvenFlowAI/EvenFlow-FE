@@ -17,6 +17,7 @@ import moment from "moment";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
 import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
+//import ReactGA from "react-ga4";
 import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds} from "./utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
@@ -228,7 +229,6 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                 service, subService, selectedRecalls, selectedPackage, selectedOpsCodes
             ),
             serviceCategoryIds: getCategories(),
-            countOfDays: 21,
             customerId: customerData?.id,
             warrantyExpiration: selectedVehicle?.warrantyExpiration,
             serviceType,
@@ -243,6 +243,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                 make: vehicle.make,
                 model: vehicle.model,
                 mileage: vehicle.mileage,
+                engineTypeId: vehicle.engineTypeId,
             }
         }
         if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;

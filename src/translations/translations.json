@@ -235,7 +235,7 @@
       "Unrepaired": "Unrepaired",
       "Recall": "Recall",
       "Recalls": "Recalls",
-      "associated with this VIN": "associated with this VIN",
+      "associated with VIN": "associated with VIN",
       "Recall Open Date": "Recall Open Date",
       "Recall Component": "Recall Component",
       "NHTSA Recall Number": "NHTSA Recall Number",
@@ -246,7 +246,11 @@
       "Service Declined": "Service Declined",
       "Decline": "Decline",
       "Add Service": "Add Service",
-      "There are no open recalls for your vehicle": "There are no open recalls for your vehicle"
+      "There are no open recalls for your vehicle": "There are no open recalls for your vehicle",
+      "We are sorry but we can not find any vehicle associated with that phone number.": "We are sorry but we cannot find any vehicles associated with that phone number.",
+      "Would you like to try a different number?": "Would you like to try a different number?",
+      "Try another number": "Try another number",
+      "Continue as a new customer": "Continue as a new customer"
     }
   },
   "es": {

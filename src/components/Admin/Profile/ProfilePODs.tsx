@@ -32,6 +32,8 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "Makes", val: e => e.vehicleMakes?.map(s => s.name).join(", ") || "", xsHidden: true},
     {header: "Models", val: e => e.vehicleModels?.map(s => s.name).join(", ") || "", xsHidden: true},
     {header: "Job Type", val: e => typeof e.jobType !== "undefined" && Number.isInteger(+e.jobType) ? EJobType[e.jobType] : "", xsHidden: true},
+    {header: "Engine Types", val: e => e.engineTypes?.map(type => type.name).join(", ") || "", xsHidden: true},
+    {header: "Service Valet Zones", val: e => e.serviceValetZones?.map(zone => zone.name).join(", ") || "", xsHidden: true},
     {header: "Mobile Zones", val: e => e.mobileZones?.map(zone => zone.name).join(", ") || "", xsHidden: true},
     {header: "Appointment Type", val: e => typeof e.appointmentType !== "undefined" && Number.isInteger(+e.appointmentType) ? getNameFromEnum(EAppointmentType[e.appointmentType]) : "", xsHidden: true},
 ]

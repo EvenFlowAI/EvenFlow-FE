@@ -14,6 +14,7 @@ import {API} from "../../api/api";
 import {LoadingButton} from "../UI/Button";
 import {useException} from "../../utils/hooks";
 import {TView} from "./types";
+//import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";

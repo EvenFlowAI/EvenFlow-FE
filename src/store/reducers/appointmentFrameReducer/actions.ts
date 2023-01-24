@@ -178,6 +178,8 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
 
 export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setPackage(null));
+    dispatch(setPackageIsSelected(false));
+    dispatch(setSelectedPackageOptionType(null));
     dispatch(selectService(null));
     dispatch(selectSubService(null));
     dispatch(selectAppointment(null));
@@ -188,7 +190,8 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setAdvisor(null));
     dispatch(setTransportation(null));
     dispatch(setRecallsAreShown(false));
-    dispatch(setSelectedRecalls([]));
+    dispatch(setSelectedRecalls([]))
+    dispatch(setAdditionalServicesChosen(false));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void): AppThunk => dispatch => {
