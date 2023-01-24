@@ -1,13 +1,5 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
-    Button,
-    ButtonGroup,
-    ClickAwayListener,
-    Grow,
-    MenuItem,
-    MenuList,
-    Paper,
-    Popper,
     styled,
     Theme
 } from "@material-ui/core";
@@ -15,9 +7,9 @@ import carImage from '../../../assets/img/car_icon.svg';
 import {ILoadedVehicle} from "../../../api/types";
 import {useDispatch} from "react-redux";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {MoreVert} from "@material-ui/icons";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useTranslation} from "react-i18next";
+import CarCardAction from "./CarCardAction";
 
 type TProps = {
     car: ILoadedVehicle;
@@ -60,99 +52,6 @@ const CarInfo = styled('ul')({
         fontWeight: "normal"
     }
 });
-const ActionButtons = styled("div")({
-    fontSize: 20,
-    width: "100%",
-    "&>div:first-child": {
-        width: "100%"
-    },
-    "& button:first-child": {
-        flexGrow: 1
-    }
-});
-const options: string[] = [
-    "Schedule New Appointment"
-];
-
-type TCarActionProps = {
-    car: ILoadedVehicle;
-    selected?: boolean;
-    onAddNewAppointment: TArgCallback<ILoadedVehicle>;
-    clearData: () => void;
-    onNext: TCallback;
-}
-const Action: React.FC<TCarActionProps> = ({car, onAddNewAppointment, clearData, onNext}) => {
-    const dispatch = useDispatch();
-
-    const [open, setOpen] = useState(false);
-    const anchorRef = useRef<HTMLDivElement|null>(null);
-    const [selectedIndex, setSelectedIndex] = useState<number>(1);
-    const {t} = useTranslation();
-
-    const handleMenuItemClick = (event: any, index:number) => {
-        setSelectedIndex(index);
-        setOpen(false);
-        onAddNewAppointment(car);
-    };
-    const handleClose = (event: React.MouseEvent<Document, MouseEvent>) => {
-        if (anchorRef.current && anchorRef.current?.contains(event?.target as Node)) {
-            return;
-        }
-        setOpen(false);
-    };
-
-    const hasAppointments = Boolean(car.appointmentHashKeys.length);
-    const getLabel = (): string => {
-        return hasAppointments ? t("Manage Appointment") : t("Schedule Appointment");
-    }
-    const handleSelect = async () => {
-        await clearData()
-        await dispatch(setVehicle(car));
-        if (!hasAppointments) onNext();
-    }
-    return <ActionButtons>
-        <ButtonGroup variant="contained" color="primary" ref={anchorRef}>
-            <Button onClick={handleSelect} style={hasAppointments ? {backgroundColor: "#27AE60", borderRightColor: "#27AE60"} : {}}>
-                {getLabel()}
-            </Button>
-            {hasAppointments ? <Button onClick={() => setOpen(true)} size="small" color="primary" style={hasAppointments ? {backgroundColor: "#27AE60"} : {}}>
-                <MoreVert/>
-            </Button> : null}
-        </ButtonGroup>
-        <Popper
-            open={open}
-            anchorEl={anchorRef.current}
-            placement={"bottom-end"}
-            role={undefined}
-            transition disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'right top' : 'right bottom',
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList>
-                    {options.map((option, index) => (
-                      <MenuItem
-                        key={option}
-                        disabled={index === 2}
-                        selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
-                      >
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-    </ActionButtons>
-};
 
 export const CarCard: React.FC<TProps> = ({
     onNext,
@@ -162,9 +61,12 @@ export const CarCard: React.FC<TProps> = ({
     clearData,
 }) => {
     const dispatch = useDispatch();
-    const onClick = () => {
+    const {t} = useTranslation();
+
+    const onClick = useCallback(() => {
         dispatch(setVehicle(car));
-    }
+    }, [car])
+
     return (
         <Wrapper
             active={selected}
@@ -174,9 +76,9 @@ export const CarCard: React.FC<TProps> = ({
             <img src={carImage} alt="Car"/>
             <CarInfo>
                 <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
-                <li>VIN: <span>{car.vin}</span></li>
+                <li>{t("VIN")}: <span>{car.vin}</span></li>
             </CarInfo>
-            <Action
+            <CarCardAction
                 onAddNewAppointment={onAddNewAppointment}
                 selected={selected}
                 car={car}
