@@ -40,12 +40,11 @@ const options: string[] = [
 ];
 
 const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, clearData, onNext}) => {
-    const dispatch = useDispatch();
-
     const [open, setOpen] = useState(false);
-    const anchorRef = useRef<HTMLDivElement|null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number>(1);
+    const anchorRef = useRef<HTMLDivElement|null>(null);
     const {t} = useTranslation();
+    const dispatch = useDispatch();
 
     const handleMenuItemClick = useCallback((event: any, index:number) => {
         setSelectedIndex(index);
