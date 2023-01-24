@@ -69,6 +69,7 @@ export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMo
         setAnchorEl(null);
         onOpen();
     }
+
     const askRemove = () => {
         setAnchorEl(null);
         askConfirm({
