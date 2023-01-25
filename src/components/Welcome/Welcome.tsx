@@ -180,14 +180,12 @@ export const Welcome = () => {
         }
     }
 
-
-
     const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : t("welcome");
     const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
 
     // todo uncomment language switcher
 
-    return isProfileLoading
+    return !scProfile || isProfileLoading
         ? <Loading/>
         : isFrame
             ? <MuiThemeProvider theme={frameTheme}>
