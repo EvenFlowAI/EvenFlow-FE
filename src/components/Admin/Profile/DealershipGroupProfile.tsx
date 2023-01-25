@@ -93,12 +93,15 @@ export const DealershipGroupProfile = () => {
         }
         setForm({...form, [name]: value});
     }
+
     const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, address: {...form.address, [e.target.name]: e.target.value}});
     }
+
     const handleSelectState = (e: React.ChangeEvent<{}>, val: string | null) => {
         setForm({...form, address: {...form.address, state: val || ""}});
     }
+
     const handleChangeAvatar = async (f: File) => {
         if (profile) {
             try {
@@ -111,6 +114,7 @@ export const DealershipGroupProfile = () => {
             showError("Profile is not loaded");
         }
     }
+
     const handleSave = async () => {
         if (profile) {
             setSaving(true)
@@ -118,7 +122,7 @@ export const DealershipGroupProfile = () => {
                 await dispatch(updateDealership(form, profile.id));
                 setSaving(false);
                 setNameEdit(false);
-                showMessage("Profile updated.")
+                showMessage("Profile updated")
             } catch (e) {
                 showError(e);
                 setSaving(false);
@@ -133,6 +137,7 @@ export const DealershipGroupProfile = () => {
     if (!profile) {
         return null;
     }
+
     return <div className={classes.container}>
         <Grid container spacing={2} alignItems="center">
             <Grid item xs={12} sm={12} md={5}>

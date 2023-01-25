@@ -109,6 +109,32 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const isMount = useRef(true);
     const dispatch = useDispatch();
 
+    const groupedAppointments: TGroupedAppointments = useMemo(() => {
+        return groupAppointments(slots);
+    }, [slots]);
+
+    const handleGALandingOnPage = useCallback(() => {
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Selected advisor',
+            label: consultant ? consultant.name : 'Any available',
+            nonInteraction: true
+        });
+        if (appointment) {
+            ReactGA.event({
+                category: 'EvenFlow User',
+                action: 'Selected Service Requests',
+                label: `Requests Codes: 
+                ${appointment?.serviceRequestPrices?.map(item => item.requestName).join(', ')}
+                ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
+            });
+        }
+    }, [consultant, appointment])
+
+    useEffect(() => {
+        handleGALandingOnPage();
+    }, [selectedPackage, consultant, appointment])
+
     useEffect(() => {
         if (selectedTime) setMonth(moment.utc(selectedTime))
     }, [selectedTime])
@@ -128,24 +154,6 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [slots, selectedTime, appointment]);
 
-    useEffect(() => {
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: 'Selected advisor',
-            label: consultant ? consultant.name : 'Any available',
-            nonInteraction: true
-        });
-        if (appointment) {
-            ReactGA.event({
-                category: 'EvenFlow User',
-                action: 'Selected Service Requests',
-                label: `Requests Codes: 
-                ${appointment?.serviceRequestPrices?.map(item => item.requestName).join(', ')}
-                ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
-            });
-        }
-    }, [selectedPackage, consultant])
-
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
         dispatch(selectAppointment(null));
@@ -164,13 +172,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         initRef.current = v;
     }, []);
 
-    const getCategories = (): number[] => {
+    const getCategories = useCallback((): number[] => {
         return allCategories
             .filter(category => {
                 return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
             })
             .map(item => item.id)
-    }
+    }, [allCategories, EServiceCategoryType, categoriesIds])
 
     useEffect(() => {
         async function loadData () {
@@ -187,7 +195,6 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                             service, subService, selectedRecalls, selectedPackage, selectedOpsCodes
                         ),
                         serviceCategoryIds: getCategories(),
-                        // countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration,
                         serviceType,
@@ -225,11 +232,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         selectedVehicle, customerData, service, vehicle,
         subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime
     ]);
-    const groupedAppointments: TGroupedAppointments = useMemo(() => {
-        return groupAppointments(slots);
-    }, [slots]);
 
-    const handleNext = (): void => {
+    const handleGANext = useCallback(() => {
         if (appointment) {
             ReactGA.event({
                 category: 'EvenFlow User',
@@ -237,21 +241,30 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                 label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('hh:mm A')}`,
             });
         }
-        handleSetScreen(currentConfig?.transportationNeeds ? 'transportationNeeds' : 'appointmentConfirmation');
-    }
+    }, [appointment])
 
-    const handleBack = (): void => {
+    const handleGABack = useCallback(() => {
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Went back',
             label: 'From Selection Date & Time Page',
         });
-        handleSetScreen(currentConfig?.appointmentSelection
-                    ? 'appointmentTiming'
-                    : currentConfig?.advisorSelection
-                        ? 'consultantSelection'
-                        : "serviceNeeds");
-    }
+    }, [])
+
+    const handleNext = useCallback((): void => {
+        handleGANext();
+        handleSetScreen(currentConfig?.transportationNeeds ? 'transportationNeeds' : 'appointmentConfirmation');
+    }, [currentConfig])
+
+    const handleBack = useCallback((): void => {
+        const nextScreen = currentConfig?.appointmentSelection
+            ? 'appointmentTiming'
+            : currentConfig?.advisorSelection
+                ? 'consultantSelection'
+                : "serviceNeeds"
+        handleGABack();
+        handleSetScreen(nextScreen);
+    }, [currentConfig])
 
     return (
         <StepWrapper>
