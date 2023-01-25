@@ -34,9 +34,10 @@ import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
+import {Loading} from "../UI/Loading";
 
 export const Welcome = () => {
-    const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
+    const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
     const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
@@ -179,26 +180,26 @@ export const Welcome = () => {
         }
     }
 
-
-
     const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : t("welcome");
     const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
 
     // todo uncomment language switcher
 
-    return (isFrame ? <MuiThemeProvider theme={frameTheme}>
+    return !scProfile || isProfileLoading
+        ? <Loading/>
+        : isFrame
+            ? <MuiThemeProvider theme={frameTheme}>
             <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
                 <FrameWelcomeLayout>
                     {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
                     {getComponent()}
                 </FrameWelcomeLayout>
-            </MuiThemeProvider> :
-            <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
+            </MuiThemeProvider>
+            : <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
                 {/*<LanguageSwitcher/>*/}
                 {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                 {getComponent()}
                 <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
             </WelcomeLayout>
-    );
 };

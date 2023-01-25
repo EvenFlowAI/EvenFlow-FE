@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
@@ -21,6 +21,7 @@ import {TScreen} from "./components/Layout/types";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions";
 import PaymentBill from "./components/AppointmentFlow/PaymentBill/PaymentBill";
+import {EServiceCenterName} from "./api/types";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -30,6 +31,7 @@ const App = () => {
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
     const dispatch = useDispatch();
+    const isFremont = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont, [scProfile]);
 
     useEffect(() => {
         if (serviceType === EServiceType.MobileService) {
@@ -69,7 +71,7 @@ const App = () => {
             anchorOrigin={{horizontal: "right", vertical: "top"}}
             variant="success">
             <Container component="main" maxWidth={false} className={isWin ? "winos" : undefined} disableGutters style={{
-                height: "100vh", maxHeight: "-webkit-fill-available"}}>
+                height: isFremont ? "60vh" : "100vh", maxHeight: "-webkit-fill-available"}}>
                 <ConfirmDialog/>
                 <Switch>
                     <Route path={Routes.EndUser.Appointment} exact component={AppointmentLayout} />
