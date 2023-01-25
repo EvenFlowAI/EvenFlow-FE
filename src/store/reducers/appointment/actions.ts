@@ -30,13 +30,16 @@ import {
 import {EDemandCategory} from "../pricingSettings/types";
 import {getSlotsGap} from "../appointmentFrameReducer/actions";
 
+export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
 export const loadSCProfile = (id: number): AppThunk => async dispatch => {
+    dispatch(setProfileLoading(true))
     const {data} = await Api.call<IServiceCenterProfile>(
         Api.endpoints.ServiceCenters.Retrieve,
         {urlParams: {id}}
     )
     dispatch(getServiceCenterProfile(data));
+    await dispatch(setProfileLoading(false))
 }
 export const getSRs = createAction<ISR[]>("Appointment/GetSRs");
 export const loadSRs = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {

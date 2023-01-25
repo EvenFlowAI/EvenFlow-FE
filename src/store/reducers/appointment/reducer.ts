@@ -26,7 +26,7 @@ import {
     setCustomerEnteredEmail,
     setCustomerLoadedData,
     setCustomerVehicle, setEditAppointment, setLoadedDateRange,
-    setLoadedReducer, setOldAppointmentId, setSessionId
+    setLoadedReducer, setOldAppointmentId, setProfileLoading, setSessionId
 } from "./actions";
 import moment from "moment";
 import {selectService, selectSubService, setPackage} from "../appointmentFrameReducer/actions";
@@ -84,6 +84,7 @@ const initialState: TAppointmentState = {
     },
     serviceCategories: [],
     allServiceCategories: [],
+    isProfileLoading: false,
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -238,5 +239,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(selectSRMultiple, (state, {payload}) => {
         return {...state, selectedSR: payload};
+    })
+    .addCase(setProfileLoading, (state, {payload}) => {
+        return {...state, isProfileLoading: payload};
     })
 );
