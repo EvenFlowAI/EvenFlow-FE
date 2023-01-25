@@ -38,7 +38,8 @@ export enum EServiceCenterName {
     BMWSchererville,
     DealertrackTest,
     SanfordInfinity,
-    Dominion
+    Dominion,
+    Fremont
 }
 
 export enum EVehiclePropType {
