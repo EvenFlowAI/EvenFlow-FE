@@ -27,6 +27,7 @@ export interface IServiceCenterProfile {
     isAuthRequired: boolean;
     maintenancePackageDisclaimer?: string;
     isShowPriceDetails?: boolean;
+    commentIsRequired: boolean;
 }
 export interface ISR {
     id: number;

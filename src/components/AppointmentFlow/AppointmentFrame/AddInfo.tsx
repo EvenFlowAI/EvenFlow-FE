@@ -19,6 +19,7 @@ import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
+import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
 
 type TProps = {
     handleSetScreen:TArgCallback<TScreen>;
@@ -40,6 +41,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         allCategories,
         userType,
         isAdditionalServices,
+        scProfile,
     ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
@@ -51,10 +53,12 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         categories.allCategories,
         appointmentFrame.userType,
         appointmentFrame.isAdditionalServices,
+        appointment.scProfile,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useModal();
+    const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();
     const {t} = useTranslation();
     const screenToReturn = useMemo(() => subService ? 'serviceSelection' : 'serviceNeeds', [subService])
 
@@ -100,6 +104,9 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     }
 
     const onSubmit = () => {
+        if (scProfile?.commentIsRequired && !description.length) {
+            return onErrorOpen();
+        }
         if (!selectedPackage || !selectedSR.length) {
             onOpen()
         } else handleNext()
@@ -146,6 +153,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
             />
             <Actions onBack={handleBack} onNext={onSubmit} />
             <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen}/>
+            <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose}/>
         </StepWrapper>
     );
 };
