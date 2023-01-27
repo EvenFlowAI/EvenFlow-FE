@@ -13,7 +13,6 @@ import moment from "moment";
 import {timeSpanString, timeString} from "../../../config/constants";
 import {calendarDateFormat} from "../../Optimizer/EmployeeSchedule/utils";
 
-
 const Label = withStyles({
     root: {
         marginLeft: 0,
