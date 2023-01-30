@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Grid} from "@material-ui/core";
+import {Grid, styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {mh400, mh600} from "./CustomerSelect";
 import {RootState} from "../../store/rootReducer";
@@ -18,11 +18,24 @@ import {makeStyles} from "@material-ui/core/styles";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {useSCs} from "../../utils/hooks";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
+import {InfoOutlined} from "@material-ui/icons";
+import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
+import ServiceTypeIcon from "./ServiceTypeIcon";
 
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
 };
+
+const CardsWrapper = styled("div")<Theme, {cardsAmount: number}>(({theme, cardsAmount}) => ({
+    display: 'grid',
+    gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
+    gap: "18px",
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateRows: `repeat(${cardsAmount}, 1fr)`,
+        gridTemplateColumns: '1fr',
+    }
+}));
 
 const useStyles = makeStyles((theme) => ({
     buttonsContainer: {
@@ -35,8 +48,10 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     button: {
+        position: 'relative',
         height: "100%",
         display: "flex",
+        flexDirection: 'column',
         alignItems: "center",
         justifyContent: "center",
         fontWeight: "bold",
@@ -61,6 +76,19 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down("xs")]: {
             fontSize: 18,
             padding: "5%"
+        },
+        "& .infoIcon": {
+            position: 'absolute',
+            top: 15,
+            right: 15,
+            display: 'flex',
+            justifyContent: 'flex-end',
+        },
+        "& .cardIcon": {
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
         }
     },
 }))
@@ -71,22 +99,12 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const {selectedSC} = useSCs();
     const classes = useStyles();
     const dispatch = useDispatch();
+    const theme = useTheme();
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"))
 
     useEffect(() => {
         selectedSC && dispatch(loadFirstScreenOptionsByQuery(selectedSC.id))
     }, [selectedSC])
-
-    const getMidSize = () => {
-        switch (firstScreenOptions.length) {
-            case 2:
-            case 3:
-                return 4;
-            case 4:
-                return 3;
-            default:
-                return 6;
-        }
-    }
 
     const handleUser = (serviceType: EServiceType) => {
         if (userType === EUserType.New) {
@@ -110,21 +128,26 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
 
     return isLoading || loading
         ? <Loading/>
-        : <Grid className={classes.buttonsContainer}
-              alignItems="stretch"
-              container
-              spacing={4}>
+        : <CardsWrapper className={classes.buttonsContainer} cardsAmount={firstScreenOptions.length}>
             {[...firstScreenOptions].sort((a, b) => a.orderIndex - b.orderIndex).map(card => {
                 if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
                 if (card.type === EServiceType.PikUpDropOff && !isPickUpDropOffServiceOn) return null;
 
-                return <Grid item xs={12} sm={12} md={getMidSize()}>
-                    <div onClick={() => handleSelect(card)} className={classes.button}>
-                        <span>{card.name}</span>
+                return <Grid key={card.id}>
+                    <div className={classes.button} onClick={() => !isSM && handleSelect(card)}>
+                        {card.description ? <HtmlTooltip
+                            enterTouchDelay={0}
+                            placement="right-end"
+                            title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                        >
+                            <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
+                        </HtmlTooltip> : null}
+                        <div style={{ width: '100%'}} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
+                        <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
                     </div>
                 </Grid>
             })}
-        </Grid>
+        </CardsWrapper>
 };
 
 export default ServiceTypeSelect;
