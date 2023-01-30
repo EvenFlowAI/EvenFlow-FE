@@ -5,7 +5,7 @@ export interface IFirstScreenOption {
     name: string;
     iconPath?: string;
     type: EServiceType;
-    orderIndex?: number;
+    orderIndex: number;
     description?: string;
     note?: string;
     transportationOptionId?: number;
@@ -15,7 +15,7 @@ export interface IFirstScreenOption {
 export type TUpdateFirstScreenOption = {
     name: string;
     type: EServiceType|string;
-    orderIndex?: number;
+    orderIndex: number;
     description?: string;
     note?: string;
     transportationOptionId?: number;

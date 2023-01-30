@@ -220,7 +220,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                         renderInput={autocompleteRender({
                             label: 'Order Index for Booking Flow',
                             placeholder: 'Select Order Index',
-                            error: !orderIndex && formIsChecked,
+                            error: !orderIndex?.length && formIsChecked,
                         })}
                     />
                     <Autocomplete
