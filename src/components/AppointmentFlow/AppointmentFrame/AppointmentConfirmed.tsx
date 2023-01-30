@@ -15,18 +15,10 @@ import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    selectCategoriesIds,
-    selectService,
-    selectSubService,
-    setAdditionalServicesChosen,
-    setAdvisor,
-    setPackage, setSelectedRecalls,
-    setTiming,
-    setTransportation,
+    clearAppointmentData,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -135,9 +127,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const isFrame = window.top !== window.self;
     const {id} = useParams();
     const dispatch = useDispatch();
+
     const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
         [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
+
     const vehicleData = vehicle?.year
         ? `${vehicle.year} ${vehicle.make} ${vehicle.model} ${engine?.name ?? ""}`
         : valueService?.year
@@ -164,6 +159,24 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         }
     }
 
+    const getAddress = (): string => {
+        if (serviceType === EServiceType.VisitCenter) {
+            return scProfile?.address ? concatAddress(scProfile?.address) : ""
+        } else {
+            return address ? `${address?.label ?? ""} ${zipCode ? zipCode : ""}` : ""
+        }
+    }
+
+    const getPriceContent = (): string => {
+        if (appointment?.price?.value) {
+            return scProfile?.isRoundPrice
+                ? `$${appointment?.price?.value}`
+                : `$${appointment?.price?.value.toFixed(2)}`
+        } else {
+            return t('Will be quoted at the dealership')
+        }
+    }
+
     const data: TItem[] = useMemo(() => {
         return [
             {
@@ -177,11 +190,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             },
             {
                 label: serviceType === EServiceType.VisitCenter || address ? t("Address") : '',
-                content: serviceType === EServiceType.VisitCenter
-                    ? scProfile?.address
-                        ? concatAddress(scProfile?.address)
-                        : ""
-                    : address ? `${address?.label ?? ""} ${zipCode ? zipCode : ""}` : "",
+                content: getAddress(),
             },
             {
                 label: servicesList?.length > 1 ? t("Services type") : t("Service type"),
@@ -189,12 +198,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             },
             {
                 label: t("Selected Price"),
-                content: appointment?.price?.value
-                    ? scProfile?.isRoundPrice
-                        ? `$${appointment?.price?.value}`
-                        : `$${appointment?.price?.value.toFixed(2)}`
-                    : t('Will be quoted at the dealership')
-
+                content: getPriceContent(),
             },
             {
                 label: t("Name"),
@@ -244,16 +248,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
 
     const onMakeNew = () => {
         dispatch(setVehicle(null));
-        dispatch(selectAppointment(null));
-        dispatch(selectService(null));
-        dispatch(selectSubService(null));
-        dispatch(setTransportation(null));
-        dispatch(setAdvisor(null));
-        dispatch(selectCategoriesIds([]));
-        dispatch(setAdditionalServicesChosen(false));
-        dispatch(setPackage(null));
-        dispatch(setTiming(null));
-        dispatch(setSelectedRecalls([]));
+        dispatch(clearAppointmentData());
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 

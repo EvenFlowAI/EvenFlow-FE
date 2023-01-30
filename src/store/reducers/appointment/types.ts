@@ -209,6 +209,7 @@ export type TAppointmentState = {
     appointmentFilters: IAppointmentFilters;
     serviceCategories: IServiceCategory[];
     allServiceCategories: IServiceCategoryShort[];
+    isProfileLoading: boolean;
 };
 export enum EReminderType {
     Email, Phone, Sms

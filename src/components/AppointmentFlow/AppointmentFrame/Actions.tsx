@@ -23,14 +23,16 @@ const ButtonsRow = styled('div')(({theme}) => ({
         }
     }
 }));
-export const Actions: React.FC<TActionProps> = ({
-                                                    onBack,
-                                                    onNext,
-                                                    nextDisabled,
-                                                    nextLabel,
-                                                    loading,
-                                                    prevDisabled,
-                                                    prevLabel}) => {
+export const Actions: React.FC<TActionProps> = (
+    {
+        onBack,
+        onNext,
+        nextDisabled,
+        nextLabel,
+        loading,
+        prevDisabled,
+        prevLabel}
+) => {
     const {t} = useTranslation();
     return (
         <ButtonsRow>
@@ -44,11 +46,11 @@ export const Actions: React.FC<TActionProps> = ({
                     {prevLabel ?? t("Back")}
                 </Button>
                 <Button
-                disabled={nextDisabled}
-                onClick={onNext}
-                color={'primary'}
-                variant='contained'>
-            {nextLabel ?? t("Submit")}
+                    disabled={nextDisabled}
+                    onClick={onNext}
+                    color={'primary'}
+                    variant='contained'>
+                    {nextLabel ?? t("Submit")}
                 </Button>
             </> : <Loading />}
         </ButtonsRow>

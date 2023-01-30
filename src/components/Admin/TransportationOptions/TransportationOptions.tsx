@@ -22,6 +22,7 @@ import {bookingFlowRoot} from "../../Optimizer/utils";
 import {SquarePaper} from "../../UI/Paper";
 import {MoreHoriz} from "@material-ui/icons";
 import EditTransportationDescription from "../../Modals/EditTransportationDescription/EditTransportationDescription";
+import {getTransportationOptionString} from "../../../utils/utils";
 
 const headCellStyles = {
     fontSize: 12,
@@ -137,7 +138,7 @@ export const TransportationOptions: React.FC<DialogProps> = props => {
                         <TableBody>
                             {initialOptions.map(el => {
                                 return <TableRow key={el.type}>
-                                    <TableCell key="1" style={leftAlign}>{getOptionString(el.type)}</TableCell>
+                                    <TableCell key="1" style={leftAlign}>{getTransportationOptionString(el.type)}</TableCell>
                                     <TableCell key="3">
                                         {el.description}
                                     </TableCell>

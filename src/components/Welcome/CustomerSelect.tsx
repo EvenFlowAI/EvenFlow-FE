@@ -2,19 +2,12 @@ import React, {useEffect, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {setUserType, setVehicle, setWelcomeScreenView} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setUserType} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../store/rootReducer";
-import {
-    getBlankCustomer,
-    getBlankVehicle,
-    saveCustomerCache, setCustomerEnteredEmail,
-    setCustomerLoadedData,
-} from "../../store/reducers/appointment/actions";
-//import ReactGA from "react-ga4";
-import ReactGA from "react-ga";
+import {setCustomerEnteredEmail} from "../../store/reducers/appointment/actions";
 import {TextField} from "../UI/EndUserInputs";
 import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
@@ -101,10 +94,11 @@ export const useStyles = makeStyles(theme => ({
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
+    handleNew: () => void;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({onComplete, loading}) => {
-    const {isMobileServiceOn, serviceType, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew}) => {
+    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
     const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
@@ -120,32 +114,6 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading}) => {
         })
     }, [sessionStorage])
 
-    const createBlankCar = () => {
-        const c = getBlankCustomer();
-        dispatch(setCustomerLoadedData(c));
-        dispatch(setVehicle(getBlankVehicle()));
-        saveCustomerCache(c);
-    }
-
-    const handleReactGA = (userType: string) => {
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: 'Enters Page',
-            label: `As ${userType} Customer`,
-        });
-    }
-
-    const handleNew = () => {
-        dispatch(setUserType(EUserType.New));
-        handleReactGA('A New');
-        dispatch(setCustomerEnteredEmail(''));
-        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
-            dispatch(setWelcomeScreenView('serviceSelect'))
-        } else {
-            createBlankCar()
-            onComplete(serviceType, EUserType.New);
-        }
-    }
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setCustomerEnteredEmail(value));
     }
