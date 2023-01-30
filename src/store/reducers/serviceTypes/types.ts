@@ -9,6 +9,7 @@ export interface IFirstScreenOption {
     description?: string;
     note?: string;
     transportationOptionId?: number;
+    externalLink?: string;
 }
 
 export type TUpdateFirstScreenOption = {
@@ -18,6 +19,7 @@ export type TUpdateFirstScreenOption = {
     description?: string;
     note?: string;
     transportationOptionId?: number;
+    externalLink?: string;
 }
 
 export type TNewFirstScreenOption = TUpdateFirstScreenOption & {

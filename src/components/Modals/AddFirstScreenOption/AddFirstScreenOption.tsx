@@ -77,6 +77,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
     const {options} = useSelector((state: RootState) => state.transportation);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [firstScreenOptionName, setFirstScreenOptionName] = useState<string>('');
+    const [externalLink, setExternalLink] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -137,6 +138,11 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
         setFirstScreenOptionName(e.target.value);
     }, [])
 
+    const onLinkChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
+        setFormIsChecked(false);
+        setExternalLink(e.target.value);
+    }, [])
+
     const onOrderIndexChange = useCallback((e: React.ChangeEvent<{}>, value: string): void => {
         setFormIsChecked(false);
         setOrderIndex(value);
@@ -157,6 +163,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
             type: selectedServiceType?.value ?? EServiceType.VisitCenter,
             orderIndex: +orderIndex,
         }
+        if (externalLink) data.externalLink = externalLink;
         if (selectedSC) {
             if (defaultTransportation) data.transportationOptionId = defaultTransportation.id;
             if (editingItem) {
@@ -190,7 +197,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                             fullWidth
                             label='Option Name'
                             placeholder='Type Option Name'
-                            error={!firstScreenOptionName && formIsChecked}
+                            error={formIsChecked && !firstScreenOptionName}
                             onChange={onNameChange}
                             value={firstScreenOptionName}/>
                     </div>
@@ -207,7 +214,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                     />
                     <Autocomplete
                         disableClearable
-                        options={['1', '2', '3', "4"]}
+                        options={['1', '2', '3', '4']}
                         value={orderIndex}
                         onChange={onOrderIndexChange}
                         renderInput={autocompleteRender({
@@ -228,6 +235,15 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                         })}
                     />
                     <FileInput setState={setFileState}/>
+                    <div>
+                        <TextField
+                            fullWidth
+                            label='External Link'
+                            placeholder='Type External Link'
+                            disabled={selectedServiceType?.value !== EServiceType.General.toString()}
+                            onChange={onLinkChange}
+                            value={externalLink}/>
+                    </div>
                 </div>
                 <TextField
                     fullWidth
