@@ -404,14 +404,6 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         } else setFormIsChecked(true);
     }
 
-    const checkIsErrorField = (fieldName: string, vehiclesData: IVehiclesData) => {
-        let isError = false;
-        if (fieldName.includes('year') && vehiclesData?.yearFrom && vehiclesData?.yearTo) {
-            isError = vehiclesData?.yearFrom > vehiclesData?.yearTo
-        }
-        return isApplyBusinessRules && formIsChecked && isError;
-    }
-
     const handleOpsCodeSelect = useCallback((el: IAssignedServiceRequest) => {
         setOpsCodes(prev => {
             return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]

@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, makeStyles, Switch} from "@material-ui/core";
 import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
-import {IPackageByQuery} from "../../../api/types";
+import {IPackageByQuery, IPackageOptionDetailed} from "../../../api/types";
 import {getPackageById, loadPackages} from "../../../store/reducers/packages/actions";
 import {updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
@@ -12,6 +12,10 @@ import {useException, useModal, useSCs} from "../../../utils/hooks";
 import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
 import {Loading} from "../../UI/Loading";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {Autocomplete} from "@material-ui/lab";
+import {useMakeAndModelStyles} from "../../Modals/AddPackage/parts/MakeAndModel/MakeAndModel";
+import {MaintenanceOptions} from "./OptionsTable/OptionsTable";
 
 type TExpandedState = {
     id?: number;
@@ -39,13 +43,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const MaintenancePackages = () => {
-    const {packages: allPackages} = useSelector((state: RootState) => state.packages);
+    const {packages: allPackages, currentPackage} = useSelector((state: RootState) => state.packages);
     const {loading} = useSelector((state: RootState) => state.serviceCenters);
     const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isDisclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
+    const [presentedOptions, setPresentedOptions] = useState<IPackageOptionDetailed[]>([]);
     const classes = useStyles();
+    const autocompleteClasses = useMakeAndModelStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const {onOpen, onClose, isOpen} = useModal();
@@ -91,6 +97,9 @@ export const MaintenancePackages = () => {
         }
     }
 
+    const onPresentedOptionsChange = useCallback((e: ChangeEvent<{}>, value: IPackageOptionDetailed[]) => {
+        setPresentedOptions(value);
+    }, [])
 
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
@@ -107,6 +116,21 @@ export const MaintenancePackages = () => {
                             color="primary"
                         />
                     </React.Fragment>}
+            </div>
+            <div style={{display: "flex", alignItems: "center"}}>
+                <Autocomplete
+                    multiple
+                    classes={autocompleteClasses}
+                    options={currentPackage?.options ?? []}
+                    disableCloseOnSelect
+                    getOptionLabel={o => Object.values(MaintenanceOptions)[o.type]}
+                    value={presentedOptions}
+                    onChange={onPresentedOptionsChange}
+                    renderInput={autocompleteRender({
+                        label: "Presented Options",
+                        placeholder: 'Select Options'
+                    })}
+                />
             </div>
             <div style={{display: "flex", alignItems: "center"}}>
                 <Button
