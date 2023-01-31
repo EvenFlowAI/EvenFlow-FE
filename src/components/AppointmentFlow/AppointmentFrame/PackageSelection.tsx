@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
-import {styled, useMediaQuery, useTheme} from "@material-ui/core";
+import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -50,11 +50,11 @@ export type TPackage = {
     moreIdx?: number[];
 } & IPackageOptions;
 
-const Wrapper = styled('div')(({theme}) => ({
+const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     display: "grid",
     marginTop: 12,
     gap: "0 20px",
-    gridTemplateColumns: "2fr repeat(3, 1fr)",
+    gridTemplateColumns: `2fr repeat(${count}, 1fr)`,
     width: "100%",
     alignItems: "stretch",
     [theme.breakpoints.down('sm')]: {
@@ -67,7 +67,7 @@ const Wrapper = styled('div')(({theme}) => ({
         alignItems: "center",
         justifyContent: "stretch"
     },
-    "&>div": {
+    "& > div": {
         textAlign: "center",
         display: "flex",
         alignItems: "center",
@@ -195,13 +195,13 @@ const Wrapper = styled('div')(({theme}) => ({
     }
 }));
 
-const Info = styled("p")({
+const Info = styled("p")<Theme, { count: number }>(({theme, count}) => ({
     color: "#808080",
     fontSize: 14,
     gridColumnStart: 1,
-    gridColumnEnd: 5,
+    gridColumnEnd: `${count + 2}`,
     marginTop: 18,
-})
+}))
 
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;
@@ -209,7 +209,6 @@ type TPackageSelectionProps = {
     currentConfig: TServiceTypeSettings|undefined;
     onAddServices: () => void;
 }
-
 
 export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices, currentConfig}) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -368,7 +367,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         isBmWService={isBmWService}
                         isSanfordInfinity={isSanfordInfinity}
                     />
-                    : <Wrapper>
+                    : <Wrapper count={packages.length}>
                         <PackageTitles packages={packages} handleClick={handleClick} setClasses={setClasses}/>
 
                         <IncludedInPackage
@@ -411,7 +410,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             isBmWService={isBmWService}
                             setClasses={setClasses}
                         />
-                        <Info>
+                        <Info count={packages.length}>
                             {scProfile?.maintenancePackageDisclaimer
                                 ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
                                 :  isBmWService
