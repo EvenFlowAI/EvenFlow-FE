@@ -16,7 +16,6 @@ import ReactGA from "react-ga";
 import {Loading} from "../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {useSCs} from "../../utils/hooks";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
@@ -95,16 +94,16 @@ const useStyles = makeStyles((theme) => ({
 
 const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const {userType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
-    const {selectedSC} = useSCs();
     const classes = useStyles();
     const dispatch = useDispatch();
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down("sm"))
 
     useEffect(() => {
-        selectedSC && dispatch(loadFirstScreenOptionsByQuery(selectedSC.id))
-    }, [selectedSC])
+        scProfile && dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
+    }, [scProfile])
 
     const handleUser = (serviceType: EServiceType) => {
         if (userType === EUserType.New) {
