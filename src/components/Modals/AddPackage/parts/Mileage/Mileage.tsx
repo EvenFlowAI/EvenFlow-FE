@@ -10,8 +10,6 @@ import {RootState} from "../../../../../store/rootReducer";
 type TMileageProps = {
     disabled: boolean;
     selectedMileages: string[];
-    isApplyBusinessRules: boolean;
-    formIsChecked: boolean;
     setFormIsChecked: Dispatch<SetStateAction<boolean>>;
     setSelectedMileages: Dispatch<SetStateAction<string[]>>;
 }
@@ -19,8 +17,6 @@ type TMileageProps = {
 const Mileage: React.FC<TMileageProps> = ({
                                               disabled,
                                               selectedMileages,
-                                              isApplyBusinessRules,
-                                              formIsChecked,
                                               setSelectedMileages,
                                               setFormIsChecked }) => {
     const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
@@ -78,6 +74,7 @@ const Mileage: React.FC<TMileageProps> = ({
             disabled={disabled}
             options={getOptions()}
             disableCloseOnSelect
+            getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
             renderOption={renderOption}
             value={selectedMileages}
             onChange={onMileageChange}
