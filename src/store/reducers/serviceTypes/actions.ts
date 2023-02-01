@@ -6,6 +6,20 @@ import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} fro
 export const setFirstScreenOptionsLoading = createAction<boolean>("ServiceTypes/SetLoading");
 export const getFirstScreenOptionsByQuery = createAction<IFirstScreenOption[]>("ServiceTypes/GetServiceTypesByQuery");
 
+export const loadFirstScreenOptionsByQuery = (id: number): AppThunk => dispatch => {
+    dispatch(setFirstScreenOptionsLoading(true));
+    Api.call(Api.endpoints.ServiceTypes.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getFirstScreenOptionsByQuery(result.data.result))
+            }
+        })
+        .catch(err => {
+            console.log('get service types by query', err)
+        })
+        .finally(() => dispatch(setFirstScreenOptionsLoading(false)))
+}
+
 export const deleteFirstScreenOptionById = (id: number, serviceCenterId: number): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceTypes.Remove, {urlParams: {id}})
         .then(result => {
@@ -58,18 +72,4 @@ export const updateFirstScreenOptionIcon = (id: number, serviceCenterId: number,
         .catch(err => {
             console.log('update service type icon error', err)
         })
-}
-
-export const loadFirstScreenOptionsByQuery = (id: number): AppThunk => dispatch => {
-    dispatch(setFirstScreenOptionsLoading(true));
-    Api.call(Api.endpoints.ServiceTypes.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
-        .then(result => {
-            if (result?.data) {
-                dispatch(getFirstScreenOptionsByQuery(result.data.result))
-            }
-        })
-        .catch(err => {
-            console.log('get service types by query', err)
-        })
-        .finally(() => dispatch(setFirstScreenOptionsLoading(false)))
 }

@@ -299,7 +299,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                             placeholder: 'Select a page',
                         })}
                     />
-                    <FileInput setState={setFileState}/>
+                    <FileInput setState={setFileState} label={`${fileState.file || editingItem?.iconPath ? 'Update' : 'Upload' } Service Category Icon`}/>
                     <div className={classes.inputWrapper}>
                         <label className={classes.label}>Add Ops Codes</label>
                         <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={assignedFilter.searchTerm} />

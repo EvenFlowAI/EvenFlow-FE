@@ -7,10 +7,11 @@ interface IIconState {
     dataUrl?: string;
 }
 
-const allowedFileTypes = ['image/svg+xml', 'image/svg'];
+const allowedFileTypes = ['image/svg+xml', 'image/svg', 'image/png', 'image/jpeg', 'image/jpg'];
 
 type TFileInputProps = {
-    setState: Dispatch<SetStateAction<IIconState>>
+    setState: Dispatch<SetStateAction<IIconState>>,
+    label: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -42,7 +43,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 
-const FileInput: React.FC<TFileInputProps> = ({ setState }) => {
+const FileInput: React.FC<TFileInputProps> = ({ setState, label }) => {
     const ref = createRef<HTMLInputElement>();
     const showError = useException();
     const showMessage = useMessage();
@@ -55,13 +56,13 @@ const FileInput: React.FC<TFileInputProps> = ({ setState }) => {
             reader.readAsDataURL(file);
             reader.onload = e => {
                 if (!allowedFileTypes.includes(file.type)) {
-                    return showError('Please upload only SVG icon')
+                    return showError('Please upload only SVG/PNG/JPEG/JPG icon')
                 }
                 if (e.target?.result) {
                     setState(prev => ({...prev, dataUrl: e.target?.result
                             ? e.target.result as string : undefined
                     }));
-                    showMessage('Icon is ready to Save!')
+                    showMessage('Icon is ready to save')
                 }
             }
             setState(prev => ({...prev, file}));
@@ -76,7 +77,7 @@ const FileInput: React.FC<TFileInputProps> = ({ setState }) => {
         <div className={classes.buttonWrapper}>
             <label htmlFor="fileInput" className={classes.fileLabel}>
                 <div className={classes.uploadBtn}>
-                    Upload Service Category Icon
+                    {label}
                 </div>
                 <input
                     onChange={handleFileChange}

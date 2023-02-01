@@ -186,7 +186,7 @@ type ApiRoutes = {
         | "Eligibility" | "ChangePricingDisplayType"
         | "EditSkills" | "Prioritize", TApiRoute>,
     ServiceTypes: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
-        | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>,
+        | "GetByQuery", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
     TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiRoute>,
@@ -458,14 +458,12 @@ export class Api {
         },
         ServiceTypes: {
             // todo change routes to real
-            Create: {route: "/service-types", method: "post"},
-            UpdateIcon: {route: "/service-types/{id}/icon", method: "patch"},
-            Update: {route: "/service-types/{id}", method: "put"},
-            Remove: {route: "/service-types/{id}", method: "delete"},
-            Retrieve: {route: "/service-types/{id}", method: "get"},
-            GetByQuery: {route: "/service-types/by-query", method: "post"},
-            GetByPage: {route: "/service-types/by-page", method: "post"},
-            GetShortByQuery: {route: "/service-types/short-by-query", method: "post"},
+            Create: {route: "/service-type-options", method: "post"},
+            UpdateIcon: {route: "/service-type-options/{id}/icon", method: "patch"},
+            Update: {route: "/service-type-options/{id}", method: "put"},
+            Remove: {route: "/service-type-options/{id}", method: "delete"},
+            Retrieve: {route: "/service-type-options/{id}", method: "get"},
+            GetByQuery: {route: "/service-type-options/by-query", method: "post"},
         },
         SlotScoring: {
             SetProximity: {route: "/slot-scoring/proximity", method: "put"},

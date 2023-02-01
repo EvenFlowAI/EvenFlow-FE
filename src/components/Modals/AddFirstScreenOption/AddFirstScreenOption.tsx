@@ -100,8 +100,8 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
             setOrderIndex(editingItem.orderIndex?.toString() ?? '');
             setDescription(editingItem.description ?? '');
             setNote(editingItem.note ?? '');
-            if (editingItem.transportationOptionId) {
-                const transportation = options.find(item => item.id === editingItem.transportationOptionId)
+            if (editingItem.transportationOption?.id) {
+                const transportation = options.find(item => item.id === editingItem.transportationOption?.id)
                 transportation && setDefaultTransportation(transportation);
             }
             if (editingItem.type) {
@@ -129,7 +129,10 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
     }
 
     const onSuccessCreate = useCallback((serviceTypeId: number) => {
-        if (fileState.file && selectedSC) dispatch(updateFirstScreenOptionIcon(serviceTypeId, selectedSC.id, fileState.file));
+        if (fileState.file && selectedSC) {
+            dispatch(updateFirstScreenOptionIcon(serviceTypeId, selectedSC.id, fileState.file));
+        }
+        onCancel();
     }, [fileState])
 
 
@@ -212,6 +215,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                             placeholder: 'Select Booking Flow Config',
                         })}
                     />
+                    <FileInput setState={setFileState} label={`${fileState.file || editingItem?.iconPath ? 'Update' : 'Upload' } Service Category Icon`}/>
                     <Autocomplete
                         disableClearable
                         options={['1', '2', '3', '4']}
@@ -234,7 +238,6 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                             placeholder: 'Select Transportation Option',
                         })}
                     />
-                    <FileInput setState={setFileState}/>
                     <div>
                         <TextField
                             fullWidth

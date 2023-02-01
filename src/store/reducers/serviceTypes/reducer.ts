@@ -1,25 +1,6 @@
 import {IFirstScreenOption} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {getFirstScreenOptionsByQuery, setFirstScreenOptionsLoading} from "./actions";
-import {EServiceType} from "../appointmentFrameReducer/types";
-
-const mockServiceTypes = [
-    {
-        id: 1,
-        name: 'Visit Center',
-        type: EServiceType.VisitCenter,
-        orderIndex: 1,
-        description: 'Description',
-        iconPath: 'fgsdfhfgj',
-    },
-    {
-        id: 2,
-        name: 'Mobile Service',
-        type: EServiceType.MobileService,
-        orderIndex: 2,
-        description: 'Description',
-    }
-]
 
 type TState = {
     firstScreenOptions: IFirstScreenOption[];
@@ -27,7 +8,7 @@ type TState = {
 }
 
 const initialState: TState = {
-    firstScreenOptions: mockServiceTypes,
+    firstScreenOptions: [],
     isLoading: false,
 }
 

@@ -21,8 +21,9 @@ export const serviceTypeNames = {
 
 const RowData: TableRowDataType<IFirstScreenOption>[] = [
     {val: (el: IFirstScreenOption) => el.name, header: "First Screen Option",  width: 300},
-    {val: (el: IFirstScreenOption) => el.orderIndex?.toString() ?? '', header: "Order Index", align: 'center', width: 150},
-    {val: (el: IFirstScreenOption) => serviceTypeNames[el.type] ?? '', header: "Booking Flow Config"},
+    {val: (el: IFirstScreenOption) => el.orderIndex?.toString() ?? '-', header: "Order Index", align: 'center', width: 150},
+    {val: (el: IFirstScreenOption) => serviceTypeNames[el.type] ?? '-', header: "Booking Flow Config"},
+    {val: (el: IFirstScreenOption) => el.transportationOption?.name ?? '-', header: "Default Transportation Option"},
 ]
 
 const FirstScreen = () => {
