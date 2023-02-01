@@ -111,7 +111,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                     .slice()
                     .sort((a, b) => a.orderIndex - b.orderIndex)
                     .map((request, rowIndex) => {
-                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.code}>
+                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={`${request.code}+${rowIndex}`}>
                         <TableCell className={classes.requestCell} key="1">{request.description}</TableCell>
                         <TableCell className={classes.requestCell} key="2" align="center" width={100}>{request.durationInHours}</TableCell>
                         <TableCell className={classes.requestCell} key="3" align="center" width={100}>${request.laborAmount}</TableCell>

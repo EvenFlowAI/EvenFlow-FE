@@ -409,6 +409,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                     disableCloseOnSelect
                     disableClearable
                     getOptionLabel={option => option.name}
+                    getOptionSelected={(o, v) => o.value === v.value}
                     renderOption={renderRequestOption}
                     value={serviceRequests}
                     onChange={onRequestChange}
@@ -425,6 +426,7 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
                         options={dayOFWeekOptions}
                         style={{ marginBottom: 20 }}
                         getOptionLabel={option => option.name}
+                        getOptionSelected={(o, v) => o.value === v.value}
                         disableClearable
                         disableCloseOnSelect
                         renderOption={renderDayOfWeekOption}
