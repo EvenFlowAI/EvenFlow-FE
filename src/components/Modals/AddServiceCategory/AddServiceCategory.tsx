@@ -25,7 +25,6 @@ import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/a
 import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
 
 type TAddServiceCategoryProps = DialogProps & {
-    isEditing?: boolean;
     editingItem: ICategory | null;
 }
 
@@ -100,7 +99,7 @@ const getOptionLabel = (option: TOption) => {
 }
 const initialFileState = {file: null, dataUrl: undefined};
 
-const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, isEditing, ...props}) => {
+const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
     const {categories} = useSelector((state: RootState) => state.categories);
     const {page} = useSelector((state: RootState) => state.categories);
@@ -256,7 +255,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
 
     return (
         <BaseModal {...props} width={1128} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} Service Category</DialogTitle>
+            <DialogTitle onClose={onCancel}>{editingItem ? 'Edit': 'Add'} Service Category</DialogTitle>
             <DialogContent>
                 <RadioGroup
                     row
@@ -300,7 +299,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, is
                             placeholder: 'Select a page',
                         })}
                     />
-                    <FileInput setState={setFileState}/>
+                    <FileInput setState={setFileState} label={`${fileState.file || editingItem?.iconPath ? 'Update' : 'Upload' } Service Category Icon`}/>
                     <div className={classes.inputWrapper}>
                         <label className={classes.label}>Add Ops Codes</label>
                         <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={assignedFilter.searchTerm} />

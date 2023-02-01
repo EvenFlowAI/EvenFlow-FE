@@ -1,5 +1,5 @@
-import React from 'react';
-import {Grid} from "@material-ui/core";
+import React, {useEffect} from 'react';
+import {Grid, styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {mh400, mh600} from "./CustomerSelect";
 import {RootState} from "../../store/rootReducer";
@@ -15,12 +15,27 @@ import {setServiceType, setVehicle} from "../../store/reducers/appointmentFrameR
 import ReactGA from "react-ga";
 import {Loading} from "../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
-import {useTranslation} from "react-i18next";
+import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
+import {useSCs} from "../../utils/hooks";
+import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
+import {InfoOutlined} from "@material-ui/icons";
+import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
+import ServiceTypeIcon from "./ServiceTypeIcon";
 
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
 };
+
+const CardsWrapper = styled("div")<Theme, {cardsAmount: number}>(({theme, cardsAmount}) => ({
+    display: 'grid',
+    gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
+    gap: "18px",
+    [theme.breakpoints.down("sm")]: {
+        gridTemplateRows: `repeat(${cardsAmount}, 1fr)`,
+        gridTemplateColumns: '1fr',
+    }
+}));
 
 const useStyles = makeStyles((theme) => ({
     buttonsContainer: {
@@ -33,8 +48,10 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     button: {
+        position: 'relative',
         height: "100%",
         display: "flex",
+        flexDirection: 'column',
         alignItems: "center",
         justifyContent: "center",
         fontWeight: "bold",
@@ -59,15 +76,35 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down("xs")]: {
             fontSize: 18,
             padding: "5%"
+        },
+        "& .infoIcon": {
+            position: 'absolute',
+            top: 15,
+            right: 15,
+            display: 'flex',
+            justifyContent: 'flex-end',
+        },
+        "& .cardIcon": {
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
         }
     },
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const {userType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
+    const {selectedSC} = useSCs();
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { t } = useTranslation();
+    const theme = useTheme();
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"))
+
+    useEffect(() => {
+        selectedSC && dispatch(loadFirstScreenOptionsByQuery(selectedSC.id))
+    }, [selectedSC])
 
     const handleUser = (serviceType: EServiceType) => {
         if (userType === EUserType.New) {
@@ -84,37 +121,33 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
         onComplete(serviceType);
     }
 
-    const handleSelect = (service: EServiceType) => {
-        dispatch(setServiceType(service));
-        handleUser(service);
+    const handleSelect = (card: IFirstScreenOption) => {
+        dispatch(setServiceType(card.type));
+        if (card.type !== EServiceType.General) handleUser(card.type);
     }
 
-    return loading
+    return isLoading || loading
         ? <Loading/>
-        : <Grid className={classes.buttonsContainer}
-              alignItems="stretch"
-              container
-              spacing={4}>
-            <Grid item xs={12} sm={12} md={isMobileServiceOn && isPickUpDropOffServiceOn ? 4 : 6}>
-                <div onClick={() => handleSelect(EServiceType.VisitCenter)} className={classes.button}>
-                    <span>{t("Visit Center")}</span>
-                </div>
-            </Grid>
-            {isMobileServiceOn
-                ? <Grid item xs={12} sm={12} md={isPickUpDropOffServiceOn ? 4 : 6}>
-                <div onClick={() => handleSelect(EServiceType.MobileService)} className={classes.button}>
-                    <span>{t("Mobile")}</span>
-                </div>
-            </Grid>
-                : null}
-            {isPickUpDropOffServiceOn
-                ? <Grid item xs={12} sm={12} md={isMobileServiceOn ? 4 : 6}>
-                <div onClick={() => handleSelect(EServiceType.PikUpDropOff)} className={classes.button}>
-                    <span>{t("Pick Up / Drop Off Service")}</span>
-                </div>
-            </Grid>
-                : null}
-        </Grid>
+        : <CardsWrapper className={classes.buttonsContainer} cardsAmount={firstScreenOptions.length}>
+            {[...firstScreenOptions].sort((a, b) => a.orderIndex - b.orderIndex).map(card => {
+                if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
+                if (card.type === EServiceType.PikUpDropOff && !isPickUpDropOffServiceOn) return null;
+
+                return <Grid key={card.id}>
+                    <div className={classes.button} onClick={() => !isSM && handleSelect(card)}>
+                        {card.description ? <HtmlTooltip
+                            enterTouchDelay={0}
+                            placement="right-end"
+                            title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                        >
+                            <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
+                        </HtmlTooltip> : null}
+                        <div style={{ width: '100%'}} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
+                        <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
+                    </div>
+                </Grid>
+            })}
+        </CardsWrapper>
 };
 
 export default ServiceTypeSelect;

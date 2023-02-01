@@ -42,7 +42,11 @@ import {
     setWelcomeScreenView,
     switchLanguage,
     setAncillaryPriceLoading,
-    setAncillaryPriceByZip, setFilteredZipCodes, setSelectedRecalls, setRecallsAreShown, setHoursOfOperations,
+    setAncillaryPriceByZip,
+    setFilteredZipCodes,
+    setSelectedRecalls,
+    setRecallsAreShown,
+    setHoursOfOperations,
 } from "./actions";
 import {
     ICustomer,
