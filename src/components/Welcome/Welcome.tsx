@@ -35,10 +35,12 @@ import {useTranslation} from "react-i18next";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
 import {Loading} from "../UI/Loading";
+import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
     const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -50,6 +52,10 @@ export const Welcome = () => {
     const showError = useException();
     const isFrame = useLayout();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        scProfile && dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
+    }, [scProfile])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
@@ -120,7 +126,7 @@ export const Welcome = () => {
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
             handleExistingUser().then();
         } else {
-            if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && firstScreenOptions.length) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
             } else {
                 redirect();
@@ -157,7 +163,7 @@ export const Welcome = () => {
         dispatch(setUserType(EUserType.New));
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
-        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+        if ((isMobileServiceOn || isPickUpDropOffServiceOn) && firstScreenOptions.length) {
             dispatch(setWelcomeScreenView('serviceSelect'))
         } else {
             createBlankCar()
