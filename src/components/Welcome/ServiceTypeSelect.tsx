@@ -82,13 +82,11 @@ const useStyles = makeStyles((theme) => ({
             display: 'flex',
             justifyContent: 'flex-end',
         },
-        "& .cardIcon": {
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        }
     },
+    name: {
+        width: "100%",
+        marginBottom: 20,
+    }
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
@@ -142,7 +140,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                         >
                             <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
                         </HtmlTooltip> : null}
-                        <div style={{ width: '100%'}} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
+                        <div className={classes.name} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
                         <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
                     </div>
                 </Grid>
