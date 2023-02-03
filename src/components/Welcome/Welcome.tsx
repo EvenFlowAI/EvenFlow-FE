@@ -173,7 +173,7 @@ export const Welcome = () => {
         dispatch(setCustomerEnteredEmail(''));
         if (isMobileServiceOn || isPickUpDropOffServiceOn) {
             if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
-                dispatch(setServiceType(firstScreenOptions[0].type))
+                dispatch(setServiceType(EServiceType.VisitCenter))
                 dispatch(setServiceTypeOption(firstScreenOptions[0]));
             } else if (firstScreenOptions.length > 1) {
                 dispatch(setWelcomeScreenView('serviceSelect'))
