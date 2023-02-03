@@ -10,7 +10,7 @@ import {
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {setServiceType, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setServiceType, setServiceTypeOption, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {Loading} from "../UI/Loading";
@@ -115,14 +115,21 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     }
 
     const handleSelect = (card: IFirstScreenOption) => {
+        dispatch(setServiceTypeOption(card))
         dispatch(setServiceType(card.type));
-        if (card.type !== EServiceType.General) handleUser(card.type);
+        if (card.type === EServiceType.General) {
+            if (card.externalLink) window.location.href = card.externalLink;
+        } else {
+            handleUser(card.type);
+        }
     }
 
     return isLoading || loading
         ? <Loading/>
         : <CardsWrapper className={classes.buttonsContainer} cardsAmount={firstScreenOptions.length}>
-            {[...firstScreenOptions].sort((a, b) => a.orderIndex - b.orderIndex).map(card => {
+            {[...firstScreenOptions]
+                .sort((a, b) => a.orderIndex - b.orderIndex)
+                .map(card => {
                 if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
                 if (card.type === EServiceType.PikUpDropOff && !isPickUpDropOffServiceOn) return null;
 

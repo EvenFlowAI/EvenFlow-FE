@@ -73,7 +73,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         selectedOpsCodes,
         categoriesIds,
         allCategories,
-        serviceType,
+        serviceTypeOption,
         selectedRecalls
     ] = useSelector(
         (state: RootState) => [
@@ -93,7 +93,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.appointment.selectedSR,
             state.appointmentFrame.categoriesIds,
             state.categories.allCategories,
-            state.appointmentFrame.serviceType,
+            state.appointmentFrame.serviceTypeOption,
             state.appointmentFrame.selectedRecalls,
         ]);
 
@@ -112,7 +112,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             serviceCategoryIds: getCategories(),
             customerId: customerData?.id,
             warrantyExpiration: selectedVehicle?.warrantyExpiration,
-            serviceType,
+            serviceTypeOptionId: serviceTypeOption?.id ?? null,
         }
         if (valueService?.selectedService) {
             dd.valueServiceOfferIds = [valueService.selectedService.id];

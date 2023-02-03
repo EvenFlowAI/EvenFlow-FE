@@ -8,8 +8,12 @@ import {RootState} from "../../store/rootReducer";
 import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
 import {
-    clearStorage, getBlankCustomer, getBlankVehicle,
-    saveAppointmentReducer, saveCustomerCache, setCustomerEnteredEmail,
+    clearStorage,
+    getBlankCustomer,
+    getBlankVehicle,
+    saveAppointmentReducer,
+    saveCustomerCache,
+    setCustomerEnteredEmail,
     setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
@@ -21,8 +25,12 @@ import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData,
     setCurrentFrameScreen,
-    setSideBarSteps, setUserType,
-    setValueServiceAvailability, setVehicle, setWelcomeScreenView
+    setServiceType, setServiceTypeOption,
+    setSideBarSteps,
+    setUserType,
+    setValueServiceAvailability,
+    setVehicle,
+    setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
@@ -163,8 +171,13 @@ export const Welcome = () => {
         dispatch(setUserType(EUserType.New));
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
-        if ((isMobileServiceOn || isPickUpDropOffServiceOn) && firstScreenOptions.length) {
-            dispatch(setWelcomeScreenView('serviceSelect'))
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                dispatch(setServiceType(firstScreenOptions[0].type))
+                dispatch(setServiceTypeOption(firstScreenOptions[0]));
+            } else if (firstScreenOptions.length > 1) {
+                dispatch(setWelcomeScreenView('serviceSelect'))
+            }
         } else {
             createBlankCar()
             onComplete(serviceType, EUserType.New);

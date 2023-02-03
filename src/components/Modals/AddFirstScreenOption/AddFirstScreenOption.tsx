@@ -118,6 +118,10 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
         setFileState(initialFileState);
         setOrderIndex('');
         setDescription('')
+        setExternalLink('')
+        setNote('')
+        setSelectedServiceType(null)
+        setDefaultTransportation(null)
         props.onClose();
     }, [])
 

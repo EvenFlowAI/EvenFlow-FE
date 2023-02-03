@@ -74,7 +74,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         serviceType,
         zipCode,
         address,
-        selectedRecalls
+        selectedRecalls,
+        serviceTypeOption,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointmentFrame.selectedTiming,
@@ -98,6 +99,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.zipCode,
         state.appointmentFrame.address,
         state.appointmentFrame.selectedRecalls,
+        state.appointmentFrame.serviceTypeOption,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -197,7 +199,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         serviceCategoryIds: getCategories(),
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration,
-                        serviceType,
+                        serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     }
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
