@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import axios from "axios";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {Loading} from "../UI/Loading";
@@ -32,8 +32,16 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
     const [icon, setIcon] = useState<string>('');
     const classes = useStyles();
 
+    const iconType = useMemo((): string => {
+        if (card.iconPath?.length) {
+            const index = card.iconPath.lastIndexOf('.');
+            return index > 0 ? card.iconPath.slice(index, card.iconPath.length - 1) : '';
+        }
+        return '';
+    }, [card.iconPath])
+
     useEffect(() => {
-        if (card.iconPath) {
+        if (card.iconPath && iconType.length && iconType.toLowerCase() === 'svg') {
             setIsIconLoading(true);
             axios.get(card.iconPath, {withCredentials: false})
                 .then(({ data }) => {
@@ -41,12 +49,14 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
                 })
                 .finally(() => setIsIconLoading(false))
         }
-    }, [card])
+    }, [iconType, card])
 
     return isIconLoading
         ? <Loading/>
-        : card.iconPath && icon
-            ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} onClick={() => isSM && onClick()}/>
+        : card.iconPath
+            ? iconType.toLowerCase() === 'svg'
+                ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} />
+                : <div className={classes.icon} onClick={() => isSM && onClick()}><img src={card.iconPath} alt="logo"/></div>
             : <div className={classes.noLogo}>No logo</div>
 };
 
