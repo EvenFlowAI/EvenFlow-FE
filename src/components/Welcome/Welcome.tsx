@@ -177,6 +177,9 @@ export const Welcome = () => {
                 dispatch(setServiceTypeOption(firstScreenOptions[0]));
             } else if (firstScreenOptions.length > 1) {
                 dispatch(setWelcomeScreenView('serviceSelect'))
+            } else {
+                createBlankCar()
+                onComplete(serviceType, EUserType.New);
             }
         } else {
             createBlankCar()
