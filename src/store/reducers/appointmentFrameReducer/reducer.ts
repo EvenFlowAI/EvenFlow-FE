@@ -46,7 +46,7 @@ import {
     setFilteredZipCodes,
     setSelectedRecalls,
     setRecallsAreShown,
-    setHoursOfOperations,
+    setHoursOfOperations, setServiceTypeOption,
 } from "./actions";
 import {
     ICustomer,
@@ -72,6 +72,7 @@ import {TScreen} from "../../../components/Layout/types";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
+import {IFirstScreenOption} from "../serviceTypes/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -120,6 +121,7 @@ type TState = {
     selectedRecalls: IRecallByVin[];
     recallsAreShown: boolean;
     hoursOfOperations: IHOODataForm[];
+    serviceTypeOption: IFirstScreenOption|null;
 }
 const initialState: TState = {
     service: null,
@@ -171,6 +173,7 @@ const initialState: TState = {
     selectedRecalls: [],
     recallsAreShown: false,
     hoursOfOperations: [],
+    serviceTypeOption: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -341,5 +344,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setHoursOfOperations, (state, {payload}) => {
         return {...state, hoursOfOperations: payload}
+    })
+    .addCase(setServiceTypeOption, (state, {payload}) => {
+        return {...state, serviceTypeOption: payload}
     })
 )

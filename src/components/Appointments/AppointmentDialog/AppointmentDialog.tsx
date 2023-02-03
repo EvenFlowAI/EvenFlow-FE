@@ -278,7 +278,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceCenterId: selectedSC.id,
                     jobType: jobType?.value ?? null,
                     appointmentHashKey: payload?.hashKey ?? undefined,
-                    serviceType: serviceType?.value ?? EServiceType.VisitCenter,
+                    // todo serviceTypeOptionId;
+                    serviceTypeOptionId: null,
                     address: address?.label ?? null,
                     zipCode: zipCode?.length ? zipCode : undefined,
                     vehicle: {
@@ -428,7 +429,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 reminderTypes: form.reminderTypes,
                 appointmentTimingType: EAppointmentTimingType.PreferredDate,
                 transportationType: form.transportationOption?.type,
-                serviceType: serviceType ? serviceType.value : EServiceType.VisitCenter,
+                //todo serviceTypeOptionId
+                serviceTypeOptionId: null,
             }
             if (zipCode) data.zipCode = zipCode;
             if (address) data.address = address.label;

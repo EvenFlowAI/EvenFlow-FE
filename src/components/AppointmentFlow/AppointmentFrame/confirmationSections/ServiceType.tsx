@@ -14,10 +14,11 @@ const TitleWrapper = styled('div')({
 });
 
 const ServiceType = () => {
-    const {serviceType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, isMobileServiceOn, isPickUpDropOffServiceOn, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
 
     const getServiceName = () => {
+        if (serviceTypeOption?.name) return serviceTypeOption.name;
         switch (serviceType) {
             case EServiceType.MobileService:
                 return t("Mobile Service");
@@ -30,7 +31,7 @@ const ServiceType = () => {
     return isMobileServiceOn || isPickUpDropOffServiceOn
         ? <div>
             <TitleWrapper>
-                <ConfirmationTitle>{t("Location Of Service")}</ConfirmationTitle>
+                <ConfirmationTitle>{serviceTypeOption?.name ? t("Service Option") : t("Location Of Service")}</ConfirmationTitle>
             </TitleWrapper>
             {getServiceName()}
         </div>
