@@ -175,11 +175,13 @@ export const Welcome = () => {
             if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
                 dispatch(setServiceType(EServiceType.VisitCenter))
                 dispatch(setServiceTypeOption(firstScreenOptions[0]));
-            } else if (firstScreenOptions.length > 1) {
-                dispatch(setWelcomeScreenView('serviceSelect'))
             } else {
-                createBlankCar()
-                onComplete(serviceType, EUserType.New);
+                if (firstScreenOptions.length > 1) {
+                    dispatch(setWelcomeScreenView('serviceSelect'))
+                } else {
+                    createBlankCar()
+                    onComplete(serviceType, EUserType.New);
+                }
             }
         } else {
             createBlankCar()
