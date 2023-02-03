@@ -114,7 +114,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
 
     const handleSelect = (card: IFirstScreenOption) => {
         dispatch(setServiceTypeOption(card))
-        dispatch(setServiceType(card.type));
+        card.type && dispatch(setServiceType(card.type));
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
         } else {
