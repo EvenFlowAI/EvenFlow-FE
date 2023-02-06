@@ -127,7 +127,7 @@ export const ServiceRequests = () => {
         } else {
             try {
                 await dispatch(removeAdminServiceRequest(editedItem));
-                showMessage("Removed");
+                showMessage("Service Request removed");
                 setEditedItem(undefined);
             } catch (e) {
                 showError(e);

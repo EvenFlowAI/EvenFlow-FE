@@ -137,6 +137,7 @@ export const AppointmentFrameLayout = () => {
         userType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
 
@@ -152,7 +153,8 @@ export const AppointmentFrameLayout = () => {
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
+        // todo by serviceOptionId
+        return config.find(item => item.serviceType?.toString() === serviceType?.toString());
     }, [config, serviceType])
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
@@ -294,7 +296,9 @@ export const AppointmentFrameLayout = () => {
     }, [])
 
     const handleAddNewVehicle = useCallback(() => {
-        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
+        const needToShowServiceSelection = userType === EUserType.Existing
+            && (firstScreenOptions.length
+                && (isMobileServiceOn || isPickUpDropOffServiceOn));
         clearData()
         if (needToShowServiceSelection) {
             handleServiceTypeSelection()
@@ -326,7 +330,7 @@ export const AppointmentFrameLayout = () => {
     const handleSelectCar = useCallback(async () => {
         dispatch(selectSR(null));
         clearAppointmentData()
-        let needToShowServiceSelection: boolean = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
+        let needToShowServiceSelection: boolean = userType === EUserType.Existing && ((isMobileServiceOn || isPickUpDropOffServiceOn));
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
             const lastIndex = key.lastIndexOf('==');

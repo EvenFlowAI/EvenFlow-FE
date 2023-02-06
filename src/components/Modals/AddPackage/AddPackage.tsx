@@ -404,14 +404,6 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         } else setFormIsChecked(true);
     }
 
-    const checkIsErrorField = (fieldName: string, vehiclesData: IVehiclesData) => {
-        let isError = false;
-        if (fieldName.includes('year') && vehiclesData?.yearFrom && vehiclesData?.yearTo) {
-            isError = vehiclesData?.yearFrom > vehiclesData?.yearTo
-        }
-        return isApplyBusinessRules && formIsChecked && isError;
-    }
-
     const handleOpsCodeSelect = useCallback((el: IAssignedServiceRequest) => {
         setOpsCodes(prev => {
             return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
@@ -472,7 +464,10 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             ? classes.errorOpsCodes
                             : classes.emptyOpsCodes}>
                         { opsCodes?.length
-                            ? opsCodes.map(item => <OpsCode serviceRequest={item.serviceRequest} onDelete={onDelete} key={item.serviceRequest.id}/>)
+                            ? opsCodes.map((item, index) => <OpsCode
+                                serviceRequest={item.serviceRequest}
+                                onDelete={onDelete}
+                                key={`${item.serviceRequest.id}+${index}`}/>)
                             : <p>There are no Ops Codes in this list yet</p>
                         }
                     </div>
@@ -509,14 +504,10 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                         setSelectedModels={setSelectedModels}
                         setFormIsChecked={setFormIsChecked}
                         disabled={!isApplyBusinessRules}
-                        formIsChecked={formIsChecked}
-                        isApplyBusinessRules={isApplyBusinessRules}
                     />
                     <Mileage
                         disabled={!isApplyBusinessRules}
                         selectedMileages={selectedMileages}
-                        isApplyBusinessRules={isApplyBusinessRules}
-                        formIsChecked={formIsChecked}
                         setFormIsChecked={setFormIsChecked}
                         setSelectedMileages={setSelectedMileages}
                     />
@@ -529,13 +520,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 disableClearable
                                 options={yearOptions}
                                 disableCloseOnSelect
-                                getOptionSelected={(option, value) => option === value}
+                                getOptionSelected={(option, value) => option.toLowerCase() === value.toLowerCase()}
                                 value={vehiclesData?.yearFrom}
                                 onChange={onFormFieldChange('yearFrom')}
                                 renderInput={autocompleteRender({
                                     label: '',
                                     placeholder: 'From',
-                                    // error: !vehiclesData.yearFrom && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
                                 })}
                             />
                             <Autocomplete
@@ -544,13 +534,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 options={yearOptions}
                                 disableClearable
                                 disableCloseOnSelect
-                                getOptionSelected={(option, value) => option === value}
+                                getOptionSelected={(option, value) => option.toLowerCase() === value.toLowerCase()}
                                 value={vehiclesData?.yearTo}
                                 onChange={onFormFieldChange('yearTo')}
                                 renderInput={autocompleteRender({
                                     label: '',
                                     placeholder: 'To',
-                                    // error: !vehiclesData.yearTo && isApplyBusinessRules && formIsChecked || checkIsErrorField('year', vehiclesData)
                                 })}
                             />
                         </div>
@@ -561,9 +550,9 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 classes={autoCompleteStyles}
                                 disableClearable
                                 options={criteriaOptions}
-                                getOptionSelected={(option, value) => option === ECustomerCriteria[+value]}
+                                getOptionSelected={(option, value) => option === value}
                                 disabled={!isApplyBusinessRules}
-                                value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[0]}
+                                value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[ECustomerCriteria.Any]}
                                 onChange={onFormFieldChange('customerCriteria')}
                                 renderInput={autocompleteRender({label: 'Customer Criteria', placeholder: 'Select Customer Criteria'})}
                             />

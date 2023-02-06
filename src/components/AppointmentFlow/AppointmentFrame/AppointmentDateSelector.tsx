@@ -7,7 +7,6 @@ import {DaySelector} from "./DaySelector";
 import {TGroupedAppointments} from "../../../utils/types";
 import {useTranslation} from "react-i18next";
 
-
 const MonthSelectorWrapper = styled('div')({
     display: "flex",
     alignItems: "center",

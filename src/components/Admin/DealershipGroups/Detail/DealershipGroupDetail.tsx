@@ -29,7 +29,7 @@ const tabs: TTab[] = [
 export const DealershipGroupDetail = () => {
     const {id} = useParams();
     const [dealership, setDS] = useState<IDealershipGroupExtended | undefined>();
-
+    const [selectedTab, setTab] = useState<string>("1");
     const dispatch = useDispatch();
 
     const {pageData: pageEData, onChangeRowsPerPage: onChangeERowsPerPage, onChangePage: onChangeEPage} = useStatePagination();
@@ -45,11 +45,11 @@ export const DealershipGroupDetail = () => {
     useEffect(() => {
         dispatch(loadDealershipEmployees(id, pageEData));
     }, [id, dispatch, pageEData]);
+
     useEffect(() => {
         dispatch(loadDealershipSCs(id, pageDData));
     }, [id, dispatch, pageDData]);
 
-    const [selectedTab, setTab] = useState<string>("1");
     const handleChangeTab = (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
     }

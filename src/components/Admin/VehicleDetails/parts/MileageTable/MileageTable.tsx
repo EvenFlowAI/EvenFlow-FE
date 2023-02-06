@@ -64,7 +64,7 @@ const MileageTable = () => {
         if (currentMileage) {
             askConfirm({
                 isRemove: true,
-                title: `Remove Mileage Option ${currentMileage?.value}?`,
+                title: `Please confirm you want to remove Mileage Option ${currentMileage?.value}?`,
                 onConfirm: handleRemove
             });
         }

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
@@ -90,15 +90,19 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             return slots;
         }, [date, appointments, gap]);
 
-        const handleSelect = (a: IRemappedAppointmentSlot|null) => {
-            const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+        const handleGA = useCallback((a: IRemappedAppointmentSlot|null) => {
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: 'Clicked on Appointment Slot',
                 label: a?.price?.value ? `With Price $${a.price.value}` : '',
             });
+        }, [])
+
+        const handleSelect = useCallback((a: IRemappedAppointmentSlot|null) => {
+            const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+            handleGA(a);
             dispatch(selectAppointment(data));
-        }
+        }, [selectedTiming])
 
         return (
             <div className={classes.wrapper}>

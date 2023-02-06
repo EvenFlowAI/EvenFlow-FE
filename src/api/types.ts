@@ -86,7 +86,7 @@ export interface ICreateAppointment {
     serviceRequestIds: number[];
     searchTerm?: string;
     jobType?: EJobType;
-    serviceType: EServiceType;
+    serviceTypeOptionId: number|null;
     address?: string;
     zipCode?: string;
 }
