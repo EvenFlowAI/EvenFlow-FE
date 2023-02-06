@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Grid, styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {mh400, mh600} from "./CustomerSelect";
@@ -96,6 +96,13 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const dispatch = useDispatch();
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down("sm"))
+    const remappedCards = useMemo(() => firstScreenOptions
+            .map(card => {
+                if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
+                if (card.type === EServiceType.PikUpDropOff && !isPickUpDropOffServiceOn) return null;
+                return card
+            })
+        .filter(card => card), [firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn])
 
     const handleUser = (serviceType: EServiceType) => {
         if (userType === EUserType.New) {
@@ -124,26 +131,25 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
 
     return isLoading || loading
         ? <Loading/>
-        : <CardsWrapper className={classes.buttonsContainer} cardsAmount={firstScreenOptions.length}>
-            {[...firstScreenOptions]
-                .sort((a, b) => a.orderIndex - b.orderIndex)
+        : <CardsWrapper className={classes.buttonsContainer} cardsAmount={remappedCards.length}>
+            {[...remappedCards]
+                .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
                 .map(card => {
-                if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
-                if (card.type === EServiceType.PikUpDropOff && !isPickUpDropOffServiceOn) return null;
-
-                return <Grid key={card.id}>
-                    <div className={classes.button} onClick={() => !isSM && handleSelect(card)}>
-                        {card.description ? <HtmlTooltip
-                            enterTouchDelay={0}
-                            placement="right-end"
-                            title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
-                        >
-                            <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
-                        </HtmlTooltip> : null}
-                        <div className={classes.name} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
-                        <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
-                    </div>
-                </Grid>
+                    if (card) {
+                        return <Grid key={card.id}>
+                            <div className={classes.button} onClick={() => !isSM && handleSelect(card)}>
+                                {card.description ? <HtmlTooltip
+                                    enterTouchDelay={0}
+                                    placement="right-end"
+                                    title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                                >
+                                    <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
+                                </HtmlTooltip> : null}
+                                <div className={classes.name} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
+                                <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
+                            </div>
+                        </Grid>
+                    }
             })}
         </CardsWrapper>
 };
