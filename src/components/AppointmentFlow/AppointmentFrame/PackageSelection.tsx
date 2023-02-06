@@ -111,8 +111,8 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             borderTop: border,
         },
         '&:nth-child(4n+1)': {
-            textAlign: "right",
-            justifyContent: "flex-end",
+            textAlign: "center",
+            justifyContent: "center",
             cursor: "default",
         },
         "&.gray": {
@@ -131,7 +131,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         },
         "&.serviceWithInfo": {
             display: 'flex',
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
             alignItems: 'center',
             padding: "6px 8px",
         },
