@@ -56,7 +56,7 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
             ? iconType.toLowerCase() === 'svg'
                 ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} />
                 : <div className={classes.icon} onClick={() => isSM && onClick()}>
-                    <img style={{width: '75%'}} src={card.iconPath} alt="logo"/>
+                    <img style={{width: '100%'}} src={card.iconPath} alt="logo"/>
                 </div>
             : <div className={classes.noLogo}>No logo</div>
 };
