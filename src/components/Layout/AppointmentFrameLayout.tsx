@@ -330,7 +330,9 @@ export const AppointmentFrameLayout = () => {
     const handleSelectCar = useCallback(async () => {
         dispatch(selectSR(null));
         clearAppointmentData()
-        let needToShowServiceSelection: boolean = userType === EUserType.Existing && ((isMobileServiceOn || isPickUpDropOffServiceOn));
+        let needToShowServiceSelection: boolean = userType === EUserType.Existing
+            && (Boolean(firstScreenOptions.length)
+                && (isMobileServiceOn || isPickUpDropOffServiceOn));
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
             const lastIndex = key.lastIndexOf('==');
@@ -361,7 +363,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, selectedVehicle, showError, dispatch]);
+    }, [handleSetScreen, selectedVehicle, showError, dispatch, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
