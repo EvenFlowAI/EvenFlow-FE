@@ -100,6 +100,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
             setOrderIndex(editingItem.orderIndex?.toString() ?? '');
             setDescription(editingItem.description ?? '');
             setNote(editingItem.note ?? '');
+            setExternalLink(editingItem.externalLink ?? '');
             if (editingItem.transportationOption?.id) {
                 const transportation = options.find(item => item.id === editingItem.transportationOption?.id)
                 transportation && setDefaultTransportation(transportation);
