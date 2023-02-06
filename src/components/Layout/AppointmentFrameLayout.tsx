@@ -153,7 +153,6 @@ export const AppointmentFrameLayout = () => {
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const currentConfig = useMemo(() => {
-        // todo by serviceOptionId
         return config.find(item => item.serviceType?.toString() === serviceType?.toString());
     }, [config, serviceType])
 

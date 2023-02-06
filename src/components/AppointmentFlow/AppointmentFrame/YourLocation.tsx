@@ -66,7 +66,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {zipCode: zipCodeValue, address, serviceType, filteredZipCodes} = useSelector((state: RootState) => state.appointmentFrame);
+    const {zipCode: zipCodeValue, address, serviceType, filteredZipCodes, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -134,7 +134,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 address: address.label,
                 zipCode: zip,
                 serviceCenterId: scProfile?.id,
-                serviceType
+                serviceTypeOptionId: serviceTypeOption?.id ?? null,
             }
             dispatch(loadAncillaryPriceByZip(data, onSuccess, showError))
         } else {
