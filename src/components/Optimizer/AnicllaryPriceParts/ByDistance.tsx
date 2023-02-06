@@ -144,6 +144,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
             }
             if (updated && updated.costPerMile === 0 && updated.serviceMultiplier === 0) {
                 showError( "Service Multiplier' or 'Cost Per Mile' must be greater than 0")
+                return false;
             }
             if (updated && updated.costPerMile > 0 && updated.serviceMultiplier > 0) {
                 showError("Only one value can be greater than 0: 'Service Multiplier' or 'Cost Per Mile'");
@@ -213,7 +214,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
     }
 
     const onCancel = () => {
-        setDistanceData(data)
+        setDistanceData(data.slice().sort((a, b) => a.orderIndex - b.orderIndex))
         setIsEdit(false)
     }
 
@@ -310,7 +311,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                                     min: 0,
                                                     step: 0.01,
                                                 }}
-                                                value={item?.maxValue || ''}
+                                                value={item?.maxValue}
                                                 onChange={handleChangeField('maxValue')}
                                             />
                                             : item.maxValue.toFixed(2)}
@@ -323,7 +324,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                                     min: 0,
                                                     step: 0.01,
                                                 }}
-                                                value={item?.costPerMile || ''}
+                                                value={item?.costPerMile}
                                                 onChange={handleChangeField('costPerMile')}
                                             />
                                             : item.costPerMile.toFixed(2)}
