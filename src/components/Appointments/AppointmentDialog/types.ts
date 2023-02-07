@@ -21,6 +21,7 @@ export type TForm = {
     serviceRequestIds: number[];
     vehicleEngineTypeId: number|null;
 };
+export type TKey = keyof TForm;
 
 export type TOption = {
     value: number;

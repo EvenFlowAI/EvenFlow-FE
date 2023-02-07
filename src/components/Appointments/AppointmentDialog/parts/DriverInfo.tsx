@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {Grid} from "@material-ui/core";
 import {TextField} from "../../../UI/TextField";
-import {TForm} from "../AppointmentDialog";
+import {TForm} from "../types";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../UI/AutocompleteRender";
