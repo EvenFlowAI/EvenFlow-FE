@@ -13,10 +13,8 @@ type MakeAndModelProps = {
     setSelectedModels: Dispatch<SetStateAction<string[]>>;
     selectedModels: string[];
     selectedMakes: string[];
-    formIsChecked: boolean;
     setFormIsChecked: Dispatch<SetStateAction<boolean>>;
     disabled: boolean;
-    isApplyBusinessRules?:boolean;
 }
 
 export const useMakeAndModelStyles = makeStyles(() => ({
@@ -49,9 +47,8 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                                                        selectedModels,
                                                        selectedMakes,
                                                        setSelectedModels,
-                                                       formIsChecked,
                                                        setFormIsChecked,
-                                                       isApplyBusinessRules}) => {
+                                                   }) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const [models, setModels] = useState<string[]>([]);
     const classes = useMakeAndModelStyles();
@@ -171,6 +168,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     disabled={disabled}
                     options={getSortedMakes(makesFromDB)}
                     disableCloseOnSelect
+                    getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
                     renderOption={renderMakeOption}
                     value={selectedMakes}
                     onChange={onMakeChange}
@@ -188,6 +186,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     options={models}
                     disableCloseOnSelect
                     renderOption={renderModelOption}
+                    getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
                     value={selectedModels}
                     onChange={onModelChange}
                     renderInput={autocompleteRender({

@@ -65,7 +65,8 @@ export enum EUserType {
 export enum EServiceType {
     VisitCenter,
     MobileService,
-    PikUpDropOff
+    PikUpDropOff,
+    General
 }
 
 export type TValueService = {

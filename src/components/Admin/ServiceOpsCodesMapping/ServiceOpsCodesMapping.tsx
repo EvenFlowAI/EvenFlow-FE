@@ -59,7 +59,7 @@ const ServiceOpsCodesMapping = () => {
         } else {
             try {
                 if (currentItem.id) dispatch(deleteCategoryById(currentItem.id))
-                showMessage("Removed");
+                showMessage("Category removed");
                 setCurrentItem(null);
             } catch (e) {
                 showError(e);
@@ -74,7 +74,7 @@ const ServiceOpsCodesMapping = () => {
         } else {
             askConfirm({
                 isRemove: true,
-                title: `Remove category ${currentItem.name}?`,
+                title: `Please confirm you want to remove category ${currentItem.name}?`,
                 onConfirm: handleRemove
             });
         }

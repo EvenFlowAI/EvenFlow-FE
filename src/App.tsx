@@ -40,11 +40,12 @@ const App = () => {
         if (serviceType === EServiceType.PikUpDropOff) {
             setValueServicePreviousScreen("location");
         }
-        if (!config.find(item => item.serviceType.toString() === serviceType.toString())?.advisorSelection
+        const currentConfig = config.find(item => item.serviceType && serviceType && item.serviceType.toString() === serviceType.toString());
+        if (!currentConfig?.advisorSelection
             || serviceType === EServiceType.MobileService) {
             setValueServiceNextScreen("appointmentTiming");
         }
-    }, [serviceType])
+    }, [serviceType, config])
 
     useEffect(() => {
         if (scProfile) dispatch(loadBookingFlowConfig(scProfile.id))

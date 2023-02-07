@@ -66,6 +66,7 @@ const initialPasswordForm: TPasswordForm = {
     newPassword: "",
     repeatPassword: ""
 }
+
 export const UserProfile = () => {
     const [saving, setSaving] = useState<boolean>(false);
     const [isEditPassword, setEditPassword] = useState<boolean>(false);
@@ -76,7 +77,7 @@ export const UserProfile = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
-
+    const classes = useStyles();
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -94,16 +95,19 @@ export const UserProfile = () => {
         setEdit(false);
         setForm({...profile} as TForm || blankProfile);
     }
+
     const cancelPasswordEdit = () => {
         setPasswordForm(initialPasswordForm);
         setEditPassword(false);
     }
+
     const handleChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
         if (name === "phoneNumber") {
             value = validatePhoneNumber(value);
         }
         setForm({...form, [name]: value});
     }
+
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordForm({...passwordForm, [e.target.name]: e.target.value});
     }
@@ -140,6 +144,7 @@ export const UserProfile = () => {
             showError("Profile is not loaded");
         }
     }
+
     const handlePasswordSave = async () => {
         if (!passwordForm.oldPassword) {
             showError("Please type old password");
@@ -162,7 +167,6 @@ export const UserProfile = () => {
         }
     }
 
-    const classes = useStyles();
     if (!profile) {
         return null;
     }

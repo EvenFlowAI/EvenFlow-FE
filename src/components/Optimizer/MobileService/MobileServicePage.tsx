@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
-import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
-import {useDispatch, useSelector} from "react-redux";
+import {useModal} from "../../../utils/hooks";
 import {Tab} from "@material-ui/core";
-import {RootState} from "../../../store/rootReducer";
 import {pricingRoot} from "../utils";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
@@ -20,12 +18,6 @@ type TTab = {
 
 const MobileServicePage = () => {
     const [selectedTab, selectTab] = useState<string>("0");
-    const [saving, setSaving] = useState<boolean>(false);
-    const {selectedSC} = useSCs();
-    const { isLoading } = useSelector((state: RootState) => state.mobileService);
-    const dispatch = useDispatch();
-    const showError = useException();
-    const showMessage = useMessage();
     const {onOpen: onAddZoneOpen, onClose: onAddZoneClose, isOpen: isAddZoneOpen} = useModal();
 
     const tabs: TTab[] = [

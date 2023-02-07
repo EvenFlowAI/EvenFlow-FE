@@ -195,7 +195,7 @@ const Wrapper = styled('div')(({theme}) => ({
     }
 }));
 
-const Info = styled("p")({
+const Info = styled("div")({
     color: "#808080",
     fontSize: 14,
     gridColumnStart: 1,
