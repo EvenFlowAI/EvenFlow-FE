@@ -11,16 +11,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
 
-type TServiceTypeOption = {
-    value: number;
-    name: string;
-}
 type TDriverInfoProps = {
     form: TForm;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
     errors: string[];
-    serviceType: TServiceTypeOption|null;
+    serviceType: IFirstScreenOption|null;
     address: any;
     zipCode: string;
     setAddress: Dispatch<SetStateAction<any>>;
@@ -118,7 +115,7 @@ const DriverInfo: React.FC<TDriverInfoProps> = ({
                     fullWidth
                 />
             </Grid>
-            { serviceType?.value !== EServiceType.VisitCenter && otherServiceTypesAvailable
+            { serviceType?.type as EServiceType !== EServiceType.VisitCenter && otherServiceTypesAvailable
                 ? <React.Fragment>
                     <Grid item xs={12} sm={8}>
                         <p className={classes.label}>Driver Address</p>
