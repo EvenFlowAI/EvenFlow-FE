@@ -220,6 +220,7 @@ export interface IBaseAppointment {
     createdBy: string;
     user?: ICurrentUser;
     serviceType: EServiceType;
+    serviceTypeOption?: IFirstScreenOption|null;
     address?: string;
     zipCode?: string;
     ancillaryPrice: number;
