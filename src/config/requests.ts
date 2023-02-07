@@ -457,7 +457,6 @@ export class Api {
             ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"},
         },
         ServiceTypes: {
-            // todo change routes to real
             Create: {route: "/service-type-options", method: "post"},
             UpdateIcon: {route: "/service-type-options/{id}/icon", method: "patch"},
             Update: {route: "/service-type-options/{id}", method: "put"},

@@ -238,7 +238,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, maintenanceDetails: {...state.maintenanceDetails, ...payload}}
     })
     .addCase(setUpdateAppointment, (state, {payload}) => {
-        // todo serviceTypeOPtion
         return {
             ...state,
             id: payload.id,
@@ -247,10 +246,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             reminders: payload.reminderTypes,
             categoriesIds: payload.serviceCategories ? payload.serviceCategories?.map(item => item.id) : [],
             description: payload.comment,
-            serviceType: payload.serviceType || EServiceType.VisitCenter,
+            serviceType: payload.serviceType ?? payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
             address: payload.address ?? null,
             zipCode: payload.zipCode ?? "",
-            // selectedPackage: payload.maintenancePackageOption ?? null,
+            serviceTypeOption: payload.serviceTypeOption ?? null,
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
