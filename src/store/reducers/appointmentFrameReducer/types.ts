@@ -112,8 +112,8 @@ export type TLanguage = "en" | "es";
 export interface IAncillaryByZipRequest {
     address: string;
     zipCode: string;
-    serviceType: EServiceType;
     serviceCenterId: number;
+    serviceTypeOptionId?: number|null;
 }
 
 export enum EAncillaryType {
