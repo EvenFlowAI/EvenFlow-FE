@@ -228,16 +228,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [packageData])
 
-    const getFixedValue = useCallback((value: string): number => {
-        if (Number.isInteger(+value)) return +value;
-        const [integer, decimal] = value.split('.');
-        if (decimal.length <= 2) {
-            return +value
-        } else {
-            return Number(`${integer}.${decimal.slice(0, 2)}`);
-        }
-    }, [])
-
     const onInputChange = useCallback((value: string, fieldName: string, optionType: string | number) => {
         if (packageData) {
             if (fieldName.toLowerCase().includes('hours') && Number(value) > 100) {
@@ -318,14 +308,18 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }, [dispatch])
 
     const handleSave = useCallback((): void => {
-        const [isValid, messages] = checkIsValid(packageData);
-        if (isValid) {
-            if (packageData) {
-                onRequestToDMSOpen();
-            }
-        } else {
-            messages.forEach(message => showError(message))
+        if (packageData) {
+            onRequestToDMSOpen();
         }
+        // todo decide if we still need data validation
+        // const [isValid, messages] = checkIsValid(packageData);
+        // if (isValid) {
+        //     if (packageData) {
+        //         onRequestToDMSOpen();
+        //     }
+        // } else {
+        //     messages.forEach(message => showError(message))
+        // }
     }, [packageData, checkIsValid, onRequestToDMSOpen, showError])
 
     const handleExpand = (e: any): void => {

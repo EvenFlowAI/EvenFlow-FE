@@ -1,17 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, makeStyles, Switch} from "@material-ui/core";
 import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
-import {IPackageByQuery} from "../../../api/types";
+import {EMaintenanceOptionType, IPackageByQuery} from "../../../api/types";
 import {getPackageById, loadPackages} from "../../../store/reducers/packages/actions";
-import {updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
+import {updateAvailablePackageOptions, updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
 import {useException, useModal, useSCs} from "../../../utils/hooks";
 import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
 import {Loading} from "../../UI/Loading";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {Autocomplete} from "@material-ui/lab";
+import {useMakeAndModelStyles} from "../../Modals/AddPackage/parts/MakeAndModel/MakeAndModel";
 
 type TExpandedState = {
     id?: number;
@@ -29,23 +32,55 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         alignItems: "center",
         justifyContent: 'space-between',
-        marginBottom: 20,
+        marginBottom: 10,
     },
     toggleWrapper: {
         display: "flex",
         alignItems: "center",
         justifyContent: 'space-between',
+    },
+    showPriceLabel: {
+        fontSize: 16,
+    },
+    optionsLabel: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        whiteSpace: 'nowrap',
+        marginRight: 10
     }
 }));
 
+type TOption = {
+    value: EMaintenanceOptionType;
+    name: string;
+}
+
+export const MaintenanceOptionTypes = [
+    {
+        name: 'Base',
+        value: EMaintenanceOptionType.Base
+    },
+    {
+        name: 'Value',
+        value: EMaintenanceOptionType.Value
+    },
+    {
+        name: 'Preffered',
+        value: EMaintenanceOptionType.Preferred
+    }
+]
+
 export const MaintenancePackages = () => {
     const {packages: allPackages} = useSelector((state: RootState) => state.packages);
-    const {loading} = useSelector((state: RootState) => state.serviceCenters);
+    const {loading, packagesOptionsLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isDisclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
+    const [presentedOptions, setPresentedOptions] = useState<TOption[]>([]);
     const classes = useStyles();
+    const autocompleteClasses = useMakeAndModelStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const {onOpen, onClose, isOpen} = useModal();
@@ -55,6 +90,8 @@ export const MaintenancePackages = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadPackages(selectedSC.id))
+            const options = MaintenanceOptionTypes.filter(item => selectedSC.maintenancePackageOptionTypes?.includes(item.value))
+            setPresentedOptions(options);
         }
         return () => {
             dispatch(getPackageById(null));
@@ -91,16 +128,18 @@ export const MaintenancePackages = () => {
         }
     }
 
+    const onPresentedOptionsChange = useCallback((e: ChangeEvent<{}>, value: TOption[]) => {
+        selectedSC && dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
+    }, [selectedSC])
 
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
         <div className={classes.topLineWrapper}>
-            <LaborRate/>
             <div className={classes.toggleWrapper}>
                 {loading
                     ? <Loading/>
                     : <React.Fragment>
-                        <h4>Show Price Details</h4>
+                        <p className={classes.showPriceLabel}>Show Price Details</p>
                         <Switch
                             onChange={handleSwitch}
                             checked={selectedSC?.isShowPriceDetails}
@@ -125,6 +164,31 @@ export const MaintenancePackages = () => {
                 >
                     Add Package
                 </Button>
+            </div>
+        </div>
+        <div className={classes.topLineWrapper}>
+            <LaborRate/>
+            <div style={{display: "flex", alignItems: "center", width: '50%'}}>
+                {packagesOptionsLoading
+                    ? <Loading/>
+                    : <React.Fragment>
+                        <p className={classes.optionsLabel}>Available Package Options</p>
+                        <Autocomplete
+                            fullWidth
+                            multiple
+                            classes={autocompleteClasses}
+                            options={MaintenanceOptionTypes}
+                            disableCloseOnSelect
+                            getOptionLabel={o => o.name}
+                            value={presentedOptions}
+                            onChange={onPresentedOptionsChange}
+                            renderInput={autocompleteRender({
+                                label: "",
+                                placeholder: 'Select Available Package Options'
+                            })}
+                        />
+                    </React.Fragment>
+                }
             </div>
         </div>
         {isDisclaimerOpen
