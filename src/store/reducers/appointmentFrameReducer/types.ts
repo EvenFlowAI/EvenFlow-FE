@@ -113,7 +113,7 @@ export interface IAncillaryByZipRequest {
     address: string;
     zipCode: string;
     serviceCenterId: number;
-    serviceTypeOptionId?: number|null;
+    serviceTypeOptionId: number|null;
 }
 
 export enum EAncillaryType {

@@ -134,8 +134,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 address: address.label,
                 zipCode: zip,
                 serviceCenterId: scProfile?.id,
+                serviceTypeOptionId: serviceTypeOption?.id ?? null,
             }
-            if (serviceTypeOption) data.serviceTypeOptionId = serviceTypeOption.id;
             dispatch(loadAncillaryPriceByZip(data, onSuccess, showError))
         } else {
             showError(t("Please select your Address and Zip code"))
