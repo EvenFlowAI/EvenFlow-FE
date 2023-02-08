@@ -97,6 +97,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         allCategories,
         categoriesIds,
         serviceType,
+        serviceTypeOption,
         address,
         zipCode,
         valueService,
@@ -115,6 +116,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
         state.appointmentFrame.serviceType,
+        state.appointmentFrame.serviceTypeOption,
         state.appointmentFrame.address,
         state.appointmentFrame.zipCode,
         state.appointmentFrame.valueService,
@@ -149,6 +151,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     }, [dispatch])
 
     const getServiceName = () => {
+        if (serviceTypeOption?.name) return serviceTypeOption?.name;
         switch (serviceType) {
             case EServiceType.MobileService:
                 return t("Mobile Service");

@@ -199,7 +199,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,
-            serviceType: appointmentFrame.serviceType,
+            serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
             zipCode: appointmentFrame.zipCode ?? null,
             address: appointmentFrame.address?.label ?? null,
         };

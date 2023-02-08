@@ -195,7 +195,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     }
 }));
 
-const Info = styled("p")<Theme, { count: number }>(({theme, count}) => ({
+const Info = styled("div")<Theme, { count: number }>(({theme, count}) => ({
     color: "#808080",
     fontSize: 14,
     gridColumnStart: 1,

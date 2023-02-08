@@ -14,6 +14,7 @@ import {EServiceCategoryType, ICategory} from "../store/reducers/categories/type
 import {EJobType} from "../store/reducers/pods/types";
 import {EServiceType} from "../store/reducers/appointmentFrameReducer/types";
 import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
+import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -86,7 +87,7 @@ export interface ICreateAppointment {
     serviceRequestIds: number[];
     searchTerm?: string;
     jobType?: EJobType;
-    serviceType: EServiceType;
+    serviceTypeOptionId: number|null;
     address?: string;
     zipCode?: string;
 }
@@ -219,6 +220,7 @@ export interface IBaseAppointment {
     createdBy: string;
     user?: ICurrentUser;
     serviceType: EServiceType;
+    serviceTypeOption?: IFirstScreenOption|null;
     address?: string;
     zipCode?: string;
     ancillaryPrice: number;
@@ -231,6 +233,7 @@ export interface IListAppointment extends IBaseAppointment {
 export interface IAppointmentByQuery extends IBaseAppointment {
     serviceCategories: ICategory[];
     jobType?: EJobType;
+    serviceTypeOption?: IFirstScreenOption;
 }
 
 export interface ISearchCustomerParams {

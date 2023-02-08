@@ -90,6 +90,16 @@ export const useStyles = makeStyles(theme => ({
             }
         }
     },
+    submitButton: {
+        minWidth: 144,
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
+            "&:last-child": {
+                marginBottom: theme.spacing(2),
+                marginTop: theme.spacing(2),
+            }
+        }
+    }
 }))
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
@@ -155,7 +165,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                 <Button
                     variant="contained"
                     color="primary"
-                    className={classes.loadingButton}
+                    className={classes.submitButton}
                     onClick={handleNew}
                 >
                     {t("Submit")}

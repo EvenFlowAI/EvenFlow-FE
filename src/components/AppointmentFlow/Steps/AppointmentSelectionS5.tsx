@@ -92,7 +92,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
     const [selectedView, setSelectedView] = useState<TView>("calendar");
     const [isLoading, setLoading] = useState<boolean>(false);
     const [popover, setPopover] = useState<TPopoverState>({anchor: null, selectedAppointment: null});
-    const {advisor, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {advisor, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
 
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -138,7 +138,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                     countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
                     customerId: customerData?.id,
                     warrantyExpiration: selectedVehicle?.warrantyExpiration,
-                    serviceType,
+                    serviceTypeOptionId: serviceTypeOption?.id ?? null,
                 }, updateDate));
             } finally {
                 setLoading(false);

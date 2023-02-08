@@ -170,7 +170,7 @@ type ApiRoutes = {
         | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
     Recalls: Record<"GetAll" | "GetById" | "GetByVin" | "Create" | "Update" | "Remove", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
-        | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
+        | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
@@ -185,6 +185,8 @@ type ApiRoutes = {
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
         | "Eligibility" | "ChangePricingDisplayType"
         | "EditSkills" | "Prioritize", TApiRoute>,
+    ServiceTypes: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
+        | "GetByQuery", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
     TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiRoute>,
@@ -454,6 +456,14 @@ export class Api {
             Eligibility: {route: "/service-requests/eligibility", method: "patch"},
             Prioritize: {route: "/service-requests/prioritize", method: "patch"},
             ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"},
+        },
+        ServiceTypes: {
+            Create: {route: "/service-type-options", method: "post"},
+            UpdateIcon: {route: "/service-type-options/{id}/icon", method: "patch"},
+            Update: {route: "/service-type-options/{id}", method: "put"},
+            Remove: {route: "/service-type-options/{id}", method: "delete"},
+            Retrieve: {route: "/service-type-options/{id}", method: "get"},
+            GetByQuery: {route: "/service-type-options/by-query", method: "post"},
         },
         SlotScoring: {
             SetProximity: {route: "/slot-scoring/proximity", method: "put"},

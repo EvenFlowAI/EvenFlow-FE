@@ -28,6 +28,7 @@ import {selectAppointment, selectSR} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
+import {IFirstScreenOption} from "../serviceTypes/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -58,6 +59,7 @@ export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCa
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
 export const setServiceType = createAction<EServiceType>('fAppointment/SetServiceType');
+export const setServiceTypeOption = createAction<IFirstScreenOption>('fAppointment/SetServiceTypeOption');
 export const setZipCode = createAction<string>('fAppointment/SetZipCode');
 export const setAddress = createAction<any>('fAppointment/SetAddress');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');

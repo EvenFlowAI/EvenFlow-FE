@@ -156,6 +156,7 @@ export const SelectedAppointment = () => {
         consultants,
         categoriesIds,
         serviceType,
+        serviceTypeOption,
         address,
         zipCode,
         valueService,
@@ -199,6 +200,7 @@ export const SelectedAppointment = () => {
     }, [scProfile])
 
     const getServiceName = () => {
+        if (serviceTypeOption?.name) return serviceTypeOption.name
         switch (serviceType) {
             case EServiceType.MobileService:
                 return t("Mobile Service");

@@ -8,11 +8,10 @@ import {yearOptions} from "../../../AppointmentFlow/AppointmentFrame/Maintenance
 import {IVehicleDetails} from "../../../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {TForm, TKey} from "../AppointmentDialog";
+import {TForm, TKey} from "../types";
 import {useSCs} from "../../../../utils/hooks";
 import {loadPackageByVehicle} from "../../../../store/reducers/appointments/actions";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
-import {IPackageAppointments} from "../../../../api/types";
 
 type TSelect = {
     label: string;
