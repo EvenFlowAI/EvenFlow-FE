@@ -68,7 +68,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         justifyContent: "stretch"
     },
     "& > div": {
-        textAlign: "center",
+        textAlign: count === 3 ? "right" : "center",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -111,8 +111,8 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             borderTop: border,
         },
         '&:nth-child(4n+1)': {
-            textAlign: "center",
-            justifyContent: "center",
+            textAlign: count === 3 ? "right" : "center",
+            justifyContent: count === 3 ? "flex-end" : "center",
             cursor: "default",
         },
         "&.gray": {
@@ -131,7 +131,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         },
         "&.serviceWithInfo": {
             display: 'flex',
-            justifyContent: 'center',
+            justifyContent: count === 3 ?  "flex-end" : 'center',
             alignItems: 'center',
             padding: "6px 8px",
         },
