@@ -299,10 +299,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const sendRequest = useCallback((data: IPackageById) => {
         const revisedData = data.options.map(option => ({
             ...option,
-            complimentaryServiceLaborHours: +option.complimentaryServiceLaborHours ?? 0,
-            complimentaryServicePrice: +option.complimentaryServicePrice ?? 0,
-            serviceRequestLaborHours: +option.serviceRequestLaborHours ?? 0,
-            serviceRequestPrice: +option.serviceRequestPrice ?? 0,
+            complimentaryServiceLaborHours: +option.complimentaryServiceLaborHours,
+            complimentaryServicePrice: +option.complimentaryServicePrice,
+            serviceRequestLaborHours: +option.serviceRequestLaborHours,
+            serviceRequestPrice: +option.serviceRequestPrice,
         }))
         try {
             dispatch(updatePackageOptions(data.id, revisedData));
