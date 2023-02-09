@@ -107,12 +107,12 @@ export const checkIsValid = (packageData: IPackageById | null): [boolean, string
     let isValid = false;
     let messages = [];
     const allRequestsHavePriceAndHours = !packageData?.options.find(option => (
-        !Boolean(option.serviceRequestPrice)
-        || !Boolean(option.serviceRequestLaborHours)
+        option.serviceRequestPrice < 0
+        || option.serviceRequestLaborHours < 0
     ));
 
     const allComplimentaryHavePriceAndHours = !packageData?.options.find(option => (
-        !Boolean(option.complimentaryServicePrice) || !Boolean(option.complimentaryServiceLaborHours)
+        option.complimentaryServicePrice < 0 || option.complimentaryServiceLaborHours < 0
     ))
 
     const requestsIncluded = Boolean(packageData?.options.every(option => option.serviceRequests.length > 0));
@@ -122,22 +122,23 @@ export const checkIsValid = (packageData: IPackageById | null): [boolean, string
 
     const allOptionsHaveNames = !!packageData?.options.every(option => option?.name?.length);
 
-    if (allRequestsHavePriceAndHours && requestsIncluded && allOptionsHaveNames) isValid = true;
+    // if (allRequestsHavePriceAndHours && requestsIncluded && allOptionsHaveNames) isValid = true;
+    if (allRequestsHavePriceAndHours) isValid = true;
 
     if (packageData?.complimentaryServices?.length) {
         if (!allComplimentaryHavePriceAndHours) {
             isValid = false;
-            messages.push('Complimentary Requests Market Prices and Invoiced Labor Hours must be more than 0');
+            messages.push('Complimentary Requests Market Prices and Invoiced Labor Hours must be equal to or more than 0');
         }
-        if (!complimentaryIncluded) {
-            isValid = false;
-            messages.push(`Please choose at least one COMPLIMENTARY Request for each Package Option`)
-        }
+        // if (!complimentaryIncluded) {
+        //     isValid = false;
+        //     messages.push(`Please choose at least one COMPLIMENTARY Request for each Package Option`)
+        // }
     }
 
-    if (!allOptionsHaveNames) messages.push('Please enter name for each Option of Package');
-    if (!allRequestsHavePriceAndHours) messages.push('Service Requests Market Prices and Invoiced Labor Hours must be more than 0');
-    if (!requestsIncluded) messages.push(`Please choose at least one SERVICE Request for each Package Option`);
+    // if (!allOptionsHaveNames) messages.push('Please enter name for each Option of Package');
+    if (!allRequestsHavePriceAndHours) messages.push('Service Requests Market Prices and Invoiced Labor Hours must be equal to or more than 0');
+    // if (!requestsIncluded) messages.push(`Please choose at least one SERVICE Request for each Package Option`);
 
     return [isValid, messages];
 }

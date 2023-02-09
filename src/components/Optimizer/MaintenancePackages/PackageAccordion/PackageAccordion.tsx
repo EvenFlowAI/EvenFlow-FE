@@ -308,18 +308,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }, [dispatch])
 
     const handleSave = useCallback((): void => {
-        if (packageData) {
-            onRequestToDMSOpen();
+        const [isValid, messages] = checkIsValid(packageData);
+        if (isValid) {
+            if (packageData) {
+                onRequestToDMSOpen();
+            }
+        } else {
+            messages.forEach(message => showError(message))
         }
-        // todo decide if we still need data validation
-        // const [isValid, messages] = checkIsValid(packageData);
-        // if (isValid) {
-        //     if (packageData) {
-        //         onRequestToDMSOpen();
-        //     }
-        // } else {
-        //     messages.forEach(message => showError(message))
-        // }
     }, [packageData, checkIsValid, onRequestToDMSOpen, showError])
 
     const handleExpand = (e: any): void => {
