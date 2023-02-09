@@ -25,7 +25,7 @@ type TProps = {
     loading: boolean;
 };
 
-const CardsWrapper = styled("div")<Theme, {cardsAmount: number}>(({theme, cardsAmount}) => ({
+const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Theme, {cardsAmount: number}>(({theme, cardsAmount}) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
     gap: "18px",

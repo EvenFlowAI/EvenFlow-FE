@@ -18,6 +18,7 @@ const ServiceType = () => {
     const {t} = useTranslation();
 
     const getServiceName = () => {
+        if (serviceTypeOption?.note) return serviceTypeOption.note;
         if (serviceTypeOption?.name) return serviceTypeOption.name;
         switch (serviceType) {
             case EServiceType.MobileService:
@@ -31,7 +32,7 @@ const ServiceType = () => {
     return isMobileServiceOn || isPickUpDropOffServiceOn
         ? <div>
             <TitleWrapper>
-                <ConfirmationTitle>{serviceTypeOption?.name ? t("Service Option") : t("Location Of Service")}</ConfirmationTitle>
+                <ConfirmationTitle>{serviceTypeOption?.note || serviceTypeOption?.name ? t("Service Option") : t("Location Of Service")}</ConfirmationTitle>
             </TitleWrapper>
             {getServiceName()}
         </div>

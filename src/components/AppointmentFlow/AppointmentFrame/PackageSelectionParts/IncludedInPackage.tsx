@@ -33,7 +33,7 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
                     ? <HtmlTooltip
                         placement="right-end"
                         title={<div dangerouslySetInnerHTML={{__html: s.detailedDescription}}/>}
-                    ><InfoOutlined style={{cursor: 'pointer', marginLeft: 20}}/></HtmlTooltip> : null}
+                    ><InfoOutlined style={{cursor: 'pointer', marginLeft: 6}}/></HtmlTooltip> : null}
                 </div>
 
                 {packages.map(p => {

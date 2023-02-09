@@ -87,7 +87,7 @@ export const useOptionsTableStyles = makeStyles(() => ({
         }
     }
 }))
-// TODO change it to dynamic option names from back end
+
 export const MaintenanceOptions = {
     0: 'Base',
     1: 'Value',

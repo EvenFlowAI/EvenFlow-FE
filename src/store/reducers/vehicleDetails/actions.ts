@@ -152,3 +152,7 @@ export const createEngineType = (data: TCreateEngineType, onError: (err: string)
             console.log('create engine type error', err);
         })
 }
+
+export const updateEngineTypeFieldName = (data: string, id: number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+
+}
