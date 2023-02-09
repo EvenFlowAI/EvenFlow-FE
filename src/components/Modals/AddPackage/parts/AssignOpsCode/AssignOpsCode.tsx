@@ -22,6 +22,7 @@ import {TSelectedOption} from "../../../AssignOpsCodeModal/AssignOpsCodeModal";
 import {MaintenanceOptions} from "../../../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
 import {TAssignedRequest} from "../../../../../store/reducers/packages/types";
 import {IPackageById} from "../../../../../api/types";
+import {getPackageById} from "../../../../../store/reducers/packages/actions";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: TAssignedRequest[];
@@ -129,6 +130,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
 
     const handleClose = useCallback((): void => {
         dispatch(setNonSelectedFilter({searchTerm: ''}));
+        dispatch(getPackageById(null));
         props.onClose();
     }, [props.onClose, dispatch])
 
