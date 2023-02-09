@@ -202,8 +202,8 @@ export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess:
         .then(result => {
             if (result?.data) {
                 dispatch(setAncillaryPriceByZip(result.data))
+                onSuccess(result.data)
             }
-            onSuccess(result?.data ?? result)
         })
         .catch(err => {
             onError(err)

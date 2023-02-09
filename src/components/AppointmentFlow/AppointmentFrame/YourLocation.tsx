@@ -116,15 +116,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         }
     }
 
-    const onSuccess = (data: TAncillaryPriceByZip|null|undefined) => {
-        if (!data) {
-            onUnavailableOpen()
+    const onSuccess = (data: TAncillaryPriceByZip) => {
+        if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
+            onNext();
         } else {
-            if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
-                onNext();
-            } else {
-                onOpen();
-            }
+            onOpen();
         }
     }
 
@@ -140,7 +136,14 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 serviceCenterId: scProfile?.id,
                 serviceTypeOptionId: serviceTypeOption?.id ?? null,
             }
-            dispatch(loadAncillaryPriceByZip(data, onSuccess, showError))
+            try {
+                dispatch(loadAncillaryPriceByZip(data, onSuccess, showError))
+            } catch (err) {
+                // todo right code
+                if (err.response?.data?.errorCode === 6) {
+                    onUnavailableOpen()
+                }
+            }
         } else {
             showError(t("Please select your Address and Zip code"))
         }
