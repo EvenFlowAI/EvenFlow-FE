@@ -38,7 +38,7 @@ const AssignedOpsCodes:React.FC<TAssignedOpsCodesProps> = ({codes}) => {
         <>
             {Object.keys(MaintenanceOptions).map(option => {
                 const item = codes.find(item => +item.type === +option);
-                return item ? <div className={classes.wrapper} key={item.code}>Option {getOptionName(option)} - {item.code}</div> : null
+                return item ? <div className={classes.wrapper} key={`${item.code} + ${item.type}`}>Option {getOptionName(option)} - {item.code}</div> : null
             })}
         </>
     );
