@@ -116,11 +116,15 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         }
     }
 
-    const onSuccess = (data: TAncillaryPriceByZip) => {
-        if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
+    const onSuccess = (data: TAncillaryPriceByZip|null|undefined) => {
+        if (!data) {
             onUnavailableOpen()
         } else {
-            onOpen();
+            if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
+                onNext();
+            } else {
+                onOpen();
+            }
         }
     }
 
