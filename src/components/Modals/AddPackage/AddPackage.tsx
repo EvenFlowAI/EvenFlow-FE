@@ -356,15 +356,9 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     }
 
     const isValid = () => {
-        if (assignedOpsCodes.length < 3) {
-            setOptionError(true);
-            showError('Assign Ops Code for each of the Package`s Options')
-            return false;
-        } else {
-            const mainData = packageName && opsCodes.length && assignedOpsCodes.length;
-            const businessRules = isApplyBusinessRules ? isBusinessRulesValid() : true;
-            return Boolean(mainData && businessRules);
-        }
+        const mainData = packageName && opsCodes.length && assignedOpsCodes.length;
+        const businessRules = isApplyBusinessRules ? isBusinessRulesValid() : true;
+        return Boolean(mainData && businessRules);
     }
 
     const onSave = () => {
