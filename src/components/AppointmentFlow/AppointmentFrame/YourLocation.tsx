@@ -139,8 +139,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
             try {
                 dispatch(loadAncillaryPriceByZip(data, onSuccess, showError))
             } catch (err) {
-                // todo right code
-                if (err.response?.data?.errorCode === 6) {
+                if (err.response?.data?.errorCode === 12) {
                     onUnavailableOpen()
                 }
             }
