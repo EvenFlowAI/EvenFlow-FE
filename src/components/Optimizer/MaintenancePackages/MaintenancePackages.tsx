@@ -5,7 +5,7 @@ import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {EMaintenanceOptionType, IPackageByQuery} from "../../../api/types";
-import {getPackageById, loadPackages} from "../../../store/reducers/packages/actions";
+import {loadPackages} from "../../../store/reducers/packages/actions";
 import {updateAvailablePackageOptions, updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
 import {useConfirm, useException, useModal, useSCs} from "../../../utils/hooks";
@@ -93,9 +93,6 @@ export const MaintenancePackages = () => {
             dispatch(loadPackages(selectedSC.id))
             const options = MaintenanceOptionTypes.filter(item => selectedSC.maintenancePackageOptionTypes?.includes(item.value))
             setPresentedOptions(options);
-        }
-        return () => {
-            dispatch(getPackageById(null));
         }
     }, [selectedSC])
 
