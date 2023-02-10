@@ -18,7 +18,7 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, i
     const {t} = useTranslation();
 
     return <React.Fragment>
-        <div className="totalComplimentary last" style={isBmWService ? {fontSize: 16} : {}}>
+        <div className="totalComplimentary complimentaryTitle" style={isBmWService ? {fontSize: 16} : {}}>
             {t("Total Complimentary Value")}
         </div>
         {isBmWService|| isSanfordInfinity
