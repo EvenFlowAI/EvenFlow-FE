@@ -430,9 +430,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     </div>
 
                     <div className={classes.label}>Assigned Ops Codes</div>
-                    <div className={assignedOpsCodes?.length
-                        ? classes.opsCodesWrapper
-                        : classes.emptyOpsCodes
+                    <div className={
+                        assignedOpsCodes?.length
+                            ? classes.opsCodesWrapper
+                            : formIsChecked
+                                ? classes.errorOpsCodes
+                                : classes.emptyOpsCodes
                     }>
                     { assignedOpsCodes?.length
                         ? <AssignedOpsCodes codes={assignedOpsCodes}/>
