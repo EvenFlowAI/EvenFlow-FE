@@ -232,8 +232,6 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
     const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
 
-    console.log(assignedOpsCodes)
-
     const classes = useStyles();
     const autoCompleteStyles = useAutocompleteStyles();
     const dispatch = useDispatch();
