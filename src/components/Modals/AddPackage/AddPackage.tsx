@@ -432,11 +432,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     <div className={classes.label}>Assigned Ops Codes</div>
                     <div className={assignedOpsCodes?.length
                         ? classes.opsCodesWrapper
-                        : formIsChecked
-                            ? assignedOpsCodes?.length < 3
-                                ? classes.errorOpsCodes
-                                : classes.emptyOpsCodes
-                            : classes.emptyOpsCodes
+                        : classes.emptyOpsCodes
                     }>
                     { assignedOpsCodes?.length
                         ? <AssignedOpsCodes codes={assignedOpsCodes}/>
@@ -445,7 +441,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     </div>
 
                     <Button
-                        className={formIsChecked && assignedOpsCodes.length < 3 ? classes.redButton : classes.wideButton}
+                        className={classes.wideButton}
                         color="primary"
                         onClick={onAssignOpsCodeOpen}>
                         Assign Ops Code To Package
