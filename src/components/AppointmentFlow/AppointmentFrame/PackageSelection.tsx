@@ -161,7 +161,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             borderBottomColor: "#000000",
         },
         "&.totalComplimentary": {
-            justifyContent: "flex-end",
+            justifyContent: "center",
             padding: "16px 8px",
             color: "#008331",
         },
