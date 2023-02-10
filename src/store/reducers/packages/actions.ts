@@ -77,7 +77,6 @@ export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[])
 
 export const updatePackage = (id: number, data: IUpdatedPackage, serviceCenterId: number, callback?: () => void, errCallback?: (err: {errorCode: number; message: string}) => void): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
-    debugger
     Api.call(Api.endpoints.MaintenancePackages.Update, {urlParams: {id}, data})
         .then(result => {
             if (result) {
