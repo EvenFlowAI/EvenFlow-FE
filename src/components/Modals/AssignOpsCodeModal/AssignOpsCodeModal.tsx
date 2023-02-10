@@ -20,6 +20,7 @@ import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {MaintenanceOptions} from "../../Optimizer/MaintenancePackages/OptionsTable/OptionsTable";
 import {makeStyles} from "@material-ui/core/styles";
+import {IPackageById} from "../../../api/types";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "OPS CODE", val: el => el.code},
@@ -171,6 +172,16 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
         return code;
     }
 
+    const getOptions = (currentPackage: IPackageById | null) => {
+        const defaultOptions = Object.values(MaintenanceOptions);
+        const options = [];
+        for (let i = 0; i < 3; i++) {
+            const currentOption = currentPackage?.options?.find(item => +item.type === i);
+            options.push({name: currentOption?.name ?? defaultOptions[i], type: i})
+        }
+        return options;
+    }
+
     return (
         <BaseModal {...props}>
             <DialogTitle onClose={handleClose}>ASSIGN OPS CODES TO MAINTENANCE PACKAGE OPTIONS</DialogTitle>
@@ -179,10 +190,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
                 <div className={classes.wrapper}>
                     {currentPackage && <Autocomplete
                       classes={inputClasses}
-                      options={
-                          currentPackage.options.map(option => ({name: option.name
-                                  || MaintenanceOptions[option.type], type: option.type}))
-                      }
+                      options={getOptions(currentPackage)}
                       getOptionSelected={(option, value) => option.type === value.type}
                       getOptionLabel={option => option.name}
                       onChange={onSelectOption}
