@@ -192,15 +192,12 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
 
     const getOptions = (currentPackage: IPackageById | null): TSelectOption[] => {
         const defaultOptions = Object.values(MaintenanceOptions);
-        if (currentPackage) {
-            return currentPackage.options.map(option => ({name: option.name || MaintenanceOptions[option.type], type: option.type}))
-        } else {
-            const options = [];
-            for (let i = 0; i < 3; i++) {
-                options.push({name:defaultOptions[i], type: i})
-            }
-            return options;
+        const options = [];
+        for (let i = 0; i < 3; i++) {
+            const currentOption = currentPackage?.options?.find(item => +item.type === i);
+            options.push({name: currentOption?.name ?? defaultOptions[i], type: i})
         }
+        return options;
     }
 
     return (
