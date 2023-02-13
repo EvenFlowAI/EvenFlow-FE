@@ -305,7 +305,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             serviceRequestPrice: +option.serviceRequestPrice,
         }))
         try {
-            dispatch(updatePackageOptions(data.id, revisedData));
+            dispatch(updatePackageOptions(data.id, revisedData, showError));
         } catch (e){
             showError(e)
         } finally {

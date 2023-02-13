@@ -63,13 +63,14 @@ export const loadPackages = (serviceCenterId: number): AppThunk => async dispatc
     })
 }
 
-export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[]): AppThunk => async dispatch => {
+export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[], showError: (err: string) => void): AppThunk => async dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.PackageOptions, {urlParams: {id}, data: {items: data}})
         .then(result => {
             if (result) dispatch(loadPackageById(id));
         })
         .catch(err => {
+            showError(err)
         console.log(err)
     })
         .finally(() => dispatch(setPackageLoading(false)))
