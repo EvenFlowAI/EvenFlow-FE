@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../../../utils/hooks";
 import {deleteMake, loadMakes, setCurrentMake} from "../../../../../store/reducers/vehicleDetails/actions";
@@ -13,6 +13,7 @@ import {autocompleteRender} from "../../../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {updateDefaultMake} from "../../../../../store/reducers/serviceCenters/actions";
+import {truncateMakes} from "../../../../../utils/utils";
 
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -31,7 +32,6 @@ const useStyles = makeStyles(() => ({
         marginLeft: 20
     }
 }))
-import {truncateMakes} from "../../../../../utils/utils";
 
 const RowData: TableRowDataType<IMake>[] = [
     {val: (el: IMake) => <span style={{fontWeight: 'bold'}}>{el.name}</span>, header: "Make"},
@@ -60,7 +60,11 @@ const MakesModelsTable = () => {
 
     useEffect(() => {
         if (makes) setTableData(truncateMakes(makes))
-    }, [makes])
+        if (selectedSC?.defaultVehicleMakeId) {
+            const make = makes.find(item => item.id === selectedSC.defaultVehicleMakeId)
+            make && setSelectedMake(make)
+        }
+    }, [makes, selectedSC])
 
     const openMenu = (el: IMake) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         dispatch(setCurrentMake(el));
