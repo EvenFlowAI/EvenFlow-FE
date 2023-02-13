@@ -41,7 +41,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         allCategories,
         userType,
         isAdditionalServices,
-        scProfile,
     ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
@@ -53,7 +52,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         categories.allCategories,
         appointmentFrame.userType,
         appointmentFrame.isAdditionalServices,
-        appointment.scProfile,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -104,7 +102,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     }
 
     const onSubmit = () => {
-        if (scProfile?.commentIsRequired && !description.length) {
+        const commentIsRequired = subService ? subService?.commentIsRequired : service?.commentIsRequired;
+        if (commentIsRequired && !description.length) {
             return onErrorOpen();
         }
         if (!selectedPackage || !selectedSR.length) {
@@ -149,6 +148,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
                 onChange={handleChange}
                 value={description}
                 rows={4}
+                // required={scProfile?.commentIsRequired}
                 placeholder={t("Describe what`s going on")}
             />
             <Actions onBack={handleBack} onNext={onSubmit} />
