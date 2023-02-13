@@ -121,6 +121,6 @@ export enum EAncillaryType {
 }
 
 export type TAncillaryPriceByZip = {
-    feeAmount: number;
+    feeAmount: number|null;
     feeType: EAncillaryType;
 }

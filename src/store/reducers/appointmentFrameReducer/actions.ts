@@ -196,7 +196,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setAdditionalServicesChosen(false));
 }
 
-export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void): AppThunk => dispatch => {
+export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
     dispatch(setAncillaryPriceLoading(true))
     Api.call(Api.endpoints.AncillaryPricing.GetByZip, {data})
         .then(result => {
@@ -206,7 +206,11 @@ export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess:
             }
         })
         .catch(err => {
-            onError(err)
+            if (err.response?.data?.errorCode === 12) {
+                onUnavailableOpen()
+            } else {
+                onError(err)
+            }
             console.log('get ancillary price by zip code error', err)
         })
         .finally(() => dispatch(setAncillaryPriceLoading(false)))
