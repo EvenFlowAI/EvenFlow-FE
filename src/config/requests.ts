@@ -170,14 +170,14 @@ type ApiRoutes = {
         | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
     Recalls: Record<"GetAll" | "GetById" | "GetByVin" | "Create" | "Update" | "Remove", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
-        | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>
+        | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
         | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
         | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
-        | "UpdateDefaultOpsCode", TApiRoute>,
+        | "UpdateDefaultOpsCode" | "UpdatePresentedPackageOptions", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -185,6 +185,8 @@ type ApiRoutes = {
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
         | "Eligibility" | "ChangePricingDisplayType"
         | "EditSkills" | "Prioritize", TApiRoute>,
+    ServiceTypes: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
+        | "GetByQuery", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
     TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiRoute>,
@@ -426,6 +428,7 @@ export class Api {
             UpdateAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "put"},
             UpdatePackagePriceDetails: {route: "/service-centers/{id}/maintenance-package-price-details", method: "patch"},
             UpdateDefaultOpsCode: {route: "/service-center-settings/{id}/default-recall", method: "put"},
+            UpdatePresentedPackageOptions: {route: "/service-centers/{id}/maintenance-package-option-types", method: "put"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},
@@ -453,6 +456,14 @@ export class Api {
             Eligibility: {route: "/service-requests/eligibility", method: "patch"},
             Prioritize: {route: "/service-requests/prioritize", method: "patch"},
             ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"},
+        },
+        ServiceTypes: {
+            Create: {route: "/service-type-options", method: "post"},
+            UpdateIcon: {route: "/service-type-options/{id}/icon", method: "patch"},
+            Update: {route: "/service-type-options/{id}", method: "put"},
+            Remove: {route: "/service-type-options/{id}", method: "delete"},
+            Retrieve: {route: "/service-type-options/{id}", method: "get"},
+            GetByQuery: {route: "/service-type-options/by-query", method: "post"},
         },
         SlotScoring: {
             SetProximity: {route: "/slot-scoring/proximity", method: "put"},

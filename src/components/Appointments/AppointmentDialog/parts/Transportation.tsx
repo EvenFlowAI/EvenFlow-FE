@@ -3,7 +3,7 @@ import {Grid, MenuItem, Select} from "@material-ui/core";
 import {Api} from "../../../../config/requests";
 import {IAppointmentByQuery, ITransportation} from "../../../../api/types";
 import {useSCs} from "../../../../utils/hooks";
-import {TForm} from "../AppointmentDialog";
+import {TForm} from "../types";
 import {IAppointmentSlot, ISR} from "../../../../store/reducers/appointment/types";
 import {TextField} from "../../../UI/TextField";
 

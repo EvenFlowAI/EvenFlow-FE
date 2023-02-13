@@ -9,9 +9,10 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
     },
     title: {
-        fontSize: 16,
+        fontSize: 12,
         fontWeight: 'bold',
         color: '#252525',
+        textTransform: 'uppercase',
         marginRight: 16,
     },
     value: {

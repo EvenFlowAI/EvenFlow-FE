@@ -5,6 +5,7 @@ import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {DemandTable, TableCell, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
 import {TableContainer} from "../../Optimizer/PricingSettings/UI";
 import {
+    ETransportationType,
     ETransportColumn,
     ITransportationOptionFull
 } from "../../../store/reducers/transportationNeeds/types";
@@ -41,6 +42,21 @@ const TableWrapper = styled("div")(({theme}) => ({
         }
     }
 }))
+
+
+export const getOptionString = (option: string) => {
+    const string = ETransportationType[+option];
+    const array = [];
+    if (string) {
+        for (let i = 0; i < string.length; i++) {
+            if (string[i] === string[i].toUpperCase() && i > 0) {
+                array.push(' ')
+            }
+            array.push(string[i])
+        }
+    }
+    return array.join('');
+}
 
 export const TransportationOptions: React.FC<DialogProps> = props => {
     const [editingElement, setEditingElement] = useState<ITransportationOptionFull | null>(null);

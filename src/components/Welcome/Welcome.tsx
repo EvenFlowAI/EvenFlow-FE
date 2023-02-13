@@ -8,8 +8,12 @@ import {RootState} from "../../store/rootReducer";
 import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
 import {
-    clearStorage, getBlankCustomer, getBlankVehicle,
-    saveAppointmentReducer, saveCustomerCache, setCustomerEnteredEmail,
+    clearStorage,
+    getBlankCustomer,
+    getBlankVehicle,
+    saveAppointmentReducer,
+    saveCustomerCache,
+    setCustomerEnteredEmail,
     setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
@@ -21,8 +25,12 @@ import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData,
     setCurrentFrameScreen,
-    setSideBarSteps, setUserType,
-    setValueServiceAvailability, setVehicle, setWelcomeScreenView
+    setServiceType, setServiceTypeOption,
+    setSideBarSteps,
+    setUserType,
+    setValueServiceAvailability,
+    setVehicle,
+    setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
@@ -34,10 +42,13 @@ import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
+import {Loading} from "../UI/Loading";
+import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 
 export const Welcome = () => {
-    const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType, currentScreen} = useSelector((state: RootState) => state.appointmentFrame);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -49,6 +60,10 @@ export const Welcome = () => {
     const showError = useException();
     const isFrame = useLayout();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        scProfile && dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
+    }, [scProfile])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
@@ -119,7 +134,7 @@ export const Welcome = () => {
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
             handleExistingUser().then();
         } else {
-            if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && firstScreenOptions.length) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
             } else {
                 redirect();
@@ -133,7 +148,9 @@ export const Welcome = () => {
             dispatch(clearAppointmentData());
         }
         handleConfig(service);
-        dispatch(setCurrentFrameScreen(service === EServiceType.VisitCenter ? 'serviceNeeds' : 'location'));
+        dispatch(setServiceType(service));
+        const nextScreen = service === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+        dispatch(setCurrentFrameScreen(nextScreen));
         redirect();
     }
 
@@ -157,7 +174,17 @@ export const Welcome = () => {
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
         if (isMobileServiceOn || isPickUpDropOffServiceOn) {
-            dispatch(setWelcomeScreenView('serviceSelect'))
+            if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                dispatch(setServiceType(EServiceType.VisitCenter))
+                dispatch(setServiceTypeOption(firstScreenOptions[0]));
+            } else {
+                if (firstScreenOptions.length > 1) {
+                    dispatch(setWelcomeScreenView('serviceSelect'))
+                } else {
+                    createBlankCar()
+                    onComplete(serviceType, EUserType.New);
+                }
+            }
         } else {
             createBlankCar()
             onComplete(serviceType, EUserType.New);
@@ -179,26 +206,26 @@ export const Welcome = () => {
         }
     }
 
-
-
     const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : t("welcome");
     const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
 
     // todo uncomment language switcher
 
-    return (isFrame ? <MuiThemeProvider theme={frameTheme}>
+    return !scProfile || isProfileLoading
+        ? <Loading/>
+        : isFrame
+            ? <MuiThemeProvider theme={frameTheme}>
             <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
                 <FrameWelcomeLayout>
                     {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
                     {getComponent()}
                 </FrameWelcomeLayout>
-            </MuiThemeProvider> :
-            <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
+            </MuiThemeProvider>
+            : <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
                 {/*<LanguageSwitcher/>*/}
                 {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                 {getComponent()}
                 <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
             </WelcomeLayout>
-    );
 };

@@ -1,6 +1,7 @@
 import {IAddress, IDealershipGroupShort} from "../dealershipGroups/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
 import {ITimeSpan} from "../../../types/types";
+import {EMaintenanceOptionType} from "../../../api/types";
 
 export interface IServiceCenter {
     id: number;
@@ -18,6 +19,7 @@ export interface IServiceCenter {
     maintenancePackageDisclaimer?: string;
     isShowPriceDetails?: boolean;
     recallServiceRequestId?: number;
+    maintenancePackageOptionTypes: EMaintenanceOptionType[];
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
@@ -96,6 +98,7 @@ export type TSetRemindersLoading = {type: "ServiceCenters/SetRemindersLoading", 
 export type TSetPredictionParams = {type: "ServiceCenters/SetPredictionParams", payload: IPredictionParams};
 export type TSetLaborRate = {type: "ServiceCenters/SetLaborRate", payload: ILaborRate};
 export type TSetPredictionParamsLoading = {type: "ServiceCenters/SetParamsLoading", payload: boolean};
+export type TSetPackageOptionsLoading = {type: "ServiceCenters/PackageOptionsLoading", payload: boolean};
 
 export type TServiceCenterActions =
     | TCreate
@@ -116,7 +119,8 @@ export type TServiceCenterActions =
     | TSetRemindersLoading
     | TSetPredictionParams
     | TSetLaborRate
-    | TSetPredictionParamsLoading;
+    | TSetPredictionParamsLoading
+    | TSetPackageOptionsLoading;
 
 export interface IPredictionParams {
     heavyRepairLaborHours: number;

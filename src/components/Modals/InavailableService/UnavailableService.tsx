@@ -11,7 +11,7 @@ import {DialogProps} from "../types";
 import {
     setAddress,
     setCurrentFrameScreen,
-    setServiceType,
+    setServiceType, setServiceTypeOption,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
@@ -45,6 +45,7 @@ type TUnavailableServiceProps = DialogProps & {
 
 const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, setFormChecked}) => {
     const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
@@ -61,6 +62,8 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
     }
 
     const onVisitCenter = () => {
+        const defaultOption = firstScreenOptions.find(item => item.type === EServiceType.VisitCenter);
+        if (defaultOption) dispatch(setServiceTypeOption(defaultOption));
         dispatch(setServiceType(EServiceType.VisitCenter));
         dispatch(setCurrentFrameScreen("serviceNeeds"));
         onTryAnother();
@@ -79,7 +82,7 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
                     onClick={onVisitCenter}
                     color={'primary'}
                     variant='contained'>
-                    Visit Center
+                    {t("Visit Center")}
                 </Button>
             </div>
             <div className={classes.buttonWrapper}>

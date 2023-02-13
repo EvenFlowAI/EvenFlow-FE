@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {Checkbox, FormControlLabel, FormGroup, FormLabel, Grid} from "@material-ui/core";
 import {EReminderType} from "../../../../store/reducers/appointment/types";
-import {TForm} from "../AppointmentDialog";
+import {TForm} from "../types";
 
 type TRemindersProps = {
     form: TForm;
