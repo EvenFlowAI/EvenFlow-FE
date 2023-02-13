@@ -128,28 +128,39 @@ export const MaintenancePackages = () => {
 
     const askRemove = useCallback((value: TOption[], packagesNeededConfig: IPackageByQuery[]) => {
         if (selectedSC) {
+            const newOption = value.find(item => !presentedOptions.find(el => +el.value === +item.value))
             const packagesString = packagesNeededConfig
                 .map((pack, index) => index === packagesNeededConfig.length - 1
                     ? `"${pack.name}"` :
                     `"${pack.name}", `)
             askConfirm({
                 isRemove: false,
-                title: `Please remember that you need to configure option "${value[0].name}" for next Maintenance Packages:\n  ${packagesString}`,
+                title: `Please remember that you need to configure "${newOption?.name ?? "this"}" option for next Maintenance Packages:\n  ${packagesString}`,
                 onConfirm: () => dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
             });
         }
-    }, [selectedSC, askConfirm, showError])
+    }, [selectedSC, askConfirm, showError, presentedOptions])
 
     const onPresentedOptionsChange = useCallback((e: ChangeEvent<{}>, value: TOption[]) => {
         if (selectedSC) {
-            const packagesNeededConfig = allPackages.filter(pack => pack.serviceRequestsAssigned.find(item => item.serviceRequestId === 0));
-            if (value.length > presentedOptions.length && packagesNeededConfig.length) {
-                askRemove(value, packagesNeededConfig)
+            if (value.length > presentedOptions.length) {
+                const newOption = value.find(item => !presentedOptions.find(el => +el.value === +item.value))
+                let packagesNeededConfig: IPackageByQuery[] = [];
+                if (newOption) {
+                    packagesNeededConfig = allPackages
+                        .filter(pack => pack.serviceRequestsAssigned
+                            .find(item => +item.type === +newOption.value && item.serviceRequestId === 0));
+                }
+                if (packagesNeededConfig.length) {
+                    askRemove(value, packagesNeededConfig)
+                } else {
+                    dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
+                }
             } else {
                 dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
             }
         }
-    }, [selectedSC, presentedOptions, askRemove, showError])
+    }, [selectedSC, presentedOptions, askRemove, showError, allPackages])
 
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
