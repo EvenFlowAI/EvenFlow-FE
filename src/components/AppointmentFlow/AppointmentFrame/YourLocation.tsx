@@ -90,9 +90,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
 
     const handleChangeAddress = async (e: any) => {
         clearSelectedData();
-        console.log(e?.value?.place_id)
-        const geoCode = await geocodeByPlaceId(e.value.place_id)
-        console.log(geoCode)
+        // const geoCode = await geocodeByPlaceId(e.value.place_id)
         setFormChecked(false);
         if (e?.label) {
             dispatch(setAddress(e));
@@ -136,13 +134,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 serviceCenterId: scProfile?.id,
                 serviceTypeOptionId: serviceTypeOption?.id ?? null,
             }
-            try {
-                dispatch(loadAncillaryPriceByZip(data, onSuccess, showError))
-            } catch (err) {
-                if (err.response?.data?.errorCode === 12) {
-                    onUnavailableOpen()
-                }
-            }
+            dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onUnavailableOpen))
         } else {
             showError(t("Please select your Address and Zip code"))
         }
