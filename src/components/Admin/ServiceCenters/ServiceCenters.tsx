@@ -15,7 +15,6 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {Titles} from "../../../config/constants";
 import {IOrder} from "../../../types/types";
 
-
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
     {val: (el: IServiceCenterExtended) => el.dealership.name, header: "Dealership group"},
     {val: (el: IServiceCenterExtended) => el.name, header: "Service center name", orderId: "name"},

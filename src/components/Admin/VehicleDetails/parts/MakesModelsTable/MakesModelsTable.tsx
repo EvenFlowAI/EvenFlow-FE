@@ -31,6 +31,7 @@ const useStyles = makeStyles(() => ({
         marginLeft: 20
     }
 }))
+import {truncateMakes} from "../../../../../utils/utils";
 
 const RowData: TableRowDataType<IMake>[] = [
     {val: (el: IMake) => <span style={{fontWeight: 'bold'}}>{el.name}</span>, header: "Make"},
@@ -57,34 +58,9 @@ const MakesModelsTable = () => {
         }
     }, [selectedSC])
 
-    const truncateNames = useCallback(() => {
-        if (makes) {
-            setTableData(() => {
-                const formattedData: IMake[] = [];
-                makes.forEach(make => {
-                    const formattedMake = {...make};
-
-                    if (formattedMake.name.length > 30) {
-                        formattedMake.name = formattedMake.name.slice(0, 26).concat('...');
-                    }
-                    formattedMake.models = formattedMake.models
-                        .map(model => model.length > 30
-                        ? model.slice(0, 26).concat('...')
-                        : model)
-                    formattedData.push(formattedMake);
-                })
-                return formattedData;
-            })
-        }
-    }, [makes])
-
     useEffect(() => {
-        truncateNames()
-        if (selectedSC?.defaultVehicleMakeId) {
-            const defaultMake = makes.find(item => item.id === selectedSC.defaultVehicleMakeId)
-            defaultMake && setSelectedMake(defaultMake);
-        }
-    }, [makes, selectedSC])
+        if (makes) setTableData(truncateMakes(makes))
+    }, [makes])
 
     const openMenu = (el: IMake) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         dispatch(setCurrentMake(el));
@@ -103,7 +79,7 @@ const MakesModelsTable = () => {
         } else {
             try {
                 if (currentMake.id) dispatch(deleteMake(currentMake.id))
-                showMessage("Removed");
+                showMessage("Make removed");
                 dispatch(setCurrentMake(null));
             } catch (e) {
                 showError(e);

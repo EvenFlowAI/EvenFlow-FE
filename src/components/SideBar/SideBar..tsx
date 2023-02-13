@@ -90,6 +90,7 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
             {to: Routes.BookingFlow.TransportationOptions, name: "Transportation Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.BookingFlow.ServiceOpsCodesMapping, name: "Service Ops Code Mapping", exact: true, sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.BookingFlow.VehicleDetails, name: "Vehicle Detail Options", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.BookingFlow.FirstScreen, name: "First Screen", exact: true, sub: true, roles: ["Owner", "Manager"]},
         ]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
     {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager"]},

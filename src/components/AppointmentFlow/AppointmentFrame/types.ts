@@ -1,4 +1,5 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 
 export type TActionProps = {
     onBack: () => void;
@@ -37,4 +38,10 @@ export interface IRecallByVin {
     summary: string;
     safetyRisk: string;
     serviceRequestId: number;
+}
+
+export type TCard = {
+    description: string;
+    name: EAppointmentTimingType;
+    icon: JSX.Element;
 }

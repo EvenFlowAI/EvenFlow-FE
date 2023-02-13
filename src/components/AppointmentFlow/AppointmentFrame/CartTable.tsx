@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {IconButton, useMediaQuery, useTheme} from "@material-ui/core";
 import {getMaintenanceList} from "./uiUtils";
@@ -107,7 +107,7 @@ const CartTable = () => {
         }
     }, [scProfile, dispatch])
 
-    const deleteIndService = (item: IMaintenanceItem) => {
+    const deleteIndService = useCallback((item: IMaintenanceItem) => {
         dispatch(selectSR(item.id));
         dispatch(selectAppointment(null));
         const services = selectedSR.filter(sr => sr !== item.id);
@@ -125,9 +125,20 @@ const CartTable = () => {
             categories = categories.filter(id => id !== diagnoseCategory?.id)
             dispatch(selectCategoriesIds(categories));
         }
-    }
+    }, [selectedSR, allCategories, categoriesIds, subService, service])
 
-    const deleteValueService = () => {
+    const filterCategories = useCallback(() => {
+        if (service?.type === EServiceCategoryType.ValueService) {
+            dispatch(selectService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
+        }
+        if (subService?.type === EServiceCategoryType.ValueService) {
+            dispatch(selectSubService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
+        }
+    }, [service, subService, categoriesIds])
+
+    const handleMaintenanceDetails = useCallback(() => {
         // todo add possibility to use value service with other dealerships if needed
         if (valueService && isBmWService) {
             const vehicle: ILoadedVehicle = {
@@ -155,28 +166,25 @@ const CartTable = () => {
                 }
                 dispatch(setVehicle(vehicle));
             }
-            dispatch(setValueService(null));
-            if (service?.type === EServiceCategoryType.ValueService) {
-                dispatch(selectService(null));
-                dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
-            }
-            if (subService?.type === EServiceCategoryType.ValueService) {
-                dispatch(selectSubService(null));
-                dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
-            }
-            dispatch(selectAppointment(null));
         }
-    }
+    }, [valueService, isBmWService, makes, yearOptions])
 
-    const handleSideBarSteps = () => {
+    const deleteValueService = useCallback(() => {
+        handleMaintenanceDetails()
+        filterCategories();
+        dispatch(setValueService(null));
+        dispatch(selectAppointment(null));
+    }, [handleMaintenanceDetails, filterCategories])
+
+    const handleSideBarSteps = useCallback(() => {
         if (sideBarSteps?.length) {
             dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location", "serviceNeeds"]));
         }
-    }
+    }, [sideBarSteps, serviceType])
 
-    const handleDeleteRecall = (item: IMaintenanceItem) => {
+    const handleDeleteRecall = useCallback((item: IMaintenanceItem) => {
         dispatch(setSelectedRecalls(selectedRecalls.filter(el => el.serviceRequestId !== item.id)))
-    }
+    }, [selectedRecalls])
 
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
@@ -205,14 +213,14 @@ const CartTable = () => {
         }
     }
 
-    const onClick = (item: IMaintenanceItem) => {
+    const onClick = useCallback((item: IMaintenanceItem) => {
         askConfirm({
             isRemove: true,
             title: t("Do you want to remove selected service?"),
             onConfirm: () => deleteService(item),
             onCancel: closeConfirm,
         })
-    }
+    }, [])
 
     return selectedServices?.length
         ? <div className={classes.wrapper}>

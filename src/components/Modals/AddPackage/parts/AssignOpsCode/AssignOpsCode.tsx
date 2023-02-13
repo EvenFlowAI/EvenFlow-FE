@@ -135,9 +135,9 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
     const handleSelect = useCallback((el: IServiceRequest) => {
         if (selectedOption) {
            setSelectedCodes(prev => {
-                const code = prev.find(code => code.type === selectedOption.type);
+                const code = prev.find(code => +code.type === +selectedOption.type);
                 if (code) {
-                    return prev.filter(item => item.type !== selectedOption.type).concat([{...code, serviceRequestId: el.id, code: el.code}])
+                    return prev.filter(item => +item.type !== +code.type).concat([{type: selectedOption.type, serviceRequestId: el.id, code: el.code}])
                 } else {
                     return [...prev, { type: selectedOption.type, serviceRequestId: el.id, code: el.code}]
                 }
@@ -192,15 +192,12 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
 
     const getOptions = (currentPackage: IPackageById | null): TSelectOption[] => {
         const defaultOptions = Object.values(MaintenanceOptions);
-        if (currentPackage) {
-            return currentPackage.options.map(option => ({name: option.name || MaintenanceOptions[option.type], type: option.type}))
-        } else {
-            const options = [];
-            for (let i = 0; i < 3; i++) {
-                options.push({name:defaultOptions[i], type: i})
-            }
-            return options;
+        const options = [];
+        for (let i = 0; i < 3; i++) {
+            const currentOption = currentPackage?.options?.find(item => +item.type === i);
+            options.push({name: currentOption?.name && isEditing ? currentOption?.name : defaultOptions[i], type: i})
         }
+        return options;
     }
 
     return (

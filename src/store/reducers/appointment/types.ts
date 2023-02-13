@@ -11,7 +11,6 @@ import {
     IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
-import {EServiceType} from "../appointmentFrameReducer/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -169,7 +168,7 @@ export interface IAppointmentSlotsRequest {
     searchTerm?: string;
     appointmentHashKey?: string;
     jobType?: number|null;
-    serviceType: EServiceType;
+    serviceTypeOptionId: number|null;
     zipCode?: string;
     address?: string;
 }
@@ -210,6 +209,7 @@ export type TAppointmentState = {
     appointmentFilters: IAppointmentFilters;
     serviceCategories: IServiceCategory[];
     allServiceCategories: IServiceCategoryShort[];
+    isProfileLoading: boolean;
 };
 export enum EReminderType {
     Email, Phone, Sms

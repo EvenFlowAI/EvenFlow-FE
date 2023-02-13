@@ -17,13 +17,17 @@ import {LocalItems} from "../../../config/constants";
 import {setSelectedPod} from "../pods/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {EDay} from "../demandSegments/types";
+import {EMaintenanceOptionType} from "../../../api/types";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
-   type: "ServiceCenters/GetAll", payload
+    type: "ServiceCenters/GetAll", payload
 });
 
 export const loading = (payload: boolean): TServiceCenterActions => ({
     type: "ServiceCenters/Loading", payload
+});
+export const packageOptionsLoading = (payload: boolean): TServiceCenterActions => ({
+    type: "ServiceCenters/PackageOptionsLoading", payload
 });
 export const saving = (payload: boolean): TServiceCenterActions => ({
     type: "ServiceCenters/Saving", payload
@@ -37,11 +41,11 @@ export const changePaging = changePagingGeneric("ServiceCenters/ChangePaging");
 const _changePageData = changePageDataGeneric("ServiceCenters/ChangePageData");
 export const changePageData: ActionCreator<ThunkAction<void, RootState, void, Action>> =
     (payload: Partial<IPageRequest>) => {
-    return async dispatch => {
-        dispatch(_changePageData(payload));
-        dispatch(loadAll());
+        return async dispatch => {
+            dispatch(_changePageData(payload));
+            dispatch(loadAll());
+        }
     }
-}
 
 export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState) => {
     dispatch(loading(true));
@@ -155,8 +159,8 @@ export const loadDealershipSCs = (dealershipId: number, pageData: IPageRequest):
     dispatch(loadingDealership(true));
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IServiceCenterExtended>>(Api.endpoints.ServiceCenters.GetAll, {data: {
-            dealershipId, ...pageData
-        }});
+                dealershipId, ...pageData
+            }});
         dispatch(pagingDealership(paging));
         dispatch(_loadDealershipSCs(result));
         dispatch(loadingDealership(false));
@@ -393,3 +397,17 @@ export const updateDefaultMake = (id: number, makeId: number|null, onErr: (err: 
         })
         .finally(() => dispatch(loading(false)))
 }
+
+export const updateAvailablePackageOptions = (id: number, data: EMaintenanceOptionType[], onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(packageOptionsLoading(true))
+    Api.call(Api.endpoints.ServiceCenters.UpdatePresentedPackageOptions, {urlParams: {id}, data: {optionTypes: data}})
+        .then(result => {
+            if (result) dispatch(loadAllSCs())
+        })
+        .catch(err => {
+            onError(err);
+            console.log('update Available Package Options err', err)
+        })
+        .finally(() => dispatch(packageOptionsLoading(false)))
+}
+
