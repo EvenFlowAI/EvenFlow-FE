@@ -5,10 +5,10 @@ import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {EMaintenanceOptionType, IPackageByQuery} from "../../../api/types";
-import {getPackageById, loadPackages} from "../../../store/reducers/packages/actions";
+import {loadPackages} from "../../../store/reducers/packages/actions";
 import {updateAvailablePackageOptions, updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
-import {useException, useModal, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useModal, useSCs} from "../../../utils/hooks";
 import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
 import {Loading} from "../../UI/Loading";
@@ -85,6 +85,7 @@ export const MaintenancePackages = () => {
     const showError = useException();
     const {onOpen, onClose, isOpen} = useModal();
     const {onOpen: onOpenEdit, onClose: onCloseEdit, isOpen: isOpenEdit} = useModal();
+    const {askConfirm} = useConfirm();
     const {selectedSC} = useSCs();
 
     useEffect(() => {
@@ -92,9 +93,6 @@ export const MaintenancePackages = () => {
             dispatch(loadPackages(selectedSC.id))
             const options = MaintenanceOptionTypes.filter(item => selectedSC.maintenancePackageOptionTypes?.includes(item.value))
             setPresentedOptions(options);
-        }
-        return () => {
-            dispatch(getPackageById(null));
         }
     }, [selectedSC])
 
@@ -128,9 +126,25 @@ export const MaintenancePackages = () => {
         }
     }
 
+    const askRemove = useCallback((value: TOption[]) => {
+        if (selectedSC) {
+            askConfirm({
+                isRemove: false,
+                title: `Please remember that all Maintenance Packages must have this option configured`,
+                onConfirm: () => dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
+            });
+        }
+    }, [selectedSC, askConfirm, showError])
+
     const onPresentedOptionsChange = useCallback((e: ChangeEvent<{}>, value: TOption[]) => {
-        selectedSC && dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
-    }, [selectedSC])
+        if (selectedSC) {
+            if (value.length > presentedOptions.length) {
+                askRemove(value)
+            } else {
+                dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
+            }
+        }
+    }, [selectedSC, presentedOptions, askRemove, showError])
 
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>

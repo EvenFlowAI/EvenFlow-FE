@@ -89,7 +89,9 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                     </TableCell>
                     <TableCell className={classes.emptyCell} width={16} key="6"/>
 
-                    {props.packageData?.options.map((option: IPackageOptionDetailed) => (
+                    {props.packageData?.options ? [...props.packageData?.options]
+                        .sort((a, b) => a.type - b.type)
+                        .map((option: IPackageOptionDetailed) => (
                         <TableCell align='center' className={optionsClasses.headerCell} key={option.type}>
                             {props.editingOption && props.editingOption.type === option.type ?
                                 <Input
@@ -102,7 +104,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                                 </div>
                             }
                         </TableCell>
-                    ))}
+                    )) : null}
                 </TableRow>
             </TableHead>
             <TableBody>

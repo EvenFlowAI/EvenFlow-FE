@@ -90,10 +90,10 @@ const SummaryInput: React.FC<TSummaryProps> = ({ isComplimentary, packageHasComp
             return classes.cell;
         }
         if (item.isEditable) {
-            if (item.fieldName.toLowerCase().includes('hours') && +item.numberValue > 100) {
-                return classes.errorCell;
-            }
-            if (+item.numberValue <= 0) {
+            // if (item.fieldName.toLowerCase().includes('hours') && +item.numberValue > 100) {
+            //     return classes.errorCell;
+            // }
+            if (+item.numberValue < 0) {
                 return classes.errorCell;
             }
             return classes.editableCell

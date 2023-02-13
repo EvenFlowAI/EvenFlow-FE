@@ -54,7 +54,11 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     display: "grid",
     marginTop: 12,
     gap: "0 20px",
-    gridTemplateColumns: `2fr repeat(${count}, 1fr)`,
+    gridTemplateColumns: count === 3
+        ? `2fr repeat(${count}, 1fr)`
+        : count === 2
+            ? '1fr 1fr 1fr'
+            : '1fr 1fr',
     width: "100%",
     alignItems: "stretch",
     [theme.breakpoints.down('sm')]: {
@@ -68,7 +72,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         justifyContent: "stretch"
     },
     "& > div": {
-        textAlign: count === 3 ? "right" : "center",
+        textAlign: "center",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -111,12 +115,12 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             borderTop: border,
         },
         '&:nth-child(4n+1)': {
-            textAlign: count === 3 ? "right" : "center",
-            justifyContent: count === 3 ? "flex-end" : "center",
+            textAlign: "right",
+            justifyContent: "center",
             cursor: "default",
         },
         "&.gray": {
-            background: "#DADADA"
+            background: "#DADADA",
         },
         "&.title": {
             padding: 20,
@@ -124,14 +128,16 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             textTransform: "uppercase"
         },
         "&.subtitle": {
-            textTransform: "uppercase"
+            textTransform: "uppercase",
+            justifyContent: "flex-end",
         },
         "&.service": {
+            justifyContent: "center",
             padding: "6px 8px",
         },
         "&.serviceWithInfo": {
             display: 'flex',
-            justifyContent: count === 3 ?  "flex-end" : 'center',
+            justifyContent: "flex-end",
             alignItems: 'center',
             padding: "6px 8px",
         },
@@ -145,6 +151,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             background: "#89E5AB"
         },
         "&.totalMaintenance": {
+            justifyContent: "flex-end",
             fontWeight: 'bold',
             borderTop: border,
             paddingBottom: 10,
@@ -154,10 +161,16 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             borderBottomColor: "#000000",
         },
         "&.totalComplimentary": {
+            justifyContent: "center",
             padding: "16px 8px",
             color: "#008331",
         },
+        "&.complimentaryTitle": {
+            justifyContent: "flex-end",
+            borderBottomColor: "#000000",
+        },
         "&.total": {
+            justifyContent: "flex-end",
             padding: 8,
             "&.price": {
                 display: "grid",
@@ -189,19 +202,20 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
                 display: "inline-block",
                 marginLeft: 4,
                 textTransform: "none",
-                fontWeight: "normal"
+                fontWeight: "normal",
             }
         }
     }
 }));
 
-const Info = styled("div")<Theme, { count: number }>(({theme, count}) => ({
-    color: "#808080",
+const Info = styled("div")({
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-start',
     fontSize: 14,
-    gridColumnStart: 1,
-    gridColumnEnd: `${count + 2}`,
-    marginTop: 18,
-}))
+    color: "#808080",
+    marginTop: 18
+})
 
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;
@@ -367,7 +381,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         isBmWService={isBmWService}
                         isSanfordInfinity={isSanfordInfinity}
                     />
-                    : <Wrapper count={packages.length}>
+                    : <React.Fragment>
+                    <Wrapper count={packages.length}>
                         <PackageTitles packages={packages} handleClick={handleClick} setClasses={setClasses}/>
 
                         <IncludedInPackage
@@ -410,15 +425,17 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             isBmWService={isBmWService}
                             setClasses={setClasses}
                         />
-                        <Info count={packages.length}>
-                            {scProfile?.maintenancePackageDisclaimer
-                                ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
-                                :  isBmWService
-                                    ? t("Please ask your service advisor")
-                                    : t("The maintenance packages may not be available")
-                            }
-                        </Info>
+
                     </Wrapper>
+                    <Info>
+                        {scProfile?.maintenancePackageDisclaimer
+                            ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
+                            :  isBmWService
+                                ? t("Please ask your service advisor")
+                                : t("The maintenance packages may not be available")
+                        }
+                    </Info>
+                    </React.Fragment>
                 }
             </React.Fragment> : null}
             <Actions
