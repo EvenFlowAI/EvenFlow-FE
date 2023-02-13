@@ -126,11 +126,15 @@ export const MaintenancePackages = () => {
         }
     }
 
-    const askRemove = useCallback((value: TOption[]) => {
+    const askRemove = useCallback((value: TOption[], packagesNeededConfig: IPackageByQuery[]) => {
         if (selectedSC) {
+            const packagesString = packagesNeededConfig
+                .map((pack, index) => index === packagesNeededConfig.length - 1
+                    ? `"${pack.name}"` :
+                    `"${pack.name}", `)
             askConfirm({
                 isRemove: false,
-                title: `Please remember that all Maintenance Packages must have this option configured`,
+                title: `Please remember that you need to configure option "${value[0].name}" for next Maintenance Packages:\n  ${packagesString}`,
                 onConfirm: () => dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
             });
         }
@@ -138,8 +142,9 @@ export const MaintenancePackages = () => {
 
     const onPresentedOptionsChange = useCallback((e: ChangeEvent<{}>, value: TOption[]) => {
         if (selectedSC) {
-            if (value.length > presentedOptions.length) {
-                askRemove(value)
+            const packagesNeededConfig = allPackages.filter(pack => pack.serviceRequestsAssigned.find(item => item.serviceRequestId === 0));
+            if (value.length > presentedOptions.length && packagesNeededConfig.length) {
+                askRemove(value, packagesNeededConfig)
             } else {
                 dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
             }
