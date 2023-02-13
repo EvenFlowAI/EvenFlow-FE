@@ -16,11 +16,11 @@ const EditFieldName:React.FC<DialogProps> = (props) => {
     const classes = useStyles();
 
     useEffect(() => {
-        // todo set field name from the BE
-    }, [])
+        if (selectedSC?.engineTypeFieldName) setFieldName(selectedSC.engineTypeFieldName);
+    }, [selectedSC])
 
     const onCancel = (): void => {
-        setFieldName('');
+        setFieldName(selectedSC?.engineTypeFieldName ?? '');
         props.onClose();
     }
 

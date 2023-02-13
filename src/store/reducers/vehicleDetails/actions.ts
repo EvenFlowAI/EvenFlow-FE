@@ -3,6 +3,7 @@ import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {IMake, IMakeExtended} from "../../../api/types";
 import {ICreateMake, IEngineType, IMileage, TCreateEngineType, TCreateMileage} from "./types";
+import {loadAllSCs} from "../serviceCenters/actions";
 
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');
@@ -153,6 +154,16 @@ export const createEngineType = (data: TCreateEngineType, onError: (err: string)
         })
 }
 
-export const updateEngineTypeFieldName = (data: string, id: number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
-
+export const updateEngineTypeFieldName = (engineTypeFieldName: string, id: number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.UpdateEngineTypeFieldName, {urlParams: {id}, data: {engineTypeFieldName}})
+        .then(result => {
+            if (result.data) {
+                dispatch(loadAllSCs())
+                onSuccess();
+            }
+        })
+        .catch(err => {
+            onError(err)
+            console.log('update engine type field name error')
+        })
 }
