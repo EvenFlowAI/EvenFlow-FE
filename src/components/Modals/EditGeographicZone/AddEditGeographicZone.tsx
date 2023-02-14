@@ -1,11 +1,11 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {Button, Divider, IconButton, styled} from "@material-ui/core";
+import {Button, Divider, IconButton} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {TZipCode, TZone, TZoneNew, TZonesServiceType, TZoneUpdate} from "../../../store/reducers/mobileService/types";
 import {TextField} from "../../UI/TextField";
-import {AddCircleOutline, Close} from "@material-ui/icons";
+import {Close} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceValetZone,
@@ -23,6 +23,10 @@ import {
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {Autocomplete} from "@material-ui/lab";
+import {loadFilteredZip} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useMakeAndModelStyles} from "../AddPackage/parts/MakeAndModel/MakeAndModel";
 
 const useStyles = makeStyles(() => ({
     text: {
@@ -90,17 +94,6 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const AddBtn = styled(Button)({
-    textTransform: 'none',
-    marginLeft: 16,
-    backgroundColor: '#F7F8FB',
-    color: '#7898FF',
-    padding: '8px 16px',
-    '.MuiButtonBase-root:disabled': {
-        color: '#AEBEF2',
-    }
-})
-
 type TEditZoneProps = DialogProps & {
     isEdit: boolean;
     zone?: TZone|null,
@@ -120,9 +113,9 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                                              ...props}) => {
     const {currentZone: currentMobileZone, isLoading: isMobileLoading, zones: mobileZones} = useSelector((state: RootState) => state.mobileService);
     const {currentZone: currentServiceValetZone, isLoading: isValetLoading, zones: valetZones} = useSelector((state: RootState) => state.serviceValet);
+    const {filteredZipCodes} = useSelector((state: RootState) => state.appointmentFrame);
     const [currentZone, setCurrentZone] = useState<TZone|null>(null);
     const [zoneName, setZoneName] = useState<string>('');
-    const [newZip, setNewZip] = useState<string>('');
     const [zipList, setZipList] = useState<string[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
@@ -130,6 +123,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
     const classes = useStyles();
+    const autocompleteClasses = useMakeAndModelStyles();
     const showError = useException();
     const showMessage = useMessage();
     const zonesList = useMemo(() => serviceType === 'serviceValet' ? valetZones : mobileZones, [serviceType, valetZones, mobileZones]);
@@ -160,7 +154,6 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const onCancel = () => {
         setFormIsChecked(false);
         setZoneName('');
-        setNewZip('');
         setZipList([]);
         props.onClose();
     }
@@ -172,6 +165,16 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const onError = (err:string) => {
         showError(err)
+    }
+
+    const handleChangeZip = (e: React.ChangeEvent<{}>, option: string[]) => {
+        setZipList(option);
+    }
+
+    const onInputChange = (e: React.ChangeEvent<{}>, value: string) => {
+        if (selectedSC) {
+            dispatch(loadFilteredZip({serviceCenterId: selectedSC.id, search: value}))
+        }
     }
 
     const onSave = () => {
@@ -214,30 +217,6 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         setZoneName(e.target.value);
     }
 
-    const onZipChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setFormIsChecked(false);
-        setNewZip(e.target.value);
-    }
-
-    const onAddZip = (): void => {
-        if (newZip.toString().length !== 5) {
-            setFormIsChecked(true);
-            showError("It's not a valid Zip code");
-        } else if (newZip && zipList.includes(newZip)) {
-            setFormIsChecked(true);
-            showError(`Zip code ${newZip} already exists`);
-        } else {
-            if (newZip) {
-                setZipList(prev => ([...prev, newZip]));
-                setNewZip('');
-            }
-        }
-    }
-
-    const onKeyUp = (e: React.KeyboardEvent) => {
-        if (e.keyCode === 13) onAddZip();
-    }
-
     const onChangeZoneClick = (code: string) => {
         if (setCurrentZip && isEdit && currentZone) {
             const codeObject = currentZone.zipCodes.find(item => item.code === code);
@@ -270,24 +249,21 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                 onChange={onNameChange}
                                 value={zoneName}/>
                             <div className={classes.fieldWrapper}>
-                                <div style={{width: "80%"}}>
-                                    <TextField
-                                        fullWidth
-                                        type="number"
-                                        label='ZIP Code'
-                                        placeholder='Type Here'
-                                        onKeyUp={onKeyUp}
-                                        error={newZip.toString().length !== 5 && formIsChecked}
-                                        onChange={onZipChange}
-                                        value={newZip}/>
-                                </div>
-                                <AddBtn
-                                    variant="contained"
-                                    onClick={onAddZip}
-                                    disabled={!newZip.toString().length}
-                                    startIcon={<AddCircleOutline/>}>
-                                    Add
-                                </AddBtn>
+                                <Autocomplete
+                                    multiple
+                                    classes={autocompleteClasses}
+                                    options={filteredZipCodes}
+                                    onChange={handleChangeZip}
+                                    fullWidth
+                                    autoComplete={true}
+                                    onInputChange={onInputChange}
+                                    renderInput={autocompleteRender({
+                                        label: 'ZIP Code',
+                                        placeholder: "Start to type ZIP",
+                                        key: "zipcode",
+                                    })}
+                                    value={zipList}
+                                />
                             </div>
                             <div className={classes.zipsWrapper}>
                                 {zipList.map(code => <div className={classes.zip} key={code}>
