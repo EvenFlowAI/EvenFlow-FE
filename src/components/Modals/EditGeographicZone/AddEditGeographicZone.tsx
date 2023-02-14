@@ -25,7 +25,7 @@ import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
-import {loadFilteredZip} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {loadFilteredZip, setFilteredZipCodes} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useMakeAndModelStyles} from "../AddPackage/parts/MakeAndModel/MakeAndModel";
 
 const useStyles = makeStyles(() => ({
@@ -155,6 +155,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
         setFormIsChecked(false);
         setZoneName('');
         setZipList([]);
+        dispatch(setFilteredZipCodes([]));
         props.onClose();
     }
 
