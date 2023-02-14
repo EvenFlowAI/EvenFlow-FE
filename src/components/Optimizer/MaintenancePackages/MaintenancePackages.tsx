@@ -135,7 +135,7 @@ export const MaintenancePackages = () => {
                     `"${pack.name}", `)
             askConfirm({
                 isRemove: false,
-                title: `Please remember that you need to configure "${newOption?.name ?? "this"}" option for next Maintenance Packages:\n  ${packagesString}`,
+                title: `Please configure "${newOption?.name ?? "this"}" option for next Maintenance Packages: ${packagesString} in order for it to display`,
                 onConfirm: () => dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
             });
         }
