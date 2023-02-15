@@ -102,8 +102,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     }
 
     const onSubmit = () => {
-        const commentIsRequired = subService ? subService?.commentIsRequired : service?.commentIsRequired;
-        if (commentIsRequired && !description.length) {
+        const isCommentRequired = subService ? subService?.isCommentRequired : service?.isCommentRequired;
+        if (isCommentRequired && !description.length) {
             return onErrorOpen();
         }
         if (!selectedPackage || !selectedSR.length) {
@@ -148,7 +148,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
                 onChange={handleChange}
                 value={description}
                 rows={4}
-                // required={scProfile?.commentIsRequired}
+                // required={scProfile?.isCommentRequired}
                 placeholder={t("Describe what`s going on")}
             />
             <Actions onBack={handleBack} onNext={onSubmit} />

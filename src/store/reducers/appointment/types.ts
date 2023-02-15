@@ -26,7 +26,7 @@ export interface IServiceCenterProfile {
     isAuthRequired: boolean;
     maintenancePackageDisclaimer?: string;
     isShowPriceDetails?: boolean;
-    commentIsRequired: boolean;
+    isCommentRequired: boolean;
     engineTypeFieldName?: string;
 }
 export interface ISR {

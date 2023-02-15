@@ -127,7 +127,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter)
-    const [commentIsRequired, setCommentIsRequired] = useState<boolean>(false);
+    const [isCommentRequired, setIsCommentRequired] = useState<boolean>(false);
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2
@@ -164,7 +164,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
 
             if (editingItem.orderIndex) setOrderIndex(editingItem.orderIndex.toString())
             if (editingItem.description) setDescription(editingItem.description);
-            if (editingItem.commentIsRequired) setCommentIsRequired(editingItem.commentIsRequired);
+            if (editingItem.isCommentRequired) setIsCommentRequired(editingItem.isCommentRequired);
         }
     }, [editingItem, allAssignedList, categoryOptions, props.open])
 
@@ -183,6 +183,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setCategoryType(null);
         setOrderIndex('');
         setDescription('')
+        setIsCommentRequired(false);
         props.onClose();
     }, [])
 
@@ -208,7 +209,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     type: categoryType.value,
                     serviceRequests: [],
                     orderIndex: Number(orderIndex),
-                    commentIsRequired: categoryType.value === EServiceCategoryType.GeneralCategory ? commentIsRequired : false,
+                    isCommentRequired: categoryType.value === EServiceCategoryType.GeneralCategory ? isCommentRequired : false,
                     // todo uncomment and add in the TUpdateCategoryData field for service type
                     //serviceType,
                 }
@@ -271,7 +272,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     }
 
     const handleSwitch = (e: any, value: boolean) => {
-        setCommentIsRequired(value);
+        setIsCommentRequired(value);
     }
 
     return (
@@ -352,7 +353,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                         control={<Switch
                             disabled={!categoryType || categoryType?.value !== EServiceCategoryType.GeneralCategory}
                             onChange={handleSwitch}
-                            checked={commentIsRequired}
+                            checked={isCommentRequired}
                             color="primary"
                         />}
                         label="Comment Field Is Required"
