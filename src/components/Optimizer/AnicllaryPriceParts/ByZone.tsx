@@ -143,13 +143,14 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
     const onSave = () => {
         setIsEdit(false)
         if (editedItem) {
-            if (editedItem.serviceMultiplier === 0 && editedItem.flatFee === 0) {
-                showError( "Service Multiplier' or 'Flat Fee' must be greater than 0")
-            } else if (editedItem.serviceMultiplier > 0 && editedItem.flatFee > 0) {
+            if (editedItem.serviceMultiplier > 0 && editedItem.flatFee > 0) {
                 showError("Only one value can be greater than 0: 'Service Multiplier' or 'Flat Fee'")
             } else {
                 onUpdate(editedItem)
             }
+            // if (editedItem.serviceMultiplier === 0 && editedItem.flatFee === 0) {
+            //     showError( "Service Multiplier' or 'Flat Fee' must be greater than 0")
+            // } else
         }
     }
 

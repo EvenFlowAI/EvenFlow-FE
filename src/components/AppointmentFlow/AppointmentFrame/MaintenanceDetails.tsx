@@ -253,7 +253,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             }
         }
         if (currentConfig?.engineType && !selectedEngine) {
-            errorsArray.push("Engine Type")
+            errorsArray.push(scProfile?.engineTypeFieldName ?? "Engine Type");
             setErrors(e => [...e, "engineTypeId"]);
         }
 
@@ -365,8 +365,10 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         getOptionSelected={o => o.id === selectedEngine?.id}
                         // disabled={!isNewVehicleView && Boolean(selectedEngine)}
                         renderInput={autocompleteRender({
-                            label: "Engine Type",
-                            placeholder: errors.includes("engineTypeId") ? "EngineType required" : "Select Engine Type",
+                            label: scProfile?.engineTypeFieldName ?? t("Engine Type"),
+                            placeholder: errors.includes("engineTypeId")
+                                ? `${scProfile?.engineTypeFieldName ?? t("Engine Type")} ${t("required")}`
+                                : `${t("Select")} ${scProfile?.engineTypeFieldName ?? t("Engine Type")}`,
                             error: errors.includes("engineTypeId"),
                             required: true,
                         })}

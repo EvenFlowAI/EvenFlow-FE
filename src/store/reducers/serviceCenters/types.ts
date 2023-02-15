@@ -21,6 +21,7 @@ export interface IServiceCenter {
     recallServiceRequestId?: number;
     defaultVehicleMakeId?: number|null;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
+    engineTypeFieldName?: string;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
