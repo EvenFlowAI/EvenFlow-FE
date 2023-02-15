@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {TableRowDataType} from "../../UI/types";
 import {ITimeRangeAndCapacity} from "../../../store/reducers/capacityServiceValet/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
 import {Loading} from "../../UI/Loading";
 import {Table} from "../../UI/Table";
 import {Button} from "@material-ui/core";
-import {useModal} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
 import EditTimeRangeAndCapacity from "../../Modals/EditTimeRangeAndCapacity/EditTimeRangeAndCapacity";
+import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";
 
 const timeFormat = "HH:mm A";
 
@@ -17,6 +18,12 @@ const TimeRangesAndCapacity = () => {
     const [tableData, setTableData] = useState<ITimeRangeAndCapacity[]>([])
     const [currentRange, setCurrentRange] = useState<ITimeRangeAndCapacity|null>(null)
     const {onOpen, isOpen, onClose} = useModal();
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+
+    useEffect(() => {
+        selectedSC && dispatch(loadTimeRangesAndCapacity(selectedSC.id))
+    }, [selectedSC])
 
     useEffect(() => {
         setTableData(() => {
