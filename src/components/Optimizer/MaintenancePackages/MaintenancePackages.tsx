@@ -66,7 +66,7 @@ export const MaintenanceOptionTypes = [
         value: EMaintenanceOptionType.Value
     },
     {
-        name: 'Preffered',
+        name: 'Preferred',
         value: EMaintenanceOptionType.Preferred
     }
 ]
