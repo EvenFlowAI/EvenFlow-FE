@@ -9,42 +9,61 @@ import {WelcomeLayout} from "./WelcomeLayout";
 import {TView} from "./types";
 import {
     clearStorage,
+    getBlankCustomer,
+    getBlankVehicle,
     saveAppointmentReducer,
+    saveCustomerCache,
+    setCustomerEnteredEmail,
     setCustomerLoadedData,
     setSessionId
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
-import {useException, useLayout} from "../../utils/hooks";
+import {useException, useLayout, useModal} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData,
     setCurrentFrameScreen,
+    setServiceType, setServiceTypeOption,
     setSideBarSteps,
-    setValueServiceAvailability, setWelcomeScreenView
+    setUserType,
+    setValueServiceAvailability,
+    setVehicle,
+    setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {API} from "../../api/api";
+//import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
+import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
+import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
+import {Loading} from "../UI/Loading";
+import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 
 export const Welcome = () => {
-    const {scProfile, customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType, currentScreen} = useSelector((state: RootState) => state.appointmentFrame);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [loading, setLoading] = useState<boolean>(false);
     const { t } = useTranslation();
+    const {isOpen, onOpen, onClose} = useModal();
 
     const {id} = useParams();
     const history = useHistory();
     const showError = useException();
     const isFrame = useLayout();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        scProfile && dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
+    }, [scProfile])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
@@ -102,11 +121,9 @@ export const Welcome = () => {
             }
         } catch (err) {
             dispatch(setSessionId(""));
-            if (err.message) {
-                showError(err)
-            } else {
-                showError(t('could not find your vehicle'));
-            }
+            if (err.response?.data?.errorCode === 6) {
+                onOpen()
+            } else showError(err)
         } finally {
             setLoading(false);
         }
@@ -117,7 +134,7 @@ export const Welcome = () => {
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
             handleExistingUser().then();
         } else {
-            if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && firstScreenOptions.length) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
             } else {
                 redirect();
@@ -131,8 +148,47 @@ export const Welcome = () => {
             dispatch(clearAppointmentData());
         }
         handleConfig(service);
-        dispatch(setCurrentFrameScreen(service === EServiceType.VisitCenter ? 'serviceNeeds' : 'location'));
+        dispatch(setServiceType(service));
+        const nextScreen = service === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+        dispatch(setCurrentFrameScreen(nextScreen));
         redirect();
+    }
+
+    const createBlankCar = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+    }
+
+    const handleReactGA = (userType: string) => {
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Enters Page',
+            label: `As ${userType} Customer`,
+        });
+    }
+
+    const handleNew = () => {
+        dispatch(setUserType(EUserType.New));
+        handleReactGA('A New');
+        dispatch(setCustomerEnteredEmail(''));
+        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
+            if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                dispatch(setServiceType(EServiceType.VisitCenter))
+                dispatch(setServiceTypeOption(firstScreenOptions[0]));
+            } else {
+                if (firstScreenOptions.length > 1) {
+                    dispatch(setWelcomeScreenView('serviceSelect'))
+                } else {
+                    createBlankCar()
+                    onComplete(serviceType, EUserType.New);
+                }
+            }
+        } else {
+            createBlankCar()
+            onComplete(serviceType, EUserType.New);
+        }
     }
 
     const getComponent = () => {
@@ -145,6 +201,7 @@ export const Welcome = () => {
                 return <CustomerSelect
                     loading={loading}
                     onComplete={onComplete}
+                    handleNew={handleNew}
                 />;
         }
     }
@@ -154,15 +211,21 @@ export const Welcome = () => {
 
     // todo uncomment language switcher
 
-    return (isFrame ? <MuiThemeProvider theme={frameTheme}>
+    return !scProfile || isProfileLoading
+        ? <Loading/>
+        : isFrame
+            ? <MuiThemeProvider theme={frameTheme}>
+            <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
                 <FrameWelcomeLayout>
+                    {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
                     {getComponent()}
                 </FrameWelcomeLayout>
-            </MuiThemeProvider> :
-            <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
+            </MuiThemeProvider>
+            : <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
                 {/*<LanguageSwitcher/>*/}
+                {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                 {getComponent()}
+                <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
             </WelcomeLayout>
-    );
 };

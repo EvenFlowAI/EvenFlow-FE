@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
@@ -8,6 +8,7 @@ import {TGroupedAppointment} from "../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectAppointment} from "../../../store/reducers/appointment/actions";
+//import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
 import {loadHoursOfOperations, loadRange} from "../../../store/reducers/slotScoring/actions";
@@ -108,7 +109,7 @@ type TProps = {
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
         const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, gap, serviceType} = useSelector((state : RootState) => state.appointmentFrame);
+        const {selectedTiming, gap, hoursOfOperations, serviceType} = useSelector((state : RootState) => state.appointmentFrame);
         const {slotRange} = useSelector((state : RootState) => state.slotScoring);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
@@ -129,9 +130,10 @@ export const AppointmentTimeSelector: React.FC<TProps> =
 
         const slots: TSlot[] = useMemo(() => {
             const slots: TSlot[] = [];
-            if (gap && slotRange) {
-                const [startHours, startMinutes] = slotRange.start.split(':');
-                const [endHours, endMinutes] = slotRange.end.split(':');
+            const currentSCSchedule = hoursOfOperations.find(item => item.dayOfWeek === moment(date).day())
+            if (gap && currentSCSchedule) {
+                const [startHours, startMinutes] = currentSCSchedule.from.split(':');
+                const [endHours, endMinutes] = currentSCSchedule.to.split(':');
                 let start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
                 const end  = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
                 let cDate = moment.utc(start);
@@ -141,17 +143,21 @@ export const AppointmentTimeSelector: React.FC<TProps> =
                 }
             }
             return slots;
-        }, [date, appointments, slotRange, gap]);
+        }, [date, appointments, gap]);
 
-        const handleSelect = (a: IRemappedAppointmentSlot|null) => {
-            const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+        const handleGA = useCallback((a: IRemappedAppointmentSlot|null) => {
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: 'Clicked on Appointment Slot',
                 label: a?.price?.value ? `With Price $${a.price.value}` : '',
             });
+        }, [])
+
+        const handleSelect = useCallback((a: IRemappedAppointmentSlot|null) => {
+            const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+            handleGA(a);
             dispatch(selectAppointment(data));
-        }
+        }, [selectedTiming])
 
         return (
             <div className={classes.wrapper}>

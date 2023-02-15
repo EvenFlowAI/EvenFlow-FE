@@ -228,16 +228,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [packageData])
 
-    const getFixedValue = useCallback((value: string): number => {
-        if (Number.isInteger(+value)) return +value;
-        const [integer, decimal] = value.split('.');
-        if (decimal.length <= 2) {
-            return +value
-        } else {
-            return Number(`${integer}.${decimal.slice(0, 2)}`);
-        }
-    }, [])
-
     const onInputChange = useCallback((value: string, fieldName: string, optionType: string | number) => {
         if (packageData) {
             if (fieldName.toLowerCase().includes('hours') && Number(value) > 100) {
@@ -290,11 +280,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }
 
     const handleAddOpsCode = (): void => {
-        if (currentPackage?.options?.find(item => item.serviceRequests.length === 0)) {
-            showError('Please save Service Requests for each Package Option first')
-        } else {
-            onAssignOpsCodeOpen();
-        }
+        onAssignOpsCodeOpen();
     }
 
     const handleCancel = useCallback((): void => {
@@ -307,8 +293,15 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     }, [currentPackage])
 
     const sendRequest = useCallback((data: IPackageById) => {
+        const revisedData = data.options.map(option => ({
+            ...option,
+            complimentaryServiceLaborHours: +option.complimentaryServiceLaborHours,
+            complimentaryServicePrice: +option.complimentaryServicePrice,
+            serviceRequestLaborHours: +option.serviceRequestLaborHours,
+            serviceRequestPrice: +option.serviceRequestPrice,
+        }))
         try {
-            dispatch(updatePackageOptions(data.id, data.options));
+            dispatch(updatePackageOptions(data.id, revisedData, showError));
         } catch (e){
             showError(e)
         } finally {

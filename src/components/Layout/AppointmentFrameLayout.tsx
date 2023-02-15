@@ -47,6 +47,7 @@ import {
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
+//import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
@@ -112,7 +113,13 @@ export const prodParentLinks = [
     "https://www.janssenfordholdrege.com/",
     "https://www.janssenchryslerjeepdodge.com/",
     "https://www.lakepowellford.com/",
-    "https://www.morrissmithfordoflarned.com/"
+    "https://www.morrissmithfordoflarned.com/",
+    "https://www.performancekingshonda.com/",
+    "https://www.performancehondastore.com/",
+    "https://www.performancelexus.com/",
+    "https://www.performancelexusrivercenter.com/",
+    "https://www.performancechryslerjeepcenterville.com/",
+    "https://www.performancetoyotastore.com/",
 ];
 
 export const AppointmentFrameLayout = () => {
@@ -130,6 +137,7 @@ export const AppointmentFrameLayout = () => {
         userType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
 
@@ -145,7 +153,7 @@ export const AppointmentFrameLayout = () => {
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
+        return config.find(item => item.serviceType?.toString() === serviceType?.toString());
     }, [config, serviceType])
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
@@ -154,8 +162,6 @@ export const AppointmentFrameLayout = () => {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
-                debug: false,
-                titleCase: false,
                 gaOptions: options,
             });
             dispatch(setTrackerCreated(true));
@@ -289,7 +295,9 @@ export const AppointmentFrameLayout = () => {
     }, [])
 
     const handleAddNewVehicle = useCallback(() => {
-        const needToShowServiceSelection = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
+        const needToShowServiceSelection = userType === EUserType.Existing
+            && (firstScreenOptions.length
+                && (isMobileServiceOn || isPickUpDropOffServiceOn));
         clearData()
         if (needToShowServiceSelection) {
             handleServiceTypeSelection()
@@ -321,7 +329,9 @@ export const AppointmentFrameLayout = () => {
     const handleSelectCar = useCallback(async () => {
         dispatch(selectSR(null));
         clearAppointmentData()
-        let needToShowServiceSelection: boolean = userType === EUserType.Existing && (isMobileServiceOn || isPickUpDropOffServiceOn);
+        let needToShowServiceSelection: boolean = userType === EUserType.Existing
+            && (Boolean(firstScreenOptions.length)
+                && (isMobileServiceOn || isPickUpDropOffServiceOn));
         if (selectedVehicle?.appointmentHashKeys.length) {
             const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
             const lastIndex = key.lastIndexOf('==');
@@ -352,7 +362,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, selectedVehicle, showError, dispatch]);
+    }, [handleSetScreen, selectedVehicle, showError, dispatch, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {

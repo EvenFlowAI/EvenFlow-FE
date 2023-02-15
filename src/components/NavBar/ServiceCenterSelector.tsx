@@ -5,7 +5,7 @@ import {ArrowDropDown} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {IServiceCenter} from "../../store/reducers/serviceCenters/types";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     root: {
         color: "#858585",
         marginRight: 10,
@@ -32,6 +32,7 @@ export const ServiceCenterSelector = () => {
     const classes = useStyles();
     if (!scList || !scList.length) return null;
     if (!currentUser || currentUser.isSuperUser) return null;
+
     return <div>
         <Button
             className={classes.root}

@@ -65,7 +65,8 @@ export enum EUserType {
 export enum EServiceType {
     VisitCenter,
     MobileService,
-    PikUpDropOff
+    PikUpDropOff,
+    General
 }
 
 export type TValueService = {
@@ -111,8 +112,8 @@ export type TLanguage = "en" | "es";
 export interface IAncillaryByZipRequest {
     address: string;
     zipCode: string;
-    serviceType: EServiceType;
     serviceCenterId: number;
+    serviceTypeOptionId: number|null;
 }
 
 export enum EAncillaryType {
@@ -120,6 +121,6 @@ export enum EAncillaryType {
 }
 
 export type TAncillaryPriceByZip = {
-    feeAmount: number;
+    feeAmount: number|null;
     feeType: EAncillaryType;
 }

@@ -9,6 +9,7 @@ import {MoreHoriz} from "@material-ui/icons";
 import {IOrder} from "../../../../../types/types";
 import {Table} from "../../../../UI/Table";
 import AddEngineType from "../../../../Modals/AddEngineType/AddEngineType";
+import EditFieldName from "../../../../Modals/EditFieldName/EditFieldName";
 
 const RowData = [
     {val: (el: IEngineType) => `${el.name}`, header: "Estimated Mileage", orderId: "name"},
@@ -26,6 +27,7 @@ const EngineTypeTable = () => {
     const dispatch = useDispatch();
     const {askConfirm} = useConfirm();
     const {onOpen, onClose, isOpen} = useModal();
+    const {onOpen: onFieldNameOpen, onClose: onFieldNameClose, isOpen: isFieldNameOpen} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
@@ -64,7 +66,7 @@ const EngineTypeTable = () => {
         if (currentEngineType) {
             askConfirm({
                 isRemove: true,
-                title: `Remove Engine Type ${currentEngineType?.name}?`,
+                title: `Please confirm you want to remove Engine Type ${currentEngineType?.name}?`,
                 onConfirm: handleRemove
             });
         }
@@ -80,6 +82,13 @@ const EngineTypeTable = () => {
     return (
         <div>
             <div style={{display: "flex", alignItems: "center", justifyContent: 'flex-end', marginBottom: 20}}>
+                <Button
+                    style={{marginLeft: 16}}
+                    color="primary"
+                    onClick={onFieldNameOpen}
+                    variant="contained">
+                    Edit Field Name
+                </Button>
                 <Button
                     style={{marginLeft: 16}}
                     color="primary"
@@ -105,6 +114,7 @@ const EngineTypeTable = () => {
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
             <AddEngineType open={isOpen} onClose={onClose}/>
+            <EditFieldName open={isFieldNameOpen} onClose={onFieldNameClose}/>
         </div>
     );
 };

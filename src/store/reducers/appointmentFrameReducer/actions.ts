@@ -27,6 +27,8 @@ import {TScreen} from "../../../components/Layout/types";
 import {selectAppointment, selectSR} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {IHOODataForm} from "../serviceCenters/types";
+import {IFirstScreenOption} from "../serviceTypes/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -57,6 +59,7 @@ export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCa
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
 export const setServiceType = createAction<EServiceType>('fAppointment/SetServiceType');
+export const setServiceTypeOption = createAction<IFirstScreenOption>('fAppointment/SetServiceTypeOption');
 export const setZipCode = createAction<string>('fAppointment/SetZipCode');
 export const setAddress = createAction<any>('fAppointment/SetAddress');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
@@ -74,6 +77,7 @@ export const setAncillaryPriceLoading = createAction<boolean>('fAppointment/SetA
 export const setFilteredZipCodes = createAction<string[]>('fAppointment/SetFilteredZipCodes');
 export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/SetSelectedRecalls');
 export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
+export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/SetHorsOfOperations');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -176,6 +180,8 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
 
 export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setPackage(null));
+    dispatch(setPackageIsSelected(false));
+    dispatch(setSelectedPackageOptionType(null));
     dispatch(selectService(null));
     dispatch(selectSubService(null));
     dispatch(selectAppointment(null));
@@ -186,10 +192,11 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setAdvisor(null));
     dispatch(setTransportation(null));
     dispatch(setRecallsAreShown(false));
-    dispatch(setSelectedRecalls([]));
+    dispatch(setSelectedRecalls([]))
+    dispatch(setAdditionalServicesChosen(false));
 }
 
-export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void): AppThunk => dispatch => {
+export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
     dispatch(setAncillaryPriceLoading(true))
     Api.call(Api.endpoints.AncillaryPricing.GetByZip, {data})
         .then(result => {
@@ -199,7 +206,11 @@ export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess:
             }
         })
         .catch(err => {
-            onError(err)
+            if (err.response?.data?.errorCode === 12) {
+                onUnavailableOpen()
+            } else {
+                onError(err)
+            }
             console.log('get ancillary price by zip code error', err)
         })
         .finally(() => dispatch(setAncillaryPriceLoading(false)))
@@ -215,4 +226,16 @@ export const loadFilteredZip = (data: {serviceCenterId: number; search: string})
             console.log('get zip codes by filter error', err)
         })
         .finally(() => dispatch(setAncillaryPriceLoading(false)))
+}
+
+export const loadHoursOfOperations = (serviceCenterId: number): AppThunk => dispatch => {
+    Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id: serviceCenterId}})
+        .then(result => {
+            if (result?.data) {
+               dispatch(setHoursOfOperations(result.data));
+            }
+        })
+        .catch(err => {
+            console.log('get hours of operations error', err)
+        })
 }

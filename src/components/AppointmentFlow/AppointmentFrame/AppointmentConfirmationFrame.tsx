@@ -125,28 +125,40 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const getCategories = (): number[] => {
         return categories.allCategories
             .filter(category => {
-                return category.type === EServiceCategoryType.GeneralCategory && appointmentFrame.categoriesIds.includes(category.id)
+                return category.type === EServiceCategoryType.GeneralCategory
+                    && appointmentFrame.categoriesIds.includes(category.id)
             })
             .map(item => item.id)
     }
 
-    const handleCreateAppointment = () => {
-        const make = appointmentFrame?.selectedVehicle?.make?.length
-                ? appointmentFrame?.selectedVehicle?.make
-                : appointmentFrame?.valueService
-                    ? "BMW"
-                    : null;
-        const model = appointmentFrame?.selectedVehicle?.model?.length
+    const getMake = (): string|null => {
+        return appointmentFrame?.selectedVehicle?.make?.length
+            ? appointmentFrame?.selectedVehicle?.make
+            : appointmentFrame?.valueService
+                ? "BMW"
+                : null;
+    }
+    const getModel = (): string|null => {
+        return appointmentFrame?.selectedVehicle?.model?.length
             ? appointmentFrame?.selectedVehicle?.model
             : appointmentFrame?.valueService?.series?.name
                 ? appointmentFrame.valueService.series.name
                 : null;
+    }
 
-        const year = appointmentFrame?.selectedVehicle?.year
-                ? String(appointmentFrame.selectedVehicle.year)
+    const getYear = (): string|null => {
+        return appointmentFrame?.selectedVehicle?.year
+            ? String(appointmentFrame.selectedVehicle.year)
             : appointmentFrame?.valueService?.year?.year
                 ? String(appointmentFrame.valueService.year.year)
                 : null;
+    }
+
+    const handleCreateAppointment = () => {
+        const make = getMake();
+        const model = getModel();
+        const year = getYear();
+
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
@@ -187,7 +199,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,
-            serviceType: appointmentFrame.serviceType,
+            serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
             zipCode: appointmentFrame.zipCode ?? null,
             address: appointmentFrame.address?.label ?? null,
         };

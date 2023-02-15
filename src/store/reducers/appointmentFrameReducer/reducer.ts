@@ -2,51 +2,58 @@ import {createReducer} from "@reduxjs/toolkit";
 import {
     getMakes,
     getModels,
-    getSlotsGap,
-    selectCategoriesIds,
     getSeriesModels,
+    getSlotsGap,
     getValueServiceOffers,
+    selectCategoriesIds,
     selectService,
     selectSubService,
     setAdditionalServicesChosen,
     setAddress,
     setAdvisor,
+    setAncillaryPriceByZip,
+    setAncillaryPriceLoading,
     setAppointmentId,
     setConsultants,
     setCurrentFrameScreen,
     setCustomer,
+    setFilteredZipCodes,
     setFrameDescription,
+    setHoursOfOperations,
     setLoadingPackages,
     setMaintenanceDetails,
+    setMobileServiceAvailability,
+    setOffersLoading,
     setPackage,
     setPackageIsSelected,
     setPackages,
+    setPickUpDropOffAvailability,
+    setRecallsAreShown,
     setReminders,
     setSelectedPackageOptionType,
+    setSelectedRecalls,
     setServiceType,
-    setOffersLoading,
+    setServiceTypeOption,
+    setSideBarSteps,
     setTime,
     setTiming,
     setTrackerCreated,
     setTransportation,
     setUpdateAppointment,
     setUserType,
-    setVehicle,
-    setZipCode,
-    updateVehicle,
     setValueService,
-    setSideBarSteps,
-    setMobileServiceAvailability,
-    setPickUpDropOffAvailability,
     setValueServiceAvailability,
+    setVehicle,
     setWelcomeScreenView,
+    setZipCode,
     switchLanguage,
-    setAncillaryPriceLoading,
-    setAncillaryPriceByZip, setFilteredZipCodes, setSelectedRecalls, setRecallsAreShown,
+    updateVehicle,
 } from "./actions";
 import {
     ICustomer,
-    ILoadedVehicle, IMake, IPackage,
+    ILoadedVehicle,
+    IMake,
+    IPackage,
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
@@ -55,18 +62,20 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {
-    IServiceOffer,
-    IValueService,
-    TMaintenanceDetails,
-    TYear,
     EServiceType,
     EUserType,
+    IServiceOffer,
+    IValueService,
+    TAncillaryPriceByZip,
     TLanguage,
-    TAncillaryPriceByZip
+    TMaintenanceDetails,
+    TYear
 } from "./types";
 import {TScreen} from "../../../components/Layout/types";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {IHOODataForm} from "../serviceCenters/types";
+import {IFirstScreenOption} from "../serviceTypes/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -114,6 +123,8 @@ type TState = {
     filteredZipCodes: string[];
     selectedRecalls: IRecallByVin[];
     recallsAreShown: boolean;
+    hoursOfOperations: IHOODataForm[];
+    serviceTypeOption: IFirstScreenOption|null;
 }
 const initialState: TState = {
     service: null,
@@ -164,6 +175,8 @@ const initialState: TState = {
     filteredZipCodes: [],
     selectedRecalls: [],
     recallsAreShown: false,
+    hoursOfOperations: [],
+    serviceTypeOption: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -233,10 +246,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             reminders: payload.reminderTypes,
             categoriesIds: payload.serviceCategories ? payload.serviceCategories?.map(item => item.id) : [],
             description: payload.comment,
-            serviceType: payload.serviceType,
+            serviceType: payload.serviceType ?? payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
             address: payload.address ?? null,
             zipCode: payload.zipCode ?? "",
-            // selectedPackage: payload.maintenancePackageOption ?? null,
+            serviceTypeOption: payload.serviceTypeOption ?? null,
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
@@ -331,5 +344,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setRecallsAreShown, (state, {payload}) => {
         return {...state, recallsAreShown: payload}
+    })
+    .addCase(setHoursOfOperations, (state, {payload}) => {
+        return {...state, hoursOfOperations: payload}
+    })
+    .addCase(setServiceTypeOption, (state, {payload}) => {
+        return {...state, serviceTypeOption: payload}
     })
 )

@@ -28,21 +28,17 @@ const AssignedOpsCodes:React.FC<TAssignedOpsCodesProps> = ({codes}) => {
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
 
-    const getOptionName = (codeId: number) => {
-        const option = codes.find(item => item.serviceRequestId === codeId);
-        if (option) {
-            const optionType = Number(option.type);
-            const optionInPackage = currentPackage?.options.find(opt => opt.type === optionType)
-            return optionInPackage ? optionInPackage.name : Object.values(MaintenanceOptions)[optionType];
-        } else {
-            return ''
-        }
+    const getOptionName = (option: string) => {
+        const optionType = Number(option);
+        const optionInPackage = currentPackage?.options.find(opt => opt.type === optionType)
+        return optionInPackage ? optionInPackage.name : Object.values(MaintenanceOptions)[optionType];
     }
 
     return (
         <>
-            {codes.slice().sort((a, b) => +a.type - +b.type).map(item => {
-                return <div className={classes.wrapper}>Option {getOptionName(item.serviceRequestId)} - {item.code}</div>
+            {Object.keys(MaintenanceOptions).map(option => {
+                const item = codes.find(item => +item.type === +option);
+                return item ? <div className={classes.wrapper} key={`${item.code} + ${item.type}`}>Option {getOptionName(option)} - {item.code}</div> : null
             })}
         </>
     );

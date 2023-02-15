@@ -85,10 +85,20 @@ const BookingFlowConfig = () => {
         setConfiguration(config)
     }, [config])
 
-    const onCheck = (serviceType: EServiceTypeBookingFlow, optionType: keyof TServiceTypeSettings) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    const isValid = (optionType: keyof TServiceTypeSettings): boolean => {
+        if ((optionType === 'checkRecallsExisting' || optionType === 'checkRecallsNew') && !selectedSC?.recallServiceRequestId) {
+            showError('To enable Checking Recalls you need to select Default Recall Ops Code');
+            return false;
+        }
         if (!selectedSC?.isValueServiceAvailable && optionType === 'valueService') {
-            return showError('No Service Offers are available for current Service Center')
-        } else {
+            showError('No Service Offers are available for current Service Center')
+            return false;
+        }
+        return true;
+    }
+
+    const onCheck = (serviceType: EServiceTypeBookingFlow, optionType: keyof TServiceTypeSettings) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        if (isValid(optionType)) {
             let analogServiceType: TServiceTypeSettings|undefined = undefined;
             const currentServiceType = configuration.find(item => item.serviceType === serviceType);
 

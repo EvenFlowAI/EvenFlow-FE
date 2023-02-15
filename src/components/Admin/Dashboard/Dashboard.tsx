@@ -1,15 +1,12 @@
-import React, {useCallback, useMemo} from "react";
-import {Box, Button, Grid, Paper} from "@material-ui/core";
-import {useHistory} from "react-router-dom";
+import React, {useMemo} from "react";
+import {Box, Grid, Paper} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
-import {ChevronRight} from "@material-ui/icons";
 import {EditAddress} from "../../Modals/EditAddress/EditAddress";
 import {HourOfOperations} from "../../Modals/HourOfOperations/HourOfOperations";
 import {Holidays} from "../../Modals/Holydays/Holidays";
 import {Break} from "../../Modals/Breaks/Break";
 import {useCurrentUser, useModal, useSCs} from "../../../utils/hooks";
-import {Routes} from "../../../config/routes";
 import {Technicians} from "../../Modals/Technicians/Technicians";
 import {Bays} from "../../Modals/Bays/Bays";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
@@ -99,27 +96,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DashboardTitle = () => {
-    const history = useHistory();
-    const handleGoToOptimizer = useCallback(() => {
-        history.push(Routes.Optimizer.Base);
-    }, [history]);
     const {selectedSC} = useSCs();
-    const actions = useMemo(() => {
-        return <Button
-            variant="contained"
-            color="primary"
-            endIcon={<ChevronRight />}
-            onClick={handleGoToOptimizer}>go to optimizer settings
-        </Button>;
-    }, [handleGoToOptimizer]);
     if (!selectedSC) return null;
 
-    return <TitleContainer
-        pad
-        // actions={actions}
-        title={selectedSC.name}
-        // subtitle={concatAddress(selectedSC.address)}
-    />;
+    return <TitleContainer pad title={selectedSC.name}/>;
 }
 
 type TItem = {
@@ -150,7 +130,6 @@ export const AdminDashboard: React.FC = () => {
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
     }, [currentUser]);
-
     const isManager: boolean = useMemo(() => {
         return ["Manager"].includes(currentUser?.role || "")
     }, [currentUser]);

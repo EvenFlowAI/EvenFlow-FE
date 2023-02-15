@@ -24,6 +24,7 @@ type TServiceCenterState = {
     selectedSC?: IServiceCenter,
     shortSC: IServiceCenter[],
     loading: boolean,
+    packagesOptionsLoading: boolean;
     dealershipLoading: boolean,
     shortLoading: boolean,
     saving: boolean,
@@ -50,6 +51,7 @@ const initialState: TServiceCenterState = {
     shortLoading: false,
     dealershipLoading: false,
     loading: false,
+    packagesOptionsLoading: false,
     saving: false,
     searchTerm: "",
     order: {...defaultOrder},
@@ -115,6 +117,8 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, laborRate: action.payload};
         case "ServiceCenters/SetParamsLoading":
             return {...state, predictionParamsLoading: action.payload};
+        case "ServiceCenters/PackageOptionsLoading":
+            return {...state, packagesOptionsLoading: action.payload};
 
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
