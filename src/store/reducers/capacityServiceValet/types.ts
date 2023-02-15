@@ -70,3 +70,13 @@ export interface IZoneTimeReservation {
     zoneName: string;
     timeWindows: ITimeWindowReservation[];
 }
+
+export interface ITimeRangeAndCapacity {
+    id?: number;
+    dayOfWeek: number;
+    pickUpMin: string;
+    pickUpMax: string;
+    dropOffMin: string;
+    dropOffMax: string;
+    dailyCapacity: number;
+}

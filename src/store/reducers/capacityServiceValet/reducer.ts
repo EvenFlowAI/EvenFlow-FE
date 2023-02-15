@@ -1,6 +1,6 @@
-import {ETimeWindows, IZonesRoutingByDay, IZoneTimeReservation, IZoneTimeSlot} from "./types";
+import {ETimeWindows, ITimeRangeAndCapacity, IZonesRoutingByDay, IZoneTimeReservation, IZoneTimeSlot} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {getZonesRouting, setLoading, setZoneTimeWindows} from "./actions";
+import {getZonesRouting, setLoading, setTimeRangesAndCapacity, setZoneTimeWindows} from "./actions";
 
 const mockZonesRouting: IZonesRoutingByDay[] = [
     {   id: 61,
@@ -186,6 +186,7 @@ interface InitialState {
     zonesRouting: IZonesRoutingByDay[],
     zoneTimeWindows: IZoneTimeSlot[],
     zoneCapacity: IZoneTimeReservation[],
+    timeRangesAndCapacity: ITimeRangeAndCapacity[];
     isLoading: boolean;
 }
 
@@ -193,6 +194,7 @@ const initialState: InitialState = {
     zonesRouting: mockZonesRouting,
     zoneTimeWindows: [],
     zoneCapacity: mockReservations,
+    timeRangesAndCapacity: [],
     isLoading: false,
 }
 
@@ -205,5 +207,8 @@ export const capacityServiceValetReducer = createReducer(initialState, builder =
     })
     .addCase(setZoneTimeWindows, (state, {payload}) => {
         return {...state, zoneTimeWindows: payload};
+    })
+    .addCase(setTimeRangesAndCapacity, (state, {payload}) => {
+        return {...state, timeRangesAndCapacity: payload};
     })
 )
