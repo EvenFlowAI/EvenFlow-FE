@@ -144,7 +144,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
                 if (optionToChange) {
                     optionToChange = {...optionToChange, serviceRequestAssignedId: selectedCode};
                     options = options.filter(item => item.type !== selectedOption.type).concat(optionToChange)
-                    dispatch(updatePackageOptions(currentPackage.id, options))
+                    dispatch(updatePackageOptions(currentPackage.id, options, showError))
                 }
             }
         } catch (e) {
