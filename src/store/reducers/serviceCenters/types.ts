@@ -20,6 +20,7 @@ export interface IServiceCenter {
     isShowPriceDetails?: boolean;
     recallServiceRequestId?: number;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
+    engineTypeFieldName?: string;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;

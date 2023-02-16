@@ -177,7 +177,7 @@ type ApiRoutes = {
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
         | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
-        | "UpdateDefaultOpsCode" | "UpdatePresentedPackageOptions", TApiRoute>,
+        | "UpdateDefaultOpsCode" | "UpdatePresentedPackageOptions" | "UpdateEngineTypeFieldName", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -429,6 +429,7 @@ export class Api {
             UpdatePackagePriceDetails: {route: "/service-centers/{id}/maintenance-package-price-details", method: "patch"},
             UpdateDefaultOpsCode: {route: "/service-center-settings/{id}/default-recall", method: "put"},
             UpdatePresentedPackageOptions: {route: "/service-centers/{id}/maintenance-package-option-types", method: "put"},
+            UpdateEngineTypeFieldName: {route: "/service-centers/{id}/engine-type-field-name", method: "patch"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

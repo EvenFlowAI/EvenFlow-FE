@@ -10,25 +10,29 @@ import {TextField} from "../../UI/TextField";
 
 const EditFieldName:React.FC<DialogProps> = (props) => {
     const [fieldName, setFieldName] = useState<string>('');
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch()
     const showError = useException();
     const classes = useStyles();
 
     useEffect(() => {
-        // todo set field name from the BE
-    }, [])
+        if (selectedSC?.engineTypeFieldName) setFieldName(selectedSC.engineTypeFieldName);
+    }, [selectedSC])
 
     const onCancel = (): void => {
-        setFieldName('');
+        setFieldName(selectedSC?.engineTypeFieldName ?? '');
+        setFormIsChecked(false);
         props.onClose();
     }
 
     const onFieldNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setFormIsChecked(false);
         setFieldName(e.target.value);
     }
 
     const onSave = ():void => {
+        setFormIsChecked(true);
         if (selectedSC) dispatch(updateEngineTypeFieldName(fieldName, selectedSC.id, onCancel, showError))
     }
 
@@ -40,6 +44,7 @@ const EditFieldName:React.FC<DialogProps> = (props) => {
                     fullWidth
                     label='Field Name'
                     placeholder='Type Field Name'
+                    error={formIsChecked && !fieldName.length}
                     onChange={onFieldNameChange}
                     value={fieldName}/>
             </DialogContent>
