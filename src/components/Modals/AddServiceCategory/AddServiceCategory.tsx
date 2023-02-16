@@ -233,7 +233,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                 onCancel();
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description])
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description, isCommentRequired])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
