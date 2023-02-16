@@ -280,6 +280,7 @@ export interface IServiceCategory extends IServiceCategoryShort {
     iconPath?: string;
     description?: string;
     offer?: IOfferForCategory;
+    isCommentRequired?: boolean;
 }
 
 export interface IServiceConsultant {
