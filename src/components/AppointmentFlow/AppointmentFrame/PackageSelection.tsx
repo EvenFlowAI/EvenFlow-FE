@@ -115,7 +115,6 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             borderTop: border,
         },
         '&:nth-child(4n+1)': {
-            textAlign: "right",
             justifyContent: "center",
             cursor: "default",
         },
@@ -140,6 +139,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             justifyContent: "flex-end",
             alignItems: 'center',
             padding: "6px 8px",
+            textAlign: 'right',
         },
         "&.green": {
             background: "#E6FCEC"
@@ -151,7 +151,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             background: "#89E5AB"
         },
         "&.totalMaintenance": {
-            justifyContent: "flex-end",
+            justifyContent: "center",
             fontWeight: 'bold',
             borderTop: border,
             paddingBottom: 10,
@@ -172,39 +172,39 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         "&.total": {
             justifyContent: "flex-end",
             padding: 8,
-            "&.price": {
-                display: "grid",
-                gridTemplateColumns: "repeat(1, 1fr)",
-                alignItems: "center",
-                justifyContent: "center",
-                "& .current": {
-                    flexGrow: 1,
-                    fontSize: 20
-                }
-            },
-            '&.priceWithBefore': {
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                alignItems: "center",
-                justifyContent: "center",
-                "&>.before": {
-                    textDecoration: "line-through",
-                    fontWeight: "bold",
-                    color: "#142EA1",
-                    fontSize: 20,
-                },
-                "& .current": {
-                    flexGrow: 1,
-                    fontSize: 20
-                }
-            },
             "&>.info": {
                 display: "inline-block",
                 marginLeft: 4,
                 textTransform: "none",
                 fontWeight: "normal",
             }
-        }
+        },
+        "&.price": {
+            display: "grid",
+            gridTemplateColumns: "repeat(1, 1fr)",
+            alignItems: "center",
+            justifyContent: "center",
+            "& .current": {
+                flexGrow: 1,
+                fontSize: 20
+            }
+        },
+        '&.priceWithBefore': {
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            alignItems: "center",
+            justifyContent: "center",
+            "&>.before": {
+                textDecoration: "line-through",
+                fontWeight: "bold",
+                color: "#142EA1",
+                fontSize: 20,
+            },
+            "& .current": {
+                flexGrow: 1,
+                fontSize: 20
+            }
+        },
     }
 }));
 
