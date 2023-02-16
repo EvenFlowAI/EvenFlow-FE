@@ -19,6 +19,7 @@ export interface IServiceCenter {
     maintenancePackageDisclaimer?: string;
     isShowPriceDetails?: boolean;
     recallServiceRequestId?: number;
+    defaultVehicleMakeId?: number|null;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
     engineTypeFieldName?: string;
 }
