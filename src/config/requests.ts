@@ -428,7 +428,7 @@ export class Api {
             UpdateAncillaryPriceType: {route: "/service-center-settings/{id}/ancillary-price-type", method: "put"},
             UpdatePackagePriceDetails: {route: "/service-centers/{id}/maintenance-package-price-details", method: "patch"},
             UpdateDefaultOpsCode: {route: "/service-center-settings/{id}/default-recall", method: "put"},
-            UpdateDefaultMake: {route: "/service-center-settings/{id}/default-vehicle-make", method: "put"},
+            UpdateDefaultMake: {route: "/service-center-settings/{id}/default-vehicle-make", method: "patch"},
             UpdatePresentedPackageOptions: {route: "/service-centers/{id}/maintenance-package-option-types", method: "put"},
             UpdateEngineTypeFieldName: {route: "/service-centers/{id}/engine-type-field-name", method: "patch"},
         },

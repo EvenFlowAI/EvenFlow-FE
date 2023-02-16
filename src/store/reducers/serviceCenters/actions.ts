@@ -385,9 +385,9 @@ export const updateDefaultRecallOpsCode = (id: number, serviceRequestId: number)
         .finally(() => dispatch(loading(false)))
 }
 
-export const updateDefaultMake = (id: number, makeId: number|null, onErr: (err: string) => void): AppThunk => dispatch => {
+export const updateDefaultMake = (id: number, defaultVehicleMakeId: number|null, onErr: (err: string) => void): AppThunk => dispatch => {
     dispatch(loading(true));
-    Api.call(Api.endpoints.ServiceCenters.UpdateDefaultMake, {urlParams:{id}, data: {makeId}})
+    Api.call(Api.endpoints.ServiceCenters.UpdateDefaultMake, {urlParams:{id}, data: {defaultVehicleMakeId}})
         .then(result => {
             if (result) dispatch(loadAllSCs())
         })
