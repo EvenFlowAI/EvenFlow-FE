@@ -5,12 +5,12 @@ import {optimizerRoot} from "../utils";
 import {TabList} from "../../UI/Tabs";
 import {Tab} from "@material-ui/core";
 import ZoneRouting from "./ZoneRouting";
-import ZoneCapacity from "./ZoneCapacity";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
 import {useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {loadHoursOfOperations} from "../../../store/reducers/slotScoring/actions";
 import TimeRangesAndCapacity from "./TimeRangesAndCapacity";
+import CenterSettings from "./CenterSettings";
 
 const CapacityServiceValet = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -42,7 +42,7 @@ const CapacityServiceValet = () => {
         </TabList>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><ZoneRouting/></TabPanel>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><TimeRangesAndCapacity /></TabPanel>
-        <TabPanel style={{width: "100%", padding: "24px 0"}} value="2"><ZoneCapacity /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="2"><CenterSettings /></TabPanel>
     </TabContext>
 };
 
