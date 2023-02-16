@@ -8,7 +8,7 @@ import {
     TUpdateCategoryData
 } from "../../../store/reducers/categories/types";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Divider, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
+import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch, withStyles} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
@@ -87,6 +87,20 @@ export interface IIconState {
     dataUrl?: string;
 }
 
+const Label = withStyles({
+    root: {
+        justifyContent: "flex-end",
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    label: {
+        fontWeight: "bold",
+        fontSize: 12,
+        textTransform: "uppercase",
+        //transform: "translate(0, 1.5px) scale(0.75)",
+    }
+})(FormControlLabel);
+
 const getOptionLabel = (option: TOption) => {
     const array = [];
     for (let i = 0; i < option.name.length; i++) {
@@ -112,7 +126,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [description, setDescription] = useState<string>('');
-    const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter);
+    const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter)
+    const [isCommentRequired, setIsCommentRequired] = useState<boolean>(false);
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2
@@ -149,6 +164,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
 
             if (editingItem.orderIndex) setOrderIndex(editingItem.orderIndex.toString())
             if (editingItem.description) setDescription(editingItem.description);
+            if (editingItem.isCommentRequired) setIsCommentRequired(editingItem.isCommentRequired);
         }
     }, [editingItem, allAssignedList, categoryOptions, props.open])
 
@@ -167,6 +183,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setCategoryType(null);
         setOrderIndex('');
         setDescription('')
+        setIsCommentRequired(false);
         props.onClose();
     }, [])
 
@@ -192,6 +209,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     type: categoryType.value,
                     serviceRequests: [],
                     orderIndex: Number(orderIndex),
+                    isCommentRequired: categoryType.value === EServiceCategoryType.GeneralCategory ? isCommentRequired : false,
                     // todo uncomment and add in the TUpdateCategoryData field for service type
                     //serviceType,
                 }
@@ -215,7 +233,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                 onCancel();
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description])
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description, isCommentRequired])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
@@ -251,6 +269,10 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.value)
         setSelectedServiceType(e.target.value === '0' ? EServiceTypeBookingFlow.VisitCenter : EServiceTypeBookingFlow.MobileService);
+    }
+
+    const handleSwitch = (e: any, value: boolean) => {
+        setIsCommentRequired(value);
     }
 
     return (
@@ -326,6 +348,16 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                             placeholder: 'Select Order Index',
                             error: !orderIndex && formIsChecked,
                         })}
+                    />
+                    <Label
+                        control={<Switch
+                            disabled={!categoryType || categoryType?.value !== EServiceCategoryType.GeneralCategory}
+                            onChange={handleSwitch}
+                            checked={isCommentRequired}
+                            color="primary"
+                        />}
+                        label="Comment Field Is Required"
+                        labelPlacement="start"
                     />
                 </div>
                 <TextField

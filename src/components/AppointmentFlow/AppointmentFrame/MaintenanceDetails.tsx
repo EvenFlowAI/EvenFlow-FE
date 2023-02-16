@@ -184,6 +184,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     useEffect(() => {
         if (makes.length) {
             setLoadedOptions(prevOptions => ({...prevOptions, make: makes.map(item => item.name)}));
+            const defaultMake = makes.find(item => item.id === scProfile?.defaultVehicleMakeId)
+            defaultMake && dispatch(setMaintenanceDetails({make: defaultMake.name}));
         } else {
             setLoadedOptions(prevOptions => ({...prevOptions, make: [t('Other')]}));
         }

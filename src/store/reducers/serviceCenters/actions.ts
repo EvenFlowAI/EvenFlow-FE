@@ -385,6 +385,19 @@ export const updateDefaultRecallOpsCode = (id: number, serviceRequestId: number)
         .finally(() => dispatch(loading(false)))
 }
 
+export const updateDefaultMake = (id: number, defaultVehicleMakeId: number|null, onErr: (err: string) => void): AppThunk => dispatch => {
+    dispatch(loading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateDefaultMake, {urlParams:{id}, data: {defaultVehicleMakeId}})
+        .then(result => {
+            if (result) dispatch(loadAllSCs())
+        })
+        .catch(err => {
+            console.log('update default make err', err)
+            onErr(err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
 export const updateAvailablePackageOptions = (id: number, data: EMaintenanceOptionType[], onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(packageOptionsLoading(true))
     Api.call(Api.endpoints.ServiceCenters.UpdatePresentedPackageOptions, {urlParams: {id}, data: {optionTypes: data}})

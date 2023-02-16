@@ -10,6 +10,7 @@ export interface ICategory {
     type: EServiceCategoryType;
     orderIndex?: number;
     description?: string;
+    isCommentRequired?: boolean;
 }
 
 export type TUpdateCategoryData = {
@@ -19,6 +20,7 @@ export type TUpdateCategoryData = {
     type: EServiceCategoryType;
     orderIndex?: number;
     description?: string;
+    isCommentRequired?: boolean;
 }
 
 export type TNewCategory = TUpdateCategoryData & {

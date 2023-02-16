@@ -256,7 +256,10 @@
       "left": "left",
       "to": "to",
       "Drop Off Time": "Drop Off Time",
-      "Pick Up Time": "Pick Up Time"
+      "Pick Up Time": "Pick Up Time",
+      "Service Option": "Service Option",
+      "In order for us to be better prepared for your appointment, please leave a brief description of your concern.": "In order for us to be better prepared for your appointment, please leave a brief description of your concern.",
+      "Close": "Close"
     }
   },
   "es": {
