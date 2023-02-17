@@ -7,16 +7,21 @@ import {useModal, useSCs} from "../../../utils/hooks";
 import ShowDropOffTimeDialog from "./ShowDropOffTimeDialog";
 import {useDispatch} from "react-redux";
 import {loadCenterSettings} from "../../../store/reducers/capacityServiceValet/actions";
+import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
+import ServiceValetOpsCodeDialog from "./ServiceValetOpsCodeDialog";
 
 const CenterSettings = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const {onOpen: onShowTimeOpen, isOpen: isShowTimeOpen, onClose: isShowTimeClose} = useModal();
     const {onOpen: onDmsAppointmentTimeOpen, isOpen: isDmsAppointmentTimeOpen, onClose: isDmsAppointmentTimeClose} = useModal();
-    const {onOpen: onServiceValetOpsCodeOpen, isOpen: isServiceValetOpsCodeOpen, onClose: isServiceValetOpsCodeClose} = useModal();
+    const {onOpen: onServiceValetOpsCodeOpen, isOpen: isServiceValetOpsCodeOpen, onClose: onServiceValetOpsCodeClose} = useModal();
 
     useEffect(() => {
-        selectedSC && dispatch(loadCenterSettings(selectedSC.id))
+        if (selectedSC) {
+            dispatch(loadCenterSettings(selectedSC.id));
+            dispatch(loadAllAssignedServiceRequests(selectedSC.id))
+        }
     }, [selectedSC])
 
     const optContent: TOptContent = {
@@ -78,6 +83,7 @@ const CenterSettings = () => {
                 />
             })}
             <ShowDropOffTimeDialog open={isShowTimeOpen} onClose={isShowTimeClose}/>
+            <ServiceValetOpsCodeDialog open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>
         </Grid>
     )
 };

@@ -6,7 +6,7 @@ import {TextField} from "../../UI/TextField";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 
-const TopWrapper = styled('div')({
+export const TopWrapper = styled('div')({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -15,7 +15,7 @@ const TopWrapper = styled('div')({
     textTransform: 'uppercase'
 })
 
-const ButtonsWrapper = styled('div')({
+export const ButtonsWrapper = styled('div')({
     width: "40%",
     display: 'flex',
     justifyContent: 'space-between',
