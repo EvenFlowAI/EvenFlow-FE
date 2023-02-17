@@ -1,14 +1,23 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {centerSettingsList, ECenterSettingType, TOptContent} from "./types";
 import {Grid} from "@material-ui/core";
 import {CenterSettingsPlate} from "./CenterSettingsPlate";
 import moment from "moment";
-import {useModal} from "../../../utils/hooks";
+import {useModal, useSCs} from "../../../utils/hooks";
+import ShowDropOffTimeDialog from "./ShowDropOffTimeDialog";
+import {useDispatch} from "react-redux";
+import {loadCenterSettings} from "../../../store/reducers/capacityServiceValet/actions";
 
 const CenterSettings = () => {
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
     const {onOpen: onShowTimeOpen, isOpen: isShowTimeOpen, onClose: isShowTimeClose} = useModal();
     const {onOpen: onDmsAppointmentTimeOpen, isOpen: isDmsAppointmentTimeOpen, onClose: isDmsAppointmentTimeClose} = useModal();
     const {onOpen: onServiceValetOpsCodeOpen, isOpen: isServiceValetOpsCodeOpen, onClose: isServiceValetOpsCodeClose} = useModal();
+
+    useEffect(() => {
+        selectedSC && dispatch(loadCenterSettings(selectedSC.id))
+    }, [selectedSC])
 
     const optContent: TOptContent = {
         [ECenterSettingType.ShowDropOffTime]: {
@@ -68,6 +77,7 @@ const CenterSettings = () => {
                     helperText={plate.helperText}
                 />
             })}
+            <ShowDropOffTimeDialog open={isShowTimeOpen} onClose={isShowTimeClose}/>
         </Grid>
     )
 };

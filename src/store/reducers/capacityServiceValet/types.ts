@@ -80,3 +80,10 @@ export interface ITimeRangeAndCapacity {
     dropOffMax: string;
     dailyCapacity: number;
 }
+
+export interface ICenterSettings {
+    isShowDropOffTime: boolean;
+    isShowDropOffDescription?: string;
+    dmsAppointmentTime: string;
+    serviceValetRequestId: number;
+}
