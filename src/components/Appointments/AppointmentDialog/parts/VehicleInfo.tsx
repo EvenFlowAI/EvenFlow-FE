@@ -62,6 +62,13 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
         if (selectedSC && isDataValid) getPackage();
     }, [selectedSC, isDataValid, form.vehicleMake, form.vehicleModel, form.vehicleYear, form.vehicleMileage, selectedEngine])
 
+    useEffect(() => {
+        if (!form.vehicleMake?.length && selectedSC) {
+            const defaultMake = makes.find(item => item.id === selectedSC.defaultVehicleMakeId)
+            defaultMake && setForm(prev => ({...prev, vehicleMake: defaultMake.name}))
+        }
+    }, [makes, form, selectedSC])
+
     const handleSelectChange = useCallback((name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (option && !skip) {
             setErrors(e => e.filter(err => err !== name));

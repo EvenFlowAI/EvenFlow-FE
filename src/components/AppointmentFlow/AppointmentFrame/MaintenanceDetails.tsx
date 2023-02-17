@@ -196,6 +196,13 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }, [makes, selectedVehicle])
 
     useEffect(() => {
+        if (!selectedVehicle?.make) {
+            const defaultMake = makes.find(item => item.id === scProfile?.defaultVehicleMakeId)
+            defaultMake && dispatch(setMaintenanceDetails({make: defaultMake.name}));
+        }
+    }, [makes, selectedVehicle])
+
+    useEffect(() => {
         dispatch(loadMakes(decodeSCID(id)));
         dispatch(loadMileage(decodeSCID(id)));
         dispatch(loadEngineType(decodeSCID(id)));
