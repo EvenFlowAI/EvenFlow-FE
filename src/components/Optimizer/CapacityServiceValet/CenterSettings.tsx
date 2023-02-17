@@ -58,6 +58,7 @@ const CenterSettings = () => {
             {centerSettingsList.map(k => {
                 const plate = optContent[k];
                 return <CenterSettingsPlate
+                    key={k}
                     onEdit={() => getPlateEdit(k)}
                     title={plate.title}
                     count={getCount(k)}
