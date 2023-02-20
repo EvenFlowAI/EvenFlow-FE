@@ -1,7 +1,6 @@
 import React from "react";
 import {Button, Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {ECenterSettingType} from "./types";
 
 const useStyles = makeStyles({
     paper: {
@@ -51,7 +50,6 @@ export type TCenterSettingsPlateProps = {
     suffix?: string;
     label: string;
     helperText: string;
-    type: ECenterSettingType;
 }
 export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
                                                                              onEdit,
@@ -61,9 +59,9 @@ export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
                                                                              suffix,
                                                                              label,
                                                                              helperText,
-                                                                             type
                                                                          }) => {
     const classes = useStyles();
+
     return <Grid item xs={6} md={4}>
         <Paper className={classes.paper} variant={"outlined"} >
             <h3 className={classes.title}>{title}</h3>

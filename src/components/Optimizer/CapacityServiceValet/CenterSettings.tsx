@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {centerSettingsList, ECenterSettingType, TOptContent} from "./types";
 import {Grid} from "@material-ui/core";
 import {CenterSettingsPlate} from "./CenterSettingsPlate";
@@ -10,10 +10,14 @@ import {loadCenterSettings} from "../../../store/reducers/capacityServiceValet/a
 import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 import ServiceValetOpsCodeDialog from "./ServiceValetOpsCodeDialog";
 import {RootState} from "../../../store/rootReducer";
+import {TimePicker} from "../../UI/DateTimePickers";
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 const CenterSettings = () => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
+    const [calendarValue, setCalendarValue] = useState<moment.Moment>(moment())
+    const [isOpen, setOpen] = useState<boolean>(false);
     const {onOpen: onShowTimeOpen, isOpen: isShowTimeOpen, onClose: isShowTimeClose} = useModal();
     const {onOpen: onDmsAppointmentTimeOpen, isOpen: isDmsAppointmentTimeOpen, onClose: isDmsAppointmentTimeClose} = useModal();
     const {onOpen: onServiceValetOpsCodeOpen, isOpen: isServiceValetOpsCodeOpen, onClose: onServiceValetOpsCodeClose} = useModal();
@@ -21,6 +25,13 @@ const CenterSettings = () => {
     const {selectedSC} = useSCs();
     const selectedOpsCode = useMemo(() => allAssignedList.find(item => item.serviceRequestId === centerSettings?.serviceValetRequestId),
         [allAssignedList, centerSettings])
+
+    useEffect(() => {
+        if (centerSettings?.dmsAppointmentTime) {
+            const [hour, min, sec, ms] = centerSettings.dmsAppointmentTime.split(':');
+            setCalendarValue(moment().set('hour', +hour).set('minute', +min).set('second', +sec).set('millisecond', +ms))
+        }
+    }, [centerSettings])
 
     useEffect(() => {
         if (selectedSC) {
@@ -47,21 +58,16 @@ const CenterSettings = () => {
         },
     }
 
-    const getDateString = (time: string): string=> {
-        const [hour, min, sec, ms] = time.split(':');
-        return moment().set('hour', +hour).set('minute', +min).set('second', +sec).set('millisecond', +ms).format('HH:mm a')
-    }
-
     const getCount = (k: ECenterSettingType): string|number => {
         switch (k) {
             case ECenterSettingType.ShowDropOffTime:
                 return centerSettings?.isShowDropOffDescription ? "Yes" : "No";
             case ECenterSettingType.DmsAppointmentTime:
                 return centerSettings?.dmsAppointmentTime
-                    ? getDateString(centerSettings.dmsAppointmentTime)
-                    : 'No Selected';
+                    ? moment(centerSettings?.dmsAppointmentTime).format('HH:mm a')
+                    : 'Not Selected';
             default:
-                return selectedOpsCode?.serviceRequest?.code ?? 'No Selected';
+                return selectedOpsCode?.serviceRequest?.code ?? 'Not Selected';
         }
     }
 
@@ -71,11 +77,17 @@ const CenterSettings = () => {
                 onShowTimeOpen();
                 break;
             case ECenterSettingType.DmsAppointmentTime:
-                onDmsAppointmentTimeOpen();
+                setOpen(true);
                 break;
             default:
                 onServiceValetOpsCodeOpen();
         }
+    }
+    const onClose = () => setOpen(false)
+
+    const onChange = (date: ParsableDate) => {
+        setCalendarValue(moment(date))
+        onClose();
     }
 
     return (
@@ -83,7 +95,6 @@ const CenterSettings = () => {
             {centerSettingsList.map(k => {
                 const plate = optContent[k];
                 return <CenterSettingsPlate
-                    type={k}
                     key={k}
                     onEdit={() => getPlateEdit(k)}
                     title={plate.title}
@@ -96,6 +107,14 @@ const CenterSettings = () => {
             })}
             <ShowDropOffTimeDialog open={isShowTimeOpen} onClose={isShowTimeClose}/>
             <ServiceValetOpsCodeDialog open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>
+            <div style={{visibility: 'hidden'}}>
+                <TimePicker
+                open={isOpen}
+                value={calendarValue}
+                onChange={onChange}
+                onClose={onClose}
+            />
+            </div>
         </Grid>
     )
 };
