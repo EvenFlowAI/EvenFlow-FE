@@ -1,6 +1,7 @@
 import React from "react";
 import {Button, Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import {ECenterSettingType} from "./types";
 
 const useStyles = makeStyles({
     paper: {
@@ -50,26 +51,28 @@ export type TCenterSettingsPlateProps = {
     suffix?: string;
     label: string;
     helperText: string;
+    type: ECenterSettingType;
 }
 export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
-                                                                         onEdit,
-                                                                         title,
-                                                                         count,
-                                                                         prefix,
-                                                                         suffix,
-                                                                         label,
-                                                                         helperText,
-                                                                     }) => {
+                                                                             onEdit,
+                                                                             title,
+                                                                             count,
+                                                                             prefix,
+                                                                             suffix,
+                                                                             label,
+                                                                             helperText,
+                                                                             type
+                                                                         }) => {
     const classes = useStyles();
     return <Grid item xs={6} md={4}>
         <Paper className={classes.paper} variant={"outlined"} >
-        <h3 className={classes.title}>{title}</h3>
-        <Button className={classes.edit} color="primary" onClick={() => onEdit()}>Edit</Button>
-        <div className={classes.value}>
-            {prefix}{count}{suffix}
-        </div>
-        <div className={classes.label}>{label}</div>
-        <div className={classes.helperText}>{helperText}</div>
-    </Paper>
+            <h3 className={classes.title}>{title}</h3>
+            <Button className={classes.edit} color="primary" onClick={() => onEdit()}>Edit</Button>
+            <div className={classes.value}>
+                {prefix}{count}{suffix}
+            </div>
+            <div className={classes.label}>{label}</div>
+            <div className={classes.helperText}>{helperText}</div>
+        </Paper>
     </Grid>
 }
