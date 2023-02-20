@@ -19,7 +19,6 @@ const CenterSettings = () => {
     const [calendarValue, setCalendarValue] = useState<moment.Moment>(moment())
     const [isOpen, setOpen] = useState<boolean>(false);
     const {onOpen: onShowTimeOpen, isOpen: isShowTimeOpen, onClose: isShowTimeClose} = useModal();
-    const {onOpen: onDmsAppointmentTimeOpen, isOpen: isDmsAppointmentTimeOpen, onClose: isDmsAppointmentTimeClose} = useModal();
     const {onOpen: onServiceValetOpsCodeOpen, isOpen: isServiceValetOpsCodeOpen, onClose: onServiceValetOpsCodeClose} = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
