@@ -322,6 +322,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
+                    disabled={!isNewVehicleView}
                     renderInput={autocompleteRender({
                         label: t("Year"),
                         placeholder: errors.includes("year") ? `${t("Year")} ${t("required")}` : `${t("Select")} ${t("Year")}`,
@@ -352,6 +353,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
+                    disabled={!isNewVehicleView}
                     renderInput={autocompleteRender({
                         label: t("Make"),
                         placeholder: errors.includes("make") ? `${t("Make")} ${t("required")}` : `${t("Select")} ${t("Make")}`,
@@ -405,6 +407,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
+                    disabled={!isNewVehicleView}
                     renderInput={autocompleteRender({
                         label: t("Model"),
                         placeholder: errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`,
