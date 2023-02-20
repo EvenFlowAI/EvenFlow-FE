@@ -5,7 +5,7 @@ import {ContentTitle} from "../../Content/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {EMaintenanceOptionType, IPackageByQuery} from "../../../api/types";
-import {getPackageById, loadPackages} from "../../../store/reducers/packages/actions";
+import {loadPackages} from "../../../store/reducers/packages/actions";
 import {updateAvailablePackageOptions, updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
 import AddPackage from "../../Modals/AddPackage/AddPackage";
 import {useConfirm, useException, useModal, useSCs} from "../../../utils/hooks";
@@ -66,7 +66,7 @@ export const MaintenanceOptionTypes = [
         value: EMaintenanceOptionType.Value
     },
     {
-        name: 'Preffered',
+        name: 'Preferred',
         value: EMaintenanceOptionType.Preferred
     }
 ]
@@ -93,9 +93,6 @@ export const MaintenancePackages = () => {
             dispatch(loadPackages(selectedSC.id))
             const options = MaintenanceOptionTypes.filter(item => selectedSC.maintenancePackageOptionTypes?.includes(item.value))
             setPresentedOptions(options);
-        }
-        return () => {
-            dispatch(getPackageById(null));
         }
     }, [selectedSC])
 
@@ -129,25 +126,41 @@ export const MaintenancePackages = () => {
         }
     }
 
-    const askRemove = useCallback((value: TOption[]) => {
+    const askRemove = useCallback((value: TOption[], packagesNeededConfig: IPackageByQuery[]) => {
         if (selectedSC) {
+            const newOption = value.find(item => !presentedOptions.find(el => +el.value === +item.value))
+            const packagesString = packagesNeededConfig
+                .map((pack, index) => index === packagesNeededConfig.length - 1
+                    ? `"${pack.name}"` :
+                    `"${pack.name}", `)
             askConfirm({
                 isRemove: false,
-                title: `Please remember that all Maintenance Packages must have this option configured`,
+                title: `Please configure "${newOption?.name ?? "this"}" option for next Maintenance Packages: ${packagesString} in order for it to display`,
                 onConfirm: () => dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
             });
         }
-    }, [selectedSC, askConfirm, showError])
+    }, [selectedSC, askConfirm, showError, presentedOptions])
 
     const onPresentedOptionsChange = useCallback((e: ChangeEvent<{}>, value: TOption[]) => {
         if (selectedSC) {
             if (value.length > presentedOptions.length) {
-                askRemove(value)
+                const newOption = value.find(item => !presentedOptions.find(el => +el.value === +item.value))
+                let packagesNeededConfig: IPackageByQuery[] = [];
+                if (newOption) {
+                    packagesNeededConfig = allPackages
+                        .filter(pack => pack.serviceRequestsAssigned
+                            .find(item => +item.type === +newOption.value && item.serviceRequestId === 0));
+                }
+                if (packagesNeededConfig.length) {
+                    askRemove(value, packagesNeededConfig)
+                } else {
+                    dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
+                }
             } else {
                 dispatch(updateAvailablePackageOptions(selectedSC.id, value.map(item => item.value), showError))
             }
         }
-    }, [selectedSC, presentedOptions, askRemove, showError])
+    }, [selectedSC, presentedOptions, askRemove, showError, allPackages])
 
     return <>
         <AddPackage onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>

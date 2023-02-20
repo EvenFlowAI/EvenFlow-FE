@@ -280,6 +280,7 @@ export interface IServiceCategory extends IServiceCategoryShort {
     iconPath?: string;
     description?: string;
     offer?: IOfferForCategory;
+    isCommentRequired?: boolean;
 }
 
 export interface IServiceConsultant {
@@ -376,12 +377,20 @@ export interface IPackageAppointments extends IPackage{
     maintenancePackageName: string;
 }
 
+export interface IPackageServiceRequestsAssigned {
+    type: EMaintenanceOptionType;
+    serviceRequestId: number;
+    description: string;
+    code: string;
+}
+
 export interface IPackageByQuery {
     name: string;
     id: number;
     isApplyPricingOptimization: boolean;
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
+    serviceRequestsAssigned: IPackageServiceRequestsAssigned[];
 }
 
 export interface IMake {

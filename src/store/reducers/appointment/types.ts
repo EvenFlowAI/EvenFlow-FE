@@ -26,6 +26,9 @@ export interface IServiceCenterProfile {
     isAuthRequired: boolean;
     maintenancePackageDisclaimer?: string;
     isShowPriceDetails?: boolean;
+    defaultVehicleMakeId?: number|null;
+    isCommentRequired: boolean;
+    engineTypeFieldName?: string;
 }
 export interface ISR {
     id: number;
