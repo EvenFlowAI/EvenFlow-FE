@@ -198,7 +198,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     useEffect(() => {
         if (!selectedVehicle?.make) {
             const defaultMake = makes.find(item => item.id === scProfile?.defaultVehicleMakeId)
-            defaultMake && dispatch(setMaintenanceDetails({make: defaultMake.name}));
+            if (defaultMake) {
+                dispatch(setMaintenanceDetails({make: defaultMake.name}));
+                selectedVehicle && dispatch(setVehicle({...selectedVehicle, make: defaultMake.name}))
+                setCurrentModels(defaultMake.models);
+            }
         }
     }, [makes, selectedVehicle])
 
