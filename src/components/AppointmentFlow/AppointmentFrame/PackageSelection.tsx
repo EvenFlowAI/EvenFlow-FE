@@ -151,7 +151,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             background: "#89E5AB"
         },
         "&.totalMaintenance": {
-            justifyContent: "center",
+            justifyContent: "flex-end",
             fontWeight: 'bold',
             borderTop: border,
             paddingBottom: 10,
