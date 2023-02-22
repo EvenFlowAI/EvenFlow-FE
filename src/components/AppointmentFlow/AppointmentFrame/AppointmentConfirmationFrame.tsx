@@ -245,7 +245,10 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     {t("View itemized fees of services")}
                 </div>
                 <ServiceType/>
-                {appointmentFrame.serviceType === EServiceType.VisitCenter ? <Review/> : null}
+                {appointmentFrame.serviceType === EServiceType.VisitCenter
+                && !appointmentFrame.serviceTypeOption?.transportationOption
+                    ? <Review/>
+                    : null}
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>
