@@ -6,7 +6,7 @@ import {Actions} from "./Actions";
 import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import {
     loadAncillaryPriceByZip,
     loadFilteredZip,
@@ -163,7 +163,10 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             addressValue: address?.label ?? '',
                             className: classes.select,
                             onChange: handleChangeAddress,
-                            placeholder: address?.label ?? t('Start To Type'),
+                            placeholder: address?.label
+                            ?? serviceTypeOption?.type === EServiceType.PikUpDropOff
+                                ? t('Enter pick up address')
+                                : t('Enter your requested location'),
                             isClearable: true,
                             isSearchable: true,
                             defaultInputValue: address?.label || "",
@@ -180,7 +183,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     onInputChange={onInputChange}
                     renderInput={autocompleteRender({
                         label: t('Your ZIP'),
-                        placeholder: isFormChecked && !zip ? t("ZIP required") : t("Your ZIP"),
+                        placeholder: isFormChecked && !zip
+                            ? t("zip code required")
+                                : serviceTypeOption?.type === EServiceType.PikUpDropOff
+                                 ? t("Enter pick up zip code")
+                                : t("Enter your requested zip code"),
                         error: isFormChecked && !zip,
                         required: true,
                         key: zipCodeValue || "zipcode",
