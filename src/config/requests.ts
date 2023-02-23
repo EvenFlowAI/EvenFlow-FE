@@ -189,6 +189,7 @@ type ApiRoutes = {
         | "GetByQuery", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
+    ServiceValet: Record<"GetZoneRouting" | "UpdateZoneRouting", TApiRoute>,
     TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
@@ -478,6 +479,10 @@ export class Api {
             GetRange: {route: "/slot-scoring/range", method: "get"},
             UpdateRange: {route: "/slot-scoring/range", method: "put"},
             GetSlotsGap: {route: "/slot-scoring/gap", method: "get"}
+        },
+        ServiceValet: {
+          GetZoneRouting: {route: "/service-valet/{id}/zone-routing", method: "get"},
+          UpdateZoneRouting: {route: "/service-valet/{id}/zone-routing", method: "put"},
         },
         TransportationOptions: {
             Edit: {route: "/transportation-options", method: "put"},

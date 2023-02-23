@@ -87,3 +87,8 @@ export interface ICenterSettings {
     dmsAppointmentTime: string;
     serviceValetRequestId: number;
 }
+
+export interface IUpdateZoneRouting {
+    dayOfWeek: number;
+    geographicZoneIds: number[];
+}
