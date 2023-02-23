@@ -2,7 +2,6 @@ import {createAction} from "@reduxjs/toolkit";
 import {
     ICenterSettings,
     ITimeRangeAndCapacity,
-    IUpdateZoneRouting,
     IZonesRoutingByDay,
     IZoneTimeReservation,
     IZoneTimeSlot
@@ -29,9 +28,9 @@ export const loadZonesRouting = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updateZonesRouting = (id: number, data: IUpdateZoneRouting[]): AppThunk => dispatch => {
+export const updateZonesRouting = (id: number, data: IZonesRoutingByDay): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.ServiceValet.UpdateZoneRouting, {urlParams: {id}, data: {zoneRoutings: data}})
+    Api.call(Api.endpoints.ServiceValet.UpdateZoneRouting, {urlParams: {id}, data: {zoneRoutings: [data]}})
         .then(result => {
             if (result?.data) dispatch(getZonesRouting(result.data))
         })

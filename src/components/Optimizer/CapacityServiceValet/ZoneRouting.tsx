@@ -7,7 +7,7 @@ import {EDaysFromMonday, IZonesRoutingByDay} from "../../../store/reducers/capac
 import {Table} from "../../UI/Table";
 import {Loading} from "../../UI/Loading";
 import {useSCs} from "../../../utils/hooks";
-import {loadZonesRouting} from "../../../store/reducers/capacityServiceValet/actions";
+import {loadZonesRouting, updateZonesRouting} from "../../../store/reducers/capacityServiceValet/actions";
 
 const dayNames = Object.keys(EDaysFromMonday).filter(key => Number.isNaN(+key));
 
@@ -21,8 +21,17 @@ const ZoneRouting = () => {
         if (selectedSC) dispatch(loadZonesRouting(selectedSC.id))
     }, [selectedSC])
 
-    const onCheckboxChange = (zoneId: number, routingId: number) => (e: any, checked:boolean) => {
-
+    const onCheckboxChange = (zoneId: number, dayOfWeek: EDaysFromMonday) => (e: any, checked: boolean) => {
+        const dayOfWeekData = zonesRouting.find(item => item.dayOfWeek === dayOfWeek);
+        if (dayOfWeekData && selectedSC) {
+            let updatedData: IZonesRoutingByDay = {...dayOfWeekData};
+            if (checked) {
+                updatedData = {...updatedData, geographicZoneIds: [...updatedData.geographicZoneIds, zoneId]}
+            } else {
+                updatedData = {...updatedData, geographicZoneIds: updatedData.geographicZoneIds.filter(el => el !== zoneId)}
+            }
+            dispatch(updateZonesRouting(selectedSC.id, updatedData))
+        }
     }
 
     const getRowData = (): TableRowDataType<IZonesRoutingByDay>[] => {
@@ -30,14 +39,14 @@ const ZoneRouting = () => {
             {
                 header: "DAY OF WEEK",
                 width: 200,
-                val: el => dayNames[el.day].toString()
+                val: el => dayNames[el.dayOfWeek].toString()
             }
         ]
         const zonesData: TableRowDataType<IZonesRoutingByDay>[] = zones.map(item => {
             return {
                 header: item.name.toUpperCase(),
                 width: 100,
-                val: el => <Checkbox checked={Boolean(el.zones.find(zone => item.id === zone.id))} onChange={onCheckboxChange(item.id, el.id)}/>
+                val: el => <Checkbox checked={Boolean(el.geographicZoneIds.find(zoneId => item.id === zoneId))} onChange={onCheckboxChange(item.id, el.dayOfWeek)}/>
             }
         })
         return [...data, ...zonesData];
@@ -48,7 +57,7 @@ const ZoneRouting = () => {
         : <div style={{width: 'fit-content', overflowX: 'auto'}}>
             <Table<IZonesRoutingByDay>
                 data={zonesRouting}
-                index={"id"}
+                index={"dayOfWeek"}
                 rowData={getRowData()}
                 hidePagination
                 borderHeader

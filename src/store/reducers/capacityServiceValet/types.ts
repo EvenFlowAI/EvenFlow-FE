@@ -8,9 +8,8 @@ export interface IZoneRouting {
 }
 
 export interface IZonesRoutingByDay {
-    id: number;
-    day: EDaysFromMonday;
-    zones: IZoneRouting[]
+    dayOfWeek: EDaysFromMonday;
+    geographicZoneIds: number[]
 }
 
 export enum EZoneTimeGap {
@@ -89,6 +88,6 @@ export interface ICenterSettings {
 }
 
 export interface IUpdateZoneRouting {
-    dayOfWeek: number;
+    dayOfWeek: EDaysFromMonday;
     geographicZoneIds: number[];
 }
