@@ -35,7 +35,7 @@ const TimeRangesAndCapacity = () => {
                     pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
                     dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
                     dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
-                    dailyCapacity: timeRange?.dailyCapacity ?? 0
+                    capacity: timeRange?.capacity ?? 0
                 }
             })
         })
@@ -74,7 +74,7 @@ const TimeRangesAndCapacity = () => {
             {
                 header: 'Daily Capacity'.toUpperCase(),
                 align: 'center',
-                val: el => el.dailyCapacity.toString(),
+                val: el => el.capacity.toString(),
             },
             {
                 header: '',

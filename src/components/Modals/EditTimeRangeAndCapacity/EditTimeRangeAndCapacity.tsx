@@ -34,7 +34,7 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
         if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax))
         if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin))
         if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax))
-        if (editingElement.dailyCapacity) setDailyCapacity(editingElement.dailyCapacity)
+        if (editingElement.capacity) setDailyCapacity(editingElement.capacity)
     }, [editingElement])
 
     const onCancel = () => {
@@ -93,10 +93,11 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
                 pickUpMax: moment(pickUpMax).format('HH:mm A'),
                 dropOffMin: moment(dropOffMin).format('HH:mm A'),
                 dropOffMax: moment(dropOffMax).format('HH:mm A'),
-                dailyCapacity: +dailyCapacity,
+                capacity: +dailyCapacity,
             }
             if (editingElement.id) {
-                dispatch(updateTimeRange(editingElement.id, data, showError, onCancel))
+                data.serviceCenterId = selectedSC.id;
+                dispatch(updateTimeRange(selectedSC.id, editingElement.id, data, showError, onCancel))
             } else {
                 dispatch(createTimeRange(selectedSC.id, data, showError, onCancel))
             }

@@ -71,13 +71,14 @@ export interface IZoneTimeReservation {
 }
 
 export interface ITimeRangeAndCapacity {
+    serviceCenterId?: number;
     id?: number;
     dayOfWeek: number;
     pickUpMin: string;
     pickUpMax: string;
     dropOffMin: string;
     dropOffMax: string;
-    dailyCapacity: number;
+    capacity: number;
 }
 
 export interface ICenterSettings {

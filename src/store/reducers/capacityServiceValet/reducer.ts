@@ -7,7 +7,7 @@ import {
     IZoneTimeSlot
 } from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {getCenterSettings, getZonesRouting, setLoading, setTimeRangesAndCapacity, setZoneTimeWindows} from "./actions";
+import {getCenterSettings, getZonesRouting, setLoading, getTimeRangesAndCapacity, setZoneTimeWindows} from "./actions";
 
 const mockReservations = [
     {
@@ -79,7 +79,7 @@ export const capacityServiceValetReducer = createReducer(initialState, builder =
     .addCase(setZoneTimeWindows, (state, {payload}) => {
         return {...state, zoneTimeWindows: payload};
     })
-    .addCase(setTimeRangesAndCapacity, (state, {payload}) => {
+    .addCase(getTimeRangesAndCapacity, (state, {payload}) => {
         return {...state, timeRangesAndCapacity: payload};
     })
     .addCase(getCenterSettings, (state, {payload}) => {

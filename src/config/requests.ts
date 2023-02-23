@@ -189,7 +189,7 @@ type ApiRoutes = {
         | "GetByQuery", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
-    ServiceValet: Record<"GetZoneRouting" | "UpdateZoneRouting", TApiRoute>,
+    ServiceValet: Record<"GetZoneRouting" | "UpdateZoneRouting" | "GatAllCapacity" | "GetCapacityById" | "CreateCapacity" | "UpdateCapacity", TApiRoute>,
     TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
@@ -481,8 +481,12 @@ export class Api {
             GetSlotsGap: {route: "/slot-scoring/gap", method: "get"}
         },
         ServiceValet: {
-          GetZoneRouting: {route: "/service-valet/{id}/zone-routing", method: "get"},
-          UpdateZoneRouting: {route: "/service-valet/{id}/zone-routing", method: "put"},
+            GetZoneRouting: {route: "/service-valet/{id}/zone-routing", method: "get"},
+            UpdateZoneRouting: {route: "/service-valet/{id}/zone-routing", method: "put"},
+            GatAllCapacity: {route: "/service-valet/{id}/capacity/get-all", method: "get"},
+            GetCapacityById: {route: "/service-valet/capacity/{id}", method: "get"},
+            CreateCapacity: {route: "/service-valet/capacity", method: "post"},
+            UpdateCapacity: {route: "/service-valet/{id}/capacity", method: "put"},
         },
         TransportationOptions: {
             Edit: {route: "/transportation-options", method: "put"},
