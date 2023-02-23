@@ -1,3 +1,5 @@
+import {EPricingDisplayType} from "../pricingSettings/types";
+
 export enum EDaysFromMonday {
     Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 }
@@ -81,14 +83,30 @@ export interface ITimeRangeAndCapacity {
     capacity: number;
 }
 
-export interface ICenterSettings {
-    isShowDropOffTime: boolean;
-    isShowDropOffDescription?: string;
-    dmsAppointmentTime: string;
-    serviceValetRequestId: number;
+export interface ICenterSettingsSR {
+    id: number;
+    code: string;
+    description: string;
+    price: number;
+    pricingDisplayType: EPricingDisplayType;
 }
 
-export interface IUpdateZoneRouting {
-    dayOfWeek: EDaysFromMonday;
-    geographicZoneIds: number[];
+export interface ICenterSettings {
+    showDropOfTime: boolean;
+    dropOfTimeDescription?: string;
+    dmsAppointmentTime?: string;
+    serviceRequest?: ICenterSettingsSR;
+}
+
+export interface IShowDropOffTime {
+    showDropOfTime: boolean;
+    description?: string;
+}
+
+export type TDmsAppointmentTime = {
+    dmsAppointmentTime: string;
+}
+
+export type TServiceValetRequestId = {
+    serviceRequestId: number;
 }

@@ -8,6 +8,9 @@ import {RootState} from "../../../store/rootReducer";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {useException, useSCs} from "../../../utils/hooks";
+import {updateServiceValetServiceRequest} from "../../../store/reducers/capacityServiceValet/actions";
+import {TServiceValetRequestId} from "../../../store/reducers/capacityServiceValet/types";
 
 const OpsCode = styled('div')({
     height: 60,
@@ -30,22 +33,28 @@ const ServiceValetOpsCodeDialog: React.FC<DialogProps> = ({onClose, open}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const [opsCode, setOpsCode] = useState<IAssignedServiceRequest|null>(null);
+    const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showError = useException();
 
     useEffect(() => {
-        if (centerSettings?.serviceValetRequestId) {
-            const opsCodeSelected = allAssignedList.find(item => item.serviceRequestId === centerSettings.serviceValetRequestId)
+        if (centerSettings?.serviceRequest) {
+            const opsCodeSelected = allAssignedList.find(item => item.serviceRequestId === centerSettings.serviceRequest?.id)
             opsCodeSelected && setOpsCode(opsCodeSelected);
         }
     }, [allAssignedList, centerSettings])
 
 
     const onCancel = () => {
+        setOpsCode(null);
         onClose();
     }
 
     const onSave = () => {
-
+        if (selectedSC && opsCode) {
+            const data: TServiceValetRequestId = {serviceRequestId: opsCode.serviceRequestId};
+            dispatch(updateServiceValetServiceRequest(selectedSC.id, data, onCancel, showError))
+        }
     }
 
     const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest|null)  => {

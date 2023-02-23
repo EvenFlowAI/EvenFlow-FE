@@ -3,15 +3,16 @@ import {centerSettingsList, ECenterSettingType, TOptContent} from "./types";
 import {Grid} from "@material-ui/core";
 import {CenterSettingsPlate} from "./CenterSettingsPlate";
 import moment from "moment";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useException, useModal, useSCs} from "../../../utils/hooks";
 import ShowDropOffTimeDialog from "./ShowDropOffTimeDialog";
 import {useDispatch, useSelector} from "react-redux";
-import {loadCenterSettings} from "../../../store/reducers/capacityServiceValet/actions";
+import {loadCenterSettings, updateDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/actions";
 import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 import ServiceValetOpsCodeDialog from "./ServiceValetOpsCodeDialog";
 import {RootState} from "../../../store/rootReducer";
 import {TimePicker} from "../../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/types";
 
 const CenterSettings = () => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
@@ -22,13 +23,14 @@ const CenterSettings = () => {
     const {onOpen: onServiceValetOpsCodeOpen, isOpen: isServiceValetOpsCodeOpen, onClose: onServiceValetOpsCodeClose} = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
-    const selectedOpsCode = useMemo(() => allAssignedList.find(item => item.serviceRequestId === centerSettings?.serviceValetRequestId),
+    const showError = useException();
+    const selectedOpsCode = useMemo(() => allAssignedList.find(item => item.serviceRequestId === centerSettings?.serviceRequest?.id),
         [allAssignedList, centerSettings])
 
     useEffect(() => {
         if (centerSettings?.dmsAppointmentTime) {
-            const [hour, min, sec, ms] = centerSettings.dmsAppointmentTime.split(':');
-            setCalendarValue(moment().set('hour', +hour).set('minute', +min).set('second', +sec).set('millisecond', +ms))
+            const [hour, min, sec] = centerSettings.dmsAppointmentTime.split(':');
+            setCalendarValue(moment().set('hour', +hour).set('minute', +min).set('second', +sec));
         }
     }, [centerSettings])
 
@@ -42,7 +44,7 @@ const CenterSettings = () => {
     const optContent: TOptContent = {
         [ECenterSettingType.ShowDropOffTime]: {
             helperText: "",
-            label: centerSettings?.isShowDropOffDescription ?? "User text (the text on the Booking Flow)",
+            label: centerSettings?.dropOfTimeDescription ?? "User text (the text on the Booking Flow)",
             title: "Show Drop Off Time",
         },
         [ECenterSettingType.DmsAppointmentTime]: {
@@ -60,7 +62,7 @@ const CenterSettings = () => {
     const getCount = (k: ECenterSettingType): string|number => {
         switch (k) {
             case ECenterSettingType.ShowDropOffTime:
-                return centerSettings?.isShowDropOffDescription ? "Yes" : "No";
+                return centerSettings?.dropOfTimeDescription ? "Yes" : "No";
             case ECenterSettingType.DmsAppointmentTime:
                 return centerSettings?.dmsAppointmentTime
                     ? moment(centerSettings?.dmsAppointmentTime).format('HH:mm a')
@@ -85,8 +87,10 @@ const CenterSettings = () => {
     const onClose = () => setOpen(false)
 
     const onChange = (date: ParsableDate) => {
-        setCalendarValue(moment(date))
-        onClose();
+        if (selectedSC) {
+            const data: TDmsAppointmentTime = {dmsAppointmentTime: moment(date).format('HH:mm:ss')}
+            dispatch(updateDmsAppointmentTime(selectedSC.id, data, onClose, showError))
+        }
     }
 
     return (

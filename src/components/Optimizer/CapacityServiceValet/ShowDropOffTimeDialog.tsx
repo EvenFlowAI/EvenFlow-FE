@@ -3,8 +3,11 @@ import {BaseModal, DialogTitle, DialogContent} from "../../Modals/BaseModal";
 import {DialogProps} from "../../Modals/types";
 import {Button, FormControlLabel, Radio, RadioGroup, styled} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {updateShowDropOffTime} from "../../../store/reducers/capacityServiceValet/actions";
+import {useException, useSCs} from "../../../utils/hooks";
+import {IShowDropOffTime} from "../../../store/reducers/capacityServiceValet/types";
 
 export const TopWrapper = styled('div')({
     display: 'flex',
@@ -39,25 +42,38 @@ const ShowDropOffTimeDialog: React.FC<DialogProps> = ({onClose, open}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const [isShowTime, setIsShowTime] = useState<boolean>(false);
     const [text, setText] = useState<string>('');
+    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
+    const showError = useException();
 
     useEffect(() => {
         if (centerSettings) {
-            setIsShowTime(centerSettings.isShowDropOffTime)
-            setText(centerSettings?.isShowDropOffDescription ?? '');
+            setIsShowTime(centerSettings.showDropOfTime)
+            setText(centerSettings?.dropOfTimeDescription ?? '');
         }
     }, [centerSettings])
 
     const onCancel = () => {
+        setIsShowTime(false)
+        setText('')
         onClose()
     }
 
     const onSave = () => {
-        if (!isShowTime) {
-            if (text.length) {
-                // todo request
+        if (selectedSC) {
+            const data: IShowDropOffTime = {
+                showDropOfTime: isShowTime
             }
-        } else {
-            // todo request
+            if (!isShowTime) {
+                if (text.length) {
+                    data.description = text;
+                    dispatch(updateShowDropOffTime(selectedSC.id, data, onCancel, showError))
+                } else {
+                    showError('"Text" must not be empty')
+                }
+            } else {
+                dispatch(updateShowDropOffTime(selectedSC.id, data, onCancel, showError))
+            }
         }
     }
 
