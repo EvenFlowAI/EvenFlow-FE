@@ -104,7 +104,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
                 height: 0,
                 borderTop: "10px solid transparent",
                 borderBottom: "10px solid transparent",
-                borderRight: "10px solid #D32F2F",
+                // borderRight: "10px solid #D32F2F",
             },
             "& .current": {
                 background: "#D32F2F",
@@ -187,13 +187,16 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             "& .current": {
                 flexGrow: 1,
                 fontSize: 20,
-                color: '#D32F2F'
+                color: '#000000'
             },
             "&.selected": {
                 "& .current": {
-                    background: "#D32F2F",
+                    background: "#000000",
                     color: "#FFFFFF",
-                }
+                },
+                "& .triangle": {
+                    borderRight: "10px solid #000000",
+                },
             }
         },
         '&.priceWithBefore': {
@@ -216,7 +219,10 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
                 "& .current": {
                     background: "#D32F2F",
                     color: "#FFFFFF",
-                }
+                },
+                "& .triangle": {
+                    borderRight: "10px solid #D32F2F",
+                },
             }
         },
     }
