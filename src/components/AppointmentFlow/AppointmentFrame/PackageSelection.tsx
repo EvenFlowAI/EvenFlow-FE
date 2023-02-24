@@ -104,10 +104,10 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
                 height: 0,
                 borderTop: "10px solid transparent",
                 borderBottom: "10px solid transparent",
-                borderRight: "10px solid #000000",
+                borderRight: "10px solid #D32F2F",
             },
             "& .current": {
-                background: "#000000",
+                background: "#D32F2F",
                 color: "#FFFFFF",
             }
         },
@@ -142,13 +142,13 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             textAlign: 'right',
         },
         "&.green": {
-            background: "#E6FCEC"
+            background: "#E5F5FF"
         },
         "&.lgray": {
             background: "#EFEFEF",
         },
         "&.green.subtitle": {
-            background: "#89E5AB"
+            background: "#91CFF7"
         },
         "&.totalMaintenance": {
             justifyContent: "flex-end",
@@ -163,7 +163,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         "&.totalComplimentary": {
             justifyContent: "center",
             padding: "16px 8px",
-            color: "#008331",
+            color: "#202021",
         },
         "&.complimentaryTitle": {
             justifyContent: "flex-end",
@@ -186,7 +186,14 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             justifyContent: "center",
             "& .current": {
                 flexGrow: 1,
-                fontSize: 20
+                fontSize: 20,
+                color: '#D32F2F'
+            },
+            "&.selected": {
+                "& .current": {
+                    background: "#D32F2F",
+                    color: "#FFFFFF",
+                }
             }
         },
         '&.priceWithBefore': {
@@ -197,12 +204,19 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             "&>.before": {
                 textDecoration: "line-through",
                 fontWeight: "bold",
-                color: "#142EA1",
+                color: "#000000",
                 fontSize: 20,
             },
             "& .current": {
                 flexGrow: 1,
-                fontSize: 20
+                fontSize: 20,
+                color: '#D32F2F'
+            },
+            "&.selected": {
+                "& .current": {
+                    background: "#D32F2F",
+                    color: "#FFFFFF",
+                }
             }
         },
     }
