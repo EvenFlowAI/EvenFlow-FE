@@ -17,6 +17,21 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, i
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 
+    const getPrice = (p: TPackage): string => {
+        let price: string = '';
+        if (p.marketPriceComplimentaryServices) {
+            price = scProfile?.isRoundPrice
+                ? p.marketPriceComplimentaryServices.toString()
+                : p.marketPriceComplimentaryServices.toFixed(2)
+        } else {
+            const suggestedPrice = p.complimentaryServices.reduce((acc, el) => acc + el.price, 0);
+            price = scProfile?.isRoundPrice
+                ? suggestedPrice.toString()
+                : suggestedPrice.toFixed(2)
+        }
+        return price;
+    }
+
     return <React.Fragment>
         <div className="totalComplimentary complimentaryTitle" style={isBmWService ? {fontSize: 16} : {}}>
             {t("Total Complimentary Value")}
@@ -37,15 +52,12 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, i
                 </div>;
             })
             : packages.map(p => {
-                const price = p.complimentaryServices.reduce(
-                    (acc, el) => acc + el.price, 0
-                );
                 return <div
                     onClick={handleClick(p)}
                     className={setClasses(p.id, "totalComplimentary last")}
                     key={p.id}>
                     <span style={{ fontSize: 20 }}>
-                        {price ? `$${scProfile?.isRoundPrice ? price : price.toFixed(2)}` : ''}
+                        {getPrice(p)}
                     </span>
                 </div>;
             })}
