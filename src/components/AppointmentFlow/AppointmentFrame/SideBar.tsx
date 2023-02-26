@@ -102,6 +102,12 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         return usualSteps[screen] < index + 1 && usualSteps[sideBarSteps[sideBarSteps.length - 1]] < index + 1;
     }
 
+    const activeButtonStyles = {
+        background: '#E6FCEC',
+        color: '#202021',
+        border: '1px solid #202021'
+    }
+
     return (
         <Wrapper>
             {!isSm
@@ -112,6 +118,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
                             disabled={getButtonState(idx)}
                             onClick={() => onClick(idx)}
                             color="primary"
+                            style={!getButtonState(idx) && !getStepsState(idx+1) ? activeButtonStyles : {}}
                             variant={getStepsState(idx+1) ? "contained" : "outlined"}>
                             <Index>{idx + 1}</Index> {t(item)}
                         </Button>
