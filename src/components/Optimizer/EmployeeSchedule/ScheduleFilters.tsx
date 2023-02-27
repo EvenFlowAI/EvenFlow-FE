@@ -6,9 +6,7 @@ import {RootState} from "../../../store/rootReducer";
 import {IScheduleFilters} from "../../../store/reducers/schedules/types";
 import {setScheduleFilters} from "../../../store/reducers/schedules/actions";
 
-type TProps = {
-}
-export const ScheduleFilters: React.FC<TProps> = () => {
+export const ScheduleFilters = () => {
     const filters = useSelector((state: RootState) => state.employeesSchedule.filters);
     const podList = useSelector((state: RootState) => state.pods.shortPodsList);
     const dispatch = useDispatch();
