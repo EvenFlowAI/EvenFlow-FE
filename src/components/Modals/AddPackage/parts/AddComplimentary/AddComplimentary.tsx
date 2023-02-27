@@ -23,7 +23,9 @@ type TAssignOpsCodeModalProps = DialogProps & {
 
 const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
     {header: "OPS CODE", val: el => el.code},
-    {header: "DESCRIPTION", val: el => el.name, width: '80%'},
+    {header: "DESCRIPTION", val: el => el.name, width: '50%'},
+    {header: "DURATION (hours)", val: el => el.durationInHours.toString(), align: 'center'},
+    {header: "REGULAR INVOICE", val: el => el.price.toFixed(2), align: 'center'},
 ]
 
 const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
