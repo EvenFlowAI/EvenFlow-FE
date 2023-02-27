@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
         },
         [theme.breakpoints.down("xs")]: {
             fontSize: 18,
-            padding: "5%"
+            padding: "5% 10%"
         },
         "& .infoIcon": {
             position: 'absolute',
