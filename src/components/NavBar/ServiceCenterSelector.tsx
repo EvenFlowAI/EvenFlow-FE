@@ -32,6 +32,8 @@ export const ServiceCenterSelector = () => {
     const classes = useStyles();
     if (!scList || !scList.length) return null;
     if (!currentUser || currentUser.isSuperUser) return null;
+    // todo check if this logic is correct
+    if (currentUser.role === "Manager") return null;
 
     return <div>
         <Button
