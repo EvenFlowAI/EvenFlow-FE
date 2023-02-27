@@ -98,6 +98,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const classes = useStyles();
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -317,6 +318,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             : <SelectWrapper>
                 <Autocomplete
                     key="year"
+                    style={{order: 0}}
                     options={yearOptions}
                     onChange={handleChange('year', false)}
                     fullWidth
@@ -333,6 +335,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 />
                 <Autocomplete
                     key="mileage"
+                    style={{order: isSM ? 3 : 1}}
                     options={mileage.map(item => item.value.toString())}
                     onChange={handleChange('mileage', false)}
                     fullWidth
@@ -348,6 +351,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 />
                 <Autocomplete
                     key="make"
+                    style={{order: isSM ? 1 : 2}}
                     options={loadedOptions.make ?? []}
                     onChange={handleChange('make', false)}
                     fullWidth
@@ -365,6 +369,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 {currentConfig?.engineType
                     ? <Autocomplete
                         key="Engine Type"
+                        style={{order: isSM ? 4 : 3}}
                         options={engineTypes}
                         onChange={handleEngineTypeChange}
                         fullWidth
@@ -382,7 +387,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         value={selectedEngine}
                     />
                     : (userType === EUserType.New || isNewVehicleView) && recallsToggledOn
-                        ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""}>
+                        ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""} style={{order: isSM ? 4 : 3}}>
                             <TextField
                                 onChange={handleTextChange("vin")}
                                 label={recallsToggledOn
@@ -404,6 +409,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     key="model"
                     options={loadedOptions.model ?? []}
                     onChange={handleChange('model', false)}
+                    style={{order: isSM ? 2 : 4}}
                     fullWidth
                     disableClearable
                     autoComplete={true}
@@ -417,7 +423,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     value={maintenanceDetails.model ?? ''}
                 />
                 {(userType === EUserType.New || isNewVehicleView) && currentConfig?.engineType && recallsToggledOn
-                    ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""}>
+                    ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""} style={{order: 5}}>
                         <TextField
                             onChange={handleTextChange("vin")}
                             label={recallsToggledOn
