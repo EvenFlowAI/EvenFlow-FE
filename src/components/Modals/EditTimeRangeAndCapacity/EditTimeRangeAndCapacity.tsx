@@ -88,7 +88,7 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
         setFormIsChecked(true)
         if (selectedSC && checkIsValid()) {
             const data: ITimeRangeAndCapacity = {
-                dayOfWeek: editingElement.dayOfWeek,
+                serviceCenterId: selectedSC.id,
                 pickUpMin: moment(pickUpMin).format('HH:mm A'),
                 pickUpMax: moment(pickUpMax).format('HH:mm A'),
                 dropOffMin: moment(dropOffMin).format('HH:mm A'),
@@ -96,9 +96,9 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
                 capacity: +dailyCapacity,
             }
             if (editingElement.id) {
-                data.serviceCenterId = selectedSC.id;
                 dispatch(updateTimeRange(selectedSC.id, editingElement.id, data, showError, onCancel))
             } else {
+                data.dayOfWeek = editingElement.dayOfWeek;
                 dispatch(createTimeRange(selectedSC.id, data, showError, onCancel))
             }
         }
@@ -107,7 +107,7 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
     return (
         <BaseModal onClose={onCancel} open={open} width={575}>
             <DialogTitle onClose={onCancel}>Edit Time Ranges & Capacity of
-                <span style={{color: '#7898FF'}}> {moment().set('day', editingElement.dayOfWeek).format('dddd').toUpperCase()}
+                <span style={{color: '#7898FF'}}> {editingElement.dayOfWeek ? moment().set('day', editingElement.dayOfWeek).format('dddd').toUpperCase() : ''}
                 </span></DialogTitle>
             <DialogContent style={{padding: '16px 120px'}}>
                 <Grid container spacing={4}>

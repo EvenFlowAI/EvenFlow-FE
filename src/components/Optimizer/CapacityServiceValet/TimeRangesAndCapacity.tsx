@@ -26,19 +26,22 @@ const TimeRangesAndCapacity = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        setTableData(() => {
-            return [1, 2, 3, 4, 5, 6, 0].map(day => {
-                const timeRange = timeRangesAndCapacity.find(item =>  item.dayOfWeek === day)
-                return {
-                    dayOfWeek: day,
-                    pickUpMin: timeRange?.pickUpMin ? moment(timeRange?.pickUpMin).format(timeFormat) : '-',
-                    pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
-                    dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
-                    dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
-                    capacity: timeRange?.capacity ?? 0
-                }
+        if (selectedSC) {
+            setTableData(() => {
+                return [1, 2, 3, 4, 5, 6, 0].map(day => {
+                    const timeRange = timeRangesAndCapacity.find(item =>  item.dayOfWeek === day)
+                    return {
+                        serviceCenterId: selectedSC.id,
+                        dayOfWeek: day,
+                        pickUpMin: timeRange?.pickUpMin ? moment(timeRange?.pickUpMin).format(timeFormat) : '-',
+                        pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
+                        dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
+                        dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
+                        capacity: timeRange?.capacity ?? 0
+                    }
+                })
             })
-        })
+        }
     }, [timeRangesAndCapacity])
 
     const onEdit = async (el: ITimeRangeAndCapacity) => {
@@ -49,7 +52,7 @@ const TimeRangesAndCapacity = () => {
     const RowData: TableRowDataType<ITimeRangeAndCapacity>[] = [
             {
                 header: 'Day Of Week'.toUpperCase(),
-                val: el => moment().set('day', el.dayOfWeek).format('dddd'),
+                val: el => el.dayOfWeek ? moment().set('day', el.dayOfWeek).format('dddd') : '',
             },
             {
                 header: 'Pick Up Min'.toUpperCase(),
