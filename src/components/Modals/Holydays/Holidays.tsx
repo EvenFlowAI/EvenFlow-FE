@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 });
 
 const rowData: TableRowDataType<IHoliday>[] = [
-    {header: "Description Title", val: v => v.description},
+    {header: "Description Title", val: v => v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description},
     {header: "Date", val: v => moment.utc(v.date).format("MMMM D")},
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]

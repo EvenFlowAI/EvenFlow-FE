@@ -102,7 +102,11 @@ export const AddHoliday: React.FC<DialogProps<IHoliday>> = ({onAction, payload, 
     }, [props.open, payload]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({...form, [e.target.name]: e.target.value});
+        if (e.target.name === "description" && e.target.value?.length > 40) {
+            showError('The Description can`t be longer than 40 characters')
+        } else {
+            setForm({...form, [e.target.name]: e.target.value});
+        }
     }
     const handleDateChange = (date: MaterialUiPickersDate) => {
         setForm({...form, date});

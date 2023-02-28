@@ -8,7 +8,8 @@ type TServiceTypeIconProps = {card: IFirstScreenOption, onClick: () => void, isS
 
 const useStyles = makeStyles((theme) => ({
     icon: {
-        width: '100%',
+        width: 224,
+        height: 112,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -17,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     noLogo: {
-        width: '100%',
+        width: 224,
+        height: 112,
         padding: '10%',
         color: "#DCDCDC",
         fontWeight: 'bold',

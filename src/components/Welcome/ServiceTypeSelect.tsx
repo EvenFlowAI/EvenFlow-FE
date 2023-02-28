@@ -81,6 +81,7 @@ const useStyles = makeStyles((theme) => ({
     },
     name: {
         width: "100%",
+        fontSize: 28,
         marginBottom: 20,
     }
 }))
