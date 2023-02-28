@@ -169,7 +169,10 @@ export const ScheduleCalendar = () => {
                 .isSame(moment(moment.utc(date).format("YYYY-MM-DD"), "YYYY-MM-DD"), "date");
         });
         if (holiday) {
-            return <Tooltip title={holiday.description}><Holiday>{holiday.description}</Holiday></Tooltip>;
+            const description = holiday.description?.length > 40
+                ? holiday.description.slice(0, 39).concat('...')
+                : holiday.description
+            return <Tooltip title={holiday.description}><Holiday>{description}</Holiday></Tooltip>;
         }
         return null;
     }, [holidaysList])
