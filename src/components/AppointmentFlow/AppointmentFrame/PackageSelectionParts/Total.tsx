@@ -19,7 +19,7 @@ const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isS
 
     return <React.Fragment>
         <div className="total end" style={isBmWService ? {fontSize: 16} : {}}>
-            Total <span className="info" >({t("excluding taxes")})</span>
+            {t("Total")} <span className="info" >({t("excluding taxes")})</span>
         </div>
 
         {packages.map(p => {
