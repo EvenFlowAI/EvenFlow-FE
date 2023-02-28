@@ -29,22 +29,18 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
     display: 'grid',
     gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
     gap: "18px",
+    marginTop: "5%",
+    [mh600]: {
+        marginTop: "2%"
+    },
     [theme.breakpoints.down("sm")]: {
         gridTemplateRows: `repeat(${cardsAmount}, 1fr)`,
         gridTemplateColumns: '1fr',
+        marginTop: theme.spacing(5)
     }
 }));
 
 const useStyles = makeStyles((theme) => ({
-    buttonsContainer: {
-        marginTop: "5%",
-        [mh600]: {
-            marginTop: "2%"
-        },
-        [theme.breakpoints.down("sm")]: {
-            marginTop: theme.spacing(5)
-        }
-    },
     button: {
         position: 'relative',
         height: "100%",
@@ -73,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
         },
         [theme.breakpoints.down("xs")]: {
             fontSize: 18,
-            padding: "5%"
+            padding: "5% 10%"
         },
         "& .infoIcon": {
             position: 'absolute',
@@ -131,7 +127,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
 
     return isLoading || loading
         ? <Loading/>
-        : <CardsWrapper className={classes.buttonsContainer} cardsAmount={remappedCards.length}>
+        : <CardsWrapper cardsAmount={remappedCards.length}>
             {[...remappedCards]
                 .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
                 .map(card => {

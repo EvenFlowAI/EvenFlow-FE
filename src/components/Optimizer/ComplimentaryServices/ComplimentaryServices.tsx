@@ -204,7 +204,7 @@ const ComplimentaryServices = () => {
                     isLoading={isLoading}
                     page={pageIndex}
                     onSort={handleSort}
-                    hidePagination={servicesCount < pageSize}
+                    hidePagination={servicesCount < pageSize && pageSize < 11}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}
                     onChangeRowsPerPage={changeRowsPerPage}

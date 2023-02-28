@@ -14,7 +14,7 @@ type TDisplayAncillaryPriceProps = DialogProps & {
     onNext: () => void;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     info: {
         display: 'flex',
         flexDirection: 'column',
@@ -32,7 +32,16 @@ const useStyles = makeStyles(() => ({
     actionsWrapper: {
         display: 'flex',
         justifyContent: 'center',
-        marginBottom: 30
+        marginBottom: 30,
+        [theme.breakpoints.down("sm")]: {
+            '& > div': {
+                flexDirection: 'column',
+                padding: '0 16px',
+                '& > button:first-child': {
+                    order: 2
+                }
+            }
+        }
     }
 }))
 

@@ -23,7 +23,9 @@ type TAssignOpsCodeModalProps = DialogProps & {
 
 const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
     {header: "OPS CODE", val: el => el.code},
-    {header: "DESCRIPTION", val: el => el.name, width: '80%'},
+    {header: "DESCRIPTION", val: el => el.name, width: '50%'},
+    {header: "DURATION (hours)", val: el => el.durationInHours.toString(), align: 'center'},
+    {header: "REGULAR INVOICE", val: el => el.price.toFixed(2), align: 'center'},
 ]
 
 const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
@@ -34,12 +36,10 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
         complimentary,
         isLoading,
         servicesCount,
-        complimentaryPageData,
     ] = useSelector((state: RootState) => [
         state.packages.complimentary,
         state.packages.isComplimentaryLoading,
         state.packages.complimentaryPaging.numberOfRecords,
-        state.packages.complimentaryPageData,
     ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
@@ -75,7 +75,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
                     index="id"
                     startActions={preActions}
                     compact
-                    hidePagination={servicesCount <= complimentaryPageData.pageSize}
+                    hidePagination={servicesCount < 11}
                     rowData={tableData}
                     isLoading={isLoading}
                     page={pageIndex}

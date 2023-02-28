@@ -98,6 +98,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const classes = useStyles();
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -311,12 +312,22 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         setLoading(false);
     }
 
+    const orderMapStyles = {
+        year: {order: isSM ? 2 : !currentConfig?.engineType && !recallsToggledOn ? 1 : 4},
+        mileage: {order: (currentConfig?.engineType || recallsToggledOn) && !isSM ? 1 : 3},
+        make: {order: 0},
+        model: {order: isSM ? 1 : 2},
+        vin: {order: isSM ? 5 : currentConfig?.engineType ? 5 : 3},
+        engineType: {order: isSM ? 4 : 3}
+    }
+
     return (<StepWrapper>
         {isLoading
             ? <Loading/>
             : <SelectWrapper>
                 <Autocomplete
                     key="year"
+                    style={orderMapStyles.year}
                     options={yearOptions}
                     onChange={handleChange('year', false)}
                     fullWidth
@@ -333,6 +344,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 />
                 <Autocomplete
                     key="mileage"
+                    style={orderMapStyles.mileage}
                     options={mileage.map(item => item.value.toString())}
                     onChange={handleChange('mileage', false)}
                     fullWidth
@@ -348,6 +360,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 />
                 <Autocomplete
                     key="make"
+                    style={orderMapStyles.make}
                     options={loadedOptions.make ?? []}
                     onChange={handleChange('make', false)}
                     fullWidth
@@ -365,6 +378,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 {currentConfig?.engineType
                     ? <Autocomplete
                         key="Engine Type"
+                        style={orderMapStyles.engineType}
                         options={engineTypes}
                         onChange={handleEngineTypeChange}
                         fullWidth
@@ -381,29 +395,12 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         })}
                         value={selectedEngine}
                     />
-                    : (userType === EUserType.New || isNewVehicleView) && recallsToggledOn
-                        ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""}>
-                            <TextField
-                                onChange={handleTextChange("vin")}
-                                label={recallsToggledOn
-                                    ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
-                                    : `${t("VIN")} (${t("Optional")})`
-                                }
-                                name={"vin"}
-                                error={errors.includes("vin")}
-                                required={requiredFields.includes("vin")}
-                                fullWidth
-                                disabled={!isNewVehicleView || recallsAreShown}
-                                value={selectedVehicle ? selectedVehicle.vin : ""}
-                                placeholder={errors.includes("vin")
-                                    ? `${t("VIN")} ${t("required")}`
-                                    : `${t("Type")} ${t("VIN")} (${t("Optional")})`}
-                            />
-                        </div> : null}
+                    : null}
                 <Autocomplete
                     key="model"
                     options={loadedOptions.model ?? []}
                     onChange={handleChange('model', false)}
+                    style={orderMapStyles.model}
                     fullWidth
                     disableClearable
                     autoComplete={true}
@@ -416,8 +413,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     })}
                     value={maintenanceDetails.model ?? ''}
                 />
-                {(userType === EUserType.New || isNewVehicleView) && currentConfig?.engineType && recallsToggledOn
-                    ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""}>
+                {(userType === EUserType.New || isNewVehicleView) && recallsToggledOn
+                    ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""} style={orderMapStyles.vin}>
                         <TextField
                             onChange={handleTextChange("vin")}
                             label={recallsToggledOn

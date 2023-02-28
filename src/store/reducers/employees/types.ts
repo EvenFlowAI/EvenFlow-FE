@@ -30,9 +30,9 @@ export interface IEmployee {
 }
 
 export interface IEmployeeFilters {
-    roles?: string[];
+    role?: string;
     dealershipId?: number;
-    serviceCenterId?: number;
+    serviceCenterId?: number|null;
     searchTerm?: string;
 }
 export interface IEmployeeOrdering {

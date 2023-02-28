@@ -243,7 +243,7 @@ export const OPsCodesPage = () => {
             onChangePage={changePage}
             onChangeRowsPerPage={changeRowsPerPage}
             count={requestsCount}
-            hidePagination={requestsCount < pageSize}
+            hidePagination={requestsCount < pageSize && pageSize < 11}
             actions={actions}
             isLoading={isLoading}
         />
