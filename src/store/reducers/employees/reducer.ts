@@ -69,7 +69,7 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
         case "Employees/Saving":
             return {...state, saving: action.payload};
         case "Employees/ChangeFilters":
-            return {...state, filters: action.payload};
+            return {...state, filters: {...state.filters, ...action.payload}};
             case "SCEmployees/LoadingDMSAdvisors":
             return {...state, loadingDMSAdvisors: action.payload};
         case setEmplSearch.type:

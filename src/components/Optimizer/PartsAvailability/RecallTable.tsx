@@ -156,7 +156,7 @@ const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, set
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
                 count={recallsCount}
-                hidePagination={recallsCount < pageSize}
+                hidePagination={recallsCount < pageSize && pageSize < 11}
             />
             <Menu
                 open={Boolean(anchorEl)}

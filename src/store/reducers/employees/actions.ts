@@ -2,7 +2,7 @@ import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {Api} from "../../../config/requests";
 import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
-import {IEmployee, IEmployeeForm, TDmsAdvisor, TEmployeeActions} from "./types";
+import {IEmployee, IEmployeeFilters, IEmployeeForm, TDmsAdvisor, TEmployeeActions} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
@@ -17,7 +17,7 @@ export const _changePageData = changePageDataGeneric("Employees/ChangePageData")
 export const changePageData: ActionCreator<AppThunk> = (payload: Partial<IPageRequest>) => {
     return async dispatch => {
         dispatch(_changePageData(payload));
-        dispatch(loadAll());
+        dispatch(loadByFilters());
     }
 }
 export const loading = (payload: boolean): TEmployeeActions => ({
@@ -160,7 +160,7 @@ export const loadDMSAdvisors = (serviceCenterId: number): AppThunk => dispatch =
         .finally(() => dispatch(loadingDMSAdvisors(false)))
 }
 
-export const loadByFilters: ActionCreator<AppThunk> = (selectedRole: string, serviceCenterId: number|null) =>
+export const loadByFilters: ActionCreator<AppThunk> = () =>
     async (dispatch, getState) => {
 
         dispatch(loading(true));
@@ -172,8 +172,8 @@ export const loadByFilters: ActionCreator<AppThunk> = (selectedRole: string, ser
                         ...state.employees.pageData,
                         ...state.employees.order,
                         searchTerm: state.employees.searchTerm,
-                        roles: selectedRole ? [selectedRole] : [],
-                        serviceCenterId,
+                        roles: state.employees.filters.role ?  [state.employees.filters.role] : [],
+                        serviceCenterId: state.employees.filters.serviceCenterId,
                     }}
             );
             dispatch(loading(false));
@@ -184,3 +184,5 @@ export const loadByFilters: ActionCreator<AppThunk> = (selectedRole: string, ser
             throw e;
         }
     };
+
+export const setEmployeeFilters = createAction<Partial<IEmployeeFilters>>("Employees/ChangeFilters")

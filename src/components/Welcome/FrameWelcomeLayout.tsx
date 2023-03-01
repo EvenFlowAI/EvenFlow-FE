@@ -3,10 +3,13 @@ import {styled} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 
 
-const Wrapper = styled('div')({
+const Wrapper = styled('div')(({theme}) => ({
     width: '80%',
-    maxWidth: 1000
-});
+    maxWidth: 1000,
+    // [theme.breakpoints.down('sm')]: {
+    //     height: '100vh'
+    // }
+}));
 const Title = styled('h1')(({theme}) => ({
     textTransform: 'uppercase',
     fontWeight: 'bold',
