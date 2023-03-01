@@ -175,8 +175,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
                 : []
         setOpsCodesList(() => {
             if (value?.length) {
-                const element = initialData.find(item => item.description.toLowerCase().includes(value))
-                return element ? initialData.filter(item => item.id === element.id) : [];
+                return initialData.filter(item => item.description.toLowerCase().includes(value));
             } else {
                 return initialData;
             }
