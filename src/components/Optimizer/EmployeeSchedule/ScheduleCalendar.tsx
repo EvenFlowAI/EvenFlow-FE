@@ -22,14 +22,12 @@ import {IEmployee} from "../../../store/reducers/employees/types";
 import {ISchedule} from "../../../store/reducers/schedules/types";
 import {EditSchedule} from "./EditSchedule";
 import {ScheduleFilters} from "./ScheduleFilters";
-import { OpenedFilters } from './OpenedFilters';
 import {Api} from "../../../config/requests";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {noop} from "../../../utils/utils";
 import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
 import { TIds } from './types';
-
 
 const ControlWrapper = styled("div")(({theme}) => ({
     display: "flex",
@@ -93,14 +91,12 @@ export const ScheduleCalendar = () => {
     const [
         employeesList,
         employeesLoading,
-        filtersOpened,
         filters,
         workingDays,
         holidaysList
     ] = useSelector((state: RootState) => [
         state.employeesSchedule.employeesList,
         state.employeesSchedule.employeesLoading,
-        state.employeesSchedule.filtersOpened,
         state.employeesSchedule.filters,
         state.serviceCenters.workingDays,
         state.holidays.weeklyHolidaysList,
@@ -173,7 +169,10 @@ export const ScheduleCalendar = () => {
                 .isSame(moment(moment.utc(date).format("YYYY-MM-DD"), "YYYY-MM-DD"), "date");
         });
         if (holiday) {
-            return <Tooltip title={holiday.description}><Holiday>{holiday.description}</Holiday></Tooltip>;
+            const description = holiday.description?.length > 40
+                ? holiday.description.slice(0, 39).concat('...')
+                : holiday.description
+            return <Tooltip title={holiday.description}><Holiday>{description}</Holiday></Tooltip>;
         }
         return null;
     }, [holidaysList])
@@ -188,10 +187,8 @@ export const ScheduleCalendar = () => {
 
     return (
         <div>
-            <div>
-                {filtersOpened ? <ScheduleFilters /> : <OpenedFilters />}
-            </div>
             <ControlWrapper>
+                <ScheduleFilters/>
                 <WeekControls
                     isXS={isXS}
                     selectedDate={selectedDate}

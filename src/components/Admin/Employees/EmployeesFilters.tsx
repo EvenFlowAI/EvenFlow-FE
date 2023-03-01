@@ -1,9 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, MenuItem, Select, styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {TextField} from "../../UI/TextField";
-import {loadByFilters, loadAll} from "../../../store/reducers/employees/actions";
+import {
+    loadByFilters,
+    loadAll,
+    setEmployeeFilters,
+    changePageData
+} from "../../../store/reducers/employees/actions";
+import {usePagination} from "../../../utils/hooks";
 
 const FiltersWrapper = styled('div')({
     width: '100%',
@@ -30,31 +36,51 @@ const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner'];
 
 const EmployeesFilters = () => {
     const {fullSCList} = useSelector((state: RootState) => state.serviceCenters);
+    const {filters} = useSelector((state: RootState) => state.employees);
     const [selectedRole, setSelectedRole] = useState<string|unknown>('');
     const [selectedCenterId, setSelectedCenterId] = useState<number|unknown>('');
     const dispatch = useDispatch();
+    const {changePage} = usePagination(
+        (s: RootState) => s.employees.pageData,
+        changePageData
+    );
+
+    useEffect(() => {
+        if (filters.role) setSelectedRole(filters.role)
+        if (filters.serviceCenterId) setSelectedCenterId(filters.serviceCenterId)
+    }, [filters])
 
     const handleSelectRole = (e: React.ChangeEvent<{value: unknown}>) => {
-        setSelectedRole(e.target.value);
+        if (typeof e.target.value === 'string') {
+            dispatch(setEmployeeFilters({role: e.target.value}))
+            changePage(null, 0)
+        }
+        // setSelectedRole(e.target.value);
     }
 
     const handleSelectCenter = (e: React.ChangeEvent<{value: unknown}>) => {
         const center = fullSCList.find(el => el.id === e.target.value);
         if (center) {
-            setSelectedCenterId(center?.id);
+            dispatch(setEmployeeFilters({serviceCenterId: center.id}))
+            // setSelectedCenterId(center?.id);
         } else {
-            setSelectedCenterId(null)
+            dispatch(setEmployeeFilters({serviceCenterId: null}))
+            // setSelectedCenterId(null)
         }
+        changePage(null, 0)
     }
 
     const clearFilters = () => {
+        dispatch(setEmployeeFilters({serviceCenterId: null}))
         setSelectedCenterId(null);
+        dispatch(setEmployeeFilters({role: ''}))
         setSelectedRole(null);
+        changePage(null, 0)
         dispatch(loadAll());
     }
 
     const applyFilters = () => {
-        dispatch(loadByFilters(selectedRole, selectedCenterId))
+        dispatch(loadByFilters())
     }
 
     return (

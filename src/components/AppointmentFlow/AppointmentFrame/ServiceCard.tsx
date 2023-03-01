@@ -48,7 +48,7 @@ const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<
             }
         },
         "& .price": {
-            color: "#27AE60",
+            color: active ? "#FFFFFF" : "#202021",
             fontSize: 20,
             fontWeight: "bold",
         },
@@ -71,7 +71,7 @@ const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<
             fontSize: 9,
         },
         "& .text": {
-            color: "#727273",
+            color: active ? "#DADADA" : "#828282",
             fontSize: 11,
             fontWeight: "bold",
             fontFamily: "Proxima Nova",

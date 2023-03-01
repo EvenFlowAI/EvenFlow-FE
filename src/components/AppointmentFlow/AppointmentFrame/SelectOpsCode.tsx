@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
@@ -154,7 +154,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         if (scProfile) dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
 
-    useEffect(() => {
+    const setInitialData = useCallback(() => {
         if (service?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose) {
             setOpsCodesList(() => service.serviceRequests);
         } else if (subService?.type === EServiceCategoryType.IndividualServices || subService?.type === EServiceCategoryType.Diagnose) {
@@ -162,7 +162,18 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         }
     }, [subService, service])
 
+    useEffect(() => {
+        setInitialData()
+    }, [subService, service])
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist()
+        if (e?.target?.value?.length) {
+            setOpsCodesList(prev => prev.filter(item => item.code.toLowerCase().includes(e?.target?.value?.toLowerCase())
+                || item.description.toLowerCase().includes(e?.target?.value?.toLowerCase())))
+        } else {
+            setInitialData()
+        }
         setSearch(e.target.value);
     }
 
