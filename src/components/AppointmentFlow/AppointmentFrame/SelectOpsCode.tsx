@@ -168,9 +168,11 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
-        if (e?.target?.value?.length) {
-            setOpsCodesList(prev => prev.filter(item => item.code.toLowerCase().includes(e?.target?.value?.toLowerCase())
-                || item.description.toLowerCase().includes(e?.target?.value?.toLowerCase())))
+        const value = e?.target?.value?.toLowerCase().trim();
+        console.log(value)
+        if (value?.length) {
+            setOpsCodesList(prev => prev.filter(item => item.code.toLowerCase().includes(value)
+                || item.description.toLowerCase().includes(value)))
         } else {
             setInitialData()
         }
