@@ -6,9 +6,9 @@ import {useTranslation} from "react-i18next";
 const Wrapper = styled('div')(({theme}) => ({
     width: '80%',
     maxWidth: 1000,
-    [theme.breakpoints.down('sm')]: {
-        height: '100vh'
-    }
+    // [theme.breakpoints.down('sm')]: {
+    //     height: '100vh'
+    // }
 }));
 const Title = styled('h1')(({theme}) => ({
     textTransform: 'uppercase',
@@ -16,12 +16,12 @@ const Title = styled('h1')(({theme}) => ({
     textAlign: 'center',
     fontSize: 32,
     margin: 0,
-    // [theme.breakpoints.down('sm')]: {
-    //     fontSize: 24
-    // },
-    // [theme.breakpoints.down('xs')]: {
-    //     fontSize: 18
-    // }
+    [theme.breakpoints.down('sm')]: {
+        fontSize: 24
+    },
+    [theme.breakpoints.down('xs')]: {
+        fontSize: 18
+    }
 }));
 export const FrameWelcomeLayout: React.FC<{}> = ({children}) => {
     const {t} = useTranslation();
