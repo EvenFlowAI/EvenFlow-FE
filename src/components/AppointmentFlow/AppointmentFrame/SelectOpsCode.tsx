@@ -148,8 +148,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
     }, [search]);
     useEffect(() => {isInit.current = false}, []);
 
-    // todo change search request logic if needed
-
     useEffect(() => {
         if (scProfile) dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
@@ -168,15 +166,21 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
-        const value = e?.target?.value?.toLowerCase().trim();
-        console.log(value)
-        if (value?.length) {
-            setOpsCodesList(prev => prev.filter(item => item.code.toLowerCase().includes(value)
-                || item.description.toLowerCase().includes(value)))
-        } else {
-            setInitialData()
-        }
         setSearch(e.target.value);
+        const value = e?.target?.value?.toLowerCase().trim();
+        const initialData = service?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose
+            ? service.serviceRequests
+            : subService?.type === EServiceCategoryType.IndividualServices || subService?.type === EServiceCategoryType.Diagnose
+                ? subService.serviceRequests
+                : []
+        setOpsCodesList(() => {
+            if (value?.length) {
+                const element = initialData.find(item => item.description.toLowerCase().includes(value))
+                return element ? initialData.filter(item => item.id === element.id) : [];
+            } else {
+                return initialData;
+            }
+        })
     }
 
     const handleCategories = (value: string) => {

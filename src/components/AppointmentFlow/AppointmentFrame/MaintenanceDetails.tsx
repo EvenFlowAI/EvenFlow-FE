@@ -134,7 +134,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 engineTypeId: selectedVehicle.engineTypeId,
             }));
         }
-    }, [dispatch, selectedVehicle]);
+    }, [dispatch, selectedVehicle, mileage]);
 
     useEffect(() => {
         if (selectedVehicle?.engineTypeId && engineTypes.length) {
