@@ -10,10 +10,9 @@ type TTotalComplimentaryProps = {
     setClasses: (id: number, cls: string) => string;
     handleClick: (p: IPackageOptions) => () => void;
     isBmWService: boolean;
-    isSanfordInfinity: boolean;
 }
 
-const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, isSanfordInfinity, packages, handleClick, setClasses}) => {
+const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, packages, handleClick, setClasses}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 
@@ -21,34 +20,20 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, i
         <div className="totalComplimentary complimentaryTitle" style={isBmWService ? {fontSize: 16} : {}}>
             {t("Total Complimentary Value")}
         </div>
-        {isBmWService|| isSanfordInfinity
-            ? packages.map(p => {
-                return <div
-                    onClick={handleClick(p)}
-                    className={setClasses(p.id, "totalComplimentary last")}
-                    key={p.id}>
+        {packages.map(p => {
+            return <div
+                onClick={handleClick(p)}
+                className={setClasses(p.id, "totalComplimentary last")}
+                key={p.id}>
                     <span style={{ fontSize: 20 }}>
                         {p.marketPriceComplimentaryServices
-                            ? `$${scProfile?.isRoundPrice 
-                                ? p.marketPriceComplimentaryServices 
+                            ? `$${scProfile?.isRoundPrice
+                                ? p.marketPriceComplimentaryServices
                                 : p.marketPriceComplimentaryServices.toFixed(2)}`
                             : ''}
                     </span>
-                </div>;
-            })
-            : packages.map(p => {
-                const price = p.complimentaryServices.reduce(
-                    (acc, el) => acc + el.price, 0
-                );
-                return <div
-                    onClick={handleClick(p)}
-                    className={setClasses(p.id, "totalComplimentary last")}
-                    key={p.id}>
-                    <span style={{ fontSize: 20 }}>
-                        {price ? `$${scProfile?.isRoundPrice ? price : price.toFixed(2)}` : ''}
-                    </span>
-                </div>;
-            })}
+            </div>;
+        })}
     </React.Fragment>
     ;
 };
