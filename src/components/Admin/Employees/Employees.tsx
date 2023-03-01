@@ -130,6 +130,7 @@ export const Employees = () => {
             startActions={startActions}
             index="id"
             actions={viewActions}
+            hidePagination={count < pageSize && pageSize < 11}
         />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
             <MenuItem onClick={editEmployee}>Edit</MenuItem>

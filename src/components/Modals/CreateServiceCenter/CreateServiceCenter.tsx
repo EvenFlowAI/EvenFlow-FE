@@ -161,6 +161,7 @@ export const CreateServiceCenter:
                     }
                     showMessage(`Service Center ${isEdit ? "updated" : "created"}`);
                     setFormState(initialFormState);
+                    setFormIsChecked(false);
                     props.onClose();
                 } catch (e) {
                     showError(e);

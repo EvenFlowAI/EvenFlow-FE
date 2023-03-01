@@ -206,6 +206,7 @@ export const MaintenancePackages = () => {
                         <Autocomplete
                             fullWidth
                             multiple
+                            disableClearable
                             classes={autocompleteClasses}
                             options={MaintenanceOptionTypes}
                             disableCloseOnSelect
