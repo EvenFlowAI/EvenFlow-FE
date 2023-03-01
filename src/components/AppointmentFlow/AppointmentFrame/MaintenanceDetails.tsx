@@ -125,11 +125,12 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
 
     useEffect(() => {
         if (selectedVehicle) {
+            const selectedMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
             dispatch(setMaintenanceDetails({
                 make: selectedVehicle.make,
                 model: selectedVehicle.model,
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
-                mileage: selectedVehicle?.mileage?.toString() || "",
+                mileage: selectedMileage?.value?.toString() ?? "",
                 engineTypeId: selectedVehicle.engineTypeId,
             }));
         }
