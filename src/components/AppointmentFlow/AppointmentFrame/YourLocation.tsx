@@ -111,11 +111,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         clearSelectedData();
         // const geoCode = await geocodeByPlaceId(e.value.place_id)
         setFormChecked(false);
-        if (e?.label) {
-            dispatch(setAddress(e));
-        } else {
-            dispatch(setAddress(null));
-        }
+        dispatch(setAddress(e));
+        // if (e?.label) {
+        //     dispatch(setAddress(e));
+        // } else {
+        //     dispatch(setAddress(null));
+        // }
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         clearSelectedData();
@@ -182,7 +183,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             onChange: handleChangeAddress,
                             onFocus: () => setFormChecked(false),
                             placeholder: address?.label
-                            ? placeholder
+                            ? address?.label
                             : isFormChecked
                                     ? t('Address is required')
                                     : placeholder,
