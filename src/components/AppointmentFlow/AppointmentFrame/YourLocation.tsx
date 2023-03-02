@@ -30,7 +30,7 @@ import UnavailableService from "../../Modals/InavailableService/UnavailableServi
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "50% 50%",
     gap: "20px",
     width: "100%",
     "& .label": {
@@ -40,7 +40,7 @@ export const SelectWrapper = styled('div')(({theme}) => ({
         fontSize: 12,
     },
     [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "1fr"
+        gridTemplateColumns: "100%"
     }
 }));
 
