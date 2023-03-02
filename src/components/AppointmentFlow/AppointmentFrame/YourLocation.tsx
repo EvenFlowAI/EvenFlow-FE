@@ -58,7 +58,10 @@ const useStyles = makeStyles(() => ({
             '& > div > div': {
                 fontSize: '1rem',
             }
-        }
+        },
+        // '& > div > div > div > div > input': {
+        //     width: '100% !important'
+        // }
     },
     errorSelect: {
         '& > div': {
@@ -71,6 +74,9 @@ const useStyles = makeStyles(() => ({
                 color: '#ff00006b',
                 opacity: 1
             }
+        },
+        '& input': {
+            width: '100%'
         }
     }
 }))
