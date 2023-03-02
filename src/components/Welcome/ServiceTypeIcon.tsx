@@ -12,6 +12,11 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        [theme.breakpoints.down('sm')]: {
+            width: 224,
+            height: 112,
+            maxWidth: '90%',
+        },
     },
     noLogo: {
         width: '100%',
@@ -21,7 +26,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 32,
         backgroundColor: "#F4F4F4",
         [theme.breakpoints.down("sm")]: {
-            fontSize: 20,
+            width: 224,
+            height: 112,
+            maxWidth: '90%'
         }
     }
 }))

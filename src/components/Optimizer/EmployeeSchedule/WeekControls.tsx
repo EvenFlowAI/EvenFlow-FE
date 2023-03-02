@@ -10,6 +10,7 @@ import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 const useStyles = makeStyles({
     container: {
         display: "inline-flex",
+        alignSelf: 'flex-end',
         "&>*": {
             marginLeft: 8,
         }

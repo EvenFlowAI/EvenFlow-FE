@@ -15,7 +15,6 @@ import {SquarePaper} from "../../UI/Paper";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.svg";
 import {ReactComponent as HoursIcon} from "../../../assets/img/Icon 2 Hours of operation.svg";
-import {ReactComponent as ScheduleIcon} from "../../../assets/img/Icon_3_Weekly_schedule.svg";
 import {ReactComponent as AddressIcon} from "../../../assets/img/Icon_1_Address.svg";
 import {ReactComponent as BaysIcon} from "../../../assets/img/Icon_6 _Bays.svg";
 import {ReactComponent as RemindersIcon} from "../../../assets/img/Icon_36px_Appointment_reminders.svg";
@@ -25,7 +24,6 @@ import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holiday
 import Reminders from "../../Modals/Reminders/Reminders";
 import LaborRate from "../../Modals/LaborRate/LaborRate";
 import {EmployeeSchedule} from "../../Modals/EmployeeSchedule/EmployeeSchedule";
-import {WeeklySchedule} from "../../Modals/WeeklySchedule/WeeklySchedule";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -174,11 +172,6 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenEmployeeSchedule,
         isOpen: isOpenEmployeeSchedule,
     } = useModal();
-    const {
-        onClose: onCloseWS,
-        onOpen: onOpenWS,
-        isOpen: isWSOpen
-    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -190,7 +183,6 @@ export const AdminDashboard: React.FC = () => {
     const items: TItem[] = [
         {label: "Address", icon: <AddressIcon />, action: onOpenAddress},
         {label: "Hours of operation", icon: <HoursIcon />, action: onOpenHOO},
-        {label: "Weekly schedule", icon: <ScheduleIcon />, action: onOpenWS},
         {label: "Employee Schedule", icon: <EmployeeScheduleIcon />, action: onOpenEmployeeSchedule},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
         {label: "Breaks", icon: <BreaksIcon />, action: onOpenB},
@@ -240,6 +232,5 @@ export const AdminDashboard: React.FC = () => {
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
         <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
         <LaborRate open={isOpenLaborRate} onClose={onCloseLaborRate}/>
-        <WeeklySchedule open={isWSOpen} onClose={onCloseWS} />
     </div>
 }

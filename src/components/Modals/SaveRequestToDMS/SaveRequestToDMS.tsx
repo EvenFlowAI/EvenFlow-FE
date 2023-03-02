@@ -220,7 +220,10 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
                                     <TableCell className={classes.headerCell} key="first">
                                         Service Request
                                     </TableCell>
-                                    {temporaryData?.options.map(option => (
+                                    {temporaryData?.options
+                                        .slice()
+                                        .sort((a, b) => a.type - b.type)
+                                        .map(option => (
                                         <TableCell className={classes.headerCellBlack} align="center" key={option.name}>
                                             {option.name}
                                         </TableCell>
@@ -235,7 +238,10 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
                                     .map((request, rowIndex) => {
                                     return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={request.code}>
                                         <TableCell className={classes.requestCell} key={request.description}>{request.description}</TableCell>
-                                        {temporaryData?.options.map((option, cellIndex) => {
+                                        {temporaryData?.options
+                                            .slice()
+                                            .sort((a, b) => a.type - b.type)
+                                            .map((option, cellIndex) => {
                                             const requestInOption = option.serviceRequests.find(req => req.serviceRequestId === request.id);
 
                                             return <TableCell

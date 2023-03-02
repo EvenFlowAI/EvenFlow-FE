@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
@@ -148,13 +148,11 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
     }, [search]);
     useEffect(() => {isInit.current = false}, []);
 
-    // todo change search request logic if needed
-
     useEffect(() => {
         if (scProfile) dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
 
-    useEffect(() => {
+    const setInitialData = useCallback(() => {
         if (service?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose) {
             setOpsCodesList(() => service.serviceRequests);
         } else if (subService?.type === EServiceCategoryType.IndividualServices || subService?.type === EServiceCategoryType.Diagnose) {
@@ -162,8 +160,26 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         }
     }, [subService, service])
 
+    useEffect(() => {
+        setInitialData()
+    }, [subService, service])
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist()
         setSearch(e.target.value);
+        const value = e?.target?.value?.toLowerCase().trim();
+        const initialData = service?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose
+            ? service.serviceRequests
+            : subService?.type === EServiceCategoryType.IndividualServices || subService?.type === EServiceCategoryType.Diagnose
+                ? subService.serviceRequests
+                : []
+        setOpsCodesList(() => {
+            if (value?.length) {
+                return initialData.filter(item => item.description.toLowerCase().includes(value));
+            } else {
+                return initialData;
+            }
+        })
     }
 
     const handleCategories = (value: string) => {
