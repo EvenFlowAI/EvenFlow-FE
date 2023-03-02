@@ -40,7 +40,8 @@ export enum EServiceCenterName {
     DealertrackTest,
     SanfordInfinity,
     Dominion,
-    Fremont
+    Fremont,
+    LakePowellFord
 }
 
 export enum EVehiclePropType {
