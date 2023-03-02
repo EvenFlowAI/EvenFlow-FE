@@ -259,7 +259,8 @@
       "Enter pick up zip code": "Enter pick up zip code",
       "Enter your requested location": "Enter your requested location",
       "Enter your requested zip code": "Enter your requested zip code",
-      "zip code required": "zip code required"
+      "zip code required": "Zip code required",
+      "Address is required": "Address is required"
     }
   },
   "es": {

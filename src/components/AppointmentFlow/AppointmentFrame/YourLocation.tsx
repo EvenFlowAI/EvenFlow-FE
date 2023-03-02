@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
@@ -59,6 +59,19 @@ const useStyles = makeStyles(() => ({
                 fontSize: '1rem',
             }
         }
+    },
+    errorSelect: {
+        '& > div': {
+            borderRadius: 0,
+            backgroundColor: '#F7F8FB',
+            padding: 2,
+            border: "1px solid red",
+            '& > div > div': {
+                fontSize: '1rem',
+                color: '#ff00006b',
+                opacity: 1
+            }
+        }
     }
 }))
 
@@ -73,6 +86,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const showError = useException();
     const classes = useStyles();
     const {t} = useTranslation();
+    const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PikUpDropOff
+        ? t('Enter pick up address')
+        : t('Enter your requested location'), [serviceTypeOption])
 
     useEffect(() => {
         setZip(zipCodeValue ?? "")
@@ -124,8 +140,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
 
     const handleNext = () => {
         setFormChecked(true);
-        if (!address) return showError('"Address" is required');
-        if (!zip?.length) return showError('"Zip Code" is required');
+        if (!address) showError('"Address" is required');
+        if (!zip?.length) showError('"Zip Code" is required');
         if (address?.label && zip.length && scProfile) {
             dispatch(setZipCode(zip));
             const data: IAncillaryByZipRequest = {
@@ -135,8 +151,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 serviceTypeOptionId: serviceTypeOption?.id ?? null,
             }
             dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onUnavailableOpen))
-        } else {
-            showError(t("Please select your Address and Zip code"))
         }
     }
 
@@ -161,16 +175,18 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                         }}
                         selectProps={{
                             addressValue: address?.label ?? '',
-                            className: classes.select,
+                            className: !address?.label && isFormChecked ? classes.errorSelect : classes.select,
                             onChange: handleChangeAddress,
+                            onFocus: () => setFormChecked(false),
                             placeholder: address?.label
-                            ?? serviceTypeOption?.type === EServiceType.PikUpDropOff
-                                ? t('Enter pick up address')
-                                : t('Enter your requested location'),
+                            ? placeholder
+                            : isFormChecked
+                                    ? t('Address is required')
+                                    : placeholder,
                             isClearable: true,
                             isSearchable: true,
                             defaultInputValue: address?.label || "",
-                            key: address?.label || 'label'
+                            key: address?.label || 'label',
                         }}
                     />
                 </div>
