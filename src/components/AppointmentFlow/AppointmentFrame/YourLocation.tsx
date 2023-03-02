@@ -29,10 +29,10 @@ import {useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
-    display: "grid",
-    gridTemplateColumns: "50% 50%",
-    gap: "20px",
     width: "100%",
+    display: "grid",
+    gridTemplateColumns: "47% 47%",
+    justifyContent: 'space-between',
     "& .label": {
         fontWeight: 700,
         margin: '0 0 4px 0',
@@ -40,7 +40,8 @@ export const SelectWrapper = styled('div')(({theme}) => ({
         fontSize: 12,
     },
     [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "100%"
+        gridTemplateColumns: "100%",
+        gap: "20px",
     }
 }));
 
