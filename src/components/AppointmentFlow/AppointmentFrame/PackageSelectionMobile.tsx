@@ -244,22 +244,20 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
     const {t} = useTranslation();
 
     useEffect(() => {
-        const currentPackage = data[+value];
-        if (currentPackage) {
-            dispatch(setPackage(currentPackage));
-        } else {
-            if (data.length) {
-                dispatch(setPackage(data[0]))
-                setValue('0')
-            }
-        }
-    }, [value, data])
-
-    useEffect(() => {
         if (selectedPackage) {
             setValue(selectedPackage.type.toString());
+        } else {
+            const currentPackage = data[+value];
+            if (currentPackage) {
+                dispatch(setPackage(currentPackage));
+            } else {
+                if (data.length) {
+                    dispatch(setPackage(data[0]))
+                    setValue('0')
+                }
+            }
         }
-    }, [selectedPackage])
+    }, [selectedPackage, data])
 
     const handleChange = (e: ChangeEvent<{}>, newValue: any): void => {
         setValue(newValue);

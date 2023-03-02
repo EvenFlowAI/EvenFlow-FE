@@ -102,9 +102,8 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             "& .triangle": {
                 width: 0,
                 height: 0,
-                borderTop: "10px solid transparent",
-                borderBottom: "10px solid transparent",
-                // borderRight: "10px solid #D32F2F",
+                borderTop: "14px solid transparent",
+                borderBottom: "14px solid transparent",
             },
             "& .current": {
                 background: "#D32F2F",
@@ -195,7 +194,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
                     color: "#FFFFFF",
                 },
                 "& .triangle": {
-                    borderRight: "10px solid #000000",
+                    borderRight: "14px solid #000000",
                 },
             }
         },
@@ -221,7 +220,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
                     color: "#FFFFFF",
                 },
                 "& .triangle": {
-                    borderRight: "10px solid #D32F2F",
+                    borderRight: "14px solid #D32F2F",
                 },
             }
         },

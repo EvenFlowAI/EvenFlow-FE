@@ -23,12 +23,12 @@ const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isS
         </div>
 
         {packages.map(p => {
-            const priceBefore = p.marketPriceComplimentaryServices + p.price;
+            const priceBefore = p.marketPriceComplimentaryServices ? p.marketPriceComplimentaryServices + p.price : 0;
                 return <div
                     onClick={handleClick(p)}
-                    className={setClasses(p.id, `total ${scProfile?.isShowPriceDetails ? 'priceWithBefore' : 'price'} end`)}
+                    className={setClasses(p.id, `total ${scProfile?.isShowPriceDetails && !!priceBefore ? 'priceWithBefore' : 'price'} end`)}
                     key={p.id}>
-                    { scProfile?.isShowPriceDetails &&
+                    { scProfile?.isShowPriceDetails && !!priceBefore &&
                     <div className="before">
                       ${scProfile?.isRoundPrice ? priceBefore : priceBefore.toFixed(2)}
                     </div> }
