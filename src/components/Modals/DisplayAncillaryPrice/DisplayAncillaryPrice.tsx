@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         marginBottom: 30,
-        [theme.breakpoints.down("sm")]: {
+        [`${theme.breakpoints.down("sm")} and (orientation: portrait)`]: {
             '& > div': {
                 flexDirection: 'column',
                 padding: '0 16px',
