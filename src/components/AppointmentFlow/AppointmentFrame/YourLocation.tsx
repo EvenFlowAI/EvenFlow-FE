@@ -75,9 +75,6 @@ const useStyles = makeStyles(() => ({
                 opacity: 1
             }
         },
-        '& input': {
-            width: '100%'
-        }
     }
 }))
 
