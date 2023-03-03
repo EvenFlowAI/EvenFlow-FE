@@ -70,7 +70,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const [appointment, appointmentFrame, categories, customerEnteredEmail, ] = useSelector((state: RootState) => [
+    const [appointment, appointmentFrame, categories, customerEnteredEmail] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
         state.categories,
@@ -248,7 +248,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     {t("View itemized fees of services")}
                 </div>
                 <ServiceType/>
-                {currentConfig?.transportationNeeds
+                {currentConfig?.transportationNeeds && appointmentFrame.transportation
                     ? <Review/>
                     : null}
             </div>
