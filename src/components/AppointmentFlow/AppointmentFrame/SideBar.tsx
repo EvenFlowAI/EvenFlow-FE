@@ -115,7 +115,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
                     return <li key={item}>
                         <Button
                             fullWidth
-                            disabled={getButtonState(idx)}
+                            disabled={getButtonState(idx) || !currentConfig}
                             onClick={() => onClick(idx)}
                             color="primary"
                             style={!getButtonState(idx) && !getStepsState(idx+1) ? activeButtonStyles : {}}

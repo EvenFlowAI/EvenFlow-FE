@@ -12,7 +12,7 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
-import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {loadHoursOfOperations, setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -102,6 +102,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
             handleGA(a);
             dispatch(selectAppointment(data));
+            dispatch(setTransportation(null));
         }, [selectedTiming])
 
         return (
