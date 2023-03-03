@@ -58,11 +58,10 @@ const useStyles = makeStyles(() => ({
             border: "1px solid #DADADA",
             '& > div > div': {
                 fontSize: '1rem',
+                color: 'rgba(0, 0, 0, 0.87)',
+                opacity: 0.4
             }
         },
-        // '& > div > div > div > div > input': {
-        //     width: '100% !important'
-        // }
     },
     errorSelect: {
         '& > div': {

@@ -128,11 +128,11 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {t} = useTranslation();
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const {transportation} = useSelector((state: RootState) => state.appointmentFrame);
     const [
         s, ss,
         individualOps, categoriesIds, packageOpt, appointmentDate,
-        hashKey, selectedRecalls
+        hashKey, selectedRecalls,
+        transportation
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -142,6 +142,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointment.appointment?.appointmentDate,
         state.appointmentFrame.hashKey,
         state.appointmentFrame.selectedRecalls,
+        state.appointmentFrame.transportation,
     ]);
 
     const serviceRequestIds = useMemo(() => {
@@ -217,6 +218,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>
         }
-        <Actions onBack={onBack} onNext={handleNext} />
+        <Actions onBack={onBack} onNext={handleNext} nextDisabled={!transportation}/>
     </StepWrapper>
 };
