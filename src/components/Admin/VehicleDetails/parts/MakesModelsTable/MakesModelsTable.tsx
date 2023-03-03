@@ -121,9 +121,9 @@ const MakesModelsTable = () => {
                 <Autocomplete
                     style={{marginRight: 20, width: 300}}
                     loading={isLoading}
-                    value={selectedMake ?? undefined}
+                    value={selectedMake}
                     options={makes}
-                    disableClearable
+                    closeIcon={null}
                     getOptionSelected={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.name}
                     onChange={onMakeChange}

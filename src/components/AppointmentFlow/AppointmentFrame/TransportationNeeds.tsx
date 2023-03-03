@@ -11,7 +11,7 @@ import {RootState} from "../../../store/rootReducer";
 import {collectServiceRequestIds} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
-import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setSideBarSteps, setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
@@ -132,7 +132,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         s, ss,
         individualOps, categoriesIds, packageOpt, appointmentDate,
         hashKey, selectedRecalls,
-        transportation
+        transportation, sideBarSteps
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -143,6 +143,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.hashKey,
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.transportation,
+        state.appointmentFrame.sideBarSteps,
     ]);
 
     const serviceRequestIds = useMemo(() => {
@@ -194,6 +195,20 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         onNext();
     }
 
+    const handleSideBar = () => {
+        const index = sideBarSteps.indexOf("appointmentSelection");
+        if (index > -1) {
+            const slicedSteps = sideBarSteps.slice(0, index);
+            dispatch(setSideBarSteps(slicedSteps))
+        }
+    }
+
+    const handleBack = () => {
+        handleSideBar();
+        dispatch(setTransportation(null));
+        onBack();
+    }
+
     return <StepWrapper>
         {loading ? <Loading/>
             : transportations.length ? <TransportationWrapper>
@@ -218,6 +233,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>
         }
-        <Actions onBack={onBack} onNext={handleNext} nextDisabled={!transportation && Boolean(transportations.length)}/>
+        <Actions onBack={handleBack} onNext={handleNext} nextDisabled={loading || Boolean(transportations.length) && !transportation}/>
     </StepWrapper>
 };
