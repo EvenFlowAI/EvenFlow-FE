@@ -96,10 +96,11 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         if (idx === 0) dispatch(setAdditionalServicesChosen(true));
     }
 
-    const getButtonState = (index: number) => {
+    const getButtonState = useCallback((index: number) => {
+        if (index > 0 && sideBarSteps.length <= 2) return true;
         const usualSteps = getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds);
         return (usualSteps[screen] < index + 1 && usualSteps[sideBarSteps[sideBarSteps.length - 1]] < index + 1);
-    }
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps])
 
     const activeButtonStyles = {
         background: '#E6FCEC',
