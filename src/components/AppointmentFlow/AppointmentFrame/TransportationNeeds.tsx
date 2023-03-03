@@ -218,6 +218,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>
         }
-        <Actions onBack={onBack} onNext={handleNext} nextDisabled={!transportation}/>
+        <Actions onBack={onBack} onNext={handleNext} nextDisabled={!transportation && Boolean(transportations.length)}/>
     </StepWrapper>
 };
