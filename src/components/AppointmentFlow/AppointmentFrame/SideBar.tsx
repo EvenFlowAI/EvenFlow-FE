@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {getCurrentMenu, getStepsMap, getStepsScreen} from "./utils";
+import {Loading} from "../../UI/Loading";
 
 const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -111,11 +112,12 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     return (
         <Wrapper>
             {!isSm
-                ? currentMenu.map((item, idx) => {
+                ? currentConfig && currentSteps
+                    ? currentMenu.map((item, idx) => {
                     return <li key={item}>
                         <Button
                             fullWidth
-                            disabled={getButtonState(idx) || !currentConfig}
+                            disabled={getButtonState(idx)}
                             onClick={() => onClick(idx)}
                             color="primary"
                             style={!getButtonState(idx) && !getStepsState(idx+1) ? activeButtonStyles : {}}
@@ -124,6 +126,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
                         </Button>
                     </li>
                 })
+                    : <Loading/>
                 : <MobileSteps
                     active={currentSteps[screen]}
                     steps={currentMenu.length}
