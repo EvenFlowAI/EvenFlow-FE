@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
@@ -6,7 +6,7 @@ import {Actions} from "./Actions";
 import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import {
     loadAncillaryPriceByZip,
     loadFilteredZip,
@@ -29,10 +29,10 @@ import {useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "20px",
     width: "100%",
+    display: "grid",
+    gridTemplateColumns: "47% 47%",
+    justifyContent: 'space-between',
     "& .label": {
         fontWeight: 700,
         margin: '0 0 4px 0',
@@ -40,7 +40,8 @@ export const SelectWrapper = styled('div')(({theme}) => ({
         fontSize: 12,
     },
     [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "1fr"
+        gridTemplateColumns: "100%",
+        gap: "20px",
     }
 }));
 
@@ -57,8 +58,23 @@ const useStyles = makeStyles(() => ({
             border: "1px solid #DADADA",
             '& > div > div': {
                 fontSize: '1rem',
+                color: 'rgba(0, 0, 0, 0.87)',
+                opacity: 0.4
             }
-        }
+        },
+    },
+    errorSelect: {
+        '& > div': {
+            borderRadius: 0,
+            backgroundColor: '#F7F8FB',
+            padding: 2,
+            border: "1px solid red",
+            '& > div > div': {
+                fontSize: '1rem',
+                color: '#ff00006b',
+                opacity: 1
+            }
+        },
     }
 }))
 
@@ -73,6 +89,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const showError = useException();
     const classes = useStyles();
     const {t} = useTranslation();
+    const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PikUpDropOff
+        ? t('Enter pick up address')
+        : t('Enter your requested location'), [serviceTypeOption])
 
     useEffect(() => {
         setZip(zipCodeValue ?? "")
@@ -92,11 +111,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         clearSelectedData();
         // const geoCode = await geocodeByPlaceId(e.value.place_id)
         setFormChecked(false);
-        if (e?.label) {
-            dispatch(setAddress(e));
-        } else {
-            dispatch(setAddress(null));
-        }
+        dispatch(setAddress(e));
+        // if (e?.label) {
+        //     dispatch(setAddress(e));
+        // } else {
+        //     dispatch(setAddress(null));
+        // }
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         clearSelectedData();
@@ -124,8 +144,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
 
     const handleNext = () => {
         setFormChecked(true);
-        if (!address) return showError('"Address" is required');
-        if (!zip?.length) return showError('"Zip Code" is required');
+        if (!address) showError('"Address" is required');
+        if (!zip?.length) showError('"Zip Code" is required');
         if (address?.label && zip.length && scProfile) {
             dispatch(setZipCode(zip));
             const data: IAncillaryByZipRequest = {
@@ -135,8 +155,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 serviceTypeOptionId: serviceTypeOption?.id ?? null,
             }
             dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onUnavailableOpen))
-        } else {
-            showError(t("Please select your Address and Zip code"))
         }
     }
 
@@ -161,13 +179,18 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                         }}
                         selectProps={{
                             addressValue: address?.label ?? '',
-                            className: classes.select,
+                            className: !address?.label && isFormChecked ? classes.errorSelect : classes.select,
                             onChange: handleChangeAddress,
-                            placeholder: address?.label ?? t('Start To Type'),
+                            onFocus: () => setFormChecked(false),
+                            placeholder: address?.label
+                            ? address?.label
+                            : isFormChecked
+                                    ? t('Address is required')
+                                    : placeholder,
                             isClearable: true,
                             isSearchable: true,
                             defaultInputValue: address?.label || "",
-                            key: address?.label || 'label'
+                            key: address?.label || 'label',
                         }}
                     />
                 </div>
@@ -180,7 +203,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     onInputChange={onInputChange}
                     renderInput={autocompleteRender({
                         label: t('Your ZIP'),
-                        placeholder: isFormChecked && !zip ? t("ZIP required") : t("Your ZIP"),
+                        placeholder: isFormChecked && !zip
+                            ? t("zip code required")
+                                : serviceTypeOption?.type === EServiceType.PikUpDropOff
+                                 ? t("Enter pick up zip code")
+                                : t("Enter your requested zip code"),
                         error: isFormChecked && !zip,
                         required: true,
                         key: zipCodeValue || "zipcode",

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
@@ -29,7 +29,6 @@ import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";
@@ -70,6 +69,7 @@ type TProps = {
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [appointment, appointmentFrame, categories, customerEnteredEmail] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
@@ -83,6 +83,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const showError = useException();
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType?.toString() === appointmentFrame.serviceType?.toString());
+    }, [config, appointmentFrame.serviceType])
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
@@ -245,7 +248,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     {t("View itemized fees of services")}
                 </div>
                 <ServiceType/>
-                {appointmentFrame.serviceType === EServiceType.VisitCenter ? <Review/> : null}
+                {currentConfig?.transportationNeeds && appointmentFrame.transportation
+                    ? <Review/>
+                    : null}
             </div>
             <div>
                 <UserData errors={errors} setErrors={setErrors}/>

@@ -19,16 +19,16 @@ const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isS
 
     return <React.Fragment>
         <div className="total end" style={isBmWService ? {fontSize: 16} : {}}>
-            Total <span className="info" >({t("excluding taxes")})</span>
+            {t("Total")} <span className="info" >({t("excluding taxes")})</span>
         </div>
 
         {packages.map(p => {
-            const priceBefore = p.marketPriceComplimentaryServices + p.price;
+            const priceBefore = p.marketPriceComplimentaryServices ? p.marketPriceComplimentaryServices + p.price : 0;
                 return <div
                     onClick={handleClick(p)}
-                    className={setClasses(p.id, `total ${scProfile?.isShowPriceDetails ? 'priceWithBefore' : 'price'} end`)}
+                    className={setClasses(p.id, `total ${scProfile?.isShowPriceDetails && !!priceBefore ? 'priceWithBefore' : 'price'} end`)}
                     key={p.id}>
-                    { scProfile?.isShowPriceDetails &&
+                    { scProfile?.isShowPriceDetails && !!priceBefore &&
                     <div className="before">
                       ${scProfile?.isRoundPrice ? priceBefore : priceBefore.toFixed(2)}
                     </div> }

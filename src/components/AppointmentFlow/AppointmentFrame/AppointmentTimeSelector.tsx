@@ -12,7 +12,11 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
-import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    loadHoursOfOperations,
+    setSideBarSteps,
+    setTransportation
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -57,7 +61,7 @@ type TProps = {
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
         const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, gap, hoursOfOperations} = useSelector((state : RootState) => state.appointmentFrame);
+        const {selectedTiming, gap, hoursOfOperations, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
         const classes = useStyles();
@@ -98,10 +102,20 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             });
         }, [])
 
+        const handleSideBar = () => {
+            const index = sideBarSteps.indexOf("appointmentSelection");
+            if (index > -1) {
+                const slicedSteps = sideBarSteps.slice(0, index);
+                dispatch(setSideBarSteps(slicedSteps))
+            }
+        }
+
         const handleSelect = useCallback((a: IRemappedAppointmentSlot|null) => {
             const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
             handleGA(a);
             dispatch(selectAppointment(data));
+            dispatch(setTransportation(null));
+            handleSideBar();
         }, [selectedTiming])
 
         return (
