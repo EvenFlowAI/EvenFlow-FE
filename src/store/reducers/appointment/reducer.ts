@@ -17,7 +17,7 @@ import {
     changeS3Form,
     changeTransportation, getAllServiceCategories,
     getAppointmentSlots, getServiceCategories,
-    getServiceCenterProfile,
+    getServiceCenterProfile, getServiceValetSlots,
     getSRs,
     handleSearch,
     selectAppointment,
@@ -78,6 +78,7 @@ const initialState: TAppointmentState = {
     comment: "",
     appointment: null,
     appointmentSlots: [],
+    serviceValetSlots: [],
     appointmentFilters: {
         offersOnly: false,
         waitTimeOnly: false
@@ -242,5 +243,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(setProfileLoading, (state, {payload}) => {
         return {...state, isProfileLoading: payload};
+    })
+    .addCase(getServiceValetSlots, (state, {payload}) => {
+        return {...state, serviceValetSlots: payload};
     })
 );

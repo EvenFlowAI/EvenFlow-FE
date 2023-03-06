@@ -11,13 +11,17 @@ import {decodeSCID, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
-import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
+import {
+    loadAppointmentSlots,
+    loadServiceValetSlots,
+    selectAppointment
+} from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
@@ -188,7 +192,9 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                 setLoading(true);
                 try {
                     const dd: IAppointmentSlotsRequest = {
-                        appointmentTimingType: selectedTimingType ?? EAppointmentTimingType.FirstAvailable,
+                        appointmentTimingType: serviceTypeOption?.type === EServiceType.PikUpDropOff || !selectedTimingType
+                            ? EAppointmentTimingType.FirstAvailable
+                            : selectedTimingType,
                         serviceCenterId: decodeSCID(id),
                         consultantId: consultant?.id ?? null,
                         fromDate: selectedTime ? moment(selectedTime).toISOString() : moment.utc().startOf("day"),
@@ -218,11 +224,15 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                     }
                     if (hashKey) dd.appointmentHashKey = hashKey;
                     if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
-                    await dispatch(loadAppointmentSlots(
-                        dd,
-                        setDateCallback,
-                        () => handleDateRangeSet(false)
-                    ));
+                    if (serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+                        await dispatch(loadServiceValetSlots(dd));
+                    } else {
+                        await dispatch(loadAppointmentSlots(
+                            dd,
+                            setDateCallback,
+                            () => handleDateRangeSet(false)
+                        ));
+                    }
                 } finally {
                     setLoading(false);
                 }

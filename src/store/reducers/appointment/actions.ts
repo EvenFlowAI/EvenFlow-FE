@@ -11,7 +11,7 @@ import {
     IPrivacy,
     IRemappedAppointmentSlot,
     IReminders, ISearchedDateRange,
-    IServiceCenterProfile,
+    IServiceCenterProfile, IServiceValetAppointment,
     ISR,
     TAppointmentState,
     TS1Form,
@@ -263,5 +263,15 @@ export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => d
         })
         .catch(err => {
             console.log('load all service categories error', err)
+        })
+}
+export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Appointment/GetServiceValetSlots");
+export const loadServiceValetSlots = (data: IAppointmentSlotsRequest): AppThunk => dispatch => {
+    Api.call<IServiceValetAppointment[]>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
+        .then(result => {
+
+        })
+        .catch(err => {
+            console.log('get service valet slots err', err)
         })
 }

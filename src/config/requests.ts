@@ -142,7 +142,7 @@ type ApiRoutes = {
         | "GetTWEligibility" | "SetTWEligibility"
         | "BatchUpdateDemandSegments" | "RemoveDemandSegment"
         | "SetUnplanned" | "GetUnplanned", TApiRoute>,
-    AppointmentSlots: Record<"GetSlots", TApiRoute>,
+    AppointmentSlots: Record<"GetSlots" | "GetServiceValetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
     BookingFlowConfig: Record<"Get" | "Update", TApiRoute>,
@@ -251,6 +251,7 @@ export class Api {
         },
         AppointmentSlots: {
             GetSlots: {route: "/appointment-slots/by-query", method: "post"},
+            GetServiceValetSlots: {route: "/service-valet-appointment-slots/by-query", method: "post"},
         },
         Authentications: {
             Request: {route: "/authentications", method: "post"},
