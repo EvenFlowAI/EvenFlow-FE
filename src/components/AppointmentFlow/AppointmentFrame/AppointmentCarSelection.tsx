@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Title} from "./Title";
 import {CarCard} from "./CarCard";
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
@@ -12,6 +12,9 @@ import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
 import {setMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
+import {TScreen} from "../../Layout/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 
 const CarsWrapper = styled('div')({
     display: "flex",
@@ -51,12 +54,22 @@ type TProps = {
     onAddNewCarAppointment: TArgCallback<ILoadedVehicle>;
     loading: boolean;
     clearData: () => void;
+    needToShowServiceSelection: boolean;
+    handleServiceTypeSelection: () => void;
+    currentConfig: TServiceTypeSettings|undefined;
+    handleSetScreen: TArgCallback<TScreen>;
 }
 export const AppointmentCarSelection: React.FC<TProps> = ({
-    onNext, onBack, loading, onAddNew, onAddNewCarAppointment, clearData}) => {
+                                                              onNext, onBack, loading, onAddNew, onAddNewCarAppointment, clearData, handleSetScreen,
+                                                              needToShowServiceSelection, handleServiceTypeSelection, currentConfig
+                                                          }) => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
-    const selectedVehicle = useSelector((state: RootState) => state.appointmentFrame.selectedVehicle);
+    const {
+        selectedVehicle,
+        valueService,
+        serviceType,
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
@@ -78,9 +91,23 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         }
     }
 
+    const getNextScreen = useCallback((): TScreen => {
+        let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+        if (valueService?.selectedService) {
+            nextScreen = currentConfig?.advisorSelection
+                ? 'consultantSelection'
+                : 'appointmentTiming'
+        }
+        return nextScreen;
+    }, [serviceType, valueService, currentConfig])
+
     useEffect(() => {
         if (customerLoadedData && !customerLoadedData.vehicles?.length) {
-            onNext();
+            if (needToShowServiceSelection) {
+                handleServiceTypeSelection()
+            } else {
+                handleSetScreen(getNextScreen());
+            }
         }
         dispatch(setMaintenanceDetails({ mileage: ''}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
