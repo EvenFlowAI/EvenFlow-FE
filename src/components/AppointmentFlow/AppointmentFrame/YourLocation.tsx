@@ -58,9 +58,9 @@ const useStyles = makeStyles(() => ({
             border: "1px solid #DADADA",
             '& > div > div': {
                 fontSize: '1rem',
-                color: 'rgba(0, 0, 0, 0.87)',
-                opacity: 0.4
-            }
+                // color: 'rgba(0, 0, 0, 0.87)',
+                // opacity: 0.4
+            },
         },
     },
     errorSelect: {
@@ -78,6 +78,14 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const useAutocompleteStyles = makeStyles({
+    root: {
+        "& input::placeholder": {
+            color: 'black'
+        },
+    },
+})
+
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
@@ -88,6 +96,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
+    const autocompleteClasses = useAutocompleteStyles();
     const {t} = useTranslation();
     const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PikUpDropOff
         ? t('Enter pick up address')
@@ -199,6 +208,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     options={filteredZipCodes}
                     onChange={handleChangeZip}
                     fullWidth
+                    classes={autocompleteClasses}
                     autoComplete={true}
                     onInputChange={onInputChange}
                     renderInput={autocompleteRender({
