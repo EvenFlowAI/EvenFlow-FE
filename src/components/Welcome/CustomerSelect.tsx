@@ -112,6 +112,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
     const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
+    const isLakePowell = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
     const classes = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation();
@@ -142,7 +143,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                 <span>{t("I`m a returning customer")}</span>
                 <TextField
                     style={{ marginTop: 20, marginBottom: 20 }}
-                    placeholder={`${t("Enter your")} ${!isRiverviewFord && !isDominion ? t("Email or ") : ''}${t("Phone")}`}
+                    placeholder={`${t("Enter your")} ${!isRiverviewFord && !isDominion && !isLakePowell ? t("Email or ") : ''}${t("Phone")}`}
                     InputProps={{disableUnderline: true}}
                     variant="standard"
                     onChange={handleChange}

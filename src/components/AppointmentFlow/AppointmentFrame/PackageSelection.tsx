@@ -102,12 +102,11 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             "& .triangle": {
                 width: 0,
                 height: 0,
-                borderTop: "10px solid transparent",
-                borderBottom: "10px solid transparent",
-                borderRight: "10px solid #000000",
+                borderTop: "14px solid transparent",
+                borderBottom: "14px solid transparent",
             },
             "& .current": {
-                background: "#000000",
+                background: "#D32F2F",
                 color: "#FFFFFF",
             }
         },
@@ -142,16 +141,16 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             textAlign: 'right',
         },
         "&.green": {
-            background: "#E6FCEC"
+            background: "#E5F5FF"
         },
         "&.lgray": {
             background: "#EFEFEF",
         },
         "&.green.subtitle": {
-            background: "#89E5AB"
+            background: "#91CFF7"
         },
         "&.totalMaintenance": {
-            justifyContent: "center",
+            justifyContent: "flex-end",
             fontWeight: 'bold',
             borderTop: border,
             paddingBottom: 10,
@@ -163,7 +162,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         "&.totalComplimentary": {
             justifyContent: "center",
             padding: "16px 8px",
-            color: "#008331",
+            color: "#202021",
         },
         "&.complimentaryTitle": {
             justifyContent: "flex-end",
@@ -186,7 +185,17 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             justifyContent: "center",
             "& .current": {
                 flexGrow: 1,
-                fontSize: 20
+                fontSize: 20,
+                color: '#000000'
+            },
+            "&.selected": {
+                "& .current": {
+                    background: "#000000",
+                    color: "#FFFFFF",
+                },
+                "& .triangle": {
+                    borderRight: "14px solid #000000",
+                },
             }
         },
         '&.priceWithBefore': {
@@ -197,12 +206,22 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
             "&>.before": {
                 textDecoration: "line-through",
                 fontWeight: "bold",
-                color: "#142EA1",
+                color: "#000000",
                 fontSize: 20,
             },
             "& .current": {
                 flexGrow: 1,
-                fontSize: 20
+                fontSize: 20,
+                color: '#D32F2F'
+            },
+            "&.selected": {
+                "& .current": {
+                    background: "#D32F2F",
+                    color: "#FFFFFF",
+                },
+                "& .triangle": {
+                    borderRight: "14px solid #D32F2F",
+                },
             }
         },
     }
@@ -415,7 +434,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
-                            isSanfordInfinity={isSanfordInfinity}
                         /> : null}
 
                         <Total

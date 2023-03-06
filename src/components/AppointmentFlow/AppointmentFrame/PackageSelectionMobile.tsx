@@ -126,7 +126,7 @@ const useStyles = makeStyles(() => ({
         fontSize: 14,
         padding: 10,
         color: "black",
-        backgroundColor: '#89E5AB',
+        backgroundColor: '#91CFF7',
         marginTop: 16,
     },
     complimentaryServices: {
@@ -134,12 +134,12 @@ const useStyles = makeStyles(() => ({
         flexDirection: 'column',
         alignContent: 'center',
         padding: 10,
-        background: '#E6FCEC',
+        background: '#E5F5FF',
         height: '15vh',
         overflow: 'auto',
     },
     complimentaryTotal: {
-        color: '#008331',
+        color: '#252733',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -167,11 +167,9 @@ const useStyles = makeStyles(() => ({
         borderRight: "10px solid #000000",
     },
     current: {
-        background: "#000000",
-        color: "#FFFFFF",
+        color: "#D32F2F",
         fontSize: 20,
         fontWeight: 'bold',
-        padding: '0 7px',
     },
     serviceRequest: {
         margin: 0,
@@ -185,15 +183,34 @@ const useStyles = makeStyles(() => ({
         textDecoration: 'underline'
     },
     prevPrice: {
-        color: '#828282',
+        color: '#202021',
         textDecoration: "line-through",
+        fontWeight: 'bold',
         fontSize: 20,
+        marginRight: 12
     },
     total: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
         padding: '8px 12px 22px 12px',
+    },
+    totalName: {
+        fontSize: 14,
+        fontWeight: 'bold'
+    },
+    totalText: {
+        fontSize: 14,
+    },
+    pricesWrapper: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    smallText: {
+        fontSize: 14,
+    },
+    bigText: {
+        fontSize: 20,
     }
 }))
 
@@ -232,22 +249,20 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
     const {t} = useTranslation();
 
     useEffect(() => {
-        const currentPackage = data[+value];
-        if (currentPackage) {
-            dispatch(setPackage(currentPackage));
-        } else {
-            if (data.length) {
-                dispatch(setPackage(data[0]))
-                setValue('0')
-            }
-        }
-    }, [value, data])
-
-    useEffect(() => {
         if (selectedPackage) {
             setValue(selectedPackage.type.toString());
+        } else {
+            const currentPackage = data[+value];
+            if (currentPackage) {
+                dispatch(setPackage(currentPackage));
+            } else {
+                if (data.length) {
+                    dispatch(setPackage(data[0]))
+                    setValue('0')
+                }
+            }
         }
-    }, [selectedPackage])
+    }, [selectedPackage, data])
 
     const handleChange = (e: ChangeEvent<{}>, newValue: any): void => {
         setValue(newValue);
@@ -286,33 +301,33 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                     .slice()
                                     .sort((a, b) => a.orderIndex - b.orderIndex)
                                     .map(item => {
-                                  return item.detailedDescription?.length
-                                      ? <HtmlTooltip
-                                          key={item.id}
-                                          placement="top"
-                                          enterTouchDelay={0}
-                                          title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                      >
-                                          <p className={classes.serviceRequestUnderlined}
-                                             style={isBmWService ? {fontSize: 18} : {}}>
-                                              {item.description}
-                                          </p>
-                                      </HtmlTooltip>
-                                      :  <p className={classes.serviceRequest}
-                                            key={item.id}
-                                            style={isBmWService ? {fontSize: 18} : {}}>
-                                          {item.description}
-                                      </p>
-                                })
+                                        return item.detailedDescription?.length
+                                            ? <HtmlTooltip
+                                                key={item.id}
+                                                placement="top"
+                                                enterTouchDelay={0}
+                                                title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                            >
+                                                <p className={classes.serviceRequestUnderlined}
+                                                   style={isBmWService ? {fontSize: 18} : {}}>
+                                                    {item.description}
+                                                </p>
+                                            </HtmlTooltip>
+                                            :  <p className={classes.serviceRequest}
+                                                  key={item.id}
+                                                  style={isBmWService ? {fontSize: 18} : {}}>
+                                                {item.description}
+                                            </p>
+                                    })
                                 }
                             </div>
 
                             { scProfile?.isShowPriceDetails
                             && <div className={classes.totalMaintenance}>
-                                <span style={isBmWService ? {fontSize: 16} : {}}>
-                                  {t("Total Maintenance Value)")}:
+                                <span className={classes.smallText}>
+                                  {t("Total Maintenance Value")}:
                                 </span>
-                              <span style={{ fontSize: 20 }}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
+                              <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
                             </div>}
 
                             <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
@@ -324,36 +339,36 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                     .slice()
                                     .sort((a, b) => a.orderIndex - b.orderIndex)
                                     .map(item => {
-                                    return item.detailedDescription?.length
-                                        ? <HtmlTooltip
-                                            key={item.id}
-                                            placement="top"
-                                            enterTouchDelay={0}
-                                            title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                        >
-                                            <p className={classes.serviceRequestUnderlined}
-                                                style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
-                                        </HtmlTooltip>
-                                        : <p className={classes.serviceRequest}
-                                             key={item.id}
-                                             style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
-                                })}
+                                        return item.detailedDescription?.length
+                                            ? <HtmlTooltip
+                                                key={item.id}
+                                                placement="top"
+                                                enterTouchDelay={0}
+                                                title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                            >
+                                                <p className={classes.serviceRequestUnderlined}
+                                                   style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                                            </HtmlTooltip>
+                                            : <p className={classes.serviceRequest}
+                                                 key={item.id}
+                                                 style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                                    })}
                             </div>
 
                             {scProfile?.isShowPriceDetails
                                 ? <div className={classes.complimentaryTotal}>
-                                <span style={isBmWService ? {fontSize: 16} : {}}>
+                                <span className={classes.smallText}>
                                     {t("Total Complimentary Value")}:
                                 </span>
                                     {isBmWService || isSanfordInfinity
-                                        ? <span style={{ fontSize: 20 }}>
+                                        ? <span className={classes.bigText}>
                                         {item.marketPriceComplimentaryServices
                                             ? `$${scProfile?.isRoundPrice
                                                 ? item.marketPriceComplimentaryServices
                                                 : item.marketPriceComplimentaryServices.toFixed(2)}`
                                             : ''}
                                 </span>
-                                        : <span style={{ fontSize: 20 }}>
+                                        : <span className={classes.bigText}>
                                         {getPrice(item.complimentaryServices)
                                             ? `$${scProfile?.isRoundPrice
                                                 ? getPrice(item.complimentaryServices)
@@ -364,18 +379,22 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                 </div>
                                 : null
                             }
-                            <div className={isBmWService || isSanfordInfinity ? classes.totalSums : classes.total}>
-                                {scProfile?.isShowPriceDetails &&
-                                <div className={classes.prevPrice}>
-                                  ${scProfile?.isRoundPrice
-                                    ? item.price + item.marketPriceComplimentaryServices
-                                    : (item.price + item.marketPriceComplimentaryServices).toFixed(2)}
-                                </div>}
+                            <div className={classes.totalSums}>
+                                <div>
+                                    <span className={classes.totalName}>{t("Total")}</span><span className={classes.totalText} > ({t("excluding taxes")})</span>
+                                </div>
+                                <div className={classes.pricesWrapper}>
+                                    {scProfile?.isShowPriceDetails &&
+                                    <div className={classes.prevPrice}>
+                                      ${scProfile?.isRoundPrice
+                                        ? item.price + item.marketPriceComplimentaryServices
+                                        : (item.price + item.marketPriceComplimentaryServices).toFixed(2)}
+                                    </div>}
 
-                                <div className={classes.currentWrp}>
-                                    <div className={classes.triangle}/>
-                                    <div className={classes.current}>
-                                        ${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}
+                                    <div className={classes.currentWrp}>
+                                        <div className={classes.current}>
+                                            ${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
