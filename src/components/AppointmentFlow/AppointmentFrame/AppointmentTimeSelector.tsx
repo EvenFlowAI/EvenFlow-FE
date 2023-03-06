@@ -11,9 +11,14 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
-import {loadHoursOfOperations, loadRange} from "../../../store/reducers/slotScoring/actions";
 import {loadSlotsGap} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
+import {
+    loadRange,
+    loadHoursOfOperations,
+    setSideBarSteps,
+    setTransportation
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {PickUpSlotCard} from "./PickUpSlotCard";
 
@@ -109,7 +114,7 @@ type TProps = {
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
         const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, gap, hoursOfOperations, serviceType} = useSelector((state : RootState) => state.appointmentFrame);
+        const {selectedTiming, gap, hoursOfOperations, sideBarSteps, serviceType} = useSelector((state : RootState) => state.appointmentFrame);
         const {slotRange} = useSelector((state : RootState) => state.slotScoring);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
@@ -153,10 +158,20 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             });
         }, [])
 
+        const handleSideBar = () => {
+            const index = sideBarSteps.indexOf("appointmentSelection");
+            if (index > -1) {
+                const slicedSteps = sideBarSteps.slice(0, index);
+                dispatch(setSideBarSteps(slicedSteps))
+            }
+        }
+
         const handleSelect = useCallback((a: IRemappedAppointmentSlot|null) => {
             const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
             handleGA(a);
             dispatch(selectAppointment(data));
+            dispatch(setTransportation(null));
+            handleSideBar();
         }, [selectedTiming])
 
         return (

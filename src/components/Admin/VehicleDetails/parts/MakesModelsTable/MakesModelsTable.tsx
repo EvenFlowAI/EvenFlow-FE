@@ -123,6 +123,7 @@ const MakesModelsTable = () => {
                     loading={isLoading}
                     value={selectedMake}
                     options={makes}
+                    closeIcon={null}
                     getOptionSelected={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.name}
                     onChange={onMakeChange}

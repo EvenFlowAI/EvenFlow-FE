@@ -132,8 +132,6 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         }
     }
 
-    const onProdPush = () => {}
-
     return <Drawer
         className={classes.drawer}
         classes={{paper: classes.drawerPaper}}
@@ -157,22 +155,12 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         </List>
         <div style={{flex: 1}} />
         {selectedSC
-            ? <>
-            <Button
+            ? <Button
                 endIcon={<ArrowForwardIos/>}
                 className={classes.link}
                 onClick={onOpen}>
                 Booking UI
             </Button>
-                 {currentUser && ["Call Center Rep", "Advisor"].includes(currentUser?.role)
-                     ? null
-                     : <Button
-                         endIcon={<ArrowForwardIos/>}
-                         className={classes.link}
-                         onClick={onProdPush}>
-                         Push To Prod
-                     </Button>}
-            </>
             : null}
         <BookingModal open={isOpen} onClose={onModalClose} />
     </Drawer>
