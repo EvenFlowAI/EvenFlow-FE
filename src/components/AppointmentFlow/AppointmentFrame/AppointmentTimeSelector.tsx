@@ -14,7 +14,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import {loadSlotsGap} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {
-    loadRange,
     loadHoursOfOperations,
     setSideBarSteps,
     setTransportation
@@ -115,7 +114,6 @@ export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
         const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, gap, hoursOfOperations, sideBarSteps, serviceType} = useSelector((state : RootState) => state.appointmentFrame);
-        const {slotRange} = useSelector((state : RootState) => state.slotScoring);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
         const classes = useStyles();
@@ -128,7 +126,6 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         useEffect(() => {
             if (scProfile) {
                 dispatch(loadHoursOfOperations(scProfile.id))
-                dispatch(loadRange(scProfile.id));
                 dispatch(loadSlotsGap(scProfile.id))
             }
         }, [scProfile])
