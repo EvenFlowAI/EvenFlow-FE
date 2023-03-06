@@ -18,7 +18,7 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, p
 
     return <React.Fragment>
         <div className="totalComplimentary complimentaryTitle" style={isBmWService ? {fontSize: 16} : {}}>
-            {t("Total Complimentary Value")}
+            {t("Total Complimentary Value")}:
         </div>
         {packages.map(p => {
             return <div
