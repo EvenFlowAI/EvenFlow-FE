@@ -168,9 +168,8 @@ const useStyles = makeStyles(() => ({
     },
     current: {
         color: "#D32F2F",
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
-        padding: '0 7px',
     },
     serviceRequest: {
         margin: 0,
@@ -187,7 +186,7 @@ const useStyles = makeStyles(() => ({
         color: '#202021',
         textDecoration: "line-through",
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 20,
         marginRight: 12
     },
     total: {
@@ -197,15 +196,21 @@ const useStyles = makeStyles(() => ({
         padding: '8px 12px 22px 12px',
     },
     totalName: {
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: 'bold'
     },
     totalText: {
-        fontSize: 12,
+        fontSize: 14,
     },
     pricesWrapper: {
         display: 'flex',
         alignItems: 'center'
+    },
+    smallText: {
+        fontSize: 14,
+    },
+    bigText: {
+        fontSize: 20,
     }
 }))
 
@@ -319,10 +324,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
 
                             { scProfile?.isShowPriceDetails
                             && <div className={classes.totalMaintenance}>
-                                <span style={isBmWService ? {fontSize: 16} : {}}>
+                                <span className={classes.smallText}>
                                   {t("Total Maintenance Value")}:
                                 </span>
-                              <span style={{ fontSize: 20 }}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
+                              <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
                             </div>}
 
                             <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
@@ -352,18 +357,18 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
 
                             {scProfile?.isShowPriceDetails
                                 ? <div className={classes.complimentaryTotal}>
-                                <span style={isBmWService ? {fontSize: 16} : {}}>
+                                <span className={classes.smallText}>
                                     {t("Total Complimentary Value")}:
                                 </span>
                                     {isBmWService || isSanfordInfinity
-                                        ? <span style={{ fontSize: 20 }}>
+                                        ? <span className={classes.bigText}>
                                         {item.marketPriceComplimentaryServices
                                             ? `$${scProfile?.isRoundPrice
                                                 ? item.marketPriceComplimentaryServices
                                                 : item.marketPriceComplimentaryServices.toFixed(2)}`
                                             : ''}
                                 </span>
-                                        : <span style={{ fontSize: 20 }}>
+                                        : <span className={classes.bigText}>
                                         {getPrice(item.complimentaryServices)
                                             ? `$${scProfile?.isRoundPrice
                                                 ? getPrice(item.complimentaryServices)
