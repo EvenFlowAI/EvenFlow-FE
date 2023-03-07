@@ -18,8 +18,6 @@ import {
     setSideBarSteps,
     setTransportation
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {PickUpSlotCard} from "./PickUpSlotCard";
 
 const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -41,14 +39,6 @@ const TimeSlotsWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-const PickUpSlotsWrapper = styled('div')(() => ({
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gap: "20px 12px",
-    alignItems: "center",
-    justifyContent: "stretch",
-}));
-
 const useStyles = makeStyles(theme => ({
     wrapper: {
         maxHeight: '40vh',
@@ -64,16 +54,6 @@ export type TSlot = {
     label: string;
 }
 
-export type TPickUpSlot = {
-    date: moment.Moment;
-    label: string;
-    pickUpStart: string;
-    pickUpEnd: string;
-    dropOffStart: string;
-    dropOffEnd: string;
-    available: number;
-}
-
 type TProps = {
     date: moment.Moment;
     loading: boolean;
@@ -83,7 +63,7 @@ type TProps = {
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
         const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, gap, hoursOfOperations, sideBarSteps, serviceType} = useSelector((state : RootState) => state.appointmentFrame);
+        const {selectedTiming, gap, hoursOfOperations, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
         const classes = useStyles();

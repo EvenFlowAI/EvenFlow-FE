@@ -251,7 +251,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         if (appointment) {
             ReactGA.event({
                 category: 'EvenFlow User',
-                action: 'Selected Appointment Slot',
+                action: serviceTypeOption?.type === EServiceType.PikUpDropOff ? 'Selected Service Valet Appointment Slot' : 'Selected Appointment Slot',
                 label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('hh:mm A')}`,
             });
         }

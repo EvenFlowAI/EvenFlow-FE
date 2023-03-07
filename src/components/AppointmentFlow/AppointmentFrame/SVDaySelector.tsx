@@ -1,10 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import moment from "moment";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
-import {DaySelectCard} from "./DaySelectCard";
 import {TArgCallback} from "../../../types/types";
-import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
-import {TGroupedAppointments} from "../../../utils/types";
+import {useMediaQuery, useTheme} from "@material-ui/core";
 import {getAppointmentDate} from "./utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -12,36 +10,10 @@ import {EAppointmentTimingType, IServiceValetAppointment} from "../../../store/r
 import {useModal} from "../../../utils/hooks";
 import PromptNewSearchRange from "../../Modals/PromptNewSearchRange/PromptNewSearchRange";
 import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
+import {selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {SVDaySelectCard} from "./SVDaySelectCard";
+import {Arrow, DaySelectorWrapper, WHILE_LIMIT} from "./DaySelector";
 
-const DaySelectorWrapper = styled('div')(({ theme }) => ({
-    marginTop: 20,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    gap: "12px",
-    width: "100%",
-    [theme.breakpoints.down('sm')]: {
-        marginTop: 0,
-        gap: "10px",
-    }
-}));
-const Arrow = styled('div')<Theme, {disabled?: boolean}>({
-    border: "1px solid #DADADA",
-    width: 30,
-    height: 30,
-    flexShrink: 0,
-    opacity: ({disabled}) => disabled ? .5 : 1,
-    display: "flex",
-    marginTop: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: ({disabled}) => disabled ? "default" : "pointer",
-});
-
-const WHILE_LIMIT = 40;
 type TProps = {
     date: moment.Moment,
     dateRangeUpdated: boolean;
@@ -63,7 +35,7 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
 
-    const {selectedPackage, selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
     const {searchedDateRange, appointment} = useSelector((state: RootState) => state.appointment);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
@@ -167,7 +139,6 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
                 <SVDaySelectCard
                     key={day}
                     isXs={isXs}
-                    isPackage={Boolean(selectedPackage)}
                     isCurrent={date.isSame(moment.utc(day), 'date')}
                     appointment={appointments.find(item => moment(item.date).isSame(moment(day), 'date'))}
                     onClick={handleChangeDay(day)}

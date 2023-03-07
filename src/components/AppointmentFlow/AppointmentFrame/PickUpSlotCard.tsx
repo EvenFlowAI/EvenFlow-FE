@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {IRemappedAppointmentSlot, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
+import {IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
-import {TPickUpSlot} from "./AppointmentTimeSelector";
 import {useTranslation} from "react-i18next";
 import {
     CheckCircleOutlined,

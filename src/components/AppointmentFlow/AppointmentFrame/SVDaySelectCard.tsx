@@ -1,55 +1,11 @@
 import React from 'react';
 import {TCallback} from "../../../types/types";
-import {styled, Theme} from "@material-ui/core";
 import moment from "moment";
-import {TGroupedAppointment} from "../../../utils/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
-
-
-type TDayCardProps = {
-    available?: boolean;
-    isCurrent?: boolean;
-    isOffPeak?: boolean;
-}
-
-const DayCard = styled(({available, isCurrent, isOffPeak, ...props}) => (<div {...props}/>))<Theme, TDayCardProps>(({theme, available, isCurrent, isOffPeak}) => ({
-    flex: "1 0 0px",
-    opacity: (!available && !isCurrent) ? .3 : 1,
-    display: "flex",
-    textTransform: "uppercase",
-    flexDirection: "column",
-    gap: "8px",
-    fontWeight: "bold",
-    alignItems: "center",
-    justifyContent: "center",
-    "& .day": {
-        border: isCurrent ? "1px solid #000000" : "1px solid #DADADA",
-        padding: 12,
-        display: "flex",
-        width: "100%",
-        alignItems: "center",
-        background: isCurrent ? "#000000" : "#FAFAFA",
-        color: isCurrent ? "#FFFFFF" : "#252733",
-        justifyContent: "center",
-        textAlign: "center",
-        minHeight: 80,
-        fontWeight: "bold",
-        textTransform: "uppercase",
-        cursor: "pointer",
-        height: "auto",
-        [theme.breakpoints.down("xs")]: {
-            borderRadius: "50%",
-            minHeight: "auto",
-            width: 50,
-            height: 50,
-            border: isCurrent ? "1px solid #000000" : (isOffPeak ? "1px solid #237243" : "1px solid #DADADA"),
-            background: isCurrent ? "#000000" : isOffPeak ? "#89E5AB" : "#FAFAFA",
-        }
-    }
-}));
+import {monthFormat, XsFormat, XsMontFormat, defaultFormat, DayCard} from "./DaySelectCard";
 
 type TProps = {
     day: string;
@@ -57,16 +13,10 @@ type TProps = {
     isCurrent: boolean;
     appointment?: IServiceValetAppointment;
     isXs: boolean;
-    isPackage: boolean;
 };
 
-const XsFormat = "ddd";
-const defaultFormat = 'D, ddd';
-const monthFormat = "MMM D";
-const XsMontFormat = "MMM";
-
 export const SVDaySelectCard: React.FC<TProps> = ({
-                                                    day, onClick, appointment, isCurrent, isPackage, isXs
+                                                    day, onClick, appointment, isCurrent, isXs
                                                 }) => {
     const isCustomRange = useSelector((state: RootState) => {
         return Boolean(
