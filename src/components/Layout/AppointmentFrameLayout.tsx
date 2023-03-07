@@ -331,12 +331,12 @@ export const AppointmentFrameLayout = () => {
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
-    const handleSelectCar = useCallback(async () => {
+    const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
         dispatch(selectSR(null));
         clearAppointmentData()
         let needToShowService: boolean = needToShowServiceSelection;
-        if (selectedVehicle?.appointmentHashKeys.length) {
-            const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
+        if (car?.appointmentHashKeys.length) {
+            const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
             const lastIndex = key.lastIndexOf('==');
             const trimmedKey = lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
             setLoadingCar(true);
@@ -365,7 +365,11 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, selectedVehicle, showError, dispatch, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
+
+    const handleSelectCar = useCallback( () => {
+        selectedVehicle && onSelectCar(selectedVehicle)
+    }, [selectedVehicle, onSelectCar]);
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
@@ -379,6 +383,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen={handleSetScreen}
                 handleServiceTypeSelection={handleServiceTypeSelection}
                 currentConfig={currentConfig}
+                onSelectCar={onSelectCar}
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 setLastSelectedCategory={setLastSelectedCategory}
