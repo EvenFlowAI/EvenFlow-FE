@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {IRemappedAppointmentSlot, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {styled, Theme} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
@@ -97,21 +97,20 @@ const useStyles = makeStyles(theme => ({
 }))
 
 type TProps = {
-    timeSlot: TPickUpSlot;
-    slot?: IRemappedAppointmentSlot;
+    timeSlot: IServiceValetAppointment;
     selected: boolean;
-    onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
+    onSelect: TArgCallback<IServiceValetAppointment|null>;
     date: moment.Moment|null;
 }
 
-export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
+export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, date}) => {
     const [timePassed, setTimePassed] = useState<boolean>(false);
     const classes = useStyles();
     const {t} = useTranslation();
 
     useEffect(() => {
-        if (slot?.date && moment(slot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
-            const differenceInMSeconds = moment(slot?.date.format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
+        if (timeSlot?.date && moment(timeSlot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
+            const differenceInMSeconds = moment(moment(timeSlot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
             if (differenceInMSeconds > 0) {
                 setTimeout(() => setTimePassed(true), differenceInMSeconds);
             } else {
@@ -120,16 +119,14 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selec
         } else {
             setTimePassed(false);
         }
-    }, [slot, date])
+    }, [timeSlot, date])
 
     return (
         <PickUpWrapper
             key={moment(timeSlot.date).toISOString()}
-            available={true}
-            // available={Boolean(slot) && !timePassed}
-            selected={false}
-            // selected={selected}
-            onClick={() => timePassed ? {} : onSelect(slot ?? null)}
+            available={Boolean(timeSlot) && !timePassed}
+            selected={selected}
+            onClick={() => timePassed ? {} : onSelect(timeSlot ?? null)}
         >
             <div className="pickUp">
                 <div className={classes.radio}>
@@ -138,9 +135,9 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selec
                 <div className={classes.text}>
                     <div>{t("Pick Up Time")}:</div>
                     <div>
-                        {moment(timeSlot.pickUpStart, 'H:mm').format('H:mm A')}
+                        {moment(timeSlot.pickUpMin, 'H:mm').format('H:mm A')}
                         <span> {t("to")} </span>
-                        {moment(timeSlot.pickUpEnd, 'H:mm').format('H:mm A')}
+                        {moment(timeSlot.pickUpMax, 'H:mm').format('H:mm A')}
                     </div>
                 </div>
             </div>
@@ -160,9 +157,9 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selec
                 <div className={classes.dropOff}>
                     <div>{t("Drop Off Time")}:</div>
                     <div className={classes.rightText}>
-                        {moment(timeSlot.dropOffStart, 'H:mm').format('H:mm A')}
+                        {moment(timeSlot.dropOffMin, 'H:mm').format('H:mm A')}
                         <span> {t("to")} </span>
-                        {moment(timeSlot.dropOffEnd, 'H:mm').format('H:mm A')}
+                        {moment(timeSlot.dropOffMax, 'H:mm').format('H:mm A')}
                     </div>
                 </div>
             </div>

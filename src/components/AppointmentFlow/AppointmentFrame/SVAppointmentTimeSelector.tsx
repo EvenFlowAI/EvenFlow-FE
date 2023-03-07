@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
-import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {IRemappedAppointmentSlot, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
 import {styled} from "@material-ui/core";
 import {Loading} from "../../UI/Loading";
 import {TGroupedAppointment} from "../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
@@ -74,16 +74,45 @@ export type TPickUpSlot = {
     available: number;
 }
 
+const mockPickUpSlots = [
+    {
+        date: moment(),
+        label: '',
+        pickUpStart: '8:00',
+        pickUpEnd: '11.00',
+        dropOffStart: '14.00',
+        dropOffEnd: '17.00',
+        available: 4
+    },
+    {
+        date: moment(),
+        label: '',
+        pickUpStart: '8:00',
+        pickUpEnd: '11.00',
+        dropOffStart: '14.00',
+        dropOffEnd: '17.00',
+        available: 0
+    },
+    {
+        date: moment(),
+        label: '',
+        pickUpStart: '8:00',
+        pickUpEnd: '11.00',
+        dropOffStart: '14.00',
+        dropOffEnd: '17.00',
+        available: 6
+    }
+]
+
 type TProps = {
     date: moment.Moment;
     loading: boolean;
-    appointments?: TGroupedAppointment;
 }
 
-export const AppointmentTimeSelector: React.FC<TProps> =
-    ({date, loading, appointments}) => {
-        const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, gap, hoursOfOperations, sideBarSteps, serviceType} = useSelector((state : RootState) => state.appointmentFrame);
+export const SVAppointmentTimeSelector: React.FC<TProps> =
+    ({date, loading}) => {
+        const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
+        const {selectedTiming, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
         const classes = useStyles();
@@ -93,34 +122,10 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView();
         }, [date, firstCardRef])
 
-        useEffect(() => {
-            if (scProfile) {
-                dispatch(loadHoursOfOperations(scProfile.id))
-                dispatch(loadSlotsGap(scProfile.id))
-            }
-        }, [scProfile])
-
-        const slots: TSlot[] = useMemo(() => {
-            const slots: TSlot[] = [];
-            const currentSCSchedule = hoursOfOperations.find(item => item.dayOfWeek === moment(date).day())
-            if (gap && currentSCSchedule) {
-                const [startHours, startMinutes] = currentSCSchedule.from.split(':');
-                const [endHours, endMinutes] = currentSCSchedule.to.split(':');
-                let start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
-                const end  = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
-                let cDate = moment.utc(start);
-                while (cDate.isSameOrBefore(end, 'minute')) {
-                    slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
-                    cDate = moment.utc(cDate).add(gap, 'minutes');
-                }
-            }
-            return slots;
-        }, [date, appointments, gap]);
-
-        const handleGA = useCallback((a: IRemappedAppointmentSlot|null) => {
+        const handleGA = useCallback((a: IServiceValetAppointment|null) => {
             ReactGA.event({
                 category: 'EvenFlow User',
-                action: 'Clicked on Appointment Slot',
+                action: 'Clicked on Service Valet Appointment Slot',
                 label: a?.price?.value ? `With Price $${a.price.value}` : '',
             });
         }, [])
@@ -133,10 +138,10 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             }
         }
 
-        const handleSelect = useCallback((a: IRemappedAppointmentSlot|null) => {
+        const handleSelect = useCallback((a: IServiceValetAppointment|null) => {
             const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
             handleGA(a);
-            dispatch(selectAppointment(data));
+            dispatch(selectServiceValetAppointment(data));
             dispatch(setTransportation(null));
             handleSideBar();
         }, [selectedTiming])
@@ -145,24 +150,21 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             <div className={classes.wrapper}>
                 <h4 ref={firstCardRef}>{t("Select Time")}</h4>
                 {!loading
-                    ? <TimeSlotsWrapper>
-                        {slots.map((timeSlot) => {
-                            const appointment = appointments?.appointments.find(
-                                a => a.date.isSame(timeSlot.date, 'minute')
-                            );
-                            return <TimeSlotCard
-                                date={date}
-                                slot={appointment}
-                                onSelect={handleSelect}
-                                selected={Boolean(
-                                    selectedAppointment && appointment?.id === selectedAppointment.id
-                                )}
-                                timeSlot={timeSlot}
-                                key={timeSlot.label}
-                            />
-                        })}
-                    </TimeSlotsWrapper>
-                    : <Loading/>}
+                        ? <PickUpSlotsWrapper>
+                            {serviceValetSlots.map(timeSlot => {
+                                    return <PickUpSlotCard
+                                        date={date}
+                                        onSelect={handleSelect}
+                                        selected={Boolean(
+                                            selectedAppointment && timeSlot?.date === selectedAppointment.date
+                                        )}
+                                        timeSlot={timeSlot}
+                                        key={moment(timeSlot.date).toISOString()}
+                                    />
+                                })
+                            }
+                        </PickUpSlotsWrapper>
+                        : <Loading/>}
             </div>
         );
     };

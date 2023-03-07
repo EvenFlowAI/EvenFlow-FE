@@ -206,6 +206,7 @@ export type TAppointmentState = {
     privacy: IPrivacy;
     comment: string;
     appointment: IRemappedAppointmentSlot|null;
+    serviceValetAppointment: IServiceValetAppointment|null;
     searchedDateRange: ISearchedDateRange|null;
     appointmentSlots: IRemappedAppointmentSlot[];
     serviceValetSlots: IServiceValetAppointment[];

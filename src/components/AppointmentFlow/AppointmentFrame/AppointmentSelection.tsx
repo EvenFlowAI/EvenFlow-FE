@@ -25,28 +25,30 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
+import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
+import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
 
 const Wrapper = styled('div')(({ theme }) => ({
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    alignItems: "stretch",
-    justifyContent: "flex-start",
-    gap: "20px",
-    "&>div": {
-        border: "1px solid #DADADA",
-        padding: "18px 44px",
-        [theme.breakpoints.down('xs')]: {
-            padding: "18px 20px",
-        },
-        "&>h4": {
-            fontSize: 16,
-            margin: "0 0 16px",
-            padding: 0,
-            fontWeight: "bold",
-            textTransform: "uppercase",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        alignItems: "stretch",
+        justifyContent: "flex-start",
+        gap: "20px",
+        "&>div": {
+            border: "1px solid #DADADA",
+            padding: "18px 44px",
+            [theme.breakpoints.down('xs')]: {
+                padding: "18px 20px",
+            },
+            "&>h4": {
+                fontSize: 16,
+                margin: "0 0 16px",
+                padding: 0,
+                fontWeight: "bold",
+                textTransform: "uppercase",
+            }
         }
-    }
     })
 );
 
@@ -283,21 +285,33 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             <Wrapper>
                 <SelectedAppointment />
                 <Actions onBack={handleBack} onNext={handleNext} nextDisabled={!appointment} />
-                <AppointmentDateSelector
-                    dateChangeDisabled={selectedTimingType !== EAppointmentTimingType.SpecialOffers}
-                    appointments={groupedAppointments}
-                    date={date}
-                    onDateRangeSet={handleDateRangeSet}
-                    dateRangeUpdated={initRef.current}
-                    loading={loading}
-                    onDateChange={updateDate} />
-                <AppointmentTimeSelector
-                    appointments={
-                        groupedAppointments[date.toISOString().replace('.000', '')]
-                    }
-                    date={date}
-                    loading={loading}
-                />
+                {serviceTypeOption?.type === EServiceType.PikUpDropOff
+                    ? <SVAppointmentDateSelector
+                        onDateRangeSet={handleDateRangeSet}
+                        dateRangeUpdated={initRef.current}
+                        dateChangeDisabled={selectedTimingType !== EAppointmentTimingType.SpecialOffers}
+                        date={date}
+                        loading={loading}
+                        onDateChange={updateDate} />
+                    : <AppointmentDateSelector
+                        dateChangeDisabled={selectedTimingType !== EAppointmentTimingType.SpecialOffers}
+                        appointments={groupedAppointments}
+                        date={date}
+                        onDateRangeSet={handleDateRangeSet}
+                        dateRangeUpdated={initRef.current}
+                        loading={loading}
+                        onDateChange={updateDate} />
+                }
+                {serviceTypeOption?.type === EServiceType.PikUpDropOff
+                ? <SVAppointmentTimeSelector
+                        date={date}
+                        loading={loading}/>
+                : <AppointmentTimeSelector
+                        appointments={
+                            groupedAppointments[date.toISOString().replace('.000', '')]
+                        }
+                        date={date}
+                        loading={loading}/>}
             </Wrapper>
         </StepWrapper>
     );

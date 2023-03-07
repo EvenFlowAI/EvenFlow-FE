@@ -66,6 +66,7 @@ export const changePrivacy = createAction<Partial<IPrivacy>>("Appointment/Change
 export const changePersonalInformation = createAction<Partial<IPersonalInformation>>("Appointment/ChangePersonalInformation");
 export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
+export const selectServiceValetAppointment = createAction<IServiceValetAppointment|null>("Appointment/SelectServiceValetAppointment");
 export const getServiceCategories = createAction<IServiceCategory[]>("Appointment/GetServiceCategories");
 export const getAllServiceCategories = createAction<IServiceCategoryShort[]>("Appointment/GetAllServiceCategories");
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
@@ -269,7 +270,7 @@ export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Ap
 export const loadServiceValetSlots = (data: IAppointmentSlotsRequest): AppThunk => dispatch => {
     Api.call<IServiceValetAppointment[]>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
-
+            if (result?.data) dispatch(getServiceValetSlots(result.data))
         })
         .catch(err => {
             console.log('get service valet slots err', err)

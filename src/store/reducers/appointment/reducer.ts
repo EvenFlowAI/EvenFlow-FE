@@ -20,7 +20,7 @@ import {
     getServiceCenterProfile, getServiceValetSlots,
     getSRs,
     handleSearch,
-    selectAppointment,
+    selectAppointment, selectServiceValetAppointment,
     selectSR, selectSRMultiple,
     setAppointmentFilters,
     setCustomerEnteredEmail,
@@ -77,6 +77,7 @@ const initialState: TAppointmentState = {
     privacy: blankPrivacy,
     comment: "",
     appointment: null,
+    serviceValetAppointment: null,
     appointmentSlots: [],
     serviceValetSlots: [],
     appointmentFilters: {
@@ -246,5 +247,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(getServiceValetSlots, (state, {payload}) => {
         return {...state, serviceValetSlots: payload};
+    })
+    .addCase(selectServiceValetAppointment, (state, {payload}) => {
+        return {...state, serviceValetAppointment: payload};
     })
 );
