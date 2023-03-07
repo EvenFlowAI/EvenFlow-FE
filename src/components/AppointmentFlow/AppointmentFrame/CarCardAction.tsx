@@ -69,7 +69,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
     const handleSelect = useCallback (async () => {
         await clearData()
         await dispatch(setVehicle(car));
-        if (!hasAppointments) onSelectCar(car);
+        onSelectCar(car);
     }, [hasAppointments, car, onNext, clearData])
 
     return <ActionButtons>

@@ -31,7 +31,9 @@ export const Actions: React.FC<TActionProps> = (
         nextLabel,
         loading,
         prevDisabled,
-        prevLabel}
+        prevLabel,
+        hideNext
+    }
 ) => {
     const {t} = useTranslation();
     return (
@@ -45,13 +47,13 @@ export const Actions: React.FC<TActionProps> = (
                     style={{backgroundColor: '#F7F8FB'}}>
                     {prevLabel ?? t("Back")}
                 </Button>
-                <Button
+                {!hideNext && <Button
                     disabled={nextDisabled}
                     onClick={onNext}
                     color={'primary'}
                     variant='contained'>
                     {nextLabel ?? t("Submit")}
-                </Button>
+                </Button>}
             </> : <Loading />}
         </ButtonsRow>
     );
