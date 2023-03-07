@@ -160,6 +160,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 {t("Click here to")} <span onClick={onAddNew}>{t("add new vehicle")}</span>
             </Info>
             <Actions
+                hideNext
                 onBack={onBack}
                 onNext={onNext}
                 nextDisabled={!selectedVehicle
