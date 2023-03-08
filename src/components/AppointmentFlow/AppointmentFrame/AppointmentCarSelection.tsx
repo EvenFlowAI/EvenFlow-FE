@@ -58,10 +58,11 @@ type TProps = {
     handleServiceTypeSelection: () => void;
     currentConfig: TServiceTypeSettings|undefined;
     handleSetScreen: TArgCallback<TScreen>;
+    onSelectCar: TArgCallback<ILoadedVehicle>;
 }
 export const AppointmentCarSelection: React.FC<TProps> = ({
                                                               onNext, onBack, loading, onAddNew, onAddNewCarAppointment, clearData, handleSetScreen,
-                                                              needToShowServiceSelection, handleServiceTypeSelection, currentConfig
+                                                              needToShowServiceSelection, handleServiceTypeSelection, currentConfig, onSelectCar
                                                           }) => {
 
     const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
@@ -142,6 +143,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                             .map(vehicle =>
                                 <CarCard
                                     onNext={onNext}
+                                    onSelectCar={onSelectCar}
                                     onAddNewAppointment={onAddNewCarAppointment}
                                     selected={isSelected(vehicle)}
                                     clearData={clearData}
@@ -158,6 +160,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 {t("Click here to")} <span onClick={onAddNew}>{t("add new vehicle")}</span>
             </Info>
             <Actions
+                hideNext
                 onBack={onBack}
                 onNext={onNext}
                 nextDisabled={!selectedVehicle

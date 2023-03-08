@@ -17,6 +17,7 @@ type TProps = {
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
     clearData: () => void;
     onNext: TCallback;
+    onSelectCar: TArgCallback<ILoadedVehicle>;
 }
 const Wrapper = styled('div')<Theme, {active?: boolean}>(({theme}) => ({
     display: "flex",
@@ -59,6 +60,7 @@ export const CarCard: React.FC<TProps> = ({
     selected,
     onAddNewAppointment,
     clearData,
+                                              onSelectCar,
 }) => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -79,6 +81,7 @@ export const CarCard: React.FC<TProps> = ({
                 <li>{t("VIN")}: <span>{car.vin}</span></li>
             </CarInfo>
             <CarCardAction
+                onSelectCar={onSelectCar}
                 onAddNewAppointment={onAddNewAppointment}
                 selected={selected}
                 car={car}
