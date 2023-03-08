@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TCallback} from "../../../../types/types";
 import {useTranslation} from "react-i18next";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -21,7 +22,8 @@ type TProps = {
     onChangeSlot: TCallback;
 }
 export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
-    const appointment = useSelector((state: RootState) => state.appointment.appointment);
+    const {appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
 
     const handleChangeSlot = () => {
@@ -29,9 +31,13 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     }
     return <div>
         <TitleWrapper>
-            <ConfirmationTitle>{t("Selected Date & Time")}</ConfirmationTitle>
+            <ConfirmationTitle>
+                {serviceTypeOption?.type === EServiceType.PikUpDropOff ? t("Selected Date") : t("Selected Date & Time")}
+            </ConfirmationTitle>
             <Edit fontSize="small" onClick={handleChangeSlot} />
         </TitleWrapper>
-        {moment.utc(appointment?.date).format('MMMM D, h:mm A')}
+        {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+            ? moment.utc(serviceValetAppointment?.date).format('MMMM D')
+            : moment.utc(appointment?.date).format('MMMM D, h:mm A')}
     </div>
 };

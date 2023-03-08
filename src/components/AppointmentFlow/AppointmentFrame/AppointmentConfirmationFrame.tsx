@@ -190,8 +190,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
             },
             transportationOptionId: appointmentFrame.transportation?.id ?? null,
-            // todo logic for service valet slot
-            slot: appointment.appointment?.id.split("|")[1] || "",
+            slot: appointment.appointment?.id.split("|")[1] || "00:00:00",
             serviceRequestIds: collectServiceRequestIds(
                 appointmentFrame.service,
                 appointmentFrame.subService,
