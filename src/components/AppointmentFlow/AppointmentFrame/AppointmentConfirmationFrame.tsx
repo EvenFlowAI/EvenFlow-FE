@@ -189,6 +189,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
             },
             transportationOptionId: appointmentFrame.transportation?.id ?? null,
+            // todo logic for service valet slot
             slot: appointment.appointment?.id.split("|")[1] || "",
             serviceRequestIds: collectServiceRequestIds(
                 appointmentFrame.service,
@@ -197,6 +198,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointmentFrame.selectedPackage,
                 appointment.selectedSR
             ),
+            // todo logic for service valet slot
             date: appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
