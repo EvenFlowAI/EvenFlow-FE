@@ -24,7 +24,7 @@ import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
-import {selectAppointment, selectSR} from "../appointment/actions";
+import {selectAppointment, selectServiceValetAppointment, selectSR} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
@@ -185,6 +185,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(selectService(null));
     dispatch(selectSubService(null));
     dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
     dispatch(setValueService(null));
     dispatch(selectCategoriesIds([]));
     dispatch(selectSR(null));

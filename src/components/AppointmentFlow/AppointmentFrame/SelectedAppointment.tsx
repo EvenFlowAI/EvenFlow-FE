@@ -6,7 +6,7 @@ import {getMaintenanceDescription} from "./uiUtils";
 import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
@@ -191,7 +191,10 @@ export const SelectedAppointment = () => {
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
-        if (isBmWService && e.target.value !== advisor?.id) dispatch(selectAppointment(null));
+        if (isBmWService && e.target.value !== advisor?.id) {
+            dispatch(selectAppointment(null));
+            dispatch(selectServiceValetAppointment(null));
+        }
         dispatch(setAdvisor(consultant ? consultant : null))
     }
 

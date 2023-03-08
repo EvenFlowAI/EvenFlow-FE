@@ -15,7 +15,7 @@ import {
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {
     EAncillaryType,
     EServiceType,
@@ -109,6 +109,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const clearSelectedData = () => {
         dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
     }
 
     const clearAddress = () => {

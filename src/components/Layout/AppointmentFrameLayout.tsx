@@ -27,7 +27,7 @@ import {
     getCustomerCache,
     loadSCProfile,
     loadSRs,
-    saveCustomerCache, selectAppointment,
+    saveCustomerCache, selectAppointment, selectServiceValetAppointment,
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
@@ -286,6 +286,7 @@ export const AppointmentFrameLayout = () => {
     const clearAppointmentData = useCallback(() => {
         dispatch(setPackage(null));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
         dispatch(selectCategoriesIds([]));
         dispatch(selectService(null));
         dispatch(selectSubService(null));

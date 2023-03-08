@@ -14,7 +14,7 @@ import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/r
 import {
     loadAppointmentSlots,
     loadServiceValetSlots,
-    selectAppointment
+    selectAppointment, selectServiceValetAppointment
 } from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds} from "./utils";
@@ -165,6 +165,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
         if (!d.isSame(month, 'month')) {
             setMonth(d);
         }

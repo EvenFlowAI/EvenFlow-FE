@@ -4,7 +4,13 @@ import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useModal} from "../../../utils/hooks";
-import {handleSearch, selectAppointment, selectSR, selectSRMultiple} from "../../../store/reducers/appointment/actions";
+import {
+    handleSearch,
+    selectAppointment,
+    selectServiceValetAppointment,
+    selectSR,
+    selectSRMultiple
+} from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
@@ -203,6 +209,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         handleCategories(value);
         dispatch(selectSR(value ? Number(value) : null));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
     }
 
     const goNext = () => {
