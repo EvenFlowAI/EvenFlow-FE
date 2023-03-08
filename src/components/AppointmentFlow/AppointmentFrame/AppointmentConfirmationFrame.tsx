@@ -33,6 +33,7 @@ import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";
 import {useTranslation} from "react-i18next";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -198,8 +199,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointmentFrame.selectedPackage,
                 appointment.selectedSR
             ),
-            // todo logic for service valet slot
-            date: appointment.appointment?.id.split("|")[0] || "",
+            date: appointmentFrame.serviceTypeOption?.type === EServiceType.PikUpDropOff && appointment.serviceValetAppointment
+                ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+                : appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
