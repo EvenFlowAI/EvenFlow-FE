@@ -39,7 +39,7 @@ import {useException} from "../../utils/hooks";
 import {
     selectCategoriesIds, selectService, selectSubService, setAdditionalServicesChosen, setAdvisor,
     setCurrentFrameScreen,
-    setPackage, setRecallsAreShown, setSelectedRecalls, setTiming,
+    setPackage, setRecallsAreShown, setSelectedRecalls, setServiceType, setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
@@ -312,9 +312,14 @@ export const AppointmentFrameLayout = () => {
     }, [dispatch, handleSetScreen]);
 
     const handleAddNewCarAppointment = useCallback((vehicle: ILoadedVehicle) => {
+        clearAppointmentData();
         dispatch(setVehicle(vehicle));
-        handleSetScreen('serviceNeeds');
-    }, [dispatch, handleSetScreen]);
+        if (needToShowServiceSelection) {
+            handleServiceTypeSelection()
+        } else {
+            handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+        }
+    }, [dispatch, handleSetScreen, needToShowServiceSelection, serviceType]);
 
     const getNextScreen = (): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
@@ -326,15 +331,16 @@ export const AppointmentFrameLayout = () => {
         return nextScreen;
     }
 
-    const handleServiceTypeSelection = () => {
+    const handleServiceTypeSelection = useCallback(() => {
         dispatch(setWelcomeScreenView('serviceSelect'))
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-    }
+    }, [history])
 
     const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
         dispatch(selectSR(null));
         clearAppointmentData()
         let needToShowService: boolean = needToShowServiceSelection;
+
         if (car?.appointmentHashKeys.length) {
             const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
             const lastIndex = key.lastIndexOf('==');
@@ -347,7 +353,16 @@ export const AppointmentFrameLayout = () => {
                 if (data.maintenancePackageOption) {
                     dispatch(setPackage(data.maintenancePackageOption))
                 }
-                if (data.serviceType) needToShowService = false;
+                if (data.serviceType) {
+                    if (data.serviceTypeOption) {
+                        // todo ask about logic
+                        const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
+                        if (option) {
+                            needToShowService = false;
+                            dispatch(setServiceType(data.serviceType))
+                        }
+                    }
+                }
                 if (needToShowService) {
                     handleServiceTypeSelection()
                 } else {
