@@ -312,9 +312,14 @@ export const AppointmentFrameLayout = () => {
     }, [dispatch, handleSetScreen]);
 
     const handleAddNewCarAppointment = useCallback((vehicle: ILoadedVehicle) => {
+        clearAppointmentData();
         dispatch(setVehicle(vehicle));
-        handleSetScreen('serviceNeeds');
-    }, [dispatch, handleSetScreen]);
+        if (needToShowServiceSelection) {
+            handleServiceTypeSelection()
+        } else {
+            handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+        }
+    }, [dispatch, handleSetScreen, needToShowServiceSelection, serviceType]);
 
     const getNextScreen = (): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
@@ -326,10 +331,10 @@ export const AppointmentFrameLayout = () => {
         return nextScreen;
     }
 
-    const handleServiceTypeSelection = () => {
+    const handleServiceTypeSelection = useCallback(() => {
         dispatch(setWelcomeScreenView('serviceSelect'))
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-    }
+    }, [history])
 
     const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
         dispatch(selectSR(null));
