@@ -39,13 +39,13 @@ import {useException} from "../../utils/hooks";
 import {
     selectCategoriesIds, selectService, selectSubService, setAdditionalServicesChosen, setAdvisor,
     setCurrentFrameScreen,
-    setPackage, setRecallsAreShown, setSelectedRecalls, setServiceType, setTiming,
+    setPackage, setRecallsAreShown, setSelectedRecalls, setServiceType, setServiceTypeOption, setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {ILoadedVehicle, IServiceCategory} from "../../api/types";
+import {IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
@@ -336,6 +336,23 @@ export const AppointmentFrameLayout = () => {
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }, [history])
 
+    const handleServiceTypeOption = (data:IAppointmentByQuery): boolean => {
+        /**
+         * We have decided to go through the flow and then to see if we should allow to user to change service type in any case
+         * And if we should to clear all the appointment data if the service type was changed from the previous one
+         **/
+        let needToShowService = true;
+        if (data.serviceType && data.serviceTypeOption) {
+            const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
+            if (option) {
+                needToShowService = false;
+                dispatch(setServiceType(data.serviceType));
+                dispatch(setServiceTypeOption(data.serviceTypeOption));
+            }
+        }
+        return needToShowService;
+    }
+
     const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
         dispatch(selectSR(null));
         clearAppointmentData()
@@ -353,16 +370,7 @@ export const AppointmentFrameLayout = () => {
                 if (data.maintenancePackageOption) {
                     dispatch(setPackage(data.maintenancePackageOption))
                 }
-                if (data.serviceType) {
-                    if (data.serviceTypeOption) {
-                        // todo ask about logic
-                        const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
-                        if (option) {
-                            needToShowService = false;
-                            dispatch(setServiceType(data.serviceType))
-                        }
-                    }
-                }
+                needToShowService = handleServiceTypeOption(data);
                 if (needToShowService) {
                     handleServiceTypeSelection()
                 } else {
