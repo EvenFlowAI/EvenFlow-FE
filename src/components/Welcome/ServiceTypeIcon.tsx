@@ -9,9 +9,14 @@ type TServiceTypeIconProps = {card: IFirstScreenOption, onClick: () => void, isS
 const useStyles = makeStyles((theme) => ({
     icon: {
         width: '100%',
+        // width: 224,
+        maxHeight: 160,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        // backgroundSize: 'contain',
+        // backgroundPosition: 'center',
+        // backgroundRepeat: 'no-repeat',
         [theme.breakpoints.down('sm')]: {
             width: 224,
             height: 112,
@@ -32,9 +37,12 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     image: {
-        width: '100%',
-        maxWidth: 224,
-        maxHeight: 112
+        width: 'fit-content',
+        maxWidth: '100%',
+        maxHeight: 112,
+        [theme.breakpoints.down("sm")]: {
+            maxWidth: 224,
+        }
     }
 }))
 
@@ -67,7 +75,10 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
         : card.iconPath
             ? iconType.toLowerCase() === 'svg'
                 ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} />
-                : <div className={classes.icon} onClick={() => isSM && onClick()}>
+                : <div className={classes.icon}
+                       onClick={() => isSM && onClick()}
+                    //style={{backgroundImage: `url(${card.iconPath})`}}
+                >
                     <img className={classes.image} src={card.iconPath} alt="logo"/>
                 </div>
             : <div className={classes.noLogo}>No logo</div>
