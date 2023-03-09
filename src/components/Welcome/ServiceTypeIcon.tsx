@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     image: {
-        width: 'fit-content',
+        // width: 'fit-content',
         maxWidth: '100%',
         maxHeight: 112,
         [theme.breakpoints.down("sm")]: {
