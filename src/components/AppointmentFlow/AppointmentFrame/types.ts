@@ -10,6 +10,7 @@ export type TActionProps = {
     onAddServices?: () => void;
     prevDisabled?: boolean;
     prevLabel?: string;
+    hideNext?: boolean;
 };
 
 export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService' | 'recall'

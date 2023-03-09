@@ -23,6 +23,7 @@ type TCarActionProps = {
     onAddNewAppointment: TArgCallback<ILoadedVehicle>;
     clearData: () => void;
     onNext: TCallback;
+    onSelectCar: TArgCallback<ILoadedVehicle>;
 }
 
 const ActionButtons = styled("div")({
@@ -39,7 +40,7 @@ const options: string[] = [
     "Schedule New Appointment"
 ];
 
-const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, clearData, onNext}) => {
+const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, clearData, onNext, onSelectCar}) => {
     const [open, setOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(1);
     const anchorRef = useRef<HTMLDivElement|null>(null);
@@ -68,7 +69,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
     const handleSelect = useCallback (async () => {
         await clearData()
         await dispatch(setVehicle(car));
-        if (!hasAppointments) onNext();
+        onSelectCar(car);
     }, [hasAppointments, car, onNext, clearData])
 
     return <ActionButtons>

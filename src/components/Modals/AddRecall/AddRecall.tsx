@@ -144,8 +144,10 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
             && form.model
             && form.recallComponent.length
             && form.recallSummary.length
+            && form.partLeadDaysCount.length
             && Number.isInteger(+form.partLeadDaysCount)
             && +form.partLeadDaysCount >= 0
+            && form.dailyPartsCount.length
             && Number.isInteger(+form.dailyPartsCount)
             && +form.dailyPartsCount >= 0
             && form.serviceRequest;

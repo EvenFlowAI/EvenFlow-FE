@@ -31,7 +31,8 @@ const App = () => {
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
     const dispatch = useDispatch();
-    const isFremont = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont, [scProfile]);
+    const isFremont = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
+        || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
 
     useEffect(() => {
         if (serviceType === EServiceType.MobileService) {

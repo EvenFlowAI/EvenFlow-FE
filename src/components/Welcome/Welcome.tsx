@@ -47,7 +47,7 @@ import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/a
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType, currentScreen} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
