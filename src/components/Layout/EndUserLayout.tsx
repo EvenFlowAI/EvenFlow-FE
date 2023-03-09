@@ -35,7 +35,9 @@ const frameStyles = {
 const frameSmStyles = {
     ...frameStyles,
     height: 'auto',
-    overflowY: 'auto'
+    overflowY: 'auto',
+    paddingTop: 16,
+    paddingBottom: 16,
 }
 
 export const options: GaOptions = {
