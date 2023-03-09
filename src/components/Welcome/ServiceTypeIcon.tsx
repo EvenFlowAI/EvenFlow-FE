@@ -30,6 +30,11 @@ const useStyles = makeStyles((theme) => ({
             height: 112,
             maxWidth: '90%'
         }
+    },
+    image: {
+        width: '100%',
+        maxWidth: 224,
+        maxHeight: 112
     }
 }))
 
@@ -63,7 +68,7 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
             ? iconType.toLowerCase() === 'svg'
                 ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} />
                 : <div className={classes.icon} onClick={() => isSM && onClick()}>
-                    <img style={{width: '100%'}} src={card.iconPath} alt="logo"/>
+                    <img className={classes.image} src={card.iconPath} alt="logo"/>
                 </div>
             : <div className={classes.noLogo}>No logo</div>
 };
