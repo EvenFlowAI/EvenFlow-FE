@@ -319,7 +319,7 @@ export interface IBusinessRule {
     vehicleYearRange: IYearRange;
     vehicleMileageValues: string[];
     customerCriteria: ECustomerCriteria;
-    engineTypeId: number|null;
+    engineTypeIds: number[];
 }
 
 export interface IComplimentaryService {
