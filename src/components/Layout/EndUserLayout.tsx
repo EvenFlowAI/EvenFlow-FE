@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Switch, Route, useParams} from "react-router-dom";
 import {endUserTheme} from "../../theme/theme";
-import {ThemeProvider} from "@material-ui/core";
+import {ThemeProvider, useMediaQuery, useTheme} from "@material-ui/core";
 import {Routes} from "../../config/routes";
 import {Welcome} from "../Welcome/Welcome";
 import {EndUserBar} from "../NavBar/EndUserBar";
@@ -32,6 +32,12 @@ const frameStyles = {
     width: '100%'
 }
 
+const frameSmStyles = {
+    ...frameStyles,
+    height: 'auto',
+    overflowY: 'auto'
+}
+
 export const options: GaOptions = {
     siteSpeedSampleRate: 100,
     cookieDomain: 'auto',
@@ -40,10 +46,12 @@ export const options: GaOptions = {
 }
 
 export const EndUserLayout = () => {
-    const { trackerCreated } = useSelector((state: RootState) => state.appointmentFrame);
+    const { trackerCreated, welcomeScreenView } = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams();
     const dispatch = useDispatch();
     const isFrame = useLayout();
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -93,7 +101,7 @@ export const EndUserLayout = () => {
     }, [id, dispatch]);
 
     return <ThemeProvider theme={endUserTheme}>
-        <div style={!isFrame ? nonFrameStyles : frameStyles}>
+        <div style={!isFrame ? nonFrameStyles : isSm && welcomeScreenView === 'serviceSelect' ? frameSmStyles : frameStyles}>
             {!isFrame ? <EndUserBar/> : null}
             <Switch>
                 <Route path={Routes.EndUser.Base} exact component={Welcome} />
