@@ -105,8 +105,8 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                 const transportation = options.find(item => item.id === editingItem.transportationOption?.id)
                 transportation && setDefaultTransportation(transportation);
             }
-            if (editingItem.type) {
-                const serviceTypeOption = getServiceTypeOptions().find(item => item.value === editingItem.type.toString());
+            if (editingItem.type >= 0) {
+                const serviceTypeOption = getServiceTypeOptions().find(item => item.value.toString() === editingItem.type.toString());
                 serviceTypeOption && setSelectedServiceType(serviceTypeOption);
             }
         }
