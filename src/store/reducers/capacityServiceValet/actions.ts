@@ -28,9 +28,9 @@ export const loadZonesRouting = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updateZonesRouting = (id: number, data: IZonesRoutingByDay): AppThunk => dispatch => {
+export const updateZonesRouting = (id: number, data: IZonesRoutingByDay[]): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.ServiceValet.UpdateZoneRouting, {urlParams: {id}, data: {zoneRoutings: [data]}})
+    Api.call(Api.endpoints.ServiceValet.UpdateZoneRouting, {urlParams: {id}, data: {zoneRoutings: data}})
         .then(result => {
             if (result?.data) dispatch(loadZonesRouting(id))
         })
@@ -57,8 +57,7 @@ export const loadTimeRangesAndCapacity = (id: number): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.ServiceValet.GatAllCapacity, {urlParams: {id}})
         .then(result => {
-            console.log(result);
-            // if (result) dispatch(getTimeRangesAndCapacity(result.data))
+            if (result) dispatch(getTimeRangesAndCapacity(result.data))
         })
         .catch(err => {
             console.log('get Time Ranges And Capacity error', err)

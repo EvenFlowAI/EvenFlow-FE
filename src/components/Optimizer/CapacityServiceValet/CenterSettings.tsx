@@ -12,6 +12,7 @@ import {RootState} from "../../../store/rootReducer";
 import {TimePicker} from "../../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/types";
+import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
 
 const CenterSettings = () => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
@@ -36,6 +37,7 @@ const CenterSettings = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadCenterSettings(selectedSC.id));
+            dispatch(loadServiceValetZones(selectedSC.id))
         }
     }, [selectedSC])
 

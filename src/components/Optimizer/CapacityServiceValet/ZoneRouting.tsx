@@ -38,7 +38,8 @@ const ZoneRouting = () => {
             } else {
                 updatedData = {...updatedData, geographicZoneIds: updatedData.geographicZoneIds.filter(el => el !== zoneId)}
             }
-            dispatch(updateZonesRouting(selectedSC.id, updatedData))
+            const data = zonesRouting.filter(item => item.dayOfWeek !== dayOfWeek).concat(updatedData)
+            dispatch(updateZonesRouting(selectedSC.id, data))
         }
     }
 
