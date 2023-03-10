@@ -17,6 +17,8 @@ type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;
 }
 
+const timeFormat = 'HH:mm:ss';
+
 const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingElement}) => {
     const [pickUpMin, setPickUpMin] = useState<moment.Moment|null>(null)
     const [pickUpMax, setPickUpMax] = useState<moment.Moment|null>(null)
@@ -30,12 +32,14 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin))
-        if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax))
-        if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin))
-        if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax))
-        if (editingElement.capacity) setDailyCapacity(editingElement.capacity)
-    }, [editingElement])
+        if (open) {
+            if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, timeFormat))
+            if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, timeFormat))
+            if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, timeFormat))
+            if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax, timeFormat))
+            if (editingElement.capacity) setDailyCapacity(editingElement.capacity)
+        }
+    }, [editingElement, open])
 
     const onCancel = () => {
         setFormIsChecked(false)

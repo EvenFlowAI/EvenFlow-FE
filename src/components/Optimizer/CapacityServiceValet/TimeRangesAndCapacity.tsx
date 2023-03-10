@@ -12,6 +12,7 @@ import EditTimeRangeAndCapacity from "../../Modals/EditTimeRangeAndCapacity/Edit
 import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";
 
 const timeFormat = "HH:mm A";
+const timeWithSecond = "HH:mm:ss";
 
 const TimeRangesAndCapacity = () => {
     const {timeRangesAndCapacity, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
@@ -33,11 +34,12 @@ const TimeRangesAndCapacity = () => {
                     return {
                         serviceCenterId: selectedSC.id,
                         dayOfWeek: day,
-                        pickUpMin: timeRange?.pickUpMin ? moment(timeRange?.pickUpMin).format(timeFormat) : '-',
-                        pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
-                        dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
-                        dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.pickUpMax).format(timeFormat) : '-',
-                        capacity: timeRange?.capacity ?? 0
+                        pickUpMin: timeRange?.pickUpMin ? moment(timeRange?.pickUpMin, timeWithSecond).format(timeFormat) : '-',
+                        pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax, timeWithSecond).format(timeFormat) : '-',
+                        dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.pickUpMax, timeWithSecond).format(timeFormat) : '-',
+                        dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.pickUpMax, timeWithSecond).format(timeFormat) : '-',
+                        capacity: timeRange?.capacity ?? 0,
+                        id: timeRange?.id ?? 0,
                     }
                 })
             })
