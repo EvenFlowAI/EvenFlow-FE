@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TableRowDataType} from "../../UI/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -14,6 +14,7 @@ const dayNames = Object.keys(EDaysFromMonday).filter(key => Number.isNaN(+key));
 const ZoneRouting = () => {
     const {zones, isLoading: isZonesLoading} = useSelector((state: RootState) => state.serviceValet);
     const {zonesRouting, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
+    const [initialZones, setInitialZones] = useState<IZonesRoutingByDay[]>([]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
@@ -21,8 +22,15 @@ const ZoneRouting = () => {
         if (selectedSC) dispatch(loadZonesRouting(selectedSC.id))
     }, [selectedSC])
 
+    useEffect(() => {
+        setInitialZones([0, 1, 2, 3, 4, 5, 6].map(item => {
+            const existingDay = zonesRouting.find(el => el.dayOfWeek.toString() === item.toString())
+            return existingDay ?? {dayOfWeek: item, geographicZoneIds: []}
+        }))
+    }, [zonesRouting])
+
     const onCheckboxChange = (zoneId: number, dayOfWeek: EDaysFromMonday) => (e: any, checked: boolean) => {
-        const dayOfWeekData = zonesRouting.find(item => item.dayOfWeek === dayOfWeek);
+        const dayOfWeekData = initialZones.find(item => item.dayOfWeek === dayOfWeek);
         if (dayOfWeekData && selectedSC) {
             let updatedData: IZonesRoutingByDay = {...dayOfWeekData};
             if (checked) {
@@ -46,7 +54,11 @@ const ZoneRouting = () => {
             return {
                 header: item.name.toUpperCase(),
                 width: 100,
-                val: el => <Checkbox checked={Boolean(el.geographicZoneIds.find(zoneId => item.id === zoneId))} onChange={onCheckboxChange(item.id, el.dayOfWeek)}/>
+                val: el => <Checkbox
+                    color="primary"
+                    checked={Boolean(el.geographicZoneIds.find(zoneId => item.id === zoneId))}
+                    onChange={onCheckboxChange(item.id, el.dayOfWeek)}
+                />
             }
         })
         return [...data, ...zonesData];
@@ -56,7 +68,7 @@ const ZoneRouting = () => {
         ? <Loading/>
         : <div style={{width: 'fit-content', overflowX: 'auto'}}>
             <Table<IZonesRoutingByDay>
-                data={zonesRouting}
+                data={initialZones}
                 index={"dayOfWeek"}
                 rowData={getRowData()}
                 hidePagination

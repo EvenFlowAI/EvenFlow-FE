@@ -32,7 +32,7 @@ export const updateZonesRouting = (id: number, data: IZonesRoutingByDay): AppThu
     dispatch(setLoading(true))
     Api.call(Api.endpoints.ServiceValet.UpdateZoneRouting, {urlParams: {id}, data: {zoneRoutings: [data]}})
         .then(result => {
-            if (result?.data) dispatch(getZonesRouting(result.data))
+            if (result?.data) dispatch(loadZonesRouting(id))
         })
         .catch(err => {
             console.log('load Zones Routing for Service Valet error', err)
