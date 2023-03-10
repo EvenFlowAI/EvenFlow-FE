@@ -18,9 +18,9 @@ const useStyles = makeStyles((theme) => ({
         // backgroundPosition: 'center',
         // backgroundRepeat: 'no-repeat',
         [theme.breakpoints.down('sm')]: {
-            width: 224,
+            maxWidth: 224,
             height: 112,
-            maxWidth: '90%',
+            width: '90%',
         },
     },
     noLogo: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     image: {
-        width: 'fit-content',
+        // width: 'fit-content',
         maxWidth: '100%',
         maxHeight: 112,
         [theme.breakpoints.down("sm")]: {
