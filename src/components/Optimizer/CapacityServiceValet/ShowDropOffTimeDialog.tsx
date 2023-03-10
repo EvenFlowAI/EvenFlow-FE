@@ -49,7 +49,7 @@ const ShowDropOffTimeDialog: React.FC<DialogProps> = ({onClose, open}) => {
     useEffect(() => {
         if (centerSettings) {
             setIsShowTime(centerSettings.showDropOffTime)
-            setText(centerSettings?.dropOfTimeDescription ?? '');
+            setText(centerSettings?.dropOffTimeDescription ?? '');
         }
     }, [centerSettings])
 

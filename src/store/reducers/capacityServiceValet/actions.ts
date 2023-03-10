@@ -85,8 +85,8 @@ export const updateTimeRange = (serviceCenterId:number, id: number, data: ITimeR
     Api.call(Api.endpoints.ServiceValet.UpdateCapacity, {urlParams: {id}, data})
         .then(result => {
             if (result) {
-                dispatch(loadTimeRangesAndCapacity(serviceCenterId))
                 onSuccess();
+                dispatch(loadTimeRangesAndCapacity(serviceCenterId))
             }
         })
         .catch(err => {

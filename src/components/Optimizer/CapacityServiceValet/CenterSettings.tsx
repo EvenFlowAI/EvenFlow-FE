@@ -44,7 +44,7 @@ const CenterSettings = () => {
     const optContent: TOptContent = {
         [ECenterSettingType.ShowDropOffTime]: {
             helperText: "",
-            label: centerSettings?.dropOfTimeDescription ?? "User text (the text on the Booking Flow)",
+            label: centerSettings?.dropOffTimeDescription ?? "User text (the text on the Booking Flow)",
             title: "Show Drop Off Time",
         },
         [ECenterSettingType.DmsAppointmentTime]: {

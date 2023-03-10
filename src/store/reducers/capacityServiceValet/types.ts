@@ -93,7 +93,7 @@ export interface ICenterSettingsSR {
 
 export interface ICenterSettings {
     showDropOffTime: boolean;
-    dropOfTimeDescription?: string;
+    dropOffTimeDescription?: string;
     dmsAppointmentTime?: string;
     serviceRequest?: ICenterSettingsSR;
 }
