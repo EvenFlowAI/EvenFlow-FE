@@ -1,6 +1,9 @@
 import React from "react";
 import {Button, Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import {Loading} from "../../UI/Loading";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles({
     paper: {
@@ -60,15 +63,18 @@ export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
                                                                              label,
                                                                              helperText,
                                                                          }) => {
+    const {isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
     const classes = useStyles();
-
     return <Grid item xs={6} md={4}>
         <Paper className={classes.paper} variant={"outlined"} >
             <h3 className={classes.title}>{title}</h3>
             <Button className={classes.edit} color="primary" onClick={() => onEdit()}>Edit</Button>
-            <div className={classes.value}>
-                {prefix}{count}{suffix}
-            </div>
+            {isLoading
+                ? <Loading/>
+                : <div className={classes.value}>
+                    {prefix}{count}{suffix}
+                </div>
+            }
             <div className={classes.label}>{label}</div>
             <div className={classes.helperText}>{helperText}</div>
         </Paper>

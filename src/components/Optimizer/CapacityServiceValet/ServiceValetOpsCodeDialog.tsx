@@ -11,6 +11,7 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {useException, useSCs} from "../../../utils/hooks";
 import {updateServiceValetServiceRequest} from "../../../store/reducers/capacityServiceValet/actions";
 import {TServiceValetRequestId} from "../../../store/reducers/capacityServiceValet/types";
+import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 
 const OpsCode = styled('div')({
     height: 60,
@@ -38,6 +39,10 @@ const ServiceValetOpsCodeDialog: React.FC<DialogProps> = ({onClose, open}) => {
     const showError = useException();
 
     useEffect(() => {
+        selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
+    }, [selectedSC])
+
+    useEffect(() => {
         if (centerSettings?.serviceRequest) {
             const opsCodeSelected = allAssignedList.find(item => item.serviceRequestId === centerSettings.serviceRequest?.id)
             opsCodeSelected && setOpsCode(opsCodeSelected);
@@ -52,7 +57,7 @@ const ServiceValetOpsCodeDialog: React.FC<DialogProps> = ({onClose, open}) => {
 
     const onSave = () => {
         if (selectedSC && opsCode) {
-            const data: TServiceValetRequestId = {serviceRequestId: opsCode.serviceRequestId};
+            const data: TServiceValetRequestId = {serviceRequestId: opsCode.id};
             dispatch(updateServiceValetServiceRequest(selectedSC.id, data, onCancel, showError))
         }
     }

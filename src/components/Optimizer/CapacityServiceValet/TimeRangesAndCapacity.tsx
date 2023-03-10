@@ -28,7 +28,7 @@ const TimeRangesAndCapacity = () => {
     useEffect(() => {
         if (selectedSC) {
             setTableData(() => {
-                return [1, 2, 3, 4, 5, 6, 0].map(day => {
+                return [1, 2, 3, 4, 5, 6, 7].map(day => {
                     const timeRange = timeRangesAndCapacity.find(item =>  item.dayOfWeek === day)
                     return {
                         serviceCenterId: selectedSC.id,

@@ -92,14 +92,14 @@ export interface ICenterSettingsSR {
 }
 
 export interface ICenterSettings {
-    showDropOfTime: boolean;
+    showDropOffTime: boolean;
     dropOfTimeDescription?: string;
     dmsAppointmentTime?: string;
     serviceRequest?: ICenterSettingsSR;
 }
 
 export interface IShowDropOffTime {
-    showDropOfTime: boolean;
+    showDropOffTime: boolean;
     description?: string;
 }
 

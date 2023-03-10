@@ -48,7 +48,7 @@ const ShowDropOffTimeDialog: React.FC<DialogProps> = ({onClose, open}) => {
 
     useEffect(() => {
         if (centerSettings) {
-            setIsShowTime(centerSettings.showDropOfTime)
+            setIsShowTime(centerSettings.showDropOffTime)
             setText(centerSettings?.dropOfTimeDescription ?? '');
         }
     }, [centerSettings])
@@ -62,11 +62,11 @@ const ShowDropOffTimeDialog: React.FC<DialogProps> = ({onClose, open}) => {
     const onSave = () => {
         if (selectedSC) {
             const data: IShowDropOffTime = {
-                showDropOfTime: isShowTime
+                showDropOffTime: isShowTime,
+                description: text,
             }
             if (!isShowTime) {
                 if (text.length) {
-                    data.description = text;
                     dispatch(updateShowDropOffTime(selectedSC.id, data, onCancel, showError))
                 } else {
                     showError('"Text" must not be empty')

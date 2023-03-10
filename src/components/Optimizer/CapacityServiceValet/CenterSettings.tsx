@@ -7,7 +7,6 @@ import {useException, useModal, useSCs} from "../../../utils/hooks";
 import ShowDropOffTimeDialog from "./ShowDropOffTimeDialog";
 import {useDispatch, useSelector} from "react-redux";
 import {loadCenterSettings, updateDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/actions";
-import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 import ServiceValetOpsCodeDialog from "./ServiceValetOpsCodeDialog";
 import {RootState} from "../../../store/rootReducer";
 import {TimePicker} from "../../UI/DateTimePickers";
@@ -24,7 +23,7 @@ const CenterSettings = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();
-    const selectedOpsCode = useMemo(() => allAssignedList.find(item => item.serviceRequestId === centerSettings?.serviceRequest?.id),
+    const selectedOpsCode = useMemo(() => allAssignedList.find(item => item.id === centerSettings?.serviceRequest?.id),
         [allAssignedList, centerSettings])
 
     useEffect(() => {
@@ -37,7 +36,6 @@ const CenterSettings = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadCenterSettings(selectedSC.id));
-            dispatch(loadAllAssignedServiceRequests(selectedSC.id))
         }
     }, [selectedSC])
 
@@ -62,10 +60,10 @@ const CenterSettings = () => {
     const getCount = (k: ECenterSettingType): string|number => {
         switch (k) {
             case ECenterSettingType.ShowDropOffTime:
-                return centerSettings?.dropOfTimeDescription ? "Yes" : "No";
+                return centerSettings?.showDropOffTime ? "Yes" : "No";
             case ECenterSettingType.DmsAppointmentTime:
                 return centerSettings?.dmsAppointmentTime
-                    ? moment(centerSettings?.dmsAppointmentTime).format('HH:mm a')
+                    ? moment(centerSettings?.dmsAppointmentTime, "HH:mm:ss").format('HH:mm a')
                     : 'Not Selected';
             default:
                 return selectedOpsCode?.serviceRequest?.code ?? 'Not Selected';

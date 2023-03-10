@@ -89,10 +89,10 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
         if (selectedSC && checkIsValid()) {
             const data: ITimeRangeAndCapacity = {
                 serviceCenterId: selectedSC.id,
-                pickUpMin: moment(pickUpMin).format('HH:mm A'),
-                pickUpMax: moment(pickUpMax).format('HH:mm A'),
-                dropOffMin: moment(dropOffMin).format('HH:mm A'),
-                dropOffMax: moment(dropOffMax).format('HH:mm A'),
+                pickUpMin: moment(pickUpMin).format("HH:mm:ss"),
+                pickUpMax: moment(pickUpMax).format("HH:mm:ss"),
+                dropOffMin: moment(dropOffMin).format("HH:mm:ss"),
+                dropOffMax: moment(dropOffMax).format("HH:mm:ss"),
                 capacity: +dailyCapacity,
             }
             if (editingElement.id) {

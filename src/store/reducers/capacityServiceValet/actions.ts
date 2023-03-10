@@ -49,7 +49,7 @@ export const loadCenterSettings = (id: number): AppThunk => dispatch => {
         .catch(err => {
             console.log('load service valet service center settings error', err)
         })
-        .finally(() => () => dispatch(setLoading(false)))
+        .finally(() => dispatch(setLoading(false)))
 }
 
 
@@ -57,7 +57,8 @@ export const loadTimeRangesAndCapacity = (id: number): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.ServiceValet.GatAllCapacity, {urlParams: {id}})
         .then(result => {
-            if (result) dispatch(getTimeRangesAndCapacity(result.data))
+            console.log(result);
+            // if (result) dispatch(getTimeRangesAndCapacity(result.data))
         })
         .catch(err => {
             console.log('get Time Ranges And Capacity error', err)
@@ -70,9 +71,8 @@ export const createTimeRange = (serviceCenterId: number, data: ITimeRangeAndCapa
     Api.call(Api.endpoints.ServiceValet.CreateCapacity, {data})
         .then(result => {
             if (result) {
-                dispatch(getTimeRangesAndCapacity(result.data))
-                onSuccess();
                 dispatch(loadTimeRangesAndCapacity(serviceCenterId))
+                onSuccess();
             }
         })
         .catch(err => {
@@ -86,7 +86,6 @@ export const updateTimeRange = (serviceCenterId:number, id: number, data: ITimeR
     Api.call(Api.endpoints.ServiceValet.UpdateCapacity, {urlParams: {id}, data})
         .then(result => {
             if (result) {
-                dispatch(getTimeRangesAndCapacity(result.data))
                 dispatch(loadTimeRangesAndCapacity(serviceCenterId))
                 onSuccess();
             }
@@ -99,6 +98,7 @@ export const updateTimeRange = (serviceCenterId:number, id: number, data: ITimeR
 }
 
 export const updateShowDropOffTime = (id: number, data: IShowDropOffTime, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
     Api.call(Api.endpoints.ServiceValet.ChangeShowDropOffTime, {urlParams: {id}, data})
         .then(result => {
             if (result) {
@@ -114,6 +114,7 @@ export const updateShowDropOffTime = (id: number, data: IShowDropOffTime, onSucc
 }
 
 export const updateDmsAppointmentTime = (id: number, data: TDmsAppointmentTime, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
     Api.call(Api.endpoints.ServiceValet.ChangeDmsTimeStamp, {urlParams: {id}, data})
         .then(result => {
             if (result) {
@@ -129,6 +130,7 @@ export const updateDmsAppointmentTime = (id: number, data: TDmsAppointmentTime, 
 }
 
 export const updateServiceValetServiceRequest = (id: number, data: TServiceValetRequestId, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true));
     Api.call(Api.endpoints.ServiceValet.ChangeServiceRequest, {urlParams: {id}, data})
         .then(result => {
             if (result) dispatch(loadCenterSettings(id))
