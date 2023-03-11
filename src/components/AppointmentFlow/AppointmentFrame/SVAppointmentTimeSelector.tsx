@@ -86,7 +86,7 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
                 <h4 ref={firstCardRef}>{t("Select Time")}</h4>
                 {!loading
                         ? <PickUpSlotsWrapper>
-                            {serviceValetSlots.map(timeSlot => {
+                            {serviceValetSlots.filter(slot => moment(slot.date).isSame(date, 'date')).map(timeSlot => {
                                     return <PickUpSlotCard
                                         date={date}
                                         onSelect={handleSelect}

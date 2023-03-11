@@ -69,6 +69,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         selectedPackage,
         selectedOpsCodes,
         appointment,
+        serviceValetAppointment,
         consultant,
         categoriesIds,
         allCategories,
@@ -93,6 +94,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.selectedPackage,
         state.appointment.selectedSR,
         state.appointment.appointment,
+        state.appointment.serviceValetAppointment,
         state.appointmentFrame.advisor,
         state.appointmentFrame.categoriesIds,
         state.categories.allCategories,
@@ -116,7 +118,10 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const initRef = useRef<boolean>(false);
     const isMount = useRef(true);
     const dispatch = useDispatch();
-
+    const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PikUpDropOff
+        ? !serviceValetAppointment
+        : !appointment,
+        [appointment, serviceValetAppointment])
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
     }, [slots]);
@@ -285,7 +290,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
-                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={!appointment} />
+                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} />
                 {serviceTypeOption?.type === EServiceType.PikUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}
