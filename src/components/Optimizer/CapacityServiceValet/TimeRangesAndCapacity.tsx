@@ -36,8 +36,8 @@ const TimeRangesAndCapacity = () => {
                         dayOfWeek: day,
                         pickUpMin: timeRange?.pickUpMin ? moment(timeRange?.pickUpMin, timeWithSecond).format(timeFormat) : '-',
                         pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax, timeWithSecond).format(timeFormat) : '-',
-                        dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.pickUpMax, timeWithSecond).format(timeFormat) : '-',
-                        dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.pickUpMax, timeWithSecond).format(timeFormat) : '-',
+                        dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.dropOffMin, timeWithSecond).format(timeFormat) : '-',
+                        dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.dropOffMax, timeWithSecond).format(timeFormat) : '-',
                         capacity: timeRange?.capacity ?? 0,
                         id: timeRange?.id ?? 0,
                     }
