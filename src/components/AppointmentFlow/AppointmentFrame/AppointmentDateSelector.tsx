@@ -7,7 +7,7 @@ import {DaySelector} from "./DaySelector";
 import {TGroupedAppointments} from "../../../utils/types";
 import {useTranslation} from "react-i18next";
 
-const MonthSelectorWrapper = styled('div')({
+export const MonthSelectorWrapper = styled('div')({
     display: "flex",
     alignItems: "center",
     gap: "8px",
@@ -27,7 +27,7 @@ const MonthSelectorWrapper = styled('div')({
     }
 });
 
-type TMonthProps = {
+export type TMonthProps = {
     date: moment.Moment,
     loading: boolean;
     onDateChange: TArgCallback<moment.Moment>;
@@ -39,7 +39,7 @@ type TProps = {
     dateChangeDisabled: boolean;
 } & TMonthProps;
 
-const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange, loading}) => {
+export const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange, loading}) => {
     const handleNext = () => {
         onDateChange(moment.utc(date).startOf('month').add(1, 'month'));
     }

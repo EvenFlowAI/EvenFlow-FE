@@ -11,7 +11,11 @@ import {RootState} from "../../../store/rootReducer";
 import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
-import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
+import {
+    loadAppointmentSlots,
+    selectAppointment,
+    selectServiceValetAppointment
+} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 //import ReactGA from "react-ga4";
 import {decodeSCID} from "../../../utils/utils";
@@ -147,6 +151,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         dispatch(setTime(t));
         if (!moment(selectedTime).isSame(t, 'date')) {
             dispatch(selectAppointment(null));
+            dispatch(selectServiceValetAppointment(null));
         }
     }, [selectedTime])
 

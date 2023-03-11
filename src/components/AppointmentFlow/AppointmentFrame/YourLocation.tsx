@@ -15,7 +15,7 @@ import {
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {
     EAncillaryType,
     EServiceType,
@@ -109,6 +109,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const clearSelectedData = () => {
         dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
     }
 
     const clearAddress = () => {
@@ -173,6 +174,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         }
     }
 
+    const getPlaceholderLabel = (): string => {
+        if (typeof address === 'string') return address;
+        if (address?.label) return address?.label;
+        return isFormChecked ? t('Address is required') : placeholder
+    }
+
     return (
         <StepWrapper>
             <SelectWrapper>
@@ -187,18 +194,14 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                             }
                         }}
                         selectProps={{
-                            addressValue: address?.label ?? '',
+                            addressValue: typeof address === 'string' ? address : address?.label ?? '',
                             className: !address?.label && isFormChecked ? classes.errorSelect : classes.select,
                             onChange: handleChangeAddress,
                             onFocus: () => setFormChecked(false),
-                            placeholder: address?.label
-                            ? address?.label
-                            : isFormChecked
-                                    ? t('Address is required')
-                                    : placeholder,
+                            placeholder: getPlaceholderLabel(),
                             isClearable: true,
                             isSearchable: true,
-                            defaultInputValue: address?.label || "",
+                            defaultInputValue: typeof address === 'string' ? address : address?.label || "",
                             key: address?.label || 'label',
                         }}
                     />

@@ -5,7 +5,12 @@ import {getMaintenanceList} from "./uiUtils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
-import {loadSRs, selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {
+    loadSRs,
+    selectAppointment,
+    selectServiceValetAppointment,
+    selectSR
+} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
@@ -110,6 +115,7 @@ const CartTable = () => {
     const deleteIndService = useCallback((item: IMaintenanceItem) => {
         dispatch(selectSR(item.id));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
         const services = selectedSR.filter(sr => sr !== item.id);
         const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
         const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
@@ -174,6 +180,7 @@ const CartTable = () => {
         filterCategories();
         dispatch(setValueService(null));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
     }, [handleMaintenanceDetails, filterCategories])
 
     const handleSideBarSteps = useCallback(() => {
@@ -195,6 +202,7 @@ const CartTable = () => {
             case 'package':
                 if (service?.type === 1) dispatch(selectService(null));
                 dispatch(selectAppointment(null));
+                dispatch(selectServiceValetAppointment(null));
                 handleSideBarSteps();
                 return dispatch(setPackage(null));
             case 'valueService':
@@ -208,6 +216,7 @@ const CartTable = () => {
                 if (service?.id === item.id) dispatch(selectService(null));
                 if (subService?.id === item.id) dispatch(selectSubService(null));
                 dispatch(selectAppointment(null));
+                dispatch(selectServiceValetAppointment(null));
                 handleSideBarSteps();
                 return dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
         }

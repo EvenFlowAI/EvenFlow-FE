@@ -106,19 +106,33 @@ export const useDialogStyles = makeStyles({
 });
 
 const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
-    const {appointment, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+    const {serviceType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
-    const price = useMemo(() => appointment?.price?.value && appointment.price.value > 0
-            ? `$${scProfile?.isRoundPrice
-                ? appointment.price.value + appointment.price.ancillaryPrice
-                : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}`
-            : '',
-        [appointment])
-    const noDefinedPriceExists = useMemo(() => appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0),
-        [appointment])
+    const price = useMemo(() => {
+            if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+                return serviceValetAppointment?.price?.value && serviceValetAppointment.price.value > 0
+                    ? `$${scProfile?.isRoundPrice
+                        ? serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice
+                        : (serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice).toFixed(2)}`
+                    : ''
+            }
+            return appointment?.price?.value && appointment.price.value > 0
+                ? `$${scProfile?.isRoundPrice
+                    ? appointment.price.value + appointment.price.ancillaryPrice
+                    : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}`
+                : ''
+        },
+        [appointment, serviceValetAppointment, serviceTypeOption])
+    const noDefinedPriceExists = useMemo(() => {
+            if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+                return serviceValetAppointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+            }
+            return appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+        },
+        [appointment, serviceValetAppointment, serviceTypeOption])
 
     const getServiceName = () => {
         switch (serviceType) {
@@ -139,7 +153,25 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
             </DialogTitle>
             <DialogContent>
                 <List>
-                    {appointment?.serviceRequestPrices?.map(item => (
+                    {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+                        ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
+                            <li className={classes.item} key={item.requestName}>
+                            <span>
+                                {item.requestName.includes("Going")
+                                    ? t("My Description of Needs")
+                                    : item.requestName}
+                            </span>
+                                <div className={classes.pricesBlock}>
+                                    {Object(item).hasOwnProperty('priceValue') && item.priceValue
+                                        ? <span className={classes.price}>
+                                    ${scProfile?.isRoundPrice
+                                            ? item.priceValue
+                                            : item.priceValue.toFixed(2)}
+                            </span>
+                                        : <ErrorOutline/>}
+                                </div>
+                            </li>))
+                    : appointment?.serviceRequestPrices?.map(item => (
                         <li className={classes.item} key={item.requestName}>
                             <span>
                                 {item.requestName.includes("Going")
@@ -161,7 +193,20 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                                     : <ErrorOutline/>}
                             </div>
                         </li>))}
-                    {appointment?.price.ancillaryPrice && serviceType !== EServiceType.VisitCenter
+                    {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+                        ? <li className={classes.item} key="serviceType">
+                            <span>
+                               {getServiceName()}
+                            </span>
+                            <div className={classes.pricesBlock}>
+                                    <span className={classes.price}>
+                                    ${scProfile?.isRoundPrice
+                                        ? serviceValetAppointment?.price.ancillaryPrice
+                                        : serviceValetAppointment?.price.ancillaryPrice.toFixed(2)}
+                            </span>
+                            </div>
+                        </li>
+                    : appointment?.price.ancillaryPrice && serviceType !== EServiceType.VisitCenter
                         ? <li className={classes.item} key="serviceType">
                             <span>
                                {getServiceName()}

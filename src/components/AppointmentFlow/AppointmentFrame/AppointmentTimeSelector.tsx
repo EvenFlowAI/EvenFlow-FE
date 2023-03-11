@@ -11,6 +11,7 @@ import {selectAppointment} from "../../../store/reducers/appointment/actions";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {makeStyles} from "@material-ui/core/styles";
+import {loadSlotsGap} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {
     loadHoursOfOperations,
@@ -58,6 +59,7 @@ type TProps = {
     loading: boolean;
     appointments?: TGroupedAppointment;
 }
+
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
         const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -73,7 +75,8 @@ export const AppointmentTimeSelector: React.FC<TProps> =
 
         useEffect(() => {
             if (scProfile) {
-                dispatch(loadHoursOfOperations(scProfile.id));
+                dispatch(loadHoursOfOperations(scProfile.id))
+                dispatch(loadSlotsGap(scProfile.id))
             }
         }, [scProfile])
 

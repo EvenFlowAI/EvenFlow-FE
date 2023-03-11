@@ -206,8 +206,10 @@ export type TAppointmentState = {
     privacy: IPrivacy;
     comment: string;
     appointment: IRemappedAppointmentSlot|null;
+    serviceValetAppointment: IServiceValetAppointment|null;
     searchedDateRange: ISearchedDateRange|null;
     appointmentSlots: IRemappedAppointmentSlot[];
+    serviceValetSlots: IServiceValetAppointment[];
     appointmentFilters: IAppointmentFilters;
     serviceCategories: IServiceCategory[];
     allServiceCategories: IServiceCategoryShort[];
@@ -230,4 +232,37 @@ export interface IServiceRequestPrice {
     pricingDisplayType: EPricingDisplayType;
     priceValue?: number;
     offer?: IOfferForCategory;
+}
+
+export interface IServiceValetRequestPrice {
+    requestName: string;
+    priceValue: number;
+    pricingDisplayType: EPricingDisplayType;
+    serviceCategoryId: number;
+}
+
+export interface IAppointmentPriceItem {
+    serviceRequestId: number;
+    price: number;
+}
+
+export interface IServiceValetAppointmentPrice {
+    priceWithoutOptimization: number;
+    value: number;
+    amountOfSavingMoney: number;
+    ancillaryPrice: number;
+    category: string;
+    items: IAppointmentPriceItem[];
+}
+
+export interface IServiceValetAppointment {
+    date: ParsableDate;
+    pickUpMin: string;
+    pickUpMax: string;
+    dropOffMin: string;
+    dropOffMax: string;
+    dropOffDescription: string;
+    available: number,
+    price: IServiceValetAppointmentPrice;
+    serviceRequestPrices: IServiceValetRequestPrice[];
 }

@@ -1,56 +1,29 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import moment from "moment";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
-import {DaySelectCard} from "./DaySelectCard";
 import {TArgCallback} from "../../../types/types";
-import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
-import {TGroupedAppointments} from "../../../utils/types";
+import {useMediaQuery, useTheme} from "@material-ui/core";
 import {getAppointmentDate} from "./utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
+import {EAppointmentTimingType, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {useModal} from "../../../utils/hooks";
 import PromptNewSearchRange from "../../Modals/PromptNewSearchRange/PromptNewSearchRange";
 import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
+import {selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
+import {SVDaySelectCard} from "./SVDaySelectCard";
+import {Arrow, DaySelectorWrapper, WHILE_LIMIT} from "./DaySelector";
 
-export const DaySelectorWrapper = styled('div')(({ theme }) => ({
-    marginTop: 20,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    gap: "12px",
-    width: "100%",
-    [theme.breakpoints.down('sm')]: {
-        marginTop: 0,
-        gap: "10px",
-    }
-}));
-export const Arrow = styled('div')<Theme, {disabled?: boolean}>({
-    border: "1px solid #DADADA",
-    width: 30,
-    height: 30,
-    flexShrink: 0,
-    opacity: ({disabled}) => disabled ? .5 : 1,
-    display: "flex",
-    marginTop: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: ({disabled}) => disabled ? "default" : "pointer",
-});
-
-export const WHILE_LIMIT = 40;
 type TProps = {
     date: moment.Moment,
     dateRangeUpdated: boolean;
     onDateRangeSet: TArgCallback<boolean>;
     onDateChange: TArgCallback<moment.Moment>;
     loading: boolean;
-    appointments: TGroupedAppointments;
+    appointments: IServiceValetAppointment[];
 }
 
-export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
+export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -61,7 +34,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const daysPerScreen: number = useMemo(() => {
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
-    
+
     const {selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
     const {searchedDateRange, appointment} = useSelector((state: RootState) => state.appointment);
 
@@ -153,7 +126,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
 
     const handleYes = () => {
         dispatch(setCurrentFrameScreen('appointmentTiming'));
-        dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
     }
 
@@ -164,15 +136,15 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         {days
             .slice(sliceIdx, sliceIdx + daysPerScreen)
             .map(day =>
-                <DaySelectCard
+                <SVDaySelectCard
                     key={day}
                     isXs={isXs}
                     isCurrent={date.isSame(moment.utc(day), 'date')}
-                    appointment={appointments[day]}
+                    appointment={appointments.find(item => moment(item.date).isSame(moment(day), 'date'))}
                     onClick={handleChangeDay(day)}
                     day={day}
                 />
-        )}
+            )}
         <Arrow onClick={handleNext} disabled={!nextAvailable()}>
             <ChevronRight />
         </Arrow>
