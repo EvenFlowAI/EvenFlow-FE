@@ -112,26 +112,27 @@ const CartTable = () => {
         }
     }, [scProfile, dispatch])
 
-    const deleteIndService = useCallback((item: IMaintenanceItem) => {
+    const deleteIndService = (item: IMaintenanceItem) => {
+        const services = selectedSR.filter(sr => sr !== item.id);
         dispatch(selectSR(item.id));
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
-        const services = selectedSR.filter(sr => sr !== item.id);
         const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
         const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
         let categories = [...categoriesIds];
-
         if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
             if (subService?.type === indServiceCategory?.type) dispatch(selectSubService(null))
+            if (service?.type === indServiceCategory?.type) dispatch(selectService(null))
             categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
             dispatch(selectCategoriesIds(categories));
         }
         if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
+            if (subService?.type === diagnoseCategory?.type) dispatch(selectSubService(null))
             if (service?.type === diagnoseCategory?.type) dispatch(selectService(null))
             categories = categories.filter(id => id !== diagnoseCategory?.id)
             dispatch(selectCategoriesIds(categories));
         }
-    }, [selectedSR, allCategories, categoriesIds, subService, service])
+    }
 
     const filterCategories = useCallback(() => {
         if (service?.type === EServiceCategoryType.ValueService) {
@@ -222,14 +223,14 @@ const CartTable = () => {
         }
     }
 
-    const onClick = useCallback((item: IMaintenanceItem) => {
+    const onClick = (item: IMaintenanceItem) => {
         askConfirm({
             isRemove: true,
             title: t("Do you want to remove selected service?"),
             onConfirm: () => deleteService(item),
             onCancel: closeConfirm,
         })
-    }, [])
+    }
 
     return selectedServices?.length
         ? <div className={classes.wrapper}>
