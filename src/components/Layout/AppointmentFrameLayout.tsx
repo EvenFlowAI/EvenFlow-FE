@@ -152,7 +152,7 @@ export const AppointmentFrameLayout = () => {
     const {t} = useTranslation();
 
     const needToShowServiceSelection = useMemo(() => Boolean(userType === EUserType.Existing
-        && (firstScreenOptions.length && (isMobileServiceOn || isPickUpDropOffServiceOn))),
+        && (!!firstScreenOptions.length && (isMobileServiceOn || isPickUpDropOffServiceOn))),
         [userType, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
@@ -342,7 +342,7 @@ export const AppointmentFrameLayout = () => {
          * We have decided to go through the flow and then to see if we should allow to user to change service type in any case
          * And if we should to clear all the appointment data if the service type was changed from the previous one
          **/
-        let needToShowService = true;
+        let needToShowService = needToShowServiceSelection;
         if (data.serviceType && data.serviceTypeOption) {
             const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
             if (option) {
