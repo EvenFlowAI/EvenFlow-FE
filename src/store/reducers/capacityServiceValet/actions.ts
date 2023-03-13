@@ -75,6 +75,7 @@ export const createTimeRange = (serviceCenterId: number, data: ITimeRangeAndCapa
             }
         })
         .catch(err => {
+            onError(err);
             console.log('get Time Ranges And Capacity error', err)
         })
         .finally(() => dispatch(setLoading(false)))

@@ -32,7 +32,7 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (open) {
+        if (open && editingElement) {
             if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, timeFormat))
             if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, timeFormat))
             if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, timeFormat))

@@ -88,7 +88,8 @@ const TimeRangesAndCapacity = () => {
             },
         ]
 
-    return isLoading
+    return <div>
+        {isLoading
         ? <Loading/>
         : <div style={{width: 'fit-content', overflowX: 'auto'}}>
             <Table<ITimeRangeAndCapacity>
@@ -97,8 +98,10 @@ const TimeRangesAndCapacity = () => {
                 rowData={RowData}
                 hidePagination
             />
-            {currentRange && <EditTimeRangeAndCapacity open={isOpen} editingElement={currentRange} onClose={onClose}/>}
         </div>
+    }
+        {currentRange && <EditTimeRangeAndCapacity open={isOpen} editingElement={currentRange} onClose={onClose}/>}
+    </div>
 };
 
 export default TimeRangesAndCapacity;
