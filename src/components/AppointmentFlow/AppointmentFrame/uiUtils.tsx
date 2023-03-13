@@ -85,6 +85,7 @@ export const getMaintenanceList = (
                 id: item.serviceRequestId,
                 name: item.shortDescription,
                 type: "recall",
+                nhtsaRecallNumber: item.nhtsaRecallNumber,
             })
         })
     }

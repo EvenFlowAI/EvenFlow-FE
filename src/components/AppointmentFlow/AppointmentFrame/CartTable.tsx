@@ -191,7 +191,7 @@ const CartTable = () => {
     }, [sideBarSteps, serviceType])
 
     const handleDeleteRecall = useCallback((item: IMaintenanceItem) => {
-        dispatch(setSelectedRecalls(selectedRecalls.filter(el => el.serviceRequestId !== item.id)))
+        item.nhtsaRecallNumber && dispatch(setSelectedRecalls(selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)))
     }, [selectedRecalls])
 
     const deleteService = (item: IMaintenanceItem) => {
@@ -240,7 +240,7 @@ const CartTable = () => {
                     {isOpen ? <ExpandLess/> : <ExpandMore/>}
                 </IconButton>}
             </div>
-            {isOpen && selectedServices.map(item => <CartItem key={item.id} item={item} onClick={onClick}/>)}
+            {isOpen && selectedServices.map(item => <CartItem key={item.nhtsaRecallNumber ?? item.id} item={item} onClick={onClick}/>)}
         </div>
         : null;
 };
