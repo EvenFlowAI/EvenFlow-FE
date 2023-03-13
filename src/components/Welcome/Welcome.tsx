@@ -47,7 +47,7 @@ import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/a
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
-    const {isMobileServiceOn, isPickUpDropOffServiceOn, welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
@@ -134,7 +134,7 @@ export const Welcome = () => {
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
             handleExistingUser().then();
         } else {
-            if ((isMobileServiceOn || isPickUpDropOffServiceOn) && firstScreenOptions.length) {
+            if (firstScreenOptions.length) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
             } else {
                 redirect();
@@ -173,21 +173,16 @@ export const Welcome = () => {
         dispatch(setUserType(EUserType.New));
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
-        if (isMobileServiceOn || isPickUpDropOffServiceOn) {
-            if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
-                dispatch(setServiceType(EServiceType.VisitCenter))
-                dispatch(setServiceTypeOption(firstScreenOptions[0]));
-            } else {
-                if (firstScreenOptions.length > 1) {
-                    dispatch(setWelcomeScreenView('serviceSelect'))
-                } else {
-                    createBlankCar()
-                    onComplete(serviceType, EUserType.New);
-                }
-            }
+        if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
+            dispatch(setServiceType(EServiceType.VisitCenter))
+            dispatch(setServiceTypeOption(firstScreenOptions[0]));
         } else {
-            createBlankCar()
-            onComplete(serviceType, EUserType.New);
+            if (firstScreenOptions.length > 1) {
+                dispatch(setWelcomeScreenView('serviceSelect'))
+            } else {
+                createBlankCar()
+                onComplete(serviceType, EUserType.New);
+            }
         }
     }
 
