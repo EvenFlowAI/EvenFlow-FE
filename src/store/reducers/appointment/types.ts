@@ -266,3 +266,8 @@ export interface IServiceValetAppointment {
     price: IServiceValetAppointmentPrice;
     serviceRequestPrices: IServiceValetRequestPrice[];
 }
+
+export interface ISVAppointmentResponse {
+    items: IServiceValetAppointment[];
+    searchedDateRange: ISearchedDateRange;
+}

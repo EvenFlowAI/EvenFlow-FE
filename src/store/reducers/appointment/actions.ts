@@ -12,7 +12,7 @@ import {
     IRemappedAppointmentSlot,
     IReminders, ISearchedDateRange,
     IServiceCenterProfile, IServiceValetAppointment,
-    ISR,
+    ISR, ISVAppointmentResponse,
     TAppointmentState,
     TS1Form,
     TS3Form
@@ -268,11 +268,12 @@ export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => d
 }
 export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Appointment/GetServiceValetSlots");
 export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => dispatch => {
-    Api.call<IServiceValetAppointment[]>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
+    Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
-            if (result?.data) dispatch(getServiceValetSlots(result.data))
+            const {items, searchedDateRange} = result.data;
+            if (items) dispatch(getServiceValetSlots(items))
+            if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange))
             loadCB && loadCB()
-            // todo searchedDateRange
         })
         .catch(err => {
             console.log('get service valet slots err', err)
