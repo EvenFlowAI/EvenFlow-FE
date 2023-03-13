@@ -271,6 +271,7 @@ export const loadServiceValetSlots = (data: IAppointmentSlotsRequest): AppThunk 
     Api.call<IServiceValetAppointment[]>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
             if (result?.data) dispatch(getServiceValetSlots(result.data))
+            // todo searchedDateRange
         })
         .catch(err => {
             console.log('get service valet slots err', err)
