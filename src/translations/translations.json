@@ -266,7 +266,9 @@
       "zip code required": "Zip code required",
       "Address is required": "Address is required",
       "Selected Date": "Selected Date",
-      "Date": "Date"
+      "Date": "Date",
+      "Pick Up From": "Pick Up From",
+      "Pick Up To": "Pick Up To"
     }
   },
   "es": {

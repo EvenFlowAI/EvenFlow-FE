@@ -18,6 +18,7 @@ const TitleWrapper = styled('div')({
         color: "#757575"
     }
 })
+
 type TProps = {
     onChangeSlot: TCallback;
 }
@@ -32,12 +33,28 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     return <div>
         <TitleWrapper>
             <ConfirmationTitle>
-                {serviceTypeOption?.type === EServiceType.PikUpDropOff ? t("Selected Date") : t("Selected Date & Time")}
+                {t("Selected Date & Time")}
             </ConfirmationTitle>
             <Edit fontSize="small" onClick={handleChangeSlot} />
         </TitleWrapper>
         {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
-            ? moment.utc(serviceValetAppointment?.date).format('MMMM D')
+            ? <div><span style={{fontWeight: 'bold'}}>{t("Date")}</span>: {moment.utc(serviceValetAppointment?.date).format('MMMM D')}</div>
             : moment.utc(appointment?.date).format('MMMM D, h:mm A')}
+        {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+            ? <div>
+                <div>
+                    <span style={{fontWeight: 'bold'}}>{t("Pick Up Time")}: </span>
+                    <span> {moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('HH:mm A')}</span>
+                    <span>{t("to")}</span>
+                    <span> {moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('HH:mm A')}</span>
+                </div>
+                <div>
+                    <span style={{fontWeight: 'bold'}}>{t("Drop Off Time")}: </span>
+                    <span> {moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('HH:mm A')}</span>
+                    <span>{t("to")}</span>
+                    <span> {moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('HH:mm A')}</span>
+                </div>
+            </div>
+            : null}
     </div>
 };

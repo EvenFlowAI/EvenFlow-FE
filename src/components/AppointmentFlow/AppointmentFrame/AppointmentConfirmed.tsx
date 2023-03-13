@@ -189,16 +189,18 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         return t('Will be quoted at the dealership')
     }
 
+    const getDate = () => {
+        return isServiceValetApp
+            ? moment(serviceValetAppointment?.date).format('ddd, MMM D')
+            : appointment?.date.format('ddd, MMM D, h:mm A')
+            ?? moment.utc().format('ddd, MMM D, h:mm A');
+    }
+
     const data: TItem[] = useMemo(() => {
-        return [
+        const list: TItem[] = [
             {
-                label: isServiceValetApp
-                    ? t("Date")
-                    : t("Date and time"),
-                content: isServiceValetApp
-                    ? moment(serviceValetAppointment?.date).format('ddd, MMM D')
-                    : appointment?.date.format('ddd, MMM D, h:mm A')
-                    ?? moment.utc().format('ddd, MMM D, h:mm A'),
+                label: isServiceValetApp ? t("Date") : t("Date and time"),
+                content: getDate(),
             },
             {
                 label: serviceType !== EServiceType.VisitCenter ? t("Location of service") : "",
@@ -233,6 +235,22 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 content: customer.email
             },
         ]
+        if (isServiceValetApp) {
+            list.splice(
+                1,
+                0,
+                {
+                    label: t("Pick Up Time"),
+                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('HH:mm A')}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('HH:mm A')}`
+                }, {
+                    label: t("Drop Off Time"),
+                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('HH:mm A')}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('HH:mm A')}`
+                }
+            )
+        }
+        return list;
     }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
 
     const getPrice = (): string => {
