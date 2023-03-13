@@ -19,6 +19,7 @@ export type IMaintenanceItem = {
     id: number;
     name: string;
     type: EMaintenanceItemType;
+    nhtsaRecallNumber?: string;
 }
 
 export type TTransportationData = {
