@@ -267,13 +267,15 @@ export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => d
         })
 }
 export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Appointment/GetServiceValetSlots");
-export const loadServiceValetSlots = (data: IAppointmentSlotsRequest): AppThunk => dispatch => {
+export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => dispatch => {
     Api.call<IServiceValetAppointment[]>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
             if (result?.data) dispatch(getServiceValetSlots(result.data))
+            loadCB && loadCB()
             // todo searchedDateRange
         })
         .catch(err => {
             console.log('get service valet slots err', err)
         })
+        .finally(() => loadCB && loadCB())
 }

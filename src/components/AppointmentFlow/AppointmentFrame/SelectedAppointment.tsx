@@ -11,6 +11,8 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {useTranslation} from "react-i18next";
+import moment from "moment";
+import {IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -149,6 +151,22 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppointment}> = ({serviceValetAppointment}) => {
+    const [hoursPMin, minutesPMin] = serviceValetAppointment.pickUpMin.split(":");
+    const [hoursPMax, minutesPMax] = serviceValetAppointment.pickUpMax.split(":");
+    const [hoursDMin, minutesDMin] = serviceValetAppointment.dropOffMin.split(":");
+    const [hoursDMax, minutesDMax] = serviceValetAppointment.dropOffMax.split(":");
+    return <DateWrapper>
+        <div>Date: <span>{moment(serviceValetAppointment.date).format('MMMM D')}</span></div>
+        <div>Pick Up Time:
+            <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("HH:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("HH:mm A")}</span>
+        </div>
+        <div>Drop Off Time:
+            <span> {moment(serviceValetAppointment.date).set('hour', +hoursDMin).set('minute', +minutesDMin).format("HH:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursDMax).set('minute', +minutesDMax).format("HH:mm A")}</span>
+        </div>
+    </DateWrapper>
+}
+
 export const SelectedAppointment = () => {
     const {
         selectedPackage,
@@ -162,7 +180,7 @@ export const SelectedAppointment = () => {
         valueService,
         selectedRecalls,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
+    const { scProfile, appointmentSlots, appointment, serviceValetAppointment } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [selectedSR, srList] = useSelector((state: RootState) => [
@@ -260,6 +278,7 @@ export const SelectedAppointment = () => {
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper> : null}
+                        {serviceValetAppointment && isSm ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/> : null}
                     </li>
 
                 </List>
@@ -270,6 +289,7 @@ export const SelectedAppointment = () => {
                             {t("Date & Time")}: <br /> {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper>
                         : null}
+                    {serviceValetAppointment && !isSm ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/> : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
                           ${scProfile?.isRoundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}

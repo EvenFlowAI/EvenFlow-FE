@@ -156,10 +156,10 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
         setFormChecked(true);
         if (!address) showError('"Address" is required');
         if (!zip?.length) showError('"Zip Code" is required');
-        if (address?.label && zip.length && scProfile) {
+        if (address && zip.length && scProfile) {
             dispatch(setZipCode(zip));
             const data: IAncillaryByZipRequest = {
-                address: address.label,
+                address: typeof address === 'string' ? address : address.label,
                 zipCode: zip,
                 serviceCenterId: scProfile?.id,
                 serviceTypeOptionId: serviceTypeOption?.id ?? null,
