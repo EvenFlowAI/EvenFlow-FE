@@ -132,8 +132,6 @@ export const AppointmentFrameLayout = () => {
         valueService,
         serviceType,
         currentScreen: currentFrameScreen,
-        isMobileServiceOn,
-        isPickUpDropOffServiceOn,
         userType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -152,8 +150,8 @@ export const AppointmentFrameLayout = () => {
     const {t} = useTranslation();
 
     const needToShowServiceSelection = useMemo(() => Boolean(userType === EUserType.Existing
-        && (!!firstScreenOptions.length && (isMobileServiceOn || isPickUpDropOffServiceOn))),
-        [userType, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
+        && (!!firstScreenOptions.length)),
+        [userType, firstScreenOptions]);
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const currentConfig = useMemo(() => {
@@ -389,7 +387,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions]);
 
     const handleSelectCar = useCallback( () => {
         selectedVehicle && onSelectCar(selectedVehicle)
