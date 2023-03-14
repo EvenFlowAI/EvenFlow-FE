@@ -60,6 +60,7 @@ type TAppointmentSelectionProps = {
 export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({handleSetScreen, currentConfig}) => {
     const [
         slots,
+        serviceValetSlots,
         selectedTimingType,
         selectedTime,
         customerData,
@@ -85,6 +86,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         serviceTypeOption,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
+        state.appointment.serviceValetSlots,
         state.appointmentFrame.selectedTiming,
         state.appointmentFrame.selectedTime,
         state.appointment.customerLoadedData,
@@ -153,19 +155,21 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [selectedTime])
 
     useEffect(() => {
-        if (slots.length && isMount.current) {
-            if (appointment?.date) {
-                setDate(moment.utc(appointment.date).startOf('day'))
+        const currentSlots = serviceTypeOption?.type === EServiceType.PikUpDropOff ? serviceValetSlots : slots;
+        const currentAppointment = serviceTypeOption?.type === EServiceType.PikUpDropOff ? serviceValetAppointment : appointment;
+        if (currentSlots.length && isMount.current) {
+            if (currentAppointment?.date) {
+                setDate(moment.utc(currentAppointment.date).startOf('day'))
             } else {
                 if (selectedTime) {
                     setDate(moment.utc(selectedTime).startOf('day'));
                 } else {
-                    if (slots?.length) setDate(moment(slots[0].date).startOf('day'))
+                    if (currentSlots?.length) setDate(moment(currentSlots[0].date).startOf('day'))
                 }
             }
             isMount.current = false;
         }
-    }, [slots, selectedTime, appointment]);
+    }, [slots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment]);
 
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));

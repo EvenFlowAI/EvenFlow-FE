@@ -35,8 +35,8 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
 
-    const {selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
-    const {searchedDateRange, appointment} = useSelector((state: RootState) => state.appointment);
+    const {selectedTiming, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {searchedDateRange, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
         let daysInMonth: number = date.daysInMonth();
@@ -66,10 +66,10 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
 
     useEffect(() => {
         if (!dateRangeUpdated) {
-            const selectedDate = appointment?.date ? appointment.date : date;
+            const selectedDate = serviceValetAppointment?.date ?? date;
             const formattedDate = moment(selectedDate).startOf('day').toISOString().replace('.000', '');
             let dateIdx = days.findIndex(el => el === formattedDate);
-            if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
+            if (dateIdx === -1 || daysInMonth <= daysPerScreen || dateIdx < daysPerScreen) {
                 setSliceIdx(0);
             } else {
                 // to get center of the displayed dates
@@ -89,7 +89,7 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
                 onDateRangeSet(true);
             }
         }
-    }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, appointment]);
+    }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, serviceTypeOption]);
 
     const handleChangeDay = (date: string) => () => {
         onDateChange(moment.utc(date));
