@@ -185,6 +185,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                         return null;
                     }
                     if (serviceTypeOption?.type === EServiceType.PikUpDropOff && idx === 1) {
+                        // todo delete this when Preferred Date Search will be implemented
                         return null;
                     }
                     return <AppointmentTimingCard
