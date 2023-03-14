@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     button: {
         position: 'relative',
         height: "100%",
+        maxHeight: 248,
         display: "flex",
         flexDirection: 'column',
         alignItems: "center",

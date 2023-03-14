@@ -9,13 +9,18 @@ type TServiceTypeIconProps = {card: IFirstScreenOption, onClick: () => void, isS
 const useStyles = makeStyles((theme) => ({
     icon: {
         width: '100%',
+        // width: 224,
+        maxHeight: 160,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        // backgroundSize: 'contain',
+        // backgroundPosition: 'center',
+        // backgroundRepeat: 'no-repeat',
         [theme.breakpoints.down('sm')]: {
-            width: 224,
+            maxWidth: 224,
             height: 112,
-            maxWidth: '90%',
+            width: '90%',
         },
     },
     noLogo: {
@@ -29,6 +34,14 @@ const useStyles = makeStyles((theme) => ({
             width: 224,
             height: 112,
             maxWidth: '90%'
+        }
+    },
+    image: {
+        // width: 'fit-content',
+        maxWidth: '100%',
+        maxHeight: 112,
+        [theme.breakpoints.down("sm")]: {
+            maxWidth: 224,
         }
     }
 }))
@@ -62,8 +75,11 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
         : card.iconPath
             ? iconType.toLowerCase() === 'svg'
                 ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} />
-                : <div className={classes.icon} onClick={() => isSM && onClick()}>
-                    <img style={{width: '100%'}} src={card.iconPath} alt="logo"/>
+                : <div className={classes.icon}
+                       onClick={() => isSM && onClick()}
+                    //style={{backgroundImage: `url(${card.iconPath})`}}
+                >
+                    <img className={classes.image} src={card.iconPath} alt="logo"/>
                 </div>
             : <div className={classes.noLogo}>No logo</div>
 };

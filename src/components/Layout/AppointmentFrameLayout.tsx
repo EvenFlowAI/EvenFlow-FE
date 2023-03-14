@@ -39,13 +39,13 @@ import {useException} from "../../utils/hooks";
 import {
     selectCategoriesIds, selectService, selectSubService, setAdditionalServicesChosen, setAdvisor,
     setCurrentFrameScreen,
-    setPackage, setRecallsAreShown, setSelectedRecalls, setTiming,
+    setPackage, setRecallsAreShown, setSelectedRecalls, setServiceType, setServiceTypeOption, setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {ILoadedVehicle, IServiceCategory} from "../../api/types";
+import {IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
@@ -152,7 +152,7 @@ export const AppointmentFrameLayout = () => {
     const {t} = useTranslation();
 
     const needToShowServiceSelection = useMemo(() => Boolean(userType === EUserType.Existing
-        && (firstScreenOptions.length && (isMobileServiceOn || isPickUpDropOffServiceOn))),
+        && (!!firstScreenOptions.length && (isMobileServiceOn || isPickUpDropOffServiceOn))),
         [userType, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
@@ -312,9 +312,14 @@ export const AppointmentFrameLayout = () => {
     }, [dispatch, handleSetScreen]);
 
     const handleAddNewCarAppointment = useCallback((vehicle: ILoadedVehicle) => {
+        clearAppointmentData();
         dispatch(setVehicle(vehicle));
-        handleSetScreen('serviceNeeds');
-    }, [dispatch, handleSetScreen]);
+        if (needToShowServiceSelection) {
+            handleServiceTypeSelection()
+        } else {
+            handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+        }
+    }, [dispatch, handleSetScreen, needToShowServiceSelection, serviceType]);
 
     const getNextScreen = (): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
@@ -326,17 +331,35 @@ export const AppointmentFrameLayout = () => {
         return nextScreen;
     }
 
-    const handleServiceTypeSelection = () => {
+    const handleServiceTypeSelection = useCallback(() => {
         dispatch(setWelcomeScreenView('serviceSelect'))
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    }, [history])
+
+    const handleServiceTypeOption = (data:IAppointmentByQuery): boolean => {
+        /**
+         * We have decided to go through the flow and then to see if we should allow to user to change service type in any case
+         * And if we should to clear all the appointment data if the service type was changed from the previous one
+         **/
+        let needToShowService = needToShowServiceSelection;
+        if (data.serviceType && data.serviceTypeOption) {
+            const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
+            if (option) {
+                needToShowService = false;
+                dispatch(setServiceType(data.serviceType));
+                dispatch(setServiceTypeOption(data.serviceTypeOption));
+            }
+        }
+        return needToShowService;
     }
 
-    const handleSelectCar = useCallback(async () => {
+    const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
         dispatch(selectSR(null));
         clearAppointmentData()
         let needToShowService: boolean = needToShowServiceSelection;
-        if (selectedVehicle?.appointmentHashKeys.length) {
-            const key = selectedVehicle.appointmentHashKeys[selectedVehicle.appointmentHashKeys.length-1];
+
+        if (car?.appointmentHashKeys.length) {
+            const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
             const lastIndex = key.lastIndexOf('==');
             const trimmedKey = lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
             setLoadingCar(true);
@@ -347,7 +370,7 @@ export const AppointmentFrameLayout = () => {
                 if (data.maintenancePackageOption) {
                     dispatch(setPackage(data.maintenancePackageOption))
                 }
-                if (data.serviceType) needToShowService = false;
+                needToShowService = handleServiceTypeOption(data);
                 if (needToShowService) {
                     handleServiceTypeSelection()
                 } else {
@@ -365,7 +388,11 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, selectedVehicle, showError, dispatch, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
+
+    const handleSelectCar = useCallback( () => {
+        selectedVehicle && onSelectCar(selectedVehicle)
+    }, [selectedVehicle, onSelectCar]);
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
@@ -379,6 +406,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen={handleSetScreen}
                 handleServiceTypeSelection={handleServiceTypeSelection}
                 currentConfig={currentConfig}
+                onSelectCar={onSelectCar}
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 setLastSelectedCategory={setLastSelectedCategory}
