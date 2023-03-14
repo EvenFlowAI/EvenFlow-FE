@@ -8,6 +8,7 @@ import {RootState} from "../../../store/rootReducer";
 import {updateShowDropOffTime} from "../../../store/reducers/capacityServiceValet/actions";
 import {useException, useSCs} from "../../../utils/hooks";
 import {IShowDropOffTime} from "../../../store/reducers/capacityServiceValet/types";
+import {useTranslation} from "react-i18next";
 
 export const TopWrapper = styled('div')({
     display: 'flex',
@@ -44,6 +45,7 @@ const ShowDropOffTimeDialog: React.FC<DialogProps> = ({onClose, open}) => {
     const [text, setText] = useState<string>('');
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const {t} = useTranslation();
     const showError = useException();
 
     useEffect(() => {
@@ -69,7 +71,7 @@ const ShowDropOffTimeDialog: React.FC<DialogProps> = ({onClose, open}) => {
                 if (text.length) {
                     dispatch(updateShowDropOffTime(selectedSC.id, data, onCancel, showError))
                 } else {
-                    showError('"Text" must not be empty')
+                    showError(t('"Text" must not be empty'))
                 }
             } else {
                 dispatch(updateShowDropOffTime(selectedSC.id, data, onCancel, showError))
