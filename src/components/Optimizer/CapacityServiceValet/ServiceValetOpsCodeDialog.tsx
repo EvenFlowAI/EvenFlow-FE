@@ -27,7 +27,7 @@ const InputWrapper = styled('div')({
     alignItems: 'center',
     fontSize: 12,
     fontWeight: 'bold',
-    marginBottom: 100
+    marginBottom: 30
 })
 
 const ServiceValetOpsCodeDialog: React.FC<DialogProps> = ({onClose, open}) => {
@@ -77,9 +77,9 @@ const ServiceValetOpsCodeDialog: React.FC<DialogProps> = ({onClose, open}) => {
             </TopWrapper>
         </DialogTitle>
         <DialogContent>
-            <OpsCode>{opsCode?.serviceRequest?.code ?? ''}</OpsCode>
+            <OpsCode>{opsCode?.serviceRequest?.code ?? 'Not Selected'}</OpsCode>
             <InputWrapper>
-                <div>DEFAULT OPS CODE</div>
+                <div>DEFAULT OPS CODE"</div>
                 <Autocomplete
                     style={{width: '50%'}}
                     value={opsCode}
