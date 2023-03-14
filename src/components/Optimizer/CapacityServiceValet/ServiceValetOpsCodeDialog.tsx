@@ -44,7 +44,7 @@ const ServiceValetOpsCodeDialog: React.FC<DialogProps> = ({onClose, open}) => {
 
     useEffect(() => {
         if (centerSettings?.serviceRequest) {
-            const opsCodeSelected = allAssignedList.find(item => item.serviceRequestId === centerSettings.serviceRequest?.id)
+            const opsCodeSelected = allAssignedList.find(item => item.id === centerSettings.serviceRequest?.id)
             opsCodeSelected && setOpsCode(opsCodeSelected);
         }
     }, [allAssignedList, centerSettings])
