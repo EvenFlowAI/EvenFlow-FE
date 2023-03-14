@@ -29,7 +29,7 @@ const TimeRangesAndCapacity = () => {
     useEffect(() => {
         if (selectedSC) {
             setTableData(() => {
-                return [1, 2, 3, 4, 5, 6, 7].map(day => {
+                return [1, 2, 3, 4, 5, 6, 0].map(day => {
                     const timeRange = timeRangesAndCapacity.find(item =>  item.dayOfWeek === day)
                     return {
                         serviceCenterId: selectedSC.id,
@@ -54,7 +54,7 @@ const TimeRangesAndCapacity = () => {
     const RowData: TableRowDataType<ITimeRangeAndCapacity>[] = [
             {
                 header: 'Day Of Week'.toUpperCase(),
-                val: el => el.dayOfWeek ? moment().set('day', el.dayOfWeek).format('dddd') : '',
+                val: el => el.dayOfWeek?.toString().length ? moment().set('day', el.dayOfWeek).format('dddd') : '',
             },
             {
                 header: 'Pick Up Min'.toUpperCase(),

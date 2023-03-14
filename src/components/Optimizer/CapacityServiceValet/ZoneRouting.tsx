@@ -8,8 +8,9 @@ import {Table} from "../../UI/Table";
 import {Loading} from "../../UI/Loading";
 import {useSCs} from "../../../utils/hooks";
 import {loadZonesRouting, updateZonesRouting} from "../../../store/reducers/capacityServiceValet/actions";
+import {EDay} from "../../../store/reducers/demandSegments/types";
 
-const dayNames = Object.keys(EDaysFromMonday).filter(key => Number.isNaN(+key));
+const dayNames = Object.keys(EDay).filter(key => Number.isNaN(+key));
 
 const ZoneRouting = () => {
     const {zones, isLoading: isZonesLoading} = useSelector((state: RootState) => state.serviceValet);
@@ -23,7 +24,7 @@ const ZoneRouting = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        setInitialZones([0, 1, 2, 3, 4, 5, 6].map(item => {
+        setInitialZones([1, 2, 3, 4, 5, 6, 0].map(item => {
             const existingDay = zonesRouting.find(el => el.dayOfWeek.toString() === item.toString())
             return existingDay ?? {dayOfWeek: item, geographicZoneIds: []}
         }))
