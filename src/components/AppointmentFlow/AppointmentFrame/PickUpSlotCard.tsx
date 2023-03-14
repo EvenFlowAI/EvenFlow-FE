@@ -133,7 +133,7 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
         >
             <div className="pickUp">
                 <div className={classes.radio}>
-                    {!selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}
+                    {!selected ? <RadioButtonUnchecked/> : <RadioButtonChecked/>}
                 </div>
                 <div className={classes.text}>
                     <div>{t("Pick Up Time")}:</div>
