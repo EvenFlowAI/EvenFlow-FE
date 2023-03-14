@@ -184,6 +184,9 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                     if (!idx) {
                         return null;
                     }
+                    if (serviceTypeOption?.type === EServiceType.PikUpDropOff && idx === 1) {
+                        return null;
+                    }
                     return <AppointmentTimingCard
                         onClick={handleSelectTiming(card.name)}
                         card={card}

@@ -298,7 +298,7 @@ const BookingFlowConfig = () => {
                                         <Switch
                                             onChange={onCheck(EServiceTypeBookingFlow.PickUpDropOff, 'appointmentSelection')}
                                             checked={pickUpDropOffConfig?.appointmentSelection}
-                                            disabled
+                                            disabled={!pickUpDropOffConfig?.available}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
