@@ -180,7 +180,7 @@ export const SelectedAppointment = () => {
         valueService,
         selectedRecalls,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, appointmentSlots, appointment, serviceValetAppointment } = useSelector((state: RootState) => state.appointment);
+    const { scProfile, appointmentSlots, appointment, serviceValetAppointment, serviceValetSlots } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [selectedSR, srList] = useSelector((state: RootState) => [
@@ -200,12 +200,20 @@ export const SelectedAppointment = () => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
 
-    const price = appointment?.price.value ?? 0;
-    const ancillaryPrice = appointment?.price.ancillaryPrice ?? 0;
+    const price = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+        ? serviceValetAppointment?.price.value ?? 0
+        : appointment?.price.value ?? 0;
+    const ancillaryPrice = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+        ? serviceValetAppointment?.price.ancillaryPrice ?? 0
+        : appointment?.price.ancillaryPrice ?? 0;
 
-    const isDynamicPricing = appointmentSlots.length
-        ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
-        : false;
+    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PikUpDropOff
+        ? serviceValetSlots.length
+            ? serviceValetSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
+            : false
+        : appointmentSlots.length
+            ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
+            : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
