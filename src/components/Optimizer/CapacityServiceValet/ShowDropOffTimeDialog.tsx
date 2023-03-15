@@ -127,7 +127,7 @@ const ShowDropOffTimeDialog: React.FC<DialogProps> = ({onClose, open}) => {
                     value={text}
                     rows={3}
                 />
-                <Warning>{!isShowTime ? 'Please enter a text' : ''}</Warning>
+                <Warning>{!isShowTime && !text.trim().length ? 'Please enter a text' : ''}</Warning>
             </DialogContent>
         </BaseModal>
     );
