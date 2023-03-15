@@ -16,7 +16,7 @@ import {
     changeS1Form,
     changeS3Form,
     changeTransportation, getAllServiceCategories,
-    getAppointmentSlots, getServiceCategories,
+    getAppointmentSlots, getDropOffSettings, getServiceCategories,
     getServiceCenterProfile, getServiceValetSlots,
     getSRs,
     handleSearch,
@@ -87,6 +87,7 @@ const initialState: TAppointmentState = {
     serviceCategories: [],
     allServiceCategories: [],
     isProfileLoading: false,
+    dropOffSettings: null,
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -250,5 +251,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(selectServiceValetAppointment, (state, {payload}) => {
         return {...state, serviceValetAppointment: payload};
+    })
+    .addCase(getDropOffSettings, (state, {payload}) => {
+        return {...state, dropOffSettings: payload};
     })
 );

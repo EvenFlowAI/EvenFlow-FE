@@ -214,6 +214,7 @@ export type TAppointmentState = {
     serviceCategories: IServiceCategory[];
     allServiceCategories: IServiceCategoryShort[];
     isProfileLoading: boolean;
+    dropOffSettings: IDropOffSettings|null;
 };
 export enum EReminderType {
     Email, Phone, Sms
@@ -267,7 +268,13 @@ export interface IServiceValetAppointment {
     serviceRequestPrices: IServiceValetRequestPrice[];
 }
 
+export interface IDropOffSettings {
+    showDropOffTime: boolean;
+    description: string;
+}
+
 export interface ISVAppointmentResponse {
     items: IServiceValetAppointment[];
     searchedDateRange: ISearchedDateRange;
+    dropOffSettings: IDropOffSettings;
 }
