@@ -43,11 +43,11 @@ const ServiceValetOpsCodeDialog: React.FC<DialogProps> = ({onClose, open}) => {
     }, [selectedSC])
 
     useEffect(() => {
-        if (centerSettings?.serviceRequest) {
+        if (centerSettings?.serviceRequest && open) {
             const opsCodeSelected = allAssignedList.find(item => item.id === centerSettings.serviceRequest?.id)
             opsCodeSelected && setOpsCode(opsCodeSelected);
         }
-    }, [allAssignedList, centerSettings])
+    }, [allAssignedList, centerSettings, open])
 
 
     const onCancel = () => {
