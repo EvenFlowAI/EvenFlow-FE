@@ -35,7 +35,7 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
 
-    const {selectedTiming, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
     const {searchedDateRange, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
@@ -62,14 +62,14 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
             daysInMonth,
             generatedDays
         ];
-    }, [date, searchedDateRange]);
+    }, [date, searchedDateRange, getAppointmentDate]);
 
     useEffect(() => {
-        if (!dateRangeUpdated) {
+        if (!dateRangeUpdated && searchedDateRange) {
             const selectedDate = serviceValetAppointment?.date ?? date;
             const formattedDate = moment(selectedDate).startOf('day').toISOString().replace('.000', '');
             let dateIdx = days.findIndex(el => el === formattedDate);
-            if (dateIdx === -1 || daysInMonth <= daysPerScreen || dateIdx < daysPerScreen) {
+            if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
                 setSliceIdx(0);
             } else {
                 // to get center of the displayed dates
@@ -85,11 +85,10 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
                     // Handle left date edge
                     setSliceIdx(idXOfCenterElement >= 0 ? idXOfCenterElement : 0);
                 }
-
-                onDateRangeSet(true);
             }
+            onDateRangeSet(true);
         }
-    }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, serviceTypeOption]);
+    }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, serviceValetAppointment, searchedDateRange]);
 
     const handleChangeDay = (date: string) => () => {
         onDateChange(moment.utc(date));
