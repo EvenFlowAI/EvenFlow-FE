@@ -169,7 +169,7 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                             {moment(timeSlot.dropOffMax, 'H:mm').format('H:mm A')}
                         </div>
                     </div>
-                    : <div className={classes.dropOff}>{dropOffSettings?.description}</div>
+                    : <div className={classes.dropOff} style={{textAlign: 'justify'}}>{dropOffSettings?.description}</div>
                 }
             </div>
         </PickUpWrapper>
