@@ -37,7 +37,7 @@ const Address = () => {
             </TitleWrapper>
             <List>
                 <li className="service-item">
-                    {address?.label || ""}
+                    {typeof address === 'string' ? address : address?.label || ""}
                 </li>
                 <li className="service-item">
                     {t("ZIP")}: {zipCode}

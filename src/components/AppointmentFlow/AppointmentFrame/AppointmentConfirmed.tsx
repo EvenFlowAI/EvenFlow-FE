@@ -87,6 +87,7 @@ type TProps = {
 export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const [
         appointment,
+        serviceValetAppointment,
         srList,
         selectedSR,
         scProfile,
@@ -105,6 +106,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         selectedRecalls,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
+        state.appointment.serviceValetAppointment,
         state.appointment.serviceRequests,
         state.appointment.selectedSR,
         state.appointment.scProfile,
@@ -141,6 +143,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
             : ''
 
+    const isServiceValetApp = useMemo(() => serviceValetAppointment && serviceTypeOption?.type === EServiceType.PikUpDropOff,
+        [serviceValetAppointment, serviceTypeOption])
+
     useEffect(() => {
         ReactGA.event({
             category: 'EvenFlow User',
@@ -166,26 +171,36 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         if (serviceType === EServiceType.VisitCenter) {
             return scProfile?.address ? concatAddress(scProfile?.address) : ""
         } else {
-            return address ? `${address?.label ?? ""} ${zipCode ? zipCode : ""}` : ""
+            return address ? `${typeof address === 'string' ? address : address?.label ?? ""} ${zipCode ? zipCode : ""}` : ""
         }
     }
 
     const getPriceContent = (): string => {
+        if (isServiceValetApp && serviceValetAppointment?.price?.value) {
+            return scProfile?.isRoundPrice
+                ? `$${serviceValetAppointment?.price?.value}`
+                : `$${serviceValetAppointment?.price?.value.toFixed(2)}`
+        }
         if (appointment?.price?.value) {
             return scProfile?.isRoundPrice
                 ? `$${appointment?.price?.value}`
                 : `$${appointment?.price?.value.toFixed(2)}`
-        } else {
-            return t('Will be quoted at the dealership')
         }
+        return t('Will be quoted at the dealership')
+    }
+
+    const getDate = () => {
+        return isServiceValetApp
+            ? moment(serviceValetAppointment?.date).format('ddd, MMM D')
+            : appointment?.date.format('ddd, MMM D, h:mm A')
+            ?? moment.utc().format('ddd, MMM D, h:mm A');
     }
 
     const data: TItem[] = useMemo(() => {
-        return [
+        const list: TItem[] = [
             {
-                label: t("Date and time"),
-                content: appointment?.date.format('ddd, MMM D, h:mm A')
-                    ?? moment.utc().format('ddd, MMM D, h:mm A'),
+                label: isServiceValetApp ? t("Date") : t("Date and time"),
+                content: getDate(),
             },
             {
                 label: serviceType !== EServiceType.VisitCenter ? t("Location of service") : "",
@@ -220,21 +235,41 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 content: customer.email
             },
         ]
-    }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR]);
+        if (isServiceValetApp) {
+            list.splice(
+                1,
+                0,
+                {
+                    label: t("Pick Up Time"),
+                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('HH:mm A')}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('HH:mm A')}`
+                }, {
+                    label: t("Drop Off Time"),
+                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('HH:mm A')}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('HH:mm A')}`
+                }
+            )
+        }
+        return list;
+    }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
 
     const getPrice = (): string => {
-        const price = appointment?.price?.value;
+        const price = isServiceValetApp
+            ? serviceValetAppointment?.price?.value
+            : appointment?.price?.value;
         return price
             ? `${t("Selected Price")}: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
             : t('Service price will be quoted at dealership');
     }
 
     const handleAddToCalendar = () => {
-        const date = moment.utc(appointment?.date);
+        const date = isServiceValetApp
+            ? moment.utc(serviceValetAppointment?.date)
+            : moment.utc(appointment?.date);
         const url = getCalendarUrl({
             dates: [
-                date.format(G_CALENDAR_FORMAT) + appointment?.time.split(":").join(""),
-                date.add(1, "hour").format(G_CALENDAR_FORMAT) + appointment?.time.split(":").join("")],
+                date.format(G_CALENDAR_FORMAT) + `${isServiceValetApp ? "000000" : appointment?.time.split(":").join("")}`,
+                date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp ? "000000" : appointment?.time.split(":").join("")}`],
             text: `${scProfile?.name} ${t("Service Appointment")}`,
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
             details: [
