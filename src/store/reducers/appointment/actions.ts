@@ -6,7 +6,7 @@ import {
     IAppointmentFilters,
     IAppointmentResponse,
     IAppointmentSlot,
-    IAppointmentSlotsRequest,
+    IAppointmentSlotsRequest, IDropOffSettings,
     IPersonalInformation,
     IPrivacy,
     IRemappedAppointmentSlot,
@@ -267,12 +267,14 @@ export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => d
         })
 }
 export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Appointment/GetServiceValetSlots");
+export const getDropOffSettings = createAction<IDropOffSettings>("Appointment/GetDropOffSettings");
 export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => dispatch => {
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
-            const {items, searchedDateRange} = result.data;
+            const {items, searchedDateRange, dropOffSettings} = result.data;
             if (items) dispatch(getServiceValetSlots(items))
             if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange))
+            if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings))
             loadCB && loadCB()
         })
         .catch(err => {

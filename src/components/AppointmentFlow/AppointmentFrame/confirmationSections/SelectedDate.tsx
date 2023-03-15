@@ -45,13 +45,13 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
                 <div>
                     <span style={{fontWeight: 'bold'}}>{t("Pick Up Time")}: </span>
                     <span> {moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('HH:mm A')}</span>
-                    <span>{t("to")}</span>
+                    <span> {t("to")} </span>
                     <span> {moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('HH:mm A')}</span>
                 </div>
                 <div>
                     <span style={{fontWeight: 'bold'}}>{t("Drop Off Time")}: </span>
                     <span> {moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('HH:mm A')}</span>
-                    <span>{t("to")}</span>
+                    <span> {t("to")} </span>
                     <span> {moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('HH:mm A')}</span>
                 </div>
             </div>

@@ -11,6 +11,8 @@ import {
     RadioButtonUnchecked
 } from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 type TPickUpSlotsWrapperProps = {
     available?: boolean,
@@ -104,6 +106,7 @@ type TProps = {
 
 export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, date}) => {
     const [timePassed, setTimePassed] = useState<boolean>(false);
+    const {dropOffSettings} = useSelector((state: RootState) => state.appointment);
     const classes = useStyles();
     const {t} = useTranslation();
 
@@ -157,14 +160,17 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                         </div>
                     }
                 </div>
-                <div className={classes.dropOff}>
-                    <div>{t("Drop Off Time")}:</div>
-                    <div className={classes.rightText}>
-                        {moment(timeSlot.dropOffMin, 'H:mm').format('H:mm A')}
-                        <span> {t("to")} </span>
-                        {moment(timeSlot.dropOffMax, 'H:mm').format('H:mm A')}
+                { dropOffSettings?.showDropOffTime
+                    ? <div className={classes.dropOff}>
+                        <div>{t("Drop Off Time")}:</div>
+                        <div className={classes.rightText}>
+                            {moment(timeSlot.dropOffMin, 'H:mm').format('H:mm A')}
+                            <span> {t("to")} </span>
+                            {moment(timeSlot.dropOffMax, 'H:mm').format('H:mm A')}
+                        </div>
                     </div>
-                </div>
+                    : <div className={classes.dropOff}>{dropOffSettings?.description}</div>
+                }
             </div>
         </PickUpWrapper>
     );
