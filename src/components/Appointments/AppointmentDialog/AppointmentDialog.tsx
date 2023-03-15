@@ -299,7 +299,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     }, [filterDate, selectedSR, preloadedSlot]);
 
     useEffect(() => {
-        if (form.vehicleVin.length === VIN_LENGTH && oldVin.current !== form.vehicleVin) {
+        if (form.vehicleVin?.length === VIN_LENGTH && oldVin.current !== form.vehicleVin) {
             const t = setTimeout(() => {
                 oldVin.current = form.vehicleVin;
                 setVinLoading(true);
