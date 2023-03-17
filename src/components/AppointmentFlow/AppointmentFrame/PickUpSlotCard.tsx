@@ -141,9 +141,9 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                 <div className={classes.text}>
                     <div>{t("Pick Up Time")}:</div>
                     <div>
-                        {moment(timeSlot.pickUpMin, 'H:mm').format('h:mm A')}
+                        {moment(timeSlot.pickUpMin, 'HH:mm').format('hh:mm A')}
                         <span> {t("to")} </span>
-                        {moment(timeSlot.pickUpMax, 'H:mm').format('h:mm A')}
+                        {moment(timeSlot.pickUpMax, 'HH:mm').format('hh:mm A')}
                     </div>
                 </div>
             </div>
@@ -164,9 +164,9 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                     ? <div className={classes.dropOff}>
                         <div>{t("Drop Off Time")}:</div>
                         <div className={classes.rightText}>
-                            {moment(timeSlot.dropOffMin, 'H:mm').format('h:mm A')}
+                            {moment(timeSlot.dropOffMin, 'HH:mm').format('hh:mm A')}
                             <span> {t("to")} </span>
-                            {moment(timeSlot.dropOffMax, 'H:mm').format('h:mm A')}
+                            {moment(timeSlot.dropOffMax, 'HH:mm').format('hh:mm A')}
                         </div>
                     </div>
                     : <div className={classes.dropOff} style={{textAlign: 'justify', paddingBottom: 16}}>{dropOffSettings?.description}</div>
