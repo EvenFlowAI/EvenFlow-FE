@@ -552,6 +552,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             <Autocomplete
                                 classes={autoCompleteStyles}
                                 options={engineTypes}
+                                disableCloseOnSelect
                                 getOptionSelected={(option, value) => option.id === value.id}
                                 getOptionLabel={(option) => option.name}
                                 disabled={!isApplyBusinessRules}
