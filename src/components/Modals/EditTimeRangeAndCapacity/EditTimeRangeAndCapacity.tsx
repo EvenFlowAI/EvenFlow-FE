@@ -36,10 +36,10 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
 
     useEffect(() => {
         if (open && editingElement) {
-            if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, backEndFormat))
-            if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, backEndFormat))
-            if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, backEndFormat))
-            if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax, backEndFormat))
+            if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, outputTimeFormat))
+            if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, outputTimeFormat))
+            if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, outputTimeFormat))
+            if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax, outputTimeFormat))
             if (editingElement.capacity) setDailyCapacity(editingElement.capacity)
         }
     }, [editingElement, open])
