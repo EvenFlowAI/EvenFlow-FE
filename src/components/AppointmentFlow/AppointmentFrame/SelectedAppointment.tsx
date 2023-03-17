@@ -306,9 +306,11 @@ export const SelectedAppointment = () => {
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
                         {/*  <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                         {/*</div> : null}*/}
-                        {isDynamicPricing && (
+                        {isDynamicPricing && serviceTypeOption?.type !== EServiceType.PikUpDropOff && (
                             <div className="info">
-                                {!appointment?.price?.amountOfSavingMoney ? t("Save by booking at off peak times!") : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
+                                {!appointment?.price?.amountOfSavingMoney
+                                    ? t("Save by booking at off peak times!")
+                                    : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
                             </div>
                         )}
                     </>
