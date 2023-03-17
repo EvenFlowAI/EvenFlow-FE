@@ -6,6 +6,7 @@ import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
 import {monthFormat, XsFormat, XsMontFormat, defaultFormat, DayCard} from "./DaySelectCard";
+import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 
 type TProps = {
     day: string;
@@ -38,7 +39,7 @@ export const SVDaySelectCard: React.FC<TProps> = ({
                 return t("Not Available");
             }
         }
-        if (appointment?.price) {
+        if (appointment?.price && !appointment?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Suppressed)) {
             return `$${scProfile?.isRoundPrice ? appointment.price.value : appointment.price.value.toFixed(2)}`;
         }
         if (appointment) {

@@ -78,7 +78,7 @@ const PopoverContent: React.FC<{appointment: TPopoverState['selectedAppointment'
         <Box py={2} px={1}>
             <Grid container spacing={2} alignItems="center">
                 <Grid item xs={7} className={classes.hour}>
-                    {appointment.date.format("h:mm A")}
+                    {appointment.date.format("hh:mm A")}
                 </Grid>
                 <Grid item xs={5} className={classes.day}>
                     {appointment.date.format("MMM D")}

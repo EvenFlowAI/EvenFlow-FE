@@ -159,10 +159,10 @@ const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppo
     return <DateWrapper>
         <div>Date: <span>{moment(serviceValetAppointment.date).format('MMMM D')}</span></div>
         <div>Pick Up Time:
-            <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("HH:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("HH:mm A")}</span>
+            <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("hh:mm A")}</span>
         </div>
         <div>Drop Off Time:
-            <span> {moment(serviceValetAppointment.date).set('hour', +hoursDMin).set('minute', +minutesDMin).format("HH:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursDMax).set('minute', +minutesDMax).format("HH:mm A")}</span>
+            <span> {moment(serviceValetAppointment.date).set('hour', +hoursDMin).set('minute', +minutesDMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursDMax).set('minute', +minutesDMax).format("hh:mm A")}</span>
         </div>
     </DateWrapper>
 }
@@ -306,9 +306,11 @@ export const SelectedAppointment = () => {
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
                         {/*  <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                         {/*</div> : null}*/}
-                        {isDynamicPricing && (
+                        {isDynamicPricing && serviceTypeOption?.type !== EServiceType.PikUpDropOff && (
                             <div className="info">
-                                {!appointment?.price?.amountOfSavingMoney ? t("Save by booking at off peak times!") : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
+                                {!appointment?.price?.amountOfSavingMoney
+                                    ? t("Save by booking at off peak times!")
+                                    : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
                             </div>
                         )}
                     </>

@@ -11,7 +11,7 @@ import {useModal, useSCs} from "../../../utils/hooks";
 import EditTimeRangeAndCapacity from "../../Modals/EditTimeRangeAndCapacity/EditTimeRangeAndCapacity";
 import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";
 
-const timeFormat = "HH:mm A";
+const timeFormat = "hh:mm A";
 const timeWithSecond = "HH:mm:ss";
 
 const TimeRangesAndCapacity = () => {
