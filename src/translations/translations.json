@@ -253,6 +253,10 @@
       "Continue as a new customer": "Continue as a new customer",
       "Type Of Service": "Type Of Service",
       "Service Option": "Service Option",
+      "left": "left",
+      "to": "to",
+      "Drop Off Time": "Drop Off Time",
+      "Pick Up Time": "Pick Up Time",
       "In order for us to be better prepared for your appointment, please leave a brief description of your concern.": "In order for us to be better prepared for your appointment, please leave a brief description of your concern.",
       "Close": "Close",
       "Enter pick up address": "Enter pick up address",
@@ -260,7 +264,11 @@
       "Enter your requested location": "Enter your requested location",
       "Enter your requested zip code": "Enter your requested zip code",
       "zip code required": "Zip code required",
-      "Address is required": "Address is required"
+      "Address is required": "Address is required",
+      "Selected Date": "Selected Date",
+      "Date": "Date",
+      "Pick Up From": "Pick Up From",
+      "Pick Up To": "Pick Up To"
     }
   },
   "es": {

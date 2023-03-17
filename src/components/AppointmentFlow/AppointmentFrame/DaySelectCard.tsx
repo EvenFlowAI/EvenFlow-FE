@@ -8,14 +8,13 @@ import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
 
-
 type TDayCardProps = {
     available?: boolean;
     isCurrent?: boolean;
     isOffPeak?: boolean;
 }
 
-const DayCard = styled(({available, isCurrent, isOffPeak, ...props}) => (<div {...props}/>))<Theme, TDayCardProps>(({theme, available, isCurrent, isOffPeak}) => ({
+export const DayCard = styled(({available, isCurrent, isOffPeak, ...props}) => (<div {...props}/>))<Theme, TDayCardProps>(({theme, available, isCurrent, isOffPeak}) => ({
     flex: "1 0 0px",
     opacity: (!available && !isCurrent) ? .3 : 1,
     display: "flex",
@@ -57,16 +56,15 @@ type TProps = {
     isCurrent: boolean;
     appointment?: TGroupedAppointment;
     isXs: boolean;
-    isPackage: boolean;
 };
 
-const XsFormat = "ddd";
-const defaultFormat = 'D, ddd';
-const monthFormat = "MMM D";
-const XsMontFormat = "MMM";
+export const XsFormat = "ddd";
+export const defaultFormat = 'D, ddd';
+export const monthFormat = "MMM D";
+export const XsMontFormat = "MMM";
 
 export const DaySelectCard: React.FC<TProps> = ({
-    day, onClick, appointment, isCurrent, isPackage, isXs
+    day, onClick, appointment, isCurrent, isXs
 }) => {
     const isCustomRange = useSelector((state: RootState) => {
         return Boolean(

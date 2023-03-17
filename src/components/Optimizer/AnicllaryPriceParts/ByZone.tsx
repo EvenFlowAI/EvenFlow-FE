@@ -166,10 +166,10 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
                         <HeaderTableCell align="left" size="small">
                             <div className="distanceCell">Zone</div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
+                        <HeaderTableCell align="left" size="small" width={100}>
                             <div className="distanceCell">Flat Fee ($)</div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small" width ={450}>
+                        <HeaderTableCell align="left" size="small" width={450}>
                             <div className="distanceCell">Service Multiplier</div>
                         </HeaderTableCell>
                         <HeaderTableCell align="left" size="small" width={170}>

@@ -48,6 +48,7 @@ const RoPredictionParameters = () => {
     const [heavyRepairLaborHours, setHeavyRepairLaborHours] = useState<string>('0');
     const [otherRepairLaborHours, setOtherRepairLaborHours] = useState<string>('0');
     const [defaultLaborHours, setDefaultLaborHours] = useState<string>('0');
+    const [pickUpDropOffHours, setPickUpDropOffHours] = useState<string>('0');
 
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -84,6 +85,10 @@ const RoPredictionParameters = () => {
         if (Number(e.target.value) >= 0) setDefaultLaborHours(e.target.value)
     }
 
+    const handleChangePickUp = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (Number(e.target.value) >= 0) setPickUpDropOffHours(e.target.value)
+    }
+
     const onSuccess = () => {
         setEdit(false);
         showMessage('RO Prediction Parameters updated')
@@ -101,11 +106,13 @@ const RoPredictionParameters = () => {
     const handleSave = () => {
         if (heavyRepairLaborHours.match(fixedToTwo)
             && otherRepairLaborHours.match(fixedToTwo)
-            && defaultLaborHours.match(fixedToTwo)) {
+            && defaultLaborHours.match(fixedToTwo)
+            && pickUpDropOffHours.match(fixedToTwo)) {
             const data: IPredictionParams = {
                 heavyRepairLaborHours: Number(heavyRepairLaborHours),
                 otherRepairLaborHours: Number(otherRepairLaborHours),
                 defaultLaborHours: Number(defaultLaborHours),
+                pickUpDropOffHours: Number(pickUpDropOffHours),
             }
             if (selectedPod) data.podId = selectedPod.id;
             if (selectedSC) dispatch(updatePredictionParams(selectedSC.id, data, onError, onSuccess));
@@ -206,6 +213,30 @@ const RoPredictionParameters = () => {
                                         }}
                                         value={defaultLaborHours}
                                         onChange={handleChangeDefault}
+                                    />
+                                }
+                            </TableCell>
+                            <TableCell/>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell align="left">
+                                Pick Up & Drop Off Hours
+                            </TableCell>
+                            <TableCell align="left">
+                                The average labor hours for a pick up & drop off appointment used to determine the total daily appointment slot capacity
+                            </TableCell>
+                            <TableCell>
+                                {!isEdit
+                                    ? pickUpDropOffHours
+                                    : <TextField
+                                        error={!pickUpDropOffHours.match(fixedToTwo)}
+                                        type="number"
+                                        inputProps={{
+                                            min: 0,
+                                            step: 1,
+                                        }}
+                                        value={pickUpDropOffHours}
+                                        onChange={handleChangePickUp}
                                     />
                                 }
                             </TableCell>

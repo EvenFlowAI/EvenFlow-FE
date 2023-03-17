@@ -97,7 +97,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }
 
     const getButtonState = useCallback((index: number) => {
-        if (index > 0 && sideBarSteps.length <= 2) return true;
+        if (index > 0 && sideBarSteps.length < 2) return true;
         const usualSteps = getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds);
         return (usualSteps[screen] < index + 1 && usualSteps[sideBarSteps[sideBarSteps.length - 1]] < index + 1);
     }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps])

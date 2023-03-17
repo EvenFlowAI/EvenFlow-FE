@@ -24,7 +24,7 @@ import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
-import {selectAppointment, selectSR} from "../appointment/actions";
+import {selectAppointment, selectServiceValetAppointment, selectSR} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
@@ -59,7 +59,7 @@ export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCa
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
 export const setServiceType = createAction<EServiceType>('fAppointment/SetServiceType');
-export const setServiceTypeOption = createAction<IFirstScreenOption>('fAppointment/SetServiceTypeOption');
+export const setServiceTypeOption = createAction<IFirstScreenOption|null>('fAppointment/SetServiceTypeOption');
 export const setZipCode = createAction<string>('fAppointment/SetZipCode');
 export const setAddress = createAction<any>('fAppointment/SetAddress');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
@@ -185,6 +185,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(selectService(null));
     dispatch(selectSubService(null));
     dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
     dispatch(setValueService(null));
     dispatch(selectCategoriesIds([]));
     dispatch(selectSR(null));

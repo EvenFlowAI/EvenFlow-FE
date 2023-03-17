@@ -27,7 +27,7 @@ import {
     getCustomerCache,
     loadSCProfile,
     loadSRs,
-    saveCustomerCache, selectAppointment,
+    saveCustomerCache, selectAppointment, selectServiceValetAppointment,
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
@@ -132,8 +132,6 @@ export const AppointmentFrameLayout = () => {
         valueService,
         serviceType,
         currentScreen: currentFrameScreen,
-        isMobileServiceOn,
-        isPickUpDropOffServiceOn,
         userType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -152,8 +150,8 @@ export const AppointmentFrameLayout = () => {
     const {t} = useTranslation();
 
     const needToShowServiceSelection = useMemo(() => Boolean(userType === EUserType.Existing
-        && (firstScreenOptions.length && (isMobileServiceOn || isPickUpDropOffServiceOn))),
-        [userType, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
+        && (!!firstScreenOptions.length)),
+        [userType, firstScreenOptions]);
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const currentConfig = useMemo(() => {
@@ -286,6 +284,7 @@ export const AppointmentFrameLayout = () => {
     const clearAppointmentData = useCallback(() => {
         dispatch(setPackage(null));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
         dispatch(selectCategoriesIds([]));
         dispatch(selectService(null));
         dispatch(selectSubService(null));
@@ -341,7 +340,7 @@ export const AppointmentFrameLayout = () => {
          * We have decided to go through the flow and then to see if we should allow to user to change service type in any case
          * And if we should to clear all the appointment data if the service type was changed from the previous one
          **/
-        let needToShowService = true;
+        let needToShowService = needToShowServiceSelection;
         if (data.serviceType && data.serviceTypeOption) {
             const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
             if (option) {
@@ -388,7 +387,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions]);
 
     const handleSelectCar = useCallback( () => {
         selectedVehicle && onSelectCar(selectedVehicle)

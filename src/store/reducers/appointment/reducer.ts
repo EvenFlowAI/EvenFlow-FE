@@ -16,11 +16,11 @@ import {
     changeS1Form,
     changeS3Form,
     changeTransportation, getAllServiceCategories,
-    getAppointmentSlots, getServiceCategories,
-    getServiceCenterProfile,
+    getAppointmentSlots, getDropOffSettings, getServiceCategories,
+    getServiceCenterProfile, getServiceValetSlots,
     getSRs,
     handleSearch,
-    selectAppointment,
+    selectAppointment, selectServiceValetAppointment,
     selectSR, selectSRMultiple,
     setAppointmentFilters,
     setCustomerEnteredEmail,
@@ -77,7 +77,9 @@ const initialState: TAppointmentState = {
     privacy: blankPrivacy,
     comment: "",
     appointment: null,
+    serviceValetAppointment: null,
     appointmentSlots: [],
+    serviceValetSlots: [],
     appointmentFilters: {
         offersOnly: false,
         waitTimeOnly: false
@@ -85,6 +87,7 @@ const initialState: TAppointmentState = {
     serviceCategories: [],
     allServiceCategories: [],
     isProfileLoading: false,
+    dropOffSettings: null,
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -242,5 +245,14 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(setProfileLoading, (state, {payload}) => {
         return {...state, isProfileLoading: payload};
+    })
+    .addCase(getServiceValetSlots, (state, {payload}) => {
+        return {...state, serviceValetSlots: payload};
+    })
+    .addCase(selectServiceValetAppointment, (state, {payload}) => {
+        return {...state, serviceValetAppointment: payload};
+    })
+    .addCase(getDropOffSettings, (state, {payload}) => {
+        return {...state, dropOffSettings: payload};
     })
 );

@@ -37,6 +37,28 @@ const Wrapper = styled(({available, offPeak, selected, ...props}) => <div {...pr
     },
 }))
 
+const PickUpWrapper = styled(({available, offPeak, selected, ...props}) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({theme, available, offPeak, selected}) => ({
+    display: "grid",
+    gridTemplateColumns: '4fr 6fr',
+    alignItems: "center",
+    fontWeight: "bold",
+    gap: "6px",
+    opacity: available ? 1 : .3,
+    cursor: "pointer",
+    border: '1px solid #000000',
+    borderRadius: 2,
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr 1fr',
+    },
+    '& .pickUp': {
+        display: 'grid',
+        gridTemplateColumns: '1fr 5fr',
+        backgroundColor: selected ? '#202021' : '#E0E0E0',
+        color: selected ? '#FFFFFF' : '#202021'
+    }
+}))
+
 type TProps = {
     timeSlot: TSlot;
     slot?: IRemappedAppointmentSlot;
@@ -44,6 +66,7 @@ type TProps = {
     onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
     date: moment.Moment|null;
 }
+
 export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
