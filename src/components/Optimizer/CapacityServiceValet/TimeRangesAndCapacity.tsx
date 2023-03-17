@@ -8,7 +8,9 @@ import {Loading} from "../../UI/Loading";
 import {Table} from "../../UI/Table";
 import {Button} from "@material-ui/core";
 import {useModal, useSCs} from "../../../utils/hooks";
-import EditTimeRangeAndCapacity from "../../Modals/EditTimeRangeAndCapacity/EditTimeRangeAndCapacity";
+import EditTimeRangeAndCapacity, {
+    inputTimeFormat, outputTimeFormat,
+} from "../../Modals/EditTimeRangeAndCapacity/EditTimeRangeAndCapacity";
 import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";
 
 const timeFormat = "HH:mm A";
@@ -59,22 +61,22 @@ const TimeRangesAndCapacity = () => {
             {
                 header: 'Pick Up Min'.toUpperCase(),
                 align: 'center',
-                val: el => el.pickUpMin,
+                val: el => moment(el.pickUpMin, inputTimeFormat).format(outputTimeFormat),
             },
             {
                 header: 'Pick Up Max'.toUpperCase(),
                 align: 'center',
-                val: el => el.pickUpMax,
+                val: el => moment(el.pickUpMax, inputTimeFormat).format(outputTimeFormat),
             },
             {
                 header: 'Drop Off Min'.toUpperCase(),
                 align: 'center',
-                val: el => el.dropOffMin,
+                val: el => moment(el.dropOffMin, inputTimeFormat).format(outputTimeFormat),
             },
             {
                 header: 'Drop Off Max'.toUpperCase(),
                 align: 'center',
-                val: el => el.dropOffMax,
+                val: el => moment(el.dropOffMax, inputTimeFormat).format(outputTimeFormat),
             },
             {
                 header: 'Daily Capacity'.toUpperCase(),
