@@ -17,7 +17,9 @@ type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;
 }
 
-const timeFormat = 'HH:mm:ss';
+export const inputTimeFormat = 'HH:mm:ss';
+export const outTimeFormat = 'h:mm:ss';
+export const outputTimeFormat = 'h:mm A';
 
 const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingElement}) => {
     const [pickUpMin, setPickUpMin] = useState<moment.Moment|null>(null)
@@ -33,10 +35,10 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
 
     useEffect(() => {
         if (open && editingElement) {
-            if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, timeFormat))
-            if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, timeFormat))
-            if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, timeFormat))
-            if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax, timeFormat))
+            if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, inputTimeFormat))
+            if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, inputTimeFormat))
+            if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, inputTimeFormat))
+            if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax, inputTimeFormat))
             if (editingElement.capacity) setDailyCapacity(editingElement.capacity)
         }
     }, [editingElement, open])
@@ -93,10 +95,10 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
         if (selectedSC && checkIsValid()) {
             const data: ITimeRangeAndCapacity = {
                 serviceCenterId: selectedSC.id,
-                pickUpMin: moment(pickUpMin).format("HH:mm:ss"),
-                pickUpMax: moment(pickUpMax).format("HH:mm:ss"),
-                dropOffMin: moment(dropOffMin).format("HH:mm:ss"),
-                dropOffMax: moment(dropOffMax).format("HH:mm:ss"),
+                pickUpMin: moment(pickUpMin).format(outTimeFormat),
+                pickUpMax: moment(pickUpMax).format(outTimeFormat),
+                dropOffMin: moment(dropOffMin).format(outTimeFormat),
+                dropOffMax: moment(dropOffMax).format(outTimeFormat),
                 capacity: +dailyCapacity,
             }
             if (editingElement.id) {
