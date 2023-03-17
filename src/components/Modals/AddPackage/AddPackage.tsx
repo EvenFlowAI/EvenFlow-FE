@@ -269,10 +269,10 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     customerCriteria: currentPackage.businessRules.customerCriteria,
                     isApplyBusinessRules: currentPackage.isApplyBusinessRules,
                 })
-                if (currentPackage.businessRules.engineTypeIds) {
-                    const engineData = engineTypes.filter(item =>  currentPackage.businessRules.engineTypeIds?.includes(item.id))
-                    engineData && setSelectedEngineTypes(engineData);
-                }
+            }
+            if (currentPackage.engineTypes) {
+                const engineData = engineTypes.filter(item => currentPackage.engineTypes?.find(el => el.id === item.id))
+                engineData && setSelectedEngineTypes(engineData);
             }
         }
     }, [currentPackage, isEditing, allAssignedList])
@@ -346,7 +346,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             || selectedMakes.length
             || selectedMileages.length
             || (yearFrom && yearTo)
-            || selectedEngineTypes
+            || selectedEngineTypes.length
         if (!atLeastOneRule) showError('At least one Business Rule is required')
         return atLeastOneRule;
     }
@@ -368,6 +368,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     serviceRequestsAssigned: assignedOpsCodes,
                     serviceCenterId: selectedSC.id,
                     isApplyBusinessRules: isApplyBusinessRules,
+                    engineTypes: selectedEngineTypes.map(item => item.id),
                 }
                 if (isApplyBusinessRules && isBusinessRulesValid()) {
                     data.businessRules = {
@@ -379,7 +380,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                         },
                         vehicleMileageValues: selectedMileages,
                         customerCriteria: vehiclesData.customerCriteria,
-                        engineTypeIds: selectedEngineTypes.map(item => item.id),
+                        engineTypeIds:[]
                     }
                 } else {
                     if (isEditing) data.businessRules = currentPackage?.businessRules;
