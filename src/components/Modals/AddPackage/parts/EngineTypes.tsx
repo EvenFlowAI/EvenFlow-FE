@@ -75,6 +75,7 @@ const EngineTypes: React.FC<TEngineTypesProps> = ({
         <Autocomplete
             classes={classes}
             options={getSortedOptions()}
+            disableCloseOnSelect
             multiple
             renderOption={renderEngineTypeOption}
             getOptionSelected={(option, value) => option.id === value.id}
