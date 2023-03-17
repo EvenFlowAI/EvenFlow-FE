@@ -136,6 +136,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setAddress(null);
         setZipCode("");
         setSelectedEngine(null);
+        setPreloadedSVSlot(null);
+        setPreloadedSlot(null);
     }
 
     useEffect(() => {
@@ -187,14 +189,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     selectedJobType && setJobType(selectedJobType);
                 }
                 setDate(payload.dateInUtc);
-                if (payload.serviceTypeOption?.type === EServiceType.PikUpDropOff) {
-                    const firstScreenOption = firstScreenOptions.find(el => el.id === payload.serviceTypeOption?.id)
-                    const slot = serviceValetSlots.find(item => moment(item.date).isSame(payload.dateInUtc, 'date'))
-                    if (slot && firstScreenOption) {
-                        setSelectedSVSlot(slot)
-                        setPreloadedSVSlot(slot)
-                    }
-                } else {
+                if (payload.serviceTypeOption?.type !== EServiceType.PikUpDropOff) {
                     const slot: IAppointmentSlot = {
                         date: payload.dateInUtc,
                         time: payload.timeSlot,
@@ -212,7 +207,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         } else {
             clearForm();
         }
-    }, [props.open, payload, engineTypes, serviceValetSlots]);
+    }, [props.open, payload, engineTypes]);
 
     useEffect(() => {
         const selectedPackage = packages.find(item => item.options.find(option => option.id === payload?.maintenancePackageOption?.id))
@@ -239,67 +234,9 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         }
     }, [selectedSC, props.open, selectedSR]);
 
-    const getUsualSlots = useCallback((waiting: boolean) => {
-        if (selectedSC) {
-            setSlotsLoading(true);
-            if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
-                setSlots([]);
-                setSlotsLoading(false);
-            } else {
-                API.timeSlots.list({
-                    appointmentTimingType: EAppointmentTimingType.PreferredDate,
-                    fromDate: moment(filterDate).toISOString(),
-                    serviceRequestIds: selectedSR.map(sr => sr.id),
-                    maintenancePackageOptionId: selectedPackageOption?.id ?? null,
-                    serviceCategoryIds: selectedCategories.map(item => item.id),
-                    serviceCenterId: selectedSC.id,
-                    jobType: jobType?.value ?? null,
-                    appointmentHashKey: payload?.hashKey ?? undefined,
-                    serviceTypeOptionId: serviceTypeOption?.id ?? null,
-                    address: address?.label ?? null,
-                    zipCode: zipCode?.length ? zipCode : undefined,
-                    vehicle: {
-                        make: form.vehicleMake,
-                        model: form.vehicleModel,
-                        year: +form.vehicleYear,
-                        mileage: +form.vehicleMileage,
-                        vin: form.vehicleVin,
-                    }
-                })
-                    .then(({data: {items}}) => {
-                        if (waiting) {
-                            if (preloadedSlot) {
-                                items = [preloadedSlot, ...items];
-                                initialRef.current = true;
-                            } else {
-                                setSelectedSlot(null);
-                            }
-                            setSlots(items);
-                        }
-
-                    })
-                    .catch((e) => {
-                        if (waiting) {
-                            showError(e);
-                            if (preloadedSlot) {
-                                setSlots([preloadedSlot]);
-                                initialRef.current = true;
-                            } else {
-                                setSlots([]);
-                                setSelectedSlot(null);
-                            }
-                        }
-                    })
-                    .finally(() => {
-                        setSlotsLoading(false);
-                    });
-            }
-        }
-    }, [form, selectedSC, filterDate, selectedSR, showError,
-        preloadedSlot, selectedPackageOption, selectedCategories, jobType, serviceTypeOption, address, zipCode])
-
-    const getServiceValetSlots = useCallback((waiting: boolean) => {
-        if (selectedSC) {
+    useEffect(() => {
+        let waiting = true;
+        if (selectedSC && props.open && serviceTypeOption?.type === EServiceType.PikUpDropOff) {
             setSlotsLoading(true);
             if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
                 setServiceValetSlots([]);
@@ -355,21 +292,70 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             }
         }
     }, [form, selectedSC, filterDate, selectedSR, showError,
-        preloadedSVSlot, selectedPackageOption, selectedCategories, jobType, serviceTypeOption, address, zipCode])
+        preloadedSVSlot, selectedPackageOption, selectedCategories, jobType, serviceTypeOption, address, zipCode, props.open])
 
     useEffect(() => {
         let waiting = true;
-        if (selectedSC && props.open) {
-            if (serviceTypeOption?.type === EServiceType.PikUpDropOff) {
-                getServiceValetSlots(waiting)
+        if (selectedSC && props.open  && filterDate && serviceTypeOption?.type !== EServiceType.PikUpDropOff) {
+            setSlotsLoading(true);
+            if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
+                setSlots([]);
+                setSlotsLoading(false);
             } else {
-                filterDate && getUsualSlots(waiting)
+                API.timeSlots.list({
+                    appointmentTimingType: EAppointmentTimingType.PreferredDate,
+                    fromDate: moment(filterDate).toISOString(),
+                    serviceRequestIds: selectedSR.map(sr => sr.id),
+                    maintenancePackageOptionId: selectedPackageOption?.id ?? null,
+                    serviceCategoryIds: selectedCategories.map(item => item.id),
+                    serviceCenterId: selectedSC.id,
+                    jobType: jobType?.value ?? null,
+                    appointmentHashKey: payload?.hashKey ?? undefined,
+                    serviceTypeOptionId: serviceTypeOption?.id ?? null,
+                    address: address?.label ?? null,
+                    zipCode: zipCode?.length ? zipCode : undefined,
+                    vehicle: {
+                        make: form.vehicleMake,
+                        model: form.vehicleModel,
+                        year: +form.vehicleYear,
+                        mileage: +form.vehicleMileage,
+                        vin: form.vehicleVin,
+                    }
+                })
+                    .then(({data: {items}}) => {
+                        if (waiting) {
+                            if (preloadedSlot) {
+                                items = [preloadedSlot, ...items];
+                                initialRef.current = true;
+                            } else {
+                                setSelectedSlot(null);
+                            }
+                            setSlots(items);
+                        }
+
+                    })
+                    .catch((e) => {
+                        if (waiting) {
+                            showError(e);
+                            if (preloadedSlot) {
+                                setSlots([preloadedSlot]);
+                                initialRef.current = true;
+                            } else {
+                                setSlots([]);
+                                setSelectedSlot(null);
+                            }
+                        }
+                    })
+                    .finally(() => {
+                        setSlotsLoading(false);
+                    });
             }
         }
         return () => {
             waiting = false;
         };
-    }, [selectedSC, props.open, filterDate, serviceTypeOption, getServiceValetSlots, getUsualSlots]);
+    }, [props.open, form, selectedSC, filterDate, selectedSR, showError,
+        preloadedSlot, selectedPackageOption, selectedCategories, jobType, serviceTypeOption, address, zipCode]);
 
     useEffect(() => {
         if (preloadedSlot && initialRef.current) {
