@@ -30,6 +30,7 @@ import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetail
 import Mileage from "./parts/Mileage/Mileage";
 import AssignedOpsCodes from "./parts/AssignedOpsCodes/AssignedOpsCodes";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
+import EngineTypes from "./parts/EngineTypes";
 
 
 type TModalProps = DialogProps & {
@@ -225,7 +226,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const [selectedModels, setSelectedModels] = useState<string[]>([]);
     const [selectedMileages, setSelectedMileages] = useState<string[]>([]);
     const [optionError, setOptionError] = useState<boolean>(false);
-    const [engineType, setEngineType] = useState<IEngineType|null>(null);
+    const [selectedEngineTypes, setSelectedEngineTypes] = useState<IEngineType[]>([]);
 
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
@@ -268,10 +269,10 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     customerCriteria: currentPackage.businessRules.customerCriteria,
                     isApplyBusinessRules: currentPackage.isApplyBusinessRules,
                 })
-                if (currentPackage.businessRules.engineTypeId) {
-                    const engineData = engineTypes.find(item => item.id === currentPackage.businessRules.engineTypeId)
-                    engineData && setEngineType(engineData);
-                }
+            }
+            if (currentPackage.engineTypes) {
+                const engineData = engineTypes.filter(item => currentPackage.engineTypes?.find(el => el.id === item.id))
+                engineData && setSelectedEngineTypes(engineData);
             }
         }
     }, [currentPackage, isEditing, allAssignedList])
@@ -288,7 +289,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         setSelectedMakes([]);
         setApplyBusinessRules(false);
         setSelectedMileages([]);
-        setEngineType(null);
+        setSelectedEngineTypes([]);
         props.onClose();
     }, [initialValues, props.onClose])
 
@@ -309,11 +310,6 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                 setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
             }
     }, [])
-
-    const onEngineTypeChange = (e: React.ChangeEvent<{}>, value: IEngineType|null) => {
-        setFormIsChecked(false);
-        setEngineType(value);
-    }
 
     const onDelete = useCallback((serviceRequest: IServiceRequest): void => {
         setFormIsChecked(false);
@@ -350,7 +346,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             || selectedMakes.length
             || selectedMileages.length
             || (yearFrom && yearTo)
-            || engineType
+            || selectedEngineTypes.length
         if (!atLeastOneRule) showError('At least one Business Rule is required')
         return atLeastOneRule;
     }
@@ -372,6 +368,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     serviceRequestsAssigned: assignedOpsCodes,
                     serviceCenterId: selectedSC.id,
                     isApplyBusinessRules: isApplyBusinessRules,
+                    engineTypes: selectedEngineTypes.map(item => item.id),
                 }
                 if (isApplyBusinessRules && isBusinessRulesValid()) {
                     data.businessRules = {
@@ -383,7 +380,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                         },
                         vehicleMileageValues: selectedMileages,
                         customerCriteria: vehiclesData.customerCriteria,
-                        engineTypeId: engineType?.id ?? null,
+                        engineTypeIds:[]
                     }
                 } else {
                     if (isEditing) data.businessRules = currentPackage?.businessRules;
@@ -538,29 +535,23 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                         </div>
                     </div>
                     <div style={{ marginBottom: 16}}>
-                        <div className={classes.twoFieldsWrapper}>
-                            <Autocomplete
-                                classes={autoCompleteStyles}
-                                disableClearable
-                                options={criteriaOptions}
-                                getOptionSelected={(option, value) => option === value}
-                                disabled={!isApplyBusinessRules}
-                                value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[ECustomerCriteria.Any]}
-                                onChange={onFormFieldChange('customerCriteria')}
-                                renderInput={autocompleteRender({label: 'Customer Criteria', placeholder: 'Select Customer Criteria'})}
-                            />
-                            <Autocomplete
-                                classes={autoCompleteStyles}
-                                options={engineTypes}
-                                getOptionSelected={(option, value) => option.id === value.id}
-                                getOptionLabel={(option) => option.name}
-                                disabled={!isApplyBusinessRules}
-                                value={engineType}
-                                onChange={onEngineTypeChange}
-                                renderInput={autocompleteRender({label: 'Engine Type', placeholder: 'Select Engine Type'})}
-                            />
-                        </div>
+                        <Autocomplete
+                            classes={autoCompleteStyles}
+                            disableClearable
+                            options={criteriaOptions}
+                            getOptionSelected={(option, value) => option === value}
+                            disabled={!isApplyBusinessRules}
+                            value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[ECustomerCriteria.Any]}
+                            onChange={onFormFieldChange('customerCriteria')}
+                            renderInput={autocompleteRender({label: 'Customer Criteria', placeholder: 'Select Customer Criteria'})}
+                        />
                     </div>
+                    <EngineTypes
+                        setSelectedEngineTypes={setSelectedEngineTypes}
+                        selectedEngineTypes={selectedEngineTypes}
+                        setFormIsChecked={setFormIsChecked}
+                        isApplyBusinessRules={isApplyBusinessRules}
+                    />
                 </div>
 
             </DialogContent>

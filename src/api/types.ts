@@ -319,7 +319,7 @@ export interface IBusinessRule {
     vehicleYearRange: IYearRange;
     vehicleMileageValues: string[];
     customerCriteria: ECustomerCriteria;
-    engineTypeId: number|null;
+    engineTypeIds: number[];
 }
 
 export interface IComplimentaryService {
@@ -410,6 +410,11 @@ export interface IMakeExtended {
     id: number;
 }
 
+export type TEngineType = {
+    id: number;
+    name: string;
+}
+
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
     isApplyBusinessRules: boolean;
@@ -420,6 +425,7 @@ export interface IPackageById {
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
     businessRules: IBusinessRule;
+    engineTypes: TEngineType[];
 }
 
 export type TOptionServiceRequest = {
