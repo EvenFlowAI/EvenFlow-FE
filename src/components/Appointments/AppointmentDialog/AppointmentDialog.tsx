@@ -173,8 +173,9 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceRequestIds: payload.serviceRequests.map(sr => sr.id),
                     vehicleEngineTypeId: payload.vehicle.engineTypeId ?? null,
                 });
-                if (payload.serviceTypeOption) {
-                    setServiceTypeOption(payload.serviceTypeOption)
+                const serviceOption = firstScreenOptions.find(item => item.id === payload.serviceTypeOption?.id)
+                if (payload.serviceTypeOption && serviceOption) {
+                    setServiceTypeOption(serviceOption)
                 }
                 if (payload.vehicle?.engineTypeId) {
                     const engine = engineTypes.find(item => item.id === payload.vehicle.engineTypeId)
@@ -202,12 +203,13 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     }
                     setSelectedSlot(slot);
                     setPreloadedSlot(slot);
+                } else {
                 }
             }
         } else {
             clearForm();
         }
-    }, [props.open, payload, engineTypes]);
+    }, [props.open, payload, engineTypes, firstScreenOptions]);
 
     useEffect(() => {
         const selectedPackage = packages.find(item => item.options.find(option => option.id === payload?.maintenancePackageOption?.id))
