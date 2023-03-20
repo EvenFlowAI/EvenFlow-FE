@@ -268,7 +268,14 @@
       "Selected Date": "Selected Date",
       "Date": "Date",
       "Pick Up From": "Pick Up From",
-      "Pick Up To": "Pick Up To"
+      "Pick Up To": "Pick Up To",
+      "VEHICLE DETAILS": "VEHICLE DETAILS",
+      "SERVICE OPTION": "SERVICE OPTION",
+      "SELECTED DATE & TIME": "SELECTED DATE & TIME",
+      "SERVICE REQUESTS": "SERVICE REQUESTS",
+      "APPOINTMENT DETAILS": "APPOINTMENT DETAILS",
+      "DEALERSHIP CONTACT NUMBER": "DEALERSHIP CONTACT NUMBER",
+      "Any Advisor": "Any Advisor"
     }
   },
   "es": {
