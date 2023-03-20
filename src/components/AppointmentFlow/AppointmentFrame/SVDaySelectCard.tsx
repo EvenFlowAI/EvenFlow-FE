@@ -39,8 +39,10 @@ export const SVDaySelectCard: React.FC<TProps> = ({
                 return t("Not Available");
             }
         }
-        if (appointment?.price && !appointment?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Suppressed)) {
-            return `$${scProfile?.isRoundPrice ? appointment.price.value : appointment.price.value.toFixed(2)}`;
+        if (appointment?.price?.value && !appointment?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Suppressed)) {
+            return `$${scProfile?.isRoundPrice 
+                ? appointment.price.value + appointment.price.ancillaryPrice 
+                : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}`;
         }
         if (appointment) {
             return t("Available");
