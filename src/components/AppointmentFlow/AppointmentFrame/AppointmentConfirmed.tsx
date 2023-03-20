@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 //import ReactGA from 'react-ga4';
 import ReactGA from 'react-ga';
 import {StepWrapper} from "./StepWrapper";
@@ -104,6 +104,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         valueService,
         engineTypes,
         selectedRecalls,
+        advisor,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -124,6 +125,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.valueService,
         state.vehicleDetails.engineTypes,
         state.appointmentFrame.selectedRecalls,
+        state.appointmentFrame.advisor,
     ]);
 
     const {t} = useTranslation();
@@ -143,7 +145,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
             : ''
 
-    const isServiceValetApp = useMemo(() => serviceValetAppointment && serviceTypeOption?.type === EServiceType.PikUpDropOff,
+    const isServiceValetApp = useMemo(() => !!serviceValetAppointment && serviceTypeOption?.type === EServiceType.PikUpDropOff,
         [serviceValetAppointment, serviceTypeOption])
 
     useEffect(() => {
@@ -241,12 +243,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 0,
                 {
                     label: t("Pick Up Time"),
-                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('HH:mm A')}
-            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('HH:mm A')}`
+                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
                 }, {
                     label: t("Drop Off Time"),
-                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('HH:mm A')}
-            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('HH:mm A')}`
+                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('hh:mm A')}`
                 }
             )
         }
@@ -262,6 +264,46 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             : t('Service price will be quoted at dealership');
     }
 
+    const getDateForCalendar = useCallback(() => {
+        let dateString: string = '';
+        if (isServiceValetApp) {
+            dateString = moment(serviceValetAppointment?.date).format('ddd, MMM D');
+            const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')} ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+            dateString = dateString.concat('\n')
+            dateString = dateString.concat(pickUpTime)
+        } else {
+            dateString = appointment?.date.format('ddd, MMM D, h:mm A') ?? moment.utc().format('ddd, MMM D, h:mm A');
+        }
+        return dateString;
+    }, [isServiceValetApp, serviceValetAppointment, appointment])
+
+    const calendarData: TItem[] = useMemo(() => ([
+        {
+            label: t('VEHICLE DETAILS'),
+            content: vehicleData,
+        },
+        {
+            label: t('SERVICE OPTION'),
+            content: getServiceName()
+        },
+        {
+            label: t('SELECTED DATE & TIME'),
+            content: getDateForCalendar(),
+        },
+        {
+            label: t('SERVICE REQUESTS'),
+            content: servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', '),
+        },
+        {
+            label: t('APPOINTMENT DETAILS'),
+            content: `Service Advisor: ${advisor?.name ?? t('Any Advisor')}`
+        },
+        {
+            label: t('DEALERSHIP CONTACT NUMBER'),
+            content: scProfile?.phoneNumber ?? '',
+        }
+    ]), [vehicleData, getServiceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile])
+
     const handleAddToCalendar = () => {
         const date = isServiceValetApp
             ? moment.utc(serviceValetAppointment?.date)
@@ -272,14 +314,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp ? "000000" : appointment?.time.split(":").join("")}`],
             text: `${scProfile?.name} ${t("Service Appointment")}`,
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
-            details: [
-                `${t("Contact number")}: ${scProfile?.phoneNumber}\n`,
-                ...data.slice(0, 2).map(r =>
-                    `${r.label}: ${r.content}`
-                ),
-                `${t("Service type")}: ${servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', ')}`,
-                getPrice(),
-            ].join("\n"),
+            details: calendarData.map(r => `${r.label}:\n${r.content}`).join("\n \n"),
+            // details: [
+            //     `${t("Contact number")}: ${scProfile?.phoneNumber}\n`,
+            //     ...data.slice(0, 2).map(r =>
+            //         `${r.label}: ${r.content}`
+            //     ),
+            //     `${t("Service type")}: ${servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', ')}`,
+            //     getPrice(),
+            // ].join("\n"),
         });
         window.open(url);
     }
@@ -294,12 +337,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         <Paper>
             <Wrapper>
                 <h2>Appointment Confirmed!</h2>
-                {data.map(item => {
+                {data.map((item, index) => {
                     if (!selectedPackage && item.label === t("Selected Price")) {
                         return null;
                     }
                     if (!item.label.length && item.content.length) return null;
-                    return <React.Fragment key={item.label}>
+                    return <React.Fragment key={item.label + index}>
                         <div className="label">{item.label}</div>
                         <div>{item.content}</div>
                     </React.Fragment>;

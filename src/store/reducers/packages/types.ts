@@ -1,16 +1,6 @@
 import {EMaintenanceOptionType, IBusinessRule} from "../../../api/types";
 import {EPricingDisplayType} from "../pricingSettings/types";
 
-export interface IPackageOption {
-    serviceRequestPrice: number;
-    complimentaryServicePrice: number;
-    serviceRequestLaborHours: number;
-    complimentaryServiceLaborHours: number;
-    serviceRequests: number[];
-    complimentaryServices: number[];
-    type: string | number;
-}
-
 export type TAssignedRequest = {
     type: string | number;
     serviceRequestId: number;
@@ -23,6 +13,7 @@ export interface IUpdatedPackage {
     complimentaryServices: number[];
     businessRules?: IBusinessRule;
     name: string,
+    engineTypes: number[];
     isApplyBusinessRules?: boolean;
 }
 
@@ -33,6 +24,7 @@ export interface INewPackage {
     businessRules?: IBusinessRule;
     name: string,
     isApplyBusinessRules?: boolean;
+    engineTypes: number[];
     serviceCenterId?: number;
 }
 
