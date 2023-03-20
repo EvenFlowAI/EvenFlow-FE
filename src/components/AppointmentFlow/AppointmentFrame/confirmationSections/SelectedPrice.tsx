@@ -35,16 +35,16 @@ export const SelectedPrice = () => {
             <ConfirmationTitle>{t("Selected Price")}</ConfirmationTitle>
             <Price>
                 {serviceTypeOption?.type === EServiceType.PikUpDropOff
-                    ? appointment?.price.value ?
-                        <span>${scProfile?.isRoundPrice
-                            ? appointment.price.value + appointment.price.ancillaryPrice
-                            : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}
-                    </span>
-                        : t('Service items will be quoted at dealership')
-                    : serviceValetAppointment?.price.value ?
+                    ? serviceValetAppointment?.price.value ?
                         <span>${scProfile?.isRoundPrice
                             ? serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice
                             : (serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice).toFixed(2)}
+                    </span>
+                        : t('Service items will be quoted at dealership')
+                    : appointment?.price.value ?
+                        <span>${scProfile?.isRoundPrice
+                            ? appointment.price.value + appointment.price.ancillaryPrice
+                            : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}
                     </span>
                         : t('Service items will be quoted at dealership')
                 }
