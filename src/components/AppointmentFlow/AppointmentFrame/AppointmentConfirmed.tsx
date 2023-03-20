@@ -104,6 +104,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         valueService,
         engineTypes,
         selectedRecalls,
+        advisor,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -124,6 +125,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.valueService,
         state.vehicleDetails.engineTypes,
         state.appointmentFrame.selectedRecalls,
+        state.appointmentFrame.advisor,
     ]);
 
     const {t} = useTranslation();
@@ -262,6 +264,33 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             : t('Service price will be quoted at dealership');
     }
 
+    const calendarData: TItem[] = [
+        {
+            label: 'VEHICLE DETAILS',
+            content: vehicleData,
+        },
+        {
+            label: 'SERVICE OPTION',
+            content: getServiceName()
+        },
+        {
+            label: 'SELECTED DATE & TIME',
+            content: getDate(),
+        },
+        {
+            label: 'SERVICE REQUESTS',
+            content: servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', '),
+        },
+        {
+            label: 'APPOINTMENT DETAILS',
+            content: `Service Advisor: ${advisor?.name ?? 'Any Advisor'}`
+        },
+        {
+            label: 'DEALERSHIP CONTACT NUMBER',
+            content: scProfile?.phoneNumber ?? '',
+        }
+    ]
+
     const handleAddToCalendar = () => {
         const date = isServiceValetApp
             ? moment.utc(serviceValetAppointment?.date)
@@ -272,14 +301,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp ? "000000" : appointment?.time.split(":").join("")}`],
             text: `${scProfile?.name} ${t("Service Appointment")}`,
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
-            details: [
-                `${t("Contact number")}: ${scProfile?.phoneNumber}\n`,
-                ...data.slice(0, 2).map(r =>
-                    `${r.label}: ${r.content}`
-                ),
-                `${t("Service type")}: ${servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', ')}`,
-                getPrice(),
-            ].join("\n"),
+            details: calendarData.map(r => `${r.label}:\n${r.content}`).join("\n \n"),
+            // details: [
+            //     `${t("Contact number")}: ${scProfile?.phoneNumber}\n`,
+            //     ...data.slice(0, 2).map(r =>
+            //         `${r.label}: ${r.content}`
+            //     ),
+            //     `${t("Service type")}: ${servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', ')}`,
+            //     getPrice(),
+            // ].join("\n"),
         });
         window.open(url);
     }
