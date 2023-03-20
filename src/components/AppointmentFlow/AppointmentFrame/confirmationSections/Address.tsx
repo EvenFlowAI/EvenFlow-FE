@@ -38,8 +38,6 @@ const Address = () => {
             <List>
                 <li className="service-item">
                     {typeof address === 'string' ? address : address?.label || ""}
-                </li>
-                <li className="service-item">
                     {t("ZIP")}: {zipCode}
                 </li>
             </List>
