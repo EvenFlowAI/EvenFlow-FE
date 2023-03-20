@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
+import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -14,10 +15,10 @@ const TitleWrapper = styled('div')({
 });
 
 const ServiceType = () => {
-    const {serviceType, isMobileServiceOn, isPickUpDropOffServiceOn, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
 
-    const getServiceName = () => {
+    const getServiceName = (serviceTypeOption: IFirstScreenOption|null, serviceType: EServiceType) => {
         if (serviceTypeOption?.note) return serviceTypeOption.note;
         if (serviceTypeOption?.name) return serviceTypeOption.name;
         switch (serviceType) {
@@ -29,14 +30,12 @@ const ServiceType = () => {
                 return t("Visit Center");
         }
     }
-    return isMobileServiceOn || isPickUpDropOffServiceOn
-        ? <div>
-            <TitleWrapper>
-                <ConfirmationTitle>{serviceTypeOption?.note || serviceTypeOption?.name ? t("Service Option") : t("Location Of Service")}</ConfirmationTitle>
-            </TitleWrapper>
-            {getServiceName()}
-        </div>
-        : null;
+    return <div>
+        <TitleWrapper>
+            <ConfirmationTitle>{serviceTypeOption?.note || serviceTypeOption?.name ? t("Service Option") : t("Location Of Service")}</ConfirmationTitle>
+        </TitleWrapper>
+        {getServiceName(serviceTypeOption, serviceType)}
+    </div>
 };
 
 export default ServiceType;
