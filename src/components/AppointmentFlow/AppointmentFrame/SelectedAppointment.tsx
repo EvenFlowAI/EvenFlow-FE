@@ -157,7 +157,7 @@ const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppo
     const [hoursDMin, minutesDMin] = serviceValetAppointment.dropOffMin.split(":");
     const [hoursDMax, minutesDMax] = serviceValetAppointment.dropOffMax.split(":");
     return <DateWrapper>
-        <div>Date: <span>{moment(serviceValetAppointment.date).format('MMMM D')}</span></div>
+        <div>Date: <span>{moment.utc(serviceValetAppointment.date).format('MMMM D')}</span></div>
         <div>Pick Up Time:
             <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("hh:mm A")}</span>
         </div>
