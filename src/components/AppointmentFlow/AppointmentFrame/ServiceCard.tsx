@@ -135,13 +135,19 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
         onClick={onSelect}
         selected={selected}
         active={active}>
-        {card.description ? <HtmlTooltip
+        {
+            card.description
+            ? <HtmlTooltip
             enterTouchDelay={0}
-            placement="right-end"
+            placement="top-end"
             title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
         >
             <div className="infoIcon"><InfoOutlined style={{ color: "#828282", filter: active ? "invert(100%)" : "unset"}}/></div>
-        </HtmlTooltip> : isSM ? null : <div/>}
+        </HtmlTooltip>
+            : isSM
+                ? null
+                : <div/>
+        }
         {isLoading
             ? <Loading/>
             : card.iconPath && icon
