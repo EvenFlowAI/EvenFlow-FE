@@ -175,8 +175,18 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             })
     }, [id, serviceRequestIds, packageOpt]);
 
+    const handleNext = (transportation: ITransportation|null): void => {
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Selected Transportation Need',
+            label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
+        })
+        onNext();
+    }
+
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
+        handleNext(o);
     }
 
     const handleSelectGeneric = (column: ETransportColumn) => {
@@ -184,15 +194,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         if (options.length) {
             dispatch(setTransportation(options[0]));
         }
-    }
-
-    const handleNext = (): void => {
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: 'Selected Transportation Need',
-            label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
-        })
-        onNext();
     }
 
     const handleSideBar = () => {
@@ -213,7 +214,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         {loading ? <Loading/>
             : transportations.length ? <TransportationWrapper>
                     {transportationNo.length ? <TransportationCard
-                        active={Boolean(transportationNo.find(item => item.id === transportation?.id))}
+                        //active={Boolean(transportationNo.find(item => item.id === transportation?.id))}
+                        active
                         selectedTransportation={transportation}
                         transportation={`${t("No, I will")}:`}
                         options={transportationNo}
@@ -221,7 +223,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                         onSelectOption={handleSelectOption}
                     /> : null}
                     {transportationYes.length ? <TransportationCard
-                        active={Boolean(transportationYes.find(item => item.id === transportation?.id))}
+                        //active={Boolean(transportationYes.find(item => item.id === transportation?.id))}
+                        active
                         options={transportationYes}
                         selectedTransportation={transportation}
                         transportation={`${t("Yes, I would like")}:`}
@@ -233,6 +236,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>
         }
-        <Actions onBack={handleBack} onNext={handleNext} nextDisabled={loading || Boolean(transportations.length) && !transportation}/>
+        <Actions onBack={handleBack} hideNext onNext={() => {}} nextDisabled={loading || Boolean(transportations.length) && !transportation}/>
     </StepWrapper>
 };
