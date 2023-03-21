@@ -193,7 +193,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
 
     const getDate = () => {
         return isServiceValetApp
-            ? moment(serviceValetAppointment?.date).format('ddd, MMM D')
+            ? moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
             : appointment?.date.format('ddd, MMM D, h:mm A')
             ?? moment.utc().format('ddd, MMM D, h:mm A');
     }
