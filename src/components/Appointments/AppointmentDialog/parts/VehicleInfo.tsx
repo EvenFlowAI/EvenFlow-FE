@@ -65,7 +65,10 @@ const VehicleInfo: React.FC<TVehicleInfoProps> = ({ selectedEngine, setSelectedE
     useEffect(() => {
         if (!form.vehicleMake?.length && selectedSC) {
             const defaultMake = makes.find(item => item.id === selectedSC.defaultVehicleMakeId)
-            defaultMake && setForm(prev => ({...prev, vehicleMake: defaultMake.name}))
+            if (defaultMake) {
+                setForm(prev => ({...prev, vehicleMake: defaultMake.name}))
+                setLoadedOptions(prevOptions => ({...prevOptions, model: defaultMake.models}));
+            }
         }
     }, [makes, form, selectedSC])
 
