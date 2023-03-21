@@ -74,40 +74,32 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         if (!userType) dispatch(setUserType(EUserType.New))
     }, [userType])
 
-    const handleSelectCard = (card: IServiceCategory) => () => {
-        dispatch(selectService(card));
+    const handleGA = (selectedService: IServiceCategory) => {
+        const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Selected Service',
+            label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
+        })
     }
 
-    const handleGA = () => {
-        if (selectedService) {
-            const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
-            ReactGA.event({
-                category: 'EvenFlow User',
-                action: 'Selected Service',
-                label: `With Name ${selectedService.name} And Service Requests ${requestsString}`,
-            })
+    const handleCategoryHighlight = (selectedService: IServiceCategory) => {
+        if (categoriesIds && selectedService.type !== EServiceCategoryType.LinkToPage2) {
+            const categories = categoriesIds?.includes(selectedService.id)
+                ? categoriesIds
+                : [...categoriesIds, selectedService.id];
+            dispatch(selectCategoriesIds(categories));
         }
     }
 
-    const handleCategoryHighlight = () => {
-        if (selectedService) {
-            if (categoriesIds && selectedService.type !== EServiceCategoryType.LinkToPage2) {
-                const categories = categoriesIds?.includes(selectedService.id)
-                    ? categoriesIds
-                    : [...categoriesIds, selectedService.id];
-                dispatch(selectCategoriesIds(categories));
-            }
-        }
-    }
-
-    const handleSubmit = () => {
+    const handleSubmit = (selectedService: IServiceCategory) => {
         if (selectedService) {
             setLastSelectedCategory(selectedService);
             if (selectedService.offer?.description) {
                 onSelect('serviceOfferProductPage');
             } else {
-                handleGA();
-                handleCategoryHighlight();
+                handleGA(selectedService);
+                handleCategoryHighlight(selectedService);
                 dispatch(setAdditionalServicesChosen(false));
 
                 switch (selectedService?.type) {
@@ -125,6 +117,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
                 }
             }
         }
+    }
+
+    const handleSelectCard = (card: IServiceCategory) => () => {
+        dispatch(selectService(card));
+        handleSubmit(card);
     }
 
     const getCardState = (card: IServiceCategory): boolean => {
@@ -149,7 +146,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 nextDisabled={!selectedService}
-                onNext={handleSubmit}
+                hideNext
+                onNext={() => {}}
                 onBack={handleBack} />
         </StepWrapper>
     );
