@@ -128,13 +128,13 @@ const DriverInfo: React.FC<TDriverInfoProps> = ({
                                 }
                             }}
                             selectProps={{
-                                addressValue: typeof address === 'string' ? address : address?.label ?? '',
+                                addressValue: typeof address === 'string' ? address : address?.label,
                                 className: classes.select,
                                 onChange: handleChangeAddress,
                                 placeholder: address?.label ?? "Start To Type",
-                                isClearable: true,
+                                isClearable: false,
                                 isSearchable: true,
-                                defaultInputValue: typeof address === 'string' ? address : address?.label || "",
+                                defaultInputValue: typeof address === 'string' ? address : address?.label,
                                 key: address?.label || 'label',
                                 error: errors.includes("address"),
                                 styles: {control: (base: any) => ({...base, border: "1 px solid red"})}
