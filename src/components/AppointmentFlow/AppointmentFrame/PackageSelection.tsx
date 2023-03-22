@@ -298,7 +298,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     }, [id, selectedVehicle, maintenanceDetails]);
 
-    const setClasses = (id: number, cls: string) => {
+    const setClasses = (id: number, cls: string): string => {
         if (id === selectedPackage?.id) {
             return `${cls} selected`;
         }
@@ -314,12 +314,12 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         onBack();
     }
 
-    const addServices = () => {
+    const addServices = (): void => {
         dispatch(setAdditionalServicesChosen(true));
         if (onAddServices) onAddServices();
     }
 
-    const handleNextScreen = () => {
+    const handleNextScreen = (): void => {
         onNext(!currentConfig?.advisorSelection
             ? currentConfig?.appointmentSelection
                 ? 'appointmentTiming'
@@ -327,8 +327,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             : 'consultantSelection')
     }
 
-    const askAdditionalServices = (selectedPackage: IPackageOptions|null) => {
-        selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
+    const askAdditionalServices = (): void => {
         const categoryChosen = service?.type === 0 || subService?.type === 0;
         if (!categoryChosen || !selectedSR.length) {
             onAdditionalOpen();
@@ -338,48 +337,50 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const onSave = async () => {
+        selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
         await onClose();
-        await askAdditionalServices(selectedPackage);
+        await askAdditionalServices();
     }
 
-    const handleGA = (selectedPackage: IPackageOptions) => {
+    const handleGA = (selectedPackage: IPackageOptions): void => {
         const packageOptions = ['Good', 'Better', 'Best'];
         ReactGA.event({
             category: 'EvenFlow User',
             action: `Selected Package`,
             label: `With ${packageOptions[selectedPackage.type]} Option`,
-        })
+        });
     }
 
     const handleNext = (selectedPackage: IPackageOptions|null): void => {
         if (selectedPackage) {
             dispatch(setPackageIsSelected(true));
             handleGA(selectedPackage);
-            if (packageIsSelected && packageOptionType && packageOptionType !== selectedPackage.type) {
+            if (packageIsSelected && packageOptionType !== null && packageOptionType !== selectedPackage.type) {
                 onOpen();
             } else {
-                askAdditionalServices(selectedPackage)
+                askAdditionalServices();
+                dispatch(setSelectedPackageOptionType(selectedPackage.type));
             }
         }
     }
 
     const handleClick = (p: IPackageOptions) => () => {
         dispatch(setPackage(p));
-        handleNext(p)
+        handleNext(p);
     }
 
-    const handleDontChangeOption = () => {
+    const handleDontChangeOption = (): void => {
         const prevPackage = packages.find(p => p.type === packageOptionType);
         if (prevPackage) dispatch(setPackage(prevPackage));
         onClose();
     }
 
-    const handleYes = () => {
+    const handleYes = (): void => {
         onAdditionalClose();
         addServices();
     }
 
-    const handleNo = () => {
+    const handleNo = (): void => {
         onAdditionalClose();
         handleNextScreen();
     }
