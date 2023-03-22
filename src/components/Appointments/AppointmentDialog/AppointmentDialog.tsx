@@ -1,18 +1,14 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {DialogProps} from "../../Modals/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
-import {
-    IAppointmentByQuery,
-    ICreateAppointment,
-    IPackageAppointments,
-    IPackageOptions,
-} from "../../../api/types";
+import {IAppointmentByQuery, ICreateAppointment, IPackageAppointments, IPackageOptions,} from "../../../api/types";
 import {Button, Divider, Grid,} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {
     EAppointmentTimingType,
     IAppointmentSlot,
+    IServiceValetAppointment,
     ISR,
     IVehicleData
 } from "../../../store/reducers/appointment/types";
@@ -45,6 +41,7 @@ import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig
 import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {TForm, TOption} from "./types";
+import SVSlotSelection from "./parts/SVSlotSelection";
 
 const initialForm: TForm = {
     date: "",
@@ -86,14 +83,17 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const [selectedPackageOption, setSelectedPackageOption] = useState<IPackageOptions | null>(null);
     const [srLoading, setSrLoading] = useState<boolean>(false);
     const [slots, setSlots] = useState<IAppointmentSlot[]>([]);
+    const [serviceValetSlots, setServiceValetSlots] = useState<IServiceValetAppointment[]>([]);
     const [preloadedSlot, setPreloadedSlot] = useState<IAppointmentSlot|null>(null);
+    const [preloadedSVSlot, setPreloadedSVSlot] = useState<IServiceValetAppointment|null>(null);
     const [slotsLoading, setSlotsLoading] = useState<boolean>(false);
     const [selectedSlot, setSelectedSlot] = useState<IAppointmentSlot|null>(null);
+    const [selectedSVSlot, setSelectedSVSlot] = useState<IServiceValetAppointment|null>(null);
     const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
     const [serviceTypeOption, setServiceTypeOption] = useState<IFirstScreenOption|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
-    const [address, setAddress] = useState<any>({value: 0, name: "Visit Center"});
+    const [address, setAddress] = useState<any>("");
     const [zipCode, setZipCode] = useState<string>("");
     const oldVin = useRef<string>("");
     const showError = useException();
@@ -107,7 +107,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const isMobileServiceOn = useMemo(()=> config.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService && item.available), [config]);
     const isPickUpServiceOn = useMemo(()=> config.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff && item.available), [config]);
-    const otherServiceTypesAvailable = useMemo(() => isMobileServiceOn || isPickUpServiceOn, [isMobileServiceOn, isPickUpServiceOn])
+    const otherServiceTypesAvailable = useMemo(() => Boolean(firstScreenOptions.length), [firstScreenOptions])
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
         setForm(f => ({
@@ -130,11 +130,14 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         setSelectedCategories([]);
         setDate("");
         setSelectedSlot(null);
+        setSelectedSVSlot(null);
         setJobType(null);
         setServiceTypeOption(null);
         setAddress(null);
         setZipCode("");
         setSelectedEngine(null);
+        setPreloadedSVSlot(null);
+        setPreloadedSlot(null);
     }
 
     useEffect(() => {
@@ -170,8 +173,9 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceRequestIds: payload.serviceRequests.map(sr => sr.id),
                     vehicleEngineTypeId: payload.vehicle.engineTypeId ?? null,
                 });
-                if (payload.serviceTypeOption) {
-                    setServiceTypeOption(payload.serviceTypeOption)
+                const serviceOption = firstScreenOptions.find(item => item.id === payload.serviceTypeOption?.id)
+                if (payload.serviceTypeOption && serviceOption) {
+                    setServiceTypeOption(serviceOption)
                 }
                 if (payload.vehicle?.engineTypeId) {
                     const engine = engineTypes.find(item => item.id === payload.vehicle.engineTypeId)
@@ -186,23 +190,26 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     selectedJobType && setJobType(selectedJobType);
                 }
                 setDate(payload.dateInUtc);
-                const slot: IAppointmentSlot = {
-                    date: payload.dateInUtc,
-                    time: payload.timeSlot,
-                    price: {
-                        value: payload.transactionValue,
-                        category: EDemandCategory.Average,
-                        ancillaryPrice: payload.ancillaryPrice,
-                    },
-                    isShorterWaitTime: false
+                if (payload.serviceTypeOption?.type !== EServiceType.PikUpDropOff) {
+                    const slot: IAppointmentSlot = {
+                        date: payload.dateInUtc,
+                        time: payload.timeSlot,
+                        price: {
+                            value: payload.transactionValue,
+                            category: EDemandCategory.Average,
+                            ancillaryPrice: payload.ancillaryPrice,
+                        },
+                        isShorterWaitTime: false
+                    }
+                    setSelectedSlot(slot);
+                    setPreloadedSlot(slot);
+                } else {
                 }
-                setSelectedSlot(slot);
-                setPreloadedSlot(slot);
             }
         } else {
             clearForm();
         }
-    }, [props.open, payload, engineTypes]);
+    }, [props.open, payload, engineTypes, firstScreenOptions]);
 
     useEffect(() => {
         const selectedPackage = packages.find(item => item.options.find(option => option.id === payload?.maintenancePackageOption?.id))
@@ -231,7 +238,67 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
 
     useEffect(() => {
         let waiting = true;
-        if (selectedSC && props.open && filterDate) {
+        if (selectedSC && props.open && serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+            setSlotsLoading(true);
+            if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
+                setServiceValetSlots([]);
+                setSlotsLoading(false);
+            } else {
+                API.serviceValetSlots.list({
+                    appointmentTimingType: EAppointmentTimingType.FirstAvailable,
+                    fromDate: moment().toISOString(),
+                    serviceRequestIds: selectedSR.map(sr => sr.id),
+                    maintenancePackageOptionId: selectedPackageOption?.id ?? null,
+                    serviceCategoryIds: selectedCategories.map(item => item.id),
+                    serviceCenterId: selectedSC.id,
+                    jobType: jobType?.value ?? null,
+                    appointmentHashKey: payload?.hashKey ?? undefined,
+                    serviceTypeOptionId: serviceTypeOption?.id ?? null,
+                    address: address?.label ?? null,
+                    zipCode: zipCode?.length ? zipCode : undefined,
+                    vehicle: {
+                        make: form.vehicleMake,
+                        model: form.vehicleModel,
+                        year: +form.vehicleYear,
+                        mileage: +form.vehicleMileage,
+                        vin: form.vehicleVin,
+                    }
+                })
+                    .then(({data: {items}}) => {
+                        if (waiting) {
+                            if (preloadedSVSlot) {
+                                items = [preloadedSVSlot, ...items];
+                                initialRef.current = true;
+                            } else {
+                                setSelectedSVSlot(null);
+                            }
+                            setServiceValetSlots(items);
+                        }
+
+                    })
+                    .catch((e) => {
+                        if (waiting) {
+                            showError(e);
+                            if (preloadedSVSlot) {
+                                setServiceValetSlots([preloadedSVSlot]);
+                                initialRef.current = true;
+                            } else {
+                                setServiceValetSlots([]);
+                                setSelectedSVSlot(null);
+                            }
+                        }
+                    })
+                    .finally(() => {
+                        setSlotsLoading(false);
+                    });
+            }
+        }
+    }, [form, selectedSC, filterDate, selectedSR, showError,
+        preloadedSVSlot, selectedPackageOption, selectedCategories, jobType, serviceTypeOption, address, zipCode, props.open])
+
+    useEffect(() => {
+        let waiting = true;
+        if (selectedSC && props.open  && filterDate && serviceTypeOption?.type !== EServiceType.PikUpDropOff) {
             setSlotsLoading(true);
             if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
                 setSlots([]);
@@ -257,46 +324,49 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                         vin: form.vehicleVin,
                     }
                 })
-                .then(({data: {items}}) => {
-                    if (waiting) {
-                        if (preloadedSlot) {
-                            items = [preloadedSlot, ...items];
-                            initialRef.current = true;
-                        } else {
-                            setSelectedSlot(null);
+                    .then(({data: {items}}) => {
+                        if (waiting) {
+                            if (preloadedSlot) {
+                                items = [preloadedSlot, ...items];
+                                initialRef.current = true;
+                            } else {
+                                setSelectedSlot(null);
+                            }
+                            setSlots(items);
                         }
-                        setSlots(items);
-                    }
 
-                })
-                .catch((e) => {
-                    if (waiting) {
-                        showError(e);
-                        if (preloadedSlot) {
-                            setSlots([preloadedSlot]);
-                            initialRef.current = true;
-                        } else {
-                            setSlots([]);
-                            setSelectedSlot(null);
+                    })
+                    .catch((e) => {
+                        if (waiting) {
+                            showError(e);
+                            if (preloadedSlot) {
+                                setSlots([preloadedSlot]);
+                                initialRef.current = true;
+                            } else {
+                                setSlots([]);
+                                setSelectedSlot(null);
+                            }
                         }
-                    }
-                })
-                .finally(() => {
-                    setSlotsLoading(false);
-                });
+                    })
+                    .finally(() => {
+                        setSlotsLoading(false);
+                    });
             }
         }
         return () => {
             waiting = false;
         };
-    }, [form, selectedSC, props.open, filterDate, selectedSR, showError,
+    }, [props.open, form, selectedSC, filterDate, selectedSR, showError,
         preloadedSlot, selectedPackageOption, selectedCategories, jobType, serviceTypeOption, address, zipCode]);
 
     useEffect(() => {
         if (preloadedSlot && initialRef.current) {
             setPreloadedSlot(null);
         }
-    }, [filterDate, selectedSR, preloadedSlot]);
+        if (preloadedSVSlot && initialRef.current) {
+            setPreloadedSVSlot(null);
+        }
+    }, [filterDate, selectedSR, preloadedSlot, preloadedSVSlot]);
 
     useEffect(() => {
         if (form.vehicleVin?.length === VIN_LENGTH && oldVin.current !== form.vehicleVin) {
@@ -339,13 +409,17 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             }
         }
         for (let field in form) {
-            if (field === "date" && !filterDate) {
+            if (field === "date" && serviceTypeOption?.type !== EServiceType.PikUpDropOff &&  !filterDate) {
                 isValid = false;
                 setErrors(prev => [...prev, "date"])
             }
-            if (field === "slot" && !selectedSlot) {
-                isValid = false;
-                setErrors(prev => [...prev, "slot"])
+            if (field === "slot") {
+                const slot = serviceTypeOption?.type === EServiceType.PikUpDropOff ? selectedSVSlot : selectedSlot;
+                if (!slot) {
+                    isValid = false;
+                    setErrors(prev => [...prev, "slot"])
+                    showError('"Appointment Slot" must not be empty')
+                }
             }
             // @ts-ignore
             if (requiredFields.includes(field) && !form[field]) {
@@ -368,8 +442,10 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         try {
             const data: ICreateAppointment = {
                 serviceRequestIds: selectedSR.map(sr => sr.id),
-                slot: selectedSlot?.time || "",
-                date: selectedSlot?.date,
+                slot: selectedSlot?.time || "00:00:00",
+                date: serviceTypeOption?.type === EServiceType.PikUpDropOff && selectedSVSlot
+                    ? selectedSVSlot?.date
+                    : selectedSlot?.date,
                 vehicle: {
                     make: form.vehicleMake,
                     model: form.vehicleModel,
@@ -384,6 +460,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 serviceCenterId: selectedSC.id,
                 isNeedCall: form.isNeedCall,
                 gmt: moment().utcOffset(),
+                // todo for service valet slots
                 offerId: selectedSlot?.offer?.id || null,
                 serviceCategoryIds: selectedCategories.map(item => item.id),
                 maintenancePackageOptionId: selectedPackageOption?.id ?? null,
@@ -399,7 +476,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 serviceTypeOptionId: serviceTypeOption?.id ?? null,
             }
             if (zipCode) data.zipCode = zipCode;
-            if (address) data.address = address.label;
+            if (address) data.address = typeof address === 'string' ? address : address.label;
             if (jobType) data.jobType = jobType.value;
             if (selectedEngine) data.vehicle.engineTypeId = selectedEngine.id;
             if (payload) {
@@ -419,6 +496,13 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        if (payload?.serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+            const slot = serviceValetSlots.find(item => moment(item.date).isSame(moment(payload?.dateInUtc), 'date'));
+            if (slot) setSelectedSVSlot(slot);
+        }
+    }, [payload, serviceValetSlots])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setErrors(prev => prev.filter(item => item !== name));
@@ -554,7 +638,16 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     />
                 </Grid>
 
-                <SlotSelection
+                {serviceTypeOption?.type === EServiceType.PikUpDropOff
+                    ? <SVSlotSelection
+                        selectedSlot={selectedSVSlot}
+                        setSelectedSlot={setSelectedSVSlot}
+                        slots={serviceValetSlots}
+                        slotsLoading={slotsLoading}
+                        errors={errors}
+                        setErrors={setErrors}
+                    />
+                    : <SlotSelection
                     selectedSlot={selectedSlot}
                     setSelectedSlot={setSelectedSlot}
                     filterDate={filterDate}
@@ -563,22 +656,23 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     slotsLoading={slotsLoading}
                     errors={errors}
                     setErrors={setErrors}
-                />
+                />}
 
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-
-                <Transportation
-                    payload={payload}
-                    form={form}
-                    setForm={setForm}
-                    selectedSR={selectedSR}
-                    slot={selectedSlot}
-                    open={props.open}
-                    serviceCategoryIds={selectedCategories.map(item => item.id)}
-                    maintenancePackageOptionId={selectedPackageOption?.id || payload?.maintenancePackageOptionId || undefined}
-                />
+                {serviceTypeOption?.type !== EServiceType.PikUpDropOff && serviceTypeOption?.type !== EServiceType.MobileService
+                    ? <Transportation
+                        payload={payload}
+                        form={form}
+                        setForm={setForm}
+                        selectedSR={selectedSR}
+                        slot={selectedSlot}
+                        open={props.open}
+                        serviceCategoryIds={selectedCategories.map(item => item.id)}
+                        maintenancePackageOptionId={selectedPackageOption?.id || payload?.maintenancePackageOptionId || undefined}
+                    />
+                    : null}
 
                 <Reminders setForm={setForm} form={form} />
 
