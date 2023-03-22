@@ -11,7 +11,8 @@ import {DialogProps} from "../types";
 import {
     setAddress,
     setCurrentFrameScreen,
-    setServiceType, setServiceTypeOption,
+    setServiceType,
+    setServiceTypeOption,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
@@ -62,7 +63,13 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
     }
 
     const onVisitCenter = () => {
-        const defaultOption = firstScreenOptions.find(item => item.type === EServiceType.VisitCenter);
+        const visitCenterOptions = firstScreenOptions.filter(item => item.type === EServiceType.VisitCenter);
+        const orderIndexes = visitCenterOptions.map(item => item.orderIndex);
+        const minIndex = Math.min(...orderIndexes);
+        const firstVisitCenterOption = visitCenterOptions.find(item => item.orderIndex === minIndex);
+        const visitCenterWithoutTransport = visitCenterOptions.find(item => !item.transportationOption);
+        const defaultOption = visitCenterWithoutTransport ?? firstVisitCenterOption;
+
         if (defaultOption) dispatch(setServiceTypeOption(defaultOption));
         dispatch(setServiceType(EServiceType.VisitCenter));
         dispatch(setCurrentFrameScreen("serviceNeeds"));
