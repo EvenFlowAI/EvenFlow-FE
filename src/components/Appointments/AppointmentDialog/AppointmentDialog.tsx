@@ -497,6 +497,13 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         }
     }
 
+    useEffect(() => {
+        if (payload?.serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+            const slot = serviceValetSlots.find(item => moment(item.date).isSame(moment(payload?.dateInUtc), 'date'));
+            if (slot) setSelectedSVSlot(slot);
+        }
+    }, [payload, serviceValetSlots])
+
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setErrors(prev => prev.filter(item => item !== name));
         if (name === "driverPhoneNumber") {
