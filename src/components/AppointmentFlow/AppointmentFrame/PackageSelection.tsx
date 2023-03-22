@@ -298,15 +298,11 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     }, [id, selectedVehicle, maintenanceDetails]);
 
-    const setClasses = (id: number, cls: string) => {
+    const setClasses = (id: number, cls: string): string => {
         if (id === selectedPackage?.id) {
             return `${cls} selected`;
         }
         return cls;
-    }
-
-    const handleClick = (p: IPackageOptions) => () => {
-        dispatch(setPackage(p));
     }
 
     const handleBack = (): void => {
@@ -318,17 +314,12 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         onBack();
     }
 
-    const addServices = () => {
+    const addServices = (): void => {
         dispatch(setAdditionalServicesChosen(true));
         if (onAddServices) onAddServices();
     }
 
-    const onSave = async () => {
-        await onClose();
-        await askAdditionalServices();
-    }
-
-    const handleNextScreen = () => {
+    const handleNextScreen = (): void => {
         onNext(!currentConfig?.advisorSelection
             ? currentConfig?.appointmentSelection
                 ? 'appointmentTiming'
@@ -336,8 +327,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             : 'consultantSelection')
     }
 
-    const askAdditionalServices = () => {
-        selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
+    const askAdditionalServices = (): void => {
         const categoryChosen = service?.type === 0 || subService?.type === 0;
         if (!categoryChosen || !selectedSR.length) {
             onAdditionalOpen();
@@ -346,41 +336,51 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         }
     }
 
-    const handleGA = () => {
-        if (selectedPackage) {
-            const packageOptions = ['Good', 'Better', 'Best'];
-            ReactGA.event({
-                category: 'EvenFlow User',
-                action: `Selected Package`,
-                label: `With ${packageOptions[selectedPackage.type]} Option`,
-            })
-        }
+    const onSave = async () => {
+        selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
+        await onClose();
+        await askAdditionalServices();
     }
 
-    const handleNext = (): void => {
+    const handleGA = (selectedPackage: IPackageOptions): void => {
+        const packageOptions = ['Good', 'Better', 'Best'];
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: `Selected Package`,
+            label: `With ${packageOptions[selectedPackage.type]} Option`,
+        });
+    }
+
+    const handleNext = (selectedPackage: IPackageOptions|null): void => {
         if (selectedPackage) {
             dispatch(setPackageIsSelected(true));
-            handleGA();
-            if (packageIsSelected && packageOptionType && packageOptionType !== selectedPackage.type) {
+            handleGA(selectedPackage);
+            if (packageIsSelected && packageOptionType !== null && packageOptionType !== selectedPackage.type) {
                 onOpen();
             } else {
-                askAdditionalServices()
+                askAdditionalServices();
+                dispatch(setSelectedPackageOptionType(selectedPackage.type));
             }
         }
     }
 
-    const handleDontChangeOption = () => {
+    const handleClick = (p: IPackageOptions) => () => {
+        dispatch(setPackage(p));
+        handleNext(p);
+    }
+
+    const handleDontChangeOption = (): void => {
         const prevPackage = packages.find(p => p.type === packageOptionType);
         if (prevPackage) dispatch(setPackage(prevPackage));
         onClose();
     }
 
-    const handleYes = () => {
+    const handleYes = (): void => {
         onAdditionalClose();
         addServices();
     }
 
-    const handleNo = () => {
+    const handleNo = (): void => {
         onAdditionalClose();
         handleNextScreen();
     }
@@ -458,8 +458,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             </React.Fragment> : null}
             <Actions
                 onBack={handleBack}
+                hideNext={!isXs}
                 nextDisabled={!selectedPackage}
-                onNext={handleNext} />
+                onNext={() => handleNext(selectedPackage)} />
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
         </StepWrapper>
