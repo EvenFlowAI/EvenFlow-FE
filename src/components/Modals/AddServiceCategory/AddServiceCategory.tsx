@@ -140,9 +140,16 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const showError = useException();
     const classes = useStyles();
 
-    const getCategoryOptions = () => selectedSC?.isValueServiceAvailable
-        ? categoryOptions
-        : categoryOptions.slice(0, categoryOptions.length - 1);
+    const getCategoryOptions = () => {
+        let options: TOption[] = categoryOptions;
+        if (selectedSC?.isValueServiceAvailable && visitCenterConfig?.valueService) {
+            options = categoryOptions.filter(o => o.value !== EServiceCategoryType.ValueService)
+        }
+        if (definedPage?.value === 1) {
+            options = categoryOptions.filter(o => o.value !== EServiceCategoryType.MaintenancePackage)
+        }
+        return options;
+    }
 
     useEffect(() => {
         props.open && selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
@@ -267,7 +274,6 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     }, [dispatch])
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value)
         setSelectedServiceType(e.target.value === '0' ? EServiceTypeBookingFlow.VisitCenter : EServiceTypeBookingFlow.MobileService);
     }
 
