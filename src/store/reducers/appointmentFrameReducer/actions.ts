@@ -195,6 +195,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setRecallsAreShown(false));
     dispatch(setSelectedRecalls([]))
     dispatch(setAdditionalServicesChosen(false));
+    dispatch(setFrameDescription(''));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -248,7 +249,8 @@ export const setDefaultVisitCenterOption = (): AppThunk => (dispatch, getState) 
     const minIndex = Math.min(...orderIndexes);
     const firstVisitCenterOption = visitCenterOptions.find(item => item.orderIndex === minIndex);
     const visitCenterWithoutTransport = visitCenterOptions.find(item => !item.transportationOption);
-    const defaultOption = visitCenterWithoutTransport ?? firstVisitCenterOption;
+    const visitCenterWithTransport = visitCenterOptions.find(item => item.transportationOption);
+    const defaultOption = visitCenterWithTransport && visitCenterWithoutTransport ? visitCenterWithoutTransport : firstVisitCenterOption;
 
     if (defaultOption) dispatch(setServiceTypeOption(defaultOption));
     dispatch(setServiceType(EServiceType.VisitCenter));

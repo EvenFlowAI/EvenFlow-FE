@@ -44,10 +44,11 @@ import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/Service
 import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
+import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
-    const {welcomeScreenView, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {welcomeScreenView, serviceType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
@@ -142,14 +143,14 @@ export const Welcome = () => {
         }
     }
 
-    const onServiceTypeSelect = (service: EServiceType) => {
+    const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
         // todo service type from the appointment by key
-        if (serviceType !== service) {
+        if (serviceTypeOption?.id !== serviceOption.id) {
             dispatch(clearAppointmentData());
         }
-        handleConfig(service);
-        dispatch(setServiceType(service));
-        const nextScreen = service === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+        handleConfig(serviceOption.type);
+        dispatch(setServiceType(serviceOption.type));
+        const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         dispatch(setCurrentFrameScreen(nextScreen));
         redirect();
     }
