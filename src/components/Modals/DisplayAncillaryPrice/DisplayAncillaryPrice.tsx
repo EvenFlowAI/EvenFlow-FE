@@ -8,11 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAncillaryType, EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
-import {
-    setCurrentFrameScreen,
-    setServiceType,
-    setServiceTypeOption
-} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setDefaultVisitCenterOption} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 type TDisplayAncillaryPriceProps = DialogProps & {
     onNext: () => void;
@@ -51,7 +47,6 @@ const useStyles = makeStyles(theme => ({
 
 const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext}) => {
     const {serviceType, ancillaryPrice} = useSelector((state: RootState) => state.appointmentFrame);
-    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
@@ -63,10 +58,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
         : t("Pick Up / Drop Off Service");
 
     const onBack = () => {
-        const visitCenterOption = firstScreenOptions.find(el => el.type === EServiceType.VisitCenter)
-        dispatch(setServiceTypeOption(visitCenterOption ?? null));
-        dispatch(setServiceType(EServiceType.VisitCenter));
-        dispatch(setCurrentFrameScreen("serviceNeeds"));
+        dispatch(setDefaultVisitCenterOption())
         onClose()
     }
 
