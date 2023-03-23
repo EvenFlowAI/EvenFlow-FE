@@ -104,7 +104,7 @@ export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => 
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const loadHorsOfOperationsToGetRange = (id: number): AppThunk => dispatch => {
+export const loadHoursOfOperations = (id: number): AppThunk => dispatch => {
     Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id}})
         .then(result => {
             if (result?.data) {

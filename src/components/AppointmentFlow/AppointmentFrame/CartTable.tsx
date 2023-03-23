@@ -5,7 +5,12 @@ import {getMaintenanceList} from "./uiUtils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
-import {loadSRs, selectAppointment, selectSR} from "../../../store/reducers/appointment/actions";
+import {
+    loadSRs,
+    selectAppointment,
+    selectServiceValetAppointment,
+    selectSR
+} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
@@ -107,25 +112,27 @@ const CartTable = () => {
         }
     }, [scProfile, dispatch])
 
-    const deleteIndService = useCallback((item: IMaintenanceItem) => {
+    const deleteIndService = (item: IMaintenanceItem) => {
+        const services = selectedSR.filter(sr => sr !== item.id);
         dispatch(selectSR(item.id));
         dispatch(selectAppointment(null));
-        const services = selectedSR.filter(sr => sr !== item.id);
+        dispatch(selectServiceValetAppointment(null));
         const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
         const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
         let categories = [...categoriesIds];
-
         if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
             if (subService?.type === indServiceCategory?.type) dispatch(selectSubService(null))
+            if (service?.type === indServiceCategory?.type) dispatch(selectService(null))
             categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
             dispatch(selectCategoriesIds(categories));
         }
         if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
+            if (subService?.type === diagnoseCategory?.type) dispatch(selectSubService(null))
             if (service?.type === diagnoseCategory?.type) dispatch(selectService(null))
             categories = categories.filter(id => id !== diagnoseCategory?.id)
             dispatch(selectCategoriesIds(categories));
         }
-    }, [selectedSR, allCategories, categoriesIds, subService, service])
+    }
 
     const filterCategories = useCallback(() => {
         if (service?.type === EServiceCategoryType.ValueService) {
@@ -174,6 +181,7 @@ const CartTable = () => {
         filterCategories();
         dispatch(setValueService(null));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
     }, [handleMaintenanceDetails, filterCategories])
 
     const handleSideBarSteps = useCallback(() => {
@@ -183,7 +191,7 @@ const CartTable = () => {
     }, [sideBarSteps, serviceType])
 
     const handleDeleteRecall = useCallback((item: IMaintenanceItem) => {
-        dispatch(setSelectedRecalls(selectedRecalls.filter(el => el.serviceRequestId !== item.id)))
+        item.nhtsaRecallNumber && dispatch(setSelectedRecalls(selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)))
     }, [selectedRecalls])
 
     const deleteService = (item: IMaintenanceItem) => {
@@ -195,6 +203,7 @@ const CartTable = () => {
             case 'package':
                 if (service?.type === 1) dispatch(selectService(null));
                 dispatch(selectAppointment(null));
+                dispatch(selectServiceValetAppointment(null));
                 handleSideBarSteps();
                 return dispatch(setPackage(null));
             case 'valueService':
@@ -208,19 +217,20 @@ const CartTable = () => {
                 if (service?.id === item.id) dispatch(selectService(null));
                 if (subService?.id === item.id) dispatch(selectSubService(null));
                 dispatch(selectAppointment(null));
+                dispatch(selectServiceValetAppointment(null));
                 handleSideBarSteps();
                 return dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
         }
     }
 
-    const onClick = useCallback((item: IMaintenanceItem) => {
+    const onClick = (item: IMaintenanceItem) => {
         askConfirm({
             isRemove: true,
             title: t("Do you want to remove selected service?"),
             onConfirm: () => deleteService(item),
             onCancel: closeConfirm,
         })
-    }, [])
+    }
 
     return selectedServices?.length
         ? <div className={classes.wrapper}>
@@ -230,7 +240,7 @@ const CartTable = () => {
                     {isOpen ? <ExpandLess/> : <ExpandMore/>}
                 </IconButton>}
             </div>
-            {isOpen && selectedServices.map(item => <CartItem key={item.id} item={item} onClick={onClick}/>)}
+            {isOpen && selectedServices.map(item => <CartItem key={item.nhtsaRecallNumber ?? item.id} item={item} onClick={onClick}/>)}
         </div>
         : null;
 };

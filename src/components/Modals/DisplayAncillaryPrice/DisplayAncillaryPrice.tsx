@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAncillaryType, EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
-import {setCurrentFrameScreen, setServiceType} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setDefaultVisitCenterOption} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 type TDisplayAncillaryPriceProps = DialogProps & {
     onNext: () => void;
@@ -58,8 +58,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
         : t("Pick Up / Drop Off Service");
 
     const onBack = () => {
-        dispatch(setServiceType(EServiceType.VisitCenter));
-        dispatch(setCurrentFrameScreen("serviceNeeds"));
+        dispatch(setDefaultVisitCenterOption())
         onClose()
     }
 

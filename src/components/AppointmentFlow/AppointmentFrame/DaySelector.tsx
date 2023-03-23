@@ -12,9 +12,9 @@ import {EAppointmentTimingType} from "../../../store/reducers/appointment/types"
 import {useModal} from "../../../utils/hooks";
 import PromptNewSearchRange from "../../Modals/PromptNewSearchRange/PromptNewSearchRange";
 import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 
-const DaySelectorWrapper = styled('div')(({ theme }) => ({
+export const DaySelectorWrapper = styled('div')(({ theme }) => ({
     marginTop: 20,
     display: "flex",
     alignItems: "center",
@@ -27,7 +27,7 @@ const DaySelectorWrapper = styled('div')(({ theme }) => ({
         gap: "10px",
     }
 }));
-const Arrow = styled('div')<Theme, {disabled?: boolean}>({
+export const Arrow = styled('div')<Theme, {disabled?: boolean}>({
     border: "1px solid #DADADA",
     width: 30,
     height: 30,
@@ -40,7 +40,7 @@ const Arrow = styled('div')<Theme, {disabled?: boolean}>({
     cursor: ({disabled}) => disabled ? "default" : "pointer",
 });
 
-const WHILE_LIMIT = 40;
+export const WHILE_LIMIT = 40;
 type TProps = {
     date: moment.Moment,
     dateRangeUpdated: boolean;
@@ -62,7 +62,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
     
-    const {selectedPackage, selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
     const {searchedDateRange, appointment} = useSelector((state: RootState) => state.appointment);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
@@ -154,6 +154,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const handleYes = () => {
         dispatch(setCurrentFrameScreen('appointmentTiming'));
         dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
     }
 
     return <DaySelectorWrapper>
@@ -166,7 +167,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
                 <DaySelectCard
                     key={day}
                     isXs={isXs}
-                    isPackage={Boolean(selectedPackage)}
                     isCurrent={date.isSame(moment.utc(day), 'date')}
                     appointment={appointments[day]}
                     onClick={handleChangeDay(day)}

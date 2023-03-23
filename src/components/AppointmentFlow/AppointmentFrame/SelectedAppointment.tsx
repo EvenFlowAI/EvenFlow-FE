@@ -6,11 +6,13 @@ import {getMaintenanceDescription} from "./uiUtils";
 import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
-import {selectAppointment} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {useTranslation} from "react-i18next";
+import moment from "moment";
+import {IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -149,6 +151,22 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppointment}> = ({serviceValetAppointment}) => {
+    const [hoursPMin, minutesPMin] = serviceValetAppointment.pickUpMin.split(":");
+    const [hoursPMax, minutesPMax] = serviceValetAppointment.pickUpMax.split(":");
+    const [hoursDMin, minutesDMin] = serviceValetAppointment.dropOffMin.split(":");
+    const [hoursDMax, minutesDMax] = serviceValetAppointment.dropOffMax.split(":");
+    return <DateWrapper>
+        <div>Date: <span>{moment.utc(serviceValetAppointment.date).format('MMMM D')}</span></div>
+        <div>Pick Up Time:
+            <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("hh:mm A")}</span>
+        </div>
+        <div>Drop Off Time:
+            <span> {moment(serviceValetAppointment.date).set('hour', +hoursDMin).set('minute', +minutesDMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursDMax).set('minute', +minutesDMax).format("hh:mm A")}</span>
+        </div>
+    </DateWrapper>
+}
+
 export const SelectedAppointment = () => {
     const {
         selectedPackage,
@@ -162,7 +180,7 @@ export const SelectedAppointment = () => {
         valueService,
         selectedRecalls,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, appointmentSlots, appointment } = useSelector((state: RootState) => state.appointment);
+    const { scProfile, appointmentSlots, appointment, serviceValetAppointment, serviceValetSlots } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [selectedSR, srList] = useSelector((state: RootState) => [
@@ -182,16 +200,27 @@ export const SelectedAppointment = () => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
 
-    const price = appointment?.price.value ?? 0;
-    const ancillaryPrice = appointment?.price.ancillaryPrice ?? 0;
+    const price = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+        ? serviceValetAppointment?.price.value ?? 0
+        : appointment?.price.value ?? 0;
+    const ancillaryPrice = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+        ? serviceValetAppointment?.price.ancillaryPrice ?? 0
+        : appointment?.price.ancillaryPrice ?? 0;
 
-    const isDynamicPricing = appointmentSlots.length
-        ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
-        : false;
+    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PikUpDropOff
+        ? serviceValetSlots.length
+            ? serviceValetSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
+            : false
+        : appointmentSlots.length
+            ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
+            : false;
 
     const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
-        if (isBmWService && e.target.value !== advisor?.id) dispatch(selectAppointment(null));
+        if (isBmWService && e.target.value !== advisor?.id) {
+            dispatch(selectAppointment(null));
+            dispatch(selectServiceValetAppointment(null));
+        }
         dispatch(setAdvisor(consultant ? consultant : null))
     }
 
@@ -257,6 +286,7 @@ export const SelectedAppointment = () => {
                         {appointment && isSm ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper> : null}
+                        {serviceValetAppointment && isSm ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/> : null}
                     </li>
 
                 </List>
@@ -267,6 +297,7 @@ export const SelectedAppointment = () => {
                             {t("Date & Time")}: <br /> {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper>
                         : null}
+                    {serviceValetAppointment && !isSm ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/> : null}
                     <>
                         {!isSm && Boolean(price) && <div className="price">
                           ${scProfile?.isRoundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}
@@ -275,9 +306,11 @@ export const SelectedAppointment = () => {
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
                         {/*  <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                         {/*</div> : null}*/}
-                        {isDynamicPricing && (
+                        {isDynamicPricing && serviceTypeOption?.type !== EServiceType.PikUpDropOff && (
                             <div className="info">
-                                {!appointment?.price?.amountOfSavingMoney ? t("Save by booking at off peak times!") : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
+                                {!appointment?.price?.amountOfSavingMoney
+                                    ? t("Save by booking at off peak times!")
+                                    : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
                             </div>
                         )}
                     </>

@@ -11,12 +11,16 @@ import {RootState} from "../../../store/rootReducer";
 import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
-import {loadAppointmentSlots, selectAppointment} from "../../../store/reducers/appointment/actions";
+import {
+    loadAppointmentSlots, loadServiceValetSlots,
+    selectAppointment,
+    selectServiceValetAppointment
+} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 //import ReactGA from "react-ga4";
 import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds} from "./utils";
-import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import AppointmentTimingCard from "./AppointmentTimingCard";
@@ -128,7 +132,12 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             }
         }
         if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
-        dispatch(loadAppointmentSlots(dd, () => {}, () => setLoading(false)));
+        if (serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+            // todo uncomment when the calendar dates disabling functionality will be ready
+            // dispatch(loadServiceValetSlots(dd, () => {}, () => setLoading(false)));
+        } else {
+            dispatch(loadAppointmentSlots(dd, () => {}, () => setLoading(false)));
+        }
     }, [consultant, service, subService, selectedPackage, selectedOpsCodes, customerData, selectedVehicle, valueService, vehicle, userType, customerEnteredEmail])
 
     const getCategories = useCallback((): number[] => {
@@ -147,6 +156,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         dispatch(setTime(t));
         if (!moment(selectedTime).isSame(t, 'date')) {
             dispatch(selectAppointment(null));
+            dispatch(selectServiceValetAppointment(null));
         }
     }, [selectedTime])
 
@@ -172,6 +182,10 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             <TimingWrapper columns={2}>
                 {cards.map((card, idx) => {
                     if (!idx) {
+                        return null;
+                    }
+                    if (serviceTypeOption?.type === EServiceType.PikUpDropOff && idx === 1) {
+                        // todo delete this when Preferred Date Search will be implemented
                         return null;
                     }
                     return <AppointmentTimingCard

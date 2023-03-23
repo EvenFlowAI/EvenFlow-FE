@@ -21,7 +21,7 @@ import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon";
 
 type TProps = {
-    onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
+    onComplete: (serviceType: IFirstScreenOption, userType?: EUserType) => void;
     loading: boolean;
 };
 
@@ -102,7 +102,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
             })
         .filter(card => card), [firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn])
 
-    const handleUser = (serviceType: EServiceType) => {
+    const handleUser = (service: IFirstScreenOption) => {
         if (userType === EUserType.New) {
             const c = getBlankCustomer();
             dispatch(setCustomerLoadedData(c));
@@ -114,7 +114,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                 label: `As New User`,
             });
         }
-        onComplete(serviceType);
+        onComplete(service);
     }
 
     const handleSelect = (card: IFirstScreenOption) => {
@@ -123,7 +123,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
         } else {
-            handleUser(card.type);
+            handleUser(card);
         }
     }
 

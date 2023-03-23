@@ -142,7 +142,7 @@ type ApiRoutes = {
         | "GetTWEligibility" | "SetTWEligibility"
         | "BatchUpdateDemandSegments" | "RemoveDemandSegment"
         | "SetUnplanned" | "GetUnplanned", TApiRoute>,
-    AppointmentSlots: Record<"GetSlots", TApiRoute>,
+    AppointmentSlots: Record<"GetSlots" | "GetServiceValetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
     BookingFlowConfig: Record<"Get" | "Update", TApiRoute>,
@@ -189,6 +189,8 @@ type ApiRoutes = {
         | "GetByQuery", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiRoute>,
+    ServiceValet: Record<"GetZoneRouting" | "UpdateZoneRouting" | "GatAllCapacity" | "GetCapacityById" | "CreateCapacity" | "UpdateCapacity"
+        | "ChangeShowDropOffTime" | "ChangeServiceRequest" | "ChangeDmsTimeStamp" | "GetServiceValetSettings", TApiRoute>,
     TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiRoute>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiRoute>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
@@ -249,6 +251,7 @@ export class Api {
         },
         AppointmentSlots: {
             GetSlots: {route: "/appointment-slots/by-query", method: "post"},
+            GetServiceValetSlots: {route: "/service-valet-appointment-slots/by-query", method: "post"},
         },
         Authentications: {
             Request: {route: "/authentications", method: "post"},
@@ -478,6 +481,18 @@ export class Api {
             GetRange: {route: "/slot-scoring/range", method: "get"},
             UpdateRange: {route: "/slot-scoring/range", method: "put"},
             GetSlotsGap: {route: "/slot-scoring/gap", method: "get"}
+        },
+        ServiceValet: {
+            GetZoneRouting: {route: "/service-valet/{id}/zone-routing", method: "get"},
+            UpdateZoneRouting: {route: "/service-valet/{id}/zone-routing", method: "put"},
+            GatAllCapacity: {route: "/service-valet/{id}/capacity/get-all", method: "get"},
+            GetCapacityById: {route: "/service-valet/capacity/{id}", method: "get"},
+            CreateCapacity: {route: "/service-valet/capacity", method: "post"},
+            UpdateCapacity: {route: "/service-valet/{id}/capacity", method: "put"},
+            ChangeShowDropOffTime: {route: "service-valet/{id}/show-drop-off-time", method: "put"},
+            ChangeServiceRequest: {route: "service-valet/{id}/service-request", method: "put"},
+            ChangeDmsTimeStamp: {route: "service-valet/{id}/dms-time", method: "put"},
+            GetServiceValetSettings: {route: "service-valet/{id}/settings", method: "get"},
         },
         TransportationOptions: {
             Edit: {route: "/transportation-options", method: "put"},

@@ -6,13 +6,13 @@ import {
     IAppointmentFilters,
     IAppointmentResponse,
     IAppointmentSlot,
-    IAppointmentSlotsRequest,
+    IAppointmentSlotsRequest, IDropOffSettings,
     IPersonalInformation,
     IPrivacy,
     IRemappedAppointmentSlot,
     IReminders, ISearchedDateRange,
-    IServiceCenterProfile,
-    ISR,
+    IServiceCenterProfile, IServiceValetAppointment,
+    ISR, ISVAppointmentResponse,
     TAppointmentState,
     TS1Form,
     TS3Form
@@ -66,6 +66,7 @@ export const changePrivacy = createAction<Partial<IPrivacy>>("Appointment/Change
 export const changePersonalInformation = createAction<Partial<IPersonalInformation>>("Appointment/ChangePersonalInformation");
 export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
+export const selectServiceValetAppointment = createAction<IServiceValetAppointment|null>("Appointment/SelectServiceValetAppointment");
 export const getServiceCategories = createAction<IServiceCategory[]>("Appointment/GetServiceCategories");
 export const getAllServiceCategories = createAction<IServiceCategoryShort[]>("Appointment/GetAllServiceCategories");
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
@@ -264,4 +265,20 @@ export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => d
         .catch(err => {
             console.log('load all service categories error', err)
         })
+}
+export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Appointment/GetServiceValetSlots");
+export const getDropOffSettings = createAction<IDropOffSettings>("Appointment/GetDropOffSettings");
+export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => dispatch => {
+    Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
+        .then(result => {
+            const {items, searchedDateRange, dropOffSettings} = result.data;
+            if (items) dispatch(getServiceValetSlots(items))
+            if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange))
+            if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings))
+            loadCB && loadCB()
+        })
+        .catch(err => {
+            console.log('get service valet slots err', err)
+        })
+        .finally(() => loadCB && loadCB())
 }
