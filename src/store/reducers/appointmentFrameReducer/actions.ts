@@ -241,3 +241,17 @@ export const loadHoursOfOperations = (serviceCenterId: number): AppThunk => disp
             console.log('get hours of operations error', err)
         })
 }
+
+export const setDefaultVisitCenterOption = (): AppThunk => (dispatch, getState) => {
+    const {firstScreenOptions} = getState().serviceTypes;
+    const visitCenterOptions = firstScreenOptions.filter(item => item.type === EServiceType.VisitCenter);
+    const orderIndexes = visitCenterOptions.map(item => item.orderIndex);
+    const minIndex = Math.min(...orderIndexes);
+    const firstVisitCenterOption = visitCenterOptions.find(item => item.orderIndex === minIndex);
+    const visitCenterWithoutTransport = visitCenterOptions.find(item => !item.transportationOption);
+    const defaultOption = visitCenterWithoutTransport ?? firstVisitCenterOption;
+
+    if (defaultOption) dispatch(setServiceTypeOption(defaultOption));
+    dispatch(setServiceType(EServiceType.VisitCenter));
+    dispatch(setCurrentFrameScreen("serviceNeeds"));
+}

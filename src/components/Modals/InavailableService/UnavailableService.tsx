@@ -10,9 +10,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {DialogProps} from "../types";
 import {
     setAddress,
-    setCurrentFrameScreen,
-    setServiceType,
-    setServiceTypeOption,
+    setDefaultVisitCenterOption,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
@@ -46,7 +44,6 @@ type TUnavailableServiceProps = DialogProps & {
 
 const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, setFormChecked}) => {
     const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
-    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
@@ -63,16 +60,7 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
     }
 
     const onVisitCenter = () => {
-        const visitCenterOptions = firstScreenOptions.filter(item => item.type === EServiceType.VisitCenter);
-        const orderIndexes = visitCenterOptions.map(item => item.orderIndex);
-        const minIndex = Math.min(...orderIndexes);
-        const firstVisitCenterOption = visitCenterOptions.find(item => item.orderIndex === minIndex);
-        const visitCenterWithoutTransport = visitCenterOptions.find(item => !item.transportationOption);
-        const defaultOption = visitCenterWithoutTransport ?? firstVisitCenterOption;
-
-        if (defaultOption) dispatch(setServiceTypeOption(defaultOption));
-        dispatch(setServiceType(EServiceType.VisitCenter));
-        dispatch(setCurrentFrameScreen("serviceNeeds"));
+        dispatch(setDefaultVisitCenterOption())
         onTryAnother();
     }
 
