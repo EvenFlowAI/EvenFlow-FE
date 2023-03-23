@@ -249,7 +249,8 @@ export const setDefaultVisitCenterOption = (): AppThunk => (dispatch, getState) 
     const minIndex = Math.min(...orderIndexes);
     const firstVisitCenterOption = visitCenterOptions.find(item => item.orderIndex === minIndex);
     const visitCenterWithoutTransport = visitCenterOptions.find(item => !item.transportationOption);
-    const defaultOption = visitCenterWithoutTransport ?? firstVisitCenterOption;
+    const visitCenterWithTransport = visitCenterOptions.find(item => item.transportationOption);
+    const defaultOption = visitCenterWithTransport && visitCenterWithoutTransport ? visitCenterWithoutTransport : firstVisitCenterOption;
 
     if (defaultOption) dispatch(setServiceTypeOption(defaultOption));
     dispatch(setServiceType(EServiceType.VisitCenter));
