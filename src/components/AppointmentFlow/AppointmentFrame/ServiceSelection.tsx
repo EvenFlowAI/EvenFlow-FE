@@ -54,38 +54,30 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
             })
     }, [id, scProfile]);
 
-    const handleSelectCard = (card: IServiceCategory) => () => {
-        dispatch(selectSubService(card));
+    const handleGA = (subService: IServiceCategory) => {
+        const requestsString = subService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Selected Sub Service',
+            label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
+        })
     }
 
-    const handleGA = () => {
-        if (subService) {
-            const requestsString = subService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
-            ReactGA.event({
-                category: 'EvenFlow User',
-                action: 'Selected Sub Service',
-                label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
-            })
+    const handleCategories = (subService: IServiceCategory) => {
+        if (categoriesIds && subService.type !== EServiceCategoryType.LinkToPage2) {
+            const categories = categoriesIds?.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
+            dispatch(selectCategoriesIds(categories));
         }
     }
 
-    const handleCategories = () => {
-        if (subService) {
-            if (categoriesIds && subService.type !== EServiceCategoryType.LinkToPage2) {
-                const categories = categoriesIds?.includes(subService.id) ? categoriesIds : [...categoriesIds, subService.id];
-                dispatch(selectCategoriesIds(categories));
-            }
-        }
-    }
-
-    const handleSubmit = () => {
+    const handleSubmit = (subService: IServiceCategory) => {
         if (subService) {
             setLastSelectedCategory(subService);
             if (subService.offer?.description) {
                 onNext('serviceOfferProductPage')
             } else {
-                handleGA();
-                handleCategories();
+                handleGA(subService);
+                handleCategories(subService);
                 dispatch(setAdditionalServicesChosen(false));
 
                 switch (subService.type) {
@@ -98,6 +90,11 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
                 }
             }
         }
+    }
+
+    const handleSelectCard = (card: IServiceCategory) => () => {
+        dispatch(selectSubService(card));
+        handleSubmit(card);
     }
 
     const handleBack = () => {
@@ -120,7 +117,8 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
             <CartTable/>
             <Actions
                 nextDisabled={!subService}
-                onNext={handleSubmit}
+                hideNext
+                onNext={() => {}}
                 onBack={handleBack} />
         </StepWrapper>
     );
