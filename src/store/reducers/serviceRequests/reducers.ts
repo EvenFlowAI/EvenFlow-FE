@@ -38,6 +38,11 @@ import {
     setNonSelectedOrder,
     getAllAssignedServiceRequests,
     setServiceRequestsPageActiveTab,
+    getUpsellServiceRequests,
+    setUpsellFilter,
+    setUpsellLoading,
+    setUpsellOrdering,
+    setUpsellPaging, setUpsellPageData,
 } from "./actions";
 import {defaultOrder} from "../../../config/config";
 
@@ -59,7 +64,7 @@ type TState = {
     assignedLoading: boolean;
     assignedPaging: IPagingResponse;
     assignedPageData: IPageRequest;
-    assignedFilter: IServiceRequestNonAddedFilter
+    assignedFilter: IServiceRequestNonAddedFilter;
     urgentList: IAssignedServiceRequestShort[];
     urgentLoading: boolean;
     urgentPaging: IPagingResponse;
@@ -70,6 +75,12 @@ type TState = {
     nonUrgentPageData: IPageRequest;
     scRequestsShort: IAssignedServiceRequestShort[];
     srPageActiveTab: string;
+    intervalUpsellList: IAssignedServiceRequest[];
+    upsellOrdering: IOrder<IAssignedServiceRequest>;
+    upsellPaging: IPagingResponse;
+    upsellPageData: IPageRequest;
+    upsellFilter: Partial<IServiceRequestNonAddedFilter>;
+    upsellLoading: boolean;
 }
 const initialState: TState = {
     adminList: [],
@@ -100,6 +111,12 @@ const initialState: TState = {
     nonUrgentPageData: {...defaultPageData},
     scRequestsShort: [],
     srPageActiveTab: "0",
+    intervalUpsellList: [],
+    upsellOrdering: {...defaultOrder},
+    upsellPaging: {...defaultPaging},
+    upsellPageData: {...defaultPageData},
+    upsellFilter: {searchTerm: ""},
+    upsellLoading: false,
 };
 
 export const serviceRequestsReducer = createReducer(
@@ -187,5 +204,23 @@ export const serviceRequestsReducer = createReducer(
         })
         .addCase(setServiceRequestsPageActiveTab, (state, {payload}) => {
             return {...state, srPageActiveTab: payload};
+        })
+        .addCase(getUpsellServiceRequests, (state, {payload}) => {
+            return {...state, intervalUpsellList: payload};
+        })
+        .addCase(setUpsellFilter, (state, {payload}) => {
+            return {...state, upsellFilter: payload};
+        })
+        .addCase(setUpsellLoading, (state, {payload}) => {
+            return {...state, upsellLoading: payload};
+        })
+        .addCase(setUpsellOrdering, (state, {payload}) => {
+            return {...state, upsellOrdering: payload};
+        })
+        .addCase(setUpsellPaging, (state, {payload}) => {
+            return {...state, upsellPaging: payload};
+        })
+        .addCase(setUpsellPageData, (state, {payload}) => {
+            return {...state, upsellPageData: {...state.upsellPageData, ...payload}};
         })
 )

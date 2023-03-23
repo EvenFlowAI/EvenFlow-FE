@@ -255,3 +255,38 @@ export const updateAdminServiceRequest = (data: ISRAdminForm, id: number): AppTh
     );
     dispatch(loadAdminServiceRequests());
 }
+
+export const getUpsellServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequests/GetIntervalUpsell");
+export const setUpsellLoading = createAction<boolean>("ServiceRequests/SetUpsellLoading");
+export const setUpsellPaging = createAction<IPagingResponse>("ServiceRequests/SetUpsellPaging");
+export const setUpsellPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetUpsellPageData");
+export const setUpsellFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/SetUpsellFilter");
+export const setUpsellOrdering = createAction<IOrder<IAssignedServiceRequest>>("ServiceRequests/SetUpsellOrder");
+export const loadUpsellServiceRequests = (serviceCenterId: number, isEligible?: boolean): AppThunk =>
+    async (dispatch, getState) => {
+        const {upsellPageData, upsellFilter, upsellOrdering} = getState().serviceRequests;
+        dispatch(setUpsellLoading(true));
+        const pricingDisplayType = isEligible ? EPricingDisplayType.Dynamic : null;
+        const params = {...upsellPageData, ...upsellFilter, ...upsellOrdering, serviceCenterId, pricingDisplayType};
+
+        try {
+            const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequest>>(
+                Api.endpoints.ServiceRequests.GetUpsell, {params});
+            dispatch(getUpsellServiceRequests(result));
+            dispatch(setUpsellLoading(false));
+            dispatch(setUpsellPaging(paging));
+        } catch (e) {
+            dispatch(setUpsellLoading(false));
+            throw e;
+        }
+    }
+
+export const updateUpsellServiceRequest = (
+    data: IServiceRequestOverrideEditRequest, id: number, serviceCenterId?: number,
+): AppThunk =>
+    async dispatch => {
+        await Api.call(Api.endpoints.ServiceRequests.EditUpsell, {data, urlParams: {id}});
+        if (serviceCenterId) {
+            dispatch(loadUpsellServiceRequests(serviceCenterId));
+        }
+    }
