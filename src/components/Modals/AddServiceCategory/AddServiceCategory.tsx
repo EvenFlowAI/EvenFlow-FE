@@ -208,6 +208,9 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             if (categoryType?.value === EServiceCategoryType.ValueService && !visitCenterConfig?.valueService) {
                 return showError("Value Service Option is turned off in the Booking Flow and cannot be saved")
             }
+            if (categoryType?.value === EServiceCategoryType.MaintenancePackage && definedPage?.value === 1) {
+                return showError('The Category with link to "Maintenance Package" can`t be saved for"Owned By Booking Flow (Page 2)"')
+            }
 
             if (categoryName && definedPage && categoryType && orderIndex) {
                 const data: TUpdateCategoryData = {
