@@ -272,12 +272,13 @@ export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: m
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
             const {items, searchedDateRange, dropOffSettings} = result.data;
-            if (items) dispatch(getServiceValetSlots(items))
-            if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange))
-            if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings))
-            loadCB && loadCB()
+            dispatch(getServiceValetSlots(items));
+            if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
+            if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
+            loadCB && loadCB();
         })
         .catch(err => {
+            dispatch(getServiceValetSlots([]));
             console.log('get service valet slots err', err)
         })
         .finally(() => loadCB && loadCB())
