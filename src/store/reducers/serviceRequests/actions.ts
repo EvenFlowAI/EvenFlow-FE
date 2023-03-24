@@ -290,3 +290,23 @@ export const updateUpsellServiceRequest = (
             dispatch(loadUpsellServiceRequests(serviceCenterId));
         }
     }
+
+export const addUpsellServiceRequests = (
+    serviceRequestIds: number[],
+    serviceCenterId: number,
+    onError = (err: string) => {},
+    onSuccess = (codes: number[]) => {},
+): AppThunk => dispatch => {
+    Api.call(
+        Api.endpoints.ServiceRequests.AddUpsell, {data: {serviceRequestIds, serviceCenterId}}
+    )
+        .then(result => {
+            if (result) {
+                dispatch(loadUpsellServiceRequests(serviceCenterId));
+                onSuccess(serviceRequestIds);
+            }
+        })
+        .catch(err => {
+            onError(err)
+        })
+}

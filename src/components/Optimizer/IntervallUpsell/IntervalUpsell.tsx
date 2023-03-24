@@ -7,7 +7,7 @@ import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} f
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    assignServiceRequests,
+    addUpsellServiceRequests,
     loadUpsellServiceRequests,
     setUpsellFilter, setUpsellOrdering, setUpsellPageData
 } from "../../../store/reducers/serviceRequests/actions";
@@ -189,7 +189,7 @@ export const IntervalUpsell = () => {
         if (selectedSC && editedItem) {
             try {
                 await Api.call(
-                    Api.endpoints.ServiceRequests.RemoveOverride,
+                    Api.endpoints.ServiceRequests.RemoveUpsell,
                     {urlParams: {id: editedItem.id}}
                 ).then(res => {
                     if (res) showMessage("Service Request removed.")
@@ -203,14 +203,13 @@ export const IntervalUpsell = () => {
             showError(SC_UNDEFINED);
         }
     }
-    const onSuccessAssign = useCallback((selectedCodes: number[]) => {
+    const onSuccessAdding = useCallback((selectedCodes: number[]) => {
         showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Ops Codes' : 'Ops Code'} added`)
     }, [])
 
     const onRequestAssign = useCallback((selectedCodes: number[], serviceCenterId: number) => {
-        // todo for upsell
-        dispatch(assignServiceRequests(selectedCodes, serviceCenterId, showError, onSuccessAssign));
-    }, [dispatch, showError, onSuccessAssign])
+        dispatch(addUpsellServiceRequests(selectedCodes, serviceCenterId, showError, onSuccessAdding));
+    }, [dispatch, showError, onSuccessAdding])
 
     return <>
         <TitleContainer
