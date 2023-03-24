@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import {
+    clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
     setAddress,
@@ -15,7 +16,6 @@ import {
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
-import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {
     EAncillaryType,
     EServiceType,
@@ -108,8 +108,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
 
     const clearSelectedData = () => {
         dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
+        dispatch(clearAppointmentData())
     }
 
     const clearAddress = () => {
