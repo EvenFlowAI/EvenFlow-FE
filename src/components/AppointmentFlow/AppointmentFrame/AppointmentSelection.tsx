@@ -254,7 +254,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [
         dispatch, id, selectedTimingType,
         selectedVehicle, customerData, service, vehicle,
-        subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime
+        subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
     ]);
 
     const handleGANext = useCallback(() => {
