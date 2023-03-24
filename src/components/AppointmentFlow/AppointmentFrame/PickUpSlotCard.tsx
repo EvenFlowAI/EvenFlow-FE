@@ -98,10 +98,17 @@ const useStyles = makeStyles(theme => ({
 }))
 
 type TProps = {
-    timeSlot: IServiceValetAppointment;
+    timeSlot: IServiceValetAppointment|null;
     selected: boolean;
     onSelect: TArgCallback<IServiceValetAppointment|null>;
     date: moment.Moment|null;
+}
+
+const mockSlotTime = {
+    pickUpMin: "07:00",
+    pickUpMax: "09:00",
+    dropOffMin: "16:00",
+    dropOffMax: "19:00",
 }
 
 export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, date}) => {
@@ -129,7 +136,7 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
 
     return (
         <PickUpWrapper
-            key={moment(timeSlot.date).toISOString()}
+            key={timeSlot ? moment(timeSlot.date).toISOString() : moment().toISOString()}
             available={Boolean(timeSlot) && !timePassed}
             selected={selected}
             onClick={() => timePassed ? {} : onSelect(timeSlot ?? null)}
@@ -141,22 +148,22 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                 <div className={classes.text}>
                     <div>{t("Pick Up Time")}:</div>
                     <div>
-                        {moment(timeSlot.pickUpMin, 'HH:mm').format('hh:mm A')}
+                        {timeSlot ? moment(timeSlot.pickUpMin, 'HH:mm').format('hh:mm A') : moment(mockSlotTime.pickUpMin, 'HH:mm').format('hh:mm A')}
                         <span> {t("to")} </span>
-                        {moment(timeSlot.pickUpMax, 'HH:mm').format('hh:mm A')}
+                        {timeSlot ? moment(timeSlot?.pickUpMax, 'HH:mm').format('hh:mm A') : moment(mockSlotTime.pickUpMax, 'HH:mm').format('hh:mm A')}
                     </div>
                 </div>
             </div>
             <div className={classes.rightPart}>
                 <div className={classes.availability}>
-                    {timeSlot.available > 0
+                    {timeSlot && timeSlot.available > 0
                         ? <div className={classes.availabilityItem} style={{color: "#008331"}}>
                             <div className={classes.textWithIcon}>{t("Available")}   <CheckCircleOutlined style={{marginLeft: 8}}/> </div>
-                            <div>{timeSlot.available} {t("left")}</div>
+                            <div>{timeSlot?.available} {t("left")}</div>
                         </div>
                         : <div className={classes.availabilityItem}>
                             <div className={classes.textWithIcon} style={{color: '#202021'}}>{t("Not Available")}   <HighlightOff style={{marginLeft: 8}}/> </div>
-                            <div className={classes.textWithIcon} style={{color: '#DADADA'}}>{timeSlot.available} {t("left")}</div>
+                            <div className={classes.textWithIcon} style={{color: '#DADADA'}}>0 {t("left")}</div>
                         </div>
                     }
                 </div>
@@ -164,9 +171,9 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                     ? <div className={classes.dropOff}>
                         <div>{t("Drop Off Time")}:</div>
                         <div className={classes.rightText}>
-                            {moment(timeSlot.dropOffMin, 'HH:mm').format('hh:mm A')}
+                            {timeSlot ? moment(timeSlot?.dropOffMin, 'HH:mm').format('hh:mm A') : moment(mockSlotTime.dropOffMin, 'HH:mm').format('hh:mm A')}
                             <span> {t("to")} </span>
-                            {moment(timeSlot.dropOffMax, 'HH:mm').format('hh:mm A')}
+                            {timeSlot ? moment(timeSlot?.dropOffMax, 'HH:mm').format('hh:mm A') : moment(mockSlotTime.dropOffMax, 'HH:mm').format('hh:mm A')}
                         </div>
                     </div>
                     : <div className={classes.dropOff} style={{textAlign: 'justify', paddingBottom: 16}}>{dropOffSettings?.description}</div>

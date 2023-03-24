@@ -9,8 +9,9 @@ import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/type
 import {makeStyles} from "@material-ui/core/styles";
 import {DialogProps} from "../types";
 import {
+    clearAppointmentData,
     setAddress,
-    setDefaultVisitCenterOption,
+    setDefaultVisitCenterOption, setSideBarSteps,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
@@ -60,7 +61,9 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
     }
 
     const onVisitCenter = () => {
-        dispatch(setDefaultVisitCenterOption())
+        dispatch(setDefaultVisitCenterOption());
+        dispatch(clearAppointmentData());
+        dispatch(setSideBarSteps([]));
         onTryAnother();
     }
 

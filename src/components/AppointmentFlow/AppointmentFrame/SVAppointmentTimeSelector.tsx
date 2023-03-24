@@ -1,6 +1,8 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
-import {IServiceValetAppointment} from "../../../store/reducers/appointment/types";
+import {
+    IServiceValetAppointment,
+} from "../../../store/reducers/appointment/types";
 import {styled} from "@material-ui/core";
 import {Loading} from "../../UI/Loading";
 import {useDispatch, useSelector} from "react-redux";
@@ -52,6 +54,9 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
         const firstCardRef = useRef<HTMLDivElement|null>(null);
         const classes = useStyles();
         const {t} = useTranslation();
+        const currentSlots = useMemo(() => {
+            return serviceValetSlots.filter(slot => moment(slot.date).isSame(date, 'date'))
+        }, [serviceValetSlots, date])
 
         useEffect(() => {
             if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView();
@@ -86,7 +91,7 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
                 <h4 ref={firstCardRef}>{t("Select Time")}</h4>
                 {!loading
                         ? <PickUpSlotsWrapper>
-                            {serviceValetSlots.filter(slot => moment(slot.date).isSame(date, 'date')).map(timeSlot => {
+                            {currentSlots?.length ? currentSlots.map(timeSlot => {
                                     return <PickUpSlotCard
                                         date={date}
                                         onSelect={handleSelect}
@@ -97,6 +102,13 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
                                         key={moment(timeSlot.date).toISOString()}
                                     />
                                 })
+                                : <PickUpSlotCard
+                                    date={date}
+                                    onSelect={handleSelect}
+                                    selected={false}
+                                    timeSlot={null}
+                                    key={moment().toISOString()}
+                                />
                             }
                         </PickUpSlotsWrapper>
                         : <Loading/>}
