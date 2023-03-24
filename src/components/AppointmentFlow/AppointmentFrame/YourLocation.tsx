@@ -27,7 +27,6 @@ import {styled} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
 import {useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
-import {getServiceValetSlots} from "../../../store/reducers/appointment/actions";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -130,7 +129,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         clearSelectedData();
-        dispatch(getServiceValetSlots([]));
         setFormChecked(false);
         setZip(option ?? "");
     }
