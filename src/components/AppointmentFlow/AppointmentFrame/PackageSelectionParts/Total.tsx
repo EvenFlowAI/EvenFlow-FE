@@ -32,12 +32,10 @@ const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isS
                     <div className="before">
                       ${scProfile?.isRoundPrice ? priceBefore : priceBefore.toFixed(2)}
                     </div> }
-                    {p.price
-                        ? <div className="currentWrp">
-                            <div className="triangle"/>
-                            <div className="current">${scProfile?.isRoundPrice ? p.price : p.price.toFixed(2)}</div>
-                        </div>
-                    : null}
+                    <div className="currentWrp">
+                        <div className="triangle"/>
+                        <div className="current">${scProfile?.isRoundPrice ? p.price : p.price.toFixed(2)}</div>
+                    </div>
                 </div>
             }
         )}
