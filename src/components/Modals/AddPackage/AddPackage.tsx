@@ -31,6 +31,7 @@ import Mileage from "./parts/Mileage/Mileage";
 import AssignedOpsCodes from "./parts/AssignedOpsCodes/AssignedOpsCodes";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import EngineTypes from "./parts/EngineTypes";
+import AddUpsellToPackage from "./parts/AddUpsellToPackage/AddUpsellToPackage";
 
 
 type TModalProps = DialogProps & {
@@ -65,7 +66,7 @@ const useStyles = makeStyles(() => ({
         marginBottom: 30,
     },
     wideButton: {
-        width: '100%',
+        // width: '100%',
         color: '#7898FF',
         border: '1px solid #7898FF',
         borderRadius: 0,
@@ -89,8 +90,8 @@ const useStyles = makeStyles(() => ({
     btnsWrapper: {
         ...baseWrapper,
 
-        '& > button:first-child': {
-            marginRight: 24,
+        '& > button:not(:first-child)': {
+            marginLeft: 12,
         },
         '& > button': {
             fontSize: 12,
@@ -217,6 +218,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const [packageName, setPackageName] = useState<string>('');
     const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
     const [opsCodes, setOpsCodes] = useState<IAssignedServiceRequest[]>([]);
+    const [upsellCodes, setUpsellCodes] = useState<IAssignedServiceRequest[]>([]);
     const [assignedOpsCodes, setAssignedOpsCodes] = useState<TAssignedRequest[]>([]);
     const [complimentary, setComplimentary] = useState<number[]>([]);
     const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
@@ -230,6 +232,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
 
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
+    const {isOpen: isUpsellOpen, onOpen: onUpsellOpen, onClose: onUpsellClose} = useModal();
     const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
     const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
 
@@ -252,6 +255,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             setPackageName(currentPackage.name);
             setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
             setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
+            // todo set upsell codes
             setApplyBusinessRules(currentPackage.isApplyBusinessRules);
             if (allAssignedList) {
                 setOpsCodes(() => {
@@ -361,6 +365,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         if (isValid()) {
             if (selectedSC) {
                 const serviceRequests = getRequestsFromSelectedPackages(selectedPackages);
+                // todo add upsell codes
                 const data: INewPackage | IUpdatedPackage = {
                     name: packageName,
                     serviceRequests,
@@ -400,6 +405,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
         });
     }, [setOpsCodes])
+
+    const handleUpsellCodeSelect = useCallback((el: IAssignedServiceRequest) => {
+        setUpsellCodes(prev => {
+            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
+        });
+    }, [setUpsellCodes])
 
     return (
         <BaseModal {...props} width={540} onClose={onCancel}>
@@ -468,6 +479,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             className={classes.wideButton}
                             onClick={onAddOpsCodeOpen}>
                             Add Ops Codes
+                        </Button>
+                        <Button
+                            color="primary"
+                            className={classes.wideButton}
+                            onClick={onUpsellOpen}>
+                            Add Interval Upsell
                         </Button>
                         <Button
                             color="primary"
@@ -589,6 +606,12 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                 onClose={onComplimentaryClose}
                 selectedCodes={complimentary}
                 setSelectedCodes={setComplimentary}/>
+            <AddUpsellToPackage
+                handleSelect={handleUpsellCodeSelect}
+                open={isUpsellOpen}
+                onClose={onUpsellClose}
+                selectedCodes={upsellCodes}
+                setSelectedCodes={setUpsellCodes}/>
             <AddOpsCode
                 handleSelect={handleOpsCodeSelect}
                 open={isAddOpsCodeOpen}
