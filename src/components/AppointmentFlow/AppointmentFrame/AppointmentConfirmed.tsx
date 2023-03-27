@@ -105,6 +105,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         engineTypes,
         selectedRecalls,
         advisor,
+        dropOffSettings,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -126,6 +127,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.vehicleDetails.engineTypes,
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.advisor,
+        state.appointment.dropOffSettings,
     ]);
 
     const {t} = useTranslation();
@@ -245,24 +247,27 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                     label: t("Pick Up Time"),
                     content: `${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')}
             ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
-                }, {
+                }
+            )
+            if (dropOffSettings?.showDropOffTime) {
+                list.splice(2, 0, {
                     label: t("Drop Off Time"),
                     content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}
             ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('hh:mm A')}`
-                }
-            )
+                })
+            }
         }
         return list;
     }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
 
-    const getPrice = (): string => {
-        const price = isServiceValetApp
-            ? serviceValetAppointment?.price?.value
-            : appointment?.price?.value;
-        return price
-            ? `${t("Selected Price")}: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
-            : t('Service price will be quoted at dealership');
-    }
+    // const getPrice = (): string => {
+    //     const price = isServiceValetApp
+    //         ? serviceValetAppointment?.price?.value
+    //         : appointment?.price?.value;
+    //     return price
+    //         ? `${t("Selected Price")}: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
+    //         : t('Service price will be quoted at dealership');
+    // }
 
     const getDateForCalendar = useCallback(() => {
         let dateString: string = '';
