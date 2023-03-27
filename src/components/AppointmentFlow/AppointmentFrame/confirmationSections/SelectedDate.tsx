@@ -24,6 +24,7 @@ type TProps = {
 }
 export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const {appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+    const { dropOffSettings } = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
 
@@ -48,12 +49,14 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
                     <span> {t("to")} </span>
                     <span> {moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}</span>
                 </div>
-                <div>
-                    <span style={{fontWeight: 'bold'}}>{t("Drop Off Time")}: </span>
-                    <span> {moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}</span>
-                    <span> {t("to")} </span>
-                    <span> {moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('hh:mm A')}</span>
-                </div>
+                {dropOffSettings?.showDropOffTime
+                    ? <div>
+                        <span style={{fontWeight: 'bold'}}>{t("Drop Off Time")}: </span>
+                        <span> {moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}</span>
+                        <span> {t("to")} </span>
+                        <span> {moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('hh:mm A')}</span>
+                    </div>
+                    : null}
             </div>
             : null}
     </div>
