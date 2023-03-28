@@ -249,7 +249,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
                 }
             )
-            if (dropOffSettings?.showDropOffTime) {
+            if (dropOffSettings?.showDropOffTime && serviceValetAppointment?.dropOffMin && serviceValetAppointment?.dropOffMax) {
                 list.splice(2, 0, {
                     label: t("Drop Off Time"),
                     content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}

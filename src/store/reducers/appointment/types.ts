@@ -260,12 +260,12 @@ export interface IServiceValetAppointment {
     date: ParsableDate;
     pickUpMin: string;
     pickUpMax: string;
-    dropOffMin: string;
-    dropOffMax: string;
     dropOffDescription: string;
     available: number,
     price: IServiceValetAppointmentPrice;
     serviceRequestPrices: IServiceValetRequestPrice[];
+    dropOffMin?: string;
+    dropOffMax?: string;
 }
 
 export interface IDropOffSettings {
