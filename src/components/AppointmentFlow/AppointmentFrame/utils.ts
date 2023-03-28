@@ -5,6 +5,7 @@ import {EOfferType} from "../../../store/reducers/offers/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../Layout/types";
 import {IRecallByVin} from "./types";
+import {TRecallForRequest} from "../../../store/reducers/appointment/types";
 
 export const getAppointmentDate = (date: moment.Moment, d: number) => {
     return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
@@ -13,12 +14,12 @@ export const getAppointmentDate = (date: moment.Moment, d: number) => {
 export const collectServiceRequestIds = (
     s: IServiceCategory|null,
     sub: IServiceCategory|null,
-    selectedRecalls: IRecallByVin[],
     selectedPackage?: IPackageOptions|null,
-    individualOpsCodes?: number[]): number[] => {
+    individualOpsCodes?: number[],
+    selectedRecalls?: IRecallByVin[]): number[] => {
     let ids = [];
 
-    if (selectedRecalls.length) {
+    if (selectedRecalls?.length) {
         selectedRecalls.forEach(item => ids.push(item.serviceRequestId))
     }
     if (individualOpsCodes?.length) {
@@ -196,4 +197,15 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
         data.transportationNeeds = -1;
     }
     return data
+}
+
+export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallForRequest[] => {
+    return selectedRecalls.map(recall => {
+        const data: TRecallForRequest = {
+            serviceRequestId: recall.serviceRequestId,
+            number: recall.nhtsaRecallNumber,
+        }
+        if (recall.id) data.id = recall.id;
+        return data;
+    })
 }

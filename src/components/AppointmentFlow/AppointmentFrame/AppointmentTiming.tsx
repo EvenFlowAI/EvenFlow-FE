@@ -12,14 +12,14 @@ import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReduce
 import moment from "moment";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
 import {
-    loadAppointmentSlots, loadServiceValetSlots,
+    loadAppointmentSlots,
     selectAppointment,
     selectServiceValetAppointment
 } from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 //import ReactGA from "react-ga4";
 import {decodeSCID} from "../../../utils/utils";
-import {collectServiceRequestIds} from "./utils";
+import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -111,12 +111,13 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             fromDate: date.toISOString(),
             maintenancePackageOptionId: selectedPackage?.id ?? null,
             serviceRequestIds: collectServiceRequestIds(
-                service, subService, selectedRecalls, selectedPackage, selectedOpsCodes
+                service, subService, selectedPackage, selectedOpsCodes
             ),
             serviceCategoryIds: getCategories(),
             customerId: customerData?.id,
             warrantyExpiration: selectedVehicle?.warrantyExpiration,
             serviceTypeOptionId: serviceTypeOption?.id ?? null,
+            recalls: mapRecallsForRequest(selectedRecalls),
         }
         if (valueService?.selectedService) {
             dd.valueServiceOfferIds = [valueService.selectedService.id];
