@@ -414,6 +414,7 @@ export type TEngineType = {
     id: number;
     name: string;
 }
+// todo change type of intervalUpsellServices
 
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
@@ -424,6 +425,7 @@ export interface IPackageById {
     id: number;
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
+    intervalUpsellServices: TExtendedService[];
     businessRules: IBusinessRule;
     engineTypes: TEngineType[];
 }
@@ -433,11 +435,14 @@ export type TOptionServiceRequest = {
     serviceRequestId: number;
 }
 
+// todo change type of intervalUpsellServices
+
 export interface IPackageOptionDetailed {
     id: number;
     type: EMaintenanceOptionType;
     price: number;
     serviceRequests: TOptionServiceRequest[];
+    intervalUpsellServices: TOptionServiceRequest[];
     complimentaryServices: number[];
     complimentaryServiceLaborHours: number;
     complimentaryServicePrice: number;
