@@ -152,6 +152,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppointment}> = ({serviceValetAppointment}) => {
+    const { dropOffSettings } = useSelector((state: RootState) => state.appointment);
     const [hoursPMin, minutesPMin] = serviceValetAppointment.pickUpMin.split(":");
     const [hoursPMax, minutesPMax] = serviceValetAppointment.pickUpMax.split(":");
     const [hoursDMin, minutesDMin] = serviceValetAppointment.dropOffMin.split(":");
@@ -161,9 +162,11 @@ const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppo
         <div>Pick Up Time:
             <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("hh:mm A")}</span>
         </div>
-        <div>Drop Off Time:
-            <span> {moment(serviceValetAppointment.date).set('hour', +hoursDMin).set('minute', +minutesDMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursDMax).set('minute', +minutesDMax).format("hh:mm A")}</span>
-        </div>
+        {dropOffSettings?.showDropOffTime
+            ? <div>Drop Off Time:
+                <span> {moment(serviceValetAppointment.date).set('hour', +hoursDMin).set('minute', +minutesDMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursDMax).set('minute', +minutesDMax).format("hh:mm A")}</span>
+            </div>
+            : null}
     </DateWrapper>
 }
 
