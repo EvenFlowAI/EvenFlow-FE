@@ -256,6 +256,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     address: address?.label ?? null,
                     zipCode: zipCode?.length ? zipCode : undefined,
+                    // todo selected recalls
+                    recalls:[],
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,
@@ -316,6 +318,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     address: address?.label ?? null,
                     zipCode: zipCode?.length ? zipCode : undefined,
+                    // todo selected recalls
+                    recalls: [],
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,
