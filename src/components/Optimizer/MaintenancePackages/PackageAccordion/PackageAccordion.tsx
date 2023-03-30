@@ -24,6 +24,7 @@ import {ComplimentaryAndOptions} from "../ComplimenteryAndOptions/ComplimentaryA
 import Description from "../Description/Description";
 import OrderIndex from "../OrderIndex/OrderIndex";
 import {IntervalUpsellAndOptions} from "../IntervalUpsellAndOptions/IntervalUpsellAndOptions";
+import PricesBlock from "../PricesRow/PricesRow";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -528,6 +529,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                         summaryText="Market Price:"
                         valuesArray={detailsData.complimentaryPrice}
                         onInputChange={onInputChange}/>
+
+                      <PricesBlock/>
 
                     </React.Fragment>}
 

@@ -51,6 +51,7 @@ export const IntervalUpsellAndOptions: React.FC<TServiceRequestsProps> = (props)
         <Table>
             <TableBody>
                 {props.packageData?.intervalUpsellServices
+                    ? props.packageData?.intervalUpsellServices
                     .slice()
                     .sort((a, b) => a.orderIndex - b.orderIndex)
                     .map((request, rowIndex) => {
@@ -85,7 +86,8 @@ export const IntervalUpsellAndOptions: React.FC<TServiceRequestsProps> = (props)
                                     </TableCell>
                                 })}
                         </TableRow>
-                    })}
+                    })
+                : null }
             </TableBody>
         </Table>
     </TableContainer>
