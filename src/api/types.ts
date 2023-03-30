@@ -360,6 +360,8 @@ export interface IPackageOptions {
     complimentaryServices: TExtendedComplimentary[];
     marketPriceServiceRequests: number;
     marketPriceComplimentaryServices: number;
+    intervalUpsellRequests: TExtendedService[];
+    marketPriceIntervalUpsell: number;
     maintenancePackageName: string;
 }
 
