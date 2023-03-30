@@ -113,8 +113,8 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext})
     }, [selectedVehicle, open])
 
     useEffect(() => {
-        dispatch(setSelectedRecalls(recallsByVin));
-    }, [recallsByVin])
+        if (open) dispatch(setSelectedRecalls(recallsByVin));
+    }, [recallsByVin, open])
 
     const onAddService = (item: IRecallByVin) => {
         const data = selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
