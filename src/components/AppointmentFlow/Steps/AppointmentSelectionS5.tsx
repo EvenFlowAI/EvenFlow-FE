@@ -139,6 +139,7 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                     customerId: customerData?.id,
                     warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
+                    recalls: [],
                 }, updateDate));
             } finally {
                 setLoading(false);

@@ -57,6 +57,7 @@ import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameRedu
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
+import {setUpdateSelectedRecalls} from "../../store/reducers/recall/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -364,6 +365,9 @@ export const AppointmentFrameLayout = () => {
             setLoadingCar(true);
             try {
                 const {data} = await API.appointment.getByKey(trimmedKey);
+                if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
+                    dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, data.recalls))
+                }
                 dispatch(setUpdateAppointment(data));
                 data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
                 if (data.maintenancePackageOption) {

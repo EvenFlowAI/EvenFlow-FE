@@ -151,6 +151,12 @@ export interface IVehicleForSlots {
     engineTypeId?: number|null;
 }
 
+export type TRecallForRequest = {
+    serviceRequestId: number;
+    number: string;
+    id?: number;
+}
+
 export interface IAppointmentSlotsRequest {
     serviceCenterId: number;
     maintenancePackageOptionId?: number|null;
@@ -173,6 +179,7 @@ export interface IAppointmentSlotsRequest {
     serviceTypeOptionId: number|null;
     zipCode?: string;
     address?: string;
+    recalls: TRecallForRequest[];
 }
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;

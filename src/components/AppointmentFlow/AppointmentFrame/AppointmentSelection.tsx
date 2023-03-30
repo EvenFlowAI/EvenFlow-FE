@@ -10,14 +10,17 @@ import {useParams} from "react-router-dom";
 import {decodeSCID, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
+import {
+    EAppointmentTimingType,
+    IAppointmentSlotsRequest,
+} from "../../../store/reducers/appointment/types";
 import {
     loadAppointmentSlots,
     loadServiceValetSlots,
     selectAppointment, selectServiceValetAppointment
 } from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
-import {collectServiceRequestIds} from "./utils";
+import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -212,12 +215,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         fromDate: selectedTime ? moment(selectedTime).toISOString() : moment.utc().startOf("day"),
                         maintenancePackageOptionId: selectedPackage?.id ?? null,
                         serviceRequestIds: collectServiceRequestIds(
-                            service, subService, selectedRecalls, selectedPackage, selectedOpsCodes
+                            service, subService, selectedPackage, selectedOpsCodes
                         ),
                         serviceCategoryIds: getCategories(),
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration,
                         serviceTypeOptionId: serviceTypeOption?.id ?? null,
+                        recalls: mapRecallsForRequest(selectedRecalls),
                     }
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
