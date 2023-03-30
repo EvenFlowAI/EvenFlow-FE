@@ -449,6 +449,8 @@ export interface IPackageOptionDetailed {
     maintenancePackageId: number;
     serviceRequestLaborHours: number;
     serviceRequestPrice: number;
+    intervalUpsellLaborHours: number;
+    intervalUpsellPrice: number;
     name?: string;
     serviceRequestAssignedId?: number;
 }
