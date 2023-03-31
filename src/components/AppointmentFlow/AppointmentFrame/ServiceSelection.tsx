@@ -82,6 +82,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
 
                 switch (subService.type) {
                     case 2:
+                    case 4:
                         return onNext('opsCode');
                     case 5:
                         return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
