@@ -275,7 +275,12 @@
       "SERVICE REQUESTS": "SERVICE REQUESTS",
       "APPOINTMENT DETAILS": "APPOINTMENT DETAILS",
       "DEALERSHIP CONTACT NUMBER": "DEALERSHIP CONTACT NUMBER",
-      "Any Advisor": "Any Advisor"
+      "Any Advisor": "Any Advisor",
+      "Search Customer by Name": "Search Customer by Name",
+      "Customer First Name": "Customer First Name",
+      "Customer Last Name": "Customer Last Name",
+      "Enter First Name": "Enter First Name",
+      "Enter Last Name": "Enter Last Name"
     }
   },
   "es": {
