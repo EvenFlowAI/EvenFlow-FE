@@ -15,6 +15,7 @@ import {useTranslation} from "react-i18next";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
+import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -129,6 +130,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const {currentUser} = useSelector((state: RootState) => state.users);
     const {onOpen, onClose, isOpen} = useModal();
+    const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
     const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
     const isLakePowell = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
@@ -196,6 +198,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                 </Button>
             </div>
         </Grid>
-        <EnhancedCustomerSearch open={isOpen} onClose={onClose}/>
+        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound}/>
+        <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
     </Grid>
 };

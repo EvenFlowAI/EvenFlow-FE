@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const EnhancedCustomerSearch: React.FC<DialogProps> = ({ open, onClose}) => {
+const EnhancedCustomerSearch: React.FC<DialogProps & {onOpenNotFound: () => void}> = ({ open, onClose, onOpenNotFound}) => {
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -68,6 +68,8 @@ const EnhancedCustomerSearch: React.FC<DialogProps> = ({ open, onClose}) => {
 
     const onSave = useCallback((): void => {
         setFormIsChecked(true);
+        onCancel()
+        onOpenNotFound();
         // todo request
     }, [])
 
