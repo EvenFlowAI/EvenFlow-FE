@@ -53,13 +53,13 @@ const CustomerNotFound: React.FC<TCustomerNotFoundProps> = ({ open, onClose, onT
     const onCancel = useCallback((): void => {
         onClose();
         onTryAnotherName();
-    }, [])
+    }, [onTryAnotherName])
 
     const onSave = useCallback((): void => {
         onClose();
         // todo check logic
         handleNew();
-    }, [])
+    }, [handleNew])
 
     return (
         <BaseModal open={open} width={700} onClose={onCancel}>
