@@ -257,6 +257,7 @@ export const updateAdminServiceRequest = (data: ISRAdminForm, id: number): AppTh
 }
 
 export const getUpsellServiceRequests = createAction<IUpsellServiceRequest[]>("ServiceRequests/GetIntervalUpsell");
+export const getCurrentUpsell = createAction<IUpsellServiceRequest|null>("ServiceRequests/GetIntervalUpsell");
 export const setUpsellLoading = createAction<boolean>("ServiceRequests/SetUpsellLoading");
 export const setUpsellPaging = createAction<IPagingResponse>("ServiceRequests/SetUpsellPaging");
 export const setUpsellPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetUpsellPageData");
@@ -266,11 +267,11 @@ export const loadUpsellServiceRequests = (serviceCenterId: number): AppThunk =>
     async (dispatch, getState) => {
         const {upsellPageData, upsellFilter, upsellOrdering} = getState().serviceRequests;
         dispatch(setUpsellLoading(true));
-        const params = {...upsellPageData, ...upsellFilter, ...upsellOrdering, serviceCenterId};
+        const data = {...upsellPageData, ...upsellFilter, ...upsellOrdering, serviceCenterId};
 
         try {
             const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IUpsellServiceRequest>>(
-                Api.endpoints.ServiceRequests.GetUpsell, {params});
+                Api.endpoints.ServiceRequests.GetUpsellByQuery, {data});
             dispatch(getUpsellServiceRequests(result));
             dispatch(setUpsellLoading(false));
             dispatch(setUpsellPaging(paging));
@@ -308,4 +309,16 @@ export const addUpsellServiceRequests = (
         .catch(err => {
             onError(err)
         })
+}
+
+export const loadUpsellById = (id: number): AppThunk => dispatch => {
+    dispatch(setUpsellLoading(true));
+    Api.call<IUpsellServiceRequest>(Api.endpoints.ServiceRequests.GetUpsellById, {urlParams: {id}})
+        .then(result => {
+            if (result) dispatch(getCurrentUpsell(result.data))
+        })
+        .catch(err => {
+            console.log('get upsell service request by id error', err)
+        })
+        .finally(() => dispatch(setUpsellLoading(false)));
 }

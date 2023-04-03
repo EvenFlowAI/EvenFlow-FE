@@ -184,7 +184,7 @@ type ApiRoutes = {
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
         | "Eligibility" | "ChangePricingDisplayType"
-        | "EditSkills" | "Prioritize" | "GetUpsell" | "EditUpsell" | "RemoveUpsell" | "AddUpsell", TApiRoute>,
+        | "EditSkills" | "Prioritize" | "GetUpsellByQuery" | "EditUpsell" | "RemoveUpsell" | "AddUpsell" | "GetUpsellById", TApiRoute>,
     ServiceTypes: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
@@ -461,10 +461,11 @@ export class Api {
             Eligibility: {route: "/service-requests/eligibility", method: "patch"},
             Prioritize: {route: "/service-requests/prioritize", method: "patch"},
             ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"},
-            GetUpsell: {route: "/service-requests/interval-upsells", method: "get"},
+            GetUpsellByQuery: {route: "/service-requests/interval-upsells/by-query", method: "post"},
             EditUpsell: {route: "/service-requests/interval-upsells/{id}", method: "put"},
             RemoveUpsell: {route: "/service-requests/interval-upsells/{id}", method: "delete"},
             AddUpsell: {route: "/service-requests/interval-upsells", method: "post"},
+            GetUpsellById: {route: "/service-requests/interval-upsells/{id}", method: "get"},
         },
         ServiceTypes: {
             Create: {route: "/service-type-options", method: "post"},
