@@ -115,3 +115,13 @@ export interface ISRAdmin {
     numberOfParts: number;
     partsUnitCost: number;
 }
+
+export interface IUpsellServiceRequest {
+    id: number;
+    code: string;
+    description: string;
+    durationInHours: number;
+    invoiceAmount: number;
+    partsUnitCost: number;
+    numberOfParts: number;
+}

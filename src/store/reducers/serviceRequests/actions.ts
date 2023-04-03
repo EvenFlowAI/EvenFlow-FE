@@ -12,7 +12,7 @@ import {
     IServiceRequestPriority,
     ISRAdmin,
     ISRAdminFilters,
-    ISRAdminForm
+    ISRAdminForm, IUpsellServiceRequest
 } from "./types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -256,21 +256,20 @@ export const updateAdminServiceRequest = (data: ISRAdminForm, id: number): AppTh
     dispatch(loadAdminServiceRequests());
 }
 
-export const getUpsellServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequests/GetIntervalUpsell");
+export const getUpsellServiceRequests = createAction<IUpsellServiceRequest[]>("ServiceRequests/GetIntervalUpsell");
 export const setUpsellLoading = createAction<boolean>("ServiceRequests/SetUpsellLoading");
 export const setUpsellPaging = createAction<IPagingResponse>("ServiceRequests/SetUpsellPaging");
 export const setUpsellPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetUpsellPageData");
 export const setUpsellFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/SetUpsellFilter");
-export const setUpsellOrdering = createAction<IOrder<IAssignedServiceRequest>>("ServiceRequests/SetUpsellOrder");
-export const loadUpsellServiceRequests = (serviceCenterId: number, isEligible?: boolean): AppThunk =>
+export const setUpsellOrdering = createAction<IOrder<IUpsellServiceRequest>>("ServiceRequests/SetUpsellOrder");
+export const loadUpsellServiceRequests = (serviceCenterId: number): AppThunk =>
     async (dispatch, getState) => {
         const {upsellPageData, upsellFilter, upsellOrdering} = getState().serviceRequests;
         dispatch(setUpsellLoading(true));
-        const pricingDisplayType = isEligible ? EPricingDisplayType.Dynamic : null;
-        const params = {...upsellPageData, ...upsellFilter, ...upsellOrdering, serviceCenterId, pricingDisplayType};
+        const params = {...upsellPageData, ...upsellFilter, ...upsellOrdering, serviceCenterId};
 
         try {
-            const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequest>>(
+            const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IUpsellServiceRequest>>(
                 Api.endpoints.ServiceRequests.GetUpsell, {params});
             dispatch(getUpsellServiceRequests(result));
             dispatch(setUpsellLoading(false));

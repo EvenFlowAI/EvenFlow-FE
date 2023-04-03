@@ -12,62 +12,45 @@ import {
     setUpsellFilter, setUpsellOrdering, setUpsellPageData
 } from "../../../store/reducers/serviceRequests/actions";
 import {TableRowDataType} from "../../UI/types";
-import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import {IUpsellServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
-import {OverrideOPsCodeDialog} from "../../Modals/OPsCodesListDialog/OverrideOPsCodeDialog";
 import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {SearchInput} from "../../UI/SearchInput";
 import {IOrder} from "../../../types/types";
 
-const tableRow: TableRowDataType<IAssignedServiceRequest>[] = [
-    {header: "Service Ops Code", val: el => el.serviceRequest.code, orderId: "code"},
+const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
+    {
+        header: "Service Ops Code",
+        val: el => el.code, orderId: "code"
+    },
     {
         header: "Description",
-        val: el => <CellData
-            data={el.serviceRequest.description}
-            override={el.serviceRequestOverride?.description}
-        />,
+        val: el => <CellData data={el.description}/>,
         orderId: "description"
     },
     {
         header: "Duration (hours)",
         align: "center",
-        val: el => <CellData
-            data={el.serviceRequest.durationInHours.toFixed(1)}
-            override={el.serviceRequestOverride?.durationInHours?.toFixed(1)}
-        />,
+        val: el => <CellData data={el.durationInHours.toFixed(1)}/>,
         orderId: "duration"
     },
     {
         header: "Regular Invoice",
         align: "center",
-        val: el => <CellData
-            prefix="$"
-            data={el.serviceRequest.invoiceAmount.toFixed(2)}
-            override={el.serviceRequestOverride?.invoiceAmount?.toFixed(2)}
-        />,
+        val: el => <CellData prefix="$" data={el.invoiceAmount.toFixed(2)}/>,
         orderId: "invoiceAmount"
     },
     {
         header: "Parts Unit Cost",
         align: "center",
-        val: el => <CellData
-            prefix="$"
-            data={el.serviceRequest.partsUnitCost?.toFixed(2)}
-            override={el.serviceRequestOverride?.partsUnitCost?.toFixed(2)}
-        />,
-        orderId: "partsUnitCost"
+        val: el => <CellData prefix="$" data={el.partsUnitCost?.toFixed(2)}/>,
     },
     {
         header: "Number of Parts",
         align: "center",
-        val: el => <CellData
-            data={el.serviceRequest.numberOfParts?.toString()}
-            override={el.serviceRequestOverride?.numberOfParts?.toString()}
-        />,
-        orderId: "numberOfParts"
+        val: el => <CellData data={el.numberOfParts?.toString()}/>,
     }
 ]
 
@@ -102,7 +85,7 @@ export const IntervalUpsell = () => {
         state.serviceRequests.upsellOrdering
     ]);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>(undefined);
+    const [editedItem, setEditedItem] = useState<IUpsellServiceRequest|undefined>(undefined);
     const {askConfirm} = useConfirm();
     const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.upsellPageData,
@@ -115,7 +98,7 @@ export const IntervalUpsell = () => {
         }
     }, [selectedSC, dispatch, pageData, order]);
 
-    const actions = (el: IAssignedServiceRequest) => {
+    const actions = (el: IUpsellServiceRequest) => {
         return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
     }
 
@@ -123,7 +106,7 @@ export const IntervalUpsell = () => {
         setEditedItem(undefined);
         onOpen();
     }
-    const handleOpenMenu = (el: IAssignedServiceRequest) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleOpenMenu = (el: IUpsellServiceRequest) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setEditedItem(el);
         setAnchorEl(e.currentTarget);
     }
@@ -138,7 +121,7 @@ export const IntervalUpsell = () => {
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setUpsellFilter({searchTerm: e.target.value}));
     }
-    const handleSort = (o: IOrder<IAssignedServiceRequest>) => () => {
+    const handleSort = (o: IOrder<IUpsellServiceRequest>) => () => {
         dispatch(setUpsellOrdering(o));
     }
     const handleSearch = useCallback(() => {
@@ -153,7 +136,7 @@ export const IntervalUpsell = () => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Please confirm you want to remove Ops Code ${editedItem?.serviceRequest.code}`,
+            title: `Please confirm you want to remove Ops Code ${editedItem?.code}`,
             onConfirm: handleRemove
         });
     }
@@ -203,7 +186,7 @@ export const IntervalUpsell = () => {
                 </Button>
             </div>}
         />
-        <Table<IAssignedServiceRequest>
+        <Table<IUpsellServiceRequest>
             data={serviceRequestsList}
             order={order.orderBy}
             isAscending={order.isAscending}
@@ -224,6 +207,6 @@ export const IntervalUpsell = () => {
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
         <OPsCodesListDialog open={isOpen} onClose={onClose} onSave={onRequestAssign}/>
-        <OverrideOPsCodeDialog open={isOOpen} onClose={onOClose} payload={editedItem} isUpsell={true}/>
+        {/*<OverrideOPsCodeDialog open={isOOpen} onClose={onOClose} payload={editedItem} isUpsell={true}/>*/}
     </>;
 }

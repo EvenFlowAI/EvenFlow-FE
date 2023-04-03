@@ -4,7 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
 import {DialogProps} from "../../../types";
 import {TableRowDataType} from "../../../../UI/types";
-import {IAssignedServiceRequest} from "../../../../../store/reducers/serviceRequests/types";
+import {IUpsellServiceRequest} from "../../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../../store/rootReducer";
 import {Table} from "../../../../UI/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal";
@@ -17,17 +17,17 @@ import {
 import Checkbox from "../../../../UI/Checkbox";
 
 type TAddUpsellProps = DialogProps & {
-    selectedCodes: IAssignedServiceRequest[];
-    setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
+    selectedCodes: IUpsellServiceRequest[];
+    setSelectedCodes: Dispatch<SetStateAction<IUpsellServiceRequest[]>>;
     handleSave?: () => void;
-    handleSelect: (el: IAssignedServiceRequest) => void;
+    handleSelect: (el: IUpsellServiceRequest) => void;
     disabledIds?: number[]
 }
 
-const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
-    {header: "OPS CODE", val: el => el.serviceRequest.code, align: "left"},
-    {header: "DESCRIPTION", val: el => el.serviceRequest.description ?? el.serviceRequestOverride?.description, align: "left"},
-    {header: "INVOICE AMOUNT", val: el => `$${el.serviceRequestOverride?.invoiceAmount || el.serviceRequest.invoiceAmount}`, align: "left"},
+const tableData: TableRowDataType<IUpsellServiceRequest>[] = [
+    {header: "OPS CODE", val: el => el.code, align: "left"},
+    {header: "DESCRIPTION", val: el => el.description ?? el.description, align: "left"},
+    {header: "INVOICE AMOUNT", val: el => `$${el.invoiceAmount}`, align: "left"},
 ]
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -103,7 +103,7 @@ const AddUpsellToPackage: React.FC<TAddUpsellProps> =
             handleClose();
         }, [selectedCodes])
 
-        const preActions = useCallback((el: IAssignedServiceRequest) => {
+        const preActions = useCallback((el: IUpsellServiceRequest) => {
             const checked = !!selectedCodes.find(item => item.id === el.id);
             return <Checkbox
                 color="primary"
@@ -131,7 +131,7 @@ const AddUpsellToPackage: React.FC<TAddUpsellProps> =
                     <div className={classes.wrapper}>
                         <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
                     </div>
-                    <Table<IAssignedServiceRequest>
+                    <Table<IUpsellServiceRequest>
                         data={serviceRequestsList}
                         index="id"
                         smallHeaderFont

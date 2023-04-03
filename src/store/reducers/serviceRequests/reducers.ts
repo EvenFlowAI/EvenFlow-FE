@@ -4,7 +4,7 @@ import {
     ISRAdminFilters,
     IServiceRequest,
     IServiceRequestNonAddedFilter,
-    ISRAdmin
+    ISRAdmin, IUpsellServiceRequest
 } from "./types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../defaultInitials";
@@ -75,8 +75,8 @@ type TState = {
     nonUrgentPageData: IPageRequest;
     scRequestsShort: IAssignedServiceRequestShort[];
     srPageActiveTab: string;
-    intervalUpsellList: IAssignedServiceRequest[];
-    upsellOrdering: IOrder<IAssignedServiceRequest>;
+    intervalUpsellList: IUpsellServiceRequest[];
+    upsellOrdering: IOrder<IUpsellServiceRequest>;
     upsellPaging: IPagingResponse;
     upsellPageData: IPageRequest;
     upsellFilter: Partial<IServiceRequestNonAddedFilter>;

@@ -12,7 +12,11 @@ import {yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDet
 import {useException, useModal, useSCs} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";
-import {IAssignedServiceRequest, IServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import {
+    IAssignedServiceRequest,
+    IServiceRequest,
+    IUpsellServiceRequest
+} from "../../../store/reducers/serviceRequests/types";
 import ExistingPackages from "./parts/ExistingPackages/ExistingPackages";
 import {ECustomerCriteria, IPackageByQuery} from "../../../api/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -218,7 +222,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const [packageName, setPackageName] = useState<string>('');
     const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
     const [opsCodes, setOpsCodes] = useState<IAssignedServiceRequest[]>([]);
-    const [upsellCodes, setUpsellCodes] = useState<IAssignedServiceRequest[]>([]);
+    const [upsellCodes, setUpsellCodes] = useState<IUpsellServiceRequest[]>([]);
     const [assignedOpsCodes, setAssignedOpsCodes] = useState<TAssignedRequest[]>([]);
     const [complimentary, setComplimentary] = useState<number[]>([]);
     const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
@@ -406,7 +410,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         });
     }, [setOpsCodes])
 
-    const handleUpsellCodeSelect = useCallback((el: IAssignedServiceRequest) => {
+    const handleUpsellCodeSelect = useCallback((el: IUpsellServiceRequest) => {
         setUpsellCodes(prev => {
             return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
         });
