@@ -42,11 +42,11 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
         if (props.open && payload) {
             setForm({
                 ...initialForm,
-                description: payload?.description || "",
-                durationInHours: payload?.durationInHours?.toString() || "",
-                invoiceAmount: payload?.invoiceAmount?.toFixed(2) || "",
-                partsUnitCost: payload?.partsUnitCost?.toFixed(2) ?? "",
-                numberOfParts: payload?.numberOfParts?.toString() ?? "",
+                description: payload?.description || payload?.serviceRequest?.description || "",
+                durationInHours: payload?.durationInHours?.toString() || payload?.serviceRequest?.durationInHours.toString() || "",
+                invoiceAmount: payload?.invoiceAmount?.toFixed(2) || payload?.serviceRequest?.invoiceAmount?.toFixed(2) || "",
+                partsUnitCost: payload?.partsUnitCost?.toFixed(2) || payload?.serviceRequest?.partsUnitCost?.toFixed(2) || "",
+                numberOfParts: payload?.numberOfParts?.toString() || payload?.serviceRequest?.numberOfParts?.toString() || "",
             })
         }
     }, [payload, props.open])

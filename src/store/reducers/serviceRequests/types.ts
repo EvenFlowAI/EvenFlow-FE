@@ -116,7 +116,7 @@ export interface ISRAdmin {
     partsUnitCost: number;
 }
 
-export interface IUpsellServiceRequest {
+export interface IBaseServiceRequest {
     id: number;
     code: string;
     description: string;
@@ -124,7 +124,11 @@ export interface IUpsellServiceRequest {
     invoiceAmount: number;
     partsUnitCost: number;
     numberOfParts: number;
+}
+
+export interface IUpsellServiceRequest extends IBaseServiceRequest {
     orderIndex: number;
+    serviceRequest: IBaseServiceRequest;
 }
 
 export interface IUpsellServiceRequestUpdate {

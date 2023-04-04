@@ -24,34 +24,48 @@ import IntervalUpsellDialog from "./IntervalUpsellDialog";
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
         header: "Service Ops Code",
-        val: el => el.code, orderId: "code"
+        val: el => el.code ?? el.serviceRequest.code, orderId: "code"
     },
     {
         header: "Description",
-        val: el => <CellData data={el.description}/>,
+        val: el => <CellData data={el.serviceRequest.description} override={el.description}/>,
         orderId: "description"
     },
     {
         header: "Duration (hours)",
         align: "center",
-        val: el => <CellData data={el.durationInHours.toFixed(1)}/>,
+        val: el => <CellData
+            override={el.durationInHours.toFixed(1)}
+            data={el.serviceRequest?.durationInHours?.toFixed(1)}
+        />,
         orderId: "duration"
     },
     {
         header: "Regular Invoice",
         align: "center",
-        val: el => <CellData prefix="$" data={el.invoiceAmount.toFixed(2)}/>,
+        val: el => <CellData
+            prefix="$"
+            override={el.invoiceAmount.toFixed(2)}
+            data={el.serviceRequest.invoiceAmount.toFixed(2)}
+        />,
         orderId: "invoiceAmount"
     },
     {
         header: "Parts Unit Cost",
         align: "center",
-        val: el => <CellData prefix="$" data={el.partsUnitCost?.toFixed(2)}/>,
+        val: el => <CellData
+            prefix="$"
+            override={el.partsUnitCost?.toFixed(2)}
+            data={el.serviceRequest.partsUnitCost?.toFixed(2)}
+        />,
     },
     {
         header: "Number of Parts",
         align: "center",
-        val: el => <CellData data={el.numberOfParts?.toString()}/>,
+        val: el => <CellData
+            override={el.numberOfParts?.toString()}
+            data={el.serviceRequest.numberOfParts?.toString()}
+        />,
     }
 ]
 
