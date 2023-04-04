@@ -271,7 +271,7 @@ export const loadUpsellServiceRequests = (serviceCenterId: number): AppThunk =>
 
         try {
             const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IUpsellServiceRequest>>(
-                Api.endpoints.ServiceRequests.GetUpsellByQuery, {data});
+                Api.endpoints.IntervalUpsell.GetUpsellByQuery, {data});
             dispatch(getUpsellServiceRequests(result));
             dispatch(setUpsellLoading(false));
             dispatch(setUpsellPaging(paging));
@@ -285,7 +285,7 @@ export const updateUpsellServiceRequest = (
     data: IUpsellServiceRequestUpdate, id: number, serviceCenterId?: number,
 ): AppThunk =>
     async dispatch => {
-        await Api.call(Api.endpoints.ServiceRequests.EditUpsell, {data, urlParams: {id}});
+        await Api.call(Api.endpoints.IntervalUpsell.EditUpsell, {data, urlParams: {id}});
         if (serviceCenterId) {
             dispatch(loadUpsellServiceRequests(serviceCenterId));
         }
@@ -298,7 +298,7 @@ export const addUpsellServiceRequests = (
     onSuccess = (codes: number[]) => {},
 ): AppThunk => dispatch => {
     Api.call(
-        Api.endpoints.ServiceRequests.AddUpsell, {data: {serviceRequestIds, serviceCenterId}}
+        Api.endpoints.IntervalUpsell.AddUpsell, {data: {serviceRequestIds, serviceCenterId}}
     )
         .then(result => {
             if (result) {
@@ -313,7 +313,7 @@ export const addUpsellServiceRequests = (
 
 export const loadUpsellById = (id: number): AppThunk => dispatch => {
     dispatch(setUpsellLoading(true));
-    Api.call<IUpsellServiceRequest>(Api.endpoints.ServiceRequests.GetUpsellById, {urlParams: {id}})
+    Api.call<IUpsellServiceRequest>(Api.endpoints.IntervalUpsell.GetUpsellById, {urlParams: {id}})
         .then(result => {
             if (result) dispatch(getCurrentUpsell(result.data))
         })

@@ -154,6 +154,7 @@ type ApiRoutes = {
     GeographicZones: Record<"Create" | "Update" | "GetZones" | "ReassignZipCode"
         | "RemoveZipCode" | "Remove" | "GetById",  TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
+    IntervalUpsell: Record<"GetUpsellByQuery" | "EditUpsell" | "RemoveUpsell" | "AddUpsell" | "GetUpsellById", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
         | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder"
@@ -185,7 +186,7 @@ type ApiRoutes = {
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
         | "Eligibility" | "ChangePricingDisplayType"
-        | "EditSkills" | "Prioritize" | "GetUpsellByQuery" | "EditUpsell" | "RemoveUpsell" | "AddUpsell" | "GetUpsellById", TApiRoute>,
+        | "EditSkills" | "Prioritize", TApiRoute>,
     ServiceTypes: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery", TApiRoute>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
@@ -308,6 +309,13 @@ export class Api {
             ReassignZipCode: {route: "/geographic-zones/re-assign-zip-code/{id}", method: "put"},
             RemoveZipCode: {route: "/geographic-zones/zip-code/{id}", method: "delete"},
             GetById: {route: "/geographic-zones/{id}", method: "get"},
+        },
+        IntervalUpsell: {
+            GetUpsellByQuery: {route: "/interval-upsells/by-query", method: "post"},
+            EditUpsell: {route: "/interval-upsells/{id}", method: "put"},
+            RemoveUpsell: {route: "/interval-upsells/{id}", method: "delete"},
+            AddUpsell: {route: "/interval-upsells", method: "post"},
+            GetUpsellById: {route: "/interval-upsells/{id}", method: "get"},
         },
         MaintenancePackages: {
             Create: {route: "/maintenance-packages", method: "post"},
@@ -466,11 +474,6 @@ export class Api {
             Eligibility: {route: "/service-requests/eligibility", method: "patch"},
             Prioritize: {route: "/service-requests/prioritize", method: "patch"},
             ChangePricingDisplayType: {route: "/service-requests/overrides/{id}/pricing-display-type", method: "patch"},
-            GetUpsellByQuery: {route: "/service-requests/interval-upsells/by-query", method: "post"},
-            EditUpsell: {route: "/service-requests/interval-upsells/{id}", method: "put"},
-            RemoveUpsell: {route: "/service-requests/interval-upsells/{id}", method: "delete"},
-            AddUpsell: {route: "/service-requests/interval-upsells", method: "post"},
-            GetUpsellById: {route: "/service-requests/interval-upsells/{id}", method: "get"},
         },
         ServiceTypes: {
             Create: {route: "/service-type-options", method: "post"},

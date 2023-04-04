@@ -28,14 +28,14 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     },
     {
         header: "Description",
-        val: el => <CellData data={el.serviceRequest.description} override={el.description}/>,
+        val: el => <CellData data={el.serviceRequest?.description} override={el.description}/>,
         orderId: "description"
     },
     {
         header: "Duration (hours)",
         align: "center",
         val: el => <CellData
-            override={el.durationInHours.toFixed(1)}
+            override={el.durationInHours?.toFixed(1)}
             data={el.serviceRequest?.durationInHours?.toFixed(1)}
         />,
         orderId: "duration"
@@ -45,8 +45,8 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
         align: "center",
         val: el => <CellData
             prefix="$"
-            override={el.invoiceAmount.toFixed(2)}
-            data={el.serviceRequest.invoiceAmount.toFixed(2)}
+            override={el.invoiceAmount?.toFixed(2)}
+            data={el.serviceRequest?.invoiceAmount?.toFixed(2)}
         />,
         orderId: "invoiceAmount"
     },
@@ -56,7 +56,7 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
         val: el => <CellData
             prefix="$"
             override={el.partsUnitCost?.toFixed(2)}
-            data={el.serviceRequest.partsUnitCost?.toFixed(2)}
+            data={el.serviceRequest?.partsUnitCost?.toFixed(2)}
         />,
     },
     {
@@ -64,7 +64,7 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
         align: "center",
         val: el => <CellData
             override={el.numberOfParts?.toString()}
-            data={el.serviceRequest.numberOfParts?.toString()}
+            data={el.serviceRequest?.numberOfParts?.toString()}
         />,
     }
 ]
@@ -159,10 +159,10 @@ export const IntervalUpsell = () => {
         if (selectedSC && editedItem) {
             try {
                 await Api.call(
-                    Api.endpoints.ServiceRequests.RemoveUpsell,
+                    Api.endpoints.IntervalUpsell.RemoveUpsell,
                     {urlParams: {id: editedItem.id}}
                 ).then(res => {
-                    if (res) showMessage("Service Request removed.")
+                    if (res) showMessage("Interval Upsell removed.")
                 })
                 setEditedItem(undefined);
                 dispatch(loadUpsellServiceRequests(selectedSC.id));

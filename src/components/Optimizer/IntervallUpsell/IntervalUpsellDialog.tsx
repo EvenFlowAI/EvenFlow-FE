@@ -89,7 +89,7 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
                         label="Service Ops Code name"
                         disabled
                         fullWidth
-                        value={payload?.code || ""}
+                        value={payload?.code || payload?.serviceRequest?.code || ""}
                     />
                 </Grid>
                 <Grid item xs={12}>
