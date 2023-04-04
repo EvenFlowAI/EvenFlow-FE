@@ -40,6 +40,7 @@ export interface IRecallByVin {
     summary: string;
     safetyRisk: string;
     serviceRequestId: number;
+    id: number|null;
 }
 
 export type TCard = {

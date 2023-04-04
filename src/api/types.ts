@@ -192,6 +192,12 @@ export interface IMaintenancePackageOption {
     id?: number;
 }
 
+export type TAppointmentRecall = {
+    number: string;
+    serviceRequestId: number;
+    shortDescription: string;
+}
+
 export interface IBaseAppointment {
     id: number;
     hashKey: string;
@@ -235,6 +241,7 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     serviceCategories: ICategory[];
     jobType?: EJobType;
     serviceTypeOption?: IFirstScreenOption;
+    recalls?: string[];
 }
 
 export interface ISearchCustomerParams {

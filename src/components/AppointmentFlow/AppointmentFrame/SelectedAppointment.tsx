@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {MenuItem, Select, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -151,20 +151,38 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+type TDropOffTime = {
+    hoursDMin: string;
+    minutesDMin: string;
+    hoursDMax: string;
+    minutesDMax: string;
+}
+
 const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppointment}> = ({serviceValetAppointment}) => {
     const { dropOffSettings } = useSelector((state: RootState) => state.appointment);
+    const [dropOffTime, setDropOffTime] = useState<TDropOffTime|null>(null);
     const [hoursPMin, minutesPMin] = serviceValetAppointment.pickUpMin.split(":");
     const [hoursPMax, minutesPMax] = serviceValetAppointment.pickUpMax.split(":");
-    const [hoursDMin, minutesDMin] = serviceValetAppointment.dropOffMin.split(":");
-    const [hoursDMax, minutesDMax] = serviceValetAppointment.dropOffMax.split(":");
+
+    useEffect(() => {
+        if (serviceValetAppointment.dropOffMax && serviceValetAppointment.dropOffMin) {
+            setDropOffTime({
+                hoursDMin: serviceValetAppointment.dropOffMin.split(":")[0],
+                minutesDMin: serviceValetAppointment.dropOffMin.split(":")[1],
+                hoursDMax: serviceValetAppointment.dropOffMax.split(":")[0],
+                minutesDMax: serviceValetAppointment.dropOffMax.split(":")[1],
+            })
+        }
+    }, [serviceValetAppointment])
+
     return <DateWrapper>
         <div>Date: <span>{moment.utc(serviceValetAppointment.date).format('MMMM D')}</span></div>
         <div>Pick Up Time:
             <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("hh:mm A")}</span>
         </div>
-        {dropOffSettings?.showDropOffTime
+        {dropOffSettings?.showDropOffTime && dropOffTime
             ? <div>Drop Off Time:
-                <span> {moment(serviceValetAppointment.date).set('hour', +hoursDMin).set('minute', +minutesDMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursDMax).set('minute', +minutesDMax).format("hh:mm A")}</span>
+                <span> {moment(serviceValetAppointment.date).set('hour', +dropOffTime.hoursDMin).set('minute', +dropOffTime.minutesDMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +dropOffTime.hoursDMax).set('minute', +dropOffTime.minutesDMax).format("hh:mm A")}</span>
             </div>
             : null}
     </DateWrapper>

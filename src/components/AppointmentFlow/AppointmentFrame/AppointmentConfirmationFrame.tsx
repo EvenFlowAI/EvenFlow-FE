@@ -13,7 +13,7 @@ import {ICreateAppointmentResp} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
-import {collectServiceRequestIds} from "./utils";
+import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {Api} from "../../../config/requests";
 import {setAppointmentId, setReminders} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -196,7 +196,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             serviceRequestIds: collectServiceRequestIds(
                 appointmentFrame.service,
                 appointmentFrame.subService,
-                appointmentFrame.selectedRecalls,
                 appointmentFrame.selectedPackage,
                 appointment.selectedSR
             ),
@@ -210,6 +209,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
             zipCode: appointmentFrame.zipCode ?? null,
             address: appointmentFrame.address?.label ?? null,
+            recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
         };
 
         const endpoint = data?.hashKey
