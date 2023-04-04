@@ -37,8 +37,8 @@ const PriceItem: React.FC<TPriceItemProps> = ({value, prevValue}) => {
 
     return (
         <div className={classes.wrapper}>
-            <div className={prevValue ? classes.prevPrice : classes.price}>{value.toFixed(2)}</div>
-            {prevValue ? <div className={classes.redPrice}>{prevValue}</div> : null}
+            <div className={prevValue ? classes.prevPrice : classes.price}>${value.toFixed(2)}</div>
+            {prevValue ? <div className={classes.redPrice}>${prevValue}</div> : null}
         </div>
     );
 };

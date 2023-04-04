@@ -472,8 +472,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             summaryText="Market Price:"
                             valuesArray={detailsData.requestsPrice}
                             onInputChange={onInputChange}
-                            toggleField="manuallyOverride"
-                            toggleLabel="Manually Override"
+                            toggleField="manualOverride"
+                            toggleLabel="Manual Override"
                             checked
                         />
 

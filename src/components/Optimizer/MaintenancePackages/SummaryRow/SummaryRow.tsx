@@ -3,6 +3,9 @@ import {makeStyles} from "@material-ui/core/styles";
 import {TSummaryCell} from "../PackageAccordion/PackageAccordion";
 import SummaryInput from "./SummaryInput";
 import {FormControlLabel, styled, Switch, Theme, withStyles} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {updateManualOverride, updateShowSuggestedPrice} from "../../../../store/reducers/packages/actions";
+import {RootState} from "../../../../store/rootReducer";
 
 type TSummaryProps = {
     summaryText: string;
@@ -65,8 +68,12 @@ const SummaryRow: React.FC<TSummaryProps> = ({
                                                  toggleLabel,
                                                  checked
 }) => {
+    const { isPackageLoading, currentPackage } = useSelector((state: RootState) => state.packages);
     const [values, setValues] = useState<TSummaryCell[]|undefined>([]);
     const classes = useStyles(Boolean(toggleField));
+    const dispatch = useDispatch();
+
+    // todo logic for checked value
 
     useEffect(() => {
         if (valuesArray) {
@@ -79,7 +86,13 @@ const SummaryRow: React.FC<TSummaryProps> = ({
     }
 
     const handleSwitch = (e: any, value: boolean) => {
-        // todo logic
+        if (currentPackage) {
+            if (toggleField === 'showSuggestedPrice') {
+                dispatch(updateShowSuggestedPrice(currentPackage.id, value))
+            } else {
+                dispatch(updateManualOverride(currentPackage.id, value))
+            }
+        }
     }
 
     return (
@@ -88,7 +101,8 @@ const SummaryRow: React.FC<TSummaryProps> = ({
             {toggleField ? <Label
                 control={<Switch
                     onChange={handleSwitch}
-                    checked={true}
+                    disabled={isPackageLoading}
+                    checked={checked}
                     color="primary"
                 />}
                 label={toggleLabel}

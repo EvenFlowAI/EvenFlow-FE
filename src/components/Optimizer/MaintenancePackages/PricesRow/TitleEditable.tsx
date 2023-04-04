@@ -6,8 +6,7 @@ import {useException} from "../../../../utils/hooks";
 
 type TTitleEditableProps = {
     text: string;
-    onSave: (name: string, id: number) => void;
-    id: number;
+    onSave: (name: string) => void;
 }
 
 const useStyles = makeStyles(() => ({
@@ -38,7 +37,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const TitleEditable: React.FC<TTitleEditableProps> = ({text, onSave, id}) => {
+const TitleEditable: React.FC<TTitleEditableProps> = ({text, onSave}) => {
     const [isEdit, setEdit] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>('');
     const classes = useStyles();
@@ -49,8 +48,9 @@ const TitleEditable: React.FC<TTitleEditableProps> = ({text, onSave, id}) => {
     }, [text])
 
     const onSaveClick = () => {
+        onSave(newName);
+        // todo logic for showing error
         setEdit(false);
-        onSave(newName, id);
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

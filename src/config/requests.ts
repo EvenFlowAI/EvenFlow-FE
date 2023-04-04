@@ -156,7 +156,8 @@ type ApiRoutes = {
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
-        | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder", TApiRoute>,
+        | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder"
+        | "SetShowSuggestedPrice" | "SetManualOverride" | "UpdatePriceTitles", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -324,6 +325,9 @@ export class Api {
             UpdateComplimentaryDescription: {route: "/maintenance-packages/{id}/set-complimentary-service-description", method: "patch"},
             UpdateComplimentaryOrder: {route: "/maintenance-packages/{id}/set-list-complimentary-service-order-index", method: "patch"},
             UpdateSROrder: {route: "/maintenance-packages/{id}/set-list-service-request-order-index", method: "patch"},
+            SetShowSuggestedPrice: {route: "/maintenance-packages/{id}/set-show-suggested-price", method: "patch"},
+            SetManualOverride: {route: "/maintenance-packages/{id}/set-manual-override-price", method: "patch"},
+            UpdatePriceTitles: {route: "/maintenance-packages/{id}/price-titles", method: "put"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

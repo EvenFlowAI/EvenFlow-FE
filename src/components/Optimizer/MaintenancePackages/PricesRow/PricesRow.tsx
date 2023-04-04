@@ -2,9 +2,10 @@ import React, {useMemo} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import TitleEditable from "./TitleEditable";
 import PriceItem from "./PriceItem";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EMaintenanceOptionType} from "../../../../api/types";
+import {updatePriceTitles} from "../../../../store/reducers/packages/actions";
 
 const useStyles = makeStyles(() => ({
     topLineWrapper: {
@@ -44,6 +45,8 @@ const useStyles = makeStyles(() => ({
 const PricesRow = () => {
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
+    const dispatch = useDispatch();
+
     const [goodOption, betterOption, bestOption] = useMemo(() => {
         const optOne = currentPackage?.options?.find(el => el.type === EMaintenanceOptionType.Base)
         const optTwo = currentPackage?.options?.find(el => el.type === EMaintenanceOptionType.Value)
@@ -87,11 +90,19 @@ const PricesRow = () => {
         return price;
     }, [bestOption, bestCorePrice])
 
-    const onSave = (name: string, id: number) => {
-        // todo set data of Package
+    const onSavePrice = (priceTitle: string) => {
+        if (currentPackage && priceTitle.length) {
+            dispatch(updatePriceTitles(currentPackage.id, {priceTitle}))
+        }
     }
 
-    // todo text value, price value
+    const onSavePriceWithFee = (priceWithFeeTitle: string) => {
+        if (currentPackage && priceWithFeeTitle.length) {
+            dispatch(updatePriceTitles(currentPackage.id, {priceWithFeeTitle}))
+        }
+    }
+
+    // todo text value
 
     return (
         <div>
@@ -101,8 +112,8 @@ const PricesRow = () => {
             </div>
             <div className={classes.wrapper}>
                 <div className={classes.rightPart}>
-                    <TitleEditable text={''} onSave={onSave} id={1}/>
-                    <TitleEditable text={''} onSave={onSave} id={2}/>
+                    <TitleEditable text={''} onSave={onSavePrice}/>
+                    <TitleEditable text={''} onSave={onSavePriceWithFee}/>
                 </div>
                 <div className={classes.leftPart}>
                     <PriceItem value={goodCorePrice}/>

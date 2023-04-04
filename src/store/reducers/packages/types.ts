@@ -61,3 +61,8 @@ export type TOrderIndex = {
     id: number;
     orderIndex: number;
 }
+
+export type TPriceTitles = {
+    priceTitle?: string;
+    priceWithFeeTitle?: string;
+}
