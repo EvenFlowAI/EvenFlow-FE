@@ -37,9 +37,18 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useException} from "../../utils/hooks";
 import {
-    selectCategoriesIds, selectService, selectSubService, setAdditionalServicesChosen, setAdvisor,
+    selectCategoriesIds,
+    selectService,
+    selectSubService,
+    setAdditionalServicesChosen,
+    setAdvisor,
     setCurrentFrameScreen,
-    setPackage, setRecallsAreShown, setSelectedRecalls, setServiceType, setServiceTypeOption, setTiming,
+    setPackage,
+    setRecallsAreShown,
+    setSelectedRecalls,
+    setServiceType,
+    setServiceTypeOption,
+    setTiming,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
