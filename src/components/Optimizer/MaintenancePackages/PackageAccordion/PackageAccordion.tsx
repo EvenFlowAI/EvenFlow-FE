@@ -451,7 +451,12 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
 
                     {detailsData && <React.Fragment>
                         <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedRequestHours}/>
-                        <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedRequestPrice}/>
+                        <SummaryRow
+                            summaryText="Suggested Price:"
+                            valuesArray={detailsData.suggestedRequestPrice}
+                            toggleField="showSuggestedPrice"
+                            toggleLabel="Show Suggested Price"
+                            checked/>
 
                         <Divider/>
 
@@ -466,7 +471,11 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             setIsEdit={setIsEdit}
                             summaryText="Market Price:"
                             valuesArray={detailsData.requestsPrice}
-                            onInputChange={onInputChange}/>
+                            onInputChange={onInputChange}
+                            toggleField="manuallyOverride"
+                            toggleLabel="Manually Override"
+                            checked
+                        />
 
                         <div className={classes.complimentaryRow}>Complimentary</div>
                         <div className={classes.tablesWrapper}>
