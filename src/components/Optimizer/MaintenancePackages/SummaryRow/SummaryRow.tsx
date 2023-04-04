@@ -34,7 +34,7 @@ const useStyles = makeStyles({
     },
 })
 
-const RowWrapper = styled('div')<Theme, {toggle: boolean}>(({theme, toggle}) => ({
+const RowWrapper = styled('div')<Theme, {toggle: number}>(({theme, toggle}) => ({
     width: '100%',
     display: 'grid',
     gridTemplateColumns: toggle ? '3fr 2fr 2fr' : '5fr 2fr',
@@ -96,7 +96,7 @@ const SummaryRow: React.FC<TSummaryProps> = ({
     }
 
     return (
-        <RowWrapper toggle={Boolean(toggleField)}>
+        <RowWrapper toggle={Boolean(toggleField) ? 1 : 0}>
             <div className={classes.summaryText}>{summaryText}</div>
             {toggleField ? <Label
                 control={<Switch

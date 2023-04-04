@@ -157,7 +157,7 @@ type ApiRoutes = {
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
         | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder"
-        | "SetShowSuggestedPrice" | "SetManualOverride" | "UpdatePriceTitles", TApiRoute>,
+        | "SetShowSuggestedPrice" | "SetManualOverride" | "UpdatePriceTitles" | "UpdateUpsellOrder", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -324,6 +324,7 @@ export class Api {
             UpdateSRDescription: {route: "/maintenance-packages/{id}/set-service-request-description", method: "patch"},
             UpdateComplimentaryDescription: {route: "/maintenance-packages/{id}/set-complimentary-service-description", method: "patch"},
             UpdateComplimentaryOrder: {route: "/maintenance-packages/{id}/set-list-complimentary-service-order-index", method: "patch"},
+            UpdateUpsellOrder: {route: "/maintenance-packages/{id}/set-list-interval-upsell-order-index", method: "patch"},
             UpdateSROrder: {route: "/maintenance-packages/{id}/set-list-service-request-order-index", method: "patch"},
             SetShowSuggestedPrice: {route: "/maintenance-packages/{id}/set-show-suggested-price", method: "patch"},
             SetManualOverride: {route: "/maintenance-packages/{id}/set-manual-override-price", method: "patch"},

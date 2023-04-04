@@ -124,6 +124,7 @@ export interface IUpsellServiceRequest {
     invoiceAmount: number;
     partsUnitCost: number;
     numberOfParts: number;
+    orderIndex: number;
 }
 
 export interface IUpsellServiceRequestUpdate {

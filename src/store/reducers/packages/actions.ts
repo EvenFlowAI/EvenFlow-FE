@@ -258,3 +258,15 @@ export const updatePriceTitles = (id: number, data: TPriceTitles): AppThunk => d
         })
     dispatch(setPackageLoading(false))
 }
+
+export const updateUpsellOrderIndex = (id: number, items: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true))
+    Api.call(Api.endpoints.MaintenancePackages.UpdateUpsellOrder, {urlParams: {id}, data: {items}})
+        .then(result => {
+            if (result) dispatch(loadPackageById(id))
+        })
+        .catch(err => {
+            console.log('update package interval upsell order index err', err)
+            onError(err)
+        }).finally(() => dispatch(setPackageLoading(false)))
+}
