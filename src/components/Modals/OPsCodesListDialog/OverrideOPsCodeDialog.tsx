@@ -10,10 +10,7 @@ import {TextField} from "../../UI/TextField";
 import {LoadingButton} from "../../UI/Button";
 import {useException, useMessage} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
-import {
-    updateAssignedServiceRequest,
-    updateUpsellServiceRequest
-} from "../../../store/reducers/serviceRequests/actions";
+import {updateAssignedServiceRequest} from "../../../store/reducers/serviceRequests/actions";
 import {ToggleButtons} from "../../UI/ToggleButtons";
 
 type TForm = {
@@ -36,7 +33,7 @@ const initialForm: TForm = {
     partsUnitCost: "",
     numberOfParts: "",
 };
-export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest>&{isUpsell?: boolean}> = ({onAction, payload, ...props}) => {
+export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isLoading, setLoading] = useState<boolean>(false);
     const showMessage = useMessage();
@@ -90,19 +87,11 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                         , {} as Partial<IServiceRequestOverride>)
                     }
                 }
-                if (props.isUpsell) {
-                    await dispatch(updateUpsellServiceRequest(
-                        data,
-                        payload.id,
-                        payload.serviceCenterId
-                    ));
-                } else {
-                    await dispatch(updateAssignedServiceRequest(
-                        data,
-                        payload.id,
-                        payload.serviceCenterId
-                    ));
-                }
+                await dispatch(updateAssignedServiceRequest(
+                    data,
+                    payload.id,
+                    payload.serviceCenterId
+                ));
                 setLoading(false);
                 showMessage("Saved");
                 props.onClose();

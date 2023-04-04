@@ -19,6 +19,7 @@ import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {SearchInput} from "../../UI/SearchInput";
 import {IOrder} from "../../../types/types";
+import IntervalUpsellDialog from "./IntervalUpsellDialog";
 
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
@@ -207,6 +208,6 @@ export const IntervalUpsell = () => {
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
         <OPsCodesListDialog open={isOpen} onClose={onClose} onSave={onRequestAssign}/>
-        {/*<OverrideOPsCodeDialog open={isOOpen} onClose={onOClose} payload={editedItem} isUpsell={true}/>*/}
+        <IntervalUpsellDialog payload={editedItem} open={isOOpen} onClose={onOClose}/>
     </>;
 }

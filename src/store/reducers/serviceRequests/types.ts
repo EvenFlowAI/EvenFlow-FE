@@ -125,3 +125,11 @@ export interface IUpsellServiceRequest {
     partsUnitCost: number;
     numberOfParts: number;
 }
+
+export interface IUpsellServiceRequestUpdate {
+    description: string|null;
+    durationInHours: number|null;
+    invoiceAmount: number|null;
+    partsUnitCost: number|null;
+    numberOfParts: number|null;
+}

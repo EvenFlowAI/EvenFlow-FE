@@ -12,7 +12,7 @@ import {
     IServiceRequestPriority,
     ISRAdmin,
     ISRAdminFilters,
-    ISRAdminForm, IUpsellServiceRequest
+    ISRAdminForm, IUpsellServiceRequest, IUpsellServiceRequestUpdate
 } from "./types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -282,7 +282,7 @@ export const loadUpsellServiceRequests = (serviceCenterId: number): AppThunk =>
     }
 
 export const updateUpsellServiceRequest = (
-    data: IServiceRequestOverrideEditRequest, id: number, serviceCenterId?: number,
+    data: IUpsellServiceRequestUpdate, id: number, serviceCenterId?: number,
 ): AppThunk =>
     async dispatch => {
         await Api.call(Api.endpoints.ServiceRequests.EditUpsell, {data, urlParams: {id}});
