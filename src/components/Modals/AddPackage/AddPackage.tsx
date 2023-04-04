@@ -378,6 +378,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     serviceCenterId: selectedSC.id,
                     isApplyBusinessRules: isApplyBusinessRules,
                     engineTypes: selectedEngineTypes.map(item => item.id),
+                    intervalUpsells: upsellCodes.map(item => item.id),
                 }
                 if (isApplyBusinessRules && isBusinessRulesValid()) {
                     data.businessRules = {
@@ -458,6 +459,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     <Button
                         className={classes.wideButton}
                         color="primary"
+                        style={{width: '100%'}}
                         onClick={onAssignOpsCodeOpen}>
                         Assign Ops Code To Package
                     </Button>

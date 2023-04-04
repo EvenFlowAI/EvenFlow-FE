@@ -20,7 +20,7 @@ export const IntervalUpsellAndOptions: React.FC<TServiceRequestsProps> = (props)
                 switch (rowIndex) {
                     case 0:
                         return classes.firstCellFirstRow;
-                    case props.packageData?.intervalUpsellServices?.length - 1:
+                    case props.packageData?.intervalUpsells?.length - 1:
                         return classes.firstCellLastRow;
                     default:
                         return classes.firstCell;
@@ -30,7 +30,7 @@ export const IntervalUpsellAndOptions: React.FC<TServiceRequestsProps> = (props)
                 switch (rowIndex) {
                     case 0:
                         return classes.lastCellFirstRow;
-                    case props.packageData?.intervalUpsellServices?.length - 1:
+                    case props.packageData?.intervalUpsells?.length - 1:
                         return classes.lastCellLastRow;
                     default:
                         return classes.lastCell;
@@ -39,7 +39,7 @@ export const IntervalUpsellAndOptions: React.FC<TServiceRequestsProps> = (props)
             switch (rowIndex) {
                 case 0:
                     return classes.cellFirstRow;
-                case props.packageData?.intervalUpsellServices?.length - 1:
+                case props.packageData?.intervalUpsells?.length - 1:
                     return classes.cellLastRow;
                 default:
                     return classes.cell
@@ -50,8 +50,8 @@ export const IntervalUpsellAndOptions: React.FC<TServiceRequestsProps> = (props)
     return <TableContainer style={{ overflowX: 'unset' }}>
         <Table>
             <TableBody>
-                {props.packageData?.intervalUpsellServices
-                    ? props.packageData?.intervalUpsellServices
+                {props.packageData?.intervalUpsells
+                    ? props.packageData?.intervalUpsells
                     .slice()
                     .sort((a, b) => a.orderIndex - b.orderIndex)
                     .map((request, rowIndex) => {
@@ -63,13 +63,13 @@ export const IntervalUpsellAndOptions: React.FC<TServiceRequestsProps> = (props)
                                 {request.durationInHours}
                             </TableCell>
                             <TableCell className={classes.requestCell} key={`${request.code}_total`} width={100}>
-                                ${request.price}
+                                ${request.partsUnitCost}
                             </TableCell>
                             <TableCell className={classes.requestCell} key={`${request.code}_partsAmount`} width={100}>
-                                ${request.partsAmount}
+                                ${request.numberOfParts}
                             </TableCell>
                             <TableCell className={classes.requestCell} key={`${request.code}_price`} width={100}>
-                                ${request.price}
+                                ${request.invoiceAmount}
                             </TableCell>
                             <TableCell className={classes.emptyCell} width={16} key="empty"/>
 

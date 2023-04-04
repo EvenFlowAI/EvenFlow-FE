@@ -1,7 +1,7 @@
 import React, {useEffect, useState, Dispatch, SetStateAction, useCallback} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {IPackageById, IPackageOptionDetailed, TExtendedService} from "../../../api/types";
+import {IPackageById, IPackageOptionDetailed, TExtendedService, TIntervalUpsellForPackage} from "../../../api/types";
 import {TableContainer, TableRow, Table, TableHead, TableCell, TableBody, IconButton, Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {CheckBoxOutlineBlank, CheckBoxOutlined, Close} from "@material-ui/icons";
@@ -120,7 +120,7 @@ export const useTableStyles = makeStyles(() => ({
 
 const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPackageData, onSave, ...props}) => {
     const [newRequests, setNewRequests] = useState<TExtendedService[]>([]);
-    const [newUpsellRequests, setNewUpsellRequests] = useState<TExtendedService[]>([]);
+    const [newUpsellRequests, setNewUpsellRequests] = useState<TIntervalUpsellForPackage[]>([]);
     const [temporaryData, setTemporaryData] = useState<IPackageById | null>(null);
     const classes = useTableStyles();
 
@@ -136,8 +136,8 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
             return prev;
         })
         setNewUpsellRequests(prev => {
-            if (temporaryData?.intervalUpsellServices) {
-                return temporaryData.intervalUpsellServices;
+            if (temporaryData?.intervalUpsells) {
+                return temporaryData.intervalUpsells;
             }
             return prev;
         })
@@ -211,12 +211,12 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
             if (prev) {
                 const optionToUpdate = prev.options.find(item => item.type === option.type);
                 if (optionToUpdate) {
-                    const request = optionToUpdate.intervalUpsellServices.find(item => item.serviceRequestId === requestId)
+                    const request = optionToUpdate.intervalUpsells.find(item => item.serviceRequestId === requestId)
                     if (request) {
                         const updatedRequest = {...request, isSendToDMS: !request.isSendToDMS};
                         const updatedOption = {
                             ...optionToUpdate,
-                            intervalUpsellServices: optionToUpdate.intervalUpsellServices
+                            intervalUpsellServices: optionToUpdate.intervalUpsells
                                 .filter(item => item.serviceRequestId !== requestId)
                                 .concat(updatedRequest)
                         };
@@ -319,7 +319,7 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
                                                 .slice()
                                                 .sort((a, b) => a.type - b.type)
                                                 .map((option, cellIndex) => {
-                                                    const requestInOption = option.intervalUpsellServices.find(req => req.serviceRequestId === request.id);
+                                                    const requestInOption = option.intervalUpsells.find(req => req.serviceRequestId === request.id);
 
                                                     return <TableCell
                                                         className={getCellClass(cellIndex, rowIndex)}

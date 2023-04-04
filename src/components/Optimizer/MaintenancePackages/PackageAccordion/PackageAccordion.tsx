@@ -184,8 +184,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             }))
             setComplimentaryData(rows)
         }
-        if (packageData?.intervalUpsellServices) {
-            const rows = packageData.intervalUpsellServices
+        if (packageData?.intervalUpsells) {
+            const rows = packageData.intervalUpsells
                 .slice()
                 .sort((a, b) => a.orderIndex - b.orderIndex)
                 .map((request) => ({
@@ -193,7 +193,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                     cellData: packageData.options
                         .map((option: IPackageOptionDetailed)  => ({
                             optionType: option.type,
-                            isSelected: Boolean(option.intervalUpsellServices.find(r => r.serviceRequestId === request.id))
+                            isSelected: Boolean(option.intervalUpsells.find(r => r.serviceRequestId === request.id))
                         }))
 
                 }))
@@ -252,9 +252,9 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             if (option) {
                 const updatedOption = {...option,
                     intervalUpsellServices:
-                        option.intervalUpsellServices.find(request => request.serviceRequestId === requestId)
-                            ? option.intervalUpsellServices.filter(request => request.serviceRequestId !== requestId)
-                            : [...option.intervalUpsellServices, {serviceRequestId: requestId, isSendToDMS: true}]
+                        option.intervalUpsells.find(request => request.serviceRequestId === requestId)
+                            ? option.intervalUpsells.filter(request => request.serviceRequestId !== requestId)
+                            : [...option.intervalUpsells, {serviceRequestId: requestId, isSendToDMS: true}]
                 }
                 const updatedData = { ...packageData, options: packageData.options
                         .filter(el => el.type !== updatedOption.type)
@@ -477,6 +477,38 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             checked
                         />
 
+                        <div className={classes.complimentaryRow}>Interval Upsell</div>
+                        <div className={classes.tablesWrapper}>
+                            {packageData && <IntervalUpsellAndOptions
+                                packageData={packageData}
+                                data={upsellData}
+                                onCheckboxClick={onUpsellClick}/>}
+                        </div>
+
+                        {/*todo change data from complimentary to upsell*/}
+
+                        <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>
+                        <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedComplimentaryPrice}/>
+
+                        <Divider/>
+
+                        <SummaryRow
+                            isEdit={isEdit}
+                            setIsEdit={setIsEdit}
+                            isComplimentary
+                            packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
+                            summaryText="Invoiced Labor Hours:"
+                            valuesArray={detailsData.complimentaryLaborHours}
+                            onInputChange={onInputChange}/>
+                        <SummaryRow
+                            isEdit={isEdit}
+                            setIsEdit={setIsEdit}
+                            packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
+                            isComplimentary
+                            summaryText="Market Price:"
+                            valuesArray={detailsData.complimentaryPrice}
+                            onInputChange={onInputChange}/>
+
                         <div className={classes.complimentaryRow}>Complimentary</div>
                         <div className={classes.tablesWrapper}>
                             {packageData && <ComplimentaryAndOptions
@@ -506,38 +538,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             summaryText="Market Price:"
                             valuesArray={detailsData.complimentaryPrice}
                             onInputChange={onInputChange}/>
-
-                      <div className={classes.complimentaryRow}>Interval Upsell</div>
-                      <div className={classes.tablesWrapper}>
-                          {packageData && <IntervalUpsellAndOptions
-                            packageData={packageData}
-                            data={upsellData}
-                            onCheckboxClick={onUpsellClick}/>}
-                      </div>
-
-                      {/*todo change data from complimentary to upsell*/}
-
-                      <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>
-                      <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedComplimentaryPrice}/>
-
-                      <Divider/>
-
-                      <SummaryRow
-                        isEdit={isEdit}
-                        setIsEdit={setIsEdit}
-                        isComplimentary
-                        packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
-                        summaryText="Invoiced Labor Hours:"
-                        valuesArray={detailsData.complimentaryLaborHours}
-                        onInputChange={onInputChange}/>
-                      <SummaryRow
-                        isEdit={isEdit}
-                        setIsEdit={setIsEdit}
-                        packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
-                        isComplimentary
-                        summaryText="Market Price:"
-                        valuesArray={detailsData.complimentaryPrice}
-                        onInputChange={onInputChange}/>
 
                       <PricesBlock/>
 

@@ -394,6 +394,11 @@ export interface IPackageByQuery {
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
     serviceRequestsAssigned: IPackageServiceRequestsAssigned[];
+    priceTitle?: string;
+    priceWithFeeTitle?: string;
+    isShowSuggestedPrice?: boolean;
+    isManualOverridePrice?: boolean;
+    intervalUpsells: TIntervalUpsellForPackage[];
 }
 
 export interface IMake {
@@ -416,7 +421,17 @@ export type TEngineType = {
     id: number;
     name: string;
 }
-// todo change type of intervalUpsellServices
+
+export type TIntervalUpsellForPackage = {
+    id: number;
+    code: string;
+    description: string;
+    durationInHours: number;
+    invoiceAmount: number;
+    orderIndex: number;
+    partsUnitCost: number;
+    numberOfParts: number;
+}
 
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
@@ -427,9 +442,13 @@ export interface IPackageById {
     id: number;
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
-    intervalUpsellServices: TExtendedService[];
+    intervalUpsells: TIntervalUpsellForPackage[];
     businessRules: IBusinessRule;
     engineTypes: TEngineType[];
+    priceTitle?: string;
+    priceWithFeeTitle?: string;
+    isShowSuggestedPrice?: boolean;
+    isManualOverridePrice?: boolean;
 }
 
 export type TOptionServiceRequest = {
@@ -444,7 +463,7 @@ export interface IPackageOptionDetailed {
     type: EMaintenanceOptionType;
     price: number;
     serviceRequests: TOptionServiceRequest[];
-    intervalUpsellServices: TOptionServiceRequest[];
+    intervalUpsells: TOptionServiceRequest[];
     complimentaryServices: number[];
     complimentaryServiceLaborHours: number;
     complimentaryServicePrice: number;

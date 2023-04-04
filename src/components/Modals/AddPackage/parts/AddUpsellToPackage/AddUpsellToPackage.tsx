@@ -25,9 +25,9 @@ type TAddUpsellProps = DialogProps & {
 }
 
 const tableData: TableRowDataType<IUpsellServiceRequest>[] = [
-    {header: "OPS CODE", val: el => el.code, align: "left"},
-    {header: "DESCRIPTION", val: el => el.description ?? el.description, align: "left"},
-    {header: "INVOICE AMOUNT", val: el => `$${el.invoiceAmount}`, align: "left"},
+    {header: "OPS CODE", val: el => el.code ?? el.serviceRequest?.code, align: "left"},
+    {header: "DESCRIPTION", val: el => el.description ?? el.serviceRequest?.description, align: "left"},
+    {header: "INVOICE AMOUNT", val: el => `$${el.invoiceAmount ?? el.serviceRequest?.invoiceAmount}`, align: "left"},
 ]
 const useStyles = makeStyles(() => ({
     wrapper: {
