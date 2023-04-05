@@ -367,6 +367,8 @@ export interface IPackageOptions {
     complimentaryServices: TExtendedComplimentary[];
     marketPriceServiceRequests: number;
     marketPriceComplimentaryServices: number;
+    intervalUpsellRequests: TExtendedService[];
+    marketPriceIntervalUpsell: number;
     maintenancePackageName: string;
 }
 
@@ -399,6 +401,11 @@ export interface IPackageByQuery {
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
     serviceRequestsAssigned: IPackageServiceRequestsAssigned[];
+    priceTitle?: string;
+    priceWithFeeTitle?: string;
+    isShowSuggestedPrice?: boolean;
+    isManualOverridePrice?: boolean;
+    intervalUpsells: TIntervalUpsellForPackage[];
 }
 
 export interface IMake {
@@ -422,6 +429,17 @@ export type TEngineType = {
     name: string;
 }
 
+export type TIntervalUpsellForPackage = {
+    id: number;
+    code: string;
+    description: string;
+    durationInHours: number;
+    invoiceAmount: number;
+    orderIndex: number;
+    partsUnitCost: number;
+    numberOfParts: number;
+}
+
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
     isApplyBusinessRules: boolean;
@@ -431,8 +449,13 @@ export interface IPackageById {
     id: number;
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
+    intervalUpsells: TIntervalUpsellForPackage[];
     businessRules: IBusinessRule;
     engineTypes: TEngineType[];
+    priceTitle?: string;
+    priceWithFeeTitle?: string;
+    isShowSuggestedPrice?: boolean;
+    isManualOverridePrice?: boolean;
 }
 
 export type TOptionServiceRequest = {
@@ -445,12 +468,15 @@ export interface IPackageOptionDetailed {
     type: EMaintenanceOptionType;
     price: number;
     serviceRequests: TOptionServiceRequest[];
+    intervalUpsells: TOptionServiceRequest[];
     complimentaryServices: number[];
     complimentaryServiceLaborHours: number;
     complimentaryServicePrice: number;
     maintenancePackageId: number;
     serviceRequestLaborHours: number;
     serviceRequestPrice: number;
+    intervalUpsellServiceLaborHours: number;
+    intervalUpsellServicePrice: number;
     name?: string;
     serviceRequestAssignedId?: number;
 }
