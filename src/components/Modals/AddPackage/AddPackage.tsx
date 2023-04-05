@@ -215,7 +215,7 @@ const initialValues = {
 
 const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const { packages, currentPackage, isPackageLoading } = useSelector((state: RootState) => state.packages);
-    const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
+    const { allAssignedList, intervalUpsellList } = useSelector((state: RootState) => state.serviceRequests);
     const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
     const { selectedSC } = useSCs();
 
@@ -259,13 +259,18 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             setPackageName(currentPackage.name);
             setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
             setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
-            // todo set upsell codes
             setApplyBusinessRules(currentPackage.isApplyBusinessRules);
             if (allAssignedList) {
                 setOpsCodes(() => {
                     const selectedServices = currentPackage.serviceRequests.map(item => item.id);
                     return allAssignedList.filter(item => selectedServices.includes(item.id));
                 })
+            }
+            if (intervalUpsellList) {
+                setUpsellCodes(() => {
+                    const selectedServices = currentPackage.intervalUpsells.map(item => item.id);
+                    return intervalUpsellList.filter(item => selectedServices.includes(item.id));
+                });
             }
             if (currentPackage.businessRules) {
                 setSelectedMakes(currentPackage.businessRules.vehicleMakes);

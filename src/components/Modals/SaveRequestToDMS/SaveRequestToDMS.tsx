@@ -145,6 +145,9 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
 
     const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (cellIndex === 0) {
+            if (newRequests.length === 1) {
+                return classes.firstCellLastRow;
+            }
             switch (rowIndex) {
                 case 0:
                     return classes.firstCellFirstRow;
@@ -153,8 +156,10 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
                 default:
                     return classes.firstCell;
             }
-        }
-        if (cellIndex === 2) {
+        } else if (cellIndex === 2) {
+            if (newRequests.length === 1) {
+                return classes.lastCellLastRow;
+            }
             switch (rowIndex) {
                 case 0:
                     return classes.lastCellFirstRow;
@@ -163,14 +168,18 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
                 default:
                     return classes.lastCell;
             }
-        }
-        switch (rowIndex) {
-            case 0:
-                return classes.cellFirstRow;
-            case newRequests.length - 1:
+        } else {
+            if (newRequests.length === 1) {
                 return classes.cellLastRow;
-            default:
-                return classes.cell
+            }
+            switch (rowIndex) {
+                case 0:
+                    return classes.cellFirstRow;
+                case newRequests.length - 1:
+                    return classes.cellLastRow;
+                default:
+                    return classes.cell
+            }
         }
     }, [newRequests, classes])
 
@@ -204,8 +213,6 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
         })
     }, [])
 
-    // todo one function if the data type will be the same
-
     const onUpsellCheckboxClick = useCallback((option: IPackageOptionDetailed, requestId: number): void => {
         setTemporaryData(prev => {
             if (prev) {
@@ -216,7 +223,7 @@ const SaveRequestToDms: React.FC<TSaveRequestModalProps> = ({ packageData, setPa
                         const updatedRequest = {...request, isSendToDMS: !request.isSendToDMS};
                         const updatedOption = {
                             ...optionToUpdate,
-                            intervalUpsellServices: optionToUpdate.intervalUpsells
+                            intervalUpsells: optionToUpdate.intervalUpsells
                                 .filter(item => item.serviceRequestId !== requestId)
                                 .concat(updatedRequest)
                         };
