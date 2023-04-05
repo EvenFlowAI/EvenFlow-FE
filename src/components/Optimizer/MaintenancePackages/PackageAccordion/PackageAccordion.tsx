@@ -270,8 +270,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [packageData])
 
-    console.log(packageData)
-
     const onInputChange = useCallback((value: string, fieldName: string, optionType: string | number) => {
         if (packageData) {
             if (fieldName.toLowerCase().includes('hours') && Number(value) > 100) {
@@ -279,7 +277,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             } else {
                 let currentOption = packageData.options.find(option => option.type === optionType);
                 if (currentOption) {
-                    currentOption = {...currentOption, [fieldName as keyof IPackageOptionDetailed]: value};
+                    currentOption = {...currentOption, [fieldName as keyof IPackageOptionDetailed]: +value};
                     const updated = {...packageData,
                         options: packageData.options
                             .filter(item => item.type !== optionType)

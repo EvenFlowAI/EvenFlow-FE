@@ -41,7 +41,7 @@ const getComplimentaryHours = (includedRequests: TExtendedComplimentary[]): stri
     return includedRequests.reduce((a, b) => a + +b.durationInHours, 0).toString();
 }
 
-const getUpsellHours = (includedRequests:  TIntervalUpsellForPackage[]): string => {
+const getUpsellHours = (includedRequests: TIntervalUpsellForPackage[]): string => {
     return includedRequests.reduce((a, b) => a + +b.durationInHours, 0).toString();
 }
 
