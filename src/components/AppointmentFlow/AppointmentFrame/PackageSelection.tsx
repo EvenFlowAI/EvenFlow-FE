@@ -37,6 +37,8 @@ import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
+import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
+import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
 
 const border = '1px solid #DADADA';
 
@@ -462,6 +464,16 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         />
 
                     </Wrapper>
+                        <TotalPriceRow
+                            packages={packages}
+                            isUpsells={Boolean(upsells.length)}
+                            handleClick={handleClick}
+                        />
+                        {upsells.length > 0
+                            ? <TotalPriceWithFeeRow
+                                packages={packages}
+                                handleClick={handleClick}/>
+                            : null}
                     <Info>
                         {scProfile?.maintenancePackageDisclaimer
                             ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
