@@ -73,7 +73,7 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, ti
         </div>
         {packages.map((p, i) => {
             const complimentaryPrice = p.marketPriceComplimentaryServices ?? 0;
-            const servicesPrice = p.marketPriceServiceRequests ?? 0;
+            const servicesPrice = p.price ?? 0;
             return <PriceValue
                 selected={i === selected}
                 onClick={handleClick(p)}

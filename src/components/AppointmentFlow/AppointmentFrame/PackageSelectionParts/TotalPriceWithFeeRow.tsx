@@ -67,7 +67,7 @@ const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleCl
         </div>
         {packages.map((p, i) => {
             const complimentaryPrice = p.marketPriceComplimentaryServices ?? 0;
-            const servicesPrice = p.marketPriceServiceRequests ?? 0;
+            const servicesPrice = p.price ?? 0;
             const upsellPrice = p.marketPriceIntervalUpsells ?? 0;
             const price = complimentaryPrice + servicesPrice + upsellPrice
             return <PriceValue
