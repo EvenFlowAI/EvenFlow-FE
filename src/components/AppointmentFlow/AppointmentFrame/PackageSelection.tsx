@@ -17,7 +17,7 @@ import {
     EServiceCenterName,
     IPackage,
     IPackageOptions, TExtendedComplimentary,
-    TExtendedService
+    TExtendedService, TUpsellOfOption
 } from "../../../api/types";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
@@ -36,6 +36,7 @@ import {useTranslation} from "react-i18next";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
+import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 
 const border = '1px solid #DADADA';
 
@@ -45,6 +46,7 @@ type TWithPackages = {
 
 export type TService = TWithPackages & TExtendedService;
 export type TComplimentary = TWithPackages & TExtendedComplimentary;
+export type TUpsell = TWithPackages & TUpsellOfOption;
 export type TPackage = {
     lastIdx?: number;
     moreIdx?: number[];
@@ -143,11 +145,17 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         "&.green": {
             background: "#E5F5FF"
         },
+        "&.yellow": {
+            background: "#FFF2CC"
+        },
         "&.lgray": {
             background: "#EFEFEF",
         },
         "&.green.subtitle": {
             background: "#91CFF7"
+        },
+        "&.yellow.subtitle": {
+            background: "#FFD966"
         },
         "&.totalMaintenance": {
             justifyContent: "flex-end",
@@ -268,7 +276,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile])
 
-    const [packages, services, complimentary]: [TPackage[], TService[], TComplimentary[]] = useMemo(() => getPackagesData(loadedPackages),
+    const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
 
     const dispatch = useDispatch();
@@ -419,6 +427,15 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                           setClasses={setClasses}
                           packages={packages}/>
                         }
+
+                        <IntervalUpsells
+                            packages={packages}
+                            services={services}
+                            upsell={upsells}
+                            handleClick={handleClick}
+                            setClasses={setClasses}
+                            isBmWService={isBmWService}
+                            isRiverviewFord={isRiverviewFord}/>
 
                         <Complimentary
                             packages={packages}

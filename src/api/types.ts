@@ -358,6 +358,15 @@ export type TExtendedService = {
     detailedDescription?: string;
 } & TServiceRequestShort;
 
+export type TUpsellOfOption = {
+    id: number;
+    name: string;
+    price: number;
+    durationInHours: number;
+    detailedDescription: string;
+    orderIndex: number;
+}
+
 export interface IPackageOptions {
     id: number;
     type: EMaintenanceOptionType;
@@ -367,7 +376,10 @@ export interface IPackageOptions {
     complimentaryServices: TExtendedComplimentary[];
     marketPriceServiceRequests: number;
     marketPriceComplimentaryServices: number;
-    intervalUpsellRequests: TExtendedService[];
+    marketPriceIntervalUpsells : number;
+    priceTitle?: string;
+    priceWithFeeTitle?: string;
+    intervalUpsells: TUpsellOfOption[];
     marketPriceIntervalUpsell: number;
     maintenancePackageName: string;
 }
