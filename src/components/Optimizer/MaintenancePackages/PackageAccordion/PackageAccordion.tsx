@@ -47,6 +47,10 @@ export interface IDetailsData {
     suggestedRequestPrice: TSummaryCell[];
     suggestedComplimentaryHours: TSummaryCell[];
     suggestedComplimentaryPrice: TSummaryCell[];
+    intervalUpsellLaborHours: TSummaryCell[];
+    intervalUpsellPrice: TSummaryCell[];
+    suggestedUpsellPrice: TSummaryCell[];
+    suggestedUpsellHours: TSummaryCell[];
 }
 
 export type TSummaryCell = {
@@ -251,7 +255,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             const option = packageData.options.find(el => el.type === item.optionType);
             if (option) {
                 const updatedOption = {...option,
-                    intervalUpsellServices:
+                    intervalUpsells:
                         option.intervalUpsells.find(request => request.serviceRequestId === requestId)
                             ? option.intervalUpsells.filter(request => request.serviceRequestId !== requestId)
                             : [...option.intervalUpsells, {serviceRequestId: requestId, isSendToDMS: true}]
@@ -337,6 +341,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             complimentaryServicePrice: +option.complimentaryServicePrice,
             serviceRequestLaborHours: +option.serviceRequestLaborHours,
             serviceRequestPrice: +option.serviceRequestPrice,
+            intervalUpsellServiceLaborHours: +option.intervalUpsellServiceLaborHours,
+            intervalUpsellServicePrice: +option.intervalUpsellServicePrice,
         }))
         try {
             dispatch(updatePackageOptions(data.id, revisedData, showError));
@@ -485,10 +491,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                                 onCheckboxClick={onUpsellClick}/>}
                         </div>
 
-                        {/*todo change data from complimentary to upsell*/}
-
-                        <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>
-                        <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedComplimentaryPrice}/>
+                        <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedUpsellHours}/>
+                        <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedUpsellPrice}/>
 
                         <Divider/>
 
@@ -496,17 +500,17 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             isEdit={isEdit}
                             setIsEdit={setIsEdit}
                             isComplimentary
-                            packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
+                            packageHasComplimentary={Boolean(packageData?.intervalUpsells?.length)}
                             summaryText="Invoiced Labor Hours:"
-                            valuesArray={detailsData.complimentaryLaborHours}
+                            valuesArray={detailsData.intervalUpsellLaborHours}
                             onInputChange={onInputChange}/>
                         <SummaryRow
                             isEdit={isEdit}
                             setIsEdit={setIsEdit}
-                            packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
+                            packageHasComplimentary={Boolean(packageData?.intervalUpsells?.length)}
                             isComplimentary
                             summaryText="Market Price:"
-                            valuesArray={detailsData.complimentaryPrice}
+                            valuesArray={detailsData.intervalUpsellPrice}
                             onInputChange={onInputChange}/>
 
                         <div className={classes.complimentaryRow}>Complimentary</div>

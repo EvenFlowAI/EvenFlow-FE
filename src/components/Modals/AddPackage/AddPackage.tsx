@@ -369,7 +369,6 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         if (isValid()) {
             if (selectedSC) {
                 const serviceRequests = getRequestsFromSelectedPackages(selectedPackages);
-                // todo add upsell codes
                 const data: INewPackage | IUpdatedPackage = {
                     name: packageName,
                     serviceRequests,

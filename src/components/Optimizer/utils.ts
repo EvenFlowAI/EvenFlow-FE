@@ -1,6 +1,6 @@
 import {TTitle} from "../Content/ContentTitle/ContentTitle";
 import {Routes} from "../../config/routes";
-import {IPackageById, TExtendedComplimentary, TExtendedService} from "../../api/types";
+import {IPackageById, TExtendedComplimentary, TExtendedService, TIntervalUpsellForPackage} from "../../api/types";
 import {IDetailsData} from "./MaintenancePackages/PackageAccordion/PackageAccordion";
 
 export const optimizerRoot: TTitle = {
@@ -28,6 +28,11 @@ const getComplimentaryTotal = (includedRequests: TExtendedComplimentary[]): stri
     return Number.isInteger(price) ? price.toString() : (+price.toFixed(2)).toString();
 }
 
+const getUpsellTotal = (includedRequests: TIntervalUpsellForPackage[]): string => {
+    const price = includedRequests.reduce((a, b) => a + +b.invoiceAmount, 0);
+    return Number.isInteger(price) ? price.toString() : (+price.toFixed(2)).toString();
+}
+
 const getHours = (includedRequests: TExtendedService[]): string => {
     return includedRequests.reduce((a, b) => a + +b.durationInHours, 0).toString();
 }
@@ -36,8 +41,12 @@ const getComplimentaryHours = (includedRequests: TExtendedComplimentary[]): stri
     return includedRequests.reduce((a, b) => a + +b.durationInHours, 0).toString();
 }
 
+const getUpsellHours = (includedRequests:  TIntervalUpsellForPackage[]): string => {
+    return includedRequests.reduce((a, b) => a + +b.durationInHours, 0).toString();
+}
+
 export const getOptionsTableData = (pack: IPackageById) => {
-    const { options, serviceRequests, complimentaryServices } = pack;
+    const { options, serviceRequests, complimentaryServices, intervalUpsells } = pack;
     const data: IDetailsData = {
         invoicedRequestLaborHours: [],
         complimentaryLaborHours: [],
@@ -47,10 +56,15 @@ export const getOptionsTableData = (pack: IPackageById) => {
         suggestedRequestPrice: [],
         suggestedComplimentaryHours: [],
         suggestedComplimentaryPrice: [],
+        intervalUpsellLaborHours: [],
+        intervalUpsellPrice: [],
+        suggestedUpsellPrice: [],
+        suggestedUpsellHours: [],
     }
     options.forEach(option => {
         const includedRequests = serviceRequests.filter(request => option.serviceRequests.find(item => item.serviceRequestId === request.id));
         const includedComplimentary = complimentaryServices.filter(request => option.complimentaryServices.includes(request.id));
+        const includedUpsells = intervalUpsells.filter(request => option.intervalUpsells.find(item => item.serviceRequestId === request.id));
         data.invoicedRequestLaborHours.push({
             numberValue: option.serviceRequestLaborHours.toString(),
             isEditable: true,
@@ -63,6 +77,12 @@ export const getOptionsTableData = (pack: IPackageById) => {
             optionType: option.type,
             fieldName: 'complimentaryServiceLaborHours',
         });
+        data.intervalUpsellLaborHours.push({
+            numberValue: option.intervalUpsellServiceLaborHours.toString(),
+            isEditable: Boolean(pack.intervalUpsells.length),
+            optionType: option.type,
+            fieldName: 'intervalUpsellLaborHours',
+        });
         data.requestsPrice.push({
             numberValue: option.serviceRequestPrice.toString(),
             isEditable: true,
@@ -74,6 +94,12 @@ export const getOptionsTableData = (pack: IPackageById) => {
             isEditable: Boolean(pack.complimentaryServices.length),
             optionType: option.type,
             fieldName: 'complimentaryServicePrice',
+        });
+        data.intervalUpsellPrice.push({
+            numberValue: option.intervalUpsellServicePrice.toString(),
+            isEditable: Boolean(pack.intervalUpsells.length),
+            optionType: option.type,
+            fieldName: 'intervalUpsellPrice',
         });
         data.suggestedRequestPrice.push({
             numberValue: getTotal(includedRequests),
@@ -98,6 +124,18 @@ export const getOptionsTableData = (pack: IPackageById) => {
             isEditable: false,
             optionType: option.type,
             fieldName: 'suggestedComplimentaryHours',
+        })
+        data.suggestedUpsellPrice.push({
+            numberValue: getUpsellTotal(includedUpsells),
+            isEditable: false,
+            optionType: option.type,
+            fieldName: 'suggestedUpsellPrice',
+        })
+        data.suggestedUpsellHours.push({
+            numberValue: getUpsellHours(includedUpsells),
+            isEditable: false,
+            optionType: option.type,
+            fieldName: 'suggestedUpsellHours',
         })
     })
     return data;

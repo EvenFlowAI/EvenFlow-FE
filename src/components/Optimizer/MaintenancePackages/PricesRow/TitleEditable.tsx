@@ -32,6 +32,10 @@ const useStyles = makeStyles(() => ({
             fontSize: 16,
         }
     },
+    text: {
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
     editIcon: {
        padding: 0
     },
@@ -65,8 +69,8 @@ const TitleEditable: React.FC<TTitleEditableProps> = ({text, onSave}) => {
     return (
         <div className={classes.wrapper}>
             {isEdit
-                ? <Input onChange={onChange} className={classes.textInput}/>
-                : <div>{newName}</div>}
+                ? <Input onChange={onChange} className={classes.textInput} value={newName}/>
+                : <div className={classes.text}>{newName}</div>}
             {isEdit
                 ? <IconButton onClick={onSaveClick} className={classes.editIcon}>
                     <Done htmlColor="#FFFFFF"/>

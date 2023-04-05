@@ -63,13 +63,13 @@ export const IntervalUpsellAndOptions: React.FC<TServiceRequestsProps> = (props)
                                 {request.durationInHours}
                             </TableCell>
                             <TableCell className={classes.requestCell} key={`${request.code}_total`} width={100}>
-                                ${request.partsUnitCost}
+                                ${request.partsUnitCost ?? 0}
                             </TableCell>
                             <TableCell className={classes.requestCell} key={`${request.code}_partsAmount`} width={100}>
-                                ${request.numberOfParts}
+                                ${request.numberOfParts ?? 0}
                             </TableCell>
                             <TableCell className={classes.requestCell} key={`${request.code}_price`} width={100}>
-                                ${request.invoiceAmount}
+                                ${request.invoiceAmount ?? 0}
                             </TableCell>
                             <TableCell className={classes.emptyCell} width={16} key="empty"/>
 

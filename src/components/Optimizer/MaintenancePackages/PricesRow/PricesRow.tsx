@@ -74,13 +74,13 @@ const PricesRow = () => {
 
     const goodUpsellPrice = useMemo(() => {
         let price = goodCorePrice;
-        if (goodOption && goodOption.intervalUpsellPrice) price = goodCorePrice + +goodOption.intervalUpsellPrice;
+        if (goodOption && goodOption.intervalUpsellServicePrice) price = goodCorePrice + +goodOption.intervalUpsellServicePrice;
         return price;
     }, [goodOption, goodCorePrice])
 
     const betterUpsellPrice = useMemo(() => {
         let price = betterCorePrice;
-        if (betterOption && betterOption.intervalUpsellPrice) price = betterCorePrice + +betterOption.intervalUpsellPrice;
+        if (betterOption && betterOption.intervalUpsellServicePrice) price = betterCorePrice + +betterOption.intervalUpsellServicePrice;
         return price;
     }, [betterOption, betterCorePrice])
 
@@ -102,8 +102,6 @@ const PricesRow = () => {
         }
     }
 
-    // todo text value
-
     return (
         <div>
             <div className={classes.topLineWrapper}>
@@ -112,8 +110,8 @@ const PricesRow = () => {
             </div>
             <div className={classes.wrapper}>
                 <div className={classes.rightPart}>
-                    <TitleEditable text={''} onSave={onSavePrice}/>
-                    <TitleEditable text={''} onSave={onSavePriceWithFee}/>
+                    <TitleEditable text={currentPackage?.priceTitle ?? ''} onSave={onSavePrice}/>
+                    <TitleEditable text={currentPackage?.priceWithFeeTitle ?? ''} onSave={onSavePriceWithFee}/>
                 </div>
                 <div className={classes.leftPart}>
                     <PriceItem value={goodCorePrice}/>

@@ -456,8 +456,6 @@ export type TOptionServiceRequest = {
     serviceRequestId: number;
 }
 
-// todo change type of intervalUpsellServices
-
 export interface IPackageOptionDetailed {
     id: number;
     type: EMaintenanceOptionType;
@@ -470,8 +468,8 @@ export interface IPackageOptionDetailed {
     maintenancePackageId: number;
     serviceRequestLaborHours: number;
     serviceRequestPrice: number;
-    intervalUpsellLaborHours: number;
-    intervalUpsellPrice: number;
+    intervalUpsellServiceLaborHours: number;
+    intervalUpsellServicePrice: number;
     name?: string;
     serviceRequestAssignedId?: number;
 }
