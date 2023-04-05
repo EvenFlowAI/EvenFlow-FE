@@ -361,8 +361,6 @@ export type TExtendedService = {
 export type TUpsellOfOption = {
     id: number;
     name: string;
-    price: number;
-    durationInHours: number;
     detailedDescription: string;
     orderIndex: number;
 }
