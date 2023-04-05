@@ -288,7 +288,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                 engineData && setSelectedEngineTypes(engineData);
             }
         }
-    }, [currentPackage, isEditing, allAssignedList])
+    }, [currentPackage, isEditing, allAssignedList, intervalUpsellList])
 
     const onCancel = useCallback(() => {
         setFormIsChecked(false);
