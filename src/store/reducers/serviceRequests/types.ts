@@ -115,3 +115,26 @@ export interface ISRAdmin {
     numberOfParts: number;
     partsUnitCost: number;
 }
+
+export interface IBaseServiceRequest {
+    id: number;
+    code: string;
+    description: string;
+    durationInHours: number;
+    invoiceAmount: number;
+    partsUnitCost: number;
+    numberOfParts: number;
+}
+
+export interface IUpsellServiceRequest extends IBaseServiceRequest {
+    orderIndex: number;
+    serviceRequest: IBaseServiceRequest;
+}
+
+export interface IUpsellServiceRequestUpdate {
+    description: string|null;
+    durationInHours: number|null;
+    invoiceAmount: number|null;
+    partsUnitCost: number|null;
+    numberOfParts: number|null;
+}

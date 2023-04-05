@@ -12,7 +12,7 @@ import {
     IServiceRequestPriority,
     ISRAdmin,
     ISRAdminFilters,
-    ISRAdminForm
+    ISRAdminForm, IUpsellServiceRequest, IUpsellServiceRequestUpdate
 } from "./types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -254,4 +254,71 @@ export const updateAdminServiceRequest = (data: ISRAdminForm, id: number): AppTh
         {data, urlParams: {id}}
     );
     dispatch(loadAdminServiceRequests());
+}
+
+export const getUpsellServiceRequests = createAction<IUpsellServiceRequest[]>("ServiceRequests/GetIntervalUpsell");
+export const getCurrentUpsell = createAction<IUpsellServiceRequest|null>("ServiceRequests/GetIntervalUpsell");
+export const setUpsellLoading = createAction<boolean>("ServiceRequests/SetUpsellLoading");
+export const setUpsellPaging = createAction<IPagingResponse>("ServiceRequests/SetUpsellPaging");
+export const setUpsellPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetUpsellPageData");
+export const setUpsellFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/SetUpsellFilter");
+export const setUpsellOrdering = createAction<IOrder<IUpsellServiceRequest>>("ServiceRequests/SetUpsellOrder");
+export const loadUpsellServiceRequests = (serviceCenterId: number): AppThunk =>
+    async (dispatch, getState) => {
+        const {upsellPageData, upsellFilter, upsellOrdering} = getState().serviceRequests;
+        dispatch(setUpsellLoading(true));
+        const data = {...upsellPageData, ...upsellFilter, ...upsellOrdering, serviceCenterId};
+
+        try {
+            const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IUpsellServiceRequest>>(
+                Api.endpoints.IntervalUpsell.GetUpsellByQuery, {data});
+            dispatch(getUpsellServiceRequests(result));
+            dispatch(setUpsellLoading(false));
+            dispatch(setUpsellPaging(paging));
+        } catch (e) {
+            dispatch(setUpsellLoading(false));
+            throw e;
+        }
+    }
+
+export const updateUpsellServiceRequest = (
+    data: IUpsellServiceRequestUpdate, id: number, serviceCenterId?: number,
+): AppThunk =>
+    async dispatch => {
+        await Api.call(Api.endpoints.IntervalUpsell.EditUpsell, {data, urlParams: {id}});
+        if (serviceCenterId) {
+            dispatch(loadUpsellServiceRequests(serviceCenterId));
+        }
+    }
+
+export const addUpsellServiceRequests = (
+    serviceRequestIds: number[],
+    serviceCenterId: number,
+    onError = (err: string) => {},
+    onSuccess = (codes: number[]) => {},
+): AppThunk => dispatch => {
+    Api.call(
+        Api.endpoints.IntervalUpsell.AddUpsell, {data: {serviceRequestIds, serviceCenterId}}
+    )
+        .then(result => {
+            if (result) {
+                dispatch(loadUpsellServiceRequests(serviceCenterId));
+                onSuccess(serviceRequestIds);
+            }
+        })
+        .catch(err => {
+            onError(err)
+        })
+}
+
+export const loadUpsellById = (id: number): AppThunk => dispatch => {
+    dispatch(setUpsellLoading(true));
+    Api.call<IUpsellServiceRequest>(Api.endpoints.IntervalUpsell.GetUpsellById, {urlParams: {id}})
+        .then(result => {
+            if (result) dispatch(getCurrentUpsell(result.data))
+        })
+        .catch(err => {
+            console.log('get upsell service request by id error', err)
+        })
+        .finally(() => dispatch(setUpsellLoading(false)));
 }

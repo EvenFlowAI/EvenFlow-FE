@@ -17,6 +17,9 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
     const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (props.packageData){
             if (cellIndex === 0) {
+                if (props.packageData?.complimentaryServices?.length === 1) {
+                    return classes.firstCellLastRow;
+                }
                 switch (rowIndex) {
                     case 0:
                         return classes.firstCellFirstRow;
@@ -25,8 +28,10 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
                     default:
                         return classes.firstCell;
                 }
-            }
-            if (cellIndex === 2) {
+            } else if (cellIndex === 2) {
+                if (props.packageData?.complimentaryServices?.length === 1) {
+                    return classes.lastCellLastRow;
+                }
                 switch (rowIndex) {
                     case 0:
                         return classes.lastCellFirstRow;
@@ -35,14 +40,18 @@ export const ComplimentaryAndOptions: React.FC<TServiceRequestsProps> = (props) 
                     default:
                         return classes.lastCell;
                 }
-            }
-            switch (rowIndex) {
-                case 0:
-                    return classes.cellFirstRow;
-                case props.packageData?.complimentaryServices?.length - 1:
+            } else {
+                if (props.packageData?.complimentaryServices?.length === 1) {
                     return classes.cellLastRow;
-                default:
-                    return classes.cell
+                }
+                switch (rowIndex) {
+                    case 0:
+                        return classes.cellFirstRow;
+                    case props.packageData?.complimentaryServices?.length - 1:
+                        return classes.cellLastRow;
+                    default:
+                        return classes.cell
+                }
             }
         }
     }, [props.packageData])
