@@ -86,7 +86,7 @@ const PricesRow: React.FC<{packageData: IPackageById|null}> = ({packageData}) =>
 
     const bestUpsellPrice = useMemo(() => {
         let price = bestCorePrice;
-        if (bestOption && bestOption.complimentaryServicePrice) price = +bestOption.serviceRequestPrice + +bestOption.complimentaryServicePrice;
+        if (bestOption && bestOption.intervalUpsellServicePrice) price = +bestCorePrice + +bestOption.intervalUpsellServicePrice;
         return price;
     }, [bestOption, bestCorePrice])
 
