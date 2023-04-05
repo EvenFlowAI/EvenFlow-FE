@@ -81,7 +81,7 @@ export const getOptionsTableData = (pack: IPackageById) => {
             numberValue: option.intervalUpsellServiceLaborHours.toString(),
             isEditable: Boolean(pack.intervalUpsells.length),
             optionType: option.type,
-            fieldName: 'intervalUpsellLaborHours',
+            fieldName: 'intervalUpsellServiceLaborHours',
         });
         data.requestsPrice.push({
             numberValue: option.serviceRequestPrice.toString(),
@@ -99,7 +99,7 @@ export const getOptionsTableData = (pack: IPackageById) => {
             numberValue: option.intervalUpsellServicePrice.toString(),
             isEditable: Boolean(pack.intervalUpsells.length),
             optionType: option.type,
-            fieldName: 'intervalUpsellPrice',
+            fieldName: 'intervalUpsellServicePrice',
         });
         data.suggestedRequestPrice.push({
             numberValue: getTotal(includedRequests),

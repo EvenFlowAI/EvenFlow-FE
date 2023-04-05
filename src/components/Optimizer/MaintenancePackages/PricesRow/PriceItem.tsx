@@ -3,7 +3,6 @@ import {makeStyles} from "@material-ui/core/styles";
 
 type TPriceItemProps = {
     value: number;
-    prevValue?: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -32,13 +31,11 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const PriceItem: React.FC<TPriceItemProps> = ({value, prevValue}) => {
+const PriceItem: React.FC<TPriceItemProps> = ({value}) => {
     const classes = useStyles();
-
     return (
         <div className={classes.wrapper}>
-            <div className={prevValue ? classes.prevPrice : classes.price}>${value.toFixed(2)}</div>
-            {prevValue ? <div className={classes.redPrice}>${prevValue}</div> : null}
+            <div className={classes.price}>${Number(value).toFixed(2)}</div>
         </div>
     );
 };

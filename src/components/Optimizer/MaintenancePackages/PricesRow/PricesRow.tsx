@@ -4,7 +4,7 @@ import TitleEditable from "./TitleEditable";
 import PriceItem from "./PriceItem";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {EMaintenanceOptionType} from "../../../../api/types";
+import {EMaintenanceOptionType, IPackageById} from "../../../../api/types";
 import {updatePriceTitles} from "../../../../store/reducers/packages/actions";
 
 const useStyles = makeStyles(() => ({
@@ -42,51 +42,51 @@ const useStyles = makeStyles(() => ({
 }))
 
 
-const PricesRow = () => {
+const PricesRow: React.FC<{packageData: IPackageById|null}> = ({packageData}) => {
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const [goodOption, betterOption, bestOption] = useMemo(() => {
-        const optOne = currentPackage?.options?.find(el => el.type === EMaintenanceOptionType.Base)
-        const optTwo = currentPackage?.options?.find(el => el.type === EMaintenanceOptionType.Value)
-        const optThree = currentPackage?.options?.find(el => el.type === EMaintenanceOptionType.Preferred)
+        const optOne = packageData?.options?.find(el => el.type === EMaintenanceOptionType.Base)
+        const optTwo = packageData?.options?.find(el => el.type === EMaintenanceOptionType.Value)
+        const optThree = packageData?.options?.find(el => el.type === EMaintenanceOptionType.Preferred)
         return [optOne, optTwo, optThree]
-    }, [currentPackage])
+    }, [packageData])
 
     const goodCorePrice = useMemo(() => {
         let price = 0;
-        if (goodOption) price = goodOption.serviceRequestPrice + goodOption.complimentaryServicePrice;
+        if (goodOption) price = +goodOption.serviceRequestPrice + +goodOption.complimentaryServicePrice;
         return price;
     }, [goodOption])
 
     const betterCorePrice = useMemo(() => {
         let price = 0;
-        if (betterOption) price = betterOption.serviceRequestPrice + betterOption.complimentaryServicePrice;
+        if (betterOption) price = +betterOption.serviceRequestPrice + +betterOption.complimentaryServicePrice;
         return price;
     }, [betterOption])
 
     const bestCorePrice = useMemo(() => {
         let price = 0;
-        if (bestOption) price = bestOption.serviceRequestPrice + bestOption.complimentaryServicePrice;
+        if (bestOption) price = +bestOption.serviceRequestPrice + +bestOption.complimentaryServicePrice;
         return price;
     }, [bestOption])
 
     const goodUpsellPrice = useMemo(() => {
         let price = goodCorePrice;
-        if (goodOption && goodOption.intervalUpsellServicePrice) price = goodCorePrice + +goodOption.intervalUpsellServicePrice;
+        if (goodOption && goodOption.intervalUpsellServicePrice) price = +goodCorePrice + +goodOption.intervalUpsellServicePrice;
         return price;
     }, [goodOption, goodCorePrice])
 
     const betterUpsellPrice = useMemo(() => {
         let price = betterCorePrice;
-        if (betterOption && betterOption.intervalUpsellServicePrice) price = betterCorePrice + +betterOption.intervalUpsellServicePrice;
+        if (betterOption && betterOption.intervalUpsellServicePrice) price = +betterCorePrice + +betterOption.intervalUpsellServicePrice;
         return price;
     }, [betterOption, betterCorePrice])
 
     const bestUpsellPrice = useMemo(() => {
         let price = bestCorePrice;
-        if (bestOption && bestOption.complimentaryServicePrice) price = bestOption.serviceRequestPrice + +bestOption.complimentaryServicePrice;
+        if (bestOption && bestOption.complimentaryServicePrice) price = +bestOption.serviceRequestPrice + +bestOption.complimentaryServicePrice;
         return price;
     }, [bestOption, bestCorePrice])
 

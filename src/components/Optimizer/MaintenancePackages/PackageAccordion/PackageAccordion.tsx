@@ -270,6 +270,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [packageData])
 
+    console.log(packageData)
+
     const onInputChange = useCallback((value: string, fieldName: string, optionType: string | number) => {
         if (packageData) {
             if (fieldName.toLowerCase().includes('hours') && Number(value) > 100) {
@@ -543,7 +545,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             valuesArray={detailsData.complimentaryPrice}
                             onInputChange={onInputChange}/>
 
-                      <PricesBlock/>
+                      <PricesBlock packageData={packageData}/>
 
                     </React.Fragment>}
 
