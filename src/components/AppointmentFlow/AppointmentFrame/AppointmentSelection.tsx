@@ -219,7 +219,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         consultantId: consultant?.id ?? null,
                         fromDate: selectedTime ? moment(selectedTime).toISOString() : moment.utc().startOf("day"),
                         maintenancePackageOptionId: selectedPackage?.id ?? null,
-                        //maintenancePackageOption,
+                        maintenancePackageOption,
                         serviceRequestIds: collectServiceRequestIds(
                             service, subService, selectedPackage, selectedOpsCodes
                         ),

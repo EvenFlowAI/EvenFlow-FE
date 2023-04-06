@@ -15,9 +15,15 @@ type TTotalPriceRowProps = {
     isUpsells?: boolean;
 }
 
-const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean }>(({theme, selected, showDetails}) => ({
+const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number }>(({
+                                                                                                         theme,
+                                                                                                         selected,
+                                                                                                         showDetails,
+                                                                                                         count
+}) => ({
+    position: 'relative',
     display: 'grid',
-    gridTemplateColumns: '1fr 4fr',
+    gridTemplateColumns: showDetails ? '1fr 4fr' : '1fr',
     justifyContent: 'center',
     alignItems: 'center',
     border: selected ? "1px solid #202021" : '1px solid #BDBDBD',
@@ -30,14 +36,22 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     cursor: 'pointer',
     "& .prices": {
         display: 'flex',
-        justifyContent: showDetails ? 'space-between' : 'center',
+        justifyContent: showDetails ? count > 2 ? 'space-between' : 'space-evenly' : 'center',
     },
     "& .currentPrice": {
         color: "#D32F2F"
     },
     "& .previousPrice": {
-        textDecoration: 'line-through'
+        textDecoration: 'line-through',
     },
+    "& .centeredPrice": {
+
+    },
+    "& .positionedBtn": {
+        position: 'absolute',
+        top: 22,
+        left: 16
+    }
 }))
 
 const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
@@ -94,10 +108,11 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
 
             return <PriceValue
                 selected={selected}
+                count={packages.length}
                 onClick={handleClick(p, EPackagePricingType.BasePrice)}
                 showDetails={showDetails}
                 key={p.id}>
-                <div>{selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}</div>
+                <div className={showDetails ? "" : "positionedBtn"}>{selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}</div>
                     <div className="prices" style={{ fontSize: 20 }}>
                         {showDetails
                             ? <div className="previousPrice">${scProfile?.isRoundPrice
@@ -105,7 +120,7 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
                                 : (complimentaryPrice + servicesPrice).toFixed(2)}
                             </div>
                             : null}
-                        <div className={showDetails ? "currentPrice" : ""}>
+                        <div className={showDetails ? "currentPrice" : "centeredPrice"}>
                             ${scProfile?.isRoundPrice
                                 ? servicesPrice
                                 : (servicesPrice).toFixed(2)}

@@ -13,9 +13,15 @@ type TTotalPriceRowProps = {
     handleClick: (p: IPackageOptions, pricing: EPackagePricingType) => () => void;
 }
 
-const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean }>(({theme, selected, showDetails}) => ({
+const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number }>(({
+                                                                                                         theme,
+                                                                                                         selected,
+                                                                                                         showDetails,
+                                                                                                         count
+                                                                                                     }) => ({
+    position: 'relative',
     display: 'grid',
-    gridTemplateColumns: '1fr 4fr',
+    gridTemplateColumns: showDetails ? '1fr 4fr' : '1fr',
     justifyContent: 'center',
     alignItems: 'center',
     border: selected ? "1px solid #202021" : '1px solid #BDBDBD',
@@ -28,7 +34,7 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     cursor: "pointer",
     "& .prices": {
         display: 'flex',
-        justifyContent: showDetails ? 'space-between' : 'center',
+        justifyContent: showDetails ? count > 2 ? 'space-between' : 'space-evenly' : 'center',
     },
     "& .currentPrice": {
         color: "#D32F2F"
@@ -36,6 +42,14 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     "& .previousPrice": {
         textDecoration: 'line-through'
     },
+    "& .centeredPrice": {
+
+    },
+    "& .positionedBtn": {
+        position: 'absolute',
+        top: 22,
+        left: 16
+    }
 }))
 
 const useStyles = makeStyles({
@@ -92,9 +106,10 @@ const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleCl
             return <PriceValue
                 showDetails={showDetails}
                 selected={selected}
+                count={packages.length}
                 onClick={handleClick(p, EPackagePricingType.PriceWithFee)}
                 key={p.id}>
-                <div>{selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}</div>
+                <div className={showDetails ? "" : "positionedBtn"}>{selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}</div>
                 <div className="prices" style={{ fontSize: 20 }}>
                     {showDetails
                         ? <div className="previousPrice">${scProfile?.isRoundPrice
@@ -102,7 +117,7 @@ const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleCl
                             : price.toFixed(2)}
                         </div>
                         : null}
-                    <div className={showDetails ? "currentPrice" : ""}>
+                    <div className={showDetails ? "currentPrice" : "centeredPrice"}>
                         ${scProfile?.isRoundPrice
                         ? servicesPrice + upsellPrice
                         : (servicesPrice + upsellPrice).toFixed(2)}
