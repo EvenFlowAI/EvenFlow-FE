@@ -27,7 +27,7 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     fontSize: 16,
     padding: '22px 16px',
     lineHeight: '20px',
-    cursor: "pointer",
+    cursor: 'pointer',
     "& .prices": {
         display: 'flex',
         justifyContent: showDetails ? 'space-between' : 'center',
@@ -83,7 +83,6 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
 
     // todo styles for excluding taxes text above
     return <Wrapper count={packages.length}>
-        {/*{t("Total")} <span className="info" >({t("excluding taxes")})</span>*/}
         <div className={classes.priceText}>
             {title && isUpsells ? title : defaultString}:
         </div>

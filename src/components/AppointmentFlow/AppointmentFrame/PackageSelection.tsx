@@ -247,8 +247,25 @@ const Info = styled("div")({
     justifyContent: 'flex-start',
     fontSize: 14,
     color: "#808080",
-    marginTop: 18
 })
+
+const FeesText = styled('div')<Theme, { count: number }>(({theme, count}) => ({
+    width: "100%",
+    display: "grid",
+    gap: "0 16px",
+    gridTemplateColumns: count === 3
+        ? `2fr repeat(${count}, 1fr)`
+        : count === 2
+            ? '1fr 1fr 1fr'
+            : '1fr 1fr',
+    alignItems: "stretch",
+    justifyItems: 'flex-end',
+    fontSize: 16,
+    fontWeight: 'bold',
+    [theme.breakpoints.down('sm')]: {
+        overflowX: "auto"
+    },
+}))
 
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;
@@ -416,62 +433,67 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         isSanfordInfinity={isSanfordInfinity}
                     />
                     : <React.Fragment>
-                    <Wrapper count={packages.length}>
-                        <PackageTitles
-                            packages={packages}
-                            handleClick={handleClick}
-                            setClasses={setClasses}/>
+                        <Wrapper count={packages.length}>
+                            <PackageTitles
+                                packages={packages}
+                                handleClick={handleClick}
+                                setClasses={setClasses}/>
 
-                        <IncludedInPackage
-                            packages={packages}
-                            services={services}
-                            handleClick={handleClick}
-                            setClasses={setClasses}
-                            isBmWService={isBmWService}
-                            isRiverviewFord={isRiverviewFord}
-                        />
+                            <IncludedInPackage
+                                packages={packages}
+                                services={services}
+                                handleClick={handleClick}
+                                setClasses={setClasses}
+                                isBmWService={isBmWService}
+                                isRiverviewFord={isRiverviewFord}
+                            />
 
-                        {scProfile?.isShowPriceDetails
-                        && <TotalMaintenance
-                          isBmWService={isBmWService}
-                          setClasses={setClasses}
-                          packages={packages}/>
-                        }
+                            {scProfile?.isShowPriceDetails
+                                && <TotalMaintenance
+                                    isBmWService={isBmWService}
+                                    setClasses={setClasses}
+                                    packages={packages}/>
+                            }
 
-                        <IntervalUpsells
-                            packages={packages}
-                            services={services}
-                            upsell={upsells}
-                            handleClick={handleClick}
-                            setClasses={setClasses}
-                            isBmWService={isBmWService}
-                            isRiverviewFord={isRiverviewFord}/>
+                            <IntervalUpsells
+                                packages={packages}
+                                services={services}
+                                upsell={upsells}
+                                handleClick={handleClick}
+                                setClasses={setClasses}
+                                isBmWService={isBmWService}
+                                isRiverviewFord={isRiverviewFord}/>
 
-                        <Complimentary
-                            packages={packages}
-                            services={services}
-                            complimentary={complimentary}
-                            handleClick={handleClick}
-                            setClasses={setClasses}
-                            isBmWService={isBmWService}
-                            isRiverviewFord={isRiverviewFord}/>
+                            <Complimentary
+                                packages={packages}
+                                services={services}
+                                complimentary={complimentary}
+                                handleClick={handleClick}
+                                setClasses={setClasses}
+                                isBmWService={isBmWService}
+                                isRiverviewFord={isRiverviewFord}/>
 
-                        {scProfile?.isShowPriceDetails ? <TotalComplimentary
-                            packages={packages}
-                            handleClick={handleClick}
-                            setClasses={setClasses}
-                            isBmWService={isBmWService}
-                        /> : null}
+                            {scProfile?.isShowPriceDetails ? <TotalComplimentary
+                                packages={packages}
+                                handleClick={handleClick}
+                                setClasses={setClasses}
+                                isBmWService={isBmWService}
+                            /> : null}
 
-                        {/*<Total*/}
-                        {/*    packages={packages}*/}
-                        {/*    handleClick={handleClick}*/}
-                        {/*    isSanfordInfinity={isSanfordInfinity}*/}
-                        {/*    isBmWService={isBmWService}*/}
-                        {/*    setClasses={setClasses}*/}
-                        {/*/>*/}
+                            {/*<Total*/}
+                            {/*    packages={packages}*/}
+                            {/*    handleClick={handleClick}*/}
+                            {/*    isSanfordInfinity={isSanfordInfinity}*/}
+                            {/*    isBmWService={isBmWService}*/}
+                            {/*    setClasses={setClasses}*/}
+                            {/*/>*/}
 
-                    </Wrapper>
+                        </Wrapper>
+                        {packages[0].priceTitle && Boolean(upsells.length)
+                            ? <FeesText count={packages.length}>
+                                <div>{t("Total")}<span className="info"> ({t("Excluding taxes & fees")}):</span></div>
+                            </FeesText>
+                            : null}
                         <TotalPriceRow
                             packages={packages}
                             isUpsells={Boolean(upsells.length)}
@@ -482,14 +504,14 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 packages={packages}
                                 handleClick={handleClick}/>
                             : null}
-                    <Info>
-                        {scProfile?.maintenancePackageDisclaimer
-                            ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
-                            :  isBmWService
-                                ? t("Please ask your service advisor")
-                                : t("The maintenance packages may not be available")
-                        }
-                    </Info>
+                        <Info>
+                            {scProfile?.maintenancePackageDisclaimer
+                                ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <div key={line}>{line}</div>)
+                                :  isBmWService
+                                    ? t("Please ask your service advisor")
+                                    : t("The maintenance packages may not be available")
+                            }
+                        </Info>
                     </React.Fragment>
                 }
             </React.Fragment> : null}
