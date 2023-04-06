@@ -3,7 +3,7 @@ import {IPackageOptions} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 import {IMaintenanceItem, IRecallByVin} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
-import {IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EPackagePricingType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
 import i18n from "../../../i18n";
 
 export const getMaintenanceDescription = (
@@ -13,11 +13,20 @@ export const getMaintenanceDescription = (
     selectedPackage?: IPackageOptions|null,
     allCategories?: ICategory[],
     selectedCategories?: number[],
-    valueService?: IValueService | null) => {
+    valueService?: IValueService | null,
+    packagePricingType?: EPackagePricingType|null,
+) => {
     const services: string[] = [];
 
     if (selectedPackage) {
-        services.push(`${selectedPackage.name} ${i18n.t("package")}`)
+        let name = `${selectedPackage.name} ${i18n.t("package")}`;
+        if (packagePricingType === EPackagePricingType.PriceWithFee) {
+            name = name + ` (${selectedPackage.priceWithFeeTitle})`
+        }
+        if (packagePricingType === EPackagePricingType.BasePrice) {
+            name = name + ` (${selectedPackage.priceTitle})`
+        }
+        services.push(name)
     }
     if (selectedSR?.length) {
         const filtered = srList.filter(el => selectedSR.includes(el.id)).map(el => el.description);
