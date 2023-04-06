@@ -462,7 +462,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             valuesArray={detailsData.suggestedRequestPrice}
                             toggleField="showSuggestedPrice"
                             toggleLabel="Show Suggested Price"
-                            checked/>
+                            checked={currentPackage?.isShowSuggestedPrice}/>
 
                         <Divider/>
 
@@ -480,7 +480,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             onInputChange={onInputChange}
                             toggleField="manualOverride"
                             toggleLabel="Manual Override"
-                            checked
+                            checked={currentPackage?.isManualOverridePrice}
                         />
 
                         <div className={classes.complimentaryRow}>Interval Upsell</div>
