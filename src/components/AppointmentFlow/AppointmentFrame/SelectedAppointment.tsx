@@ -191,6 +191,7 @@ const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppo
 export const SelectedAppointment = () => {
     const {
         selectedPackage,
+        packagePricingType,
         advisor,
         consultants,
         categoriesIds,
@@ -215,8 +216,8 @@ export const SelectedAppointment = () => {
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType])
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])

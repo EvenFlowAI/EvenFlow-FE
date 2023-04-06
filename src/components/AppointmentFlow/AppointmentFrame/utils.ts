@@ -1,6 +1,12 @@
 import moment from "moment";
-import {ILoadedVehicle, IOfferForCategory, IPackage, IPackageOptions, IServiceCategory} from "../../../api/types";
-import {TComplimentary, TPackage, TService} from "./PackageSelection";
+import {
+    ILoadedVehicle,
+    IOfferForCategory,
+    IPackage,
+    IPackageOptions,
+    IServiceCategory,
+} from "../../../api/types";
+import {TComplimentary, TPackage, TService, TUpsell} from "./PackageSelection";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../Layout/types";
@@ -45,12 +51,13 @@ export const checkSelectedCar = (vehicle: ILoadedVehicle|null, vehicles?: ILoade
     }))
 }
 
-export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TService[], TComplimentary[]] => {
+export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TService[], TComplimentary[], TUpsell[]] => {
     if (loadedPackages.length) {
         const loadedPackage = loadedPackages[0];
         const services: TService[] = [];
         const packages: TPackage[] = [];
         const complimentary: TComplimentary[] = [];
+        const upsells: TUpsell[] = [];
 
         for (let option of loadedPackage.options.sort((a, b) => a.type - b.type)) {
             packages.push({
@@ -76,6 +83,19 @@ export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TServi
                     })
                 } else if (!present.packages.includes(option.id)) {
                     present.packages = [...present.packages, option.id];
+                }
+            }
+            if (option.intervalUpsells) {
+                for (let upsell of option.intervalUpsells) {
+                    const present = upsells.find(c => c.id === upsell.id);
+                    if (!present) {
+                        upsells.push({
+                            ...upsell,
+                            packages: [option.id]
+                        })
+                    } else if (!present.packages.includes(option.id)) {
+                        present.packages = [...present.packages, option.id];
+                    }
                 }
             }
             services.reduce((acc, s, idx) => {
@@ -106,9 +126,9 @@ export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TServi
             }, {pck: [], more: [], moreIdx: 0} as { pck: number[], more: number[], moreIdx: number });
         }
 
-        return [packages, services, complimentary];
+        return [packages, services, complimentary, upsells];
     }
-    return [[], [], []];
+    return [[], [], [], []];
 }
 
 

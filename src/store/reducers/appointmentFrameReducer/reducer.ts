@@ -25,7 +25,7 @@ import {
     setMobileServiceAvailability,
     setOffersLoading,
     setPackage,
-    setPackageIsSelected,
+    setPackageIsSelected, setPackagePricingType,
     setPackages,
     setPickUpDropOffAvailability,
     setRecallsAreShown,
@@ -62,6 +62,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {
+    EPackagePricingType,
     EServiceType,
     EUserType,
     IServiceOffer,
@@ -125,6 +126,7 @@ type TState = {
     recallsAreShown: boolean;
     hoursOfOperations: IHOODataForm[];
     serviceTypeOption: IFirstScreenOption|null;
+    packagePricingType: EPackagePricingType | null;
 }
 const initialState: TState = {
     service: null,
@@ -177,6 +179,7 @@ const initialState: TState = {
     recallsAreShown: false,
     hoursOfOperations: [],
     serviceTypeOption: null,
+    packagePricingType: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -350,5 +353,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setServiceTypeOption, (state, {payload}) => {
         return {...state, serviceTypeOption: payload}
+    })
+    .addCase(setPackagePricingType, (state, {payload}) => {
+        return {...state, packagePricingType: payload}
     })
 )

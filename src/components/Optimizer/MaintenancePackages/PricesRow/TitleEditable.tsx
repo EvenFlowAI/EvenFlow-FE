@@ -58,11 +58,7 @@ const TitleEditable: React.FC<TTitleEditableProps> = ({text, onSave}) => {
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value && !e.target.value.match(/^[A-Za-z0-9 \s\-_]*[A-Za-z0-9][A-Za-z0-9 \s\-_]*$/)) {
-            showError('Please use only letters, digits, and whitespaces')
-        } else {
-            setNewName(e.target.value)
-        }
+        setNewName(e.target.value)
     }
 
 

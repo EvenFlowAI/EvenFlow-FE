@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {StepWrapper} from "./StepWrapper";
+import {PackagesStepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,7 +7,9 @@ import {RootState} from "../../../store/rootReducer";
 import {
     setAdditionalServicesChosen,
     setPackage,
-    setPackageIsSelected, setSelectedPackageOptionType
+    setPackageIsSelected,
+    setPackagePricingType,
+    setSelectedPackageOptionType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
@@ -16,8 +18,10 @@ import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {
     EServiceCenterName,
     IPackage,
-    IPackageOptions, TExtendedComplimentary,
-    TExtendedService
+    IPackageOptions,
+    TExtendedComplimentary,
+    TExtendedService,
+    TUpsellOfOption
 } from "../../../api/types";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
@@ -31,11 +35,14 @@ import IncludedInPackage from "./PackageSelectionParts/IncludedInPackage";
 import TotalMaintenance from "./PackageSelectionParts/TotalMaintenance";
 import Complimentary from "./PackageSelectionParts/Complimentary";
 import TotalComplimentary from "./PackageSelectionParts/TotalComplimentary";
-import Total from "./PackageSelectionParts/Total";
 import {useTranslation} from "react-i18next";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
+import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
+import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
+import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
+import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const border = '1px solid #DADADA';
 
@@ -45,6 +52,7 @@ type TWithPackages = {
 
 export type TService = TWithPackages & TExtendedService;
 export type TComplimentary = TWithPackages & TExtendedComplimentary;
+export type TUpsell = TWithPackages & TUpsellOfOption;
 export type TPackage = {
     lastIdx?: number;
     moreIdx?: number[];
@@ -53,7 +61,7 @@ export type TPackage = {
 const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     display: "grid",
     marginTop: 12,
-    gap: "0 20px",
+    gap: "0 16px",
     gridTemplateColumns: count === 3
         ? `2fr repeat(${count}, 1fr)`
         : count === 2
@@ -143,11 +151,17 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
         "&.green": {
             background: "#E5F5FF"
         },
+        "&.yellow": {
+            background: "#FFF2CC"
+        },
         "&.lgray": {
             background: "#EFEFEF",
         },
         "&.green.subtitle": {
             background: "#91CFF7"
+        },
+        "&.yellow.subtitle": {
+            background: "#FFD966"
         },
         "&.totalMaintenance": {
             justifyContent: "flex-end",
@@ -233,8 +247,25 @@ const Info = styled("div")({
     justifyContent: 'flex-start',
     fontSize: 14,
     color: "#808080",
-    marginTop: 18
 })
+
+const FeesText = styled('div')<Theme, { count: number }>(({theme, count}) => ({
+    width: "100%",
+    display: "grid",
+    gap: "0 16px",
+    gridTemplateColumns: count === 3
+        ? `2fr repeat(${count}, 1fr)`
+        : count === 2
+            ? '1fr 1fr 1fr'
+            : '1fr 1fr',
+    alignItems: "stretch",
+    justifyItems: 'flex-end',
+    fontSize: 16,
+    fontWeight: 'bold',
+    [theme.breakpoints.down('sm')]: {
+        overflowX: "auto"
+    },
+}))
 
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;
@@ -268,7 +299,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile])
 
-    const [packages, services, complimentary]: [TPackage[], TService[], TComplimentary[]] = useMemo(() => getPackagesData(loadedPackages),
+    const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
 
     const dispatch = useDispatch();
@@ -364,9 +395,10 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         }
     }
 
-    const handleClick = (p: IPackageOptions) => () => {
+    const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
         dispatch(setPackage(p));
-        handleNext(p);
+        dispatch(setPackagePricingType(pricing ?? EPackagePricingType.BasePrice));
+        //handleNext(p);
     }
 
     const handleDontChangeOption = (): void => {
@@ -386,7 +418,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     return (
-        <StepWrapper>
+        <PackagesStepWrapper>
             <NoItemsLoading
                 wrapperStyles={{marginTop: 20}}
                 items={packages}
@@ -401,68 +433,95 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         isSanfordInfinity={isSanfordInfinity}
                     />
                     : <React.Fragment>
-                    <Wrapper count={packages.length}>
-                        <PackageTitles packages={packages} handleClick={handleClick} setClasses={setClasses}/>
+                        <Wrapper count={packages.length}>
+                            <PackageTitles
+                                packages={packages}
+                                handleClick={handleClick}
+                                setClasses={setClasses}/>
 
-                        <IncludedInPackage
+                            <IncludedInPackage
+                                packages={packages}
+                                services={services}
+                                handleClick={handleClick}
+                                setClasses={setClasses}
+                                isBmWService={isBmWService}
+                                isRiverviewFord={isRiverviewFord}
+                            />
+
+                            {scProfile?.isShowPriceDetails
+                                && <TotalMaintenance
+                                    isBmWService={isBmWService}
+                                    setClasses={setClasses}
+                                    packages={packages}/>
+                            }
+
+                            <IntervalUpsells
+                                packages={packages}
+                                services={services}
+                                upsell={upsells}
+                                handleClick={handleClick}
+                                setClasses={setClasses}
+                                isBmWService={isBmWService}
+                                isRiverviewFord={isRiverviewFord}/>
+
+                            <Complimentary
+                                packages={packages}
+                                services={services}
+                                complimentary={complimentary}
+                                handleClick={handleClick}
+                                setClasses={setClasses}
+                                isBmWService={isBmWService}
+                                isRiverviewFord={isRiverviewFord}/>
+
+                            {scProfile?.isShowPriceDetails ? <TotalComplimentary
+                                packages={packages}
+                                handleClick={handleClick}
+                                setClasses={setClasses}
+                                isBmWService={isBmWService}
+                            /> : null}
+
+                            {/*<Total*/}
+                            {/*    packages={packages}*/}
+                            {/*    handleClick={handleClick}*/}
+                            {/*    isSanfordInfinity={isSanfordInfinity}*/}
+                            {/*    isBmWService={isBmWService}*/}
+                            {/*    setClasses={setClasses}*/}
+                            {/*/>*/}
+
+                        </Wrapper>
+                        {packages[0].priceTitle && Boolean(upsells.length)
+                            ? <FeesText count={packages.length}>
+                                <div>{t("Total")}<span className="info"> ({t("Excluding taxes & fees")}):</span></div>
+                            </FeesText>
+                            : null}
+                        <TotalPriceRow
                             packages={packages}
-                            services={services}
+                            isUpsells={Boolean(upsells.length)}
                             handleClick={handleClick}
-                            setClasses={setClasses}
-                            isBmWService={isBmWService}
-                            isRiverviewFord={isRiverviewFord}
                         />
-
-                        {scProfile?.isShowPriceDetails
-                        && <TotalMaintenance
-                          isBmWService={isBmWService}
-                          setClasses={setClasses}
-                          packages={packages}/>
-                        }
-
-                        <Complimentary
-                            packages={packages}
-                            services={services}
-                            complimentary={complimentary}
-                            handleClick={handleClick}
-                            setClasses={setClasses}
-                            isBmWService={isBmWService}
-                            isRiverviewFord={isRiverviewFord}/>
-
-                        {scProfile?.isShowPriceDetails ? <TotalComplimentary
-                            packages={packages}
-                            handleClick={handleClick}
-                            setClasses={setClasses}
-                            isBmWService={isBmWService}
-                        /> : null}
-
-                        <Total
-                            packages={packages}
-                            handleClick={handleClick}
-                            isSanfordInfinity={isSanfordInfinity}
-                            isBmWService={isBmWService}
-                            setClasses={setClasses}
-                        />
-
-                    </Wrapper>
-                    <Info>
-                        {scProfile?.maintenancePackageDisclaimer
-                            ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <p key={line}>{line}</p>)
-                            :  isBmWService
-                                ? t("Please ask your service advisor")
-                                : t("The maintenance packages may not be available")
-                        }
-                    </Info>
+                        {upsells.length > 0
+                            ? <TotalPriceWithFeeRow
+                                packages={packages}
+                                handleClick={handleClick}/>
+                            : null}
+                        <Info>
+                            {scProfile?.maintenancePackageDisclaimer
+                                ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <div key={line}>{line}</div>)
+                                :  isBmWService
+                                    ? t("Please ask your service advisor")
+                                    : t("The maintenance packages may not be available")
+                            }
+                        </Info>
                     </React.Fragment>
                 }
             </React.Fragment> : null}
             <Actions
                 onBack={handleBack}
-                hideNext={!isXs}
+                // hideNext={!isXs}
                 nextDisabled={!selectedPackage}
                 onNext={() => handleNext(selectedPackage)} />
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-        </StepWrapper>
+        </PackagesStepWrapper>
     );
 };

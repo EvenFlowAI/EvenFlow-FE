@@ -11,6 +11,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
 import {
+    EPackagePricingType,
     EServiceType,
     EUserType, IAncillaryByZipRequest,
     IAppointmentId,
@@ -34,6 +35,7 @@ export const selectService = createAction<IServiceCategory|null>("fAppointment/s
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
 export const setFrameDescription = createAction<string>("fAppointment/setFrameDescription");
 export const setPackage = createAction<IPackageOptions|null>("fAppointment/setPackage");
+export const setPackagePricingType = createAction<EPackagePricingType|null>("fAppointment/setPackagePricingType");
 export const setAdvisor = createAction<IServiceConsultant|null>("fAppointment/setAdvisor");
 export const setTiming = createAction<EAppointmentTimingType|null>("fAppointment/setTiming");
 export const setTime = createAction<moment.Moment|null>("fAppointment/setTime");
