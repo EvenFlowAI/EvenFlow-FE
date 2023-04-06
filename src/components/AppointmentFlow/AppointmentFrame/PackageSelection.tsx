@@ -7,7 +7,7 @@ import {RootState} from "../../../store/rootReducer";
 import {
     setAdditionalServicesChosen,
     setPackage,
-    setPackageIsSelected, setSelectedPackageOptionType
+    setPackageIsSelected, setPackagePricingType, setSelectedPackageOptionType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
@@ -39,6 +39,7 @@ import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/ty
 import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
+import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const border = '1px solid #DADADA';
 
@@ -374,9 +375,10 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         }
     }
 
-    const handleClick = (p: IPackageOptions) => () => {
+    const handleClick = (p: IPackageOptions, pricing: EPackagePricingType) => () => {
         dispatch(setPackage(p));
-        handleNext(p);
+        dispatch(setPackagePricingType(pricing));
+        //handleNext(p);
     }
 
     const handleDontChangeOption = (): void => {
@@ -412,12 +414,15 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                     />
                     : <React.Fragment>
                     <Wrapper count={packages.length}>
-                        <PackageTitles packages={packages} handleClick={handleClick} setClasses={setClasses}/>
+                        <PackageTitles
+                            packages={packages}
+                            // handleClick={handleClick}
+                            setClasses={setClasses}/>
 
                         <IncludedInPackage
                             packages={packages}
                             services={services}
-                            handleClick={handleClick}
+                            // handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                             isRiverviewFord={isRiverviewFord}
@@ -434,7 +439,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             packages={packages}
                             services={services}
                             upsell={upsells}
-                            handleClick={handleClick}
+                            // handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                             isRiverviewFord={isRiverviewFord}/>
@@ -443,25 +448,25 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             packages={packages}
                             services={services}
                             complimentary={complimentary}
-                            handleClick={handleClick}
+                            // handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                             isRiverviewFord={isRiverviewFord}/>
 
                         {scProfile?.isShowPriceDetails ? <TotalComplimentary
                             packages={packages}
-                            handleClick={handleClick}
+                            // handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                         /> : null}
 
-                        <Total
-                            packages={packages}
-                            handleClick={handleClick}
-                            isSanfordInfinity={isSanfordInfinity}
-                            isBmWService={isBmWService}
-                            setClasses={setClasses}
-                        />
+                        {/*<Total*/}
+                        {/*    packages={packages}*/}
+                        {/*    handleClick={handleClick}*/}
+                        {/*    isSanfordInfinity={isSanfordInfinity}*/}
+                        {/*    isBmWService={isBmWService}*/}
+                        {/*    setClasses={setClasses}*/}
+                        {/*/>*/}
 
                     </Wrapper>
                         <TotalPriceRow
@@ -487,7 +492,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             </React.Fragment> : null}
             <Actions
                 onBack={handleBack}
-                hideNext={!isXs}
+                // hideNext={!isXs}
                 nextDisabled={!selectedPackage}
                 onNext={() => handleNext(selectedPackage)} />
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>

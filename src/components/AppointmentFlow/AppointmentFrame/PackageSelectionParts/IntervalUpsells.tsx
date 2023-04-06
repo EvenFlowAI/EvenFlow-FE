@@ -11,13 +11,13 @@ type TComplimentaryProps = {
     services: TService[];
     upsell: TUpsell[];
     setClasses: (id: number, cls: string) => string;
-    handleClick: (p: IPackageOptions) => () => void;
+    // handleClick: (p: IPackageOptions) => () => void;
     isRiverviewFord: boolean;
     isBmWService: boolean;
 }
 
 const IntervalUpsells: React.FC<TComplimentaryProps> =
-    ({upsell, packages, handleClick, setClasses, isBmWService, isRiverviewFord}) => {
+    ({upsell, packages, setClasses, isBmWService, isRiverviewFord}) => {
     const {t} = useTranslation();
     return <React.Fragment>
             <div className="yellow subtitle">{t("Service Interval Upsell")}</div>
@@ -25,7 +25,7 @@ const IntervalUpsells: React.FC<TComplimentaryProps> =
             {packages.map(p =>
                 <div
                     key={p.id}
-                    onClick={handleClick(p)}
+                    // onClick={handleClick(p)}
                     className={setClasses(p.id, "yellow subtitle")}/>
             )}
 
@@ -47,7 +47,7 @@ const IntervalUpsells: React.FC<TComplimentaryProps> =
                 {packages.map(p =>
                     <div
                         key={p.id}
-                        onClick={handleClick(p)}
+                        // onClick={handleClick(p)}
                         className={setClasses(p.id, "service yellow")}>
                         {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
                     </div>

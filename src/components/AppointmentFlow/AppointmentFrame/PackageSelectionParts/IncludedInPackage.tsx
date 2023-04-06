@@ -10,13 +10,13 @@ type TIncludedInPackageProps = {
     packages: TPackage[];
     services: TService[];
     setClasses: (id: number, cls: string) => string;
-    handleClick: (p: IPackageOptions) => () => void;
+    // handleClick: (p: IPackageOptions) => () => void;
     isRiverviewFord: boolean;
     isBmWService: boolean;
 }
 
 const IncludedInPackage: React.FC<TIncludedInPackageProps> =
-    ({packages, services, setClasses, handleClick, isRiverviewFord, isBmWService}) => {
+    ({packages, services, setClasses, isRiverviewFord, isBmWService}) => {
     const {t} = useTranslation();
     return <React.Fragment>
         <div className="gray subtitle">{t("Included in package")}</div>
@@ -41,7 +41,7 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
                         const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
                         return <div
                             key={p.id}
-                            onClick={handleClick(p)}
+                            // onClick={handleClick(p)}
                             className={setClasses(p.id, wMoreClsx)}>
                             {s.packages.includes(p.id) ?  isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
                         </div>;

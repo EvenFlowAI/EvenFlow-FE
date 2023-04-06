@@ -11,13 +11,13 @@ type TComplimentaryProps = {
     services: TService[];
     complimentary: TComplimentary[];
     setClasses: (id: number, cls: string) => string;
-    handleClick: (p: IPackageOptions) => () => void;
+    // handleClick: (p: IPackageOptions) => () => void;
     isRiverviewFord: boolean;
     isBmWService: boolean;
 }
 
 const Complimentary: React.FC<TComplimentaryProps> =
-    ({complimentary, packages, handleClick, setClasses, isBmWService, isRiverviewFord}) => {
+    ({complimentary, packages, setClasses, isBmWService, isRiverviewFord}) => {
     const {t} = useTranslation();
     return <React.Fragment>
             <div className="green subtitle">{t("Complimentary")}</div>
@@ -25,7 +25,7 @@ const Complimentary: React.FC<TComplimentaryProps> =
             {packages.map(p =>
                 <div
                     key={p.id}
-                    onClick={handleClick(p)}
+                    // onClick={handleClick(p)}
                     className={setClasses(p.id, "green subtitle")}/>
             )}
 
@@ -47,7 +47,7 @@ const Complimentary: React.FC<TComplimentaryProps> =
                 {packages.map(p =>
                     <div
                         key={p.id}
-                        onClick={handleClick(p)}
+                        // onClick={handleClick(p)}
                         className={setClasses(p.id, "service green")}>
                         {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
                     </div>
