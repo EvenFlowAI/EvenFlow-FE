@@ -210,7 +210,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 : appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
-            maintenancePackageOption,
+            //maintenancePackageOption,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,
             serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,

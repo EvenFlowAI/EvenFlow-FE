@@ -119,7 +119,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             consultantId: consultant?.id ?? null,
             fromDate: date.toISOString(),
             maintenancePackageOptionId: selectedPackage?.id ?? null,
-            maintenancePackageOption,
+            //maintenancePackageOption,
             serviceRequestIds: collectServiceRequestIds(
                 service, subService, selectedPackage, selectedOpsCodes
             ),
