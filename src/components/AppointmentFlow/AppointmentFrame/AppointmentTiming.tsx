@@ -10,7 +10,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
-import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
+import {
+    EAppointmentTimingType,
+    IAppointmentSlotsRequest,
+    MPOptionShort
+} from "../../../store/reducers/appointment/types";
 import {
     loadAppointmentSlots,
     selectAppointment,
@@ -78,7 +82,8 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         categoriesIds,
         allCategories,
         serviceTypeOption,
-        selectedRecalls
+        selectedRecalls,
+        packagePricingType,
     ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
@@ -99,17 +104,22 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.categories.allCategories,
             state.appointmentFrame.serviceTypeOption,
             state.appointmentFrame.selectedRecalls,
+            state.appointmentFrame.packagePricingType,
         ]);
 
     useEffect(() => {
         setLoading(true);
         const date = moment();
+        const maintenancePackageOption: MPOptionShort|null = selectedPackage
+            ? {id: selectedPackage?.id, priceType: packagePricingType}
+            : null;
         const dd: IAppointmentSlotsRequest = {
             appointmentTimingType: EAppointmentTimingType.PreferredDate,
             serviceCenterId: decodeSCID(id),
             consultantId: consultant?.id ?? null,
             fromDate: date.toISOString(),
             maintenancePackageOptionId: selectedPackage?.id ?? null,
+            maintenancePackageOption,
             serviceRequestIds: collectServiceRequestIds(
                 service, subService, selectedPackage, selectedOpsCodes
             ),

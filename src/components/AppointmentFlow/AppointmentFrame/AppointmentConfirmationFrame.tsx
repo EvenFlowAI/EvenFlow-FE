@@ -162,6 +162,12 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         const make = getMake();
         const model = getModel();
         const year = getYear();
+        const maintenancePackageOption = appointmentFrame.selectedPackage
+            ? {
+                id: appointmentFrame.selectedPackage?.id,
+                priceType: appointmentFrame.packagePricingType
+            }
+            : null;
 
         const data = {
             id: appointmentFrame.id,
@@ -204,6 +210,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 : appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
             maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
+            maintenancePackageOption,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,
             serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,

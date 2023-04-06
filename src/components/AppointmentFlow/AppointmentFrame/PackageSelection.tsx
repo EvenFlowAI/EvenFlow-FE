@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {StepWrapper} from "./StepWrapper";
+import {PackagesStepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,7 +7,9 @@ import {RootState} from "../../../store/rootReducer";
 import {
     setAdditionalServicesChosen,
     setPackage,
-    setPackageIsSelected, setPackagePricingType, setSelectedPackageOptionType
+    setPackageIsSelected,
+    setPackagePricingType,
+    setSelectedPackageOptionType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
@@ -16,8 +18,10 @@ import {NoItemsLoading} from "../../UI/NoItemsLoading";
 import {
     EServiceCenterName,
     IPackage,
-    IPackageOptions, TExtendedComplimentary,
-    TExtendedService, TUpsellOfOption
+    IPackageOptions,
+    TExtendedComplimentary,
+    TExtendedService,
+    TUpsellOfOption
 } from "../../../api/types";
 import PackageSelectionMobile from "./PackageSelectionMobile";
 import ReactGA from "react-ga";
@@ -31,7 +35,6 @@ import IncludedInPackage from "./PackageSelectionParts/IncludedInPackage";
 import TotalMaintenance from "./PackageSelectionParts/TotalMaintenance";
 import Complimentary from "./PackageSelectionParts/Complimentary";
 import TotalComplimentary from "./PackageSelectionParts/TotalComplimentary";
-import Total from "./PackageSelectionParts/Total";
 import {useTranslation} from "react-i18next";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
@@ -58,7 +61,7 @@ export type TPackage = {
 const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     display: "grid",
     marginTop: 12,
-    gap: "0 20px",
+    gap: "0 16px",
     gridTemplateColumns: count === 3
         ? `2fr repeat(${count}, 1fr)`
         : count === 2
@@ -375,9 +378,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         }
     }
 
-    const handleClick = (p: IPackageOptions, pricing: EPackagePricingType) => () => {
+    const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
         dispatch(setPackage(p));
-        dispatch(setPackagePricingType(pricing));
+        dispatch(setPackagePricingType(pricing ?? EPackagePricingType.BasePrice));
         //handleNext(p);
     }
 
@@ -398,7 +401,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     return (
-        <StepWrapper>
+        <PackagesStepWrapper>
             <NoItemsLoading
                 wrapperStyles={{marginTop: 20}}
                 items={packages}
@@ -416,13 +419,13 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                     <Wrapper count={packages.length}>
                         <PackageTitles
                             packages={packages}
-                            // handleClick={handleClick}
+                            handleClick={handleClick}
                             setClasses={setClasses}/>
 
                         <IncludedInPackage
                             packages={packages}
                             services={services}
-                            // handleClick={handleClick}
+                            handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                             isRiverviewFord={isRiverviewFord}
@@ -439,7 +442,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             packages={packages}
                             services={services}
                             upsell={upsells}
-                            // handleClick={handleClick}
+                            handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                             isRiverviewFord={isRiverviewFord}/>
@@ -448,14 +451,14 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             packages={packages}
                             services={services}
                             complimentary={complimentary}
-                            // handleClick={handleClick}
+                            handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                             isRiverviewFord={isRiverviewFord}/>
 
                         {scProfile?.isShowPriceDetails ? <TotalComplimentary
                             packages={packages}
-                            // handleClick={handleClick}
+                            handleClick={handleClick}
                             setClasses={setClasses}
                             isBmWService={isBmWService}
                         /> : null}
@@ -497,6 +500,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 onNext={() => handleNext(selectedPackage)} />
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-        </StepWrapper>
+        </PackagesStepWrapper>
     );
 };

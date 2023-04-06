@@ -6,6 +6,7 @@ import {IPackageOptions} from "../../../../api/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {styled, Theme} from "@material-ui/core";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 
 type TTotalPriceRowProps = {
     packages: TPackage[];
@@ -13,6 +14,10 @@ type TTotalPriceRowProps = {
 }
 
 const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean }>(({theme, selected, showDetails}) => ({
+    display: 'grid',
+    gridTemplateColumns: '1fr 4fr',
+    justifyContent: 'center',
+    alignItems: 'center',
     border: selected ? "1px solid #202021" : '1px solid #BDBDBD',
     background: selected ? "#FFD966" : "#FFF2CC",
     color: "#202021",
@@ -20,6 +25,7 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     fontSize: 16,
     padding: '22px 16px',
     lineHeight: '20px',
+    cursor: "pointer",
     "& .prices": {
         display: 'flex',
         justifyContent: showDetails ? 'space-between' : 'center',
@@ -52,8 +58,7 @@ const useStyles = makeStyles({
 
 const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     display: "grid",
-    marginTop: 12,
-    gap: "0 20px",
+    gap: "0 16px",
     gridTemplateColumns: count === 3
         ? `2fr repeat(${count}, 1fr)`
         : count === 2
@@ -89,6 +94,7 @@ const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleCl
                 selected={selected}
                 onClick={handleClick(p, EPackagePricingType.PriceWithFee)}
                 key={p.id}>
+                <div>{selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}</div>
                 <div className="prices" style={{ fontSize: 20 }}>
                     {showDetails
                         ? <div className="previousPrice">${scProfile?.isRoundPrice

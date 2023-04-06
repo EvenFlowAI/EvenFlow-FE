@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     EAppointmentTimingType,
-    IAppointmentSlotsRequest,
+    IAppointmentSlotsRequest, MPOptionShort,
 } from "../../../store/reducers/appointment/types";
 import {
     loadAppointmentSlots,
@@ -87,6 +87,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         address,
         selectedRecalls,
         serviceTypeOption,
+        packagePricingType,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -113,6 +114,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.address,
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.serviceTypeOption,
+        state.appointmentFrame.packagePricingType,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -206,6 +208,9 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             if (id) {
                 setLoading(true);
                 try {
+                    const maintenancePackageOption: MPOptionShort|null = selectedPackage
+                        ? {id: selectedPackage?.id, priceType: packagePricingType}
+                        : null;
                     const dd: IAppointmentSlotsRequest = {
                         appointmentTimingType: serviceTypeOption?.type === EServiceType.PikUpDropOff || !selectedTimingType
                             ? EAppointmentTimingType.FirstAvailable
@@ -214,6 +219,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         consultantId: consultant?.id ?? null,
                         fromDate: selectedTime ? moment(selectedTime).toISOString() : moment.utc().startOf("day"),
                         maintenancePackageOptionId: selectedPackage?.id ?? null,
+                        maintenancePackageOption,
                         serviceRequestIds: collectServiceRequestIds(
                             service, subService, selectedPackage, selectedOpsCodes
                         ),
@@ -257,7 +263,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType,
-        selectedVehicle, customerData, service, vehicle,
+        selectedVehicle, customerData, service, vehicle, packagePricingType,
         subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
     ]);
 

@@ -5,18 +5,19 @@ import {IPackageOptions} from "../../../../api/types";
 import {TPackage, TService} from "../PackageSelection";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "../ServiceCard";
+import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 type TIncludedInPackageProps = {
     packages: TPackage[];
     services: TService[];
     setClasses: (id: number, cls: string) => string;
-    // handleClick: (p: IPackageOptions) => () => void;
+    handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
     isRiverviewFord: boolean;
     isBmWService: boolean;
 }
 
 const IncludedInPackage: React.FC<TIncludedInPackageProps> =
-    ({packages, services, setClasses, isRiverviewFord, isBmWService}) => {
+    ({packages, services, setClasses, isRiverviewFord, isBmWService, handleClick}) => {
     const {t} = useTranslation();
     return <React.Fragment>
         <div className="gray subtitle">{t("Included in package")}</div>
@@ -41,7 +42,7 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
                         const wMoreClsx = p.moreIdx?.includes(idx) ? `${clsx} lgray` : clsx;
                         return <div
                             key={p.id}
-                            // onClick={handleClick(p)}
+                            onClick={handleClick(p)}
                             className={setClasses(p.id, wMoreClsx)}>
                             {s.packages.includes(p.id) ?  isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
                         </div>;

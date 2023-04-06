@@ -126,6 +126,6 @@ export type TAncillaryPriceByZip = {
 }
 
 export enum EPackagePricingType {
-    SimplePrice,
+    BasePrice,
     PriceWithFee
 }

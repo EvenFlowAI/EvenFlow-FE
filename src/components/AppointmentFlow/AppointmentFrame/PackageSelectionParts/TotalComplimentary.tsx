@@ -4,15 +4,16 @@ import {IPackageOptions} from "../../../../api/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
+import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 type TTotalComplimentaryProps = {
     packages: TPackage[];
     setClasses: (id: number, cls: string) => string;
-    // handleClick: (p: IPackageOptions) => () => void;
+    handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
     isBmWService: boolean;
 }
 
-const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, packages, setClasses}) => {
+const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, packages, setClasses, handleClick}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 
@@ -22,7 +23,7 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, p
         </div>
         {packages.map(p => {
             return <div
-                // onClick={handleClick(p)}
+                onClick={handleClick(p)}
                 className={setClasses(p.id, "totalComplimentary last")}
                 key={p.id}>
                     <span style={{ fontSize: 20 }}>
