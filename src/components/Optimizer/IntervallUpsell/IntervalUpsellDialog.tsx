@@ -72,6 +72,8 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
                     await dispatch(updateUpsellServiceRequest(data, payload.id, selectedSC.id))
                     showMessage('Interval Upsell Request Updated');
                     setLoading(false);
+                    setForm(initialForm);
+                    props.onClose()
                 }
                 catch {
                     setLoading(false);
