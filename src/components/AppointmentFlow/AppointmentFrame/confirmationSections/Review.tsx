@@ -24,11 +24,13 @@ export const Review = () => {
         consultant,
         transportation,
         serviceType,
+        consultants,
         config
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
         state.appointmentFrame.serviceType,
+        state.appointmentFrame.consultants,
         state.bookingFlowConfig.config,
     ]);
     const currentConfig = useMemo(() => {
@@ -53,7 +55,7 @@ export const Review = () => {
             <Wrapper>
                 <li>Transportation needs: {transportation?.description}
                 </li>
-                {currentConfig?.advisorSelection
+                {currentConfig?.advisorSelection && consultants.length
                     ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}</li>
                     : null
                 }

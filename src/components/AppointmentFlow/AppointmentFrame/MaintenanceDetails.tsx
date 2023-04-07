@@ -79,7 +79,7 @@ type TMaintenanceDetailsProps = {
 }
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown, consultants}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
@@ -280,11 +280,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (isValid()) {
             onNext(service?.type === EServiceCategoryType.MaintenancePackage
                 ? 'packageSelection'
-                : !currentConfig?.advisorSelection
-                    ? currentConfig?.appointmentSelection
+                : currentConfig?.advisorSelection && consultants.length
+                    ? 'consultantSelection'
+                    : currentConfig?.appointmentSelection
                         ? 'appointmentTiming'
-                        : "appointmentSelection"
-                    : 'consultantSelection');
+                        : "appointmentSelection");
         }
     }
 

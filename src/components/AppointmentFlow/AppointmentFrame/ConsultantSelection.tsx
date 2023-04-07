@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
 import {styled, Theme} from "@material-ui/core";
 import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/advisor_black.svg';
 import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey.svg';
-import {useParams} from "react-router-dom";
 import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
-    loadConsultants, selectCategoriesIds,
+    selectCategoriesIds,
     selectService, selectSubService,
     setAdvisor,
     setPackage, setPackageIsSelected, setSelectedPackageOptionType
@@ -104,18 +103,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {advisor: selectedConsultant, consultants, selectedPackage, service, subService, categoriesIds}= useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
-    const {id} = useParams();
     const dispatch = useDispatch();
-
-    const getData = async (id: string) => {
-        setLoading(true);
-        await dispatch(loadConsultants(id));
-        await setLoading(false);
-    }
-
-    useEffect(() => {
-        getData(id).then()
-    }, [id]);
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(selectAppointment(null));

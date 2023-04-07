@@ -2,12 +2,18 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TScreen} from "../../Layout/types";
 import {ProgressStepper} from "../ProgressStepper";
-import {setAdditionalServicesChosen, setSideBarSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    loadConsultants,
+    setAdditionalServicesChosen,
+    setSideBarSteps
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {getCurrentMenu, getStepsMap, getStepsScreen} from "./utils";
 import {Loading} from "../../UI/Loading";
+import {useParams} from "react-router-dom";
+import {decodeSCID} from "../../../utils/utils";
 
 const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -64,17 +70,18 @@ type TProps = {
 }
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const {serviceType, sideBarSteps} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, sideBarSteps, consultants} = useSelector((state: RootState) => state.appointmentFrame);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const {t} = useTranslation();
+    const {id} = useParams();
 
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType]);
-    const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
+    const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
     const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
     const currentMenu = useMemo(() => getCurrentMenu(serviceType, advisorSelection, transportationNeeds),
@@ -85,6 +92,10 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     useEffect(() => {
         dispatch(setSideBarSteps(Array.from(new Set([...sideBarSteps, screen]))));
     }, [screen, dispatch, setSideBarSteps])
+
+    useEffect(() => {
+        dispatch(loadConsultants(decodeSCID(id)));
+    }, [id])
 
     const getStepsState = useCallback((idx: number): boolean => {
         return getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)[screen] === idx

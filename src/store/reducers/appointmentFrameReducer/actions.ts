@@ -96,12 +96,12 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
-export const loadConsultants = (id: string): AppThunk => async dispatch => {
+export const loadConsultants = (id: number): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(
         Api.endpoints.ServiceConsultants.GetByQuery,
         {
             data: {
-                serviceCenterId: decodeSCID(id)
+                serviceCenterId: decodeSCID(id.toString())
             }
         })
         .then(({data: {result}}) => {

@@ -285,7 +285,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         packageIsSelected,
         service,
         subService,
-        packageOptionType
+        packageOptionType,
+        consultants
     } = useSelector((state: RootState) => state.appointmentFrame);
 
     const theme = useTheme();
@@ -351,11 +352,11 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const handleNextScreen = (): void => {
-        onNext(!currentConfig?.advisorSelection
-            ? currentConfig?.appointmentSelection
+        onNext(currentConfig?.advisorSelection && consultants.length
+            ? 'consultantSelection'
+            : currentConfig?.appointmentSelection
                 ? 'appointmentTiming'
-                : "appointmentSelection"
-            : 'consultantSelection')
+                : "appointmentSelection")
     }
 
     const askAdditionalServices = (): void => {
