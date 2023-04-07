@@ -11,6 +11,7 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 type TTotalPriceRowProps = {
     packages: TPackage[];
     handleClick: (p: IPackageOptions, pricing: EPackagePricingType) => () => void;
+    title: string;
 }
 
 const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number }>(({
@@ -85,11 +86,11 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     },
 }))
 
-const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick}) => {
+const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, title}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {selectedPackage, packagePricingType} = useSelector((state: RootState) => state.appointmentFrame);
     const classes = useStyles();
-    const title = packages[0].priceWithFeeTitle;
+
 
     return <Wrapper count={packages.length}>
         <div className={classes.priceText}>

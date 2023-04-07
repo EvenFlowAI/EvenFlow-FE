@@ -30,7 +30,7 @@ import {
     setPickUpDropOffAvailability,
     setRecallsAreShown,
     setReminders,
-    setSelectedPackageOptionType,
+    setSelectedPackageOptionType, setSelectedPackagePriceTitles,
     setSelectedRecalls,
     setServiceType,
     setServiceTypeOption,
@@ -77,6 +77,7 @@ import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
+import {TPackagePrice} from "../packages/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -127,6 +128,7 @@ type TState = {
     hoursOfOperations: IHOODataForm[];
     serviceTypeOption: IFirstScreenOption|null;
     packagePricingType: EPackagePricingType | null;
+    packagePriceTitles: TPackagePrice[];
 }
 const initialState: TState = {
     service: null,
@@ -180,6 +182,7 @@ const initialState: TState = {
     hoursOfOperations: [],
     serviceTypeOption: null,
     packagePricingType: null,
+    packagePriceTitles: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -356,5 +359,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
         return {...state, packagePricingType: payload}
+    })
+    .addCase(setSelectedPackagePriceTitles, (state, {payload}) => {
+        return {...state, packagePriceTitles: payload}
     })
 )
