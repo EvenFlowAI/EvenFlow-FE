@@ -20,10 +20,12 @@ export const getMaintenanceDescription = (
 ) => {
     const services: string[] = [];
 
-    if (packagePriceTitles.length && selectedPackage) {
+    if (selectedPackage) {
         let name = `${selectedPackage.name} ${i18n.t("package")}`;
-        const price = packagePriceTitles.find(item => item.type === packagePricingType);
-        if (price) name = name + ` (${price.title})`;
+        if (packagePriceTitles?.length) {
+            const price = packagePriceTitles.find(item => item.type === packagePricingType);
+            if (price) name = name + ` (${price.title})`;
+        }
         services.push(name)
     }
     if (selectedSR?.length) {
