@@ -260,17 +260,15 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
             setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
             setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
             setApplyBusinessRules(currentPackage.isApplyBusinessRules);
+            setUpsellCodes(() => {
+                const selectedServices = currentPackage.intervalUpsells.map(item => item.id);
+                return intervalUpsellList.filter(item => selectedServices.includes(item.id));
+            });
             if (allAssignedList) {
                 setOpsCodes(() => {
                     const selectedServices = currentPackage.serviceRequests.map(item => item.id);
                     return allAssignedList.filter(item => selectedServices.includes(item.id));
                 })
-            }
-            if (intervalUpsellList) {
-                setUpsellCodes(() => {
-                    const selectedServices = currentPackage.intervalUpsells.map(item => item.id);
-                    return intervalUpsellList.filter(item => selectedServices.includes(item.id));
-                });
             }
             if (currentPackage.businessRules) {
                 setSelectedMakes(currentPackage.businessRules.vehicleMakes);
@@ -303,6 +301,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         setApplyBusinessRules(false);
         setSelectedMileages([]);
         setSelectedEngineTypes([]);
+        setUpsellCodes([]);
         props.onClose();
     }, [initialValues, props.onClose])
 
@@ -620,8 +619,7 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                 handleSelect={handleUpsellCodeSelect}
                 open={isUpsellOpen}
                 onClose={onUpsellClose}
-                selectedCodes={upsellCodes}
-                setSelectedCodes={setUpsellCodes}/>
+                selectedCodes={upsellCodes}/>
             <AddOpsCode
                 handleSelect={handleOpsCodeSelect}
                 open={isAddOpsCodeOpen}
