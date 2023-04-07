@@ -200,6 +200,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setSelectedRecalls([]))
     dispatch(setAdditionalServicesChosen(false));
     dispatch(setFrameDescription(''));
+    dispatch(setPackagePricingType(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
