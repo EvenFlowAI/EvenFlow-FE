@@ -5,7 +5,7 @@ import {Api} from "../../../config/requests";
 import {
     IComplimentaryServiceByQuery,
     INewPackage,
-    IUpdatedPackage, TOrderIndex, TPriceTitles
+    IUpdatedPackage, TOrderIndex, TPackagePrice
 } from "./types";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
@@ -247,7 +247,7 @@ export const updateManualOverride = (id: number,  isManualOverridePrice: boolean
         }).finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updatePriceTitles = (id: number, data: TPriceTitles): AppThunk => dispatch => {
+export const updatePriceTitles = (id: number, data: TPackagePrice): AppThunk => dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.UpdatePriceTitles, {urlParams: {id}, data})
         .then(result => {

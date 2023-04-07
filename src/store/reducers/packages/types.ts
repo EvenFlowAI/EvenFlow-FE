@@ -1,5 +1,6 @@
 import {EMaintenanceOptionType, IBusinessRule} from "../../../api/types";
 import {EPricingDisplayType} from "../pricingSettings/types";
+import {EPackagePricingType} from "../appointmentFrameReducer/types";
 
 export type TAssignedRequest = {
     type: string | number;
@@ -62,6 +63,11 @@ export interface IPackageOptionShort {
 export type TOrderIndex = {
     id: number;
     orderIndex: number;
+}
+
+export type TPackagePrice = {
+    title: string;
+    type: EPackagePricingType;
 }
 
 export type TPriceTitles = {

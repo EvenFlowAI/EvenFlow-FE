@@ -13,6 +13,7 @@ type TTotalPriceRowProps = {
     packages: TPackage[];
     handleClick: (p: IPackageOptions, pricing: EPackagePricingType) => () => void;
     isUpsells?: boolean;
+    title: string;
 }
 
 const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number }>(({
@@ -87,18 +88,16 @@ const useStyles = makeStyles({
     }
 })
 
-const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, isUpsells}) => {
+const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, isUpsells, title}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {selectedPackage, packagePricingType} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const classes = useStyles();
     const defaultString = `${t("Total")} (${t("excluding taxes & fees")})`;
-    const title = packages[0].priceTitle;
 
-    // todo styles for excluding taxes text above
     return <Wrapper count={packages.length}>
         <div className={classes.priceText}>
-            {title && isUpsells ? title : defaultString}:
+            {title?.length && isUpsells ? title : defaultString}:
         </div>
         {packages.map((p) => {
             const complimentaryPrice = p.marketPriceComplimentaryServices ?? 0;

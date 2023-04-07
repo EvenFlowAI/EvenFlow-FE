@@ -9,7 +9,7 @@ import {
     setPackage,
     setPackageIsSelected,
     setPackagePricingType,
-    setSelectedPackageOptionType
+    setSelectedPackageOptionType, setSelectedPackagePriceTitles
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
@@ -321,6 +321,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         )
             .then(({data}) => {
                 setPackages(data);
+                if (data.length) dispatch(setSelectedPackagePriceTitles((data[0].priceTitles)))
             })
             .catch(() => {
                 setPackages([]);
@@ -417,6 +418,15 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         handleNextScreen();
     }
 
+    const getTitle = (type: EPackagePricingType) => {
+        let title = '';
+        if (loadedPackages[0]) {
+            const price = loadedPackages[0].priceTitles?.find(el => el.type === type);
+            if (price) title = price.title;
+        }
+        return title;
+    }
+
     return (
         <PackagesStepWrapper>
             <NoItemsLoading
@@ -489,19 +499,21 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             {/*/>*/}
 
                         </Wrapper>
-                        {packages[0].priceTitle && Boolean(upsells.length)
+                        {loadedPackages[0].priceTitles?.length && Boolean(upsells.length)
                             ? <FeesText count={packages.length}>
                                 <div>{t("Total")}<span className="info"> ({t("Excluding taxes & fees")}):</span></div>
                             </FeesText>
                             : null}
                         <TotalPriceRow
                             packages={packages}
+                            title={getTitle(EPackagePricingType.BasePrice)}
                             isUpsells={Boolean(upsells.length)}
                             handleClick={handleClick}
                         />
                         {upsells.length > 0
                             ? <TotalPriceWithFeeRow
                                 packages={packages}
+                                title={getTitle(EPackagePricingType.PriceWithFee)}
                                 handleClick={handleClick}/>
                             : null}
                         <Info>

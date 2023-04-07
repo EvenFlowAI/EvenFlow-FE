@@ -5,10 +5,12 @@ import {IMaintenanceItem, IRecallByVin} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 import {EPackagePricingType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
 import i18n from "../../../i18n";
+import {TPackagePrice} from "../../../store/reducers/packages/types";
 
 export const getMaintenanceDescription = (
     srList: ISR[],
     selectedRecalls: IRecallByVin[],
+    packagePriceTitles: TPackagePrice[],
     selectedSR?: number[],
     selectedPackage?: IPackageOptions|null,
     allCategories?: ICategory[],
@@ -20,11 +22,9 @@ export const getMaintenanceDescription = (
 
     if (selectedPackage) {
         let name = `${selectedPackage.name} ${i18n.t("package")}`;
-        if (packagePricingType === EPackagePricingType.PriceWithFee) {
-            name = name + ` (${selectedPackage.priceWithFeeTitle})`
-        }
-        if (packagePricingType === EPackagePricingType.BasePrice) {
-            name = name + ` (${selectedPackage.priceTitle})`
+        if (packagePriceTitles?.length) {
+            const price = packagePriceTitles.find(item => item.type === packagePricingType);
+            if (price) name = name + ` (${price.title})`;
         }
         services.push(name)
     }
