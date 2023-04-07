@@ -27,6 +27,7 @@ const initialForm: TForm = {
 const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isLoading, setLoading] = useState<boolean>(false);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
@@ -52,10 +53,19 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
     }, [payload, props.open])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
         setForm({...form, [e.target.name]: e.target.value});
     }
 
-    const handleSave = async () => {
+    const onSuccess = () => {
+        showMessage('Interval Upsell Request Updated');
+        setLoading(false);
+        setForm(initialForm);
+        props.onClose()
+    }
+
+    const handleSave = () => {
+        setFormIsChecked(true);
         if (!payload) {
             showError("Data is not loaded");
         } else {
@@ -69,11 +79,7 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
                         partsUnitCost: form.partsUnitCost ? Number(form.partsUnitCost) : null,
                         numberOfParts: form.numberOfParts ? Number(form.numberOfParts) : null,
                     }
-                    await dispatch(updateUpsellServiceRequest(data, payload.id, selectedSC.id))
-                    showMessage('Interval Upsell Request Updated');
-                    setLoading(false);
-                    setForm(initialForm);
-                    props.onClose()
+                    dispatch(updateUpsellServiceRequest(data, payload.id, selectedSC.id, showError, onSuccess))
                 }
                 catch {
                     setLoading(false);
@@ -115,6 +121,7 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
                         autoComplete="duration-number duration"
                         value={form.durationInHours}
                         placeholder={payload ? String(payload.durationInHours) : ""}
+                        error={formIsChecked && +form.durationInHours < 0}
                         onChange={handleChange}
                         type="number"
                         inputProps={{min: .5, step: .5}}
@@ -129,6 +136,7 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
                         id="invoiceAmount"
                         autoComplete="invoice-amount"
                         value={form.invoiceAmount}
+                        error={formIsChecked && +form.invoiceAmount < 0}
                         placeholder={payload ? String(payload.invoiceAmount) : ""}
                         onChange={handleChange}
                         type="number"
@@ -144,6 +152,7 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
                         id="partsUnitCost"
                         autoComplete="parts-unit-cost"
                         value={form.partsUnitCost}
+                        error={formIsChecked && +form.partsUnitCost < 0}
                         placeholder={payload?.partsUnitCost?.toString() || ""}
                         onChange={handleChange}
                         type="number"
@@ -158,6 +167,7 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
                         id="numberOfParts"
                         autoComplete="number-of-parts"
                         value={form.numberOfParts}
+                        error={formIsChecked && +form.numberOfParts < 0}
                         placeholder={payload?.numberOfParts?.toString() || ""}
                         onChange={handleChange}
                         type="number"

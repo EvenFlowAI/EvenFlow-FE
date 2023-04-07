@@ -282,14 +282,17 @@ export const loadUpsellServiceRequests = (serviceCenterId: number): AppThunk =>
     }
 
 export const updateUpsellServiceRequest = (
-    data: IUpsellServiceRequestUpdate, id: number, serviceCenterId?: number,
-): AppThunk =>
-    async dispatch => {
-        await Api.call(Api.endpoints.IntervalUpsell.EditUpsell, {data, urlParams: {id}});
-        if (serviceCenterId) {
-            dispatch(loadUpsellServiceRequests(serviceCenterId));
-        }
-    }
+    data: IUpsellServiceRequestUpdate, id: number, serviceCenterId: number, onError: (err: string) => void, onSuccess: () => void
+): AppThunk => dispatch => {
+    Api.call(Api.endpoints.IntervalUpsell.EditUpsell, {data, urlParams: {id}})
+        .then(result => {
+            if (result) {
+                dispatch(loadUpsellServiceRequests(serviceCenterId));
+                onSuccess();
+            }
+        })
+        .catch(err => onError(err))
+}
 
 export const addUpsellServiceRequests = (
     serviceRequestIds: number[],
