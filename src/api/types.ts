@@ -4,7 +4,7 @@ import {
     EAppointmentTimingType,
     EReminderType, ETransportation,
     IPersonalInformation,
-    IVehicleData
+    IVehicleData, IVehicleForSlots, MPOptionShort, TRecallForRequest
 } from "../store/reducers/appointment/types";
 import {EOfferType, IOffer} from "../store/reducers/offers/types";
 import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
@@ -299,6 +299,22 @@ export interface IServiceConsultant {
     dmsName: string;
     position: string;
     iconPath: string;
+}
+
+export interface IConsultantsRequestData {
+    serviceCenterId: number;
+    pageIndex: 0;
+    pageSize: 0;
+    searchTerm: string;
+    serviceRequestIds: number[];
+    serviceCategoryIds: number[];
+    maintenancePackageOption: MPOptionShort|null;
+    recalls: TRecallForRequest[];
+    serviceTypeOptionId: number|null;
+    vehicle: IVehicleForSlots;
+    valueServiceOfferIds?: number[];
+    address?: string;
+    zipCode?: string;
 }
 
 export interface ICustomer {

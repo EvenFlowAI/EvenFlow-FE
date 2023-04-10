@@ -116,8 +116,8 @@ const PricesRow: React.FC<{packageData: IPackageById|null}> = ({packageData}) =>
             </div>
             <div className={classes.wrapper}>
                 <div className={classes.rightPart}>
-                    <TitleEditable text={basePrice?.title ?? 'Total price Title'} onSave={onSavePrice}/>
-                    <TitleEditable text={withFeePrice?.title ?? 'Total price with Upsell Title'} onSave={onSavePriceWithFee}/>
+                    <TitleEditable text={basePrice?.title} onSave={onSavePrice}/>
+                    <TitleEditable text={withFeePrice?.title} onSave={onSavePriceWithFee}/>
                 </div>
                 <div className={classes.leftPart}>
                     <PriceItem value={goodCorePrice}/>

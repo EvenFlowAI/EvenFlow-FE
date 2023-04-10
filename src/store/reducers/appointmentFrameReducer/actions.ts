@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    IAppointmentByQuery,
+    IAppointmentByQuery, IConsultantsRequestData,
     ICustomer,
     ILoadedVehicle, IPackage,
     IPackageOptions,
@@ -100,14 +100,9 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
-export const loadConsultants = (id: number, onEmptyList: () => void): AppThunk => async dispatch => {
+export const loadConsultants = (data: IConsultantsRequestData, onEmptyList: () => void): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-        Api.endpoints.ServiceConsultants.GetByQuery,
-        {
-            data: {
-                serviceCenterId: decodeSCID(id.toString())
-            }
-        })
+        Api.endpoints.ServiceConsultants.GetByQuery, {data})
         .then(({data: {result}}) => {
             dispatch(setConsultants(result));
             if (!result.length) onEmptyList();
