@@ -58,19 +58,19 @@ const ConsultantWrapper = styled(
     transition: "all .2s",
     cursor: "pointer",
     "& .icon-wrapper": {
-        width: 50,
+        width: 84,
         display: "flex",
         alignItems: "center",
         justifyContent: 'center',
-        height: 50,
+        height: 84,
         borderRadius: "50%",
         color: active ? "#FFFFFF" : theme.palette.text.primary,
     }
 }));
 
 const Avatar = styled('div')<Theme, {src?: string, contain?: boolean}>({
-    width: 36,
-    height: 36,
+    width: 84,
+    height: 84,
     borderRadius: "50%",
     backgroundColor: "#FFFFFF",
     backgroundSize: ({contain}) => contain ? "contain" : "cover",
@@ -90,10 +90,10 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
     const {t} = useTranslation();
     return <ConsultantWrapper onClick={onClick} active={active}>
         {blank
-            ? <div className={"icon-wrapper"}><AnyConsultantIcon /></div>
+            ? <div className={"icon-wrapper"}><AnyConsultantIcon width={84} height={84}/></div>
             : advisor?.iconPath
                 ? <Avatar src={advisor?.iconPath}/>
-                : <ConsultantIcon/>
+                : <ConsultantIcon width={84} height={84}/>
         }
         <div>
             {blank ? t("Any available advisor") : advisor?.name ?? "-"}
