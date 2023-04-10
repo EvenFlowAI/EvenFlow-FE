@@ -119,6 +119,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         serviceTypeOption,
         address,
         zipCode,
+        valueService
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -156,7 +157,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                 serviceRequestIds,
                 recalls: mapRecallsForRequest(selectedRecalls),
                 serviceCategoryIds: getCategories(),
-                valueServiceOfferIds: [],
                 maintenancePackageOption,
                 serviceTypeOptionId: serviceTypeOption?.id ??  null,
                 searchTerm: "",
@@ -170,6 +170,9 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                 },
                 address,
                 zipCode,
+            }
+            if (valueService?.selectedService) {
+                data.valueServiceOfferIds = [valueService.selectedService.id];
             }
             dispatch(loadConsultants(data, onNext))
         }
