@@ -42,7 +42,7 @@ const App = () => {
             setValueServicePreviousScreen("location");
         }
         const currentConfig = config.find(item => item.serviceType && serviceType && item.serviceType.toString() === serviceType.toString());
-        if ((!currentConfig?.advisorSelection && !consultants.length)
+        if ((!currentConfig?.advisorSelection)
             || serviceType === EServiceType.MobileService) {
             setValueServiceNextScreen("appointmentTiming");
         }

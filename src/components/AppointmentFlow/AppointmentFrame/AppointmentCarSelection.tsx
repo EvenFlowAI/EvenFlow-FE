@@ -96,7 +96,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const getNextScreen = useCallback((): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         if (valueService?.selectedService) {
-            nextScreen = currentConfig?.advisorSelection && consultants.length
+            nextScreen = currentConfig?.advisorSelection
                 ? 'consultantSelection'
                 : 'appointmentTiming'
         }

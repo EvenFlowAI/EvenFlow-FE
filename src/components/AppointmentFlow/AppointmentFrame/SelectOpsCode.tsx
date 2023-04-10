@@ -219,7 +219,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
             handleSetScreen("maintenanceDetails");
         } else {
             const nextScreen: TScreen = config.find(item => item.serviceType.toString() === serviceType.toString())?.advisorSelection
-            && consultants.length
                 ? "consultantSelection"
                 : "appointmentTiming";
             handleSetScreen(nextScreen);

@@ -63,7 +63,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     const screenToReturn = useMemo(() => subService ? 'serviceSelection' : 'serviceNeeds', [subService])
 
     const getScreenForNew = (): TScreen => {
-        if (currentConfig?.advisorSelection && consultants.length) {
+        if (currentConfig?.advisorSelection) {
             return 'consultantSelection';
         } else {
             return currentConfig?.appointmentSelection

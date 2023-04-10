@@ -55,7 +55,7 @@ export const Review = () => {
             <Wrapper>
                 <li>Transportation needs: {transportation?.description}
                 </li>
-                {currentConfig?.advisorSelection && consultants.length
+                {currentConfig?.advisorSelection
                     ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}</li>
                     : null
                 }

@@ -294,7 +294,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleBack = useCallback((): void => {
         const nextScreen = currentConfig?.appointmentSelection
             ? 'appointmentTiming'
-            : currentConfig?.advisorSelection && consultants.length
+            : currentConfig?.advisorSelection
                 ? 'consultantSelection'
                 : "serviceNeeds"
         handleGABack();

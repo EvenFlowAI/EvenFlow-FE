@@ -280,7 +280,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (isValid()) {
             onNext(service?.type === EServiceCategoryType.MaintenancePackage
                 ? 'packageSelection'
-                : currentConfig?.advisorSelection && consultants.length
+                : currentConfig?.advisorSelection
                     ? 'consultantSelection'
                     : currentConfig?.appointmentSelection
                         ? 'appointmentTiming'

@@ -81,7 +81,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType]);
-    const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
+    const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
     const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
     const currentMenu = useMemo(() => getCurrentMenu(serviceType, advisorSelection, transportationNeeds),

@@ -325,7 +325,7 @@ export const AppointmentFrameLayout = () => {
     const getNextScreen = (): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         if (valueService?.selectedService) {
-            nextScreen = currentConfig?.advisorSelection && consultants.length
+            nextScreen = currentConfig?.advisorSelection
                 ? 'consultantSelection'
                 : 'appointmentTiming'
         }
@@ -454,7 +454,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen(currentConfig?.appointmentSelection ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen(currentConfig?.advisorSelection && consultants.length ? 'consultantSelection' : 'serviceNeeds')}
+                onBack={handleChangeScreen(currentConfig?.advisorSelection ? 'consultantSelection' : 'serviceNeeds')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection

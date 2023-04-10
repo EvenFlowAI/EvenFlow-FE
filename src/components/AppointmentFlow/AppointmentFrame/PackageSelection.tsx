@@ -352,7 +352,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const handleNextScreen = (): void => {
-        onNext(currentConfig?.advisorSelection && consultants.length
+        onNext(currentConfig?.advisorSelection
             ? 'consultantSelection'
             : currentConfig?.appointmentSelection
                 ? 'appointmentTiming'
