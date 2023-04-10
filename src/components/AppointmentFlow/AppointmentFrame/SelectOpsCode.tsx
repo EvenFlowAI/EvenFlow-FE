@@ -16,7 +16,7 @@ import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {checkSelectedCar, getOfferString} from "./utils";
+import {checkSelectedCar} from "./utils";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
@@ -119,6 +119,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         categoriesIds,
         serviceType,
         config,
+        consultants
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
@@ -133,6 +134,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         state.appointmentFrame.categoriesIds,
         state.appointmentFrame.serviceType,
         state.bookingFlowConfig.config,
+        state.appointmentFrame.consultants,
     ]);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));

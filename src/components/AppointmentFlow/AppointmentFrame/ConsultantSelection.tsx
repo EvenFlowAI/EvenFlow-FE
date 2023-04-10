@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
 import {styled, Theme} from "@material-ui/core";
 import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/advisor_black.svg';
 import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey.svg';
-import {useParams} from "react-router-dom";
 import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
-    loadConsultants, selectCategoriesIds,
+    loadConsultants,
+    selectCategoriesIds,
     selectService, selectSubService,
     setAdvisor,
-    setPackage, setPackageIsSelected, setSelectedPackageOptionType
+    setPackage, setPackageIsSelected, setSelectedPackageOptionType, setSideBarActualSteps, setSideBarMenu
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -24,6 +24,8 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
+import {getCurrentMenu, getStepsMap} from "./utils";
+import {useParams} from "react-router-dom";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -101,21 +103,39 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
 
 export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const {advisor: selectedConsultant, consultants, selectedPackage, service, subService, categoriesIds}= useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        advisor: selectedConsultant,
+        consultants,
+        selectedPackage,
+        service,
+        subService,
+        categoriesIds,
+        serviceType
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
-    const {id} = useParams();
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
+    const {id} = useParams();
 
-    const getData = async (id: string) => {
-        setLoading(true);
-        await dispatch(loadConsultants(id));
-        await setLoading(false);
-    }
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType]);
+    const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
+    const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
+    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
 
     useEffect(() => {
-        getData(id).then()
-    }, [id]);
+        dispatch(loadConsultants(id, onNext))
+    }, [id])
+
+    useEffect(() => {
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, transportationNeeds, getCurrentMenu])
+
+    useEffect(() => {
+        dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(selectAppointment(null));
@@ -184,7 +204,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     return (<StepWrapper>
         <ConsultantsWrapper>
-            {loading ? <Loading /> : <React.Fragment>
+            {loading || !advisorSelection ? <Loading /> : <React.Fragment>
                 <ConsultantCard
                     blank
                     onClick={handleSelectConsultant(null)}

@@ -71,6 +71,8 @@ export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesMode
 export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
 export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoading');
 export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
+export const setSideBarMenu = createAction<string[]>('fAppointment/SetSideBarMenu');
+export const setSideBarActualSteps = createAction<{[K in TScreen]: number}>('fAppointment/SetSideBarMenuActualSteps');
 export const setMobileServiceAvailability = createAction<boolean>('fAppointment/SetMobileServiceState');
 export const setPickUpDropOffAvailability = createAction<boolean>('fAppointment/SetPickUpDropOffAvailability');
 export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability');
@@ -98,16 +100,17 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
-export const loadConsultants = (id: string): AppThunk => async dispatch => {
+export const loadConsultants = (id: number, onEmptyList: () => void): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(
         Api.endpoints.ServiceConsultants.GetByQuery,
         {
             data: {
-                serviceCenterId: decodeSCID(id)
+                serviceCenterId: decodeSCID(id.toString())
             }
         })
         .then(({data: {result}}) => {
             dispatch(setConsultants(result));
+            if (!result.length) onEmptyList();
         })
         .catch(err => console.log(err))
 }

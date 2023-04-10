@@ -279,14 +279,14 @@ export const SelectedAppointment = () => {
                         </div> }
                     </li>
                     <li key="advisor">
-                        {currentConfig?.advisorSelection
+                        {currentConfig?.advisorSelection && consultants.length
                             ? <div className={classes.selectWrapper}>
                                 <div className={classes.selectWrapper}>
                                     {t("Advisor")}: {isSm ? <br/> : null}
                                     <Select
                                         value={advisor?.id || "Any"}
                                         className={classes.select}
-                                        disabled={currentConfig && !currentConfig?.advisorSelection}
+                                        disabled={currentConfig && !currentConfig?.advisorSelection || !consultants.length}
                                         onChange={handleConsultantChange}>
                                         {consultants
                                             .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
