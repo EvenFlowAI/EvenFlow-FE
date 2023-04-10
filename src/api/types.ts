@@ -12,9 +12,10 @@ import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EJobType} from "../store/reducers/pods/types";
-import {EServiceType} from "../store/reducers/appointmentFrameReducer/types";
+import {EPackagePricingType, EServiceType} from "../store/reducers/appointmentFrameReducer/types";
 import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
+import {TPackagePrice} from "../store/reducers/packages/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -211,7 +212,7 @@ export interface IBaseAppointment {
     customerId: string;
     maintenancePackageOptionId: number | null;
     maintenancePackageOption: IPackageOptions | null;
-    // maintenancePackageOption: IMaintenancePackageOption | null;
+    //maintenancePackageOption: IMaintenancePackageOption | null;
     driver: IDriverInfo;
     duration: number;
     transactionValue: number;
@@ -375,21 +376,17 @@ export interface IPackageOptions {
     marketPriceServiceRequests: number;
     marketPriceComplimentaryServices: number;
     marketPriceIntervalUpsells : number;
-    priceTitle?: string;
-    priceWithFeeTitle?: string;
     intervalUpsells: TUpsellOfOption[];
     marketPriceIntervalUpsell: number;
     maintenancePackageName: string;
+    priceType?: EPackagePricingType;
 }
 
 export interface IPackage {
     isApplyPricingOptimization?: boolean;
     maintenancePackageName?: string;
     options: IPackageOptions[];
-}
-
-export interface IPackage {
-    options: IPackageOptions[];
+    priceTitles: TPackagePrice[];
 }
 
 export interface IPackageAppointments extends IPackage{
@@ -462,10 +459,9 @@ export interface IPackageById {
     intervalUpsells: TIntervalUpsellForPackage[];
     businessRules: IBusinessRule;
     engineTypes: TEngineType[];
-    priceTitle?: string;
-    priceWithFeeTitle?: string;
     isShowSuggestedPrice?: boolean;
     isManualOverridePrice?: boolean;
+    priceTitles: TPackagePrice[];
 }
 
 export type TOptionServiceRequest = {

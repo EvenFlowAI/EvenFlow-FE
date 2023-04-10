@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EMaintenanceOptionType, IPackageById} from "../../../../api/types";
 import {updatePriceTitles} from "../../../../store/reducers/packages/actions";
+import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 const useStyles = makeStyles(() => ({
     topLineWrapper: {
@@ -46,6 +47,11 @@ const PricesRow: React.FC<{packageData: IPackageById|null}> = ({packageData}) =>
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
     const dispatch = useDispatch();
+
+    const basePrice = useMemo(() => currentPackage?.priceTitles?.find(item => item.type === EPackagePricingType.BasePrice),
+        [currentPackage])
+    const withFeePrice = useMemo(() => currentPackage?.priceTitles?.find(item => item.type === EPackagePricingType.PriceWithFee),
+        [currentPackage])
 
     const [goodOption, betterOption, bestOption] = useMemo(() => {
         const optOne = packageData?.options?.find(el => el.type === EMaintenanceOptionType.Base)
@@ -90,15 +96,15 @@ const PricesRow: React.FC<{packageData: IPackageById|null}> = ({packageData}) =>
         return price;
     }, [bestOption, bestCorePrice])
 
-    const onSavePrice = (priceTitle: string) => {
-        if (currentPackage && priceTitle.length) {
-            dispatch(updatePriceTitles(currentPackage.id, {priceTitle}))
+    const onSavePrice = (title: string) => {
+        if (currentPackage && title.length) {
+            dispatch(updatePriceTitles(currentPackage.id, {title, type: EPackagePricingType.BasePrice}))
         }
     }
 
-    const onSavePriceWithFee = (priceWithFeeTitle: string) => {
-        if (currentPackage && priceWithFeeTitle.length) {
-            dispatch(updatePriceTitles(currentPackage.id, {priceWithFeeTitle}))
+    const onSavePriceWithFee = (title: string) => {
+        if (currentPackage && title.length) {
+            dispatch(updatePriceTitles(currentPackage.id, {title, type: EPackagePricingType.PriceWithFee}))
         }
     }
 
@@ -110,8 +116,8 @@ const PricesRow: React.FC<{packageData: IPackageById|null}> = ({packageData}) =>
             </div>
             <div className={classes.wrapper}>
                 <div className={classes.rightPart}>
-                    <TitleEditable text={currentPackage?.priceTitle ?? 'Total price Title'} onSave={onSavePrice}/>
-                    <TitleEditable text={currentPackage?.priceWithFeeTitle ?? 'Total price with Upsell Title'} onSave={onSavePriceWithFee}/>
+                    <TitleEditable text={basePrice?.title ?? 'Total price Title'} onSave={onSavePrice}/>
+                    <TitleEditable text={withFeePrice?.title ?? 'Total price with Upsell Title'} onSave={onSavePriceWithFee}/>
                 </div>
                 <div className={classes.leftPart}>
                     <PriceItem value={goodCorePrice}/>

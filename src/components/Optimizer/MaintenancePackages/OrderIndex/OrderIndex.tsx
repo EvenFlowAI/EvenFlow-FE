@@ -5,7 +5,7 @@ import {Loading} from "../../../UI/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
-import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
+import {TExtendedComplimentary, TExtendedService, TIntervalUpsellForPackage} from "../../../../api/types";
 import {LoadingButton} from "../../../UI/Button";
 import {
     updateComplimentaryOrderIndex,
@@ -14,7 +14,6 @@ import {
 } from "../../../../store/reducers/packages/actions";
 import {useException} from "../../../../utils/hooks";
 import {TextField} from "../../../UI/TextField";
-import {IUpsellServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 
 type TOrderIndex = {
     onClose: () => void;
@@ -41,7 +40,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
     const {isPackageLoading, currentPackage} = useSelector((state: RootState) => state.packages);
     const [serviceRequests, setServiceRequests] = useState<TExtendedService[]>([]);
     const [complimentary, setComplimentary] = useState<TExtendedComplimentary[]>([]);
-    const [upsell, setUpsell] = useState<IUpsellServiceRequest[]>([]);
+    const [upsell, setUpsell] = useState<TIntervalUpsellForPackage[]>([]);
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
@@ -50,6 +49,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
         if (open && currentPackage) {
             setServiceRequests(currentPackage.serviceRequests);
             setComplimentary(currentPackage.complimentaryServices);
+            setUpsell(currentPackage.intervalUpsells);
         }
     }, [currentPackage, open])
 

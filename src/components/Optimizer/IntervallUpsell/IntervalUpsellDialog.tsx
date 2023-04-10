@@ -64,6 +64,11 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
         props.onClose()
     }
 
+    const onError = (err: string) => {
+        showError(err);
+        setLoading(false);
+    }
+
     const handleSave = () => {
         setFormIsChecked(true);
         if (!payload) {
@@ -79,7 +84,7 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
                         partsUnitCost: form.partsUnitCost ? Number(form.partsUnitCost) : null,
                         numberOfParts: form.numberOfParts ? Number(form.numberOfParts) : null,
                     }
-                    dispatch(updateUpsellServiceRequest(data, payload.id, selectedSC.id, showError, onSuccess))
+                    dispatch(updateUpsellServiceRequest(data, payload.id, selectedSC.id, onError, onSuccess))
                 }
                 catch {
                     setLoading(false);

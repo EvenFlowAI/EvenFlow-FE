@@ -30,6 +30,7 @@ import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
+import {TPackagePrice} from "../packages/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -57,6 +58,7 @@ export const setTrackerCreated = createAction<boolean>('fAppointment/SetTrackerC
 export const setAdditionalServicesChosen = createAction<boolean>('fAppointment/SetAdditionalServicesChosen');
 export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPackageIsSelected');
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');
+export const setSelectedPackagePriceTitles = createAction<TPackagePrice[]>('fAppointment/SetSelectedPackagePriceTitles');
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
@@ -201,6 +203,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setSelectedRecalls([]))
     dispatch(setAdditionalServicesChosen(false));
     dispatch(setFrameDescription(''));
+    dispatch(setPackagePricingType(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
