@@ -33,7 +33,7 @@ import {
     setSelectedPackageOptionType,
     setSelectedRecalls,
     setServiceType,
-    setServiceTypeOption,
+    setServiceTypeOption, setSideBarActualSteps, setSideBarMenu,
     setSideBarSteps,
     setTime,
     setTiming,
@@ -117,6 +117,8 @@ type TState = {
     isPickUpDropOffServiceOn: boolean;
     isValueServiceOn: boolean;
     sideBarSteps: TScreen[];
+    sideBarMenu: string[],
+    sideBarActualSteps: {[K in TScreen]: number}|null,
     welcomeScreenView: TView;
     language: TLanguage;
     ancillaryPriceLoading: boolean;
@@ -170,6 +172,8 @@ const initialState: TState = {
     isPickUpDropOffServiceOn: false,
     isValueServiceOn: false,
     sideBarSteps: [],
+    sideBarMenu: [],
+    sideBarActualSteps: null,
     welcomeScreenView: "select",
     language: "en",
     ancillaryPriceLoading: false,
@@ -356,5 +360,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
         return {...state, packagePricingType: payload}
+    })
+    .addCase(setSideBarMenu, (state, {payload}) => {
+        return {...state, sideBarMenu: payload}
+    })
+    .addCase(setSideBarActualSteps, (state, {payload}) => {
+        return {...state, sideBarActualSteps: payload}
     })
 )

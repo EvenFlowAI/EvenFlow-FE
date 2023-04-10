@@ -3,8 +3,7 @@ import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {TScreen} from "../../Layout/types";
 import {ProgressStepper} from "../ProgressStepper";
 import {
-    loadConsultants,
-    setAdditionalServicesChosen,
+    setAdditionalServicesChosen, setSideBarActualSteps, setSideBarMenu,
     setSideBarSteps
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -12,8 +11,6 @@ import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {getCurrentMenu, getStepsMap, getStepsScreen} from "./utils";
 import {Loading} from "../../UI/Loading";
-import {useParams} from "react-router-dom";
-import {decodeSCID} from "../../../utils/utils";
 
 const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -70,13 +67,12 @@ type TProps = {
 }
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const {serviceType, sideBarSteps, consultants} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, sideBarSteps, sideBarMenu, sideBarActualSteps} = useSelector((state: RootState) => state.appointmentFrame);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const {t} = useTranslation();
-    const {id} = useParams();
 
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
@@ -84,22 +80,22 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
     const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
-    const currentMenu = useMemo(() => getCurrentMenu(serviceType, advisorSelection, transportationNeeds),
-        [serviceType, advisorSelection, transportationNeeds]);
-    const currentSteps = useMemo(() => getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds),
-        [serviceType, advisorSelection, appointmentSelection, transportationNeeds]);
+
+    useEffect(() => {
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, transportationNeeds, getCurrentMenu])
+
+    useEffect(() => {
+        dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap])
 
     useEffect(() => {
         dispatch(setSideBarSteps(Array.from(new Set([...sideBarSteps, screen]))));
     }, [screen, dispatch, setSideBarSteps])
 
-    useEffect(() => {
-        dispatch(loadConsultants(decodeSCID(id)));
-    }, [id])
-
     const getStepsState = useCallback((idx: number): boolean => {
-        return getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)[screen] === idx
-    }, [serviceType, screen, advisorSelection, appointmentSelection, transportationNeeds])
+        return !!sideBarActualSteps && sideBarActualSteps[screen] === idx
+    }, [sideBarActualSteps, screen])
 
     const onClick = (idx: number) => {
         const screen: TScreen = getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)[idx];
@@ -109,9 +105,13 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
 
     const getButtonState = useCallback((index: number) => {
         if (index > 0 && sideBarSteps.length < 2) return true;
-        const usualSteps = getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds);
-        return (usualSteps[screen] < index + 1 && usualSteps[sideBarSteps[sideBarSteps.length - 1]] < index + 1);
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps])
+        if (sideBarActualSteps) {
+            const currentScreenNumberValue = sideBarActualSteps[screen];
+            const lastPassedScreenNumberValue = sideBarActualSteps[sideBarSteps[sideBarSteps.length - 1]];
+            return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
+        }
+        return false;
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps, sideBarActualSteps])
 
     const activeButtonStyles = {
         background: '#E6FCEC',
@@ -122,27 +122,29 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     return (
         <Wrapper>
             {!isSm
-                ? currentConfig && currentSteps
-                    ? currentMenu.map((item, idx) => {
-                    return <li key={item}>
-                        <Button
-                            fullWidth
-                            disabled={getButtonState(idx)}
-                            onClick={() => onClick(idx)}
-                            color="primary"
-                            style={!getButtonState(idx) && !getStepsState(idx+1) ? activeButtonStyles : {}}
-                            variant={getStepsState(idx+1) ? "contained" : "outlined"}>
-                            <Index>{idx + 1}</Index> {t(item)}
-                        </Button>
-                    </li>
-                })
+                ? currentConfig && sideBarActualSteps
+                    ? sideBarMenu.map((item, idx) => {
+                        return <li key={item}>
+                            <Button
+                                fullWidth
+                                disabled={getButtonState(idx)}
+                                onClick={() => onClick(idx)}
+                                color="primary"
+                                style={!getButtonState(idx) && !getStepsState(idx+1) ? activeButtonStyles : {}}
+                                variant={getStepsState(idx+1) ? "contained" : "outlined"}>
+                                <Index>{idx + 1}</Index> {t(item)}
+                            </Button>
+                        </li>
+                    })
                     : <Loading/>
-                : <MobileSteps
-                    active={currentSteps[screen]}
-                    steps={currentMenu.length}
-                    currentLabel={currentMenu[currentSteps[screen]-1]}
-                    nextLabel={currentMenu[currentSteps[screen]]}
-                />}
+                : sideBarActualSteps
+                    ? <MobileSteps
+                        active={sideBarActualSteps[screen]}
+                        steps={sideBarMenu.length}
+                        currentLabel={sideBarMenu[sideBarActualSteps[screen]-1]}
+                        nextLabel={sideBarMenu[sideBarActualSteps[screen]]}
+                    />
+                    : <Loading/>}
         </Wrapper>
     );
 };

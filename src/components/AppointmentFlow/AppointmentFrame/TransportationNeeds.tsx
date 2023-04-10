@@ -205,7 +205,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = () => {
-        handleSideBar();
+        // handleSideBar();
         dispatch(setTransportation(null));
         onBack();
     }
