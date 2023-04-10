@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -6,7 +6,7 @@ import {styled, Theme} from "@material-ui/core";
 import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/advisor_black.svg';
 import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey.svg';
 import {TCallback} from "../../../types/types";
-import {IServiceConsultant} from '../../../api/types';
+import {IConsultantsRequestData, IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
     selectCategoriesIds,
@@ -24,8 +24,10 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
-import {getCurrentMenu, getStepsMap} from "./utils";
+import {collectServiceRequestIds, getCurrentMenu, getStepsMap, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
+import {decodeSCID} from "../../../utils/utils";
+import {MPOptionShort} from "../../../store/reducers/appointment/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -110,7 +112,13 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         service,
         subService,
         categoriesIds,
-        serviceType
+        serviceType,
+        selectedRecalls,
+        selectedVehicle,
+        packagePricingType,
+        serviceTypeOption,
+        address,
+        zipCode,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -124,10 +132,48 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
     const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
+    const serviceRequestIds = useMemo(() => {
+        return collectServiceRequestIds(service, subService, null, selectedSR, selectedRecalls);
+    }, [service, subService, selectedRecalls, selectedSR]);
+
+    const getCategories = useCallback((): number[] => {
+        return allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
+            })
+            .map(item => item.id)
+    }, [allCategories, EServiceCategoryType, categoriesIds])
 
     useEffect(() => {
-        dispatch(loadConsultants(id, onNext))
-    }, [id])
+        if (selectedVehicle) {
+            const maintenancePackageOption: MPOptionShort|null = selectedPackage
+                ? {id: selectedPackage?.id, priceType: packagePricingType}
+                : null;
+            const data: IConsultantsRequestData = {
+                serviceCenterId: decodeSCID(id),
+                pageIndex: 0,
+                pageSize: 0,
+                serviceRequestIds,
+                recalls: mapRecallsForRequest(selectedRecalls),
+                serviceCategoryIds: getCategories(),
+                valueServiceOfferIds: [],
+                maintenancePackageOption,
+                serviceTypeOptionId: serviceTypeOption?.id ??  null,
+                searchTerm: "",
+                vehicle: {
+                    vin: selectedVehicle.vin,
+                    year: selectedVehicle.year,
+                    make: selectedVehicle.make,
+                    model: selectedVehicle.model,
+                    mileage: selectedVehicle.mileage,
+                    engineTypeId: selectedVehicle.engineTypeId,
+                },
+                address,
+                zipCode,
+            }
+            dispatch(loadConsultants(data, onNext))
+        }
+    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest])
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
