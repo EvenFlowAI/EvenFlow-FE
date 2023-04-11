@@ -11,6 +11,8 @@ export interface ICategory {
     orderIndex?: number;
     description?: string;
     isCommentRequired?: boolean;
+    taglineText?: string;
+    taglineFontColorHex?: string;
 }
 
 export type TUpdateCategoryData = {
@@ -21,6 +23,8 @@ export type TUpdateCategoryData = {
     orderIndex?: number;
     description?: string;
     isCommentRequired?: boolean;
+    taglineText?: string;
+    taglineFontColorHex?: string;
 }
 
 export type TNewCategory = TUpdateCategoryData & {

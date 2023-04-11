@@ -67,7 +67,15 @@ const useStyles = makeStyles(() => ({
     radioGroup: {
         display: 'flex',
         justifyContent: 'flex-end'
-    }
+    },
+    twoInputsWrapper: {
+        width: '100%',
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gridGap: 18,
+        marginBottom: 18,
+        marginTop: 18,
+    },
 }))
 
 type TOption = {
@@ -128,6 +136,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const [description, setDescription] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter)
     const [isCommentRequired, setIsCommentRequired] = useState<boolean>(false);
+    const [taglineText, setTaglineText] = useState<string>('');
+    const [taglineColor, setTaglineColor] = useState<string>('');
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2
@@ -172,6 +182,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             if (editingItem.orderIndex) setOrderIndex(editingItem.orderIndex.toString())
             if (editingItem.description) setDescription(editingItem.description);
             if (editingItem.isCommentRequired) setIsCommentRequired(editingItem.isCommentRequired);
+            if (editingItem.taglineText) setTaglineText(editingItem.taglineText);
+            if (editingItem.taglineFontColorHex) setTaglineColor(editingItem.taglineFontColorHex);
         }
     }, [editingItem, allAssignedList, categoryOptions, props.open])
 
@@ -191,6 +203,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setOrderIndex('');
         setDescription('')
         setIsCommentRequired(false);
+        setTaglineColor('');
+        setTaglineText('');
         props.onClose();
     }, [])
 
@@ -225,6 +239,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     serviceRequests: [],
                     orderIndex: Number(orderIndex),
                     isCommentRequired: categoryType.value === EServiceCategoryType.GeneralCategory ? isCommentRequired : false,
+                    taglineText: taglineText,
+                    taglineFontColorHex: taglineColor,
                     // todo uncomment and add in the TUpdateCategoryData field for service type
                     //serviceType,
                 }
@@ -248,7 +264,9 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                 onCancel();
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description, isCommentRequired])
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
+        editingItem, fileState, visitCenterConfig, description, isCommentRequired,
+        taglineText, taglineColor])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
@@ -287,6 +305,16 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
 
     const handleSwitch = (e: any, value: boolean) => {
         setIsCommentRequired(value);
+    }
+
+    const onTaglineTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
+        setTaglineText(e.target.value)
+    }
+
+    const onTaglineColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
+        setTaglineColor(e.target.value)
     }
 
     return (
@@ -383,6 +411,27 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     placeholder="Enter Description"
                     onChange={onDescriptionChange}
                 />
+                <div className={classes.twoInputsWrapper}>
+                    <div>
+                        <TextField
+                            fullWidth
+                            value={taglineText}
+                            label="Tagline Text"
+                            placeholder="Enter Tagline Text"
+                            onChange={onTaglineTextChange}
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            fullWidth
+                            value={taglineColor}
+                            inputProps={{maxLength: 6}}
+                            label="Tagline Font Color hex #"
+                            placeholder="Enter Tagline Font Color (6 symbols)"
+                            onChange={onTaglineColorChange}
+                        />
+                    </div>
+                </div>
                 <Divider/>
                 <OpsCodesTable
                     selectedCodes={selectedCodes}
