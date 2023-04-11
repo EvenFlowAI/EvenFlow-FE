@@ -5,7 +5,7 @@ import {IconButton, Input} from "@material-ui/core";
 import {useException} from "../../../../utils/hooks";
 
 type TTitleEditableProps = {
-    text: string;
+    text?: string;
     onSave: (name: string) => void;
 }
 
@@ -48,13 +48,16 @@ const TitleEditable: React.FC<TTitleEditableProps> = ({text, onSave}) => {
     const showError = useException();
 
     useEffect(() => {
-        if (text.length) setNewName(text);
+        if (text?.length) setNewName(text);
     }, [text])
 
     const onSaveClick = () => {
-        onSave(newName);
-        // todo logic for showing error
-        setEdit(false);
+        if (newName.length) {
+            onSave(newName)
+            setEdit(false);
+        } else {
+            showError('The "Price Text" must not be empty')
+        }
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,8 +68,8 @@ const TitleEditable: React.FC<TTitleEditableProps> = ({text, onSave}) => {
     return (
         <div className={classes.wrapper}>
             {isEdit
-                ? <Input onChange={onChange} className={classes.textInput} value={newName}/>
-                : <div className={classes.text}>{newName}</div>}
+                ? <Input onChange={onChange} className={classes.textInput} value={newName} placeholder="Enter Price Text"/>
+                : <div className={classes.text}>{newName?.length ? newName : "Enter Price Text"}</div>}
             {isEdit
                 ? <IconButton onClick={onSaveClick} className={classes.editIcon}>
                     <Done htmlColor="#FFFFFF"/>
