@@ -144,7 +144,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                     .sort((a, b) => a.id - b.id)
                                     .map(item => {
                                         return <TableRow key={item.id}>
-                                            <TableCell key="3">
+                                            <TableCell key="3" width={100}>
                                                 <TextField
                                                     type="number"
                                                     inputProps={{min: 1, step: 1, max: serviceRequests.length + 1}}
