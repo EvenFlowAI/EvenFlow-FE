@@ -486,9 +486,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             summaryText="Market Price:"
                             valuesArray={detailsData.requestsPrice}
                             onInputChange={onInputChange}
-                            toggleField="manualOverride"
-                            toggleLabel="Manual Override"
-                            checked={currentPackage?.isManualOverridePrice}
+                            // todo when new logic will be ready, uncomment
+                            // toggleField="manualOverride"
+                            // toggleLabel="Manual Override"
+                            // checked={currentPackage?.isManualOverridePrice}
                         />
 
                         <div className={classes.complimentaryRow}>Interval Upsell</div>
