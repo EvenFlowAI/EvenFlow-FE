@@ -42,7 +42,9 @@ export enum EServiceCenterName {
     SanfordInfinity,
     Dominion,
     Fremont,
-    LakePowellFord
+    LakePowellFord,
+    PerformanceLexus,
+    LexusRiverCenter,
 }
 
 export enum EVehiclePropType {
@@ -391,7 +393,7 @@ export interface IPackageOptions {
     complimentaryServices: TExtendedComplimentary[];
     marketPriceServiceRequests: number;
     marketPriceComplimentaryServices: number;
-    marketPriceIntervalUpsells : number;
+    marketPriceIntervalUpsells: number;
     intervalUpsells: TUpsellOfOption[];
     marketPriceIntervalUpsell: number;
     maintenancePackageName: string;

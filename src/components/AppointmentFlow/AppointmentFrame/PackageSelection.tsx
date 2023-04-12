@@ -286,7 +286,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         service,
         subService,
         packageOptionType,
-        consultants
     } = useSelector((state: RootState) => state.appointmentFrame);
 
     const theme = useTheme();
@@ -439,6 +438,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             {packages.length ? <React.Fragment>
                 {isXs
                     ? <PackageSelectionMobile
+                        getTitle={getTitle}
                         data={packages}
                         isBmWService={isBmWService}
                         isSanfordInfinity={isSanfordInfinity}
