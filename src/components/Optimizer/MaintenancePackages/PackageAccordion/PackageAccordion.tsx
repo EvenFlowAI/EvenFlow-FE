@@ -552,7 +552,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             valuesArray={detailsData.complimentaryPrice}
                             onInputChange={onInputChange}/>
 
-                      <PricesBlock packageData={packageData}/>
+                      <PricesBlock packageData={packageData} suggestedPrices={detailsData.suggestedRequestPrice}/>
 
                     </React.Fragment>}
 

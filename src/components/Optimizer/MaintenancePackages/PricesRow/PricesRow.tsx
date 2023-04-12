@@ -7,6 +7,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {EMaintenanceOptionType, IPackageById} from "../../../../api/types";
 import {updatePriceTitles} from "../../../../store/reducers/packages/actions";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {TSummaryCell} from "../PackageAccordion/PackageAccordion";
 
 const useStyles = makeStyles(() => ({
     topLineWrapper: {
@@ -43,7 +44,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 
-const PricesRow: React.FC<{packageData: IPackageById|null}> = ({packageData}) => {
+const PricesRow: React.FC<{packageData: IPackageById|null, suggestedPrices: TSummaryCell[]}> = ({packageData, suggestedPrices}) => {
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -62,21 +63,42 @@ const PricesRow: React.FC<{packageData: IPackageById|null}> = ({packageData}) =>
 
     const goodCorePrice = useMemo(() => {
         let price = 0;
-        if (goodOption) price = +goodOption.serviceRequestPrice + +goodOption.complimentaryServicePrice;
+        if (goodOption) {
+            if (currentPackage?.isShowSuggestedPrice) {
+                const suggested = suggestedPrices.find(el => el.optionType === goodOption.type)?.numberValue;
+                if (suggested) price = +suggested;
+            } else {
+                price = +goodOption.serviceRequestPrice;
+            }
+        }
         return price;
-    }, [goodOption])
+    }, [goodOption, currentPackage, suggestedPrices])
 
     const betterCorePrice = useMemo(() => {
         let price = 0;
-        if (betterOption) price = +betterOption.serviceRequestPrice + +betterOption.complimentaryServicePrice;
+        if (betterOption) {
+            if (currentPackage?.isShowSuggestedPrice) {
+                const suggested = suggestedPrices.find(el => el.optionType === betterOption.type)?.numberValue;
+                if (suggested) price = +suggested;
+            } else {
+                price = +betterOption.serviceRequestPrice;
+            }
+        }
         return price;
-    }, [betterOption])
+    }, [betterOption, currentPackage, suggestedPrices])
 
     const bestCorePrice = useMemo(() => {
         let price = 0;
-        if (bestOption) price = +bestOption.serviceRequestPrice + +bestOption.complimentaryServicePrice;
+        if (bestOption) {
+            if (currentPackage?.isShowSuggestedPrice) {
+                const suggested = suggestedPrices.find(el => el.optionType === bestOption.type)?.numberValue;
+                if (suggested) price = +suggested;
+            } else {
+                price = +bestOption.serviceRequestPrice;
+            }
+        }
         return price;
-    }, [bestOption])
+    }, [bestOption, currentPackage, suggestedPrices])
 
     const goodUpsellPrice = useMemo(() => {
         let price = goodCorePrice;
