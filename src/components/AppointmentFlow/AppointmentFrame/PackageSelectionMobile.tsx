@@ -350,7 +350,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle
                                 <span className={classes.smallText}>
                                   {t("Total Maintenance Value")}:
                                 </span>
-                              <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
+                              <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.totalMaintenanceValue : item.totalMaintenanceValue.toFixed(2)}</span>
                             </div>}
                             {item.intervalUpsells?.length
                                 ? <React.Fragment>

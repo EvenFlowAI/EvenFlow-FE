@@ -395,6 +395,7 @@ export interface IPackageOptions {
     marketPriceComplimentaryServices: number;
     marketPriceIntervalUpsells: number;
     intervalUpsells: TUpsellOfOption[];
+    totalMaintenanceValue: number;
     marketPriceIntervalUpsell: number;
     maintenancePackageName: string;
     priceType?: EPackagePricingType;
