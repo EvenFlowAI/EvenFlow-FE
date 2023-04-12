@@ -131,6 +131,16 @@ const useStyles = makeStyles(() => ({
         color: "black",
         backgroundColor: '#91CFF7',
     },
+    upsellTitle: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontWeight: 'bold',
+        fontSize: 14,
+        padding: 10,
+        color: "black",
+        background: "#FFD966",
+    },
     complimentaryServices: {
         display: 'flex',
         flexDirection: 'column',
@@ -342,31 +352,38 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle
                                 </span>
                               <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
                             </div>}
-                            <div className={classes.intervalUpsells}>
-                                {item.intervalUpsells
-                                    .slice()
-                                    .sort((a, b) => a.orderIndex - b.orderIndex)
-                                    .map(item => {
-                                        return item.detailedDescription?.length
-                                            ? <HtmlTooltip
-                                                key={item.id}
-                                                placement="top"
-                                                enterTouchDelay={0}
-                                                title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                            >
-                                                <p className={classes.serviceRequestUnderlined}
-                                                   style={isBmWService ? {fontSize: 18} : {}}>
-                                                    {item.name}
-                                                </p>
-                                            </HtmlTooltip>
-                                            :  <p className={classes.serviceRequest}
-                                                  key={item.id}
-                                                  style={isBmWService ? {fontSize: 18} : {}}>
-                                                {item.name}
-                                            </p>
-                                    })
-                                }
-                            </div>
+                            {item.intervalUpsells?.length
+                                ? <React.Fragment>
+                                    <div className={classes.upsellTitle} style={isBmWService ? {fontSize: 16} : {}}>
+                                        {t(t("Service Interval Upsell"))}
+                                    </div>
+                                    <div className={classes.intervalUpsells}>
+                                        {item.intervalUpsells
+                                            .slice()
+                                            .sort((a, b) => a.orderIndex - b.orderIndex)
+                                            .map(item => {
+                                                return item.detailedDescription?.length
+                                                    ? <HtmlTooltip
+                                                        key={item.id}
+                                                        placement="top"
+                                                        enterTouchDelay={0}
+                                                        title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                                    >
+                                                        <p className={classes.serviceRequestUnderlined}
+                                                           style={isBmWService ? {fontSize: 18} : {}}>
+                                                            {item.name}
+                                                        </p>
+                                                    </HtmlTooltip>
+                                                    :  <p className={classes.serviceRequest}
+                                                          key={item.id}
+                                                          style={isBmWService ? {fontSize: 18} : {}}>
+                                                        {item.name}
+                                                    </p>
+                                            })
+                                        }
+                                    </div>
+                                </React.Fragment>
+                                : null}
 
                             <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
                                 {t("Complimentary")}
