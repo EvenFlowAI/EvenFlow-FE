@@ -59,7 +59,7 @@ const useStyles = makeStyles({
         textAlign: 'right',
         fontSize: 16,
         fontWeight: 700,
-        color: "#FFFFFF",
+        color: "#202021",
         background: "#FFD966",
         border: '1px solid #DADADA',
         padding: '22px 16px',
