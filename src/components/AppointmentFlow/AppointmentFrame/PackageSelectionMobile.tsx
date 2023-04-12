@@ -4,12 +4,14 @@ import {Done} from "@material-ui/icons";
 import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {TPackage} from "./PackageSelection";
-import {setPackage} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setPackage, setPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {TExtendedComplimentary} from "../../../api/types";
+import {EMaintenanceOptionType, TExtendedComplimentary} from "../../../api/types";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "./ServiceCard";
+import TotalPriceMobile from "./PackageSelectionParts/TotalPriceMobile";
+import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const style = withStyles(() => ({
     root: {
@@ -53,6 +55,7 @@ type PackageSelectionMobileProps = {
     data: TPackage[];
     isBmWService: boolean;
     isSanfordInfinity: boolean;
+    getTitle: (type: EPackagePricingType) => string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -127,7 +130,6 @@ const useStyles = makeStyles(() => ({
         padding: 10,
         color: "black",
         backgroundColor: '#91CFF7',
-        marginTop: 16,
     },
     complimentaryServices: {
         display: 'flex',
@@ -135,7 +137,7 @@ const useStyles = makeStyles(() => ({
         alignContent: 'center',
         padding: 10,
         background: '#E5F5FF',
-        height: '15vh',
+        // height: '15vh',
         overflow: 'auto',
     },
     complimentaryTotal: {
@@ -146,6 +148,7 @@ const useStyles = makeStyles(() => ({
         padding: '8px 12px 16px 12px',
         borderBottom: '1px solid black',
         fontWeight: 'bold',
+        marginBottom: 10,
     },
     totalSums: {
         display: 'flex',
@@ -175,6 +178,7 @@ const useStyles = makeStyles(() => ({
         margin: 0,
         textAlign: 'center',
         padding: 5,
+        fontWeight: 'bold',
     },
     serviceRequestUnderlined: {
         margin: 0,
@@ -211,6 +215,10 @@ const useStyles = makeStyles(() => ({
     },
     bigText: {
         fontSize: 20,
+    },
+    intervalUpsells: {
+        background: '#FFF2CC',
+        paddingBottom: 16,
     }
 }))
 
@@ -240,7 +248,7 @@ const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
     return <div className={classes.iconWrapper}>{isSelected && <Done  className={classes.icon} htmlColor={'white'}/>} {text}</div>
 }
 
-const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,isBmWService, isSanfordInfinity }) => {
+const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle, data,isBmWService, isSanfordInfinity }) => {
     const [value, setValue] = useState<string>('1');
     const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -272,6 +280,12 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
 
     const getPrice = (requests: TExtendedComplimentary[]): number => {
         return requests.reduce((a, b) => a + +b.price, 0)
+    }
+
+    const handleClick = (type: EMaintenanceOptionType, pricing?: EPackagePricingType) => {
+        const p = data.find(item => item.type === type);
+        if (p) dispatch(setPackage(p));
+        dispatch(setPackagePricingType(pricing ?? EPackagePricingType.BasePrice));
     }
 
     return (
@@ -329,6 +343,31 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                 </span>
                               <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}</span>
                             </div>}
+                            <div className={classes.intervalUpsells}>
+                                {item.intervalUpsells
+                                    .slice()
+                                    .sort((a, b) => a.orderIndex - b.orderIndex)
+                                    .map(item => {
+                                        return item.detailedDescription?.length
+                                            ? <HtmlTooltip
+                                                key={item.id}
+                                                placement="top"
+                                                enterTouchDelay={0}
+                                                title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                            >
+                                                <p className={classes.serviceRequestUnderlined}
+                                                   style={isBmWService ? {fontSize: 18} : {}}>
+                                                    {item.name}
+                                                </p>
+                                            </HtmlTooltip>
+                                            :  <p className={classes.serviceRequest}
+                                                  key={item.id}
+                                                  style={isBmWService ? {fontSize: 18} : {}}>
+                                                {item.name}
+                                            </p>
+                                    })
+                                }
+                            </div>
 
                             <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
                                 {t("Complimentary")}
@@ -379,25 +418,42 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({ data,is
                                 </div>
                                 : null
                             }
-                            <div className={classes.totalSums}>
-                                <div>
-                                    <span className={classes.totalName}>{t("Total")}</span><span className={classes.totalText} > ({t("excluding taxes")})</span>
-                                </div>
-                                <div className={classes.pricesWrapper}>
-                                    {scProfile?.isShowPriceDetails &&
-                                    <div className={classes.prevPrice}>
-                                      ${scProfile?.isRoundPrice
-                                        ? item.price + item.marketPriceComplimentaryServices
-                                        : (item.price + item.marketPriceComplimentaryServices).toFixed(2)}
-                                    </div>}
+                            <TotalPriceMobile
+                                isUpsellPrice={false}
+                                handleClick={handleClick}
+                                type={item.type}
+                                text={getTitle(EPackagePricingType.BasePrice)}
+                                price={item.price}
+                                complimentaryPrice={item.marketPriceComplimentaryServices}
+                            />
+                            <TotalPriceMobile
+                                isUpsellPrice
+                                handleClick={handleClick}
+                                type={item.type}
+                                text={getTitle(EPackagePricingType.PriceWithFee)}
+                                price={item.price}
+                                complimentaryPrice={item.marketPriceComplimentaryServices}
+                                upsellPrice={item.marketPriceIntervalUpsells}
+                            />
+                            {/*<div className={classes.totalSums}>*/}
+                            {/*    <div>*/}
+                            {/*        <span className={classes.totalName}>{t("Total")}</span><span className={classes.totalText} > ({t("excluding taxes")})</span>*/}
+                            {/*    </div>*/}
+                            {/*    <div className={classes.pricesWrapper}>*/}
+                            {/*        {scProfile?.isShowPriceDetails &&*/}
+                            {/*        <div className={classes.prevPrice}>*/}
+                            {/*          ${scProfile?.isRoundPrice*/}
+                            {/*            ? item.price + item.marketPriceComplimentaryServices*/}
+                            {/*            : (item.price + item.marketPriceComplimentaryServices).toFixed(2)}*/}
+                            {/*        </div>}*/}
 
-                                    <div className={classes.currentWrp}>
-                                        <div className={classes.current}>
-                                            ${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {/*        <div className={classes.currentWrp}>*/}
+                            {/*            <div className={classes.current}>*/}
+                            {/*                ${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}*/}
+                            {/*            </div>*/}
+                            {/*        </div>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
                         </div>
                     </TabPanel>
                 ))}
