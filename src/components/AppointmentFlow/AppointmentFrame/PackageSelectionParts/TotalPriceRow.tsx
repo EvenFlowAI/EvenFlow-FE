@@ -16,11 +16,12 @@ type TTotalPriceRowProps = {
     title: string;
 }
 
-const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number }>(({
+const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number, roundPrice?: boolean }>(({
                                                                                                          theme,
                                                                                                          selected,
                                                                                                          showDetails,
-                                                                                                         count
+                                                                                                         count,
+                                                                                                                               roundPrice
 }) => ({
     position: 'relative',
     display: 'grid',
@@ -37,7 +38,7 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     cursor: 'pointer',
     "& .prices": {
         display: 'flex',
-        justifyContent: showDetails ? count > 2 ? 'space-between' : 'space-evenly' : 'center',
+        justifyContent: showDetails ? !roundPrice ? 'space-between' : 'space-evenly' : 'center',
     },
     "& .currentPrice": {
         color: "#D32F2F"
@@ -108,6 +109,7 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
             return <PriceValue
                 selected={selected}
                 count={packages.length}
+                roundPrice={scProfile?.isRoundPrice}
                 onClick={handleClick(p, EPackagePricingType.BasePrice)}
                 showDetails={showDetails}
                 key={p.id}>
