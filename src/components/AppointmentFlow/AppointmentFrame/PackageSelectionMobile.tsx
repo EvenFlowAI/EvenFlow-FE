@@ -63,7 +63,6 @@ const useStyles = makeStyles(() => ({
         width: '100%',
         padding: 0,
         marginTop: 17,
-        border: '1px solid rgba(0, 0, 0, 0.15)',
         borderCollapse: 'collapse',
     },
     tabWrapper: {
@@ -73,6 +72,7 @@ const useStyles = makeStyles(() => ({
         fontSize: 10,
         fontWeight: 'bold',
         borderBottom: '1px solid rgba(0, 0, 0, 0.15)',
+        borderTop: '1px solid rgba(0, 0, 0, 0.15)',
         '&:not(:last-child), &:not(:first-child)': {
             borderRight: '1px solid rgba(0, 0, 0, 0.15)',
             borderLeft: '1px solid rgba(0, 0, 0, 0.15)',
@@ -107,7 +107,7 @@ const useStyles = makeStyles(() => ({
     serviceRequests: {
         display: 'flex',
         flexDirection: 'column',
-        height: '33vh',
+        // height: '33vh',
         padding: '10px 0',
         fontSize: 14,
         borderBottom: '1px solid black',
@@ -148,7 +148,6 @@ const useStyles = makeStyles(() => ({
         padding: '8px 12px 16px 12px',
         borderBottom: '1px solid black',
         fontWeight: 'bold',
-        marginBottom: 10,
     },
     totalSums: {
         display: 'flex',
@@ -308,9 +307,9 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle
 
                 {data.map((item, index) => (
                     <TabPanel value={`${index}`} key={item.name}>
-                        <div>
+                        <div style={{ border: '1px solid rgba(0, 0, 0, 0.15)'}}>
                             <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
-                            <div className={classes.serviceRequests}>
+                            <div className={classes.serviceRequests} style={{paddingBottom: 36}}>
                                 {item.serviceRequests
                                     .slice()
                                     .sort((a, b) => a.orderIndex - b.orderIndex)
@@ -418,23 +417,6 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle
                                 </div>
                                 : null
                             }
-                            <TotalPriceMobile
-                                isUpsellPrice={false}
-                                handleClick={handleClick}
-                                type={item.type}
-                                text={getTitle(EPackagePricingType.BasePrice)}
-                                price={item.price}
-                                complimentaryPrice={item.marketPriceComplimentaryServices}
-                            />
-                            <TotalPriceMobile
-                                isUpsellPrice
-                                handleClick={handleClick}
-                                type={item.type}
-                                text={getTitle(EPackagePricingType.PriceWithFee)}
-                                price={item.price}
-                                complimentaryPrice={item.marketPriceComplimentaryServices}
-                                upsellPrice={item.marketPriceIntervalUpsells}
-                            />
                             {/*<div className={classes.totalSums}>*/}
                             {/*    <div>*/}
                             {/*        <span className={classes.totalName}>{t("Total")}</span><span className={classes.totalText} > ({t("excluding taxes")})</span>*/}
@@ -459,6 +441,25 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle
                 ))}
             </TabContext>
             }
+            {selectedPackage ? <React.Fragment>
+                <TotalPriceMobile
+                    isUpsellPrice={false}
+                    handleClick={handleClick}
+                    type={selectedPackage.type}
+                    text={getTitle(EPackagePricingType.BasePrice)}
+                    price={selectedPackage.price}
+                    complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
+                />
+                <TotalPriceMobile
+                    isUpsellPrice
+                    handleClick={handleClick}
+                    type={selectedPackage.type}
+                    text={getTitle(EPackagePricingType.PriceWithFee)}
+                    price={selectedPackage.price}
+                    complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
+                    upsellPrice={selectedPackage.marketPriceIntervalUpsells}
+                />
+            </React.Fragment> : null}
         </div>
     );
 };
