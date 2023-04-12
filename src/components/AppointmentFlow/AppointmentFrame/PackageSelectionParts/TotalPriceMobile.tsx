@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {styled, Theme} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -70,25 +70,39 @@ type TProps = {
     handleClick: (type: EMaintenanceOptionType, packagePricingType: EPackagePricingType) => void,
 }
 
-const TotalPriceMobile: React.FC<TProps> = ({handleClick, type, isUpsellPrice, text, price, complimentaryPrice, upsellPrice}) => {
+const TotalPriceMobile: React.FC<TProps> = ({
+                                                handleClick,
+                                                type,
+                                                isUpsellPrice,
+                                                text,
+                                                price,
+                                                complimentaryPrice,
+                                                upsellPrice
+}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {selectedPackage, packagePricingType} = useSelector((state: RootState) => state.appointmentFrame);
 
-    const selected = type === selectedPackage?.type && packagePricingType === (isUpsellPrice ? EPackagePricingType.PriceWithFee : EPackagePricingType.BasePrice);
+    const selected = useMemo(() => {
+        return type === selectedPackage?.type
+            && packagePricingType === (isUpsellPrice
+                ? EPackagePricingType.PriceWithFee
+                : EPackagePricingType.BasePrice)
+    }, [type, selectedPackage, packagePricingType, isUpsellPrice]);
+
     const showDetails = Boolean(scProfile?.isShowPriceDetails && complimentaryPrice && complimentaryPrice > 0);
 
-    const prevPrice = scProfile?.isRoundPrice
-        ? price + (complimentaryPrice ?? 0)
-        : (price + (complimentaryPrice ?? 0)).toFixed(2)
-    const uniquePrice = scProfile?.isRoundPrice
+    const prevPrice = useMemo(() => scProfile?.isRoundPrice
+            ? price + (complimentaryPrice ?? 0)
+            : (price + (complimentaryPrice ?? 0)).toFixed(2), [scProfile, price, complimentaryPrice]);
+    const uniquePrice = useMemo(() => scProfile?.isRoundPrice
         ? price
-        : price.toFixed(2);
-    const upsellPrevPrice = scProfile?.isRoundPrice
+        : price.toFixed(2), [scProfile, price]);
+    const upsellPrevPrice = useMemo(() => scProfile?.isRoundPrice
         ? +prevPrice + (upsellPrice ?? 0)
-        : (+prevPrice + (upsellPrice ?? 0)).toFixed(2);
-    const upsellUniquePrice = scProfile?.isRoundPrice
+        : (+prevPrice + (upsellPrice ?? 0)).toFixed(2), [scProfile, prevPrice, upsellPrice])
+    const upsellUniquePrice = useMemo(() => scProfile?.isRoundPrice
         ? +uniquePrice + (upsellPrice ?? 0)
-        : (+uniquePrice + (upsellPrice ?? 0)).toFixed(2)
+        : (+uniquePrice + (upsellPrice ?? 0)).toFixed(2), [scProfile, uniquePrice, upsellPrice])
 
     return (
         <PriceWrapper
@@ -108,7 +122,7 @@ const TotalPriceMobile: React.FC<TProps> = ({handleClick, type, isUpsellPrice, t
                     <div className="currentPrice">${isUpsellPrice ? upsellUniquePrice : uniquePrice}</div>
                     </React.Fragment>
                     : <div className="uniquePrice">
-                        ${uniquePrice}
+                        ${isUpsellPrice ? upsellUniquePrice : uniquePrice}
                     </div>
                 }
             </div>
