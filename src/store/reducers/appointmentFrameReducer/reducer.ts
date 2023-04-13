@@ -24,7 +24,7 @@ import {
     setMaintenanceDetails,
     setMobileServiceAvailability,
     setOffersLoading,
-    setPackage,
+    setPackage, setPackageEMenuType,
     setPackageIsSelected, setPackagePricingType,
     setPackages,
     setPickUpDropOffAvailability,
@@ -64,6 +64,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {
+    EPackageEMenuType,
     EPackagePricingType,
     EServiceType,
     EUserType,
@@ -133,6 +134,7 @@ type TState = {
     serviceTypeOption: IFirstScreenOption|null;
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
+    packageEMenuType: EPackageEMenuType|null;
 }
 const initialState: TState = {
     service: null,
@@ -189,6 +191,7 @@ const initialState: TState = {
     serviceTypeOption: null,
     packagePricingType: null,
     packagePriceTitles: [],
+    packageEMenuType: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -374,5 +377,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSelectedPackagePriceTitles, (state, {payload}) => {
         return {...state, packagePriceTitles: payload}
+    })
+    .addCase(setPackageEMenuType, (state, {payload}) => {
+        return {...state, packageEMenuType: payload}
     })
 )

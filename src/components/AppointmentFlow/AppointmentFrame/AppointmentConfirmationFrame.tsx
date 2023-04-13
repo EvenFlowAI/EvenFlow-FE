@@ -216,6 +216,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
                 : appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
+            // todo package type eMenu
             //maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             maintenancePackageOption,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],

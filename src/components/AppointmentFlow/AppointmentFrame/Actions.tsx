@@ -5,7 +5,7 @@ import {Loading} from "../../UI/Loading";
 import {useTranslation} from "react-i18next";
 
 
-const ButtonsRow = styled('div')(({theme}) => ({
+export const ButtonsRow = styled('div')(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

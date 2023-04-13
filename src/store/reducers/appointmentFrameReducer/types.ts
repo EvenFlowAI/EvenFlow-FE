@@ -129,3 +129,8 @@ export enum EPackagePricingType {
     BasePrice,
     PriceWithFee
 }
+
+export enum EPackageEMenuType {
+    Factory,
+    Dealer
+}

@@ -11,6 +11,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
 import {
+    EPackageEMenuType,
     EPackagePricingType,
     EServiceType,
     EUserType, IAncillaryByZipRequest,
@@ -84,6 +85,7 @@ export const setFilteredZipCodes = createAction<string[]>('fAppointment/SetFilte
 export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/SetSelectedRecalls');
 export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
 export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/SetHorsOfOperations');
+export const setPackageEMenuType = createAction<EPackageEMenuType|null>('fAppointment/SetPackageEMenuType');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;

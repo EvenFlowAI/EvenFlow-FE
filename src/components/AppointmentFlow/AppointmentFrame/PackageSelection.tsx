@@ -43,6 +43,8 @@ import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
 import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
+import PackageEMenuActions from "./PackageEmenuActions";
+import PackagesEmenu from "./PackagesEmenu";
 
 const border = '1px solid #DADADA';
 
@@ -297,7 +299,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
-    const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile])
+    const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
+    const isLexus = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.LexusRiverCenter)
+        || (scProfile?.serviceCenterFlag === EServiceCenterName.PerformanceLexus), [scProfile]);
 
     const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
@@ -307,27 +311,29 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     useEffect(() => {
         setLoading(true);
-        Api.call<IPackage[]>(
-            Api.endpoints.MaintenancePackages.ByVehicle,
-            {
-                data: {
-                    serviceCenterId: decodeSCID(id),
-                    vehicle: {
-                        ...selectedVehicle,
-                        mileage: selectedVehicle?.mileage ?? maintenanceDetails.mileage
+        if (!isLexus) {
+            Api.call<IPackage[]>(
+                Api.endpoints.MaintenancePackages.ByVehicle,
+                {
+                    data: {
+                        serviceCenterId: decodeSCID(id),
+                        vehicle: {
+                            ...selectedVehicle,
+                            mileage: selectedVehicle?.mileage ?? maintenanceDetails.mileage
+                        }
                     }
                 }
-            }
-        )
-            .then(({data}) => {
-                setPackages(data);
-                if (data.length) dispatch(setSelectedPackagePriceTitles((data[0].priceTitles)))
-            })
-            .catch(() => {
-                setPackages([]);
-            })
-            .finally(() => {setLoading(false)})
+            )
+                .then(({data}) => {
+                    setPackages(data);
+                    if (data.length) dispatch(setSelectedPackagePriceTitles((data[0].priceTitles)))
+                })
+                .catch(() => {
+                    setPackages([]);
+                })
+                .finally(() => {setLoading(false)})
 
+        }
     }, [id, selectedVehicle, maintenanceDetails]);
 
     const setClasses = (id: number, cls: string): string => {
@@ -435,7 +441,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 loading={loading}
                 label={t("There are no packages available")}
             />
-            {packages.length ? <React.Fragment>
+            {isRiverviewFord
+                ? <PackagesEmenu/>
+                : packages.length ? <React.Fragment>
                 {isXs
                     ? <PackageSelectionMobile
                         getTitle={getTitle}
@@ -528,11 +536,14 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                     </React.Fragment>
                 }
             </React.Fragment> : null}
-            <Actions
+            {/*todo isLexus*/}
+            {isRiverviewFord
+                ? <PackageEMenuActions onBack={handleBack} isLoading={loading}/>
+                : <Actions
                 onBack={handleBack}
                 // hideNext={!isXs}
                 nextDisabled={!selectedPackage}
-                onNext={() => handleNext(selectedPackage)} />
+                onNext={() => handleNext(selectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
         </PackagesStepWrapper>
