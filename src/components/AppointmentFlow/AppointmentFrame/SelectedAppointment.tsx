@@ -262,6 +262,7 @@ export const SelectedAppointment = () => {
                 return t("Visit Center");
         }
     }
+    // todo show emenu selected package
 
     return (
         <div>

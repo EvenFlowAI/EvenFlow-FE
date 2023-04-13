@@ -62,7 +62,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType} from "../appointmenttypes";
 import {
     EPackageEMenuType,
     EPackagePricingType,

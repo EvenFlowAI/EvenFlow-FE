@@ -9,7 +9,8 @@ import {
     setPackage,
     setPackageIsSelected,
     setPackagePricingType,
-    setSelectedPackageOptionType, setSelectedPackagePriceTitles
+    setSelectedPackageOptionType,
+    setSelectedPackagePriceTitles
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
@@ -42,7 +43,7 @@ import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/ty
 import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
-import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EPackageEMenuType, EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
 import PackageEMenuActions from "./PackageEmenuActions";
 import PackagesEmenu from "./PackagesEmenu";
 
@@ -288,6 +289,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         service,
         subService,
         packageOptionType,
+        packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
 
     const theme = useTheme();
@@ -400,6 +402,17 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 dispatch(setSelectedPackageOptionType(selectedPackage.type));
             }
         }
+    }
+
+    const onEMenuNext = () => {
+        dispatch(setPackageIsSelected(true));
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: `Selected eMenu Package`,
+            label: `With ${packageEMenuType === EPackageEMenuType.Dealer ? 'Dealer' : "Factory"} Option`,
+        });
+        askAdditionalServices();
+        //handleNextScreen();
     }
 
     const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
@@ -538,7 +551,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             </React.Fragment> : null}
             {/*todo isLexus*/}
             {isRiverviewFord
-                ? <PackageEMenuActions onBack={handleBack} isLoading={loading}/>
+                ? <PackageEMenuActions onBack={handleBack} isLoading={loading} onNext={onEMenuNext}/>
                 : <Actions
                 onBack={handleBack}
                 // hideNext={!isXs}

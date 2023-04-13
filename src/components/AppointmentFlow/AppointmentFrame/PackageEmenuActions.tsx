@@ -7,12 +7,24 @@ import {useDispatch} from "react-redux";
 import {setPackageEMenuType} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {EPackageEMenuType} from "../../../store/reducers/appointmentFrameReducer/types";
 
-const PackageEMenuActions: React.FC<{isLoading: boolean, onBack: () => void}> = ({isLoading, onBack}) => {
+type TProps = {
+    isLoading: boolean,
+    onBack: () => void,
+    onNext: () => void,
+}
+
+const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
-    const onSelectFactory = () => dispatch(setPackageEMenuType(EPackageEMenuType.Factory));
-    const onSelectDealer = () => dispatch(setPackageEMenuType(EPackageEMenuType.Dealer));
+    const onSelectFactory = () => {
+        dispatch(setPackageEMenuType(EPackageEMenuType.Factory));
+        onNext();
+    }
+    const onSelectDealer = () => {
+        dispatch(setPackageEMenuType(EPackageEMenuType.Dealer));
+        onNext();
+    }
 
     return (
         <ButtonsRow>
