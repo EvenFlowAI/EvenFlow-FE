@@ -41,6 +41,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         allCategories,
         userType,
         isAdditionalServices,
+        consultants
     ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
@@ -52,6 +53,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         categories.allCategories,
         appointmentFrame.userType,
         appointmentFrame.isAdditionalServices,
+        appointmentFrame.consultants,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();

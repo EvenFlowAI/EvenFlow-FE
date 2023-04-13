@@ -5,18 +5,19 @@ import {IPackageOptions} from "../../../../api/types";
 import {TPackage, TService} from "../PackageSelection";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "../ServiceCard";
+import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 type TIncludedInPackageProps = {
     packages: TPackage[];
     services: TService[];
     setClasses: (id: number, cls: string) => string;
-    handleClick: (p: IPackageOptions) => () => void;
+    handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
     isRiverviewFord: boolean;
     isBmWService: boolean;
 }
 
 const IncludedInPackage: React.FC<TIncludedInPackageProps> =
-    ({packages, services, setClasses, handleClick, isRiverviewFord, isBmWService}) => {
+    ({packages, services, setClasses, isRiverviewFord, isBmWService, handleClick}) => {
     const {t} = useTranslation();
     return <React.Fragment>
         <div className="gray subtitle">{t("Included in package")}</div>

@@ -5,7 +5,7 @@ import {Api} from "../../../config/requests";
 import {
     IComplimentaryServiceByQuery,
     INewPackage,
-    IUpdatedPackage, TOrderIndex
+    IUpdatedPackage, TOrderIndex, TPackagePrice
 } from "./types";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
@@ -210,8 +210,7 @@ export const updateSROrderIndex = (id: number, items: TOrderIndex[], onError: (e
         .catch(err => {
             console.log('update package service requests order index err', err)
             onError(err)
-        })
-    dispatch(setPackageLoading(false))
+        }).finally(() => dispatch(setPackageLoading(false)))
 }
 
 export const updateComplimentaryOrderIndex = (id: number, items: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
@@ -223,6 +222,51 @@ export const updateComplimentaryOrderIndex = (id: number, items: TOrderIndex[], 
         .catch(err => {
             console.log('update package complimentary order index err', err)
             onError(err)
+        }).finally(() => dispatch(setPackageLoading(false)))
+}
+
+export const updateShowSuggestedPrice = (id: number,  isShowSuggestedPrice: boolean): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true));
+    Api.call(Api.endpoints.MaintenancePackages.SetShowSuggestedPrice, {urlParams: {id}, data: {isShowSuggestedPrice}})
+        .then(result => {
+            if (result) dispatch(loadPackageById(id))
+        })
+        .catch(err => {
+            console.log('update is show suggested price err', err)
+        }).finally(() => dispatch(setPackageLoading(false)))
+}
+
+export const updateManualOverride = (id: number,  isManualOverridePrice: boolean): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true));
+    Api.call(Api.endpoints.MaintenancePackages.SetManualOverride, {urlParams: {id}, data: {isManualOverridePrice}})
+        .then(result => {
+            if (result) dispatch(loadPackageById(id))
+        })
+        .catch(err => {
+            console.log('update is manual override err', err)
+        }).finally(() => dispatch(setPackageLoading(false)))
+}
+
+export const updatePriceTitles = (id: number, data: TPackagePrice): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true));
+    Api.call(Api.endpoints.MaintenancePackages.UpdatePriceTitles, {urlParams: {id}, data})
+        .then(result => {
+            if (result) dispatch(loadPackageById(id))
+        })
+        .catch(err => {
+            console.log('update is manual override err', err)
         })
     dispatch(setPackageLoading(false))
+}
+
+export const updateUpsellOrderIndex = (id: number, items: TOrderIndex[], onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true))
+    Api.call(Api.endpoints.MaintenancePackages.UpdateUpsellOrder, {urlParams: {id}, data: {items}})
+        .then(result => {
+            if (result) dispatch(loadPackageById(id))
+        })
+        .catch(err => {
+            console.log('update package interval upsell order index err', err)
+            onError(err)
+        }).finally(() => dispatch(setPackageLoading(false)))
 }

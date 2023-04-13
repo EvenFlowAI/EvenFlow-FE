@@ -11,6 +11,7 @@ import {
     IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
+import {EPackagePricingType} from "../appointmentFrameReducer/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -157,9 +158,15 @@ export type TRecallForRequest = {
     id?: number;
 }
 
+export type MPOptionShort = {
+    id: number;
+    priceType: EPackagePricingType|null;
+}
+
 export interface IAppointmentSlotsRequest {
     serviceCenterId: number;
     maintenancePackageOptionId?: number|null;
+    maintenancePackageOption: MPOptionShort|null;
     fromDate?: ParsableDate;
     appointmentTimingType: EAppointmentTimingType;
     countOfDays?: number;

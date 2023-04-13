@@ -191,6 +191,8 @@ const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppo
 export const SelectedAppointment = () => {
     const {
         selectedPackage,
+        packagePricingType,
+        packagePriceTitles,
         advisor,
         consultants,
         categoriesIds,
@@ -215,8 +217,8 @@ export const SelectedAppointment = () => {
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, packagePriceTitles, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType])
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
@@ -277,14 +279,14 @@ export const SelectedAppointment = () => {
                         </div> }
                     </li>
                     <li key="advisor">
-                        {currentConfig?.advisorSelection
+                        {currentConfig?.advisorSelection && consultants.length
                             ? <div className={classes.selectWrapper}>
                                 <div className={classes.selectWrapper}>
                                     {t("Advisor")}: {isSm ? <br/> : null}
                                     <Select
                                         value={advisor?.id || "Any"}
                                         className={classes.select}
-                                        disabled={currentConfig && !currentConfig?.advisorSelection}
+                                        disabled={currentConfig && !currentConfig?.advisorSelection || !consultants.length}
                                         onChange={handleConsultantChange}>
                                         {consultants
                                             .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
@@ -295,7 +297,7 @@ export const SelectedAppointment = () => {
                             : null}
                         {serviceType !== EServiceType.VisitCenter && address
                             ? <div className="service-list">
-                                <h4> {t("YOUR ADDRESS")}: <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div></h4>
+                                <h4> {t("YOUR ADDRESS")}: <div>{`${typeof address === "string" ? address : address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div></h4>
                             </div>
                             : null}
                         {serviceType !== EServiceType.VisitCenter

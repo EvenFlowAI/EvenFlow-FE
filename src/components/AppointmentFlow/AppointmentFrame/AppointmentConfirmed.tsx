@@ -93,6 +93,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         scProfile,
         s, ss,
         selectedPackage,
+        packagePricingType,
         customer,
         vehicle,
         allCategories,
@@ -105,6 +106,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         engineTypes,
         selectedRecalls,
         advisor,
+        packagePriceTitles,
         dropOffSettings,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
@@ -115,6 +117,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
         state.appointmentFrame.selectedPackage,
+        state.appointmentFrame.packagePricingType,
         state.appointmentFrame.customer,
         state.appointmentFrame.selectedVehicle,
         state.categories.allCategories,
@@ -127,6 +130,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.vehicleDetails.engineTypes,
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.advisor,
+        state.appointmentFrame.packagePriceTitles,
         state.appointment.dropOffSettings,
     ]);
 
@@ -136,8 +140,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const {id} = useParams();
     const dispatch = useDispatch();
 
-    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService])
+    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, packagePriceTitles, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType),
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType])
 
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
 

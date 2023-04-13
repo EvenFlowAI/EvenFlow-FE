@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    IAppointmentByQuery,
+    IAppointmentByQuery, IConsultantsRequestData,
     ICustomer,
     ILoadedVehicle, IPackage,
     IPackageOptions,
@@ -11,6 +11,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
 import {
+    EPackagePricingType,
     EServiceType,
     EUserType, IAncillaryByZipRequest,
     IAppointmentId,
@@ -29,11 +30,13 @@ import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
+import {TPackagePrice} from "../packages/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
 export const setFrameDescription = createAction<string>("fAppointment/setFrameDescription");
 export const setPackage = createAction<IPackageOptions|null>("fAppointment/setPackage");
+export const setPackagePricingType = createAction<EPackagePricingType|null>("fAppointment/setPackagePricingType");
 export const setAdvisor = createAction<IServiceConsultant|null>("fAppointment/setAdvisor");
 export const setTiming = createAction<EAppointmentTimingType|null>("fAppointment/setTiming");
 export const setTime = createAction<moment.Moment|null>("fAppointment/setTime");
@@ -55,6 +58,7 @@ export const setTrackerCreated = createAction<boolean>('fAppointment/SetTrackerC
 export const setAdditionalServicesChosen = createAction<boolean>('fAppointment/SetAdditionalServicesChosen');
 export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPackageIsSelected');
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');
+export const setSelectedPackagePriceTitles = createAction<TPackagePrice[]>('fAppointment/SetSelectedPackagePriceTitles');
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
@@ -67,6 +71,9 @@ export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesMode
 export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
 export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoading');
 export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
+export const setSideBarMenu = createAction<string[]>('fAppointment/SetSideBarMenu');
+export const setSideBarActualSteps = createAction<{[K in TScreen]: number}>('fAppointment/SetSideBarMenuActualSteps');
+export const setSideBarStepsList = createAction<TScreen[]>('fAppointment/SetSideBarStepsList');
 export const setMobileServiceAvailability = createAction<boolean>('fAppointment/SetMobileServiceState');
 export const setPickUpDropOffAvailability = createAction<boolean>('fAppointment/SetPickUpDropOffAvailability');
 export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability');
@@ -94,16 +101,12 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
-export const loadConsultants = (id: string): AppThunk => async dispatch => {
+export const loadConsultants = (data: IConsultantsRequestData, onEmptyList: () => void): AppThunk => async dispatch => {
     Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-        Api.endpoints.ServiceConsultants.GetByQuery,
-        {
-            data: {
-                serviceCenterId: decodeSCID(id)
-            }
-        })
+        Api.endpoints.ServiceConsultants.GetByQuery, {data})
         .then(({data: {result}}) => {
             dispatch(setConsultants(result));
+            if (!result.length) onEmptyList();
         })
         .catch(err => console.log(err))
 }
@@ -196,6 +199,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setSelectedRecalls([]))
     dispatch(setAdditionalServicesChosen(false));
     dispatch(setFrameDescription(''));
+    dispatch(setPackagePricingType(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {

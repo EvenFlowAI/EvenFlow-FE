@@ -4,7 +4,7 @@ import {
     EAppointmentTimingType,
     EReminderType, ETransportation,
     IPersonalInformation,
-    IVehicleData
+    IVehicleData, IVehicleForSlots, MPOptionShort, TRecallForRequest
 } from "../store/reducers/appointment/types";
 import {EOfferType, IOffer} from "../store/reducers/offers/types";
 import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
@@ -12,9 +12,10 @@ import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EJobType} from "../store/reducers/pods/types";
-import {EServiceType} from "../store/reducers/appointmentFrameReducer/types";
+import {EPackagePricingType, EServiceType} from "../store/reducers/appointmentFrameReducer/types";
 import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
+import {TPackagePrice} from "../store/reducers/packages/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -41,7 +42,9 @@ export enum EServiceCenterName {
     SanfordInfinity,
     Dominion,
     Fremont,
-    LakePowellFord
+    LakePowellFord,
+    PerformanceLexus,
+    LexusRiverCenter,
 }
 
 export enum EVehiclePropType {
@@ -211,7 +214,7 @@ export interface IBaseAppointment {
     customerId: string;
     maintenancePackageOptionId: number | null;
     maintenancePackageOption: IPackageOptions | null;
-    // maintenancePackageOption: IMaintenancePackageOption | null;
+    //maintenancePackageOption: IMaintenancePackageOption | null;
     driver: IDriverInfo;
     duration: number;
     transactionValue: number;
@@ -300,6 +303,22 @@ export interface IServiceConsultant {
     iconPath: string;
 }
 
+export interface IConsultantsRequestData {
+    serviceCenterId: number;
+    pageIndex: 0;
+    pageSize: 0;
+    searchTerm: string;
+    serviceRequestIds: number[];
+    serviceCategoryIds: number[];
+    maintenancePackageOption: MPOptionShort|null;
+    recalls: TRecallForRequest[];
+    serviceTypeOptionId: number|null;
+    vehicle: IVehicleForSlots;
+    valueServiceOfferIds?: number[];
+    address?: string;
+    zipCode?: string;
+}
+
 export interface ICustomer {
     fullName: string;
     phoneNumber: string;
@@ -358,6 +377,13 @@ export type TExtendedService = {
     detailedDescription?: string;
 } & TServiceRequestShort;
 
+export type TUpsellOfOption = {
+    id: number;
+    name: string;
+    detailedDescription: string;
+    orderIndex: number;
+}
+
 export interface IPackageOptions {
     id: number;
     type: EMaintenanceOptionType;
@@ -367,17 +393,19 @@ export interface IPackageOptions {
     complimentaryServices: TExtendedComplimentary[];
     marketPriceServiceRequests: number;
     marketPriceComplimentaryServices: number;
+    marketPriceIntervalUpsells: number;
+    intervalUpsells: TUpsellOfOption[];
+    totalMaintenanceValue: number;
+    marketPriceIntervalUpsell: number;
     maintenancePackageName: string;
+    priceType?: EPackagePricingType;
 }
 
 export interface IPackage {
     isApplyPricingOptimization?: boolean;
     maintenancePackageName?: string;
     options: IPackageOptions[];
-}
-
-export interface IPackage {
-    options: IPackageOptions[];
+    priceTitles: TPackagePrice[];
 }
 
 export interface IPackageAppointments extends IPackage{
@@ -399,6 +427,11 @@ export interface IPackageByQuery {
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
     serviceRequestsAssigned: IPackageServiceRequestsAssigned[];
+    priceTitle?: string;
+    priceWithFeeTitle?: string;
+    isShowSuggestedPrice?: boolean;
+    isManualOverridePrice?: boolean;
+    intervalUpsells: TIntervalUpsellForPackage[];
 }
 
 export interface IMake {
@@ -422,6 +455,17 @@ export type TEngineType = {
     name: string;
 }
 
+export type TIntervalUpsellForPackage = {
+    id: number;
+    code: string;
+    description: string;
+    durationInHours: number;
+    invoiceAmount: number;
+    orderIndex: number;
+    partsUnitCost: number;
+    numberOfParts: number;
+}
+
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
     isApplyBusinessRules: boolean;
@@ -431,8 +475,12 @@ export interface IPackageById {
     id: number;
     serviceRequests: TExtendedService[];
     complimentaryServices: TExtendedComplimentary[];
+    intervalUpsells: TIntervalUpsellForPackage[];
     businessRules: IBusinessRule;
     engineTypes: TEngineType[];
+    isShowSuggestedPrice?: boolean;
+    isManualOverridePrice?: boolean;
+    priceTitles: TPackagePrice[];
 }
 
 export type TOptionServiceRequest = {
@@ -445,12 +493,15 @@ export interface IPackageOptionDetailed {
     type: EMaintenanceOptionType;
     price: number;
     serviceRequests: TOptionServiceRequest[];
+    intervalUpsells: TOptionServiceRequest[];
     complimentaryServices: number[];
     complimentaryServiceLaborHours: number;
     complimentaryServicePrice: number;
     maintenancePackageId: number;
     serviceRequestLaborHours: number;
     serviceRequestPrice: number;
+    intervalUpsellServiceLaborHours: number;
+    intervalUpsellServicePrice: number;
     name?: string;
     serviceRequestAssignedId?: number;
 }

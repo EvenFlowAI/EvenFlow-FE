@@ -154,9 +154,11 @@ type ApiRoutes = {
     GeographicZones: Record<"Create" | "Update" | "GetZones" | "ReassignZipCode"
         | "RemoveZipCode" | "Remove" | "GetById",  TApiRoute>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiRoute>,
+    IntervalUpsell: Record<"GetUpsellByQuery" | "EditUpsell" | "RemoveUpsell" | "AddUpsell" | "GetUpsellById", TApiRoute>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
-        | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder", TApiRoute>,
+        | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder"
+        | "SetShowSuggestedPrice" | "SetManualOverride" | "UpdatePriceTitles" | "UpdateUpsellOrder", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -308,6 +310,13 @@ export class Api {
             RemoveZipCode: {route: "/geographic-zones/zip-code/{id}", method: "delete"},
             GetById: {route: "/geographic-zones/{id}", method: "get"},
         },
+        IntervalUpsell: {
+            GetUpsellByQuery: {route: "/interval-upsells/by-query", method: "post"},
+            EditUpsell: {route: "/interval-upsells/{id}", method: "put"},
+            RemoveUpsell: {route: "/interval-upsells/{id}", method: "delete"},
+            AddUpsell: {route: "/interval-upsells", method: "post"},
+            GetUpsellById: {route: "/interval-upsells/{id}", method: "get"},
+        },
         MaintenancePackages: {
             Create: {route: "/maintenance-packages", method: "post"},
             Update: {route: "/maintenance-packages/{id}", method: "put"},
@@ -323,7 +332,11 @@ export class Api {
             UpdateSRDescription: {route: "/maintenance-packages/{id}/set-service-request-description", method: "patch"},
             UpdateComplimentaryDescription: {route: "/maintenance-packages/{id}/set-complimentary-service-description", method: "patch"},
             UpdateComplimentaryOrder: {route: "/maintenance-packages/{id}/set-list-complimentary-service-order-index", method: "patch"},
+            UpdateUpsellOrder: {route: "/maintenance-packages/{id}/set-list-interval-upsell-order-index", method: "patch"},
             UpdateSROrder: {route: "/maintenance-packages/{id}/set-list-service-request-order-index", method: "patch"},
+            SetShowSuggestedPrice: {route: "/maintenance-packages/{id}/set-show-suggested-price", method: "patch"},
+            SetManualOverride: {route: "/maintenance-packages/{id}/set-manual-override-price", method: "patch"},
+            UpdatePriceTitles: {route: "/maintenance-packages/{id}/price-titles", method: "put"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

@@ -26,7 +26,7 @@ import {EServiceCenterName} from "./api/types";
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, consultants} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
@@ -42,7 +42,7 @@ const App = () => {
             setValueServicePreviousScreen("location");
         }
         const currentConfig = config.find(item => item.serviceType && serviceType && item.serviceType.toString() === serviceType.toString());
-        if (!currentConfig?.advisorSelection
+        if ((!currentConfig?.advisorSelection)
             || serviceType === EServiceType.MobileService) {
             setValueServiceNextScreen("appointmentTiming");
         }
