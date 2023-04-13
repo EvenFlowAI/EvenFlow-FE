@@ -74,6 +74,7 @@ export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoa
 export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
 export const setSideBarMenu = createAction<string[]>('fAppointment/SetSideBarMenu');
 export const setSideBarActualSteps = createAction<{[K in TScreen]: number}>('fAppointment/SetSideBarMenuActualSteps');
+export const setSideBarStepsList = createAction<TScreen[]>('fAppointment/SetSideBarStepsList');
 export const setMobileServiceAvailability = createAction<boolean>('fAppointment/SetMobileServiceState');
 export const setPickUpDropOffAvailability = createAction<boolean>('fAppointment/SetPickUpDropOffAvailability');
 export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability');
