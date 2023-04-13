@@ -10,9 +10,15 @@ import {IConsultantsRequestData, IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
     selectCategoriesIds,
-    selectService, selectSubService,
+    selectService,
+    selectSubService,
     setAdvisor,
-    setPackage, setPackageIsSelected, setSelectedPackageOptionType, setSideBarActualSteps, setSideBarMenu
+    setPackage,
+    setPackageIsSelected,
+    setSelectedPackageOptionType,
+    setSideBarActualSteps,
+    setSideBarMenu,
+    setSideBarStepsList
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -24,7 +30,7 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
-import {collectServiceRequestIds, getCurrentMenu, getStepsMap, mapRecallsForRequest} from "./utils";
+import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
 import {MPOptionShort} from "../../../store/reducers/appointment/types";
@@ -184,7 +190,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap])
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap, getStepsScreen])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(selectAppointment(null));
