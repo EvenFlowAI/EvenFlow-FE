@@ -37,7 +37,8 @@ import {MPOptionShort} from "../../../store/reducers/appointment/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+   // gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: "stretch",
     justifyContent: "flex-start",
     gridGap: "20px",
