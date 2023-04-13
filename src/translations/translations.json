@@ -82,6 +82,7 @@
       "Total Complimentary Value": "Total Complimentary Value",
       "Included in package": "Included in package",
       "excluding taxes": "excluding taxes",
+      "excluding taxes & fees": "excluding taxes & fees",
       "Do you want to change the selected Package Option?": "Do you want to change the selected Package Option?",
       "No": "No",
       "Yes": "Yes",
@@ -276,6 +277,8 @@
       "APPOINTMENT DETAILS": "APPOINTMENT DETAILS",
       "DEALERSHIP CONTACT NUMBER": "DEALERSHIP CONTACT NUMBER",
       "Any Advisor": "Any Advisor",
+      "Service Interval Upsell": "Service Interval Upsell",
+      "Excluding taxes & fees": "Excluding taxes & fees"
       "Search Customer by Name": "Search Customer by Name",
       "Customer First Name": "Customer First Name",
       "Customer Last Name": "Customer Last Name",

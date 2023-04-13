@@ -15,7 +15,11 @@ import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {Api} from "../../../config/requests";
-import {setAppointmentId, setReminders} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setAppointmentId,
+    setPackagePricingType,
+    setReminders
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
@@ -101,6 +105,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             id: data.id,
             hashKey: data.hashKey,
         }));
+        if (data.maintenancePackageOption?.priceType) {
+            dispatch(setPackagePricingType(data.maintenancePackageOption.priceType))
+        }
         if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
             const d = {
                 ...appointment.customerLoadedData
@@ -162,6 +169,12 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         const make = getMake();
         const model = getModel();
         const year = getYear();
+        const maintenancePackageOption = appointmentFrame.selectedPackage
+            ? {
+                id: appointmentFrame.selectedPackage?.id,
+                priceType: appointmentFrame.packagePricingType
+            }
+            : null;
 
         const data = {
             id: appointmentFrame.id,
@@ -203,7 +216,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
                 : appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
-            maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
+            //maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
+            maintenancePackageOption,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,
             serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,

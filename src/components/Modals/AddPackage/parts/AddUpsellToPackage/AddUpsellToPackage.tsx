@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
@@ -18,8 +18,6 @@ import Checkbox from "../../../../UI/Checkbox";
 
 type TAddUpsellProps = DialogProps & {
     selectedCodes: IUpsellServiceRequest[];
-    setSelectedCodes: Dispatch<SetStateAction<IUpsellServiceRequest[]>>;
-    handleSave?: () => void;
     handleSelect: (el: IUpsellServiceRequest) => void;
     disabledIds?: number[]
 }
@@ -63,8 +61,6 @@ const AddUpsellToPackage: React.FC<TAddUpsellProps> =
     ({ handleSelect,
          disabledIds,
          selectedCodes,
-         setSelectedCodes,
-         handleSave,
          ...props}) => {
         const {selectedSC} = useSCs();
         const dispatch = useDispatch();
@@ -88,20 +84,15 @@ const AddUpsellToPackage: React.FC<TAddUpsellProps> =
         );
 
         useEffect(() => {
-            if (props.open && selectedSC) {
+            if (selectedSC) {
                 dispatch(loadUpsellServiceRequests(selectedSC.id));
             }
-        }, [props.open, dispatch, selectedSC, pageSize, pageIndex]);
+        }, [dispatch, selectedSC, pageSize, pageIndex]);
 
         const handleClose = useCallback((): void => {
             dispatch(setUpsellFilter({searchTerm: ''}));
             props.onClose();
         }, [props.onClose, dispatch])
-
-        const handleSaveOpsCode = useCallback(() => {
-            handleSave && handleSave();
-            handleClose();
-        }, [selectedCodes])
 
         const preActions = useCallback((el: IUpsellServiceRequest) => {
             const checked = !!selectedCodes.find(item => item.id === el.id);
@@ -151,11 +142,6 @@ const AddUpsellToPackage: React.FC<TAddUpsellProps> =
                     <Button onClick={handleClose}>
                         Close
                     </Button>
-                    {handleSave && (
-                        <Button onClick={handleSaveOpsCode} color="primary" variant="contained">
-                            Save
-                        </Button>)
-                    }
                 </DialogActions>
             </BaseModal>
         );

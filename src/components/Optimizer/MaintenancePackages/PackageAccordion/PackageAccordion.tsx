@@ -25,6 +25,7 @@ import Description from "../Description/Description";
 import OrderIndex from "../OrderIndex/OrderIndex";
 import {IntervalUpsellAndOptions} from "../IntervalUpsellAndOptions/IntervalUpsellAndOptions";
 import PricesBlock from "../PricesRow/PricesRow";
+import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -345,14 +346,21 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             intervalUpsellServicePrice: +option.intervalUpsellServicePrice,
         }))
         try {
-            dispatch(updatePackageOptions(data.id, revisedData, showError));
+            const upsellPriceText = currentPackage?.priceTitles?.find(item => item.type === EPackagePricingType.PriceWithFee)?.title;
+            const priceText = currentPackage?.priceTitles?.find(item => item.type === EPackagePricingType.BasePrice)?.title;
+            const upsellsAreIncluded = data.options.find(opt => opt.intervalUpsells.length);
+            if (upsellsAreIncluded && (!upsellPriceText|| !priceText)) {
+                showError("Please save the Price Texts first")
+            } else {
+                dispatch(updatePackageOptions(data.id, revisedData, showError));
+            }
         } catch (e){
             showError(e)
         } finally {
             setIsEdit(false);
             setEditingOption(null);
         }
-    }, [dispatch])
+    }, [dispatch, currentPackage, showError])
 
     const handleSave = useCallback((): void => {
         const [isValid, messages] = checkIsValid(packageData);
@@ -462,7 +470,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             valuesArray={detailsData.suggestedRequestPrice}
                             toggleField="showSuggestedPrice"
                             toggleLabel="Show Suggested Price"
-                            checked/>
+                            checked={currentPackage?.isShowSuggestedPrice}/>
 
                         <Divider/>
 
@@ -478,9 +486,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             summaryText="Market Price:"
                             valuesArray={detailsData.requestsPrice}
                             onInputChange={onInputChange}
-                            toggleField="manualOverride"
-                            toggleLabel="Manual Override"
-                            checked
+                            // todo when new logic will be ready, uncomment
+                            // toggleField="manualOverride"
+                            // toggleLabel="Manual Override"
+                            // checked={currentPackage?.isManualOverridePrice}
                         />
 
                         <div className={classes.complimentaryRow}>Interval Upsell</div>
@@ -543,7 +552,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             valuesArray={detailsData.complimentaryPrice}
                             onInputChange={onInputChange}/>
 
-                      <PricesBlock packageData={packageData}/>
+                      <PricesBlock packageData={packageData} suggestedPrices={detailsData.suggestedRequestPrice}/>
 
                     </React.Fragment>}
 

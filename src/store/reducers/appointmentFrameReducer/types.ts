@@ -124,3 +124,8 @@ export type TAncillaryPriceByZip = {
     feeAmount: number|null;
     feeType: EAncillaryType;
 }
+
+export enum EPackagePricingType {
+    BasePrice,
+    PriceWithFee
+}

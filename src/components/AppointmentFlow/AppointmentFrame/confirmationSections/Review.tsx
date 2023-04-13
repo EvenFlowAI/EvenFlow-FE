@@ -24,11 +24,13 @@ export const Review = () => {
         consultant,
         transportation,
         serviceType,
+        consultants,
         config
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
         state.appointmentFrame.serviceType,
+        state.appointmentFrame.consultants,
         state.bookingFlowConfig.config,
     ]);
     const currentConfig = useMemo(() => {

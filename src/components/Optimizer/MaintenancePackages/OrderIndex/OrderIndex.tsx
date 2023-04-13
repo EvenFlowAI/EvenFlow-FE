@@ -5,7 +5,7 @@ import {Loading} from "../../../UI/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
-import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
+import {TExtendedComplimentary, TExtendedService, TIntervalUpsellForPackage} from "../../../../api/types";
 import {LoadingButton} from "../../../UI/Button";
 import {
     updateComplimentaryOrderIndex,
@@ -14,7 +14,6 @@ import {
 } from "../../../../store/reducers/packages/actions";
 import {useException} from "../../../../utils/hooks";
 import {TextField} from "../../../UI/TextField";
-import {IUpsellServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 
 type TOrderIndex = {
     onClose: () => void;
@@ -41,7 +40,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
     const {isPackageLoading, currentPackage} = useSelector((state: RootState) => state.packages);
     const [serviceRequests, setServiceRequests] = useState<TExtendedService[]>([]);
     const [complimentary, setComplimentary] = useState<TExtendedComplimentary[]>([]);
-    const [upsell, setUpsell] = useState<IUpsellServiceRequest[]>([]);
+    const [upsell, setUpsell] = useState<TIntervalUpsellForPackage[]>([]);
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
@@ -50,6 +49,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
         if (open && currentPackage) {
             setServiceRequests(currentPackage.serviceRequests);
             setComplimentary(currentPackage.complimentaryServices);
+            setUpsell(currentPackage.intervalUpsells);
         }
     }, [currentPackage, open])
 
@@ -144,7 +144,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                     .sort((a, b) => a.id - b.id)
                                     .map(item => {
                                         return <TableRow key={item.id}>
-                                            <TableCell key="3">
+                                            <TableCell key="3" width={110}>
                                                 <TextField
                                                     type="number"
                                                     inputProps={{min: 1, step: 1, max: serviceRequests.length + 1}}
@@ -181,7 +181,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                         .sort((a, b) => a.id - b.id)
                                         .map(item => {
                                             return <TableRow key={item.id}>
-                                                <TableCell key="3">
+                                                <TableCell key="3" width={110}>
                                                     <TextField
                                                         type="number"
                                                         inputProps={{min: 1, step: 1, max: upsell.length + 1}}
@@ -190,7 +190,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                                         onChange={onUpsellOrderChange(item.id)}
                                                     />
                                                 </TableCell>
-                                                <TableCell key="2">{item.description}</TableCell>
+                                                <TableCell key="2" align="left">{item.description}</TableCell>
                                             </TableRow>
                                         })}
                                 </TableBody>
@@ -220,7 +220,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                             .sort((a, b) => a.id - b.id)
                                             .map(item => {
                                                 return <TableRow key={item.id}>
-                                                    <TableCell key="3">
+                                                    <TableCell key="3" width={110}>
                                                         <TextField
                                                             type="number"
                                                             inputProps={{min: 1, step: 1, max: complimentary.length + 1}}
@@ -229,7 +229,7 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
                                                             onChange={onComplimentaryOrderChange(item.id)}
                                                         />
                                                     </TableCell>
-                                                    <TableCell key="2">{item.name}</TableCell>
+                                                    <TableCell key="2" align="left">{item.name}</TableCell>
                                                 </TableRow>
                                             })}
                                     </TableBody>
