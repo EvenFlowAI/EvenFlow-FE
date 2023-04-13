@@ -62,7 +62,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType} from "../appointmenttypes";
+import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {
     EPackageEMenuType,
     EPackagePricingType,
@@ -382,8 +382,5 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSideBarStepsList, (state, {payload}) => {
         return {...state, sideBarStepsList: payload}
-    })
-    .addCase(setPackageEMenuType, (state, {payload}) => {
-        return {...state, packageEMenuType: payload}
     })
 )
