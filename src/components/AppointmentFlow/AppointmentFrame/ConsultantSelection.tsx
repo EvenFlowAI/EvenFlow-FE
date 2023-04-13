@@ -52,9 +52,12 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
 
 const ConsultantWrapper = styled(
     ({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
-    display: "flex",
-    rowGap: 16,
-    columnGap: 16,
+    //display: "flex",
+    display: 'grid',
+    gridGap: 16,
+    // rowGap: 16,
+    // columnGap: 16,
+    gridTemplateColumns: '1fr 1fr',
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     color: active ? "#FFFFFF" : theme.palette.text.primary,
     background: active ? "#000000" : "transparent",
