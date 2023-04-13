@@ -14,11 +14,12 @@ type TTotalPriceRowProps = {
     title: string;
 }
 
-const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number }>(({
+const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number, roundPrice?: boolean }>(({
                                                                                                          theme,
                                                                                                          selected,
                                                                                                          showDetails,
-                                                                                                         count
+                                                                                                         count,
+                                                                                                                               roundPrice
                                                                                                      }) => ({
     position: 'relative',
     display: 'grid',
@@ -35,7 +36,7 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     cursor: "pointer",
     "& .prices": {
         display: 'flex',
-        justifyContent: showDetails ? count > 2 ? 'space-between' : 'space-evenly' : 'center',
+        justifyContent: showDetails ? !roundPrice ? 'space-between' : 'space-evenly' : 'center',
     },
     "& .currentPrice": {
         color: "#D32F2F"
@@ -59,7 +60,7 @@ const useStyles = makeStyles({
         textAlign: 'right',
         fontSize: 16,
         fontWeight: 700,
-        color: "#FFFFFF",
+        color: "#202021",
         background: "#FFD966",
         border: '1px solid #DADADA',
         padding: '22px 16px',
@@ -106,6 +107,7 @@ const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleCl
 
             return <PriceValue
                 showDetails={showDetails}
+                roundPrice={scProfile?.isRoundPrice}
                 selected={selected}
                 count={packages.length}
                 onClick={handleClick(p, EPackagePricingType.PriceWithFee)}

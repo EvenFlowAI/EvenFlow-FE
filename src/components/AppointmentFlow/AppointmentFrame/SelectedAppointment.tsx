@@ -297,7 +297,7 @@ export const SelectedAppointment = () => {
                             : null}
                         {serviceType !== EServiceType.VisitCenter && address
                             ? <div className="service-list">
-                                <h4> {t("YOUR ADDRESS")}: <div>{`${address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div></h4>
+                                <h4> {t("YOUR ADDRESS")}: <div>{`${typeof address === "string" ? address : address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div></h4>
                             </div>
                             : null}
                         {serviceType !== EServiceType.VisitCenter
