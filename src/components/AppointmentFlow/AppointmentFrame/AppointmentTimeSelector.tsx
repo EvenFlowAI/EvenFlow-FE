@@ -96,6 +96,9 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             }
             return slots;
         }, [date, appointments, gap]);
+        // console.log(gap)
+        // console.log('slots', slots)
+        // console.log('appointments', appointments)
 
         const handleGA = useCallback((a: IRemappedAppointmentSlot|null) => {
             ReactGA.event({
