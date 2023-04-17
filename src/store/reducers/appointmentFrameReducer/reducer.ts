@@ -383,4 +383,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     .addCase(setSideBarStepsList, (state, {payload}) => {
         return {...state, sideBarStepsList: payload}
     })
+    .addCase(setPackageEMenuType, (state, {payload}) => {
+        return {...state, packageEMenuType: payload}
+    })
 )

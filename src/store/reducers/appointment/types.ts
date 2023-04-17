@@ -11,7 +11,7 @@ import {
     IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
-import {EPackagePricingType} from "../appointmentFrameReducer/types";
+import {EPackageEMenuType, EPackagePricingType} from "../appointmentFrameReducer/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -160,8 +160,9 @@ export type TRecallForRequest = {
 }
 
 export type MPOptionShort = {
-    id: number;
-    priceType: EPackagePricingType|null;
+    id?: number;
+    priceType?: EPackagePricingType|null;
+    optionType?: EPackageEMenuType|null;
 }
 
 export interface IAppointmentSlotsRequest {

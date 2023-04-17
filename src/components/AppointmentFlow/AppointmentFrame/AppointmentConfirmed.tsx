@@ -94,6 +94,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         s, ss,
         selectedPackage,
         packagePricingType,
+        packageEMenuType,
         customer,
         vehicle,
         allCategories,
@@ -118,6 +119,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.subService,
         state.appointmentFrame.selectedPackage,
         state.appointmentFrame.packagePricingType,
+        state.appointmentFrame.packageEMenuType,
         state.appointmentFrame.customer,
         state.appointmentFrame.selectedVehicle,
         state.categories.allCategories,
@@ -140,8 +142,21 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const {id} = useParams();
     const dispatch = useDispatch();
 
-    const servicesList = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, packagePriceTitles, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType])
+    const servicesList = useMemo(() => {
+            return getMaintenanceDescription(
+                srList,
+                selectedRecalls,
+                packagePriceTitles,
+                selectedSR,
+                selectedPackage,
+                allCategories,
+                categoriesIds,
+                valueService,
+                packagePricingType,
+                packageEMenuType
+            )
+        },
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType, packageEMenuType])
 
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
 

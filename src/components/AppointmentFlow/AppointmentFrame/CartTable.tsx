@@ -93,7 +93,9 @@ const CartTable = () => {
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
-    const selectedServices = useMemo(() => getMaintenanceList(serviceRequests, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService),
+    const selectedServices = useMemo(() => {
+           return getMaintenanceList(serviceRequests, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService)
+        },
         [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, selectedRecalls])
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);

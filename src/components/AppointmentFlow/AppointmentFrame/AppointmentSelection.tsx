@@ -88,7 +88,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         selectedRecalls,
         serviceTypeOption,
         packagePricingType,
-        consultants
+        packageEMenuType
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -116,7 +116,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.serviceTypeOption,
         state.appointmentFrame.packagePricingType,
-        state.appointmentFrame.consultants,
+        state.appointmentFrame.packageEMenuType,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -210,9 +210,12 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             if (id) {
                 setLoading(true);
                 try {
+                    // todo check if data is correct, to ask about consultants request in this case
                     const maintenancePackageOption: MPOptionShort|null = selectedPackage
                         ? {id: selectedPackage?.id, priceType: packagePricingType}
-                        : null;
+                        : packageEMenuType
+                            ? {optionType: packageEMenuType}
+                            : null;
                     const dd: IAppointmentSlotsRequest = {
                         appointmentTimingType: serviceTypeOption?.type === EServiceType.PikUpDropOff || !selectedTimingType
                             ? EAppointmentTimingType.FirstAvailable
@@ -264,7 +267,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType,
-        selectedVehicle, customerData, service, vehicle, packagePricingType,
+        selectedVehicle, customerData, service, vehicle, packagePricingType, packageEMenuType,
         subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
     ]);
 

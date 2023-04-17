@@ -3,7 +3,11 @@ import {IPackageOptions} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 import {IMaintenanceItem, IRecallByVin} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
-import {EPackagePricingType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
+import {
+    EPackageEMenuType,
+    EPackagePricingType,
+    IValueService
+} from "../../../store/reducers/appointmentFrameReducer/types";
 import i18n from "../../../i18n";
 import {TPackagePrice} from "../../../store/reducers/packages/types";
 
@@ -17,6 +21,7 @@ export const getMaintenanceDescription = (
     selectedCategories?: number[],
     valueService?: IValueService | null,
     packagePricingType?: EPackagePricingType|null,
+    packageEMenuType?: EPackageEMenuType|null,
 ) => {
     const services: string[] = [];
 
@@ -27,6 +32,11 @@ export const getMaintenanceDescription = (
             if (price) name = name + ` (${price.title})`;
         }
         services.push(name)
+    } else {
+        if (packageEMenuType) {
+            const name = packageEMenuType === EPackageEMenuType.Dealer ? "Dealer Package" : "Factory Package";
+            services.push(i18n.t(name));
+        }
     }
     if (selectedSR?.length) {
         const filtered = srList.filter(el => selectedSR.includes(el.id)).map(el => el.description);

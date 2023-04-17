@@ -192,6 +192,7 @@ export const SelectedAppointment = () => {
     const {
         selectedPackage,
         packagePricingType,
+        packageEMenuType,
         packagePriceTitles,
         advisor,
         consultants,
@@ -217,8 +218,21 @@ export const SelectedAppointment = () => {
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const selectedServices = useMemo(() => getMaintenanceDescription(srList, selectedRecalls, packagePriceTitles, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType),
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType])
+    const selectedServices = useMemo(() => {
+            return getMaintenanceDescription(
+                srList,
+                selectedRecalls,
+                packagePriceTitles,
+                selectedSR,
+                selectedPackage,
+                allCategories,
+                categoriesIds,
+                valueService,
+                packagePricingType,
+                packageEMenuType
+            )
+        },
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType, packageEMenuType])
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
