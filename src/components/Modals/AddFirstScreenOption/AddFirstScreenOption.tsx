@@ -70,7 +70,15 @@ const useStyles = makeStyles(() => ({
     radioGroup: {
         display: 'flex',
         justifyContent: 'flex-end'
-    }
+    },
+    twoInputsWrapper: {
+        width: '100%',
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gridGap: 18,
+        marginBottom: 18,
+        marginTop: 18,
+    },
 }))
 
 const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem, ...props}) => {
@@ -84,6 +92,8 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
     const [note, setNote] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<TOption|null>({value: '0', name: 'Visit Center'});
     const [defaultTransportation, setDefaultTransportation] = useState<ITransportationOptionFull|null>(null);
+    const [taglineText, setTaglineText] = useState<string>('');
+    const [taglineColor, setTaglineColor] = useState<string>('');
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -109,6 +119,8 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                 const serviceTypeOption = getServiceTypeOptions().find(item => item.value.toString() === editingItem.type.toString());
                 serviceTypeOption && setSelectedServiceType(serviceTypeOption);
             }
+            if (editingItem.taglineText) setTaglineText(editingItem.taglineText);
+            if (editingItem.taglineFontColorHex) setTaglineColor(editingItem.taglineFontColorHex);
         }
     }, [props.open, editingItem, options])
 
@@ -123,6 +135,8 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
         setNote('')
         setSelectedServiceType(null)
         setDefaultTransportation(null)
+        setTaglineColor('');
+        setTaglineText('');
         props.onClose();
     }, [])
 
@@ -170,6 +184,8 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
             note,
             type: selectedServiceType?.value ?? EServiceType.VisitCenter,
             orderIndex: +orderIndex,
+            taglineText: taglineText,
+            taglineFontColorHex: taglineColor,
         }
         if (externalLink) data.externalLink = externalLink;
         if (selectedSC) {
@@ -194,6 +210,16 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
         setFormIsChecked(false);
         setSelectedServiceType(value);
     }, [])
+
+    const onTaglineTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
+        setTaglineText(e.target.value)
+    }
+
+    const onTaglineColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
+        setTaglineColor(e.target.value)
+    }
 
     return (
         <BaseModal {...props} width={1128} onClose={onCancel}>
@@ -272,6 +298,27 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                     placeholder="Enter Note"
                     onChange={onNoteChange}
                 />
+                <div className={classes.twoInputsWrapper}>
+                    <div>
+                        <TextField
+                            fullWidth
+                            value={taglineText}
+                            label="Tagline Text"
+                            placeholder="Enter Tagline Text"
+                            onChange={onTaglineTextChange}
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            fullWidth
+                            value={taglineColor}
+                            inputProps={{maxLength: 6}}
+                            label="Tagline Font Color hex #"
+                            placeholder="Enter Tagline Font Color (6 symbols)"
+                            onChange={onTaglineColorChange}
+                        />
+                    </div>
+                </div>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} className={classes.cancelButton}>
