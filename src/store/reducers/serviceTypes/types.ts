@@ -19,6 +19,8 @@ export interface IFirstScreenOption {
     note?: string;
     transportationOption: IFirstScreenTransportation;
     externalLink?: string;
+    taglineText?: string;
+    taglineFontColorHex?: string;
 }
 
 export type TUpdateFirstScreenOption = {
@@ -29,6 +31,8 @@ export type TUpdateFirstScreenOption = {
     note?: string;
     transportationOptionId?: number;
     externalLink?: string;
+    taglineText?: string;
+    taglineFontColorHex?: string;
 }
 
 export type TNewFirstScreenOption = TUpdateFirstScreenOption & {

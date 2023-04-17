@@ -40,11 +40,22 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
     }
 }));
 
+const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme, {taglineColor?: string}>(({theme, taglineColor}) => ({
+    minHeight: 40,
+    width: '100%',
+    display: 'flex',
+    justifyContent: "center",
+    fontWeight: 600,
+    fontSize: 20,
+    paddingBottom: 16,
+    color: taglineColor ? `#${taglineColor}` : 'inherit',
+}))
+
 const useStyles = makeStyles((theme) => ({
     button: {
         position: 'relative',
         height: "100%",
-        maxHeight: 248,
+        maxHeight: 285,
         display: "flex",
         flexDirection: 'column',
         alignItems: "center",
@@ -101,6 +112,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                 return card
             })
         .filter(card => card), [firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn])
+    const isTaglinePresent = useMemo(() => remappedCards.find(el => el?.taglineText?.length), [remappedCards]);
 
     const handleUser = (service: IFirstScreenOption) => {
         if (userType === EUserType.New) {
@@ -132,7 +144,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
         : <CardsWrapper cardsAmount={remappedCards.length}>
             {[...remappedCards]
                 .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
-                .map(card => {
+                .map((card) => {
                     if (card) {
                         return <Grid key={card.id}>
                             <div className={classes.button} onClick={() => !isSM && handleSelect(card)}>
@@ -144,6 +156,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                                     <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
                                 </HtmlTooltip> : null}
                                 <div className={classes.name} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
+                                {isTaglinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
                                 <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
                             </div>
                         </Grid>

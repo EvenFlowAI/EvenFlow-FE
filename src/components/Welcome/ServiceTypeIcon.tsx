@@ -17,10 +17,13 @@ const useStyles = makeStyles((theme) => ({
         // backgroundSize: 'contain',
         // backgroundPosition: 'center',
         // backgroundRepeat: 'no-repeat',
-        [theme.breakpoints.down('sm')]: {
+        [`${theme.breakpoints.down("sm")} and (orientation: portrait)`]: {
             maxWidth: 224,
             height: 112,
             width: '90%',
+        },
+        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+           padding: '7%'
         },
     },
     noLogo: {
@@ -30,11 +33,14 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold',
         fontSize: 32,
         backgroundColor: "#F4F4F4",
-        [theme.breakpoints.down("sm")]: {
+        [`${theme.breakpoints.down("sm")} and (orientation: portrait)`]: {
             width: 224,
             height: 112,
             maxWidth: '90%'
-        }
+        },
+        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+            padding: '7%'
+        },
     },
     image: {
         // width: 'fit-content',
