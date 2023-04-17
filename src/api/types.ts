@@ -434,9 +434,15 @@ export interface IPackageByQuery {
     intervalUpsells: TIntervalUpsellForPackage[];
 }
 
+export type TModelCode = {
+    id: number;
+    name: string;
+}
+
 export interface IMake {
     name: string;
     models: string[];
+    modelCodes?: TModelCode[];
     id?:number;
 }
 

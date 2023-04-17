@@ -30,6 +30,7 @@ export interface IServiceCenterProfile {
     defaultVehicleMakeId?: number|null;
     isCommentRequired: boolean;
     engineTypeFieldName?: string;
+    dmsId?: string;
 }
 export interface ISR {
     id: number;

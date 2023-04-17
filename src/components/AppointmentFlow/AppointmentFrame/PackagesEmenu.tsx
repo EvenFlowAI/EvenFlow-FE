@@ -12,23 +12,21 @@ const PackagesEmenu = () => {
     useEffect(() => {
         let str = 'http://www.emenusllc.com/index.php?go=member.pdfTH&pdfType=threeUp&service_type=1&';
         if (selectedVehicle?.model) {
-            const models = makes.find(item => item.name === selectedVehicle.make)?.models;
-            // todo model id real
-            const modelId = models?.find(item => item === selectedVehicle.model)
+            const models = makes.find(item => item.name === selectedVehicle.make)?.modelCodes;
+            const modelId = models?.find(item => item.name === selectedVehicle.model)?.id;
             if (modelId) str = str + `model=${modelId}&`;
-            // todo member id
-            if (scProfile?.id) str = str + `member=${scProfile.id}&`;
+            if (scProfile?.dmsId) str = str + `member=${scProfile.dmsId}&`;
             if (selectedVehicle.year) str = str + `year=${selectedVehicle.year}&`;
             if (selectedVehicle.mileage) str = str + `mileage_service_type=${selectedVehicle.mileage}TC`;
             if (selectedVehicle.vin?.length === 16) str = str + `&vin=${selectedVehicle.vin}`;
             setSrcLink(str);
         }
     }, [selectedVehicle, scProfile])
-    // todo correct src
+    // todo delete mock src
     const src = 'http://www.emenusllc.com/index.php?go=member.pdfTH&pdfType=threeUp&service_type=1&model=43&member=2437&year=2010&mileage_service_type=30000TC';
     return isLoading
         ? <Loading/>
-        : <iframe src={src} width="100%" style={{height: '50vh'}}/>;
+        : <iframe src={srcLink} width="100%" style={{height: '50vh'}}/>;
 };
 
 export default PackagesEmenu;
