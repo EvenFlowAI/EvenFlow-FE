@@ -36,9 +36,16 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     padding: '22px 16px',
     lineHeight: '20px',
     cursor: 'pointer',
+    [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        gridTemplateColumns: showDetails ? '1fr 2fr' : '1fr',
+        padding: '11px 8px',
+    },
     "& .prices": {
         display: 'flex',
         justifyContent: showDetails ? !roundPrice ? 'space-between' : 'space-evenly' : 'center',
+        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+            flexDirection: 'column'
+        }
     },
     "& .currentPrice": {
         color: "#D32F2F"
