@@ -225,7 +225,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
         if (e.target.value.match(/^[a-zA-Z0-9]*$/)) {
             setTaglineColor(e.target.value.trim())
         } else {
-            showError('Tagline Font Color Hex must consist from letters and digits only')
+            showError('Tagline Font Color Hex must consist letters and digits only')
         }
     }
 
