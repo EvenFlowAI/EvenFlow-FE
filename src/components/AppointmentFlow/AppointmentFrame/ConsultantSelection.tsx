@@ -10,9 +10,15 @@ import {IConsultantsRequestData, IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
     selectCategoriesIds,
-    selectService, selectSubService,
+    selectService,
+    selectSubService,
     setAdvisor,
-    setPackage, setPackageIsSelected, setSelectedPackageOptionType, setSideBarActualSteps, setSideBarMenu
+    setPackage,
+    setPackageIsSelected,
+    setSelectedPackageOptionType,
+    setSideBarActualSteps,
+    setSideBarMenu,
+    setSideBarStepsList
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -24,14 +30,15 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
-import {collectServiceRequestIds, getCurrentMenu, getStepsMap, mapRecallsForRequest} from "./utils";
+import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
 import {MPOptionShort} from "../../../store/reducers/appointment/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+   // gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: "stretch",
     justifyContent: "flex-start",
     gridGap: "20px",
@@ -46,9 +53,12 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
 
 const ConsultantWrapper = styled(
     ({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
-    display: "flex",
-    rowGap: 16,
-    columnGap: 16,
+    //display: "flex",
+    display: 'grid',
+    gridGap: 16,
+    // rowGap: 16,
+    // columnGap: 16,
+    gridTemplateColumns: '1fr 1fr',
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     color: active ? "#FFFFFF" : theme.palette.text.primary,
     background: active ? "#000000" : "transparent",
@@ -184,7 +194,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap])
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap, getStepsScreen])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(selectAppointment(null));
