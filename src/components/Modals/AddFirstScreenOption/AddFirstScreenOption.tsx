@@ -184,7 +184,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
             note,
             type: selectedServiceType?.value ?? EServiceType.VisitCenter,
             orderIndex: +orderIndex,
-            taglineText: taglineText,
+            taglineText: taglineText.trim(),
             taglineFontColorHex: taglineColor,
         }
         if (externalLink) data.externalLink = externalLink;
@@ -218,7 +218,11 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
 
     const onTaglineColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormIsChecked(false);
-        setTaglineColor(e.target.value)
+        if (e.target.value.match(/^[a-zA-Z0-9]*$/)) {
+            setTaglineColor(e.target.value.trim())
+        } else {
+            showError('Tagline Font Color Hex must consist from letters and digits only')
+        }
     }
 
     return (
