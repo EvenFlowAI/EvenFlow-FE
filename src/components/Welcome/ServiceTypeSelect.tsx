@@ -41,7 +41,7 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
 }));
 
 const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme, {taglineColor?: string}>(({theme, taglineColor}) => ({
-    height: 40,
+    minHeight: 40,
     width: '100%',
     display: 'flex',
     justifyContent: "center",
