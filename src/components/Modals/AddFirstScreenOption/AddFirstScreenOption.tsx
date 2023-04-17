@@ -213,7 +213,11 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
 
     const onTaglineTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormIsChecked(false);
-        setTaglineText(e.target.value)
+        if (e.target.value.length > 30) {
+            showError('Tagline Text must not include more than 30 symbols')
+        } else {
+            setTaglineText(e.target.value)
+        }
     }
 
     const onTaglineColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
