@@ -3,10 +3,9 @@ import {Button} from "@material-ui/core";
 import {Loading} from "../../UI/Loading";
 import {ButtonsRow} from "./Actions";
 import {useTranslation} from "react-i18next";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {setPackageEMenuType} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {EPackageEMenuType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {RootState} from "../../../store/rootReducer";
 
 type TProps = {
     isLoading: boolean,
@@ -15,12 +14,10 @@ type TProps = {
 }
 
 const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
-    const {categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
     const onSelectFactory = () => {
-        console.log(categoriesIds);
         dispatch(setPackageEMenuType(EPackageEMenuType.Factory));
         onNext();
     }

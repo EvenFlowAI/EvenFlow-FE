@@ -23,10 +23,12 @@ const PackagesEmenu = () => {
         }
     }, [selectedVehicle, scProfile])
     // todo delete mock src
+
     const src = 'http://www.emenusllc.com/index.php?go=member.pdfTH&pdfType=threeUp&service_type=1&model=43&member=2437&year=2010&mileage_service_type=30000TC';
     return isLoading
         ? <Loading/>
-        : <iframe src={srcLink} width="100%" style={{height: '50vh'}}/>;
+        : <iframe src={srcLink} width="100%" style={{height: '50vh'}} id="e-menu">
+        </iframe>;
 };
 
 export default PackagesEmenu;
