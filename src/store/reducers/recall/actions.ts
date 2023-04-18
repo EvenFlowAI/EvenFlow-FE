@@ -84,7 +84,7 @@ export const loadRecallsByVin = (serviceCenterId: number, vin: string, vehicleMa
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const setUpdateSelectedRecalls = (serviceCenterId: number, vin: string, recallsNumbers: string[]): AppThunk => dispatch => {
+export const setUpdateSelectedRecalls = (serviceCenterId: number, vin: string, vehicleMakeId: number, recallsNumbers: string[]): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin}})
         .then(result => {
