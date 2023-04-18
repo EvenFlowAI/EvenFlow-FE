@@ -19,7 +19,7 @@ import {
     selectService,
     selectSubService,
     setMaintenanceDetails,
-    setPackage, setSelectedRecalls,
+    setPackage, setPackageEMenuType, setSelectedRecalls,
     setSideBarSteps,
     setValueService,
     setVehicle
@@ -89,14 +89,15 @@ const CartTable = () => {
         sideBarSteps,
         serviceType,
         selectedRecalls,
+        packageEMenuType
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
     const selectedServices = useMemo(() => {
-           return getMaintenanceList(serviceRequests, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService)
+           return getMaintenanceList(serviceRequests, selectedRecalls, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packageEMenuType)
         },
-        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, selectedRecalls])
+        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, selectedRecalls, packageEMenuType])
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const dispatch = useDispatch();
@@ -116,7 +117,7 @@ const CartTable = () => {
 
     const deleteIndService = (item: IMaintenanceItem) => {
         const services = selectedSR.filter(sr => sr !== item.id);
-        dispatch(selectSR(item.id));
+        item.id && dispatch(selectSR(item.id));
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
         const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
@@ -207,6 +208,7 @@ const CartTable = () => {
                 dispatch(selectAppointment(null));
                 dispatch(selectServiceValetAppointment(null));
                 handleSideBarSteps();
+                if (packageEMenuType) dispatch(setPackageEMenuType(null));
                 return dispatch(setPackage(null));
             case 'valueService':
                 handleSideBarSteps();

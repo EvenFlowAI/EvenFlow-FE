@@ -40,7 +40,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         selectedPackage,
         valueService,
         serviceType,
-        userType
+        userType,
+        packageEMenuType
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
@@ -125,7 +126,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
     }
 
     const getCardState = (card: IServiceCategory): boolean => {
-        if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage);
+        if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || packageEMenuType);
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
         return categoriesIds?.includes(card.id)
     }

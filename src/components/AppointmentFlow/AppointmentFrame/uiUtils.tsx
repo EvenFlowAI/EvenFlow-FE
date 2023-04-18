@@ -33,8 +33,10 @@ export const getMaintenanceDescription = (
         }
         services.push(name)
     } else {
-        if (packageEMenuType) {
-            const name = packageEMenuType === EPackageEMenuType.Dealer ? "Dealer Package" : "Factory Package";
+        if (packageEMenuType !== null) {
+            const name = packageEMenuType === EPackageEMenuType.Dealer
+                ? `${i18n.t("Dealer")} Package`
+                : `${i18n.t("Factory")} Package`;
             services.push(i18n.t(name));
         }
     }
@@ -65,6 +67,7 @@ export const getMaintenanceList = (
     allCategories?: ICategory[],
     selectedCategories?: number[],
     valueService?: IValueService | null,
+    packageEMenuType?: EPackageEMenuType|null
     ) => {
     const services: IMaintenanceItem[] = [];
 
@@ -96,6 +99,12 @@ export const getMaintenanceList = (
             id: valueService.selectedService.id,
             name: valueService.selectedService.name,
             type: 'valueService'
+        })
+    }
+    if (packageEMenuType !== null) {
+        services.push({
+            type: "package",
+            name: `${packageEMenuType === EPackageEMenuType.Dealer ? i18n.t("Dealer") : i18n.t("Factory")} Package`
         })
     }
     if (selectedRecalls.length) {
