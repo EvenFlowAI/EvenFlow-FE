@@ -84,10 +84,10 @@ const AddUpsellToPackage: React.FC<TAddUpsellProps> =
         );
 
         useEffect(() => {
-            if (selectedSC) {
+            if (selectedSC && props.open) {
                 dispatch(loadUpsellServiceRequests(selectedSC.id));
             }
-        }, [dispatch, selectedSC, pageSize, pageIndex]);
+        }, [dispatch, selectedSC, pageSize, pageIndex, props.open]);
 
         const handleClose = useCallback((): void => {
             dispatch(setUpsellFilter({searchTerm: ''}));
