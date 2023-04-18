@@ -178,7 +178,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                     mileage: selectedVehicle.mileage,
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
-                address,
+                address: typeof address === 'string' ? address : address?.label ?? '',
                 zipCode,
             }
             if (valueService?.selectedService) {
