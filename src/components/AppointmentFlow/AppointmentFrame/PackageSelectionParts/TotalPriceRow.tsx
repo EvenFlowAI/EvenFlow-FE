@@ -112,7 +112,7 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
             const servicesPrice = p.price ?? 0;
             const showDetails = Boolean(scProfile?.isShowPriceDetails && complimentaryPrice > 0);
             const selected = p.type === selectedPackage?.type && packagePricingType === EPackagePricingType.BasePrice
-
+            // todo change totalMaintenance to servicePrice
             return <PriceValue
                 selected={selected}
                 count={packages.length}
@@ -124,8 +124,8 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
                     <div className="prices" style={{ fontSize: 20 }}>
                         {showDetails
                             ? <div className="previousPrice">${scProfile?.isRoundPrice
-                                ? complimentaryPrice + servicesPrice
-                                : (complimentaryPrice + servicesPrice).toFixed(2)}
+                                ? complimentaryPrice + +p.totalMaintenanceValue
+                                : (complimentaryPrice + +p.totalMaintenanceValue).toFixed(2)}
                             </div>
                             : null}
                         <div className={showDetails ? "currentPrice" : "centeredPrice"}>
