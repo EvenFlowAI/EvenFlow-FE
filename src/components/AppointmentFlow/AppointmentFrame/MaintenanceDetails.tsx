@@ -300,15 +300,18 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const handleSubmit = async () => {
         if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && !recallsAreShown) {
             setLoading(true);
-            const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin}})
-            dispatch(setRecallsAreShown(true));
-            if (data.length) {
-                await onOpen()
-            } else {
-                if (userType === EUserType.New) {
-                    onNoRecallsOpen()
+            const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase());
+            if (selectedVehicle?.make && make?.id) {
+                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin, vehicleMakeId: make?.id}})
+                dispatch(setRecallsAreShown(true));
+                if (data.length) {
+                    await onOpen()
                 } else {
-                    handleNext();
+                    if (userType === EUserType.New) {
+                        onNoRecallsOpen()
+                    } else {
+                        handleNext();
+                    }
                 }
             }
         } else {

@@ -135,6 +135,7 @@ export const AppointmentFrameLayout = () => {
         currentScreen: currentFrameScreen,
         userType,
         consultants,
+        makes,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -367,7 +368,8 @@ export const AppointmentFrameLayout = () => {
             try {
                 const {data} = await API.appointment.getByKey(trimmedKey);
                 if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
-                    dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, data.recalls))
+                    const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
+                    if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
                 }
                 dispatch(setUpdateAppointment(data));
                 data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
@@ -392,7 +394,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes]);
 
     const handleSelectCar = useCallback( () => {
         selectedVehicle && onSelectCar(selectedVehicle)
