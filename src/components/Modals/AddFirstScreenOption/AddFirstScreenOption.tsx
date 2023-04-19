@@ -184,8 +184,8 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
             note,
             type: selectedServiceType?.value ?? EServiceType.VisitCenter,
             orderIndex: +orderIndex,
-            taglineText: taglineText.trim(),
-            taglineFontColorHex: taglineColor,
+            taglineText: taglineText.trim().length ? taglineText.trim() : null,
+            taglineFontColorHex: taglineColor.length ? taglineColor : null,
         }
         if (externalLink) data.externalLink = externalLink;
         if (selectedSC) {
