@@ -40,50 +40,69 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
     }
 }));
 
-const useStyles = makeStyles((theme) => ({
-    button: {
-        position: 'relative',
-        height: "100%",
-        maxHeight: 248,
-        display: "flex",
-        flexDirection: 'column',
-        alignItems: "center",
-        justifyContent: "center",
-        fontWeight: "bold",
-        fontSize: 32,
-        textAlign: "center",
-        cursor: "pointer",
-        padding: "10%",
-        border: "1px solid #DADADA",
-        background: "#FFFFFF",
-        transition: theme.transitions.create(["box-shadow"]),
-        "&:hover": {
-            boxShadow: "0 2px 8px rgba(0,0,0,.1)"
-        },
-        [mh600]: {
-            fontSize: 22,
-            padding: "7%"
-        },
-        [mh400]: {
-            fontSize: 18,
-            padding: "2%"
-        },
-        [theme.breakpoints.down("xs")]: {
-            fontSize: 18,
-            padding: "5% 10%"
-        },
-        "& .infoIcon": {
-            position: 'absolute',
-            top: 15,
-            right: 15,
-            display: 'flex',
-            justifyContent: 'flex-end',
-        },
+const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme, {taglineColor?: string}>(({theme, taglineColor}) => ({
+    minHeight: 40,
+    width: '100%',
+    display: 'flex',
+    justifyContent: "center",
+    fontWeight: 600,
+    fontSize: 20,
+    paddingBottom: 16,
+    color: taglineColor ? `#${taglineColor}` : 'inherit',
+}))
+
+const Button = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<Theme, {isTaglinePresent: boolean}>(({theme, isTaglinePresent}) => ({
+    position: 'relative',
+    height: "100%",
+    maxHeight: 285,
+    //display: "flex",
+    display: "grid",
+    gridTemplateRows: isTaglinePresent ? '1fr 2fr 3fr' : '1fr 3fr',
+    gridGap: isTaglinePresent ? 10 : 20,
+    // flexDirection: 'column',
+    // alignItems: "center",
+    // alignContent: "center",
+    // justifyContent: "center",
+    // justifyItems: "center",
+    fontWeight: "bold",
+    fontSize: 32,
+    textAlign: "center",
+    cursor: "pointer",
+    padding: "10%",
+    border: "1px solid #DADADA",
+    background: "#FFFFFF",
+    transition: theme.transitions.create(["box-shadow"]),
+    "&:hover": {
+        boxShadow: "0 2px 8px rgba(0,0,0,.1)"
     },
+    [mh600]: {
+        fontSize: 22,
+        padding: "7%"
+    },
+    [mh400]: {
+        fontSize: 18,
+        padding: "2%"
+    },
+    [theme.breakpoints.down("sm")]: {
+        justifyItems: 'center',
+    },
+    [theme.breakpoints.down("xs")]: {
+        fontSize: 18,
+        padding: "5% 10%"
+    },
+    "& .infoIcon": {
+        position: 'absolute',
+        top: 15,
+        right: 15,
+        display: 'flex',
+        justifyContent: 'flex-end',
+    },
+}));
+
+const useStyles = makeStyles((theme) => ({
     name: {
         width: "100%",
         fontSize: 28,
-        marginBottom: 20,
     }
 }))
 
@@ -101,6 +120,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                 return card
             })
         .filter(card => card), [firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn])
+    const isTaglinePresent = useMemo(() => remappedCards.find(el => el?.taglineText?.length), [remappedCards]);
 
     const handleUser = (service: IFirstScreenOption) => {
         if (userType === EUserType.New) {
@@ -132,10 +152,10 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
         : <CardsWrapper cardsAmount={remappedCards.length}>
             {[...remappedCards]
                 .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
-                .map(card => {
+                .map((card) => {
                     if (card) {
                         return <Grid key={card.id}>
-                            <div className={classes.button} onClick={() => !isSM && handleSelect(card)}>
+                            <Button onClick={() => !isSM && handleSelect(card)} isTaglinePresent={!!isTaglinePresent}>
                                 {card.description ? <HtmlTooltip
                                     enterTouchDelay={0}
                                     placement="right-end"
@@ -144,8 +164,9 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                                     <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
                                 </HtmlTooltip> : null}
                                 <div className={classes.name} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
+                                {isTaglinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
                                 <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
-                            </div>
+                            </Button>
                         </Grid>
                     }
             })}

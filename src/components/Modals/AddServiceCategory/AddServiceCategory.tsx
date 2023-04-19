@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => ({
     radioGroup: {
         display: 'flex',
         justifyContent: 'flex-end'
-    }
+    },
 }))
 
 type TOption = {
@@ -248,7 +248,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                 onCancel();
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description, isCommentRequired])
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
+        editingItem, fileState, visitCenterConfig, description, isCommentRequired])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);

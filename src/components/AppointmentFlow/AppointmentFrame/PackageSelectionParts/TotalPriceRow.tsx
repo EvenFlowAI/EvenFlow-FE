@@ -36,9 +36,16 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     padding: '22px 16px',
     lineHeight: '20px',
     cursor: 'pointer',
+    [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        gridTemplateColumns: showDetails ? '1fr 2fr' : '1fr',
+        padding: '11px 8px',
+    },
     "& .prices": {
         display: 'flex',
         justifyContent: showDetails ? !roundPrice ? 'space-between' : 'space-evenly' : 'center',
+        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+            flexDirection: 'column'
+        }
     },
     "& .currentPrice": {
         color: "#D32F2F"
@@ -105,7 +112,7 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
             const servicesPrice = p.price ?? 0;
             const showDetails = Boolean(scProfile?.isShowPriceDetails && complimentaryPrice > 0);
             const selected = p.type === selectedPackage?.type && packagePricingType === EPackagePricingType.BasePrice
-
+            // todo change totalMaintenance to servicePrice
             return <PriceValue
                 selected={selected}
                 count={packages.length}
@@ -117,8 +124,8 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
                     <div className="prices" style={{ fontSize: 20 }}>
                         {showDetails
                             ? <div className="previousPrice">${scProfile?.isRoundPrice
-                                ? complimentaryPrice + servicesPrice
-                                : (complimentaryPrice + servicesPrice).toFixed(2)}
+                                ? complimentaryPrice + +p.totalMaintenanceValue
+                                : (complimentaryPrice + +p.totalMaintenanceValue).toFixed(2)}
                             </div>
                             : null}
                         <div className={showDetails ? "currentPrice" : "centeredPrice"}>

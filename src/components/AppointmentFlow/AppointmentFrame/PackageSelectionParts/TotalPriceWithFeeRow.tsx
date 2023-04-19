@@ -34,9 +34,16 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     padding: '22px 16px',
     lineHeight: '20px',
     cursor: "pointer",
+    [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        gridTemplateColumns: showDetails ? '1fr 2fr' : '1fr',
+        padding: '11px 8px',
+    },
     "& .prices": {
         display: 'flex',
         justifyContent: showDetails ? !roundPrice ? 'space-between' : 'space-evenly' : 'center',
+        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+            flexDirection: 'column'
+        }
     },
     "& .currentPrice": {
         color: "#D32F2F"
@@ -100,8 +107,11 @@ const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleCl
         {packages.map((p) => {
             const complimentaryPrice = p.marketPriceComplimentaryServices ?? 0;
             const servicesPrice = p.price ?? 0;
+            const totalMaintenance = p.totalMaintenanceValue ?? 0;
             const upsellPrice = p.marketPriceIntervalUpsells ?? 0;
-            const price = complimentaryPrice + servicesPrice + upsellPrice;
+            // todo change totalMaintenance to servicePrice
+           // const price = complimentaryPrice + servicesPrice + upsellPrice;
+            const price = complimentaryPrice + totalMaintenance + upsellPrice;
             const showDetails = Boolean(scProfile?.isShowPriceDetails && complimentaryPrice > 0);
             const selected = p.type === selectedPackage?.type && packagePricingType === EPackagePricingType.PriceWithFee
 
