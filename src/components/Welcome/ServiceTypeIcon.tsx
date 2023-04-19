@@ -28,10 +28,13 @@ const useStyles = makeStyles((theme) => ({
     },
     noLogo: {
         width: '100%',
-        padding: '10%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         color: "#DCDCDC",
         fontWeight: 'bold',
         fontSize: 32,
+        padding: '10%',
         backgroundColor: "#F4F4F4",
         [`${theme.breakpoints.down("sm")} and (orientation: portrait)`]: {
             width: 224,
