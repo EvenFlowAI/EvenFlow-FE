@@ -137,3 +137,9 @@ export interface ILaborRate {
     warranty: number;
     internal: number;
 }
+
+export enum EAdvisorAssignMethod {
+    Rotational,
+    MaxCapacity,
+    LastAdvisor
+}
