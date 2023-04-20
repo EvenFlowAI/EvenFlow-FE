@@ -210,10 +210,10 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             if (id) {
                 setLoading(true);
                 try {
-                    // todo check if data is correct, to ask about consultants request in this case
+                    // todo ask about consultants request in this case
                     const maintenancePackageOption: MPOptionShort|null = selectedPackage
                         ? {id: selectedPackage?.id, priceType: packagePricingType}
-                        : packageEMenuType
+                        : packageEMenuType !== null
                             ? {optionType: packageEMenuType}
                             : null;
                     const dd: IAppointmentSlotsRequest = {
