@@ -111,7 +111,7 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
                                 <TableCell style={{color: "#9FA2B4", fontSize: 12}} align="left">Option</TableCell>
                                 <TableCell style={{color: "#9FA2B4", fontSize: 12}} align="center">Primary Method</TableCell>
                                 <TableCell
-                                    style={{color: "#9FA2B4", fontSize: 12, backgroundColor: isSecondaryDisabled ? "#F2F3F7" : ""}}
+                                    style={{color: "#9FA2B4", fontSize: 12, backgroundColor: isSecondaryDisabled ? "#F4F4F4" : ""}}
                                     align="center">
                                     Secondary Method
                                 </TableCell>
@@ -130,7 +130,7 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
                                             cursor="pointer"
                                             onClick={() => onChange("primary", EAdvisorAssignMethod.Rotational)}/>}
                                 </TableCell>
-                                <TableCell align="center" style={{backgroundColor: isSecondaryDisabled ? "#F2F3F7" : ""}}>
+                                <TableCell align="center" style={{backgroundColor: isSecondaryDisabled ? "#F4F4F4" : ""}}>
                                     {secondaryMethod === EAdvisorAssignMethod.Rotational
                                         ? <RadioButtonChecked
                                             cursor={isSecondaryDisabled ? "" : "pointer"}
@@ -153,7 +153,7 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
                                             cursor="pointer"
                                             onClick={() => onChange("primary", EAdvisorAssignMethod.MaxCapacity)}/>}
                                 </TableCell>
-                                <TableCell align="center" style={{backgroundColor: isSecondaryDisabled ? "#F2F3F7" : ""}}>
+                                <TableCell align="center" style={{backgroundColor: isSecondaryDisabled ? "#E8E9ED" : ""}}>
                                     {secondaryMethod === EAdvisorAssignMethod.MaxCapacity
                                         ? <RadioButtonChecked
                                             htmlColor={isSecondaryDisabled ? "#DADADA" : "#3855F3"}
@@ -176,7 +176,7 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
                                             cursor="pointer"
                                             onClick={() => onChange("primary", EAdvisorAssignMethod.LastAdvisor)}/>}
                                 </TableCell>
-                                <TableCell align="center"  style={{backgroundColor: isSecondaryDisabled ? "#F2F3F7" : ""}}>
+                                <TableCell align="center"  style={{backgroundColor: isSecondaryDisabled ? "#F4F4F4" : ""}}>
                                     {secondaryMethod === EAdvisorAssignMethod.LastAdvisor
                                         ? <RadioButtonChecked
                                             htmlColor={isSecondaryDisabled ? "#DADADA" : "#3855F3"}
