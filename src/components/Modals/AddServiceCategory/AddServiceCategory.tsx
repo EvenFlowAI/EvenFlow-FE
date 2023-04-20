@@ -115,8 +115,7 @@ const initialFileState = {file: null, dataUrl: undefined};
 
 const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
-    const {categories} = useSelector((state: RootState) => state.categories);
-    const {page} = useSelector((state: RootState) => state.categories);
+    const {categories, page, filter} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [categoryName, setCategoryName] = useState<string>('');
@@ -129,16 +128,23 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter)
     const [isCommentRequired, setIsCommentRequired] = useState<boolean>(false);
 
-    const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
-        || categoryType?.value === EServiceCategoryType.LinkToPage2
-        || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
-    // todo for Mobile service when it will be separate logic
-    const visitCenterConfig = useMemo(() => config.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter), [config])
-
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
+
+    const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
+        || categoryType?.value === EServiceCategoryType.LinkToPage2
+        || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
+
+    const visitCenterConfig = useMemo(() => {
+        const currentServiceType = filter === EServiceTypeBookingFlow.VisitCenter ? EServiceTypeBookingFlow.VisitCenter : EServiceTypeBookingFlow.MobileService;
+        return config.find(item => item.serviceType === currentServiceType)
+    }, [config, filter])
+
+    useEffect(() => {
+        setSelectedServiceType(filter);
+    }, [filter])
 
     const getCategoryOptions = () => {
         let options: TOption[] = categoryOptions;
@@ -225,8 +231,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     serviceRequests: [],
                     orderIndex: Number(orderIndex),
                     isCommentRequired: categoryType.value === EServiceCategoryType.GeneralCategory ? isCommentRequired : false,
-                    // todo uncomment and add in the TUpdateCategoryData field for service type
-                    //serviceType,
+                    serviceType: selectedServiceType,
                 }
                 if (description) data.description = description;
                 if (categoryType.value !== EServiceCategoryType.MaintenancePackage

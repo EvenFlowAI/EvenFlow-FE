@@ -39,11 +39,11 @@ export enum EServiceCenterName {
     RiverviewFord,
     BMWSchererville,
     DealertrackTest,
-    SanfordInfinity,
+    SanfordInfiniti,
     Dominion,
     Fremont,
     LakePowellFord,
-    PerformanceLexus,
+    LexusCincinnati,
     LexusRiverCenter,
 }
 

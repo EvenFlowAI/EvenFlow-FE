@@ -114,7 +114,7 @@ const CartTable = () => {
 
     const deleteIndService = (item: IMaintenanceItem) => {
         const services = selectedSR.filter(sr => sr !== item.id);
-        dispatch(selectSR(item.id));
+        if (item.id) dispatch(selectSR(item.id));
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
         const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
