@@ -312,8 +312,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const {id} = useParams();
 
     useEffect(() => {
-        setLoading(true);
         if (!isLexus) {
+            setLoading(true);
             Api.call<IPackage[]>(
                 Api.endpoints.MaintenancePackages.ByVehicle,
                 {
@@ -448,13 +448,15 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     return (
         <PackagesStepWrapper>
-            <NoItemsLoading
+            {!isLexus
+                ?  <NoItemsLoading
                 wrapperStyles={{marginTop: 20}}
                 items={packages}
                 loading={loading}
                 label={t("There are no packages available")}
             />
-            {isRiverviewFord
+                : null}
+            {isLexus
                 ? <PackagesEmenu/>
                 : packages.length ? <React.Fragment>
                 {isXs
@@ -549,8 +551,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                     </React.Fragment>
                 }
             </React.Fragment> : null}
-            {/*todo isLexus*/}
-            {isRiverviewFord
+            {isLexus
                 ? <PackageEMenuActions onBack={handleBack} isLoading={loading} onNext={onEMenuNext}/>
                 : <Actions
                 onBack={handleBack}
