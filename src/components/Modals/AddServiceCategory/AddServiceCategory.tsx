@@ -75,7 +75,13 @@ type TOption = {
     name: string;
 }
 
-const pageOptions = [{name: 'Owned By Booking Flow (Page 1)', value: 0}, {name: 'Owned By Booking Flow (Page 2)', value: 1}];
+const getPageOptions = (serviceType: EServiceType): TOption[] => {
+    const typeName = serviceType === EServiceType.MobileService ? "Mobile Service" : "Visit Center";
+    return [
+        {name: `Owned By ${typeName} (Page 1)`, value: 0},
+        {name: `Owned By ${typeName} (Page 2)`, value: 1}
+    ]
+}
 
 const categoryOptions = Object.keys(EServiceCategoryType)
     .filter(item => Number.isNaN(+item))
@@ -138,9 +144,9 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
 
     const visitCenterConfig = useMemo(() => {
-        const currentServiceType = filter === EServiceType.VisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService;
+        const currentServiceType = selectedServiceType === EServiceType.VisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService;
         return config.find(item => item.serviceType === currentServiceType)
-    }, [config, filter])
+    }, [config, selectedServiceType])
 
     useEffect(() => {
         setSelectedServiceType(filter);
@@ -159,15 +165,15 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
 
     useEffect(() => {
         props.open && selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
-        const currentPageOption = pageOptions.find(item => item.value === page);
+        const currentPageOption = getPageOptions(selectedServiceType).find(item => item.value === page);
         currentPageOption && setDefinedPage(currentPageOption);
-    }, [selectedSC, page, pageOptions, props.open])
+    }, [selectedSC, page, getPageOptions, props.open, selectedServiceType])
 
     useEffect(() => {
         if (editingItem && allAssignedList && props.open) {
             setCategoryName(editingItem.name);
 
-            const page = pageOptions.find(option => option.value === +editingItem.page);
+            const page = getPageOptions(selectedServiceType).find(option => option.value === +editingItem.page);
             page && setDefinedPage(page);
 
             setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
@@ -179,7 +185,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             if (editingItem.description) setDescription(editingItem.description);
             if (editingItem.isCommentRequired) setIsCommentRequired(editingItem.isCommentRequired);
         }
-    }, [editingItem, allAssignedList, categoryOptions, props.open])
+    }, [editingItem, allAssignedList, categoryOptions, props.open, selectedServiceType])
 
     useEffect(() => {
         if (selectedSC) {
@@ -197,6 +203,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setOrderIndex('');
         setDescription('')
         setIsCommentRequired(false);
+        setSelectedServiceType(filter);
         props.onClose();
     }, [])
 
@@ -331,7 +338,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                             value={categoryName}/>
                     </div>
                     <Autocomplete
-                        options={pageOptions}
+                        options={getPageOptions(selectedServiceType)}
                         getOptionSelected={(option) => option.value === definedPage?.value}
                         getOptionLabel={option => option.name}
                         value={definedPage}

@@ -15,10 +15,10 @@ import CategoriesTablePage from "./CategoriesTablePage";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const tabNames = [
-    "Visit Center Booking Flow (Page 1)",
-    "Visit Center Booking Flow (Page 2)",
-    "Mobile Service Booking Flow (Page 1)",
-    "Mobile Service Booking Flow (Page 2)"
+    "Visit Center (Page 1)",
+    "Visit Center (Page 2)",
+    "Mobile Service (Page 1)",
+    "Mobile Service (Page 2)"
 ];
 
 const ServiceOpsCodesMapping = () => {
