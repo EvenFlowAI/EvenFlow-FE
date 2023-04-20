@@ -22,7 +22,7 @@ import {createCategory, updateCategory, updateCategoryIcon} from "../../../store
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
-import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;
@@ -125,7 +125,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [description, setDescription] = useState<string>('');
-    const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter)
+    const [selectedServiceType, setSelectedServiceType] = useState<EServiceType>(EServiceType.VisitCenter)
     const [isCommentRequired, setIsCommentRequired] = useState<boolean>(false);
 
     const {selectedSC} = useSCs();
@@ -138,7 +138,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
 
     const visitCenterConfig = useMemo(() => {
-        const currentServiceType = filter === EServiceTypeBookingFlow.VisitCenter ? EServiceTypeBookingFlow.VisitCenter : EServiceTypeBookingFlow.MobileService;
+        const currentServiceType = filter === EServiceType.VisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService;
         return config.find(item => item.serviceType === currentServiceType)
     }, [config, filter])
 
@@ -288,7 +288,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     }, [dispatch])
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedServiceType(e.target.value === '0' ? EServiceTypeBookingFlow.VisitCenter : EServiceTypeBookingFlow.MobileService);
+        setSelectedServiceType(e.target.value === '0' ? EServiceType.VisitCenter : EServiceType.MobileService);
     }
 
     const handleSwitch = (e: any, value: boolean) => {
@@ -308,13 +308,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     className={classes.radioGroup}
                 >
                     <FormControlLabel
-                        value={EServiceTypeBookingFlow.VisitCenter}
+                        value={EServiceType.VisitCenter}
                         control={<Radio color="primary"/>}
                         label="VISIT CENTER"
                         labelPlacement="end"
                     />
                     <FormControlLabel
-                        value={EServiceTypeBookingFlow.MobileService}
+                        value={EServiceType.MobileService}
                         control={<Radio color="primary"/>}
                         label="MOBILE SERVICE"
                         labelPlacement="end"

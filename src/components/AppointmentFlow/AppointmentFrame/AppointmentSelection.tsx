@@ -127,7 +127,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const initRef = useRef<boolean>(false);
     const isMount = useRef(true);
     const dispatch = useDispatch();
-    const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PikUpDropOff
+    const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? !serviceValetAppointment
         : !appointment,
         [appointment, serviceValetAppointment])
@@ -162,8 +162,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [selectedTime])
 
     useEffect(() => {
-        const currentSlots = serviceTypeOption?.type === EServiceType.PikUpDropOff ? serviceValetSlots : slots;
-        const currentAppointment = serviceTypeOption?.type === EServiceType.PikUpDropOff ? serviceValetAppointment : appointment;
+        const currentSlots = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : slots;
+        const currentAppointment = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment;
         if (currentSlots.length && isMount.current) {
             if (currentAppointment?.date) {
                 setDate(moment.utc(currentAppointment.date).startOf('day'))
@@ -214,7 +214,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         ? {id: selectedPackage?.id, priceType: packagePricingType}
                         : null;
                     const dd: IAppointmentSlotsRequest = {
-                        appointmentTimingType: serviceTypeOption?.type === EServiceType.PikUpDropOff || !selectedTimingType
+                        appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTimingType
                             ? EAppointmentTimingType.FirstAvailable
                             : selectedTimingType,
                         serviceCenterId: decodeSCID(id),
@@ -247,7 +247,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                     }
                     if (hashKey) dd.appointmentHashKey = hashKey;
                     if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
-                    if (serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+                    if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
                         await dispatch(loadServiceValetSlots(dd));
                     } else {
                         await dispatch(loadAppointmentSlots(
@@ -272,7 +272,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         if (appointment) {
             ReactGA.event({
                 category: 'EvenFlow User',
-                action: serviceTypeOption?.type === EServiceType.PikUpDropOff ? 'Selected Service Valet Appointment Slot' : 'Selected Appointment Slot',
+                action: serviceTypeOption?.type === EServiceType.PickUpDropOff ? 'Selected Service Valet Appointment Slot' : 'Selected Appointment Slot',
                 label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('hh:mm A')}`,
             });
         }
@@ -306,7 +306,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             <Wrapper>
                 <SelectedAppointment />
                 <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} />
-                {serviceTypeOption?.type === EServiceType.PikUpDropOff
+                {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}
                         dateRangeUpdated={initRef.current}
@@ -323,7 +323,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         loading={loading}
                         onDateChange={updateDate} />
                 }
-                {serviceTypeOption?.type === EServiceType.PikUpDropOff
+                {serviceTypeOption?.type === EServiceType.PickUpDropOff
                 ? <SVAppointmentTimeSelector
                         date={date}
                         loading={loading}/>

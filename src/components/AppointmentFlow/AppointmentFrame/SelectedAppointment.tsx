@@ -223,14 +223,14 @@ export const SelectedAppointment = () => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
 
-    const price = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+    const price = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.value ?? 0
         : appointment?.price.value ?? 0;
-    const ancillaryPrice = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+    const ancillaryPrice = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.ancillaryPrice ?? 0
         : appointment?.price.ancillaryPrice ?? 0;
 
-    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PikUpDropOff
+    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? serviceValetSlots.length
             ? serviceValetSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
             : false
@@ -256,7 +256,7 @@ export const SelectedAppointment = () => {
         switch (serviceType) {
             case EServiceType.MobileService:
                 return t("Mobile Service");
-            case EServiceType.PikUpDropOff:
+            case EServiceType.PickUpDropOff:
                 return t("Pick Up / Drop Off Service");
             default:
                 return t("Visit Center");
@@ -329,7 +329,7 @@ export const SelectedAppointment = () => {
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
                         {/*  <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                         {/*</div> : null}*/}
-                        {isDynamicPricing && serviceTypeOption?.type !== EServiceType.PikUpDropOff && (
+                        {isDynamicPricing && serviceTypeOption?.type !== EServiceType.PickUpDropOff && (
                             <div className="info">
                                 {!appointment?.price?.amountOfSavingMoney
                                     ? t("Save by booking at off peak times!")

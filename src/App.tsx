@@ -38,7 +38,7 @@ const App = () => {
         if (serviceType === EServiceType.MobileService) {
             setValueServicePreviousScreen("location");
         }
-        if (serviceType === EServiceType.PikUpDropOff) {
+        if (serviceType === EServiceType.PickUpDropOff) {
             setValueServicePreviousScreen("location");
         }
         const currentConfig = config.find(item => item.serviceType && serviceType && item.serviceType.toString() === serviceType.toString());

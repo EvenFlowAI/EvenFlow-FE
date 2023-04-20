@@ -1,6 +1,6 @@
 import {EServiceCategoryPage} from "../../../api/types";
 import {IServiceRequestShort} from "../serviceRequests/types";
-import {EServiceTypeBookingFlow} from "../bookingFlowConfig/types";
+import {EServiceType} from "../appointmentFrameReducer/types";
 
 export interface ICategory {
     id: number;
@@ -26,7 +26,7 @@ export type TUpdateCategoryData = {
     isCommentRequired?: boolean;
     taglineText?: string;
     taglineFontColorHex?: string;
-    serviceType: EServiceTypeBookingFlow;
+    serviceType: EServiceType;
 }
 
 export type TNewCategory = TUpdateCategoryData & {

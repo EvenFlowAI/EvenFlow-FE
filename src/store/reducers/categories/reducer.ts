@@ -7,14 +7,14 @@ import {
     setCategoriesLoading,
     setCategoriesPage
 } from "./actions";
-import {EServiceTypeBookingFlow} from "../bookingFlowConfig/types";
+import {EServiceType} from "../appointmentFrameReducer/types";
 
 type TState = {
     categories: ICategory[];
     allCategories: ICategory[];
     isLoading: boolean;
     page: number;
-    filter: EServiceTypeBookingFlow;
+    filter: EServiceType;
 }
 
 const initialState: TState = {
@@ -22,7 +22,7 @@ const initialState: TState = {
     allCategories: [],
     isLoading: false,
     page: 0,
-    filter: EServiceTypeBookingFlow.VisitCenter,
+    filter: EServiceType.VisitCenter,
 }
 
 export const categoriesReducer = createReducer(initialState, builder => builder

@@ -108,7 +108,7 @@ const AncillaryPrice = () => {
     const onAddRange = (data: TDistanceRange) => {
         if (selectedSC) {
             data.serviceCenterId = selectedSC.id;
-            data.serviceType = EServiceType.PikUpDropOff;
+            data.serviceType = EServiceType.PickUpDropOff;
             dispatch(addServiceValetDistanceRange(selectedSC.id, data, onSuccess, onError))
         }
     }

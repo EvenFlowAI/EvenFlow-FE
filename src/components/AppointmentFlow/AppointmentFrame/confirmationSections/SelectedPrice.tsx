@@ -34,7 +34,7 @@ export const SelectedPrice = () => {
         <div>
             <ConfirmationTitle>{t("Selected Price")}</ConfirmationTitle>
             <Price>
-                {serviceTypeOption?.type === EServiceType.PikUpDropOff
+                {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? serviceValetAppointment?.price.value ?
                         <span>${scProfile?.isRoundPrice
                             ? serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice

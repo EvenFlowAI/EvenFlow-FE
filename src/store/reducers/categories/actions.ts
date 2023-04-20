@@ -2,10 +2,10 @@ import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData} from "./types";
-import {EServiceTypeBookingFlow} from "../bookingFlowConfig/types";
+import {EServiceType} from "../appointmentFrameReducer/types";
 
 export const setCategoriesPage = createAction<number>("Categories/SetPage");
-export const setCategoriesFilter = createAction<EServiceTypeBookingFlow>("Categories/SetFilter");
+export const setCategoriesFilter = createAction<EServiceType>("Categories/SetFilter");
 export const setCategoriesLoading = createAction<boolean>("Categories/SetLoading");
 export const getCategoriesByPage = createAction<ICategory[]>("Categories/GetCategoriesByPage");
 export const getCategoriesByQuery = createAction<ICategory[]>("Categories/GetCategoriesByQuery");

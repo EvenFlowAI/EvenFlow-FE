@@ -11,8 +11,8 @@ import {
 } from "../../../store/reducers/categories/actions";
 import {useSCs} from "../../../utils/hooks";
 import {bookingFlowRoot} from "../../Optimizer/utils";
-import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
 import CategoriesTablePage from "./CategoriesTablePage";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const tabNames = [
     "Visit Center Booking Flow (Page 1)",
@@ -33,7 +33,7 @@ const ServiceOpsCodesMapping = () => {
     const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
         const firstPage = (+tab === 0) || (+tab === 2);
-        await dispatch(setCategoriesFilter(+tab > 1 ? EServiceTypeBookingFlow.MobileService : EServiceTypeBookingFlow.VisitCenter))
+        await dispatch(setCategoriesFilter(+tab > 1 ? EServiceType.MobileService : EServiceType.VisitCenter))
         await dispatch(setCategoriesPage(firstPage ? 0 : 1));
         await dispatch(loadCategoriesByPage());
     }

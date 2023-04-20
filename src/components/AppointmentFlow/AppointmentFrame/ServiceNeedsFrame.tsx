@@ -40,7 +40,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         selectedPackage,
         valueService,
         serviceType,
-        userType
+        userType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
@@ -61,7 +61,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
             Api.endpoints.ServiceCategories.GetByPage,
             {data: {
                 serviceCenterId: decodeSCID(id),
-                page: EServiceCategoryPage.Page1
+                page: EServiceCategoryPage.Page1,
+                    // serviceType:
             }}
         )
             .then(({data}) => {
