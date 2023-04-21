@@ -50,13 +50,15 @@ const Complimentary: React.FC<TComplimentaryProps> =
                     : null}
                 </div>
 
-                {packages.map(p =>
-                    <div
-                        key={p.id}
-                        onClick={handleClick(p)}
-                        className={setClasses(p.id, `service green ${scProfile?.isShowPriceDetails ? "" : "last"}`)}>
-                        {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
-                    </div>
+                {packages.map((p) => {
+                        return <div
+                            key={p.id}
+                            onClick={handleClick(p)}
+                            className={setClasses(p.id, `service green ${scProfile?.isShowPriceDetails ? "" 
+                                : i === complimentary.length - 1 ? "last" : ""}`)}>
+                            {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
+                        </div>
+                    }
                 )}
             </React.Fragment>)}
         </React.Fragment>;
