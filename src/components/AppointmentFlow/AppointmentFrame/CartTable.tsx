@@ -218,7 +218,7 @@ const CartTable = () => {
                 dispatch(selectAppointment(null));
                 dispatch(selectServiceValetAppointment(null));
                 handleSideBarSteps();
-                if (packageEMenuType) dispatch(setPackageEMenuType(null));
+                if (packageEMenuType !== null) dispatch(setPackageEMenuType(null));
                 return dispatch(setPackage(null));
             case 'valueService':
                 handleSideBarSteps();

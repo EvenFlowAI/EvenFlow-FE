@@ -174,7 +174,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 id: appointmentFrame.selectedPackage?.id,
                 priceType: appointmentFrame.packagePricingType
             }
-            : null;
+            : appointmentFrame.packageEMenuType !== null
+                ? {optionType: appointmentFrame.packageEMenuType}
+                : null;
 
         const data = {
             id: appointmentFrame.id,
@@ -216,8 +218,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
                 : appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
-            // todo package type eMenu
-            //maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             maintenancePackageOption,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,
