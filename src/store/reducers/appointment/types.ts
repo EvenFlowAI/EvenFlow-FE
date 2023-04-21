@@ -5,13 +5,14 @@ import {EDemandCategory, EPricingDisplayType} from "../pricingSettings/types";
 import {EOfferType, IOffer} from "../offers/types";
 import moment from "moment";
 import {
+    EMaintenanceOptionType,
     ICreateAppointmentResp,
     ICustomerLoadedData,
     ILoadedVehicle, IOfferForCategory,
     IServiceCategory, IServiceCategoryShort,
     ITransportation
 } from "../../../api/types";
-import {EPackageEMenuType, EPackagePricingType} from "../appointmentFrameReducer/types";
+import {EPackagePricingType} from "../appointmentFrameReducer/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -31,6 +32,7 @@ export interface IServiceCenterProfile {
     isCommentRequired: boolean;
     engineTypeFieldName?: string;
     dmsId?: string;
+    maintenancePackageOptionTypes: EMaintenanceOptionType[];
 }
 export interface ISR {
     id: number;
@@ -162,7 +164,7 @@ export type TRecallForRequest = {
 export type MPOptionShort = {
     id?: number;
     priceType?: EPackagePricingType|null;
-    optionType?: EPackageEMenuType|null;
+    optionType?: EMaintenanceOptionType|null;
 }
 
 export interface IAppointmentSlotsRequest {

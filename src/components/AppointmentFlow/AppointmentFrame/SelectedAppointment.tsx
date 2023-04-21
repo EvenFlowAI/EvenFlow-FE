@@ -229,10 +229,12 @@ export const SelectedAppointment = () => {
                 categoriesIds,
                 valueService,
                 packagePricingType,
-                packageEMenuType
+                packageEMenuType,
+                scProfile?.maintenancePackageOptionTypes
             )
         },
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType, packageEMenuType])
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService,
+            packagePricingType, packageEMenuType, scProfile])
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])

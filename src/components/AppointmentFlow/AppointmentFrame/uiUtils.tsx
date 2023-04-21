@@ -1,10 +1,9 @@
 import React from "react";
-import {IPackageOptions} from "../../../api/types";
+import {EMaintenanceOptionType, IPackageOptions} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 import {IMaintenanceItem, IRecallByVin} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 import {
-    EPackageEMenuType,
     EPackagePricingType,
     IValueService
 } from "../../../store/reducers/appointmentFrameReducer/types";
@@ -21,7 +20,8 @@ export const getMaintenanceDescription = (
     selectedCategories?: number[],
     valueService?: IValueService | null,
     packagePricingType?: EPackagePricingType|null,
-    packageEMenuType?: EPackageEMenuType|null,
+    packageEMenuType?: EMaintenanceOptionType|null,
+    optionTypes?: EMaintenanceOptionType[] | undefined,
 ) => {
     const services: string[] = [];
 
@@ -33,10 +33,11 @@ export const getMaintenanceDescription = (
         }
         services.push(name)
     } else {
-        if (packageEMenuType !== null) {
-            const name = packageEMenuType === EPackageEMenuType.Dealer
-                ? `${i18n.t("Dealer")} Package`
-                : `${i18n.t("Factory")} Package`;
+        if (packageEMenuType !== null && optionTypes?.length) {
+            const firstOption = optionTypes[0];
+            const name = packageEMenuType === firstOption
+                ? `${i18n.t("Factory")} Package`
+                : `${i18n.t("dealer")} Package`;
             services.push(i18n.t(name));
         }
     }
@@ -67,7 +68,8 @@ export const getMaintenanceList = (
     allCategories?: ICategory[],
     selectedCategories?: number[],
     valueService?: IValueService | null,
-    packageEMenuType?: EPackageEMenuType|null
+    packageEMenuType?: EMaintenanceOptionType|null,
+    optionTypes?: EMaintenanceOptionType[] | undefined,
     ) => {
     const services: IMaintenanceItem[] = [];
 
@@ -101,10 +103,11 @@ export const getMaintenanceList = (
             type: 'valueService'
         })
     }
-    if (packageEMenuType !== null) {
+    if (packageEMenuType !== null && optionTypes?.length) {
+        const firstOption = optionTypes[0];
         services.push({
             type: "package",
-            name: `${packageEMenuType === EPackageEMenuType.Dealer ? i18n.t("Dealer") : i18n.t("Factory")} Package`
+            name: `${packageEMenuType === firstOption ? i18n.t("Factory") : i18n.t("Dealer")} Package`
         })
     }
     if (selectedRecalls.length) {

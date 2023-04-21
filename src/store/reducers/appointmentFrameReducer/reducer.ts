@@ -52,6 +52,7 @@ import {
     updateVehicle,
 } from "./actions";
 import {
+    EMaintenanceOptionType,
     ICustomer,
     ILoadedVehicle,
     IMake,
@@ -64,7 +65,6 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {
-    EPackageEMenuType,
     EPackagePricingType,
     EServiceType,
     EUserType,
@@ -135,7 +135,7 @@ type TState = {
     serviceTypeOption: IFirstScreenOption|null;
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
-    packageEMenuType: EPackageEMenuType|null;
+    packageEMenuType: EMaintenanceOptionType|null;
 }
 const initialState: TState = {
     service: null,

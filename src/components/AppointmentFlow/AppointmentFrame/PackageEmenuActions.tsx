@@ -3,9 +3,9 @@ import {Button} from "@material-ui/core";
 import {Loading} from "../../UI/Loading";
 import {ButtonsRow} from "./Actions";
 import {useTranslation} from "react-i18next";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setPackageEMenuType} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {EPackageEMenuType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {RootState} from "../../../store/rootReducer";
 
 type TProps = {
     isLoading: boolean,
@@ -14,15 +14,20 @@ type TProps = {
 }
 
 const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
-    const {t} = useTranslation();
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     const onSelectFactory = () => {
-        dispatch(setPackageEMenuType(EPackageEMenuType.Factory));
+        if (scProfile?.maintenancePackageOptionTypes.length) {
+            dispatch(setPackageEMenuType(scProfile?.maintenancePackageOptionTypes[0]));
+        }
         onNext();
     }
     const onSelectDealer = () => {
-        dispatch(setPackageEMenuType(EPackageEMenuType.Dealer));
+        if (scProfile?.maintenancePackageOptionTypes[1]) {
+            dispatch(setPackageEMenuType(scProfile?.maintenancePackageOptionTypes[1]));
+        }
         onNext();
     }
 

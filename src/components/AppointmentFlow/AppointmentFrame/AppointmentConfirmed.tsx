@@ -153,10 +153,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 categoriesIds,
                 valueService,
                 packagePricingType,
-                packageEMenuType
+                packageEMenuType,
+                scProfile?.maintenancePackageOptionTypes
             )
         },
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType, packageEMenuType])
+        [srList, selectedSR, selectedPackage, allCategories, categoriesIds,
+            valueService, packagePricingType, packageEMenuType, scProfile])
 
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
 

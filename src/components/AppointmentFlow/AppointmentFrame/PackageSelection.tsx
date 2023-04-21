@@ -43,7 +43,7 @@ import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/ty
 import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
-import {EPackageEMenuType, EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
 import PackageEMenuActions from "./PackageEmenuActions";
 import PackagesEmenu from "./PackagesEmenu";
 
@@ -406,10 +406,11 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     const onEMenuNext = () => {
         dispatch(setPackageIsSelected(true));
+        const firstOption = scProfile?.maintenancePackageOptionTypes[0];
         ReactGA.event({
             category: 'EvenFlow User',
             action: `Selected eMenu Package`,
-            label: `With ${packageEMenuType === EPackageEMenuType.Dealer ? 'Dealer' : "Factory"} Option`,
+            label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
         });
         askAdditionalServices();
         //handleNextScreen();
