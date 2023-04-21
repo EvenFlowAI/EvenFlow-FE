@@ -31,8 +31,8 @@ export type TUpdateFirstScreenOption = {
     note?: string;
     transportationOptionId?: number;
     externalLink?: string;
-    taglineText?: string;
-    taglineFontColorHex?: string;
+    taglineText?: string|null;
+    taglineFontColorHex?: string|null;
 }
 
 export type TNewFirstScreenOption = TUpdateFirstScreenOption & {

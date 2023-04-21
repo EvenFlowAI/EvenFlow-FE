@@ -107,8 +107,11 @@ const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleCl
         {packages.map((p) => {
             const complimentaryPrice = p.marketPriceComplimentaryServices ?? 0;
             const servicesPrice = p.price ?? 0;
+            const totalMaintenance = p.totalMaintenanceValue ?? 0;
             const upsellPrice = p.marketPriceIntervalUpsells ?? 0;
-            const price = complimentaryPrice + servicesPrice + upsellPrice;
+            // todo change totalMaintenance to servicePrice
+           // const price = complimentaryPrice + servicesPrice + upsellPrice;
+            const price = complimentaryPrice + totalMaintenance + upsellPrice;
             const showDetails = Boolean(scProfile?.isShowPriceDetails && complimentaryPrice > 0);
             const selected = p.type === selectedPackage?.type && packagePricingType === EPackagePricingType.PriceWithFee
 

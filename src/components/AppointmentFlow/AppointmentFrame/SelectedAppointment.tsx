@@ -16,7 +16,9 @@ import {IServiceValetAppointment} from "../../../store/reducers/appointment/type
 
 
 const Wrapper = styled('div')(({theme}) => ({
-    display: "flex",
+    display: "grid",
+    gridTemplateColumns: "3fr 2fr",
+    gridGap: 10,
     alignItems: "stretch",
     justifyContent: "space-between",
     [theme.breakpoints.down("xs")]: {
