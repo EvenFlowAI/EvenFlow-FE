@@ -2,7 +2,7 @@ import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon_black.svg";
 import {CheckBoxOutlined, InfoOutlined} from "@material-ui/icons";
 import {TComplimentary, TPackage, TService} from "../PackageSelection";
-import {IPackageOptions} from "../../../../api/types";
+import {EMaintenanceOptionType, IPackageOptions} from "../../../../api/types";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "../ServiceCard";
 import {useSelector} from "react-redux";
@@ -22,6 +22,7 @@ type TComplimentaryProps = {
 const Complimentary: React.FC<TComplimentaryProps> =
     ({complimentary, packages, setClasses, isBmWService, isRiverviewFord, handleClick}) => {
         const {scProfile} = useSelector((state: RootState) => state.appointment);
+        console.log(packages);
     const {t} = useTranslation();
     return <React.Fragment>
             <div className="green subtitle">{t("Complimentary")}</div>
@@ -50,13 +51,15 @@ const Complimentary: React.FC<TComplimentaryProps> =
                     : null}
                 </div>
 
-                {packages.map(p =>
-                    <div
-                        key={p.id}
-                        onClick={handleClick(p)}
-                        className={setClasses(p.id, `service green ${scProfile?.isShowPriceDetails ? "" : "last"}`)}>
-                        {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
-                    </div>
+                {packages.map((p) => {
+                        return <div
+                            key={p.id}
+                            onClick={handleClick(p)}
+                            className={setClasses(p.id, `service green ${scProfile?.isShowPriceDetails ? "" 
+                                : i === complimentary.length - 1 ? "last" : ""}`)}>
+                            {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
+                        </div>
+                    }
                 )}
             </React.Fragment>)}
         </React.Fragment>;
