@@ -27,11 +27,9 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, p
                 className={setClasses(p.id, "totalComplimentary last")}
                 key={p.id}>
                     <span style={{ fontSize: 20 }}>
-                        {p.marketPriceComplimentaryServices
-                            ? `$${scProfile?.isRoundPrice
-                                ? p.marketPriceComplimentaryServices
-                                : p.marketPriceComplimentaryServices.toFixed(2)}`
-                            : ''}
+         ${scProfile?.isRoundPrice
+                        ? +p.marketPriceComplimentaryServices
+                        : +p.marketPriceComplimentaryServices.toFixed(2)}
                     </span>
             </div>;
         })}
