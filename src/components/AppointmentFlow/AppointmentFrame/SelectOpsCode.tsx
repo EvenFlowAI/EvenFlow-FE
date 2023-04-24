@@ -62,7 +62,7 @@ const Price = styled('span')({
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: "bold",
 })
 
@@ -90,7 +90,7 @@ const Code = styled(FormControlLabel)({
     textTransform: "uppercase",
     display: 'flex',
     "& span": {
-        fontSize: 12,
+        fontSize: 14,
         "&:last-child": {
             padding: "8px 8px 8px 0"
         }
