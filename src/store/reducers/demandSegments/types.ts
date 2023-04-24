@@ -1,3 +1,5 @@
+import {ETimeSlotType} from "../slotScoring/types";
+
 export interface IDemandSegment {
     id: number;
     window1Point: number;
@@ -40,6 +42,15 @@ export interface IUnplannedDemandForm {
     day: EDay;
     optimizerSetting: number;
 }
+
+export interface IUnplannedDemandBySlot {
+    day: EDay;
+    start: string;
+    end: string;
+    optimizerSetting: number;
+    timeSlotType: ETimeSlotType;
+}
+
 export interface IUnplannedDemandRequest {
     items: IUnplannedDemandForm[];
     serviceCenterId: number;

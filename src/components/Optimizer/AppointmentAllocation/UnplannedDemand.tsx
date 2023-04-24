@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
 import {DemandTable, SaveEditBlock, TableCell, TableRow} from "./UI";
 import {TableBody, TableHead} from "@material-ui/core";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
@@ -24,9 +24,13 @@ const remapSegments = (sl: IUnplannedDemand[]): IUnplannedDemand[] => {
     })
 }
 
-export const UnplannedDemand = () => {
+type TUnplannedDemandProps = {
+    isEdit: boolean;
+    setEdit: Dispatch<SetStateAction<boolean>>;
+}
+
+export const UnplannedDemand: React.FC<TUnplannedDemandProps> = ({ setEdit, isEdit }) => {
     const [form, setForm] = useState<TForm>([]);
-    const [isEdit, setEdit] = useState<boolean>(false);
     const [isSaving, setSaving] = useState<boolean>(false);
     const showError = useException();
     const showMessage = useMessage();
@@ -93,6 +97,7 @@ export const UnplannedDemand = () => {
                     <TableCell>Optimizer Setting</TableCell>
                     <TableCell width={200} style={{textAlign: "right"}}>
                         <SaveEditBlock
+                            isLowerCase
                             onSave={handleSave}
                             onEdit={() => setEdit(true)}
                             onCancel={handleCancel}
