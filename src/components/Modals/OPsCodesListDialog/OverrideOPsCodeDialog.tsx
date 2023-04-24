@@ -76,6 +76,7 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
             showError("Data is not loaded");
         } else {
             setLoading(true);
+
             try {
                 const {description, ...f} = form;
                 const data: IServiceRequestOverrideEditRequest = {

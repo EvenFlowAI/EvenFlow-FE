@@ -79,7 +79,7 @@ type TMaintenanceDetailsProps = {
 }
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown, consultants}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
@@ -280,11 +280,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (isValid()) {
             onNext(service?.type === EServiceCategoryType.MaintenancePackage
                 ? 'packageSelection'
-                : !currentConfig?.advisorSelection
-                    ? currentConfig?.appointmentSelection
+                : currentConfig?.advisorSelection
+                    ? 'consultantSelection'
+                    : currentConfig?.appointmentSelection
                         ? 'appointmentTiming'
-                        : "appointmentSelection"
-                    : 'consultantSelection');
+                        : "appointmentSelection");
         }
     }
 
@@ -300,15 +300,18 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const handleSubmit = async () => {
         if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && !recallsAreShown) {
             setLoading(true);
-            const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin}})
-            dispatch(setRecallsAreShown(true));
-            if (data.length) {
-                await onOpen()
-            } else {
-                if (userType === EUserType.New) {
-                    onNoRecallsOpen()
+            const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase());
+            if (selectedVehicle?.make && make?.id) {
+                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin, vehicleMakeId: make?.id}})
+                dispatch(setRecallsAreShown(true));
+                if (data.length) {
+                    await onOpen()
                 } else {
-                    handleNext();
+                    if (userType === EUserType.New) {
+                        onNoRecallsOpen()
+                    } else {
+                        handleNext();
+                    }
                 }
             }
         } else {

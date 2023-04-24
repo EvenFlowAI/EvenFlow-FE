@@ -194,7 +194,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                         }}
                         selectProps={{
                             addressValue: typeof address === 'string' ? address : address?.label ?? '',
-                            className: !address?.label && isFormChecked ? classes.errorSelect : classes.select,
+                            className: typeof address === 'string'
+                                ? !address && isFormChecked
+                                : !address?.label && isFormChecked
+                                    ? classes.errorSelect
+                                    : classes.select,
                             onChange: handleChangeAddress,
                             onFocus: () => setFormChecked(false),
                             placeholder: getPlaceholderLabel(),

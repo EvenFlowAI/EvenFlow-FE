@@ -24,6 +24,7 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
     const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (props.packageData){
             if (cellIndex === 0) {
+                if (props.packageData?.serviceRequests?.length === 1) return classes.firstCellLastRow;
                 switch (rowIndex) {
                     case 0:
                         return classes.firstCellFirstRow;
@@ -32,8 +33,8 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                     default:
                         return classes.firstCell;
                 }
-            }
-            if (cellIndex === 2) {
+            } else if (cellIndex === 2) {
+                if (props.packageData?.serviceRequests?.length === 1) return classes.lastCellLastRow;
                 switch (rowIndex) {
                     case 0:
                         return classes.lastCellFirstRow;
@@ -42,14 +43,16 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
                     default:
                         return classes.lastCell;
                 }
-            }
-            switch (rowIndex) {
-                case 0:
-                    return classes.cellFirstRow;
-                case props.packageData?.serviceRequests?.length - 1:
-                    return classes.cellLastRow;
-                default:
-                    return classes.cell
+            } else {
+                if (props.packageData?.serviceRequests?.length === 1) return classes.cellLastRow;
+                switch (rowIndex) {
+                    case 0:
+                        return classes.cellFirstRow;
+                    case props.packageData?.serviceRequests?.length - 1:
+                        return classes.cellLastRow;
+                    default:
+                        return classes.cell
+                }
             }
         }
     }, [props.packageData])

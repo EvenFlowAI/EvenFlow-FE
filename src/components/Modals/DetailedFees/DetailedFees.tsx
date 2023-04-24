@@ -145,7 +145,6 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
         }
     }
 
-
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
             <DialogTitle onClose={onClose} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>

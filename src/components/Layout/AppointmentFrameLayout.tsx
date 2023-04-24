@@ -57,6 +57,7 @@ import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameRedu
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
+import {setUpdateSelectedRecalls} from "../../store/reducers/recall/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -133,6 +134,8 @@ export const AppointmentFrameLayout = () => {
         serviceType,
         currentScreen: currentFrameScreen,
         userType,
+        consultants,
+        makes,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -364,6 +367,10 @@ export const AppointmentFrameLayout = () => {
             setLoadingCar(true);
             try {
                 const {data} = await API.appointment.getByKey(trimmedKey);
+                if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
+                    const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
+                    if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
+                }
                 dispatch(setUpdateAppointment(data));
                 data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
                 if (data.maintenancePackageOption) {
@@ -387,7 +394,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes]);
 
     const handleSelectCar = useCallback( () => {
         selectedVehicle && onSelectCar(selectedVehicle)
@@ -449,7 +456,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen(currentConfig?.appointmentSelection ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen(!currentConfig?.advisorSelection ? 'serviceNeeds' : 'consultantSelection')}
+                onBack={handleChangeScreen(currentConfig?.advisorSelection && consultants.length ? 'consultantSelection' : 'serviceNeeds')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection

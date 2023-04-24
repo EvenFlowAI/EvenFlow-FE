@@ -1,18 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
 import {styled, Theme} from "@material-ui/core";
 import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/advisor_black.svg';
 import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey.svg';
-import {useParams} from "react-router-dom";
 import {TCallback} from "../../../types/types";
-import {IServiceConsultant} from '../../../api/types';
+import {IConsultantsRequestData, IServiceConsultant} from '../../../api/types';
 import {
-    loadConsultants, selectCategoriesIds,
-    selectService, selectSubService,
+    loadConsultants,
+    selectCategoriesIds,
+    selectService,
+    selectSubService,
     setAdvisor,
-    setPackage, setPackageIsSelected, setSelectedPackageOptionType
+    setPackage,
+    setPackageIsSelected,
+    setSelectedPackageOptionType,
+    setSideBarActualSteps,
+    setSideBarMenu,
+    setSideBarStepsList
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -24,10 +30,15 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
+import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
+import {useParams} from "react-router-dom";
+import {decodeSCID} from "../../../utils/utils";
+import {MPOptionShort} from "../../../store/reducers/appointment/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+   // gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: "stretch",
     justifyContent: "flex-start",
     gridGap: "20px",
@@ -42,9 +53,12 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
 
 const ConsultantWrapper = styled(
     ({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
-    display: "flex",
-    rowGap: 16,
-    columnGap: 16,
+    //display: "flex",
+    display: 'grid',
+    gridGap: 16,
+    // rowGap: 16,
+    // columnGap: 16,
+    gridTemplateColumns: '1fr 1fr',
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     color: active ? "#FFFFFF" : theme.palette.text.primary,
     background: active ? "#000000" : "transparent",
@@ -56,19 +70,19 @@ const ConsultantWrapper = styled(
     transition: "all .2s",
     cursor: "pointer",
     "& .icon-wrapper": {
-        width: 50,
+        width: 84,
         display: "flex",
         alignItems: "center",
         justifyContent: 'center',
-        height: 50,
+        height: 84,
         borderRadius: "50%",
         color: active ? "#FFFFFF" : theme.palette.text.primary,
     }
 }));
 
 const Avatar = styled('div')<Theme, {src?: string, contain?: boolean}>({
-    width: 36,
-    height: 36,
+    width: 84,
+    height: 84,
     borderRadius: "50%",
     backgroundColor: "#FFFFFF",
     backgroundSize: ({contain}) => contain ? "contain" : "cover",
@@ -88,10 +102,10 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
     const {t} = useTranslation();
     return <ConsultantWrapper onClick={onClick} active={active}>
         {blank
-            ? <div className={"icon-wrapper"}><AnyConsultantIcon /></div>
+            ? <div className={"icon-wrapper"}><AnyConsultantIcon width={84} height={84}/></div>
             : advisor?.iconPath
                 ? <Avatar src={advisor?.iconPath}/>
-                : <ConsultantIcon/>
+                : <ConsultantIcon width={84} height={84}/>
         }
         <div>
             {blank ? t("Any available advisor") : advisor?.name ?? "-"}
@@ -101,21 +115,87 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
 
 export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const {advisor: selectedConsultant, consultants, selectedPackage, service, subService, categoriesIds}= useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        advisor: selectedConsultant,
+        consultants,
+        selectedPackage,
+        service,
+        subService,
+        categoriesIds,
+        serviceType,
+        selectedRecalls,
+        selectedVehicle,
+        packagePricingType,
+        serviceTypeOption,
+        address,
+        zipCode,
+        valueService
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
-    const {id} = useParams();
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
+    const {id} = useParams();
 
-    const getData = async (id: string) => {
-        setLoading(true);
-        await dispatch(loadConsultants(id));
-        await setLoading(false);
-    }
+    const currentConfig = useMemo(() => {
+        return config.find(item => item.serviceType.toString() === serviceType.toString());
+    }, [config, serviceType]);
+    const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
+    const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
+    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
+    const serviceRequestIds = useMemo(() => {
+        return collectServiceRequestIds(service, subService, null, selectedSR, selectedRecalls);
+    }, [service, subService, selectedRecalls, selectedSR]);
+
+    const getCategories = useCallback((): number[] => {
+        return allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
+            })
+            .map(item => item.id)
+    }, [allCategories, EServiceCategoryType, categoriesIds])
 
     useEffect(() => {
-        getData(id).then()
-    }, [id]);
+        if (selectedVehicle) {
+            const maintenancePackageOption: MPOptionShort|null = selectedPackage
+                ? {id: selectedPackage?.id, priceType: packagePricingType}
+                : null;
+            const data: IConsultantsRequestData = {
+                serviceCenterId: decodeSCID(id),
+                pageIndex: 0,
+                pageSize: 0,
+                serviceRequestIds,
+                recalls: mapRecallsForRequest(selectedRecalls),
+                serviceCategoryIds: getCategories(),
+                maintenancePackageOption,
+                serviceTypeOptionId: serviceTypeOption?.id ??  null,
+                searchTerm: "",
+                vehicle: {
+                    vin: selectedVehicle.vin,
+                    year: selectedVehicle.year,
+                    make: selectedVehicle.make,
+                    model: selectedVehicle.model,
+                    mileage: selectedVehicle.mileage,
+                    engineTypeId: selectedVehicle.engineTypeId,
+                },
+                address: typeof address === 'string' ? address : address?.label ?? '',
+                zipCode,
+            }
+            if (valueService?.selectedService) {
+                data.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            dispatch(loadConsultants(data, onNext))
+        }
+    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest])
+
+    useEffect(() => {
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, transportationNeeds, getCurrentMenu])
+
+    useEffect(() => {
+        dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap, getStepsScreen])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(selectAppointment(null));
@@ -184,7 +264,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     return (<StepWrapper>
         <ConsultantsWrapper>
-            {loading ? <Loading /> : <React.Fragment>
+            {loading || !advisorSelection ? <Loading /> : <React.Fragment>
                 <ConsultantCard
                     blank
                     onClick={handleSelectConsultant(null)}

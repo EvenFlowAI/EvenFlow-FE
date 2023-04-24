@@ -1,10 +1,17 @@
 import moment from "moment";
-import {ILoadedVehicle, IOfferForCategory, IPackage, IPackageOptions, IServiceCategory} from "../../../api/types";
-import {TComplimentary, TPackage, TService} from "./PackageSelection";
+import {
+    ILoadedVehicle,
+    IOfferForCategory,
+    IPackage,
+    IPackageOptions,
+    IServiceCategory,
+} from "../../../api/types";
+import {TComplimentary, TPackage, TService, TUpsell} from "./PackageSelection";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../Layout/types";
 import {IRecallByVin} from "./types";
+import {TRecallForRequest} from "../../../store/reducers/appointment/types";
 
 export const getAppointmentDate = (date: moment.Moment, d: number) => {
     return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
@@ -13,12 +20,12 @@ export const getAppointmentDate = (date: moment.Moment, d: number) => {
 export const collectServiceRequestIds = (
     s: IServiceCategory|null,
     sub: IServiceCategory|null,
-    selectedRecalls: IRecallByVin[],
     selectedPackage?: IPackageOptions|null,
-    individualOpsCodes?: number[]): number[] => {
+    individualOpsCodes?: number[],
+    selectedRecalls?: IRecallByVin[]): number[] => {
     let ids = [];
 
-    if (selectedRecalls.length) {
+    if (selectedRecalls?.length) {
         selectedRecalls.forEach(item => ids.push(item.serviceRequestId))
     }
     if (individualOpsCodes?.length) {
@@ -44,12 +51,13 @@ export const checkSelectedCar = (vehicle: ILoadedVehicle|null, vehicles?: ILoade
     }))
 }
 
-export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TService[], TComplimentary[]] => {
+export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TService[], TComplimentary[], TUpsell[]] => {
     if (loadedPackages.length) {
         const loadedPackage = loadedPackages[0];
         const services: TService[] = [];
         const packages: TPackage[] = [];
         const complimentary: TComplimentary[] = [];
+        const upsells: TUpsell[] = [];
 
         for (let option of loadedPackage.options.sort((a, b) => a.type - b.type)) {
             packages.push({
@@ -75,6 +83,19 @@ export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TServi
                     })
                 } else if (!present.packages.includes(option.id)) {
                     present.packages = [...present.packages, option.id];
+                }
+            }
+            if (option.intervalUpsells) {
+                for (let upsell of option.intervalUpsells) {
+                    const present = upsells.find(c => c.id === upsell.id);
+                    if (!present) {
+                        upsells.push({
+                            ...upsell,
+                            packages: [option.id]
+                        })
+                    } else if (!present.packages.includes(option.id)) {
+                        present.packages = [...present.packages, option.id];
+                    }
                 }
             }
             services.reduce((acc, s, idx) => {
@@ -105,9 +126,9 @@ export const getPackagesData = (loadedPackages: IPackage[]): [TPackage[], TServi
             }, {pck: [], more: [], moreIdx: 0} as { pck: number[], more: number[], moreIdx: number });
         }
 
-        return [packages, services, complimentary];
+        return [packages, services, complimentary, upsells];
     }
-    return [[], [], []];
+    return [[], [], [], []];
 }
 
 
@@ -196,4 +217,15 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
         data.transportationNeeds = -1;
     }
     return data
+}
+
+export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallForRequest[] => {
+    return selectedRecalls.map(recall => {
+        const data: TRecallForRequest = {
+            serviceRequestId: recall.serviceRequestId,
+            number: recall.nhtsaRecallNumber,
+        }
+        if (recall.id) data.id = recall.id;
+        return data;
+    })
 }

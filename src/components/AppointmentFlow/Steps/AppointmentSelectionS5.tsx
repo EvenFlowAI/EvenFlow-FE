@@ -4,7 +4,7 @@ import {Box, Button, ButtonGroup, Divider, Grid, Popover} from "@material-ui/cor
 import {ListAppointmentSelection} from '../AppointmentSelections/ListAppointmentSelection';
 import {CalendarAppointmentSelection} from "../AppointmentSelections/CalendarAppointmentSelection";
 import {useDispatch, useSelector} from "react-redux";
-import {changeS3Form, loadAppointmentSlots} from "../../../store/reducers/appointment/actions";
+import {changeS3Form} from "../../../store/reducers/appointment/actions";
 import {useParams} from "react-router-dom";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
@@ -14,7 +14,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import {getOfferValue} from "../AppointmentSelections/UI";
 import {AppointmentSelectInfo} from "../AppointmentSelectInfo";
 import {AppointmentFilters} from "../AppointmentFilters";
-import {decodeSCID} from "../../../utils/utils";
 
 type TView = "calendar" | "list";
 type TButton = { label: string, type: TView };
@@ -92,7 +91,6 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
     const [selectedView, setSelectedView] = useState<TView>("calendar");
     const [isLoading, setLoading] = useState<boolean>(false);
     const [popover, setPopover] = useState<TPopoverState>({anchor: null, selectedAppointment: null});
-    const {advisor, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
 
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -127,19 +125,20 @@ export const AppointmentSelectionS5: React.FC<TStepProps> = ({prev, next, isComp
                 ? moment(selectedDate)
                 : moment.utc().startOf("day");
             try {
-                await dispatch(loadAppointmentSlots({
-                    appointmentTimingType: selectedAppointmentType,
-                    serviceCenterId: decodeSCID(id),
-                    onlyOffers: filters.offersOnly,
-                    consultantId: advisor?.id ?? null,
-                    shorterWaitTime: filters.waitTimeOnly,
-                    fromDate: sd.toISOString(),
-                    serviceRequestIds: selectedServiceRequests,
-                    countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
-                    customerId: customerData?.id,
-                    warrantyExpiration: selectedVehicle?.warrantyExpiration,
-                    serviceTypeOptionId: serviceTypeOption?.id ?? null,
-                }, updateDate));
+                // await dispatch(loadAppointmentSlots({
+                //     appointmentTimingType: selectedAppointmentType,
+                //     serviceCenterId: decodeSCID(id),
+                //     onlyOffers: filters.offersOnly,
+                //     consultantId: advisor?.id ?? null,
+                //     shorterWaitTime: filters.waitTimeOnly,
+                //     fromDate: sd.toISOString(),
+                //     serviceRequestIds: selectedServiceRequests,
+                //     countOfDays: Math.abs(sd.diff(moment(sd).endOf("month"), "days")) + 1,
+                //     customerId: customerData?.id,
+                //     warrantyExpiration: selectedVehicle?.warrantyExpiration,
+                //     serviceTypeOptionId: serviceTypeOption?.id ?? null,
+                //     recalls: [],
+                // }, updateDate));
             } finally {
                 setLoading(false);
             }

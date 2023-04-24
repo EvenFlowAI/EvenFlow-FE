@@ -10,16 +10,20 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
-import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
 import {
-    loadAppointmentSlots, loadServiceValetSlots,
+    EAppointmentTimingType,
+    IAppointmentSlotsRequest,
+    MPOptionShort
+} from "../../../store/reducers/appointment/types";
+import {
+    loadAppointmentSlots,
     selectAppointment,
     selectServiceValetAppointment
 } from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga";
 //import ReactGA from "react-ga4";
 import {decodeSCID} from "../../../utils/utils";
-import {collectServiceRequestIds} from "./utils";
+import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -78,7 +82,8 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         categoriesIds,
         allCategories,
         serviceTypeOption,
-        selectedRecalls
+        selectedRecalls,
+        packagePricingType,
     ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
@@ -99,24 +104,29 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.categories.allCategories,
             state.appointmentFrame.serviceTypeOption,
             state.appointmentFrame.selectedRecalls,
+            state.appointmentFrame.packagePricingType,
         ]);
 
     useEffect(() => {
         setLoading(true);
         const date = moment();
+        const maintenancePackageOption: MPOptionShort|null = selectedPackage
+            ? {id: selectedPackage?.id, priceType: packagePricingType}
+            : null;
         const dd: IAppointmentSlotsRequest = {
             appointmentTimingType: EAppointmentTimingType.PreferredDate,
             serviceCenterId: decodeSCID(id),
             consultantId: consultant?.id ?? null,
             fromDate: date.toISOString(),
-            maintenancePackageOptionId: selectedPackage?.id ?? null,
+            maintenancePackageOption,
             serviceRequestIds: collectServiceRequestIds(
-                service, subService, selectedRecalls, selectedPackage, selectedOpsCodes
+                service, subService, selectedPackage, selectedOpsCodes
             ),
             serviceCategoryIds: getCategories(),
             customerId: customerData?.id,
             warrantyExpiration: selectedVehicle?.warrantyExpiration,
             serviceTypeOptionId: serviceTypeOption?.id ?? null,
+            recalls: mapRecallsForRequest(selectedRecalls),
         }
         if (valueService?.selectedService) {
             dd.valueServiceOfferIds = [valueService.selectedService.id];

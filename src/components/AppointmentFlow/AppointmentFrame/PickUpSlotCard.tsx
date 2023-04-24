@@ -167,7 +167,7 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                         </div>
                     }
                 </div>
-                { dropOffSettings?.showDropOffTime
+                { dropOffSettings?.showDropOffTime && timeSlot?.dropOffMin && timeSlot?.dropOffMax
                     ? <div className={classes.dropOff}>
                         <div>{t("Drop Off Time")}:</div>
                         <div className={classes.rightText}>

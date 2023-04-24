@@ -251,11 +251,14 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     maintenancePackageOptionId: selectedPackageOption?.id ?? null,
                     serviceCategoryIds: selectedCategories.map(item => item.id),
                     serviceCenterId: selectedSC.id,
+                    maintenancePackageOption: null,
                     jobType: jobType?.value ?? null,
                     appointmentHashKey: payload?.hashKey ?? undefined,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     address: address?.label ?? null,
                     zipCode: zipCode?.length ? zipCode : undefined,
+                    // todo selected recalls
+                    recalls:[],
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,
@@ -310,12 +313,15 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     serviceRequestIds: selectedSR.map(sr => sr.id),
                     maintenancePackageOptionId: selectedPackageOption?.id ?? null,
                     serviceCategoryIds: selectedCategories.map(item => item.id),
+                    maintenancePackageOption: null,
                     serviceCenterId: selectedSC.id,
                     jobType: jobType?.value ?? null,
                     appointmentHashKey: payload?.hashKey ?? undefined,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     address: address?.label ?? null,
                     zipCode: zipCode?.length ? zipCode : undefined,
+                    // todo selected recalls
+                    recalls: [],
                     vehicle: {
                         make: form.vehicleMake,
                         model: form.vehicleModel,

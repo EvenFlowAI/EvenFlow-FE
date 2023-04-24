@@ -70,6 +70,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         selectedVehicle,
         valueService,
         serviceType,
+        consultants
     } = useSelector((state: RootState) => state.appointmentFrame);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
@@ -100,7 +101,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 : 'appointmentTiming'
         }
         return nextScreen;
-    }, [serviceType, valueService, currentConfig])
+    }, [serviceType, valueService, currentConfig, consultants])
 
     useEffect(() => {
         if (customerLoadedData && !customerLoadedData.vehicles?.length) {

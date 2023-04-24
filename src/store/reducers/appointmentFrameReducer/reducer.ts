@@ -25,16 +25,18 @@ import {
     setMobileServiceAvailability,
     setOffersLoading,
     setPackage,
-    setPackageIsSelected,
+    setPackageIsSelected, setPackagePricingType,
     setPackages,
     setPickUpDropOffAvailability,
     setRecallsAreShown,
     setReminders,
     setSelectedPackageOptionType,
+    setSelectedPackagePriceTitles,
     setSelectedRecalls,
     setServiceType,
     setServiceTypeOption,
-    setSideBarSteps,
+    setSideBarActualSteps, setSideBarMenu,
+    setSideBarSteps, setSideBarStepsList,
     setTime,
     setTiming,
     setTrackerCreated,
@@ -62,6 +64,7 @@ import {
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType} from "../appointment/types";
 import {
+    EPackagePricingType,
     EServiceType,
     EUserType,
     IServiceOffer,
@@ -76,6 +79,7 @@ import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
+import {TPackagePrice} from "../packages/types";
 
 type TState = {
     service: IServiceCategory|null;
@@ -116,6 +120,9 @@ type TState = {
     isPickUpDropOffServiceOn: boolean;
     isValueServiceOn: boolean;
     sideBarSteps: TScreen[];
+    sideBarMenu: string[];
+    sideBarActualSteps: {[K in TScreen]: number}|null;
+    sideBarStepsList: TScreen[];
     welcomeScreenView: TView;
     language: TLanguage;
     ancillaryPriceLoading: boolean;
@@ -125,6 +132,8 @@ type TState = {
     recallsAreShown: boolean;
     hoursOfOperations: IHOODataForm[];
     serviceTypeOption: IFirstScreenOption|null;
+    packagePricingType: EPackagePricingType | null;
+    packagePriceTitles: TPackagePrice[];
 }
 const initialState: TState = {
     service: null,
@@ -168,6 +177,9 @@ const initialState: TState = {
     isPickUpDropOffServiceOn: false,
     isValueServiceOn: false,
     sideBarSteps: [],
+    sideBarMenu: [],
+    sideBarActualSteps: null,
+    sideBarStepsList: [],
     welcomeScreenView: "select",
     language: "en",
     ancillaryPriceLoading: false,
@@ -177,6 +189,8 @@ const initialState: TState = {
     recallsAreShown: false,
     hoursOfOperations: [],
     serviceTypeOption: null,
+    packagePricingType: null,
+    packagePriceTitles: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -350,5 +364,20 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setServiceTypeOption, (state, {payload}) => {
         return {...state, serviceTypeOption: payload}
+    })
+    .addCase(setPackagePricingType, (state, {payload}) => {
+        return {...state, packagePricingType: payload}
+    })
+    .addCase(setSideBarMenu, (state, {payload}) => {
+        return {...state, sideBarMenu: payload}
+    })
+    .addCase(setSideBarActualSteps, (state, {payload}) => {
+        return {...state, sideBarActualSteps: payload}
+    })
+    .addCase(setSelectedPackagePriceTitles, (state, {payload}) => {
+        return {...state, packagePriceTitles: payload}
+    })
+    .addCase(setSideBarStepsList, (state, {payload}) => {
+        return {...state, sideBarStepsList: payload}
     })
 )

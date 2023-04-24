@@ -1,5 +1,6 @@
 import {EMaintenanceOptionType, IBusinessRule} from "../../../api/types";
 import {EPricingDisplayType} from "../pricingSettings/types";
+import {EPackagePricingType} from "../appointmentFrameReducer/types";
 
 export type TAssignedRequest = {
     type: string | number;
@@ -11,6 +12,7 @@ export interface IUpdatedPackage {
     serviceRequestsAssigned: TAssignedRequest[];
     serviceRequests: number[];
     complimentaryServices: number[];
+    intervalUpsells: number[];
     businessRules?: IBusinessRule;
     name: string,
     engineTypes: number[];
@@ -21,6 +23,7 @@ export interface INewPackage {
     serviceRequestsAssigned: TAssignedRequest[];
     serviceRequests: number[];
     complimentaryServices: number[];
+    intervalUpsells: number[];
     businessRules?: IBusinessRule;
     name: string,
     isApplyBusinessRules?: boolean;
@@ -60,4 +63,14 @@ export interface IPackageOptionShort {
 export type TOrderIndex = {
     id: number;
     orderIndex: number;
+}
+
+export type TPackagePrice = {
+    title: string;
+    type: EPackagePricingType;
+}
+
+export type TPriceTitles = {
+    priceTitle?: string;
+    priceWithFeeTitle?: string;
 }

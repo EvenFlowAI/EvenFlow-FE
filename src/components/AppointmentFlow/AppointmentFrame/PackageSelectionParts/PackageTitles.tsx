@@ -1,10 +1,11 @@
 import React from 'react';
 import {IPackageOptions} from "../../../../api/types";
 import {TPackage} from "../PackageSelection";
+import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 type TPackageTitlesProps = {
     setClasses: (id: number, cls: string) => string;
-    handleClick: (p: IPackageOptions) => () => void;
+    handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
     packages: TPackage[];
 }
 

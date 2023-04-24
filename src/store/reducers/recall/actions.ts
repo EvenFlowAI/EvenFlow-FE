@@ -3,6 +3,7 @@ import {ICreateUpdateRecall, IRecall, IRecallResponse} from "./types";
 import {AppThunk, IPageRequest} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {setSelectedRecalls} from "../appointmentFrameReducer/actions";
 
 export const getRecalls  = createAction<IRecall[]>('Recall/GetRecalls');
 export const setLoading  = createAction<boolean>('Recall/SetLoading');
@@ -71,14 +72,31 @@ export const deleteRecall = (id: number, serviceCenterId: number,onError: (err: 
         })
 }
 
-export const loadRecallsByVin = (serviceCenterId: number, vin: string): AppThunk => dispatch => {
+export const loadRecallsByVin = (serviceCenterId: number, vin: string, vehicleMakeId: number): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin}})
+    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin, vehicleMakeId}})
         .then(result => {
             if (result.data) dispatch(getRecallsByVin(result.data))
         })
         .catch(err => {
             console.log('get recalls by vin err', err)
+        })
+        .finally(() => dispatch(setLoading(false)))
+}
+
+export const setUpdateSelectedRecalls = (serviceCenterId: number, vin: string, vehicleMakeId: number, recallsNumbers: string[]): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin}})
+        .then(result => {
+            if (result.data) {
+                const data: IRecallByVin[] = result.data
+                dispatch(getRecallsByVin(data))
+                const selected = data.filter(item => recallsNumbers.includes(item.nhtsaRecallNumber))
+                dispatch(setSelectedRecalls(selected));
+            }
+        })
+        .catch(err => {
+            console.log('set update seleted recalls err', err)
         })
         .finally(() => dispatch(setLoading(false)))
 }

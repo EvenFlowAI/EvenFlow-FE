@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => ({
     radioGroup: {
         display: 'flex',
         justifyContent: 'flex-end'
-    }
+    },
 }))
 
 type TOption = {
@@ -146,7 +146,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             options = categoryOptions.filter(o => o.value !== EServiceCategoryType.ValueService)
         }
         if (definedPage?.value === 1) {
-            options = categoryOptions.filter(o => o.value !== EServiceCategoryType.MaintenancePackage)
+            options = categoryOptions.filter(o => o.value !== EServiceCategoryType.MaintenancePackage && o.value !== EServiceCategoryType.LinkToPage2)
         }
         return options;
     }
@@ -208,8 +208,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             if (categoryType?.value === EServiceCategoryType.ValueService && !visitCenterConfig?.valueService) {
                 return showError("Value Service Option is turned off in the Booking Flow and cannot be saved")
             }
-            if (categoryType?.value === EServiceCategoryType.MaintenancePackage && definedPage?.value === 1) {
-                return showError('The Category with link to "Maintenance Package" can`t be saved for"Owned By Booking Flow (Page 2)"')
+            if (definedPage?.value === 1) {
+                if (categoryType?.value === EServiceCategoryType.MaintenancePackage) {
+                    return showError('The Category with link to "Maintenance Package" can`t be saved for"Owned By Booking Flow (Page 2)"')
+                }
+                if (categoryType?.value === EServiceCategoryType.LinkToPage2) {
+                    return showError('The Category with link to "Link to Page 2" can`t be saved for"Owned By Booking Flow (Page 2)"')
+                }
             }
 
             if (categoryName && definedPage && categoryType && orderIndex) {
@@ -243,7 +248,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                 onCancel();
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes, editingItem, fileState, visitCenterConfig, description, isCommentRequired])
+    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
+        editingItem, fileState, visitCenterConfig, description, isCommentRequired])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);

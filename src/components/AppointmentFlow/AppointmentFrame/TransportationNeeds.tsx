@@ -147,7 +147,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     ]);
 
     const serviceRequestIds = useMemo(() => {
-        return collectServiceRequestIds(s, ss, selectedRecalls, null, individualOps);
+        return collectServiceRequestIds(s, ss, null, individualOps, selectedRecalls);
     }, [s, ss, individualOps]);
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
@@ -205,7 +205,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = () => {
-        handleSideBar();
+        // handleSideBar();
         dispatch(setTransportation(null));
         onBack();
     }

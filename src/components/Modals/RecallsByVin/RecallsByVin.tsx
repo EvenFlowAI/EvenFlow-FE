@@ -100,21 +100,24 @@ type TRecallsByVinProps = DialogProps & {handleNext : () => void}
 
 const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
-    const {selectedVehicle, selectedRecalls} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, selectedRecalls, makes} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
     const classes = useStyles();
 
     useEffect(() => {
-        if (selectedVehicle?.vin?.length && open) {
-            dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin))
+        if (selectedVehicle) {
+            const make = makes.find(item => item.name === selectedVehicle.make);
+            if (selectedVehicle.vin?.length && open && make?.id) {
+                dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin, make.id))
+            }
         }
-    }, [selectedVehicle, open])
+    }, [selectedVehicle, open, makes])
 
     useEffect(() => {
-        dispatch(setSelectedRecalls(recallsByVin));
-    }, [recallsByVin])
+        if (open) dispatch(setSelectedRecalls(recallsByVin));
+    }, [recallsByVin, open])
 
     const onAddService = (item: IRecallByVin) => {
         const data = selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)

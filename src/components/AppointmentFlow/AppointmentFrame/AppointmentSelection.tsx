@@ -10,14 +10,17 @@ import {useParams} from "react-router-dom";
 import {decodeSCID, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../../../store/reducers/appointment/types";
+import {
+    EAppointmentTimingType,
+    IAppointmentSlotsRequest, MPOptionShort,
+} from "../../../store/reducers/appointment/types";
 import {
     loadAppointmentSlots,
     loadServiceValetSlots,
     selectAppointment, selectServiceValetAppointment
 } from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
-import {collectServiceRequestIds} from "./utils";
+import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
@@ -84,6 +87,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         address,
         selectedRecalls,
         serviceTypeOption,
+        packagePricingType,
+        consultants
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -110,6 +115,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.address,
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.serviceTypeOption,
+        state.appointmentFrame.packagePricingType,
+        state.appointmentFrame.consultants,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -203,6 +210,9 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             if (id) {
                 setLoading(true);
                 try {
+                    const maintenancePackageOption: MPOptionShort|null = selectedPackage
+                        ? {id: selectedPackage?.id, priceType: packagePricingType}
+                        : null;
                     const dd: IAppointmentSlotsRequest = {
                         appointmentTimingType: serviceTypeOption?.type === EServiceType.PikUpDropOff || !selectedTimingType
                             ? EAppointmentTimingType.FirstAvailable
@@ -210,14 +220,15 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         serviceCenterId: decodeSCID(id),
                         consultantId: consultant?.id ?? null,
                         fromDate: selectedTime ? moment(selectedTime).toISOString() : moment.utc().startOf("day"),
-                        maintenancePackageOptionId: selectedPackage?.id ?? null,
+                        maintenancePackageOption,
                         serviceRequestIds: collectServiceRequestIds(
-                            service, subService, selectedRecalls, selectedPackage, selectedOpsCodes
+                            service, subService, selectedPackage, selectedOpsCodes
                         ),
                         serviceCategoryIds: getCategories(),
                         customerId: customerData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration,
                         serviceTypeOptionId: serviceTypeOption?.id ?? null,
+                        recalls: mapRecallsForRequest(selectedRecalls),
                     }
                     if (valueService?.selectedService) {
                         dd.valueServiceOfferIds = [valueService.selectedService.id];
@@ -253,7 +264,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType,
-        selectedVehicle, customerData, service, vehicle,
+        selectedVehicle, customerData, service, vehicle, packagePricingType,
         subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
     ]);
 
