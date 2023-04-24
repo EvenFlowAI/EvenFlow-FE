@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Loading} from "../../UI/Loading";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import axios from "axios";
 
 const PackagesEmenu = () => {
     const {selectedVehicle, makes} = useSelector((state: RootState) => state.appointmentFrame);
@@ -10,15 +11,32 @@ const PackagesEmenu = () => {
     const [srcLink, setSrcLink] = useState<string>('');
 
     useEffect(() => {
-        let str = 'http://www.emenusllc.com/index.php?go=member.pdfTH&pdfType=threeUp&service_type=1&';
+
+    //     axios.get('https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&vin=JTDEPRAEXLJ020044&mileage_service_type=30000M1',
+    //         {headers: { 'Subscription-Id': "ev99999"}})
+    //         .then(res => {
+    //             console.log(res)
+    // }).catch(err => {
+    //         console.log(err)
+    //     })
+        let str1 = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';
+
+        let str = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';
+        //let str = 'http://www.emenusllc.com/index.php?go=member.pdfTH&pdfType=threeUp&service_type=1&';
         if (selectedVehicle?.model) {
-            const models = makes.find(item => item.name === selectedVehicle.make)?.modelCodes;
-            const modelId = models?.find(item => item.name === selectedVehicle.model)?.id;
-            if (modelId) str = str + `model=${modelId}&`;
-            if (scProfile?.dmsId) str = str + `member=${scProfile.dmsId}&`;
-            if (selectedVehicle.year) str = str + `year=${selectedVehicle.year}&`;
+            if (selectedVehicle.vin?.length === 16) {
+                str = str + `&vin=${selectedVehicle.vin}`
+            } else {
+                const models = makes.find(item => item.name === selectedVehicle.make)?.modelCodes;
+                const modelId = models?.find(item => item.name === selectedVehicle.model)?.id;
+                if (modelId) str = str + `model=${modelId}&`;
+                if (selectedVehicle.year) str = str + `year=${selectedVehicle.year}&`;
+            }
+
+            //if (scProfile?.dmsId) str = str + `member=${scProfile.dmsId}&`;
+
             if (selectedVehicle.mileage) str = str + `mileage_service_type=${selectedVehicle.mileage}TC`;
-            if (selectedVehicle.vin?.length === 16) str = str + `&vin=${selectedVehicle.vin}`;
+
             setSrcLink(str);
         }
     }, [selectedVehicle, scProfile])
