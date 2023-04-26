@@ -113,9 +113,8 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
     const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
     const isLakePowell = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
-    const isLexus = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LexusRiverCenter
-        || scProfile?.serviceCenterFlag === EServiceCenterName.LexusCincinnati, [scProfile]);
-    const notShowEmail = isRiverviewFord || isDominion || isLakePowell || isLexus;
+    const isDealerBuilt = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
+    const notShowEmail = isRiverviewFord || isDominion || isLakePowell || isDealerBuilt;
     const classes = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation();
