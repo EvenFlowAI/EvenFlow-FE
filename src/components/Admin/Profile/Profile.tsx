@@ -36,9 +36,8 @@ export const Profile = () => {
 
     useEffect(() => {
         setTabList(currentUser?.role === "Owner" ? tabs : tabs.filter(item => item.id === "2"));
+        if (currentUser?.role !== "Owner") setTab("2");
     }, [currentUser, tabs])
-
-    console.log(tabList);
 
     const handleChangeTab = (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
