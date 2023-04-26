@@ -43,7 +43,7 @@ export enum EServiceCenterName {
     Dominion,
     Fremont,
     LakePowellFord,
-    PerformanceLexus,
+    LexusCincinnati,
     LexusRiverCenter,
 }
 
