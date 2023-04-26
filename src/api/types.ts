@@ -45,6 +45,7 @@ export enum EServiceCenterName {
     LakePowellFord,
     LexusCincinnati,
     LexusRiverCenter,
+    DealerBuilt,
 }
 
 export enum EVehiclePropType {
