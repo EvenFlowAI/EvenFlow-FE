@@ -9,6 +9,7 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
     setEdit: Dispatch<SetStateAction<boolean>>;
+    day: EDay;
 }
 
 type TOption = {
@@ -44,7 +45,7 @@ const daysOptions = Object.values(EDay)
     .filter(key => !isNaN(Number(key)))
     .map(value => ({name: moment().set('day', +value).format('dddd'), value: +value}));
 
-const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdit, isEdit }) => {
+const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdit, isEdit, day }) => {
     const [demandSlots, setDemandSlots] = useState<IUnplannedDemandBySlot[]>([]);
     const [selectedDay, setSelectedDay] = useState<TOption>(daysOptions[0]);
     // todo loading from redux

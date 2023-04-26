@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {DemandTable, SaveEditBlock, TableCell, TableRow} from "./UI";
 import {TableBody, TableHead} from "@material-ui/core";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
@@ -9,6 +9,7 @@ import {loadUnplannedDemand, setUnplannedDemand} from "../../../store/reducers/d
 import {RootState} from "../../../store/rootReducer";
 import {EDay, IUnplannedDemand} from "../../../store/reducers/demandSegments/types";
 import {TextField} from "../../UI/TextField";
+import UnplannedDemandEditing from "./UnplannedDemandEditing";
 
 type TForm = number[];
 const blankDemand: IUnplannedDemand = {
@@ -24,14 +25,11 @@ const remapSegments = (sl: IUnplannedDemand[]): IUnplannedDemand[] => {
     })
 }
 
-type TUnplannedDemandProps = {
-    isEdit: boolean;
-    setEdit: Dispatch<SetStateAction<boolean>>;
-}
-
-export const UnplannedDemand: React.FC<TUnplannedDemandProps> = ({ setEdit, isEdit }) => {
+export const UnplannedDemand = () => {
     const [form, setForm] = useState<TForm>([]);
     const [isSaving, setSaving] = useState<boolean>(false);
+    const [isEdit, setEdit] = useState<boolean>(false);
+    const [editingElement, setEditingElement] = useState<IUnplannedDemand|null>(null);
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
@@ -134,5 +132,6 @@ export const UnplannedDemand: React.FC<TUnplannedDemandProps> = ({ setEdit, isEd
                 })}
             </TableBody>
         </DemandTable>
+        <UnplannedDemandEditing setEdit={setEdit} isEdit={isEdit} day={EDay.Friday}/>
     </div>
 }

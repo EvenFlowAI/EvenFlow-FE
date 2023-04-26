@@ -7,7 +7,7 @@ import {Tab} from "@material-ui/core";
 import {ScheduledAppointments} from "./ScheduledAppointments";
 import RoPredictionParameters from "./RoPredictionParameters";
 import {OverbookingFactor} from "./OverbookingFactor";
-import UnplannedDemandTab from "./UnplannedDemandTab";
+import {UnplannedDemand} from "./UnplannedDemand";
 
 export const AppointmentAllocationPage = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -29,7 +29,7 @@ export const AppointmentAllocationPage = () => {
             <Tab label="Overbooking Factor" value="3" />
         </TabList>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><ScheduledAppointments /></TabPanel>
-        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><UnplannedDemandTab /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><UnplannedDemand /></TabPanel>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="2"><RoPredictionParameters /></TabPanel>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="3"><OverbookingFactor/></TabPanel>
     </TabContext>
