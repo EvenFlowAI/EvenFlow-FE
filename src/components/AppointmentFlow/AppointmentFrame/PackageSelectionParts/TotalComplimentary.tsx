@@ -18,23 +18,22 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, p
     const {t} = useTranslation();
 
     return <React.Fragment>
-        <div className="totalComplimentary complimentaryTitle" style={isBmWService ? {fontSize: 16} : {}}>
-            {t("Total Complimentary Value")}:
-        </div>
-        {packages.map(p => {
-            return <div
-                onClick={handleClick(p)}
-                className={setClasses(p.id, "totalComplimentary last")}
-                key={p.id}>
-                    <span style={{ fontSize: 20 }}>
+            <div className="totalComplimentary complimentaryTitle" style={isBmWService ? {fontSize: 16} : {}}>
+                {t("Total Complimentary Value")}:
+            </div>
+            {packages.map(p => {
+                return <div
+                    onClick={handleClick(p)}
+                    className={setClasses(p.id, "totalComplimentary last")}
+                    key={p.id}>
+                    <span style={{fontSize: 20}}>
          ${scProfile?.isRoundPrice
                         ? +p.marketPriceComplimentaryServices
-                        : +p.marketPriceComplimentaryServices.toFixed(2)}
+                        : (+p.marketPriceComplimentaryServices).toFixed(2)}
                     </span>
-            </div>;
-        })}
-    </React.Fragment>
-    ;
+                </div>;
+            })}
+        </React.Fragment>;
 };
 
 export default TotalComplimentary;
