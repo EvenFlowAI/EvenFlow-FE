@@ -12,13 +12,13 @@ const PackagesEmenu = () => {
 
     useEffect(() => {
 
-    //     axios.get('https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&vin=JTDEPRAEXLJ020044&mileage_service_type=30000M1',
-    //         {headers: { 'Subscription-Id': "ev99999"}})
-    //         .then(res => {
-    //             console.log(res)
-    // }).catch(err => {
-    //         console.log(err)
-    //     })
+        axios.get('https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&vin=JTDEPRAEXLJ020044&mileage_service_type=30000M1',
+            {headers: { 'Subscription-Id': "ev99999"}})
+            .then(res => {
+                console.log(res)
+    }).catch(err => {
+            console.log(err)
+        })
         let str1 = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';
 
         let str = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';

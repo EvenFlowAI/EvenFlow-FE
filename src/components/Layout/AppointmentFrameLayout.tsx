@@ -167,8 +167,8 @@ export const AppointmentFrameLayout = () => {
         [userType, firstScreenOptions]);
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
-    const isLexus = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.LexusRiverCenter)
-        || (scProfile?.serviceCenterFlag === EServiceCenterName.PerformanceLexus), [scProfile]);
+    // todo lexus
+    const isLexus = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt), [scProfile]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType?.toString() === serviceType?.toString());
     }, [config, serviceType])
