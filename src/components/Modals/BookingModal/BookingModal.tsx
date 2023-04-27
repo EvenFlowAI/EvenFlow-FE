@@ -5,11 +5,12 @@ import {Box, Button, ButtonGroup} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {copyTextToClipboard, encodeSCID} from "../../../utils/utils";
 import {Routes} from "../../../config/routes";
-import {useMessage, useSCs} from "../../../utils/hooks";
+import {useCurrentUser, useMessage, useSCs} from "../../../utils/hooks";
 
 export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
     const {selectedSC} = useSCs();
     const showMessage = useMessage();
+    const currentUser = useCurrentUser();
 
     const [link, frame] = useMemo(() => {
         const encoded = encodeSCID(selectedSC?.id??0);
@@ -52,7 +53,8 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
                 </ButtonGroup>}
                 fullWidth />
             <Box p={2} />
-            <TextField
+            {currentUser?.role !== "Call Center Rep"
+                ? <TextField
                 label={"Frame"}
                 readOnly
                 fullWidth
@@ -61,6 +63,7 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
                 value={frame}
                 rows={4}
             />
+                : null}
         </DialogContent>
         <DialogActions>
             <Button variant="contained" color="primary" onClick={props.onClose}>Close</Button>
