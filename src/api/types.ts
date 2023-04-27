@@ -43,8 +43,9 @@ export enum EServiceCenterName {
     Dominion,
     Fremont,
     LakePowellFord,
-    PerformanceLexus,
+    LexusCincinnati,
     LexusRiverCenter,
+    DealerBuilt,
 }
 
 export enum EVehiclePropType {

@@ -4,6 +4,7 @@ import {useCurrentUser, useSCs} from "../../utils/hooks";
 import {ArrowDropDown} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {IServiceCenter} from "../../store/reducers/serviceCenters/types";
+import {TRole} from "../../store/reducers/users/types";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -13,6 +14,8 @@ const useStyles = makeStyles(() => ({
         textTransform: "none"
     }
 }))
+
+const restrictedRoles: TRole[] = ["Manager", "Advisor", "Super Admin"];
 
 export const ServiceCenterSelector = () => {
     const {selectSC, selectedSC, scList} = useSCs();
@@ -32,8 +35,7 @@ export const ServiceCenterSelector = () => {
     const classes = useStyles();
     if (!scList || !scList.length) return null;
     if (!currentUser || currentUser.isSuperUser) return null;
-    // todo check if this logic is correct
-    if (currentUser.role === "Manager") return null;
+    if (restrictedRoles.includes(currentUser.role)) return null;
 
     return <div>
         <Button

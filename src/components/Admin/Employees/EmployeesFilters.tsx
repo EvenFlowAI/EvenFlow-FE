@@ -9,7 +9,7 @@ import {
     setEmployeeFilters,
     changePageData
 } from "../../../store/reducers/employees/actions";
-import {usePagination} from "../../../utils/hooks";
+import {useCurrentUser, usePagination} from "../../../utils/hooks";
 
 const FiltersWrapper = styled('div')({
     width: '100%',
@@ -33,12 +33,14 @@ const ButtonsWrapper = styled('div')({
 })
 
 const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner'];
+const widerRoles = ['Advisor', 'Owner'];
 
 const EmployeesFilters = () => {
     const {fullSCList} = useSelector((state: RootState) => state.serviceCenters);
     const {filters} = useSelector((state: RootState) => state.employees);
     const [selectedRole, setSelectedRole] = useState<string|unknown>('');
     const [selectedCenterId, setSelectedCenterId] = useState<number|unknown>('');
+    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const {changePage} = usePagination(
         (s: RootState) => s.employees.pageData,
@@ -88,7 +90,7 @@ const EmployeesFilters = () => {
             <FiltersWrapper>
                 <Select
                     fullWidth
-                    style={{ marginRight: 20}}
+                    style={{ marginRight: 20, width: currentUser && !widerRoles.includes(currentUser?.role) ? "45%" : "100%"}}
                     placeholder='Role'
                     onChange={handleSelectRole}
                     value={selectedRole}
@@ -101,7 +103,8 @@ const EmployeesFilters = () => {
                         return <MenuItem key={role} value={role}>{role}</MenuItem>
                     })}
                 </Select>
-                <Select
+                {currentUser && widerRoles.includes(currentUser.role)
+                    ? <Select
                     fullWidth
                     placeholder='Service Center'
                     onChange={handleSelectCenter}
@@ -112,9 +115,10 @@ const EmployeesFilters = () => {
                 >
                     <MenuItem value=''>-</MenuItem>
                     {fullSCList.map(serviceCenter => {
-                        return <MenuItem key={serviceCenter.name} value={serviceCenter.id}>{serviceCenter.name}</MenuItem>
+                        return <MenuItem key={serviceCenter.name}
+                                         value={serviceCenter.id}>{serviceCenter.name}</MenuItem>
                     })}
-                </Select>
+                </Select> : <div/>}
             </FiltersWrapper>
             <ButtonsWrapper>
                 <Button

@@ -1,6 +1,6 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon_black.svg";
-import {CheckBoxOutlined, InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@material-ui/icons";
 import {IPackageOptions} from "../../../../api/types";
 import {TPackage, TService} from "../PackageSelection";
 import {useTranslation} from "react-i18next";
@@ -12,12 +12,11 @@ type TIncludedInPackageProps = {
     services: TService[];
     setClasses: (id: number, cls: string) => string;
     handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
-    isRiverviewFord: boolean;
     isBmWService: boolean;
 }
 
 const IncludedInPackage: React.FC<TIncludedInPackageProps> =
-    ({packages, services, setClasses, isRiverviewFord, isBmWService, handleClick}) => {
+    ({packages, services, setClasses, isBmWService, handleClick}) => {
     const {t} = useTranslation();
     return <React.Fragment>
         <div className="gray subtitle">{t("Included in package")}</div>
@@ -44,7 +43,7 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
                             key={p.id}
                             onClick={handleClick(p)}
                             className={setClasses(p.id, wMoreClsx)}>
-                            {s.packages.includes(p.id) ?  isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
+                            {s.packages.includes(p.id) ?  <CheckboxCircle/> : ""}
                         </div>;
                     }
                 )}
