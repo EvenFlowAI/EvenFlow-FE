@@ -6,6 +6,9 @@ import {TextField} from "../../UI/TextField";
 import {copyTextToClipboard, encodeSCID} from "../../../utils/utils";
 import {Routes} from "../../../config/routes";
 import {useCurrentUser, useMessage, useSCs} from "../../../utils/hooks";
+import {TRole} from "../../../store/reducers/users/types";
+
+const restrictedRoles: TRole[] = ["Call Center Rep", "Advisor", "Manager"]
 
 export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
     const {selectedSC} = useSCs();
@@ -53,7 +56,7 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
                 </ButtonGroup>}
                 fullWidth />
             <Box p={2} />
-            {currentUser?.role !== "Call Center Rep"
+            {!restrictedRoles.includes(currentUser?.role)
                 ? <TextField
                 label={"Frame"}
                 readOnly
