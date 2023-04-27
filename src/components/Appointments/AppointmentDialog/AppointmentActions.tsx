@@ -45,13 +45,13 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
                 color="primary">
                 Filters
             </Button>
-            <Button
-                onClick={onOpen}
-                style={{ marginLeft: 20 }}
-                variant="contained"
-                color="primary">
-                New Appointment
-            </Button>
+            {/*<Button*/}
+            {/*    onClick={onOpen}*/}
+            {/*    style={{ marginLeft: 20 }}*/}
+            {/*    variant="contained"*/}
+            {/*    color="primary">*/}
+            {/*    New Appointment*/}
+            {/*</Button>*/}
         </Box>
         <AppointmentDialog onAction={onAction} open={isOpen} onClose={onClose} />
     </>
