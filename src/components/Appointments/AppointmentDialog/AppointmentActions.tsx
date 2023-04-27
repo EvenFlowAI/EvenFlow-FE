@@ -49,7 +49,7 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
                 color="primary">
                 Filters
             </Button>
-            {restrictedRoles.includes(currentUser?.role)
+            {currentUser && restrictedRoles.includes(currentUser?.role)
                 ? null
             : <Button
                     onClick={onOpen}
