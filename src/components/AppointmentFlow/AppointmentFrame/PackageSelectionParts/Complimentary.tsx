@@ -1,6 +1,6 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon_black.svg";
-import {CheckBoxOutlined, InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@material-ui/icons";
 import {TComplimentary, TPackage, TService} from "../PackageSelection";
 import {IPackageOptions} from "../../../../api/types";
 import {useTranslation} from "react-i18next";
@@ -15,12 +15,11 @@ type TComplimentaryProps = {
     complimentary: TComplimentary[];
     setClasses: (id: number, cls: string) => string;
     handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
-    isRiverviewFord: boolean;
     isBmWService: boolean;
 }
 
 const Complimentary: React.FC<TComplimentaryProps> =
-    ({complimentary, packages, setClasses, isBmWService, isRiverviewFord, handleClick}) => {
+    ({complimentary, packages, setClasses, isBmWService, handleClick}) => {
         const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
     return <React.Fragment>
@@ -56,7 +55,7 @@ const Complimentary: React.FC<TComplimentaryProps> =
                             onClick={handleClick(p)}
                             className={setClasses(p.id, `service green ${scProfile?.isShowPriceDetails ? "" 
                                 : i === complimentary.length - 1 ? "last" : ""}`)}>
-                            {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
+                            {c.packages.includes(p.id) ? <CheckboxCircle/> : ""}
                         </div>
                     }
                 )}
