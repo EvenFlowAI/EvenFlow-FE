@@ -49,15 +49,15 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
                 color="primary">
                 Filters
             </Button>
-            {currentUser && restrictedRoles.includes(currentUser?.role)
-                ? null
-            : <Button
-                    onClick={onOpen}
-                    style={{marginLeft: 20}}
-                    variant="contained"
-                    color="primary">
-                    New Appointment
-                </Button>}
+            {/*{currentUser && restrictedRoles.includes(currentUser?.role)*/}
+            {/*    ? null*/}
+            {/*: <Button*/}
+            {/*        onClick={onOpen}*/}
+            {/*        style={{marginLeft: 20}}*/}
+            {/*        variant="contained"*/}
+            {/*        color="primary">*/}
+            {/*        New Appointment*/}
+            {/*    </Button>}*/}
         </Box>
         <AppointmentDialog onAction={onAction} open={isOpen} onClose={onClose} />
     </>
