@@ -56,7 +56,7 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
                 </ButtonGroup>}
                 fullWidth />
             <Box p={2} />
-            {!restrictedRoles.includes(currentUser?.role)
+            {currentUser && !restrictedRoles.includes(currentUser.role)
                 ? <TextField
                 label={"Frame"}
                 readOnly
