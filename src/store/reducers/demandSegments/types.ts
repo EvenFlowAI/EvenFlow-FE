@@ -44,11 +44,16 @@ export interface IUnplannedDemandForm {
 }
 
 export interface IUnplannedDemandBySlot {
+    id: number;
     day: EDay;
     start: string;
     end: string;
     optimizerSetting: number;
     timeSlotType: ETimeSlotType;
+}
+
+export interface IRemappedUnplannedDemandBySlot extends IUnplannedDemandBySlot {
+    orderIndex: number;
 }
 
 export interface IUnplannedDemandRequest {

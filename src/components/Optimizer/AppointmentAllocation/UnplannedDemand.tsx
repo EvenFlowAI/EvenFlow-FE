@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {DemandTable, SaveEditBlock, TableCell, TableRow} from "./UI";
-import {TableBody, TableHead} from "@material-ui/core";
+import {DemandTable, TableCell, TableRow} from "./UI";
+import {TableBody, TableHead, Button} from "@material-ui/core";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {SC_UNDEFINED} from "../../../config/constants";
 import moment from "moment";
@@ -86,22 +86,28 @@ export const UnplannedDemand = () => {
         }
     }
 
+    const onEdit = async (d: number) => {
+        const el = unplannedSegments.find(item => item.day === d as EDay);
+        if (el) await setEditingElement(el);
+        await setEdit(true);
+    }
+
     return <div style={{overflowX: "auto"}}>
-        <DemandTable>
+        {!isEdit ? <DemandTable>
             <TableHead>
                 <TableRow>
                     <TableCell>Day</TableCell>
                     <TableCell>Historical Walk-in Schedule Blocks</TableCell>
                     <TableCell>Optimizer Setting</TableCell>
                     <TableCell width={200} style={{textAlign: "right"}}>
-                        <SaveEditBlock
-                            isLowerCase
-                            onSave={handleSave}
-                            onEdit={() => setEdit(true)}
-                            onCancel={handleCancel}
-                            isEdit={isEdit}
-                            isSaving={isSaving}
-                        />
+                        {/*<SaveEditBlock*/}
+                        {/*    isLowerCase*/}
+                        {/*    onSave={handleSave}*/}
+                        {/*    onEdit={() => setEdit(true)}*/}
+                        {/*    onCancel={handleCancel}*/}
+                        {/*    isEdit={isEdit}*/}
+                        {/*    isSaving={isSaving}*/}
+                        {/*/>*/}
                     </TableCell>
                 </TableRow>
             </TableHead>
@@ -127,11 +133,13 @@ export const UnplannedDemand = () => {
                                 />
                             }
                         </TableCell>
-                        <TableCell />
+                        <TableCell>
+                            <Button variant="text" color="primary" onClick={() => onEdit(idx)}>Edit</Button>
+                        </TableCell>
                     </TableRow>
                 })}
             </TableBody>
         </DemandTable>
-        <UnplannedDemandEditing setEdit={setEdit} isEdit={isEdit} day={EDay.Friday}/>
+            : <UnplannedDemandEditing setEdit={setEdit} isEdit={isEdit} editingElement={editingElement}/>}
     </div>
 }
