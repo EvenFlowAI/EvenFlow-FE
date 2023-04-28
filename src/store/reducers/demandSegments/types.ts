@@ -52,10 +52,6 @@ export interface IUnplannedDemandBySlot {
     timeSlotType: ETimeSlotType;
 }
 
-export interface IRemappedUnplannedDemandBySlot extends IUnplannedDemandBySlot {
-    orderIndex: number;
-}
-
 export interface IUnplannedDemandRequest {
     items: IUnplannedDemandForm[];
     serviceCenterId: number;
