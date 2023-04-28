@@ -48,7 +48,7 @@ export interface IUnplannedDemandBySlot {
     day: EDay;
     start: string;
     end: string;
-    optimizerSetting: number;
+    optimizerSetting: number|string;
     timeSlotType: ETimeSlotType;
 }
 

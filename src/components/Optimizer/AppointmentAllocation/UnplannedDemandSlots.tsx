@@ -56,7 +56,7 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
                 let data = [...prev];
                 const prevItem = data.find(el => el.id === item.id)
                 if (prevItem) {
-                    prevItem.optimizerSetting = +e.target.value;
+                    prevItem.optimizerSetting = e.target.value;
                 }
                 return sortSlots(data);
             })
