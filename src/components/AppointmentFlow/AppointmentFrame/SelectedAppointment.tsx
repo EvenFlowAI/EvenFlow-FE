@@ -3,7 +3,7 @@ import {MenuItem, Select, styled, useMediaQuery, useTheme} from "@material-ui/co
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {getMaintenanceDescription} from "./uiUtils";
-import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAdvisor, setServiceTypeOption} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
@@ -208,6 +208,8 @@ export const SelectedAppointment = () => {
     const { scProfile, appointmentSlots, appointment, serviceValetAppointment, serviceValetSlots } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+
     const [selectedSR, srList] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests
@@ -248,6 +250,15 @@ export const SelectedAppointment = () => {
         }
         dispatch(setAdvisor(consultant ? consultant : null))
     }
+
+    const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+        dispatch(selectServiceValetAppointment(null));
+        const option = firstScreenOptions.find(item => item.id === e.target.value);
+        if (option) {
+            dispatch(setServiceTypeOption(option));
+        }
+    }
+
 
     useEffect(() => {
         scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
@@ -303,7 +314,22 @@ export const SelectedAppointment = () => {
                             </div>
                             : null}
                         {serviceType !== EServiceType.VisitCenter
-                            ? <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
+                            ? serviceType === EServiceType.PikUpDropOff
+                                ? <div className={classes.selectWrapper}>
+                                <div className={classes.selectWrapper}>
+                                    {t("PROVIDED BY OUR")}: {isSm ? <br/> : null}
+                                    <Select
+                                        value={serviceTypeOption?.id}
+                                        className={classes.select}
+                                        disabled={serviceType !== EServiceType.PikUpDropOff}
+                                        onChange={handleServiceOptionChange}>
+                                        {firstScreenOptions
+                                            .filter(option => option.type === EServiceType.PikUpDropOff || option.type === EServiceType.VisitCenter)
+                                            .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)}
+                                    </Select>
+                                </div>
+                            </div>
+                                : <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
                                 <div>{t("PROVIDED BY OUR")}: {getServiceName()}</div>
                             </div>
                             : null
