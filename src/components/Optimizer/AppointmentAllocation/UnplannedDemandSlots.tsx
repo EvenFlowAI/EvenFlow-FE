@@ -1,6 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
 import {
-    IRemappedUnplannedDemandBySlot,
     IUnplannedDemandBySlot
 } from "../../../store/reducers/demandSegments/types";
 import {makeStyles} from "@material-ui/core/styles";
@@ -10,10 +9,11 @@ import moment from "moment";
 import {timeSpanString, timeString} from "../../../config/constants";
 import {TextField} from "../../UI/TextField";
 import {useException} from "../../../utils/hooks";
+import {sortSlots} from "./UnplannedDemandEditing";
 
 type TTableProps = {
-    setDemandSlots: Dispatch<SetStateAction<IRemappedUnplannedDemandBySlot[]>>;
-    slots: IRemappedUnplannedDemandBySlot[];
+    setDemandSlots: Dispatch<SetStateAction<IUnplannedDemandBySlot[]>>;
+    slots: IUnplannedDemandBySlot[];
 }
 
 const useStyles = makeStyles({
@@ -53,13 +53,12 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
             showError('"Unplanned Demand" must be a whole number');
         } else {
             setDemandSlots(prev => {
-                let data = prev;
-                const prevItem = prev.find(el => el.id === item.id)
+                let data = [...prev];
+                const prevItem = data.find(el => el.id === item.id)
                 if (prevItem) {
-                    const updated = {...prevItem, optimizerSetting: +e.target.value}
-                    data = prev.filter(el => el.id !== item.id).concat(updated)
+                    prevItem.optimizerSetting = +e.target.value;
                 }
-                return data;
+                return sortSlots(data);
             })
         }
     }

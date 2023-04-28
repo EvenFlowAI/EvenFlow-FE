@@ -1,6 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {
-    IRemappedUnplannedDemandBySlot,
     IUnplannedDemand,
     IUnplannedDemandBySlot
 } from "../../../store/reducers/demandSegments/types";
@@ -9,6 +8,7 @@ import {SaveEditBlock} from "./UI";
 import {makeStyles} from "@material-ui/core/styles";
 import UnplannedDemandSlots from "./UnplannedDemandSlots";
 import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
+import {timeSpanString} from "../../../config/constants";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
@@ -95,12 +95,12 @@ const mockSlots = [
     }
 ]
 
-const remapSlots = (slots: IUnplannedDemandBySlot[]): IRemappedUnplannedDemandBySlot[] => {
-    return slots.map((item, index) => ({...item, orderIndex: index}))
+export const sortSlots = (slots: IUnplannedDemandBySlot[]): IUnplannedDemandBySlot[] => {
+    return slots.sort((a, b) => moment(a.start, timeSpanString).diff(moment(b.start, timeSpanString)) > 0 ? 1 : 0)
 }
 
 const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdit, isEdit, editingElement }) => {
-    const [demandSlots, setDemandSlots] = useState<IRemappedUnplannedDemandBySlot[]>([]);
+    const [demandSlots, setDemandSlots] = useState<IUnplannedDemandBySlot[]>([]);
     // todo loading from redux
     let isSaving = false;
     const classes = useStyles();
@@ -112,7 +112,7 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
 
     useEffect(() => {
         // todo request by day of week and remap them in the redux thunk action
-        setDemandSlots(remapSlots(mockSlots))
+        setDemandSlots(sortSlots(mockSlots))
     }, [])
 
     const handleSave = () => {
