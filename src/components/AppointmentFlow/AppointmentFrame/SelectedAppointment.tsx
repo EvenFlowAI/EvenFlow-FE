@@ -3,7 +3,11 @@ import {MenuItem, Select, styled, useMediaQuery, useTheme} from "@material-ui/co
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {getMaintenanceDescription} from "./uiUtils";
-import {setAdvisor, setServiceTypeOption} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setAdvisor,
+    setServiceType,
+    setServiceTypeOption
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {EServiceCenterName} from "../../../api/types";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
@@ -226,6 +230,7 @@ export const SelectedAppointment = () => {
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
+    const selectedPrevServiceOption = useMemo(() => serviceTypeOption, []);
 
     const price = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.value ?? 0
@@ -252,10 +257,15 @@ export const SelectedAppointment = () => {
     }
 
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        dispatch(selectServiceValetAppointment(null));
+        if (e.target.value === EServiceType.PikUpDropOff) {
+            dispatch(selectAppointment(null))
+        } else {
+            dispatch(selectServiceValetAppointment(null));
+        }
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
             dispatch(setServiceTypeOption(option));
+            dispatch(setServiceType(option.type))
         }
     }
 
@@ -313,15 +323,14 @@ export const SelectedAppointment = () => {
                                 <h4> {t("YOUR ADDRESS")}: <div>{`${typeof address === "string" ? address : address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div></h4>
                             </div>
                             : null}
-                        {serviceType !== EServiceType.VisitCenter
-                            ? serviceType === EServiceType.PikUpDropOff
+                        {selectedPrevServiceOption?.type !== EServiceType.VisitCenter
+                            ? selectedPrevServiceOption?.type === EServiceType.PikUpDropOff
                                 ? <div className={classes.selectWrapper}>
                                 <div className={classes.selectWrapper}>
                                     {t("PROVIDED BY OUR")}: {isSm ? <br/> : null}
                                     <Select
                                         value={serviceTypeOption?.id}
                                         className={classes.select}
-                                        disabled={serviceType !== EServiceType.PikUpDropOff}
                                         onChange={handleServiceOptionChange}>
                                         {firstScreenOptions
                                             .filter(option => option.type === EServiceType.PikUpDropOff || option.type === EServiceType.VisitCenter)
