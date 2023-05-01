@@ -267,7 +267,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType,
-        selectedVehicle, customerData, service, vehicle, packagePricingType, packageEMenuType, serviceTypeOption
+        selectedVehicle, customerData, service, vehicle, packagePricingType, packageEMenuType, serviceTypeOption,
         subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
     ]);
 
