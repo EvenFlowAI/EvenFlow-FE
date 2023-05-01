@@ -173,23 +173,6 @@ export const SelectedAppointment = () => {
         ? serviceValetAppointment?.price.ancillaryPrice ?? 0
         : appointment?.price.ancillaryPrice ?? 0;
 
-    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PickUpDropOff
-        ? serviceValetSlots.length
-            ? serviceValetSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
-            : false
-        : appointmentSlots.length
-            ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
-            : false;
-
-    const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        const consultant = consultants.find(item => item.id === e.target.value);
-        if (isBmWService && e.target.value !== advisor?.id) {
-            dispatch(selectAppointment(null));
-            dispatch(selectServiceValetAppointment(null));
-        }
-        dispatch(setAdvisor(consultant ? consultant : null))
-    }
-
     useEffect(() => {
         scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
