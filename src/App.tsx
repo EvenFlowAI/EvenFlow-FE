@@ -31,8 +31,8 @@ const App = () => {
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
     const dispatch = useDispatch();
-    const isFremont = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
-        || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
+    const isWithoutTopPadding = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
+        || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
     useEffect(() => {
         if (serviceType === EServiceType.MobileService) {
@@ -73,7 +73,7 @@ const App = () => {
             anchorOrigin={{horizontal: "right", vertical: "top"}}
             variant="success">
             <Container component="main" maxWidth={false} className={isWin ? "winos" : undefined} disableGutters style={{
-                height: isFremont ? "60vh" : "100vh", maxHeight: "-webkit-fill-available"}}>
+                height: isWithoutTopPadding ? "60vh" : "100vh", maxHeight: "-webkit-fill-available"}}>
                 <ConfirmDialog/>
                 <Switch>
                     <Route path={Routes.EndUser.Appointment} exact component={AppointmentLayout} />

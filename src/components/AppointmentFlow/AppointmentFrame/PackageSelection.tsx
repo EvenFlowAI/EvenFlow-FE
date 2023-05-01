@@ -296,8 +296,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfiniti,[scProfile]);
-    const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile])
+    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
 
     const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
@@ -456,7 +455,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 handleClick={handleClick}
                                 setClasses={setClasses}
                                 isBmWService={isBmWService}
-                                isRiverviewFord={isRiverviewFord}
                             />
 
                             {scProfile?.isShowPriceDetails
@@ -472,8 +470,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 upsell={upsells}
                                 handleClick={handleClick}
                                 setClasses={setClasses}
-                                isBmWService={isBmWService}
-                                isRiverviewFord={isRiverviewFord}/>
+                                isBmWService={isBmWService}/>
 
                             <Complimentary
                                 packages={packages}
@@ -481,8 +478,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 complimentary={complimentary}
                                 handleClick={handleClick}
                                 setClasses={setClasses}
-                                isBmWService={isBmWService}
-                                isRiverviewFord={isRiverviewFord}/>
+                                isBmWService={isBmWService}/>
 
                             {scProfile?.isShowPriceDetails ? <TotalComplimentary
                                 packages={packages}

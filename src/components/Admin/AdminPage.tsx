@@ -55,9 +55,7 @@ export const AdminPage = () => {
             {!currentUser.isSuperUser && !hideDashboard
                 ? <PrivateRoute path={Routes.Admin.Reporting} exact component={Reporting}/>
                 : null}
-            {currentUser.role === Roles.Owner
-                ? <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
-                : null}
+            <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
