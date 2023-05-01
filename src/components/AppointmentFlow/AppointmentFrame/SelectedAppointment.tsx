@@ -5,7 +5,6 @@ import {RootState} from "../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {useTranslation} from "react-i18next";
 import SelectedConsultant from "./SelectedAppointmentParts/SelectedConsultant";
 import ServiceValetDateTime from "./SelectedAppointmentParts/ServiceValetDateTime";
@@ -154,8 +153,8 @@ export const DateWrapper = styled('div')(({theme}) => ({
 }))
 
 export const SelectedAppointment = () => {
-    const {serviceType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, appointmentSlots, appointment, serviceValetAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
+    const { serviceType, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+    const { scProfile, appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const dispatch = useDispatch();
@@ -173,14 +172,6 @@ export const SelectedAppointment = () => {
     const ancillaryPrice = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.ancillaryPrice ?? 0
         : appointment?.price.ancillaryPrice ?? 0;
-
-    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PikUpDropOff
-        ? serviceValetSlots.length
-            ? serviceValetSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
-            : false
-        : appointmentSlots.length
-            ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
-            : false;
 
     useEffect(() => {
         scProfile && dispatch(loadCategoriesByQuery(scProfile.id))

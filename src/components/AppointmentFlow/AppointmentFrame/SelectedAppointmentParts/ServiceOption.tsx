@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {MenuItem, Select} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,12 +9,11 @@ import {selectAppointment, selectServiceValetAppointment} from "../../../../stor
 import {setServiceType, setServiceTypeOption} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
-    const {serviceTypeOption, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption, serviceType, primarySelectedServiceTypeOption, address, zipCode} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
     const dispatch = useDispatch();
-    const selectedPrevServiceOption = useMemo(() => serviceTypeOption, []);
 
     const getServiceName = () => {
         if (serviceTypeOption?.name) return serviceTypeOption.name
@@ -41,8 +40,8 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
     }
 
-    return selectedPrevServiceOption?.type !== EServiceType.VisitCenter
-        ? selectedPrevServiceOption?.type === EServiceType.PikUpDropOff
+    return primarySelectedServiceTypeOption?.type !== EServiceType.VisitCenter
+        ? serviceTypeOption?.type !== EServiceType.MobileService && address && zipCode
             ? <div className={classes.selectWrapper}>
                 <div className={classes.selectWrapper}>
                     {t("PROVIDED BY OUR")}: {isSm ? <br/> : null}
