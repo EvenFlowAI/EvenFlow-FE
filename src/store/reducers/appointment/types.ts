@@ -33,6 +33,7 @@ export interface IServiceCenterProfile {
     engineTypeFieldName?: string;
     dmsId?: string;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
+    eMenuEnabled?: boolean;
 }
 export interface ISR {
     id: number;

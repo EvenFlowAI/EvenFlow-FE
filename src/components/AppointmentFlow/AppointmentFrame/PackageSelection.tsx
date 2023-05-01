@@ -301,8 +301,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
-    // todo lexus
-    const isLexus = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt), [scProfile]);
 
     const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
@@ -311,7 +309,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const {id} = useParams();
 
     useEffect(() => {
-        if (!isLexus) {
+        if (!scProfile?.eMenuEnabled) {
             setLoading(true);
             Api.call<IPackage[]>(
                 Api.endpoints.MaintenancePackages.ByVehicle,
@@ -448,7 +446,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     return (
         <PackagesStepWrapper>
-            {!isLexus
+            {!scProfile?.eMenuEnabled
                 ?  <NoItemsLoading
                 wrapperStyles={{marginTop: 20}}
                 items={packages}
@@ -456,7 +454,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 label={t("There are no packages available")}
             />
                 : null}
-            {isLexus
+            {scProfile?.eMenuEnabled
                 ? <PackagesEmenu/>
                 : packages.length ? <React.Fragment>
                 {isXs
@@ -548,7 +546,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                     </React.Fragment>
                 }
             </React.Fragment> : null}
-            {isLexus
+            {scProfile?.eMenuEnabled
                 ? <PackageEMenuActions onBack={handleBack} isLoading={loading} onNext={onEMenuNext}/>
                 : <Actions
                 onBack={handleBack}

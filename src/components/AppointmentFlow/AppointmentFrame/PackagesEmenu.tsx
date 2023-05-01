@@ -27,7 +27,7 @@ const PackagesEmenu = () => {
 
             if (selectedVehicle.mileage) str = str + `mileage_service_type=${selectedVehicle.mileage}TC`;
 
-            axios.get(str, {headers: { 'Subscription-Id': "ev99999"}, responseType: "arraybuffer"})
+            axios.get(str, {headers: { 'Subscription-Id': scProfile?.dmsId ?? ""}, responseType: "arraybuffer"})
                 .then(res => {
                     if (res.data) {
                         console.log(res.data)
