@@ -21,7 +21,7 @@ const IntervalUpsells: React.FC<TComplimentaryProps> =
         const {t} = useTranslation();
         return upsell.length
             ? <React.Fragment>
-                <div className="yellow subtitle">{t("Service Interval Upsell")}</div>
+                <div className="yellow subtitle">{t("Dashboard Indicator Services")}</div>
 
                 {packages.map(p =>
                     <div

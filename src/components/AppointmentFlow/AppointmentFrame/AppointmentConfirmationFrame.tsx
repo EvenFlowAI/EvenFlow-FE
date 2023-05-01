@@ -194,7 +194,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             serviceCenterId: decodeSCID(id),
             consultantId: appointmentFrame.advisor?.id,
             vehicle: {
-                dmsId: null,
+                dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
                 driveType: "",
                 ...(appointmentFrame.selectedVehicle ?? {}),
                 engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,

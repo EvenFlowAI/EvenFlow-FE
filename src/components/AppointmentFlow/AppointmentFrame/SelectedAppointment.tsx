@@ -1,19 +1,18 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {MenuItem, Select, styled, useMediaQuery, useTheme} from "@material-ui/core";
+import React, {useEffect, useMemo} from 'react';
+import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {getMaintenanceDescription} from "./uiUtils";
-import {setAdvisor} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
-import {EServiceCenterName} from "../../../api/types";
-import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {useTranslation} from "react-i18next";
-import moment from "moment";
-import {IServiceValetAppointment} from "../../../store/reducers/appointment/types";
-
+import SelectedConsultant from "./SelectedAppointmentParts/SelectedConsultant";
+import ServiceValetDateTime from "./SelectedAppointmentParts/ServiceValetDateTime";
+import ServicesList from "./SelectedAppointmentParts/ServicesWithPrices";
+import Prices from "./SelectedAppointmentParts/Prices";
+import ServiceOption from "./SelectedAppointmentParts/ServiceOption";
+import Address from "./SelectedAppointmentParts/Address";
+import Info from "./SelectedAppointmentParts/Info";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -108,18 +107,7 @@ const PriceWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const DateWrapper = styled('div')(({theme}) => ({
-    marginBottom: "auto",
-    textAlign: "right",
-    fontSize: 16,
-    fontWeight: "bold",
-    [theme.breakpoints.down("sm")]: {
-        marginTop: 8,
-        textAlign: "left",
-    }
-}))
-
-const useStyles = makeStyles(theme => ({
+export const useSelectedAppointmentStyles = makeStyles(theme => ({
     selectWrapper: {
         display: 'flex',
         alignItems: 'center',
@@ -153,90 +141,27 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-type TDropOffTime = {
-    hoursDMin: string;
-    minutesDMin: string;
-    hoursDMax: string;
-    minutesDMax: string;
-}
-
-const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppointment}> = ({serviceValetAppointment}) => {
-    const { dropOffSettings } = useSelector((state: RootState) => state.appointment);
-    const [dropOffTime, setDropOffTime] = useState<TDropOffTime|null>(null);
-    const [hoursPMin, minutesPMin] = serviceValetAppointment.pickUpMin.split(":");
-    const [hoursPMax, minutesPMax] = serviceValetAppointment.pickUpMax.split(":");
-
-    useEffect(() => {
-        if (serviceValetAppointment.dropOffMax && serviceValetAppointment.dropOffMin) {
-            setDropOffTime({
-                hoursDMin: serviceValetAppointment.dropOffMin.split(":")[0],
-                minutesDMin: serviceValetAppointment.dropOffMin.split(":")[1],
-                hoursDMax: serviceValetAppointment.dropOffMax.split(":")[0],
-                minutesDMax: serviceValetAppointment.dropOffMax.split(":")[1],
-            })
-        }
-    }, [serviceValetAppointment])
-
-    return <DateWrapper>
-        <div>Date: <span>{moment.utc(serviceValetAppointment.date).format('MMMM D')}</span></div>
-        <div>Pick Up Time:
-            <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("hh:mm A")}</span>
-        </div>
-        {dropOffSettings?.showDropOffTime && dropOffTime
-            ? <div>Drop Off Time:
-                <span> {moment(serviceValetAppointment.date).set('hour', +dropOffTime.hoursDMin).set('minute', +dropOffTime.minutesDMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +dropOffTime.hoursDMax).set('minute', +dropOffTime.minutesDMax).format("hh:mm A")}</span>
-            </div>
-            : null}
-    </DateWrapper>
-}
+export const DateWrapper = styled('div')(({theme}) => ({
+    marginBottom: "auto",
+    textAlign: "right",
+    fontSize: 16,
+    fontWeight: "bold",
+    [theme.breakpoints.down("sm")]: {
+        marginTop: 8,
+        textAlign: "left",
+    }
+}))
 
 export const SelectedAppointment = () => {
-    const {
-        selectedPackage,
-        packagePricingType,
-        packageEMenuType,
-        packagePriceTitles,
-        advisor,
-        consultants,
-        categoriesIds,
-        serviceType,
-        serviceTypeOption,
-        address,
-        zipCode,
-        valueService,
-        selectedRecalls,
-    } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, appointmentSlots, appointment, serviceValetAppointment, serviceValetSlots } = useSelector((state: RootState) => state.appointment);
-    const { allCategories } = useSelector((state: RootState) => state.categories);
+    const { serviceType, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+    const { scProfile, appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
-    const [selectedSR, srList] = useSelector((state: RootState) => [
-        state.appointment.selectedSR,
-        state.appointment.serviceRequests
-    ]);
+
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const classes = useSelectedAppointmentStyles();
     const theme = useTheme();
     const {t} = useTranslation();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
-    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const selectedServices = useMemo(() => {
-            return getMaintenanceDescription(
-                srList,
-                selectedRecalls,
-                packagePriceTitles,
-                selectedSR,
-                selectedPackage,
-                allCategories,
-                categoriesIds,
-                valueService,
-                packagePricingType,
-                packageEMenuType,
-                scProfile?.maintenancePackageOptionTypes
-            )
-        },
-        [srList, selectedSR, selectedPackage, allCategories, categoriesIds, valueService,
-            packagePricingType, packageEMenuType, scProfile])
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
@@ -248,38 +173,9 @@ export const SelectedAppointment = () => {
         ? serviceValetAppointment?.price.ancillaryPrice ?? 0
         : appointment?.price.ancillaryPrice ?? 0;
 
-    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PikUpDropOff
-        ? serviceValetSlots.length
-            ? serviceValetSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
-            : false
-        : appointmentSlots.length
-            ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
-            : false;
-
-    const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        const consultant = consultants.find(item => item.id === e.target.value);
-        if (isBmWService && e.target.value !== advisor?.id) {
-            dispatch(selectAppointment(null));
-            dispatch(selectServiceValetAppointment(null));
-        }
-        dispatch(setAdvisor(consultant ? consultant : null))
-    }
-
     useEffect(() => {
         scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
     }, [scProfile])
-
-    const getServiceName = () => {
-        if (serviceTypeOption?.name) return serviceTypeOption.name
-        switch (serviceType) {
-            case EServiceType.MobileService:
-                return t("Mobile Service");
-            case EServiceType.PikUpDropOff:
-                return t("Pick Up / Drop Off Service");
-            default:
-                return t("Visit Center");
-        }
-    }
 
     return (
         <div>
@@ -288,48 +184,22 @@ export const SelectedAppointment = () => {
                     {!isSm && <p className={classes.title}>{t("Your selections")}</p>}
                 <List>
                     <li className={"service-item"} key="service-item">
-                        <div className="service-list">
-                            {selectedServices.map(item => <div key={item}>{item}</div>)}
-                        </div>
+                       <ServicesList/>
                         { isSm && Boolean(price) &&
-                        <div className="price">
-                          ${scProfile?.isRoundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}
-                        </div> }
+                        <Prices price={price} ancillaryPrice={ancillaryPrice}/> }
                     </li>
                     <li key="advisor">
-                        {currentConfig?.advisorSelection && consultants.length
-                            ? <div className={classes.selectWrapper}>
-                                <div className={classes.selectWrapper}>
-                                    {t("Advisor")}: {isSm ? <br/> : null}
-                                    <Select
-                                        value={advisor?.id || "Any"}
-                                        className={classes.select}
-                                        disabled={currentConfig && !currentConfig?.advisorSelection || !consultants.length}
-                                        onChange={handleConsultantChange}>
-                                        {consultants
-                                            .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
-                                            .concat([<MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>])}
-                                    </Select>
-                                </div>
-                            </div>
-                            : null}
-                        {serviceType !== EServiceType.VisitCenter && address
-                            ? <div className="service-list">
-                                <h4> {t("YOUR ADDRESS")}: <div>{`${typeof address === "string" ? address : address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div></h4>
-                            </div>
-                            : null}
-                        {serviceType !== EServiceType.VisitCenter
-                            ? <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
-                                <div>{t("PROVIDED BY OUR")}: {getServiceName()}</div>
-                            </div>
-                            : null
-                        }
-                        {appointment && isSm ? <DateWrapper>
+                        <SelectedConsultant currentConfig={currentConfig}/>
+                        <Address />
+                        <ServiceOption isSm={isSm}/>
+                        {appointment && isSm
+                            ? <DateWrapper>
                             {appointment.date.format('MMMM D, h:mm A')}
-                        </DateWrapper> : null}
-                        {serviceValetAppointment && isSm ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/> : null}
+                        </DateWrapper>
+                            : serviceValetAppointment && isSm
+                                ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
+                                : null}
                     </li>
-
                 </List>
                 </div>
                 <PriceWrapper>
@@ -337,24 +207,17 @@ export const SelectedAppointment = () => {
                         ? <DateWrapper>
                             {t("Date & Time")}: <br /> {appointment.date.format('MMMM D, h:mm A')}
                         </DateWrapper>
-                        : null}
-                    {serviceValetAppointment && !isSm ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/> : null}
-                    <>
-                        {!isSm && Boolean(price) && <div className="price">
-                          ${scProfile?.isRoundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}
-                        </div>}
+                        : serviceValetAppointment && !isSm
+                            ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
+                            : null}
+                    <React.Fragment>
+                        {!isSm && Boolean(price) && <Prices price={price} ancillaryPrice={ancillaryPrice}/>}
                         {/*todo uncomment for offer new functionality*/}
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
                         {/*  <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                         {/*</div> : null}*/}
-                        {isDynamicPricing && serviceTypeOption?.type !== EServiceType.PikUpDropOff && (
-                            <div className="info">
-                                {!appointment?.price?.amountOfSavingMoney
-                                    ? t("Save by booking at off peak times!")
-                                    : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
-                            </div>
-                        )}
-                    </>
+                        <Info/>
+                    </React.Fragment>
                 </PriceWrapper>
             </Wrapper>
         </div>
