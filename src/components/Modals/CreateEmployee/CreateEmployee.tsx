@@ -227,6 +227,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                 showMessage(`Employee ${isEdit ? "updated" : "created"}`);
                 setTechnicianForm(initialTechnicianForm);
                 setAdvisorForm(initialAdvisorForm);
+                setFormIsChecked(false);
                 if (onAction) {
                     onAction();
                 }
