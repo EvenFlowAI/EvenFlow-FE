@@ -279,7 +279,11 @@
       "Any Advisor": "Any Advisor",
       "Service Interval Upsell": "Service Interval Upsell",
       "Excluding taxes & fees": "Excluding taxes & fees",
-      "Dashboard Indicator Services": "Dashboard Indicator Services"
+      "Dashboard Indicator Services": "Dashboard Indicator Services",
+      "Select Factory": "Select Factory",
+      "Select Dealer": "Select Dealer",
+      "Dealer Package": "Dealer Package",
+      "Factory Package": "Factory Package"
     }
   },
   "es": {

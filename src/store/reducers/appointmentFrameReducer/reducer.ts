@@ -24,7 +24,7 @@ import {
     setMaintenanceDetails,
     setMobileServiceAvailability,
     setOffersLoading,
-    setPackage,
+    setPackage, setPackageEMenuType,
     setPackageIsSelected, setPackagePricingType,
     setPackages,
     setPickUpDropOffAvailability,
@@ -52,6 +52,7 @@ import {
     updateVehicle,
 } from "./actions";
 import {
+    EMaintenanceOptionType,
     ICustomer,
     ILoadedVehicle,
     IMake,
@@ -135,6 +136,7 @@ type TState = {
     primarySelectedServiceTypeOption: IFirstScreenOption|null;
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
+    packageEMenuType: EMaintenanceOptionType|null;
 }
 const initialState: TState = {
     service: null,
@@ -193,6 +195,7 @@ const initialState: TState = {
     primarySelectedServiceTypeOption: null,
     packagePricingType: null,
     packagePriceTitles: [],
+    packageEMenuType: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -383,5 +386,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSideBarStepsList, (state, {payload}) => {
         return {...state, sideBarStepsList: payload}
+    })
+    .addCase(setPackageEMenuType, (state, {payload}) => {
+        return {...state, packageEMenuType: payload}
     })
 )

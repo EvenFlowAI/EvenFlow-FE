@@ -1,9 +1,12 @@
 import React from "react";
-import {IPackageOptions} from "../../../api/types";
+import {EMaintenanceOptionType, IPackageOptions} from "../../../api/types";
 import {ISR} from "../../../store/reducers/appointment/types";
 import {IMaintenanceItem, IRecallByVin} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
-import {EPackagePricingType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
+import {
+    EPackagePricingType,
+    IValueService
+} from "../../../store/reducers/appointmentFrameReducer/types";
 import i18n from "../../../i18n";
 import {TPackagePrice} from "../../../store/reducers/packages/types";
 
@@ -17,6 +20,8 @@ export const getMaintenanceDescription = (
     selectedCategories?: number[],
     valueService?: IValueService | null,
     packagePricingType?: EPackagePricingType|null,
+    packageEMenuType?: EMaintenanceOptionType|null,
+    optionTypes?: EMaintenanceOptionType[] | undefined,
 ) => {
     const services: string[] = [];
 
@@ -27,6 +32,14 @@ export const getMaintenanceDescription = (
             if (price) name = name + ` (${price.title})`;
         }
         services.push(name)
+    } else {
+        if (packageEMenuType !== null && optionTypes?.length) {
+            const firstOption = optionTypes[0];
+            const name = packageEMenuType === firstOption
+                ? `${i18n.t("Factory")} Package`
+                : `${i18n.t("dealer")} Package`;
+            services.push(i18n.t(name));
+        }
     }
     if (selectedSR?.length) {
         const filtered = srList.filter(el => selectedSR.includes(el.id)).map(el => el.description);
@@ -55,6 +68,8 @@ export const getMaintenanceList = (
     allCategories?: ICategory[],
     selectedCategories?: number[],
     valueService?: IValueService | null,
+    packageEMenuType?: EMaintenanceOptionType|null,
+    optionTypes?: EMaintenanceOptionType[] | undefined,
     ) => {
     const services: IMaintenanceItem[] = [];
 
@@ -86,6 +101,13 @@ export const getMaintenanceList = (
             id: valueService.selectedService.id,
             name: valueService.selectedService.name,
             type: 'valueService'
+        })
+    }
+    if (packageEMenuType !== null && optionTypes?.length) {
+        const firstOption = optionTypes[0];
+        services.push({
+            type: "package",
+            name: `${packageEMenuType === firstOption ? i18n.t("Factory") : i18n.t("Dealer")} Package`
         })
     }
     if (selectedRecalls.length) {
