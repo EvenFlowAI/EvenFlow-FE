@@ -1,6 +1,6 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon_black.svg";
-import {CheckBoxOutlined, InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@material-ui/icons";
 import {TPackage, TService, TUpsell} from "../PackageSelection";
 import {IPackageOptions} from "../../../../api/types";
 import {useTranslation} from "react-i18next";
@@ -13,16 +13,15 @@ type TComplimentaryProps = {
     upsell: TUpsell[];
     setClasses: (id: number, cls: string) => string;
     handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
-    isRiverviewFord: boolean;
     isBmWService: boolean;
 }
 
 const IntervalUpsells: React.FC<TComplimentaryProps> =
-    ({upsell, packages, setClasses, isBmWService, isRiverviewFord, handleClick}) => {
+    ({upsell, packages, setClasses, isBmWService, handleClick}) => {
         const {t} = useTranslation();
         return upsell.length
             ? <React.Fragment>
-                <div className="yellow subtitle">{t("Service Interval Upsell")}</div>
+                <div className="yellow subtitle">{t("Dashboard Indicator Services")}</div>
 
                 {packages.map(p =>
                     <div
@@ -51,7 +50,7 @@ const IntervalUpsells: React.FC<TComplimentaryProps> =
                                 key={p.id}
                                 onClick={handleClick(p)}
                                 className={setClasses(p.id, "service yellow")}>
-                                {c.packages.includes(p.id) ? isRiverviewFord ? <CheckboxCircle/> : <CheckBoxOutlined/> : ""}
+                                {c.packages.includes(p.id) ? <CheckboxCircle/> : ""}
                             </div>
                         )}
                     </React.Fragment>)}

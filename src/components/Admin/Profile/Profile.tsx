@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {Tab} from "@material-ui/core";
@@ -6,6 +6,7 @@ import {TabList} from "../../UI/Tabs";
 import {DealershipGroupProfile} from "./DealershipGroupProfile";
 import {UserProfile} from "./UserProfile";
 import {ProfilePODs} from "./ProfilePODs";
+import {useCurrentUser} from "../../../utils/hooks";
 
 const useStyles = makeStyles({
     container: {
@@ -30,6 +31,14 @@ const tabs: TTab[] = [
 
 export const Profile = () => {
     const [selectedTab, setTab] = useState<string>("1");
+    const [tabList, setTabList] = useState<TTab[]>([]);
+    const currentUser = useCurrentUser();
+
+    useEffect(() => {
+        setTabList(currentUser?.role === "Owner" ? tabs : tabs.filter(item => item.id === "2"));
+        if (currentUser?.role !== "Owner") setTab("2");
+    }, [currentUser, tabs])
+
     const handleChangeTab = (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
     }
@@ -42,11 +51,11 @@ export const Profile = () => {
                 scrollButtons="auto"
                 indicatorColor="primary"
                 onChange={handleChangeTab}>
-                {tabs.map((t) => {
+                {tabList.map((t) => {
                     return <Tab label={t.label} key={t.id} value={t.id} />
                 })}
             </TabList>
-            {tabs.map(t => {
+            {tabList.map(t => {
                 return <TabPanel className={classes.panel} key={t.id} value={t.id}><t.component /></TabPanel>;
             })}
         </TabContext>

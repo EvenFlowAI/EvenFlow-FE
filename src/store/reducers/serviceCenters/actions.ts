@@ -186,11 +186,15 @@ export const loadAllSCs = (): AppThunk => async (dispatch, getState) => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params: {pageSize: 0, pageIndex: 0}});
     if (result.length) {
         dispatch(_loadAllSCS(result));
-        if (!getState().users.currentUser?.isSuperUser) {
+        const user = getState().users.currentUser;
+        if (!user?.isSuperUser) {
             const prevSelected = localStorage.getItem(LocalItems.selectedSC);
-            if (prevSelected) {
+            const assignedTo = result.find(i => i.id === user?.serviceCenterId);
+            if (prevSelected || assignedTo) {
                 const selected = result.find(i => i.id === Number(prevSelected));
-                if (selected) {
+                if (assignedTo) {
+                    dispatch(selectSC(assignedTo));
+                } else if (selected) {
                     dispatch(selectSC(selected));
                 } else {
                     dispatch(selectSC(result[0]));
@@ -410,4 +414,3 @@ export const updateAvailablePackageOptions = (id: number, data: EMaintenanceOpti
         })
         .finally(() => dispatch(packageOptionsLoading(false)))
 }
-

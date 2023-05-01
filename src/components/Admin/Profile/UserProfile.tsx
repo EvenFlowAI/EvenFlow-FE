@@ -79,6 +79,7 @@ export const UserProfile = () => {
     const showMessage = useMessage();
     const classes = useStyles();
     const theme = useTheme();
+    const currentUser = useCurrentUser();
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     useEffect(() => {
@@ -172,98 +173,103 @@ export const UserProfile = () => {
     }
 
     return <div className={classes.container}>
-        <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={12} md={3}>
-                <div className={classes.avatarContainer}>
-                    <AvatarUpload onChange={handleChangeAvatar} dataUrl={profile.avatarPath} />
-                    <span className={classes.title}>{profile.fullName}</span>
-                </div>
-            </Grid>
-            <Grid item xs={1} hidden={isSM} />
-            <Grid item xs={12} sm={6} md={2}>
-                <TextField
-                    fullWidth
-                    label="Role"
-                    name="role"
-                    id="role"
-                    disabled
-                    value={profile.role}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                    fullWidth
-                    label="Email"
-                    name="email"
-                    id="email"
-                    disabled
-                    value={profile.email}
-                />
-            </Grid>
-            <Grid item xs={12} sm={12} md={3} className={classes.editButtonContainer}>
-                {!isEdit ? <Button
-                    className={classes.centerButton}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setEdit(true)}>
-                    Edit
-                </Button> : <>
-                    <Button
-                        style={{marginRight: 10}}
+        {currentUser?.role === "Owner"
+            ? <React.Fragment>
+            <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} sm={12} md={3}>
+                    <div className={classes.avatarContainer}>
+                        <AvatarUpload onChange={handleChangeAvatar} dataUrl={profile.avatarPath} />
+                        <span className={classes.title}>{profile.fullName}</span>
+                    </div>
+                </Grid>
+                <Grid item xs={1} hidden={isSM} />
+                <Grid item xs={12} sm={6} md={2}>
+                    <TextField
+                        fullWidth
+                        label="Role"
+                        name="role"
+                        id="role"
+                        disabled
+                        value={profile.role}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <TextField
+                        fullWidth
+                        label="Email"
+                        name="email"
+                        id="email"
+                        disabled
+                        value={profile.email}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={3} className={classes.editButtonContainer}>
+                    {!isEdit ? <Button
                         className={classes.centerButton}
-                        onClick={handleCancel}>
-                        Cancel
-                    </Button>
-                    <LoadingButton
-                        fullWidth={false}
-                        loading={saving}
-                        className={classes.centerButton}
+                        variant="contained"
                         color="primary"
-                        onClick={handleSave}
-                        variant="contained">
-                        Save
-                    </LoadingButton>
-                </>}
+                        onClick={() => setEdit(true)}>
+                        Edit
+                    </Button> : <>
+                        <Button
+                            style={{marginRight: 10}}
+                            className={classes.centerButton}
+                            onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                        <LoadingButton
+                            fullWidth={false}
+                            loading={saving}
+                            className={classes.centerButton}
+                            color="primary"
+                            onClick={handleSave}
+                            variant="contained">
+                            Save
+                        </LoadingButton>
+                    </>}
+                </Grid>
             </Grid>
-        </Grid>
-        <Divider className={classes.divider} />
-        <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                    fullWidth
-                    label="First name"
-                    name="firstName"
-                    id="firstName"
-                    disabled={!isEdit}
-                    value={form.firstName}
-                    onChange={handleChange}
-                />
+            <Divider className={classes.divider} />
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={6} md={4}>
+                    <TextField
+                        fullWidth
+                        label="First name"
+                        name="firstName"
+                        id="firstName"
+                        disabled={!isEdit}
+                        value={form.firstName}
+                        onChange={handleChange}
+                    />
+                </Grid>
+                <Grid item xs={1} hidden={isSM} />
+                <Grid item xs={12} sm={6} md={4}>
+                    <TextField
+                        fullWidth
+                        label="Last name"
+                        name="lastName"
+                        id="lastName"
+                        disabled={!isEdit}
+                        value={form.lastName}
+                        onChange={handleChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <TextField
+                        fullWidth
+                        label="Phone number"
+                        name="phoneNumber"
+                        id="phoneNumber"
+                        disabled={!isEdit}
+                        value={form.phoneNumber}
+                        onChange={handleChange}
+                    />
+                </Grid>
             </Grid>
-            <Grid item xs={1} hidden={isSM} />
-            <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                    fullWidth
-                    label="Last name"
-                    name="lastName"
-                    id="lastName"
-                    disabled={!isEdit}
-                    value={form.lastName}
-                    onChange={handleChange}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                    fullWidth
-                    label="Phone number"
-                    name="phoneNumber"
-                    id="phoneNumber"
-                    disabled={!isEdit}
-                    value={form.phoneNumber}
-                    onChange={handleChange}
-                />
-            </Grid>
-        </Grid>
-        <Divider className={classes.divider} />
+            <Divider className={classes.divider} />
+        </React.Fragment>
+            : null}
+
         <Grid container spacing={2}>
             <Grid item xs={12} sm={12} md={4}>
                 {!isEditPassword
