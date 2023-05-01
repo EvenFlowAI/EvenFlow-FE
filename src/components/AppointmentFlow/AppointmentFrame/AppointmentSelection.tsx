@@ -136,12 +136,14 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [slots]);
 
     const handleGALandingOnPage = useCallback(() => {
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: 'Selected advisor',
-            label: consultant ? consultant.name : 'Any available',
-            nonInteraction: true
-        });
+        if (consultants?.length && currentConfig?.advisorSelection) {
+            ReactGA.event({
+                category: 'EvenFlow User',
+                action: 'Selected advisor',
+                label: consultant ? consultant.name : 'Any available',
+                nonInteraction: true
+            });
+        }
         if (appointment) {
             ReactGA.event({
                 category: 'EvenFlow User',
