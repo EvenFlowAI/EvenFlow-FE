@@ -154,7 +154,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                 ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
             });
         }
-    }, [consultant, appointment])
+    }, [consultant, appointment, consultants, currentConfig])
 
     useEffect(() => {
         handleGALandingOnPage();
