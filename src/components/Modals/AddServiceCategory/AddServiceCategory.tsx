@@ -212,8 +212,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     }
 
     const onSuccessCreate = useCallback((categoryId: number) => {
-        if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file));
-    }, [fileState])
+        if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file, selectedServiceType));
+    }, [fileState, selectedServiceType])
 
     const onSave = useCallback(() => {
         if (selectedSC) {
@@ -251,17 +251,17 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     }
                 }
                 if (editingItem) {
-                    dispatch(updateCategory(editingItem.id, data));
-                    if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file));
+                    dispatch(updateCategory(editingItem.id, data, selectedServiceType));
+                    if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file, selectedServiceType));
                 } else {
                     const newData: TNewCategory = {...data, serviceCenterId: selectedSC.id};
-                    dispatch(createCategory(newData, onSuccessCreate));
+                    dispatch(createCategory(newData, onSuccessCreate, selectedServiceType));
                 }
                 onCancel();
             }
         }
     }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
-        editingItem, fileState, visitCenterConfig, description, isCommentRequired])
+        editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);

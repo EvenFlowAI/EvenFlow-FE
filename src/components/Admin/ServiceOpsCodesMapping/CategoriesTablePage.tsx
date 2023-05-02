@@ -10,6 +10,8 @@ import {MoreHoriz} from "@material-ui/icons";
 import {deleteCategoryById} from "../../../store/reducers/categories/actions";
 import {useConfirm, useException, useMessage, useModal} from "../../../utils/hooks";
 import AddServiceCategory from "../../Modals/AddServiceCategory/AddServiceCategory";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {visitCenterTabs} from "./ServiceOpsCodesMapping";
 
 const RowData: TableRowDataType<ICategory>[] = [
     {val: (el: ICategory) => el.name, header: "Service Category Name",  width: 300},
@@ -48,7 +50,9 @@ const CategoriesTablePage: React.FC<{tabValue: string}> = ({tabValue}) => {
             showError("Make is not chosen");
         } else {
             try {
-                if (currentItem.id) dispatch(deleteCategoryById(currentItem.id))
+                const isVisitCenter = visitCenterTabs.includes(tabValue)
+                if (currentItem.id) dispatch(deleteCategoryById(currentItem.id,
+                    isVisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService))
                 showMessage("Category removed");
                 setCurrentItem(null);
             } catch (e) {

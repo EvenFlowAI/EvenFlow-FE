@@ -300,7 +300,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
+    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfiniti,[scProfile]);
 
     const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);

@@ -21,21 +21,23 @@ const tabNames = [
     "Mobile Service (Page 2)"
 ];
 
+export const visitCenterTabs = ["0", "1"];
+
 const ServiceOpsCodesMapping = () => {
     const [selectedTab, setTab] = useState<string>("0");
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
 
     useEffect(() => {
-        selectedSC && dispatch(loadCategoriesByPage());
+        selectedSC && dispatch(loadCategoriesByPage(EServiceType.VisitCenter));
     }, [selectedSC])
 
     const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
-        const firstPage = (+tab === 0) || (+tab === 2);
-        await dispatch(setCategoriesFilter(+tab > 1 ? EServiceType.MobileService : EServiceType.VisitCenter))
-        await dispatch(setCategoriesPage(firstPage ? 0 : 1));
-        await dispatch(loadCategoriesByPage());
+        const isVisitCenter = visitCenterTabs.includes(tab);
+        await dispatch(setCategoriesFilter(isVisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService))
+        await dispatch(setCategoriesPage(+tab % 2));
+        await dispatch(loadCategoriesByPage(isVisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService));
     }
 
     return (
