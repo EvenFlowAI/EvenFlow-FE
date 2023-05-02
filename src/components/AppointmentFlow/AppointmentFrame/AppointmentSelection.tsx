@@ -88,7 +88,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         selectedRecalls,
         serviceTypeOption,
         packagePricingType,
-        consultants
+        packageEMenuType,
+        consultants,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -116,6 +117,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.serviceTypeOption,
         state.appointmentFrame.packagePricingType,
+        state.appointmentFrame.packageEMenuType,
         state.appointmentFrame.consultants,
     ]);
 
@@ -131,17 +133,20 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         ? !serviceValetAppointment
         : !appointment,
         [appointment, serviceValetAppointment])
+
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
     }, [slots]);
 
     const handleGALandingOnPage = useCallback(() => {
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: 'Selected advisor',
-            label: consultant ? consultant.name : 'Any available',
-            nonInteraction: true
-        });
+        if (consultants?.length && currentConfig?.advisorSelection) {
+            ReactGA.event({
+                category: 'EvenFlow User',
+                action: 'Selected advisor',
+                label: consultant ? consultant.name : 'Any available',
+                nonInteraction: true
+            });
+        }
         if (appointment) {
             ReactGA.event({
                 category: 'EvenFlow User',
@@ -151,7 +156,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                 ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
             });
         }
-    }, [consultant, appointment])
+    }, [consultant, appointment, consultants, currentConfig])
 
     useEffect(() => {
         handleGALandingOnPage();
@@ -187,6 +192,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [month, selectedTimingType]);
 
+
     const setDateCallback = useCallback((d: moment.Moment) => {
         if (selectedTimingType !== EAppointmentTimingType.FirstAvailable) {
             setDate(d.startOf('day'));
@@ -210,9 +216,12 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             if (id) {
                 setLoading(true);
                 try {
+                    // todo ask about consultants request in this case
                     const maintenancePackageOption: MPOptionShort|null = selectedPackage
                         ? {id: selectedPackage?.id, priceType: packagePricingType}
-                        : null;
+                        : packageEMenuType !== null
+                            ? {optionType: packageEMenuType}
+                            : null;
                     const dd: IAppointmentSlotsRequest = {
                         appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTimingType
                             ? EAppointmentTimingType.FirstAvailable
@@ -264,7 +273,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType,
-        selectedVehicle, customerData, service, vehicle, packagePricingType, serviceTypeOption,
+        selectedVehicle, customerData, service, vehicle, packagePricingType, packageEMenuType, serviceTypeOption,
         subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
     ]);
 
@@ -294,7 +303,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleBack = useCallback((): void => {
         const nextScreen = currentConfig?.appointmentSelection
             ? 'appointmentTiming'
-            : currentConfig?.advisorSelection
+            : currentConfig?.advisorSelection && consultants.length
                 ? 'consultantSelection'
                 : "serviceNeeds"
         handleGABack();
