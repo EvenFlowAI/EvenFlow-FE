@@ -89,6 +89,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         serviceTypeOption,
         packagePricingType,
         packageEMenuType,
+        consultants,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -117,6 +118,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.serviceTypeOption,
         state.appointmentFrame.packagePricingType,
         state.appointmentFrame.packageEMenuType,
+        state.appointmentFrame.consultants,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -154,7 +156,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                 ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
             });
         }
-    }, [consultant, appointment])
+    }, [consultant, appointment, consultants, currentConfig])
 
     useEffect(() => {
         handleGALandingOnPage();
@@ -189,6 +191,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             setMonth(d);
         }
     }, [month, selectedTimingType]);
+
 
     const setDateCallback = useCallback((d: moment.Moment) => {
         if (selectedTimingType !== EAppointmentTimingType.FirstAvailable) {
