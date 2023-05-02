@@ -88,7 +88,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         selectedRecalls,
         serviceTypeOption,
         packagePricingType,
-        packageEMenuType
+        packageEMenuType,
+        consultants,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -117,6 +118,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.serviceTypeOption,
         state.appointmentFrame.packagePricingType,
         state.appointmentFrame.packageEMenuType,
+        state.appointmentFrame.consultants,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
