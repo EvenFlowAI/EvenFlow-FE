@@ -87,7 +87,10 @@ export const DaySelectCard: React.FC<TProps> = ({
             }
         }
         if (appointment?.lowestPrice) {
-            return `$${scProfile?.isRoundPrice ? appointment.lowestPrice + appointment.ancillaryPrice : (appointment.lowestPrice + appointment.ancillaryPrice).toFixed(2)}`;
+            const price = appointment.amountOfSavingMoney
+                ? appointment.lowestPrice + appointment.ancillaryPrice + appointment.amountOfSavingMoney
+                : appointment.lowestPrice + appointment.ancillaryPrice;
+            return `$${scProfile?.isRoundPrice ? price : price.toFixed(2)}`;
         }
         if (appointment) {
             return t("Available");
