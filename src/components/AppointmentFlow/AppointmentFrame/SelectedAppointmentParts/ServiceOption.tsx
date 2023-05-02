@@ -6,10 +6,21 @@ import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
-import {setServiceType, setServiceTypeOption} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setServiceType,
+    setServiceTypeOption,
+    setSideBarSteps
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
-    const {serviceTypeOption, serviceType, primarySelectedServiceTypeOption, address, zipCode} = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        serviceTypeOption,
+        serviceType,
+        primarySelectedServiceTypeOption,
+        address,
+        zipCode,
+        sideBarSteps
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
@@ -27,12 +38,21 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
     }
 
+    const handleSideBar = () => {
+        const index = sideBarSteps.indexOf("appointmentSelection");
+        if (index > -1) {
+            const slicedSteps = sideBarSteps.slice(0, index);
+            dispatch(setSideBarSteps(slicedSteps))
+        }
+    }
+
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         if (e.target.value === EServiceType.PickUpDropOff) {
-            dispatch(selectAppointment(null))
+            dispatch(selectAppointment(null));
         } else {
             dispatch(selectServiceValetAppointment(null));
         }
+        handleSideBar();
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
             dispatch(setServiceTypeOption(option));
