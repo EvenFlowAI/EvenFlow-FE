@@ -50,9 +50,8 @@ const CategoriesTablePage: React.FC<{tabValue: string}> = ({tabValue}) => {
             showError("Make is not chosen");
         } else {
             try {
-                const isVisitCenter = visitCenterTabs.includes(tabValue)
-                if (currentItem.id) dispatch(deleteCategoryById(currentItem.id,
-                    isVisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService))
+                const tabServiceType = visitCenterTabs.includes(tabValue) ? EServiceType.VisitCenter : EServiceType.MobileService
+                if (currentItem.id) dispatch(deleteCategoryById(currentItem.id, tabServiceType))
                 showMessage("Category removed");
                 setCurrentItem(null);
             } catch (e) {
@@ -106,7 +105,7 @@ const CategoriesTablePage: React.FC<{tabValue: string}> = ({tabValue}) => {
                 <MenuItem onClick={openEdit}>Edit</MenuItem>
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
-            <AddServiceCategory open={isOpen} editingItem={currentItem} onClose={onClose}/>
+            <AddServiceCategory open={isOpen} editingItem={currentItem} onClose={onClose} tabValue={tabValue}/>
         </TabPanel>
     );
 };

@@ -23,9 +23,11 @@ import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {visitCenterTabs} from "../../Admin/ServiceOpsCodesMapping/ServiceOpsCodesMapping";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;
+    tabValue: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -119,7 +121,7 @@ const getOptionLabel = (option: TOption) => {
 }
 const initialFileState = {file: null, dataUrl: undefined};
 
-const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ...props}) => {
+const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, tabValue, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
     const {categories, page, filter} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -133,6 +135,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const [description, setDescription] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<EServiceType>(EServiceType.VisitCenter)
     const [isCommentRequired, setIsCommentRequired] = useState<boolean>(false);
+    const tabServiceType = visitCenterTabs.includes(tabValue) ? EServiceType.VisitCenter : EServiceType.MobileService;
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -212,8 +215,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     }
 
     const onSuccessCreate = useCallback((categoryId: number) => {
-        if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file, selectedServiceType));
-    }, [fileState, selectedServiceType])
+        if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file, tabServiceType));
+    }, [fileState, tabServiceType])
 
     const onSave = useCallback(() => {
         if (selectedSC) {
@@ -251,17 +254,17 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     }
                 }
                 if (editingItem) {
-                    dispatch(updateCategory(editingItem.id, data, selectedServiceType));
-                    if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file, selectedServiceType));
+                    dispatch(updateCategory(editingItem.id, data, tabServiceType));
+                    if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file, tabServiceType));
                 } else {
                     const newData: TNewCategory = {...data, serviceCenterId: selectedSC.id};
-                    dispatch(createCategory(newData, onSuccessCreate, selectedServiceType));
+                    dispatch(createCategory(newData, onSuccessCreate, tabServiceType));
                 }
                 onCancel();
             }
         }
     }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
-        editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType])
+        editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType, tabServiceType])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
