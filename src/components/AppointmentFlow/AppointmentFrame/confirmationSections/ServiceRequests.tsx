@@ -32,7 +32,7 @@ const ServiceRequests = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const currentAppointment = useMemo(() => {
-        return serviceTypeOption?.type === EServiceType.PikUpDropOff ? serviceValetAppointment : appointment
+        return serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment
     }, [serviceTypeOption, serviceValetAppointment, appointment])
 
     return currentAppointment?.serviceRequestPrices?.length
@@ -42,7 +42,7 @@ const ServiceRequests = () => {
             </TitleWrapper>
             <List>
                 {
-                    serviceTypeOption?.type === EServiceType.PikUpDropOff
+                    serviceTypeOption?.type === EServiceType.PickUpDropOff
                         ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
                             <li className="service-item" key={item.requestName}>
                                 {item.requestName.includes("Going") ? t("My Description of Needs") : item.requestName}

@@ -168,7 +168,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
             : ''
 
-    const isServiceValetApp = useMemo(() => !!serviceValetAppointment && serviceTypeOption?.type === EServiceType.PikUpDropOff,
+    const isServiceValetApp = useMemo(() => !!serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff,
         [serviceValetAppointment, serviceTypeOption])
 
     useEffect(() => {
@@ -185,7 +185,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         switch (serviceType) {
             case EServiceType.MobileService:
                 return t("Mobile Service");
-            case EServiceType.PikUpDropOff:
+            case EServiceType.PickUpDropOff:
                 return t("Pick Up / Drop Off Service");
             default:
                 return t("Visit Center");

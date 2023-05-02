@@ -2,19 +2,23 @@ import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData} from "./types";
+import {EServiceType} from "../appointmentFrameReducer/types";
 
 export const setCategoriesPage = createAction<number>("Categories/SetPage");
+export const setCategoriesFilter = createAction<EServiceType>("Categories/SetFilter");
 export const setCategoriesLoading = createAction<boolean>("Categories/SetLoading");
 export const getCategoriesByPage = createAction<ICategory[]>("Categories/GetCategoriesByPage");
 export const getCategoriesByQuery = createAction<ICategory[]>("Categories/GetCategoriesByQuery");
 
-export const loadCategoriesByPage = (): AppThunk => (dispatch, getState) => {
+export const loadCategoriesByPage = (serviceType: EServiceType): AppThunk => (dispatch, getState) => {
     dispatch(setCategoriesLoading(true));
-    const { page } = getState().categories;
+    const { page, filter } = getState().categories;
     const { selectedSC } = getState().serviceCenters;
 
+    // todo add filter to the request
+
     if (selectedSC) {
-        Api.call(Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId:  selectedSC.id, page}})
+        Api.call(Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId:  selectedSC.id, page, serviceType}})
             .then(result => {
                 if (result) {
                     dispatch(getCategoriesByPage(result.data))
@@ -29,11 +33,11 @@ export const loadCategoriesByPage = (): AppThunk => (dispatch, getState) => {
     }
 }
 
-export const deleteCategoryById = (id: number): AppThunk => dispatch => {
+export const deleteCategoryById = (id: number, serviceType: EServiceType): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCategories.Remove, {urlParams: {id}})
         .then(result => {
             if (result) {
-                dispatch(loadCategoriesByPage())
+                dispatch(loadCategoriesByPage(serviceType))
             }
         })
         .catch(err => {
@@ -41,11 +45,11 @@ export const deleteCategoryById = (id: number): AppThunk => dispatch => {
         })
 }
 
-export const updateCategory = (id: number, data: TUpdateCategoryData): AppThunk => dispatch => {
+export const updateCategory = (id: number, data: TUpdateCategoryData, serviceType: EServiceType): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCategories.Update, {urlParams: {id}, data})
         .then(result => {
             if (result) {
-                dispatch(loadCategoriesByPage())
+                dispatch(loadCategoriesByPage(serviceType))
             }
         })
         .catch(err => {
@@ -53,11 +57,11 @@ export const updateCategory = (id: number, data: TUpdateCategoryData): AppThunk 
         })
 }
 
-export const createCategory = (data: TNewCategory, callback: TSuccessCallback): AppThunk => dispatch => {
+export const createCategory = (data: TNewCategory, callback: TSuccessCallback, serviceType: EServiceType): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCategories.Create, {data})
         .then(result => {
             if (result) {
-                dispatch(loadCategoriesByPage())
+                dispatch(loadCategoriesByPage(serviceType))
                 if (result.data?.id) callback(result.data.id);
             }
         })
@@ -66,13 +70,13 @@ export const createCategory = (data: TNewCategory, callback: TSuccessCallback): 
         })
 }
 
-export const updateCategoryIcon = (id: number, file: File): AppThunk => dispatch => {
+export const updateCategoryIcon = (id: number, file: File, serviceType: EServiceType): AppThunk => dispatch => {
     const data = new FormData();
     data.append("file", file, file.name);
     Api.call(Api.endpoints.ServiceCategories.UpdateIcon, {urlParams: {id}, data})
         .then(result => {
             if (result) {
-                dispatch(loadCategoriesByPage())
+                dispatch(loadCategoriesByPage(serviceType))
             }
         })
         .catch(err => {

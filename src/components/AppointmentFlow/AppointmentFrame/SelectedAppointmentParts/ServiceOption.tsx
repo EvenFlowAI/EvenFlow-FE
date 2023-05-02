@@ -20,7 +20,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         switch (serviceType) {
             case EServiceType.MobileService:
                 return t("Mobile Service");
-            case EServiceType.PikUpDropOff:
+            case EServiceType.PickUpDropOff:
                 return t("Pick Up / Drop Off Service");
             default:
                 return t("Visit Center");
@@ -28,7 +28,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     }
 
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        if (e.target.value === EServiceType.PikUpDropOff) {
+        if (e.target.value === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null))
         } else {
             dispatch(selectServiceValetAppointment(null));
@@ -50,7 +50,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
                         className={classes.select}
                         onChange={handleServiceOptionChange}>
                         {firstScreenOptions
-                            .filter(option => option.type === EServiceType.PikUpDropOff || option.type === EServiceType.VisitCenter)
+                            .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
                             .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)}
                     </Select>
                 </div>
