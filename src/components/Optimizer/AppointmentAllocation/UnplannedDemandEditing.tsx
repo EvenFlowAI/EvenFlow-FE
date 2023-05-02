@@ -50,7 +50,7 @@ const mockSlots = [
         day: 0,
         start: "08:00:00",
         end: "08:30:00",
-        optimizerSetting: 0,
+        amount: 0,
         timeSlotType: ETimeSlotType.ThirtyMinutes,
     },
     {
@@ -58,7 +58,7 @@ const mockSlots = [
         day: 0,
         start: "08:30:00",
         end: "09:00:00",
-        optimizerSetting: 0,
+        amount: 0,
         timeSlotType: ETimeSlotType.ThirtyMinutes,
     },
     {
@@ -66,7 +66,7 @@ const mockSlots = [
         day: 0,
         start: "09:00:00",
         end: "09:30:00",
-        optimizerSetting: 0,
+        amount: 0,
         timeSlotType: ETimeSlotType.ThirtyMinutes,
     },
     {
@@ -74,7 +74,7 @@ const mockSlots = [
         day: 0,
         start: "09:30:00",
         end: "10:00:00",
-        optimizerSetting: 0,
+        amount: 0,
         timeSlotType: ETimeSlotType.ThirtyMinutes,
     },
     {
@@ -82,7 +82,7 @@ const mockSlots = [
         day: 0,
         start: "10:00:00",
         end: "10:30:00",
-        optimizerSetting: 0,
+        amount: 0,
         timeSlotType: ETimeSlotType.ThirtyMinutes,
     },
     {
@@ -90,7 +90,7 @@ const mockSlots = [
         day: 0,
         start: "10:30:00",
         end: "11:00:00",
-        optimizerSetting: 0,
+        amount: 0,
         timeSlotType: ETimeSlotType.ThirtyMinutes,
     }
 ]

@@ -88,7 +88,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         selectedRecalls,
         serviceTypeOption,
         packagePricingType,
-        packageEMenuType
+        packageEMenuType,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,

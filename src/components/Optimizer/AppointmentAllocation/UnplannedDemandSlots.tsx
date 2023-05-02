@@ -1,7 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import {
-    IUnplannedDemandBySlot
-} from "../../../store/reducers/demandSegments/types";
+import {IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {Table, TableBody, TableHead} from "@material-ui/core";
 import {TableCell, TableRow} from "./UI";
@@ -56,7 +54,7 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
                 let data = [...prev];
                 const prevItem = data.find(el => el.id === item.id)
                 if (prevItem) {
-                    prevItem.optimizerSetting = e.target.value;
+                    prevItem.amount = e.target.value;
                 }
                 return sortSlots(data);
             })
@@ -78,7 +76,7 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
                     <TableCell key={item.end} align="center" className={classes.cell}>{moment(item.end, timeSpanString).format(timeString)}</TableCell>
                     <TableCell className={classes.cell} align="center">
                         <TextField
-                            value={item.optimizerSetting}
+                            value={item.amount}
                             type="number"
                             inputProps={{
                                 min: 0,
