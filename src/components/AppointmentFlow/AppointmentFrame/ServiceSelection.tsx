@@ -45,7 +45,9 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
             {data: {
                     serviceCenterId: decodeSCID(id),
                     page: EServiceCategoryPage.Page2,
-                    serviceType: serviceTypeOption?.type ?? EServiceType.VisitCenter
+                    serviceType: serviceTypeOption?.type === EServiceType.MobileService
+                        ? EServiceType.MobileService
+                        : EServiceType.VisitCenter
             }}
         )
             .then(({data}) => {
