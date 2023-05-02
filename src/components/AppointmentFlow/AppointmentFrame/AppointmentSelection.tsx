@@ -190,6 +190,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [month, selectedTimingType]);
 
+
     const setDateCallback = useCallback((d: moment.Moment) => {
         if (selectedTimingType !== EAppointmentTimingType.FirstAvailable) {
             setDate(d.startOf('day'));
