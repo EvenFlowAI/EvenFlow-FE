@@ -16,7 +16,7 @@ export type TActionProps = {
 export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService' | 'recall'
 
 export type IMaintenanceItem = {
-    id: number;
+    id?: number;
     name: string;
     type: EMaintenanceItemType;
     nhtsaRecallNumber?: string;
