@@ -131,6 +131,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         ? !serviceValetAppointment
         : !appointment,
         [appointment, serviceValetAppointment])
+
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
     }, [slots]);
