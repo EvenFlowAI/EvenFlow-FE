@@ -136,12 +136,14 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [slots]);
 
     const handleGALandingOnPage = useCallback(() => {
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: 'Selected advisor',
-            label: consultant ? consultant.name : 'Any available',
-            nonInteraction: true
-        });
+        if (consultants?.length && currentConfig?.advisorSelection) {
+            ReactGA.event({
+                category: 'EvenFlow User',
+                action: 'Selected advisor',
+                label: consultant ? consultant.name : 'Any available',
+                nonInteraction: true
+            });
+        }
         if (appointment) {
             ReactGA.event({
                 category: 'EvenFlow User',
@@ -264,7 +266,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType,
-        selectedVehicle, customerData, service, vehicle, packagePricingType,
+        selectedVehicle, customerData, service, vehicle, packagePricingType, serviceTypeOption,
         subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
     ]);
 
@@ -294,7 +296,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleBack = useCallback((): void => {
         const nextScreen = currentConfig?.appointmentSelection
             ? 'appointmentTiming'
-            : currentConfig?.advisorSelection
+            : currentConfig?.advisorSelection && consultants.length
                 ? 'consultantSelection'
                 : "serviceNeeds"
         handleGABack();
