@@ -174,12 +174,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 id: appointmentFrame.selectedPackage?.id,
                 priceType: appointmentFrame.packagePricingType
             }
-            : null;
+            : appointmentFrame.packageEMenuType !== null
+                ? {optionType: appointmentFrame.packageEMenuType}
+                : null;
 
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
-            appointmentTimingType: appointmentFrame.serviceTypeOption?.type !== EServiceType.PikUpDropOff  && appointmentFrame.selectedTiming
+            appointmentTimingType: appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff  && appointmentFrame.selectedTiming
                 ? appointmentFrame.selectedTiming
                 : EAppointmentTimingType.FirstAvailable,
             customerId: appointment.customerLoadedData?.id ?? null,
@@ -212,11 +214,10 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointmentFrame.selectedPackage,
                 appointment.selectedSR
             ),
-            date: appointmentFrame.serviceTypeOption?.type === EServiceType.PikUpDropOff && appointment.serviceValetAppointment
+            date: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
                 ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
                 : appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),
-            //maintenancePackageOptionId: appointmentFrame.selectedPackage?.id ?? null,
             maintenancePackageOption,
             valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
             searchTerm: customerEnteredEmail,

@@ -166,10 +166,10 @@ export const SelectedAppointment = () => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
 
-    const price = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+    const price = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.value ?? 0
         : appointment?.price.value ?? 0;
-    const ancillaryPrice = serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+    const ancillaryPrice = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.ancillaryPrice ?? 0
         : appointment?.price.ancillaryPrice ?? 0;
 

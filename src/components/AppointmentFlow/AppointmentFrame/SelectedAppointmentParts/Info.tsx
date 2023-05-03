@@ -10,7 +10,7 @@ const Info = () => {
     const {appointmentSlots, appointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 
-    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PikUpDropOff
+    const isDynamicPricing = serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? serviceValetSlots.length
             ? serviceValetSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
             : false
@@ -18,7 +18,7 @@ const Info = () => {
             ? appointmentSlots[0]?.serviceRequestPrices?.find(item => item.pricingDisplayType === EPricingDisplayType.Dynamic)
             : false;
 
-    return isDynamicPricing && serviceTypeOption?.type !== EServiceType.PikUpDropOff
+    return isDynamicPricing && serviceTypeOption?.type !== EServiceType.PickUpDropOff
         ? <div className="info">
             {!appointment?.price?.amountOfSavingMoney
                 ? t("Save by booking at off peak times!")
