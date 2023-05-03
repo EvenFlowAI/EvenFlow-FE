@@ -30,9 +30,7 @@ const PackagesEmenu = () => {
             axios.get(str, {headers: { 'Subscription-Id': scProfile?.dmsId ?? ""}, responseType: "arraybuffer"})
                 .then(res => {
                     if (res.data) {
-                        console.log(res.data)
                         const file = new Blob([res.data], {type: 'application/pdf'});
-                        console.log(file);
                         const fileURL = URL.createObjectURL(file);
                         setSrcLink(fileURL)
                     }
@@ -47,7 +45,7 @@ const PackagesEmenu = () => {
 
     return isLoading
         ? <Loading/>
-        : <iframe src={srcLink} width="100%" style={{height: '50vh'}} id="e-menu"/>;
+        : <iframe src={srcLink} width="100%" style={{height: '75vh'}} id="e-menu"/>;
 };
 
 export default PackagesEmenu;
