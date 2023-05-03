@@ -36,8 +36,8 @@ export const getMaintenanceDescription = (
         if (packageEMenuType !== null && optionTypes?.length) {
             const firstOption = optionTypes[0];
             const name = packageEMenuType === firstOption
-                ? `${i18n.t("Factory")} Package`
-                : `${i18n.t("dealer")} Package`;
+                ? i18n.t("Factory Package")
+                : i18n.t("Dealer Package");
             services.push(i18n.t(name));
         }
     }
