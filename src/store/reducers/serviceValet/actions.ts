@@ -32,7 +32,7 @@ export const loadServiceValetZones = (id: number): AppThunk => dispatch => {
     const data = {
         pageIndex: 0,
         pageSize: 0,
-        serviceType: EServiceType.PikUpDropOff,
+        serviceType: EServiceType.PickUpDropOff,
         serviceCenterId: id
     }
     Api.call(Api.endpoints.GeographicZones.GetZones, {data})
@@ -62,7 +62,7 @@ export const getServiceValetZoneById = (id: number): AppThunk => dispatch => {
 
 export const addServiceValetZone = (id: number, data: TZoneNew, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.GeographicZones.Create, {data: {...data, serviceType: EServiceType.PikUpDropOff}})
+    Api.call(Api.endpoints.GeographicZones.Create, {data: {...data, serviceType: EServiceType.PickUpDropOff}})
         .then(result => {
             if (result) {
                 dispatch(loadServiceValetZones(data.serviceCenterId))
@@ -143,7 +143,7 @@ export const loadServiceValetPrisingByZones = (id: number): AppThunk => dispatch
     const data = {
         pageIndex: 0,
         pageSize: 0,
-        serviceType: EServiceType.PikUpDropOff,
+        serviceType: EServiceType.PickUpDropOff,
         serviceCenterId: id
     }
     Api.call(Api.endpoints.AncillaryPricing.GetZones, {data})
@@ -164,7 +164,7 @@ export const loadServiceValetPrisingByDistance = (id: number): AppThunk => dispa
         pageIndex: 0,
         pageSize: 0,
         serviceCenterId: id,
-        serviceType: EServiceType.PikUpDropOff,
+        serviceType: EServiceType.PickUpDropOff,
     }
     Api.call(Api.endpoints.AncillaryPricing.GetDistances, {data})
         .then(({data}) => {
@@ -240,7 +240,7 @@ export const saveLinkToServiceValetMap = (id: number, link: string, onErr: (err:
 export const loadServiceValetPricingOption = (id: number): AppThunk => dispatch => {
     dispatch(setPricingOptionLoading(true));
     const data: TAncillaryPriceTypeData = {
-        serviceType: EServiceType.PikUpDropOff,
+        serviceType: EServiceType.PickUpDropOff,
         serviceCenterId: id,
     }
     Api.call(Api.endpoints.ServiceCenters.GetAncillaryPriceType, {urlParams: {id}, data})
@@ -258,7 +258,7 @@ export const loadServiceValetPricingOption = (id: number): AppThunk => dispatch 
 export const changeServiceValetPriceSettings = (id: number, ancillaryPriceType: EAncillaryPriceType, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setPricingOptionLoading(true))
     const data: TChangeAncillaryPriceType = {
-        serviceType: EServiceType.PikUpDropOff,
+        serviceType: EServiceType.PickUpDropOff,
         ancillaryPriceType,
     }
     Api.call(Api.endpoints.ServiceCenters.UpdateAncillaryPriceType, {urlParams: {id}, data})

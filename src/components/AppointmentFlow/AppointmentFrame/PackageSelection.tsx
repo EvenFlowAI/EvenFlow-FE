@@ -44,7 +44,6 @@ import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
 import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
-import PackageEMenuActions from "./PackageEmenuActions";
 import PackagesEmenu from "./PackagesEmenu";
 
 const border = '1px solid #DADADA';
@@ -300,7 +299,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
+    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfiniti,[scProfile]);
 
     const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
@@ -455,7 +454,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             />
                 : null}
             {scProfile?.eMenuEnabled
-                ? <PackagesEmenu/>
+                ? <React.Fragment>
+                    <PackagesEmenu onBack={handleBack} onNext={onEMenuNext}/>
+                </React.Fragment>
                 : packages.length ? <React.Fragment>
                 {isXs
                     ? <PackageSelectionMobile
@@ -547,7 +548,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 }
             </React.Fragment> : null}
             {scProfile?.eMenuEnabled
-                ? <PackageEMenuActions onBack={handleBack} isLoading={loading} onNext={onEMenuNext}/>
+                ? null
                 : <Actions
                 onBack={handleBack}
                 // hideNext={!isXs}

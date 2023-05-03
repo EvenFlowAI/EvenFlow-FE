@@ -112,7 +112,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const classes = useStyles();
     const {t} = useTranslation();
     const price = useMemo(() => {
-            if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+            if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
                 return serviceValetAppointment?.price?.value && serviceValetAppointment.price.value > 0
                     ? `$${scProfile?.isRoundPrice
                         ? serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice
@@ -127,7 +127,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
         },
         [appointment, serviceValetAppointment, serviceTypeOption])
     const noDefinedPriceExists = useMemo(() => {
-            if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+            if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
                 return serviceValetAppointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
             }
             return appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
@@ -138,7 +138,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
         switch (serviceType) {
             case EServiceType.MobileService:
                 return t("Mobile Service");
-            case EServiceType.PikUpDropOff:
+            case EServiceType.PickUpDropOff:
                 return t("Pick Up / Drop Off Service");
             default:
                 return t("Visit Center");
@@ -152,7 +152,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
             </DialogTitle>
             <DialogContent>
                 <List>
-                    {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+                    {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
                         ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
                             <li className={classes.item} key={item.requestName}>
                             <span>
@@ -192,7 +192,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
                                     : <ErrorOutline/>}
                             </div>
                         </li>))}
-                    {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+                    {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
                         ? <li className={classes.item} key="serviceType">
                             <span>
                                {getServiceName()}

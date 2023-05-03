@@ -30,7 +30,7 @@ const List = styled('ul')({
 const Address = () => {
     const {address, zipCode, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
-    return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PikUpDropOff)
+    return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PickUpDropOff)
         ? <div>
             <TitleWrapper>
                 <ConfirmationTitle>{t("Address")}</ConfirmationTitle>

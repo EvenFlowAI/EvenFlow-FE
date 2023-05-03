@@ -142,7 +142,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             }
         }
         if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
-        if (serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+        if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
             // todo uncomment when the calendar dates disabling functionality will be ready
             // dispatch(loadServiceValetSlots(dd, () => {}, () => setLoading(false)));
         } else {
@@ -194,7 +194,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                     if (!idx) {
                         return null;
                     }
-                    if (serviceTypeOption?.type === EServiceType.PikUpDropOff && idx === 1) {
+                    if (serviceTypeOption?.type === EServiceType.PickUpDropOff && idx === 1) {
                         // todo delete this when Preferred Date Search will be implemented
                         return null;
                     }

@@ -4,8 +4,14 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import axios from "axios";
 import {useException} from "../../../utils/hooks";
+import PackageEMenuActions from "./PackageEmenuActions";
 
-const PackagesEmenu = () => {
+type TProps = {
+    onBack: () => void,
+    onNext: () => void,
+}
+
+const PackagesEmenu: React.FC<TProps> = ({onBack, onNext}) => {
     const {selectedVehicle, makes} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -30,9 +36,7 @@ const PackagesEmenu = () => {
             axios.get(str, {headers: { 'Subscription-Id': scProfile?.dmsId ?? ""}, responseType: "arraybuffer"})
                 .then(res => {
                     if (res.data) {
-                        console.log(res.data)
                         const file = new Blob([res.data], {type: 'application/pdf'});
-                        console.log(file);
                         const fileURL = URL.createObjectURL(file);
                         setSrcLink(fileURL)
                     }
@@ -47,7 +51,9 @@ const PackagesEmenu = () => {
 
     return isLoading
         ? <Loading/>
-        : <iframe src={srcLink} width="100%" style={{height: '50vh'}} id="e-menu"/>;
+        :  <React.Fragment>
+            <PackageEMenuActions onBack={onBack} isLoading={isLoading} onNext={onNext}/>
+            <iframe src={srcLink} width="100%" style={{height: '75vh'}} id="e-menu"/></React.Fragment>
 };
 
 export default PackagesEmenu;

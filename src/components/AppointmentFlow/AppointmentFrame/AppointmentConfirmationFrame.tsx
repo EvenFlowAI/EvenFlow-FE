@@ -181,7 +181,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         const data = {
             id: appointmentFrame.id,
             hashKey: appointmentFrame.hashKey,
-            appointmentTimingType: appointmentFrame.serviceTypeOption?.type !== EServiceType.PikUpDropOff  && appointmentFrame.selectedTiming
+            appointmentTimingType: appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff  && appointmentFrame.selectedTiming
                 ? appointmentFrame.selectedTiming
                 : EAppointmentTimingType.FirstAvailable,
             customerId: appointment.customerLoadedData?.id ?? null,
@@ -214,7 +214,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 appointmentFrame.selectedPackage,
                 appointment.selectedSR
             ),
-            date: appointmentFrame.serviceTypeOption?.type === EServiceType.PikUpDropOff && appointment.serviceValetAppointment
+            date: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
                 ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
                 : appointment.appointment?.id.split("|")[0] || "",
             serviceCategoryIds: getCategories(),

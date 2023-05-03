@@ -22,6 +22,7 @@ import ReactGA from "react-ga";
 import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
@@ -29,7 +30,7 @@ type TProps = {
     setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelectedCategory}) => {
-    const {subService, categoriesIds} = useSelector((state: RootState) => state.appointmentFrame);
+    const {subService, categoriesIds, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [loading, setLoading] = useState<boolean>(false);
     const [services, setServices] = useState<IServiceCategory[]>([]);
@@ -42,8 +43,11 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
         Api.call<IServiceCategory[]>(
             Api.endpoints.ServiceCategories.GetByPage,
             {data: {
-                serviceCenterId: decodeSCID(id),
-                page: EServiceCategoryPage.Page2
+                    serviceCenterId: decodeSCID(id),
+                    page: EServiceCategoryPage.Page2,
+                    serviceType: serviceTypeOption?.type === EServiceType.MobileService
+                        ? EServiceType.MobileService
+                        : EServiceType.VisitCenter
             }}
         )
             .then(({data}) => {

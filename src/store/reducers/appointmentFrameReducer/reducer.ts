@@ -133,7 +133,7 @@ type TState = {
     recallsAreShown: boolean;
     hoursOfOperations: IHOODataForm[];
     serviceTypeOption: IFirstScreenOption|null;
-    primarySelectedServiceTypeOption: IFirstScreenOption|null;
+    selectedOptionTypes: EServiceType[];
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
     packageEMenuType: EMaintenanceOptionType|null;
@@ -192,7 +192,7 @@ const initialState: TState = {
     recallsAreShown: false,
     hoursOfOperations: [],
     serviceTypeOption: null,
-    primarySelectedServiceTypeOption: null,
+    selectedOptionTypes: [],
     packagePricingType: null,
     packagePriceTitles: [],
     packageEMenuType: null,
@@ -368,9 +368,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, hoursOfOperations: payload}
     })
     .addCase(setServiceTypeOption, (state, {payload}) => {
-        if (!state.primarySelectedServiceTypeOption) {
-            return {...state, serviceTypeOption: payload, primarySelectedServiceTypeOption: payload}
-        } else return {...state, serviceTypeOption: payload}
+        const optionsTypes = payload
+            ?  Array.from(new Set([...state.selectedOptionTypes, payload.type]))
+            : state.selectedOptionTypes;
+        return {...state, serviceTypeOption: payload, selectedOptionTypes: optionsTypes};
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
         return {...state, packagePricingType: payload}

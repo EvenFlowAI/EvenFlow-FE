@@ -283,7 +283,9 @@
       "Select Factory": "Select Factory",
       "Select Dealer": "Select Dealer",
       "Dealer Package": "Dealer Package",
-      "Factory Package": "Factory Package"
+      "Factory Package": "Factory Package",
+      "Dealer": "Dealer",
+      "Factory": "Factory"
     }
   },
   "es": {

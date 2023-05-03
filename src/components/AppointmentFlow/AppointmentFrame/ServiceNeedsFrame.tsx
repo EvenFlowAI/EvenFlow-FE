@@ -41,6 +41,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         valueService,
         serviceType,
         userType,
+        serviceTypeOption,
         packageEMenuType
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
@@ -61,8 +62,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         Api.call<IServiceCategory[]>(
             Api.endpoints.ServiceCategories.GetByPage,
             {data: {
-                serviceCenterId: decodeSCID(id),
-                page: EServiceCategoryPage.Page1
+                    serviceCenterId: decodeSCID(id),
+                    page: EServiceCategoryPage.Page1,
+                    serviceType: serviceTypeOption?.type === EServiceType.MobileService
+                        ? EServiceType.MobileService
+                        : EServiceType.VisitCenter
             }}
         )
             .then(({data}) => {
