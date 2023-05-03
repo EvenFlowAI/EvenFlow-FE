@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {MenuItem, Select} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -16,7 +16,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {
         serviceTypeOption,
         serviceType,
-        primarySelectedServiceTypeOption,
+        selectedOptionTypes,
         address,
         zipCode,
         sideBarSteps
@@ -25,6 +25,13 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
     const dispatch = useDispatch();
+    const wasSelectedSecondaryTypes = useMemo(() => {
+        return  selectedOptionTypes.includes(EServiceType.MobileService)
+        || selectedOptionTypes.includes(EServiceType.PickUpDropOff)
+    }, [selectedOptionTypes]);
+    const serviceValetIsPossibleToUse = useMemo(() => {
+        return serviceTypeOption?.type !== EServiceType.MobileService && address && zipCode
+    }, [serviceTypeOption, address, zipCode]);
 
     const getServiceName = () => {
         if (serviceTypeOption?.name) return serviceTypeOption.name
@@ -41,7 +48,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const handleSideBar = () => {
         const index = sideBarSteps.indexOf("appointmentSelection");
         if (index > -1) {
-            const slicedSteps = sideBarSteps.slice(0, index);
+            const slicedSteps = sideBarSteps.slice(0, index + 1);
             dispatch(setSideBarSteps(slicedSteps))
         }
     }
@@ -60,8 +67,8 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
     }
 
-    return primarySelectedServiceTypeOption?.type !== EServiceType.VisitCenter
-        ? serviceTypeOption?.type !== EServiceType.MobileService && address && zipCode
+    return wasSelectedSecondaryTypes
+        ? serviceValetIsPossibleToUse
             ? <div className={classes.selectWrapper}>
                 <div className={classes.selectWrapper}>
                     {t("PROVIDED BY OUR")}: {isSm ? <br/> : null}
