@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, {Dispatch, SetStateAction, useEffect} from "react";
 import {IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {Table, TableBody, TableHead} from "@material-ui/core";
@@ -54,7 +54,8 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
                 let data = [...prev];
                 const prevItem = data.find(el => el.id === item.id)
                 if (prevItem) {
-                    prevItem.amount = e.target.value;
+                    const updated = {...prevItem, amount: e.target.value};
+                    data = data.filter(el => el.id !== item.id).concat(updated);
                 }
                 return sortSlots(data);
             })
@@ -81,6 +82,7 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
                             inputProps={{
                                 min: 0,
                             }}
+                            onBlur={(e) => console.log('blur')}
                             onChange={onInputChange(item)}
                             className={classes.inputWrapper}/>
                     </TableCell>

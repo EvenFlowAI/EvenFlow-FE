@@ -9,6 +9,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import UnplannedDemandSlots from "./UnplannedDemandSlots";
 import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {timeSpanString} from "../../../config/constants";
+import {useException} from "../../../utils/hooks";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
@@ -96,24 +97,35 @@ const mockSlots = [
 ]
 
 export const sortSlots = (slots: IUnplannedDemandBySlot[]): IUnplannedDemandBySlot[] => {
-    return slots.sort((a, b) => moment(a.start, timeSpanString).diff(moment(b.start, timeSpanString)) > 0 ? 1 : 0)
+    return slots.sort((a, b) => {
+        return moment(a.start, timeSpanString).diff(moment(b.start, timeSpanString)) > 0 ? 1 : -1
+    })
 }
 
 const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdit, isEdit, editingElement }) => {
     const [demandSlots, setDemandSlots] = useState<IUnplannedDemandBySlot[]>([]);
+    const [slots1, setSlots1] = useState<IUnplannedDemandBySlot[]>([]);
+    const [slots2, setSlots2] = useState<IUnplannedDemandBySlot[]>([]);
+    const showError = useException();
     // todo loading from redux
     let isSaving = false;
     const classes = useStyles();
 
-    const [slots1, slots2] = useMemo(() => {
-        const half = Math.floor(demandSlots.length / 2);
-        return [demandSlots.slice(0, half), demandSlots.slice(half)];
-    }, [demandSlots]);
+    // const [slots1, slots2] = useMemo(() => {
+    //     const half = Math.floor(demandSlots.length / 2);
+    //     return [demandSlots.slice(0, half), demandSlots.slice(half)];
+    // }, [demandSlots]);
 
     useEffect(() => {
         // todo request by day of week and remap them in the redux thunk action
         setDemandSlots(sortSlots(mockSlots))
     }, [])
+
+    useEffect(() => {
+        const half = Math.floor(demandSlots.length / 2);
+        setSlots1(demandSlots.slice(0, half));
+        setSlots2(demandSlots.slice(half));
+    }, [demandSlots])
 
     const handleSave = () => {
         // todo save data request
@@ -143,8 +155,8 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
                 </div>
             </div>
             <div className={classes.tablesWrapper}>
-            <UnplannedDemandSlots slots={slots1} setDemandSlots={setDemandSlots}/>
-            <UnplannedDemandSlots slots={slots2} setDemandSlots={setDemandSlots}/>
+            <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1}/>
+            <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2}/>
             </div>
         </div>
     );
