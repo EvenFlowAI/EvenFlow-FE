@@ -32,7 +32,7 @@ const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
     }
 
     return (
-        <ButtonsRow>
+        <ButtonsRow style={{alignSelf: "flex-start"}}>
             {!isLoading ? <>
                 <Button
                     onClick={onBack}

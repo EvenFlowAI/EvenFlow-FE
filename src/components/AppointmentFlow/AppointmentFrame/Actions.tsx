@@ -9,7 +9,7 @@ export const ButtonsRow = styled('div')(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: '22px',
+    gap: "22px",
     marginTop: 20,
     "& button": {
         minWidth: 144
