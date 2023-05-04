@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {
     IUnplannedDemand,
     IUnplannedDemandBySlot
@@ -133,7 +133,7 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
 
     const handleCancel = () => {
         // todo set initial data
-        setEdit(false);
+        // setEdit(false);
     }
 
     return (
