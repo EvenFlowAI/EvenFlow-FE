@@ -60,7 +60,7 @@ const SULinks: LinkType[] = [
     {to: Routes.Admin.DealershipGroups, name: "Dealership Groups", roles: ["Super Admin"]},
     // {to: Routes.Admin.Employees, name: "Employees", roles: ["Super Admin"]},
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Super Admin"]},
-    {to: Routes.Admin.ServiceRequests, name: "Service Requests", roles: ["Super Admin"]}
+    // {to: Routes.Admin.ServiceRequests, name: "Service Requests", roles: ["Super Admin"]}
 ];
 
 const MainLinksWithSub: LinkTypeWithSub[] = [
