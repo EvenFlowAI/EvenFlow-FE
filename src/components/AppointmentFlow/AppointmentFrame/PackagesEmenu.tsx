@@ -19,11 +19,11 @@ const PackagesEmenu: React.FC<TProps> = ({onBack, onNext}) => {
     const showError = useException();
 
     useEffect(() => {
-        let str = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&pdfType=threeUp&';
+        let str = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';
         setLoading(true);
         if (selectedVehicle?.model) {
-            if (selectedVehicle.vin?.length === 16) {
-                str = str + `&vin=${selectedVehicle.vin}`
+            if (selectedVehicle.vin) {
+                str = str + `vin=${selectedVehicle.vin}&`
             } else {
                 const models = makes.find(item => item.name === selectedVehicle.make)?.modelCodes;
                 const modelId = models?.find(item => item.name === selectedVehicle.model)?.id;
