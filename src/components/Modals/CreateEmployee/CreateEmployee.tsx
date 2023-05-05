@@ -12,7 +12,6 @@ import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} 
 import {IEmployee, IEmployeeForm} from "../../../store/reducers/employees/types";
 import {
     createEmployee,
-    loadAll,
     loadDMSAdvisors,
     updateEmployee
 } from "../../../store/reducers/employees/actions";
@@ -223,7 +222,6 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                         await dispatch(createEmployee(data as IEmployeeForm, avatar));
                     }
                 }
-                dispatch(loadAll());
                 showMessage(`Employee ${isEdit ? "updated" : "created"}`);
                 setTechnicianForm(initialTechnicianForm);
                 setAdvisorForm(initialAdvisorForm);
