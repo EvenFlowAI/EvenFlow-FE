@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {TActionProps, TTransportationData} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -19,7 +19,7 @@ import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../store/reducers/transportationNeeds/types";
-import {MPOptionShort} from "../../../store/reducers/appointment/types";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     width: 287,
@@ -143,6 +143,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         packagePricingType,
         selectedPackage,
         selectedVehicle,
+        packageEMenuType,
+        allCategories,
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -157,6 +159,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.packagePricingType,
         state.appointmentFrame.selectedPackage,
         state.appointmentFrame.selectedVehicle,
+        state.appointmentFrame.packageEMenuType,
+        state.categories.allCategories,
     ]);
 
     const serviceRequestIds = useMemo(() => {
@@ -167,17 +171,27 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const dispatch = useDispatch();
 
+    const getCategories = useCallback((): number[] => {
+        return allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
+            })
+            .map(item => item.id)
+    }, [allCategories, EServiceCategoryType, categoriesIds])
+
     useEffect(() => {
         if (selectedVehicle) {
             setLoading(true);
-            const maintenancePackageOption: MPOptionShort|null = selectedPackage
+            const maintenancePackageOption = selectedPackage
                 ? {id: selectedPackage?.id, priceType: packagePricingType}
-                : null;
+                : packageEMenuType !== null
+                    ? {optionType: packageEMenuType}
+                    : null;
             const data: TTransportationData = {
                 serviceCenterId: decodeSCID(id),
                 serviceRequestIds,
                 slot: appointmentDate,
-                serviceCategoryIds: packageOpt?.id || serviceRequestIds.length ? [] : categoriesIds,
+                serviceCategoryIds: getCategories(),
                 recalls: mapRecallsForRequest(selectedRecalls),
                 maintenancePackageOption,
                 vehicle: {
@@ -199,7 +213,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     setLoading(false)
                 })
         }
-    }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls, packagePricingType]);
+    }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
+        packagePricingType, packageEMenuType, appointmentDate, packageOpt, categoriesIds, hashKey]);
 
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({
