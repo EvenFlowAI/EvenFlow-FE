@@ -240,7 +240,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const handleSideBar = () => {
         const index = sideBarSteps.indexOf("appointmentSelection");
         if (index > -1) {
-            const slicedSteps = sideBarSteps.slice(0, index);
+            const slicedSteps = sideBarSteps.slice(0, index + 1);
             dispatch(setSideBarSteps(slicedSteps))
         }
     }
