@@ -22,11 +22,11 @@ const PackagesEmenu: React.FC<TProps> = ({onBack, onNext}) => {
         let str = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';
         setLoading(true);
         if (selectedVehicle?.model) {
-            if (selectedVehicle.vin?.length === 16) {
-                str = str + `&vin=${selectedVehicle.vin}`
+            if (selectedVehicle.vin) {
+                str = str + `vin=${selectedVehicle.vin}&`
             } else {
-                const models = makes.find(item => item.name === selectedVehicle.make)?.modelCodes;
-                const modelId = models?.find(item => item.name === selectedVehicle.model)?.id;
+                const modelCodes = makes.find(item => item.name === selectedVehicle.make)?.modelCodes;
+                const modelId = modelCodes?.find(item => item.name === selectedVehicle.model)?.code;
                 if (modelId) str = str + `model=${modelId}&`;
                 if (selectedVehicle.year) str = str + `year=${selectedVehicle.year}&`;
             }

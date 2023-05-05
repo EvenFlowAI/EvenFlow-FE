@@ -1,7 +1,6 @@
 import React from 'react';
-import {Button} from "@material-ui/core";
+import {Button, styled} from "@material-ui/core";
 import {Loading} from "../../UI/Loading";
-import {ButtonsRow} from "./Actions";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {setPackageEMenuType} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -12,6 +11,26 @@ type TProps = {
     onBack: () => void,
     onNext: () => void,
 }
+
+const ButtonsRow = styled('div')(({theme}) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "flex-start",
+    gap: "22px",
+    marginTop: 20,
+    "& button": {
+        minWidth: 144
+    },
+    [`${theme.breakpoints.down('sm')} and (orientation: portrait)`]: {
+        flexDirection: "column",
+        width: "100%",
+        gap: "12px",
+        "& button": {
+            width: "100%"
+        }
+    }
+}));
 
 const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -32,7 +51,7 @@ const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
     }
 
     return (
-        <ButtonsRow style={{alignSelf: "flex-start"}}>
+        <ButtonsRow>
             {!isLoading ? <>
                 <Button
                     onClick={onBack}
