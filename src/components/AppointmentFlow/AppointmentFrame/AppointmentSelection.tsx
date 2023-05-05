@@ -30,6 +30,7 @@ import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
+import {setSideBarSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const Wrapper = styled('div')(({ theme }) => ({
         display: "flex",
@@ -90,6 +91,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         packagePricingType,
         packageEMenuType,
         consultants,
+        sideBarSteps,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -119,6 +121,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.packagePricingType,
         state.appointmentFrame.packageEMenuType,
         state.appointmentFrame.consultants,
+        state.appointmentFrame.sideBarSteps,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -183,8 +186,17 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [slots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment]);
 
+    const handleSideBar = () => {
+        const index = sideBarSteps.indexOf("appointmentSelection");
+        if (index > -1) {
+            const slicedSteps = sideBarSteps.slice(0, index + 1);
+            dispatch(setSideBarSteps(slicedSteps))
+        }
+    }
+
     const updateDate = useCallback((d: moment.Moment) => {
         setDate(d.startOf('day'));
+        handleSideBar();
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
         if (!d.isSame(month, 'month')) {
@@ -216,7 +228,6 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             if (id) {
                 setLoading(true);
                 try {
-                    // todo ask about consultants request in this case
                     const maintenancePackageOption: MPOptionShort|null = selectedPackage
                         ? {id: selectedPackage?.id, priceType: packagePricingType}
                         : packageEMenuType !== null
