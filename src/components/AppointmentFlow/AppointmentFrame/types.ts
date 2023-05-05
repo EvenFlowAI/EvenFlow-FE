@@ -1,5 +1,10 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
+import {
+    EAppointmentTimingType,
+    IVehicleForSlots,
+    MPOptionShort,
+    TRecallForRequest
+} from "../../../store/reducers/appointment/types";
 
 export type TActionProps = {
     onBack: () => void;
@@ -25,10 +30,12 @@ export type IMaintenanceItem = {
 export type TTransportationData = {
     serviceCenterId: number;
     serviceRequestIds: number[];
-    maintenancePackageOptionId: number | null;
     slot: ParsableDate;
     serviceCategoryIds: number[];
     appointmentHashKey?: string;
+    recalls: TRecallForRequest[];
+    maintenancePackageOption: MPOptionShort|null;
+    vehicle: IVehicleForSlots;
 }
 
 export interface IRecallByVin {

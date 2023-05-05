@@ -8,7 +8,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {collectServiceRequestIds} from "./utils";
+import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {setSideBarSteps, setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -19,6 +19,7 @@ import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../store/reducers/transportationNeeds/types";
+import {MPOptionShort} from "../../../store/reducers/appointment/types";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     width: 287,
@@ -129,10 +130,19 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [
-        s, ss,
-        individualOps, categoriesIds, packageOpt, appointmentDate,
-        hashKey, selectedRecalls,
-        transportation, sideBarSteps
+        s,
+        ss,
+        individualOps,
+        categoriesIds,
+        packageOpt,
+        appointmentDate,
+        hashKey,
+        selectedRecalls,
+        transportation,
+        sideBarSteps,
+        packagePricingType,
+        selectedPackage,
+        selectedVehicle,
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -144,6 +154,9 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.transportation,
         state.appointmentFrame.sideBarSteps,
+        state.appointmentFrame.packagePricingType,
+        state.appointmentFrame.selectedPackage,
+        state.appointmentFrame.selectedVehicle,
     ]);
 
     const serviceRequestIds = useMemo(() => {
@@ -155,25 +168,38 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setLoading(true);
-        const data: TTransportationData = {
-            serviceCenterId: decodeSCID(id),
-            serviceRequestIds,
-            maintenancePackageOptionId: packageOpt?.id ?? null,
-            slot: appointmentDate,
-            serviceCategoryIds: packageOpt?.id || serviceRequestIds.length ? [] : categoriesIds,
+        if (selectedVehicle) {
+            setLoading(true);
+            const maintenancePackageOption: MPOptionShort|null = selectedPackage
+                ? {id: selectedPackage?.id, priceType: packagePricingType}
+                : null;
+            const data: TTransportationData = {
+                serviceCenterId: decodeSCID(id),
+                serviceRequestIds,
+                slot: appointmentDate,
+                serviceCategoryIds: packageOpt?.id || serviceRequestIds.length ? [] : categoriesIds,
+                recalls: mapRecallsForRequest(selectedRecalls),
+                maintenancePackageOption,
+                vehicle: {
+                    vin: selectedVehicle.vin,
+                    year: selectedVehicle.year,
+                    make: selectedVehicle.make,
+                    model: selectedVehicle.model,
+                    mileage: selectedVehicle.mileage,
+                    engineTypeId: selectedVehicle.engineTypeId,
+                },
+            }
+            if (appointmentDate) data.slot = appointmentDate;
+            if (hashKey) data.appointmentHashKey = hashKey;
+            Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
+                .then(({data}) => {
+                    setTransportations(data);
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
         }
-        if (appointmentDate) data.slot = appointmentDate;
-        if (hashKey) data.appointmentHashKey = hashKey;
-
-        Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
-            .then(({data}) => {
-            setTransportations(data);
-        })
-            .finally(() => {
-                setLoading(false)
-            })
-    }, [id, serviceRequestIds, packageOpt]);
+    }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls, packagePricingType]);
 
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({
