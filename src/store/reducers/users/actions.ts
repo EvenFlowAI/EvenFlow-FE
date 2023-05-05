@@ -2,6 +2,7 @@ import {ICurrentUser, IUserForm, TUserActions} from "./types";
 import {Api} from "../../../config/requests";
 import {AppThunk} from "../../../types/types";
 import {IEmployee} from "../employees/types";
+import {loadByFilters} from "../employees/actions";
 
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
     type: "User/GetCurrentUser", payload
@@ -32,6 +33,7 @@ export const createUser = (payload: IUserForm, avatar?: File): AppThunk => async
         if (avatar) {
             await dispatch(saveEmployeeAvatar(avatar, typeof data === "string" ? data : data.id));
         }
+        dispatch(loadByFilters())
         dispatch(saving(false))
     } catch (e) {
         dispatch(saving(false));
@@ -47,6 +49,7 @@ export const updateUser = (payload: IUserForm, id: string, avatar?: File): AppTh
         }
         dispatch(saving(false));
         dispatch(getCurrentUser());
+        dispatch(loadByFilters())
     } catch (e) {
         dispatch(saving(false));
         throw e;
