@@ -1,14 +1,18 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 import {
     IUnplannedDemand,
-    IUnplannedDemandBySlot
+    IUnplannedDemandBySlot, IUnplannedDemandSlotsRequest
 } from "../../../store/reducers/demandSegments/types";
 import moment from "moment";
 import {SaveEditBlock} from "./UI";
 import {makeStyles} from "@material-ui/core/styles";
 import UnplannedDemandSlots from "./UnplannedDemandSlots";
-import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {timeSpanString} from "../../../config/constants";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {changeUnplannedSlots, loadUnplannedSlots} from "../../../store/reducers/demandSegments/actions";
+import {RootState} from "../../../store/rootReducer";
+import {Loading} from "../../UI/Loading";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
@@ -44,57 +48,6 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const mockSlots = [
-    {
-        id: 1,
-        day: 0,
-        start: "08:00:00",
-        end: "08:30:00",
-        amount: 0,
-        timeSlotType: ETimeSlotType.ThirtyMinutes,
-    },
-    {
-        id: 2,
-        day: 0,
-        start: "08:30:00",
-        end: "09:00:00",
-        amount: 0,
-        timeSlotType: ETimeSlotType.ThirtyMinutes,
-    },
-    {
-        id: 3,
-        day: 0,
-        start: "09:00:00",
-        end: "09:30:00",
-        amount: 0,
-        timeSlotType: ETimeSlotType.ThirtyMinutes,
-    },
-    {
-        id: 4,
-        day: 0,
-        start: "09:30:00",
-        end: "10:00:00",
-        amount: 0,
-        timeSlotType: ETimeSlotType.ThirtyMinutes,
-    },
-    {
-        id: 5,
-        day: 0,
-        start: "10:00:00",
-        end: "10:30:00",
-        amount: 0,
-        timeSlotType: ETimeSlotType.ThirtyMinutes,
-    },
-    {
-        id: 6,
-        day: 0,
-        start: "10:30:00",
-        end: "11:00:00",
-        amount: 0,
-        timeSlotType: ETimeSlotType.ThirtyMinutes,
-    }
-]
-
 export const sortSlots = (slots: IUnplannedDemandBySlot[]): IUnplannedDemandBySlot[] => {
     return slots.sort((a, b) => {
         return moment(a.start, timeSpanString).diff(moment(b.start, timeSpanString)) > 0 ? 1 : -1
@@ -102,38 +55,54 @@ export const sortSlots = (slots: IUnplannedDemandBySlot[]): IUnplannedDemandBySl
 }
 
 const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdit, isEdit, editingElement }) => {
-    const [demandSlots, setDemandSlots] = useState<IUnplannedDemandBySlot[]>([]);
+    const {unplannedSlots, isSlotsLoading} = useSelector((state: RootState) => state.demandSegments);
     const [slots1, setSlots1] = useState<IUnplannedDemandBySlot[]>([]);
     const [slots2, setSlots2] = useState<IUnplannedDemandBySlot[]>([]);
-    // todo loading from redux
-    let isSaving = false;
+    const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
+    const dispatch = useDispatch();
     const classes = useStyles();
-
-    // const [slots1, slots2] = useMemo(() => {
-    //     const half = Math.floor(demandSlots.length / 2);
-    //     return [demandSlots.slice(0, half), demandSlots.slice(half)];
-    // }, [demandSlots]);
+    const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
-        // todo request by day of week and remap them in the redux thunk action
-        setDemandSlots(sortSlots(mockSlots))
-    }, [])
+        if (selectedSC && editingElement) {
+            const data: IUnplannedDemandSlotsRequest = {
+                serviceCenterId: selectedSC.id,
+                podId: selectedPod?.id,
+                day: editingElement?.day
+            }
+            dispatch(loadUnplannedSlots(data))
+        }
+    }, [selectedSC, editingElement, selectedPod])
+
+    const setInitialData = useCallback(() => {
+        const half = Math.floor(unplannedSlots.length / 2);
+        setSlots1(unplannedSlots.slice(0, half));
+        setSlots2(unplannedSlots.slice(half));
+    }, [unplannedSlots])
 
     useEffect(() => {
-        const half = Math.floor(demandSlots.length / 2);
-        setSlots1(demandSlots.slice(0, half));
-        setSlots2(demandSlots.slice(half));
-    }, [demandSlots])
+        setInitialData()
+    }, [setInitialData])
+
+    const handleCancel = useCallback(() => {
+        setInitialData()
+        setEdit(false);
+    }, [setInitialData])
 
     const handleSave = () => {
-        // todo save data request
-        console.log(slots1)
-        console.log(slots2)
-    }
-
-    const handleCancel = () => {
-        // todo set initial data
-        // setEdit(false);
+        if (selectedSC && editingElement) {
+            const items = [...slots1, ...slots2]
+                .map(item => ({id: item.id, amount: +item.amount}))
+            const data = {
+                items,
+                day: editingElement.day,
+                serviceCenterId: selectedSC.id,
+                podId: selectedPod?.id
+            }
+            dispatch(changeUnplannedSlots(data, showError, () => showMessage("Unplanned Demand Updated")))
+        }
     }
 
     return (
@@ -150,14 +119,16 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
                         onEdit={() => setEdit(true)}
                         onCancel={handleCancel}
                         isEdit={isEdit}
-                        isSaving={isSaving}
+                        isSaving={isSlotsLoading}
                     />
                 </div>
             </div>
-            <div className={classes.tablesWrapper}>
-            <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1}/>
-            <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2}/>
-            </div>
+            {isSlotsLoading
+                ? <Loading/>
+                :  <div className={classes.tablesWrapper}>
+                    <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1}/>
+                    <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2}/>
+                </div>}
         </div>
     );
 };

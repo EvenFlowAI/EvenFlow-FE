@@ -1,5 +1,3 @@
-import {ETimeSlotType} from "../slotScoring/types";
-
 export interface IDemandSegment {
     id: number;
     window1Point: number;
@@ -49,11 +47,28 @@ export interface IUnplannedDemandBySlot {
     start: string;
     end: string;
     amount: number|string;
-    timeSlotType: ETimeSlotType;
 }
 
 export interface IUnplannedDemandRequest {
     items: IUnplannedDemandForm[];
     serviceCenterId: number;
+    podId?: number;
+}
+
+export interface IUnplannedDemandSlotsRequest {
+    serviceCenterId: number;
+    day: EDay;
+    podId?: number;
+}
+
+export type TUnplannedSlot = {
+    id: number;
+    amount: number;
+}
+
+export interface IUnplannedSlotUpdateData {
+    serviceCenterId: number;
+    day: EDay;
+    items: TUnplannedSlot[]
     podId?: number;
 }
