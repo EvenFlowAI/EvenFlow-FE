@@ -308,8 +308,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
 
     const handleNext = useCallback((): void => {
         handleGANext();
-        handleSetScreen(currentConfig?.transportationNeeds ? 'transportationNeeds' : 'appointmentConfirmation');
-    }, [currentConfig])
+        handleSetScreen(currentConfig?.transportationNeeds && !serviceTypeOption?.transportationOption ? 'transportationNeeds' : 'appointmentConfirmation');
+    }, [currentConfig, serviceTypeOption])
 
     const handleBack = useCallback((): void => {
         const nextScreen = currentConfig?.appointmentSelection
