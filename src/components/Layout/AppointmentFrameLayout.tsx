@@ -146,6 +146,7 @@ export const AppointmentFrameLayout = () => {
         userType,
         consultants,
         makes,
+        serviceTypeOption,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -488,7 +489,9 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,
             appointmentConfirmation: <AppointmentConfirmationFrame
-                onBack={handleChangeScreen(currentConfig?.transportationNeeds ? 'transportationNeeds' : 'appointmentSelection')}
+                onBack={handleChangeScreen(currentConfig?.transportationNeeds && !serviceTypeOption?.transportationOption
+                    ? 'transportationNeeds'
+                    : 'appointmentSelection')}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
@@ -511,7 +514,7 @@ export const AppointmentFrameLayout = () => {
         return carSelections[currentScreen];
     }, [
         currentScreen, handleChangeScreen, handleSetScreen, handleAddNewVehicle,
-        handleLogin, handleSelectCar, loadingCar, handleAddNewCarAppointment
+        handleLogin, handleSelectCar, loadingCar, handleAddNewCarAppointment, serviceTypeOption
     ]);
 
     const getTitle = () => {

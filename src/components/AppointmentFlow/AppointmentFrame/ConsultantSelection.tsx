@@ -142,7 +142,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }, [config, serviceType]);
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
-    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
+    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds &&
+        !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(service, subService, null, selectedSR, selectedRecalls);
     }, [service, subService, selectedRecalls, selectedSR]);
