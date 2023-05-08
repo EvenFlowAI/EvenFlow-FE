@@ -30,6 +30,10 @@ const ServiceOpsCodesMapping = () => {
 
     useEffect(() => {
         selectedSC && dispatch(loadCategoriesByPage(EServiceType.VisitCenter));
+        return () => {
+            setTab("0")
+            dispatch(setCategoriesPage(0));
+        }
     }, [selectedSC])
 
     const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => {
@@ -49,9 +53,9 @@ const ServiceOpsCodesMapping = () => {
                 scrollButtons="auto"
                 indicatorColor="primary"
             >
-                {tabNames.map((name, index) => <Tab label={name} value={`${index}`}/>)}
+                {tabNames.map((name, index) => <Tab label={name} value={`${index}`} key={name}/>)}
             </TabList>
-                {tabNames.map((name, index) => <CategoriesTablePage tabValue={`${index}`}/>)}
+                {tabNames.map((name, index) => <CategoriesTablePage tabValue={`${index}`} key={name}/>)}
         </TabContext>
     );
 };
