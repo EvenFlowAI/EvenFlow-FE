@@ -1,13 +1,12 @@
-import React, {Dispatch, SetStateAction, useEffect} from "react";
+import React, {Dispatch, SetStateAction} from "react";
 import {IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {Table, TableBody, TableHead} from "@material-ui/core";
 import {TableCell, TableRow} from "./UI";
 import moment from "moment";
 import {timeSpanString, timeString} from "../../../config/constants";
-import {TextField} from "../../UI/TextField";
-import {useException} from "../../../utils/hooks";
 import {sortSlots} from "./UnplannedDemandEditing";
+import DemandInput from "./DemandInput";
 
 type TTableProps = {
     setDemandSlots: Dispatch<SetStateAction<IUnplannedDemandBySlot[]>>;
@@ -34,32 +33,21 @@ const useStyles = makeStyles({
         borderRight: "1px solid #D9D9D9 !important",
         borderTop: "1px solid #D9D9D9 !important"
     },
-    inputWrapper: {
-        width: 80,
-        '& > input': {
-            textAlign: "center"
-        }
-    }
 })
 
 const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) => {
     const classes = useStyles();
-    const showError = useException();
 
-    const onInputChange = (item: IUnplannedDemandBySlot) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!Number.isInteger(+e.target.value)) {
-            showError('"Unplanned Demand" must be a whole number');
-        } else {
-            setDemandSlots(prev => {
-                let data = [...prev];
-                const prevItem = data.find(el => el.id === item.id)
-                if (prevItem) {
-                    const updated = {...prevItem, amount: e.target.value};
-                    data = data.filter(el => el.id !== item.id).concat(updated);
-                }
-                return sortSlots(data);
-            })
-        }
+    const onChange = (item: IUnplannedDemandBySlot, value: number|string) => {
+        setDemandSlots(prev => {
+            let data = [...prev];
+            const prevItem = data.find(el => el.id === item.id)
+            if (prevItem) {
+                const updated = {...prevItem, amount: +value};
+                data = data.filter(el => el.id !== item.id).concat(updated);
+            }
+            return sortSlots(data);
+        })
     }
 
     return <Table>
@@ -76,15 +64,7 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
                     <TableCell key={item.start} align="center" className={classes.cell}>{moment(item.start, timeSpanString).format(timeString)}</TableCell>
                     <TableCell key={item.end} align="center" className={classes.cell}>{moment(item.end, timeSpanString).format(timeString)}</TableCell>
                     <TableCell className={classes.cell} align="center">
-                        <TextField
-                            value={item.amount}
-                            type="number"
-                            inputProps={{
-                                min: 0,
-                            }}
-                            onBlur={(e) => console.log('blur')}
-                            onChange={onInputChange(item)}
-                            className={classes.inputWrapper}/>
+                        <DemandInput item={item} onBlur={onChange}/>
                     </TableCell>
                 </TableRow>
             })}

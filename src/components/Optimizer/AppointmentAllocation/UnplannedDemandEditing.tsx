@@ -9,7 +9,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import UnplannedDemandSlots from "./UnplannedDemandSlots";
 import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {timeSpanString} from "../../../config/constants";
-import {useException} from "../../../utils/hooks";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
@@ -106,7 +105,6 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
     const [demandSlots, setDemandSlots] = useState<IUnplannedDemandBySlot[]>([]);
     const [slots1, setSlots1] = useState<IUnplannedDemandBySlot[]>([]);
     const [slots2, setSlots2] = useState<IUnplannedDemandBySlot[]>([]);
-    const showError = useException();
     // todo loading from redux
     let isSaving = false;
     const classes = useStyles();
@@ -129,6 +127,8 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
 
     const handleSave = () => {
         // todo save data request
+        console.log(slots1)
+        console.log(slots2)
     }
 
     const handleCancel = () => {
