@@ -186,7 +186,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                     ...currentZone,
                     name: zoneName,
                     zipCodes: zipList,
-                    serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
+                    serviceType: serviceType === 'serviceValet' ? EServiceType.PickUpDropOff : EServiceType.MobileService,
                 }
                 if (serviceType === 'serviceValet') {
                     dispatch(updateServiceValetZone(currentZone.id, selectedSC.id, data, onSuccess, onError))
@@ -198,7 +198,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                     const data: TZoneNew = {
                         name: zoneName,
                         zipCodes: zipList,
-                        serviceType: serviceType === 'serviceValet' ? EServiceType.PikUpDropOff : EServiceType.MobileService,
+                        serviceType: serviceType === 'serviceValet' ? EServiceType.PickUpDropOff : EServiceType.MobileService,
                         serviceCenterId: selectedSC.id,
                     }
                     if (serviceType === 'serviceValet') {

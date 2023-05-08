@@ -22,10 +22,12 @@ import {createCategory, updateCategory, updateCategoryIcon} from "../../../store
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
-import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {visitCenterTabs} from "../../Admin/ServiceOpsCodesMapping/ServiceOpsCodesMapping";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;
+    tabValue: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -75,7 +77,13 @@ type TOption = {
     name: string;
 }
 
-const pageOptions = [{name: 'Owned By Booking Flow (Page 1)', value: 0}, {name: 'Owned By Booking Flow (Page 2)', value: 1}];
+const getPageOptions = (serviceType: EServiceType): TOption[] => {
+    const typeName = serviceType === EServiceType.MobileService ? "Mobile Service" : "Visit Center";
+    return [
+        {name: `Owned By ${typeName} (Page 1)`, value: 0},
+        {name: `Owned By ${typeName} (Page 2)`, value: 1}
+    ]
+}
 
 const categoryOptions = Object.keys(EServiceCategoryType)
     .filter(item => Number.isNaN(+item))
@@ -113,10 +121,9 @@ const getOptionLabel = (option: TOption) => {
 }
 const initialFileState = {file: null, dataUrl: undefined};
 
-const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ...props}) => {
+const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, tabValue, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
-    const {categories} = useSelector((state: RootState) => state.categories);
-    const {page} = useSelector((state: RootState) => state.categories);
+    const {categories, page, filter} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [categoryName, setCategoryName] = useState<string>('');
@@ -126,19 +133,27 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [description, setDescription] = useState<string>('');
-    const [selectedServiceType, setSelectedServiceType] = useState<EServiceTypeBookingFlow>(EServiceTypeBookingFlow.VisitCenter)
+    const [selectedServiceType, setSelectedServiceType] = useState<EServiceType>(EServiceType.VisitCenter)
     const [isCommentRequired, setIsCommentRequired] = useState<boolean>(false);
-
-    const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
-        || categoryType?.value === EServiceCategoryType.LinkToPage2
-        || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
-    // todo for Mobile service when it will be separate logic
-    const visitCenterConfig = useMemo(() => config.find(item => item.serviceType === EServiceTypeBookingFlow.VisitCenter), [config])
+    const tabServiceType = visitCenterTabs.includes(tabValue) ? EServiceType.VisitCenter : EServiceType.MobileService;
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
+
+    const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
+        || categoryType?.value === EServiceCategoryType.LinkToPage2
+        || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
+
+    const visitCenterConfig = useMemo(() => {
+        const currentServiceType = selectedServiceType === EServiceType.VisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService;
+        return config.find(item => item.serviceType === currentServiceType)
+    }, [config, selectedServiceType])
+
+    useEffect(() => {
+        setSelectedServiceType(filter);
+    }, [filter])
 
     const getCategoryOptions = () => {
         let options: TOption[] = categoryOptions;
@@ -153,15 +168,15 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
 
     useEffect(() => {
         props.open && selectedSC && dispatch(loadAllAssignedServiceRequests(selectedSC.id))
-        const currentPageOption = pageOptions.find(item => item.value === page);
+        const currentPageOption = getPageOptions(selectedServiceType).find(item => item.value === page);
         currentPageOption && setDefinedPage(currentPageOption);
-    }, [selectedSC, page, pageOptions, props.open])
+    }, [selectedSC, page, getPageOptions, props.open, selectedServiceType])
 
     useEffect(() => {
         if (editingItem && allAssignedList && props.open) {
             setCategoryName(editingItem.name);
 
-            const page = pageOptions.find(option => option.value === +editingItem.page);
+            const page = getPageOptions(selectedServiceType).find(option => option.value === +editingItem.page);
             page && setDefinedPage(page);
 
             setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
@@ -173,7 +188,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
             if (editingItem.description) setDescription(editingItem.description);
             if (editingItem.isCommentRequired) setIsCommentRequired(editingItem.isCommentRequired);
         }
-    }, [editingItem, allAssignedList, categoryOptions, props.open])
+    }, [editingItem, allAssignedList, categoryOptions, props.open, selectedServiceType])
 
     useEffect(() => {
         if (selectedSC) {
@@ -191,6 +206,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
         setOrderIndex('');
         setDescription('')
         setIsCommentRequired(false);
+        setSelectedServiceType(filter);
         props.onClose();
     }, [])
 
@@ -199,8 +215,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     }
 
     const onSuccessCreate = useCallback((categoryId: number) => {
-        if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file));
-    }, [fileState])
+        if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file, tabServiceType));
+    }, [fileState, tabServiceType])
 
     const onSave = useCallback(() => {
         if (selectedSC) {
@@ -225,8 +241,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     serviceRequests: [],
                     orderIndex: Number(orderIndex),
                     isCommentRequired: categoryType.value === EServiceCategoryType.GeneralCategory ? isCommentRequired : false,
-                    // todo uncomment and add in the TUpdateCategoryData field for service type
-                    //serviceType,
+                    serviceType: selectedServiceType,
                 }
                 if (description) data.description = description;
                 if (categoryType.value !== EServiceCategoryType.MaintenancePackage
@@ -239,17 +254,17 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     }
                 }
                 if (editingItem) {
-                    dispatch(updateCategory(editingItem.id, data));
-                    if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file));
+                    dispatch(updateCategory(editingItem.id, data, tabServiceType));
+                    if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file, tabServiceType));
                 } else {
                     const newData: TNewCategory = {...data, serviceCenterId: selectedSC.id};
-                    dispatch(createCategory(newData, onSuccessCreate));
+                    dispatch(createCategory(newData, onSuccessCreate, tabServiceType));
                 }
                 onCancel();
             }
         }
     }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
-        editingItem, fileState, visitCenterConfig, description, isCommentRequired])
+        editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType, tabServiceType])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
@@ -283,7 +298,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
     }, [dispatch])
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedServiceType(e.target.value === '0' ? EServiceTypeBookingFlow.VisitCenter : EServiceTypeBookingFlow.MobileService);
+        setSelectedServiceType(e.target.value === '0' ? EServiceType.VisitCenter : EServiceType.MobileService);
     }
 
     const handleSwitch = (e: any, value: boolean) => {
@@ -303,13 +318,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                     className={classes.radioGroup}
                 >
                     <FormControlLabel
-                        value={EServiceTypeBookingFlow.VisitCenter}
+                        value={EServiceType.VisitCenter}
                         control={<Radio color="primary"/>}
                         label="VISIT CENTER"
                         labelPlacement="end"
                     />
                     <FormControlLabel
-                        value={EServiceTypeBookingFlow.MobileService}
+                        value={EServiceType.MobileService}
                         control={<Radio color="primary"/>}
                         label="MOBILE SERVICE"
                         labelPlacement="end"
@@ -326,7 +341,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ..
                             value={categoryName}/>
                     </div>
                     <Autocomplete
-                        options={pageOptions}
+                        options={getPageOptions(selectedServiceType)}
                         getOptionSelected={(option) => option.value === definedPage?.value}
                         getOptionLabel={option => option.name}
                         value={definedPage}

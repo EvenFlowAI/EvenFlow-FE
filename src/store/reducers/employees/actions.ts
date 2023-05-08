@@ -27,9 +27,7 @@ export const saving = (payload: boolean): TEmployeeActions => ({
     payload, type: "Employees/Saving"
 })
 
-export const loadAll: ActionCreator<AppThunk> = () =>
-    async (dispatch, getState) => {
-
+export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState) => {
     dispatch(loading(true));
     const state = getState();
     try {
@@ -81,7 +79,7 @@ export const createEmployee = (payload: IEmployeeForm, avatar?: File): AppThunk 
             await dispatch(saveEmployeeAvatar(avatar, typeof data === 'string' ? data : data.id));
         }
         dispatch(saving(false));
-        dispatch(loadAll());
+        dispatch(loadByFilters())
     } catch (e) {
         dispatch(saving(false));
         throw e;
@@ -102,7 +100,7 @@ export const updateEmployee = (data: IEmployeeForm, id: string, avatar?: File): 
             await dispatch(saveEmployeeAvatar(avatar, id));
         }
         dispatch(saving(false));
-        dispatch(loadAll());
+        dispatch(loadByFilters())
     } catch (e) {
         dispatch(saving(false));
         throw e;

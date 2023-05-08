@@ -24,7 +24,7 @@ const ServiceType = () => {
         switch (serviceType) {
             case EServiceType.MobileService:
                 return t("Mobile Service");
-            case EServiceType.PikUpDropOff:
+            case EServiceType.PickUpDropOff:
                 return t("Pick Up / Drop Off");
             default:
                 return t("Visit Center");

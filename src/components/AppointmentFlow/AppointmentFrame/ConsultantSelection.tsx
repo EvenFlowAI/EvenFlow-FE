@@ -33,7 +33,6 @@ import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
-import {MPOptionShort} from "../../../store/reducers/appointment/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -129,7 +128,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         serviceTypeOption,
         address,
         zipCode,
-        valueService
+        valueService,
+        packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -157,9 +157,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         if (selectedVehicle) {
-            const maintenancePackageOption: MPOptionShort|null = selectedPackage
+            const maintenancePackageOption = selectedPackage
                 ? {id: selectedPackage?.id, priceType: packagePricingType}
-                : null;
+                : packageEMenuType !== null
+                    ? {optionType: packageEMenuType}
+                    : null;
+
             const data: IConsultantsRequestData = {
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
@@ -186,7 +189,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             }
             dispatch(loadConsultants(data, onNext))
         }
-    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest])
+    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage])
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))

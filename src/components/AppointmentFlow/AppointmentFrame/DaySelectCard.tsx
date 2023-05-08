@@ -2,7 +2,7 @@ import React from 'react';
 import {TCallback} from "../../../types/types";
 import {styled, Theme} from "@material-ui/core";
 import moment from "moment";
-import {TGroupedAppointment} from "../../../utils/types";
+import {TGroupedAppointment, TGroupedAppointments} from "../../../utils/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
@@ -56,6 +56,7 @@ type TProps = {
     isCurrent: boolean;
     appointment?: TGroupedAppointment;
     isXs: boolean;
+    appointments: TGroupedAppointments;
 };
 
 export const XsFormat = "ddd";
@@ -64,7 +65,7 @@ export const monthFormat = "MMM D";
 export const XsMontFormat = "MMM";
 
 export const DaySelectCard: React.FC<TProps> = ({
-    day, onClick, appointment, isCurrent, isXs
+    day, onClick, appointment, isCurrent, isXs, appointments,
 }) => {
     const isCustomRange = useSelector((state: RootState) => {
         return Boolean(
@@ -74,6 +75,16 @@ export const DaySelectCard: React.FC<TProps> = ({
     })
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
+    const getMaxPrice = () => {
+        if (appointment) {
+            const prices = appointment.appointments
+                .filter(app => moment(app.appointmentDate).isSame(moment(appointment.date), 'day'))
+                .map(item => item.price.value)
+            return Math.max(...prices);
+        }
+    }
+
+    getMaxPrice()
 
     const getLabel = () => {
         if (isXs) {
@@ -87,7 +98,15 @@ export const DaySelectCard: React.FC<TProps> = ({
             }
         }
         if (appointment?.lowestPrice) {
-            return `$${scProfile?.isRoundPrice ? appointment.lowestPrice + appointment.ancillaryPrice : (appointment.lowestPrice + appointment.ancillaryPrice).toFixed(2)}`;
+            const price = getMaxPrice();
+            if (price) {
+                return `$${scProfile?.isRoundPrice ? price : price.toFixed(2)}`;
+            } else {
+                return t("Available");
+            }
+            // const price = appointment.amountOfSavingMoney
+            //     ? appointment.lowestPrice + appointment.ancillaryPrice + appointment.amountOfSavingMoney
+            //     : appointment.lowestPrice + appointment.ancillaryPrice;
         }
         if (appointment) {
             return t("Available");

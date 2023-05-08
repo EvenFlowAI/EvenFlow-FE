@@ -37,7 +37,6 @@ import {Autocomplete} from "@material-ui/lab";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
-import {EServiceTypeBookingFlow} from "../../../store/reducers/bookingFlowConfig/types";
 import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {TForm, TOption} from "./types";
@@ -105,8 +104,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
         return Boolean(form.vehicleMake) && Boolean(form.vehicleYear) && Boolean(form.vehicleModel) && Boolean(form.vehicleMileage)
     }, [form])
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
-    const isMobileServiceOn = useMemo(()=> config.find(item => item.serviceType === EServiceTypeBookingFlow.MobileService && item.available), [config]);
-    const isPickUpServiceOn = useMemo(()=> config.find(item => item.serviceType === EServiceTypeBookingFlow.PickUpDropOff && item.available), [config]);
+    const isMobileServiceOn = useMemo(()=> config.find(item => item.serviceType === EServiceType.MobileService && item.available), [config]);
+    const isPickUpServiceOn = useMemo(()=> config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available), [config]);
     const otherServiceTypesAvailable = useMemo(() => Boolean(firstScreenOptions.length), [firstScreenOptions])
 
     const fillDataByVin = useCallback((d: IVehicleData) => {
@@ -190,7 +189,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     selectedJobType && setJobType(selectedJobType);
                 }
                 setDate(payload.dateInUtc);
-                if (payload.serviceTypeOption?.type !== EServiceType.PikUpDropOff) {
+                if (payload.serviceTypeOption?.type !== EServiceType.PickUpDropOff) {
                     const slot: IAppointmentSlot = {
                         date: payload.dateInUtc,
                         time: payload.timeSlot,
@@ -238,7 +237,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
 
     useEffect(() => {
         let waiting = true;
-        if (selectedSC && props.open && serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+        if (selectedSC && props.open && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
             setSlotsLoading(true);
             if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
                 setServiceValetSlots([]);
@@ -301,7 +300,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
 
     useEffect(() => {
         let waiting = true;
-        if (selectedSC && props.open  && filterDate && serviceTypeOption?.type !== EServiceType.PikUpDropOff) {
+        if (selectedSC && props.open  && filterDate && serviceTypeOption?.type !== EServiceType.PickUpDropOff) {
             setSlotsLoading(true);
             if (!selectedSR.length && !selectedCategories.length && !selectedPackageOption) {
                 setSlots([]);
@@ -415,12 +414,12 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             }
         }
         for (let field in form) {
-            if (field === "date" && serviceTypeOption?.type !== EServiceType.PikUpDropOff &&  !filterDate) {
+            if (field === "date" && serviceTypeOption?.type !== EServiceType.PickUpDropOff &&  !filterDate) {
                 isValid = false;
                 setErrors(prev => [...prev, "date"])
             }
             if (field === "slot") {
-                const slot = serviceTypeOption?.type === EServiceType.PikUpDropOff ? selectedSVSlot : selectedSlot;
+                const slot = serviceTypeOption?.type === EServiceType.PickUpDropOff ? selectedSVSlot : selectedSlot;
                 if (!slot) {
                     isValid = false;
                     setErrors(prev => [...prev, "slot"])
@@ -449,7 +448,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
             const data: ICreateAppointment = {
                 serviceRequestIds: selectedSR.map(sr => sr.id),
                 slot: selectedSlot?.time || "00:00:00",
-                date: serviceTypeOption?.type === EServiceType.PikUpDropOff && selectedSVSlot
+                date: serviceTypeOption?.type === EServiceType.PickUpDropOff && selectedSVSlot
                     ? selectedSVSlot?.date
                     : selectedSlot?.date,
                 vehicle: {
@@ -504,7 +503,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     }
 
     useEffect(() => {
-        if (payload?.serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+        if (payload?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
             const slot = serviceValetSlots.find(item => moment(item.date).isSame(moment(payload?.dateInUtc), 'date'));
             if (slot) setSelectedSVSlot(slot);
         }
@@ -558,7 +557,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
     const getFirstScreenOptionDisabled = (o: IFirstScreenOption) => {
         if (o.type as EServiceType === EServiceType.General) return true;
         if (o.type as EServiceType === EServiceType.MobileService && !isMobileServiceOn) return true;
-        return o.type as EServiceType === EServiceType.PikUpDropOff && !isPickUpServiceOn;
+        return o.type as EServiceType === EServiceType.PickUpDropOff && !isPickUpServiceOn;
     }
 
     return <BaseModal {...props}>
@@ -644,7 +643,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     />
                 </Grid>
 
-                {serviceTypeOption?.type === EServiceType.PikUpDropOff
+                {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVSlotSelection
                         selectedSlot={selectedSVSlot}
                         setSelectedSlot={setSelectedSVSlot}
@@ -667,7 +666,7 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-                {serviceTypeOption?.type !== EServiceType.PikUpDropOff && serviceTypeOption?.type !== EServiceType.MobileService
+                {serviceTypeOption?.type !== EServiceType.PickUpDropOff && serviceTypeOption?.type !== EServiceType.MobileService
                     ? <Transportation
                         payload={payload}
                         form={form}

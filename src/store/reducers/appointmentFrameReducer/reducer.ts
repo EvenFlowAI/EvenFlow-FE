@@ -24,7 +24,7 @@ import {
     setMaintenanceDetails,
     setMobileServiceAvailability,
     setOffersLoading,
-    setPackage,
+    setPackage, setPackageEMenuType,
     setPackageIsSelected, setPackagePricingType,
     setPackages,
     setPickUpDropOffAvailability,
@@ -52,6 +52,7 @@ import {
     updateVehicle,
 } from "./actions";
 import {
+    EMaintenanceOptionType,
     ICustomer,
     ILoadedVehicle,
     IMake,
@@ -132,9 +133,10 @@ type TState = {
     recallsAreShown: boolean;
     hoursOfOperations: IHOODataForm[];
     serviceTypeOption: IFirstScreenOption|null;
-    primarySelectedServiceTypeOption: IFirstScreenOption|null;
+    selectedOptionTypes: EServiceType[];
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
+    packageEMenuType: EMaintenanceOptionType|null;
 }
 const initialState: TState = {
     service: null,
@@ -190,9 +192,10 @@ const initialState: TState = {
     recallsAreShown: false,
     hoursOfOperations: [],
     serviceTypeOption: null,
-    primarySelectedServiceTypeOption: null,
+    selectedOptionTypes: [],
     packagePricingType: null,
     packagePriceTitles: [],
+    packageEMenuType: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -365,9 +368,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, hoursOfOperations: payload}
     })
     .addCase(setServiceTypeOption, (state, {payload}) => {
-        if (!state.primarySelectedServiceTypeOption) {
-            return {...state, serviceTypeOption: payload, primarySelectedServiceTypeOption: payload}
-        } else return {...state, serviceTypeOption: payload}
+        const optionsTypes = payload
+            ?  Array.from(new Set([...state.selectedOptionTypes, payload.type]))
+            : state.selectedOptionTypes;
+        return {...state, serviceTypeOption: payload, selectedOptionTypes: optionsTypes};
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
         return {...state, packagePricingType: payload}
@@ -383,5 +387,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSideBarStepsList, (state, {payload}) => {
         return {...state, sideBarStepsList: payload}
+    })
+    .addCase(setPackageEMenuType, (state, {payload}) => {
+        return {...state, packageEMenuType: payload}
     })
 )

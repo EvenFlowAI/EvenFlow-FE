@@ -117,6 +117,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
+    console.log(idx, idx + vehiclesPerScreen)
 
     const isSelected = (vehicle: ILoadedVehicle) => {
         if (!selectedVehicle) {
@@ -149,7 +150,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                                     selected={isSelected(vehicle)}
                                     clearData={clearData}
                                     car={vehicle}
-                                    key={vehicle.vin}/>
+                                    key={vehicle.dmsId || new Date().toISOString()}/>
                             )}
                         <Arrow onClick={next} disabled={nextDisabled()}>
                             <ChevronRight />
