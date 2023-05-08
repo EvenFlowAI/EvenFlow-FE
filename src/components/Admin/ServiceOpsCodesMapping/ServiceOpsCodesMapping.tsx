@@ -30,7 +30,10 @@ const ServiceOpsCodesMapping = () => {
 
     useEffect(() => {
         selectedSC && dispatch(loadCategoriesByPage(EServiceType.VisitCenter));
-        return () => setTab("0")
+        return () => {
+            setTab("0")
+            dispatch(setCategoriesPage(0));
+        }
     }, [selectedSC])
 
     const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => {

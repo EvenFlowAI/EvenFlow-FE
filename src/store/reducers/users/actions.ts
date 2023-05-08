@@ -11,8 +11,8 @@ const loading = (payload: boolean): TUserActions => ({type: "User/Loading", payl
 export const getCurrentUser = (): AppThunk => async dispatch => {
     try {
         dispatch(loading(true));
-        const {data} = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
-        dispatch(_getCurrentUser(data));
+        const result = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
+        if (result.data) dispatch(_getCurrentUser(result.data));
     } catch (e) {
         console.error(e);
     } finally {
