@@ -1,0 +1,43 @@
+import React from 'react';
+import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
+import {DialogProps} from "../types";
+import CustomerSearchResultsActions from "./CustomerSearchResultsActions";
+import {TCallback} from "../../../types/types";
+
+type TCustomerSearchResultsProps = DialogProps & {
+    onClearSearchForm: TCallback;
+    handleNew: TCallback;
+};
+
+const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({open, onClose, handleNew, onClearSearchForm}) => {
+    const onCancel = () => {
+        onClose()
+    }
+
+    const onBack = () => {
+        onCancel();
+    }
+    const onNewSearch = () => {
+        onCancel()
+        onClearSearchForm()
+    }
+    const onCreateNewAppointment = async () => {
+        await handleNew()
+        await onCancel()
+    }
+
+
+    return (
+        <BaseModal open={open} width={900} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>Customer Search results</DialogTitle>
+            <DialogContent>
+                <CustomerSearchResultsActions
+                    onBack={onBack}
+                    onNewSearch={onNewSearch}
+                    onCreateNewAppointment={onCreateNewAppointment}/>
+            </DialogContent>
+        </BaseModal>
+    );
+};
+
+export default CustomerSearchResults;

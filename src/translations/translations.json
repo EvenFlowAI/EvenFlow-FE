@@ -293,7 +293,9 @@
       "Enter Last Name": "Enter Last Name",
       "Try other names": "Try other names",
       "We are sorry but we cannot find any customers associated with that name": "We are sorry but we cannot find any customers \n associated with that name",
-      "Would you like to try a different first & last name?": "Would you like to try a different first & last name?"
+      "Would you like to try a different first & last name?": "Would you like to try a different first & last name?",
+      "New Search": "New Search",
+      "Create Appointment for New Customer": "Create Appointment for New Customer"
     }
   },
   "es": {

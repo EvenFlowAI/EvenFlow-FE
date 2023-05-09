@@ -200,7 +200,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                 </Button>
             </div>
         </Grid>
-        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound}/>
+        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound} handleNew={handleNew}/>
         <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
     </Grid>
 };

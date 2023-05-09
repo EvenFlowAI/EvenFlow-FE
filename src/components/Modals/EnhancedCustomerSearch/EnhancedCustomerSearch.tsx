@@ -1,12 +1,14 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../UI/Button";
+import {TCallback} from "../../../types/types";
+import CustomerSearchResults from "./CustomerSearchResults";
 
 const useStyles = makeStyles(() => ({
     buttonsWrapper: {
@@ -30,20 +32,19 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const EnhancedCustomerSearch: React.FC<DialogProps & {onOpenNotFound: () => void}> = ({ open, onClose, onOpenNotFound}) => {
+type TEnhancedCustomerSearchProps = DialogProps & {onOpenNotFound: TCallback, handleNew: TCallback};
+
+const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, onClose, onOpenNotFound, handleNew}) => {
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+    const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
     const classes = useStyles();
     const {t} = useTranslation();
-
-    useEffect(() => {
-
-    }, [])
 
     const onFirstNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setFormIsChecked(false);
@@ -55,12 +56,16 @@ const EnhancedCustomerSearch: React.FC<DialogProps & {onOpenNotFound: () => void
         setLastName(e.target.value);
     }, [])
 
-    const onCancel = useCallback((): void => {
+    const clearForm = () => {
         setFormIsChecked(false);
         setFirstName('');
         setLastName('');
+    }
+
+    const onCancel = useCallback((): void => {
+        clearForm()
         onClose();
-    }, [])
+    }, [clearForm])
 
     const onSuccess = () => {
         onCancel()
@@ -68,9 +73,10 @@ const EnhancedCustomerSearch: React.FC<DialogProps & {onOpenNotFound: () => void
 
     const onSave = useCallback((): void => {
         setFormIsChecked(true);
-        onCancel()
-        onOpenNotFound();
-        // todo request
+        // todo request and then open corresponding window with them
+        //onOpenNotFound();
+
+        onOpenSearchResults()
     }, [])
 
     return (
@@ -112,6 +118,12 @@ const EnhancedCustomerSearch: React.FC<DialogProps & {onOpenNotFound: () => void
                 </div>
             </div>
             </div>
+            <CustomerSearchResults
+                handleNew={handleNew}
+                onClose={onCloseSearchResults}
+                open={isOpenSearchResults}
+                onClearSearchForm={clearForm}
+            />
         </BaseModal>
     );
 };
