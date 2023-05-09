@@ -9,7 +9,8 @@ import {
     setPackage,
     setPackageIsSelected,
     setPackagePricingType,
-    setSelectedPackageOptionType, setSelectedPackagePriceTitles
+    setSelectedPackageOptionType,
+    setSelectedPackagePriceTitles
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
@@ -43,6 +44,7 @@ import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
 import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
+import PackagesEmenu from "./PackagesEmenu";
 
 const border = '1px solid #DADADA';
 
@@ -286,6 +288,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         service,
         subService,
         packageOptionType,
+        packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
 
     const theme = useTheme();
@@ -296,8 +299,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfinity,[scProfile]);
-    const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile])
+    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfiniti,[scProfile]);
 
     const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
@@ -306,28 +308,30 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const {id} = useParams();
 
     useEffect(() => {
-        setLoading(true);
-        Api.call<IPackage[]>(
-            Api.endpoints.MaintenancePackages.ByVehicle,
-            {
-                data: {
-                    serviceCenterId: decodeSCID(id),
-                    vehicle: {
-                        ...selectedVehicle,
-                        mileage: selectedVehicle?.mileage ?? maintenanceDetails.mileage
+        if (!scProfile?.eMenuEnabled) {
+            setLoading(true);
+            Api.call<IPackage[]>(
+                Api.endpoints.MaintenancePackages.ByVehicle,
+                {
+                    data: {
+                        serviceCenterId: decodeSCID(id),
+                        vehicle: {
+                            ...selectedVehicle,
+                            mileage: selectedVehicle?.mileage ?? maintenanceDetails.mileage
+                        }
                     }
                 }
-            }
-        )
-            .then(({data}) => {
-                setPackages(data);
-                if (data.length) dispatch(setSelectedPackagePriceTitles((data[0].priceTitles)))
-            })
-            .catch(() => {
-                setPackages([]);
-            })
-            .finally(() => {setLoading(false)})
+            )
+                .then(({data}) => {
+                    setPackages(data);
+                    if (data.length) dispatch(setSelectedPackagePriceTitles((data[0].priceTitles)))
+                })
+                .catch(() => {
+                    setPackages([]);
+                })
+                .finally(() => {setLoading(false)})
 
+        }
     }, [id, selectedVehicle, maintenanceDetails]);
 
     const setClasses = (id: number, cls: string): string => {
@@ -396,6 +400,18 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         }
     }
 
+    const onEMenuNext = () => {
+        dispatch(setPackageIsSelected(true));
+        const firstOption = scProfile?.maintenancePackageOptionTypes[0];
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: `Selected eMenu Package`,
+            label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
+        });
+        askAdditionalServices();
+        //handleNextScreen();
+    }
+
     const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
         dispatch(setPackage(p));
         dispatch(setPackagePricingType(pricing ?? EPackagePricingType.BasePrice));
@@ -429,13 +445,19 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     return (
         <PackagesStepWrapper>
-            <NoItemsLoading
+            {!scProfile?.eMenuEnabled
+                ?  <NoItemsLoading
                 wrapperStyles={{marginTop: 20}}
                 items={packages}
                 loading={loading}
                 label={t("There are no packages available")}
             />
-            {packages.length ? <React.Fragment>
+                : null}
+            {scProfile?.eMenuEnabled
+                ? <React.Fragment>
+                    <PackagesEmenu onBack={handleBack} onNext={onEMenuNext}/>
+                </React.Fragment>
+                : packages.length ? <React.Fragment>
                 {isXs
                     ? <PackageSelectionMobile
                         getTitle={getTitle}
@@ -456,7 +478,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 handleClick={handleClick}
                                 setClasses={setClasses}
                                 isBmWService={isBmWService}
-                                isRiverviewFord={isRiverviewFord}
                             />
 
                             {scProfile?.isShowPriceDetails
@@ -472,8 +493,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 upsell={upsells}
                                 handleClick={handleClick}
                                 setClasses={setClasses}
-                                isBmWService={isBmWService}
-                                isRiverviewFord={isRiverviewFord}/>
+                                isBmWService={isBmWService}/>
 
                             <Complimentary
                                 packages={packages}
@@ -481,8 +501,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 complimentary={complimentary}
                                 handleClick={handleClick}
                                 setClasses={setClasses}
-                                isBmWService={isBmWService}
-                                isRiverviewFord={isRiverviewFord}/>
+                                isBmWService={isBmWService}/>
 
                             {scProfile?.isShowPriceDetails ? <TotalComplimentary
                                 packages={packages}
@@ -528,11 +547,13 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                     </React.Fragment>
                 }
             </React.Fragment> : null}
-            <Actions
+            {scProfile?.eMenuEnabled
+                ? null
+                : <Actions
                 onBack={handleBack}
                 // hideNext={!isXs}
                 nextDisabled={!selectedPackage}
-                onNext={() => handleNext(selectedPackage)} />
+                onNext={() => handleNext(selectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
         </PackagesStepWrapper>

@@ -12,6 +12,9 @@ import {encodeSCID} from "../../../../utils/utils";
 import {Loading} from "../../../UI/Loading";
 import {clearAppointmentData, setVehicle} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
+import {getCurrentUser} from "../../../../store/reducers/users/actions";
+import {useCurrentUser} from "../../../../utils/hooks";
+import {TRole} from "../../../../store/reducers/users/types";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -26,19 +29,32 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const restrictedRoles: TRole[] = ["Manager", "Advisor"];
+
 export const ServiceCenterSwitcher = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {shortSC, shortLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [selectedServiceCenter, setSelectedServiceCenter] = useState<IServiceCenter|null>(null);
+    const [centersList, setCentersList] = useState<IServiceCenter[]>([]);
 
     const dispatch = useDispatch();
     const history = useHistory();
     const classes = useStyles();
+    const currentUser = useCurrentUser();
+
+    useEffect(() => {
+        if (shortSC?.length && currentUser) {
+            setCentersList(() => restrictedRoles.includes(currentUser?.role)
+                ? shortSC.filter(item => item.id === currentUser.serviceCenterId)
+                : shortSC)
+        }
+    }, [currentUser, shortSC, restrictedRoles])
 
     useEffect(() => {
         if (scProfile) {
             dispatch(loadShortSC(false, scProfile.dealershipId));
+            dispatch(getCurrentUser());
         }
     }, [scProfile])
 
@@ -70,7 +86,7 @@ export const ServiceCenterSwitcher = () => {
         }
     }
 
-    return shortSC.length
+    return currentUser && centersList?.length
         ? <div className={classes.selectWrapper}>
             { shortLoading
                 ? <Loading/>
@@ -85,7 +101,7 @@ export const ServiceCenterSwitcher = () => {
                         anchorEl={anchorEl}
                         onClose={handleMenuClose}
                         open={Boolean(anchorEl)}>
-                        {shortSC.map(sc => {
+                        {centersList.map(sc => {
                             return <MenuItem key={sc.id} onClick={handleChooseServiceCenter(sc)}>{sc.name}</MenuItem>
                         })}
                     </Menu>

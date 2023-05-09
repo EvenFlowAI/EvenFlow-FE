@@ -24,7 +24,7 @@ import {
     setMaintenanceDetails,
     setMobileServiceAvailability,
     setOffersLoading,
-    setPackage,
+    setPackage, setPackageEMenuType,
     setPackageIsSelected, setPackagePricingType,
     setPackages,
     setPickUpDropOffAvailability,
@@ -36,7 +36,7 @@ import {
     setServiceType,
     setServiceTypeOption,
     setSideBarActualSteps, setSideBarMenu,
-    setSideBarSteps,
+    setSideBarSteps, setSideBarStepsList,
     setTime,
     setTiming,
     setTrackerCreated,
@@ -52,6 +52,7 @@ import {
     updateVehicle,
 } from "./actions";
 import {
+    EMaintenanceOptionType,
     ICustomer,
     ILoadedVehicle,
     IMake,
@@ -120,8 +121,9 @@ type TState = {
     isPickUpDropOffServiceOn: boolean;
     isValueServiceOn: boolean;
     sideBarSteps: TScreen[];
-    sideBarMenu: string[],
-    sideBarActualSteps: {[K in TScreen]: number}|null,
+    sideBarMenu: string[];
+    sideBarActualSteps: {[K in TScreen]: number}|null;
+    sideBarStepsList: TScreen[];
     welcomeScreenView: TView;
     language: TLanguage;
     ancillaryPriceLoading: boolean;
@@ -131,8 +133,10 @@ type TState = {
     recallsAreShown: boolean;
     hoursOfOperations: IHOODataForm[];
     serviceTypeOption: IFirstScreenOption|null;
+    selectedOptionTypes: EServiceType[];
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
+    packageEMenuType: EMaintenanceOptionType|null;
 }
 const initialState: TState = {
     service: null,
@@ -178,6 +182,7 @@ const initialState: TState = {
     sideBarSteps: [],
     sideBarMenu: [],
     sideBarActualSteps: null,
+    sideBarStepsList: [],
     welcomeScreenView: "select",
     language: "en",
     ancillaryPriceLoading: false,
@@ -187,8 +192,10 @@ const initialState: TState = {
     recallsAreShown: false,
     hoursOfOperations: [],
     serviceTypeOption: null,
+    selectedOptionTypes: [],
     packagePricingType: null,
     packagePriceTitles: [],
+    packageEMenuType: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -361,7 +368,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, hoursOfOperations: payload}
     })
     .addCase(setServiceTypeOption, (state, {payload}) => {
-        return {...state, serviceTypeOption: payload}
+        const optionsTypes = payload
+            ?  Array.from(new Set([...state.selectedOptionTypes, payload.type]))
+            : state.selectedOptionTypes;
+        return {...state, serviceTypeOption: payload, selectedOptionTypes: optionsTypes};
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
         return {...state, packagePricingType: payload}
@@ -374,5 +384,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSelectedPackagePriceTitles, (state, {payload}) => {
         return {...state, packagePriceTitles: payload}
+    })
+    .addCase(setSideBarStepsList, (state, {payload}) => {
+        return {...state, sideBarStepsList: payload}
+    })
+    .addCase(setPackageEMenuType, (state, {payload}) => {
+        return {...state, packageEMenuType: payload}
     })
 )

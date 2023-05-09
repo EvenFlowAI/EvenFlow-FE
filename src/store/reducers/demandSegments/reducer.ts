@@ -1,12 +1,20 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IDemandSegment, ITimeWindow, IUnplannedDemand} from "./types";
-import {getDemandSegments, getTimeWindow, getUnplannedDemand, loadingDemandSegments} from "./actions";
+import {IDemandSegment, ITimeWindow, IUnplannedDemand, IUnplannedDemandBySlot} from "./types";
+import {
+    getDemandSegments,
+    getTimeWindow,
+    getUnplannedDemand,
+    loadingDemandSegments,
+    setUnplannedLoading, setUnplannedSlots
+} from "./actions";
 
 type TState = {
     demandSegmentList: IDemandSegment[];
     listLoading: boolean;
     timeWindow: ITimeWindow;
     unplannedDemands: IUnplannedDemand[];
+    unplannedSlots: IUnplannedDemandBySlot[];
+    isSlotsLoading: boolean;
 }
 type TPDemandSegment = {
     window1Point: number;
@@ -27,7 +35,9 @@ const initialState: TState = {
         serviceCenterId: 0,
         startInHours: 0,
     },
-    unplannedDemands: []
+    unplannedDemands: [],
+    unplannedSlots: [],
+    isSlotsLoading: false,
 }
 export const demandSegmentsReducer = createReducer(initialState, builder => builder
     .addCase(getDemandSegments, (state, {payload}) => {
@@ -41,5 +51,11 @@ export const demandSegmentsReducer = createReducer(initialState, builder => buil
     })
     .addCase(getUnplannedDemand, (state, {payload}) => {
         return {...state, unplannedDemands: payload};
+    })
+    .addCase(setUnplannedLoading, (state, {payload}) => {
+        return {...state, isSlotsLoading: payload};
+    })
+    .addCase(setUnplannedSlots, (state, {payload}) => {
+        return {...state, unplannedSlots: payload};
     })
 );

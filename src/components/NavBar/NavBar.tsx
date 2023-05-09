@@ -128,7 +128,9 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
                         <SupervisorAccount style={{marginRight: 8}} color="secondary" />
                         <Typography color="secondary">Root Access</Typography>
                     </MenuItem> : null}
-                    {currentUser?.role === Roles.Owner ? <MenuItem onClick={openProfile}>Company Settings</MenuItem> : null}
+                    <MenuItem onClick={openProfile}>
+                        {currentUser?.role === Roles.Owner ? "Company Settings" : "Change Password"}
+                    </MenuItem>
                     <MenuItem onClick={handleLogout}>{isAdminDealership ? "Exit" : "Logout"}</MenuItem>
                 </Menu>
             </Toolbar>

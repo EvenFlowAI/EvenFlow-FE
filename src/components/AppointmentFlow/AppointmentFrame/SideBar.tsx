@@ -4,7 +4,7 @@ import {TScreen} from "../../Layout/types";
 import {ProgressStepper} from "../ProgressStepper";
 import {
     setAdditionalServicesChosen, setSideBarActualSteps, setSideBarMenu,
-    setSideBarSteps
+    setSideBarSteps, setSideBarStepsList
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -67,7 +67,7 @@ type TProps = {
 }
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const {serviceType, sideBarSteps, sideBarMenu, sideBarActualSteps} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType, sideBarSteps, sideBarMenu, sideBarActualSteps, sideBarStepsList, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -79,7 +79,8 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }, [config, serviceType]);
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
-    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
+    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds
+        && !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
@@ -87,6 +88,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
     }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap])
 
     useEffect(() => {
@@ -98,9 +100,10 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }, [sideBarActualSteps, screen])
 
     const onClick = (idx: number) => {
-        const screen: TScreen = getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)[idx];
-        handleSetScreen(screen);
-        if (idx === 0) dispatch(setAdditionalServicesChosen(true));
+        if (sideBarStepsList) {
+            handleSetScreen(sideBarStepsList[idx]);
+            if (idx === 0) dispatch(setAdditionalServicesChosen(true));
+        }
     }
 
     const getButtonState = useCallback((index: number) => {

@@ -1,5 +1,6 @@
 import {EServiceCategoryPage} from "../../../api/types";
 import {IServiceRequestShort} from "../serviceRequests/types";
+import {EServiceType} from "../appointmentFrameReducer/types";
 
 export interface ICategory {
     id: number;
@@ -11,6 +12,8 @@ export interface ICategory {
     orderIndex?: number;
     description?: string;
     isCommentRequired?: boolean;
+    taglineText?: string;
+    taglineFontColorHex?: string;
 }
 
 export type TUpdateCategoryData = {
@@ -21,6 +24,9 @@ export type TUpdateCategoryData = {
     orderIndex?: number;
     description?: string;
     isCommentRequired?: boolean;
+    taglineText?: string;
+    taglineFontColorHex?: string;
+    serviceType: EServiceType;
 }
 
 export type TNewCategory = TUpdateCategoryData & {
@@ -37,3 +43,8 @@ export enum EServiceCategoryType {
 }
 
 export type TSuccessCallback = (id: number) => void;
+
+export enum ECategoriesFilter {
+    VisitCenter,
+    MobileService
+}

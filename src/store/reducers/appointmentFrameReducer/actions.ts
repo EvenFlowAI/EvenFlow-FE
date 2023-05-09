@@ -1,5 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
+    EMaintenanceOptionType,
     IAppointmentByQuery, IConsultantsRequestData,
     ICustomer,
     ILoadedVehicle, IPackage,
@@ -73,6 +74,7 @@ export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoa
 export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
 export const setSideBarMenu = createAction<string[]>('fAppointment/SetSideBarMenu');
 export const setSideBarActualSteps = createAction<{[K in TScreen]: number}>('fAppointment/SetSideBarMenuActualSteps');
+export const setSideBarStepsList = createAction<TScreen[]>('fAppointment/SetSideBarStepsList');
 export const setMobileServiceAvailability = createAction<boolean>('fAppointment/SetMobileServiceState');
 export const setPickUpDropOffAvailability = createAction<boolean>('fAppointment/SetPickUpDropOffAvailability');
 export const setValueServiceAvailability = createAction<boolean>('fAppointment/SetValueServiceAvailability');
@@ -84,6 +86,7 @@ export const setFilteredZipCodes = createAction<string[]>('fAppointment/SetFilte
 export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/SetSelectedRecalls');
 export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
 export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/SetHorsOfOperations');
+export const setPackageEMenuType = createAction<EMaintenanceOptionType|null>('fAppointment/SetPackageEMenuType');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -199,6 +202,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setAdditionalServicesChosen(false));
     dispatch(setFrameDescription(''));
     dispatch(setPackagePricingType(null));
+    dispatch(setPackageEMenuType(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {

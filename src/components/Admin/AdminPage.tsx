@@ -9,9 +9,7 @@ import {PrivateRoute} from "../../utils/Routes";
 import {useCurrentUser} from "../../utils/hooks";
 import {AdminDashboard} from "./Dashboard/Dashboard";
 import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDetail";
-import {Roles} from "../../config/constants";
 import {Profile} from "./Profile/Profile";
-import {ServiceRequests} from "./ServiceRequets/ServiceRequets";
 import {Appointments} from "../Appointments/Appointments";
 import PricingPage from "./Pricing/PricingPage";
 import Reporting from "./Reporting/Reporting";
@@ -32,10 +30,10 @@ export const AdminPage = () => {
             {currentUser.isSuperUser
                 ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetail} />
                 : null}
-            {currentUser.isSuperUser
-                ? <PrivateRoute
-                    path={`${Routes.Admin.ServiceRequests}`} component={ServiceRequests} />
-                : null}
+            {/*{currentUser.isSuperUser*/}
+            {/*    ? <PrivateRoute*/}
+            {/*        path={`${Routes.Admin.ServiceRequests}`} component={ServiceRequests} />*/}
+            {/*    : null}*/}
             {!hideDashboard && <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>}
             {!currentUser.isSuperUser ?
                 <PrivateRoute path={Routes.Admin.Appointments} component={Appointments} />
@@ -55,9 +53,7 @@ export const AdminPage = () => {
             {!currentUser.isSuperUser && !hideDashboard
                 ? <PrivateRoute path={Routes.Admin.Reporting} exact component={Reporting}/>
                 : null}
-            {currentUser.role === Roles.Owner
-                ? <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
-                : null}
+            <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />

@@ -44,6 +44,8 @@ import {
     setAdvisor,
     setCurrentFrameScreen,
     setPackage,
+    setPackageEMenuType,
+    setPackagePricingType,
     setRecallsAreShown,
     setSelectedRecalls,
     setServiceType,
@@ -54,7 +56,7 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
+import {EServiceCenterName, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
@@ -144,6 +146,8 @@ export const AppointmentFrameLayout = () => {
         currentScreen: currentFrameScreen,
         userType,
         consultants,
+        makes,
+        serviceTypeOption,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -165,6 +169,7 @@ export const AppointmentFrameLayout = () => {
         [userType, firstScreenOptions]);
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
+    const isLexus = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt), [scProfile]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType?.toString() === serviceType?.toString());
     }, [config, serviceType])
@@ -305,6 +310,9 @@ export const AppointmentFrameLayout = () => {
         dispatch(setSelectedRecalls([]));
         dispatch(setRecallsAreShown(false));
         dispatch(setAdditionalServicesChosen(false));
+        dispatch(setPackagePricingType(null));
+        dispatch(setServiceTypeOption(null));
+        dispatch(setPackageEMenuType(null));
     },[])
 
     const clearData = useCallback(() => {
@@ -376,12 +384,17 @@ export const AppointmentFrameLayout = () => {
             try {
                 const {data} = await API.appointment.getByKey(trimmedKey);
                 if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
-                    dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, data.recalls))
+                    const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
+                    if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
                 }
                 dispatch(setUpdateAppointment(data));
                 data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
                 if (data.maintenancePackageOption) {
-                    dispatch(setPackage(data.maintenancePackageOption))
+                    if (isLexus) {
+                        dispatch(setPackageEMenuType(data.maintenancePackageOption.type))
+                    } else {
+                        dispatch(setPackage(data.maintenancePackageOption))
+                    }
                 }
                 needToShowService = handleServiceTypeOption(data);
                 if (needToShowService) {
@@ -401,7 +414,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes]);
 
     const handleSelectCar = useCallback( () => {
         selectedVehicle && onSelectCar(selectedVehicle)
@@ -475,7 +488,9 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,
             appointmentConfirmation: <AppointmentConfirmationFrame
-                onBack={handleChangeScreen(currentConfig?.transportationNeeds ? 'transportationNeeds' : 'appointmentSelection')}
+                onBack={handleChangeScreen(currentConfig?.transportationNeeds && !serviceTypeOption?.transportationOption
+                    ? 'transportationNeeds'
+                    : 'appointmentSelection')}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
@@ -498,7 +513,7 @@ export const AppointmentFrameLayout = () => {
         return carSelections[currentScreen];
     }, [
         currentScreen, handleChangeScreen, handleSetScreen, handleAddNewVehicle,
-        handleLogin, handleSelectCar, loadingCar, handleAddNewCarAppointment
+        handleLogin, handleSelectCar, loadingCar, handleAddNewCarAppointment, serviceTypeOption
     ]);
 
     const getTitle = () => {

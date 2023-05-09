@@ -65,7 +65,7 @@ export enum EUserType {
 export enum EServiceType {
     VisitCenter,
     MobileService,
-    PikUpDropOff,
+    PickUpDropOff,
     General
 }
 

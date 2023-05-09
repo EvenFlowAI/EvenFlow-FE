@@ -4,10 +4,10 @@ import {
     IDemandSegmentForm,
     ISetDemandSegmentRequest,
     ITimeWindow,
-    IUnplannedDemand,
-    IUnplannedDemandRequest
+    IUnplannedDemand, IUnplannedDemandBySlot,
+    IUnplannedDemandRequest, IUnplannedDemandSlotsRequest, IUnplannedSlotUpdateData
 } from "./types";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
 export const loadingDemandSegments = createAction<boolean>("DemandSegments/Loading");
@@ -58,4 +58,34 @@ export const loadUnplannedDemand = (serviceCenterId: number, podId?: number): Ap
 export const setUnplannedDemand = (data: IUnplannedDemandRequest): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.AppointmentAllocation.SetUnplanned, {data});
     dispatch(loadUnplannedDemand(data.serviceCenterId, data.podId));
+}
+
+export const setUnplannedLoading = createAction<boolean>("DemandSegments/SetUnplannedLoading");
+export const setUnplannedSlots = createAction<IUnplannedDemandBySlot[]>("DemandSegments/SetUnplannedSlots");
+export const loadUnplannedSlots = (data: IUnplannedDemandSlotsRequest): AppThunk => dispatch => {
+    dispatch(setUnplannedLoading(true));
+    Api.call(Api.endpoints.AppointmentAllocation.GetUnplannedSlotsByDay, {params: {...data}})
+        .then(res => {
+            if (res.data) dispatch(setUnplannedSlots(res.data))
+        })
+        .catch(err => {
+            console.log('load unplanned demand slots by day error', err)
+        })
+        .finally(() => dispatch(setUnplannedLoading(false)));
+}
+
+export const changeUnplannedSlots = (data: IUnplannedSlotUpdateData, onError: TArgCallback<{err: string}>, onSuccess: TCallback): AppThunk => dispatch => {
+    dispatch(setUnplannedLoading(true));
+    Api.call(Api.endpoints.AppointmentAllocation.UpdateUnplannedSlots, {data})
+        .then(res => {
+            if (res.data) {
+                dispatch(loadUnplannedDemand(data.serviceCenterId, data.podId))
+                onSuccess()
+            }
+        })
+        .catch(err => {
+            console.log('load unplanned demand slots by day error', err)
+            onError(err)
+        })
+        .finally(() => dispatch(setUnplannedLoading(false)));
 }

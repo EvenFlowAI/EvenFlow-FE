@@ -43,8 +43,14 @@ const Arrow = styled("span")<Theme, {disabled?: boolean}>(({theme, disabled}) =>
     width: 40,
     height: 40,
     cursor: "pointer",
-    border: "1px solid #DADADA",
-    opacity: disabled ? .4 : 1
+    border: "1px solid #91CFF7",
+    backgroundColor: "#E5F5FF",
+    color: "#202021",
+    opacity: disabled ? 0.4 : 1,
+    "&:hover": {
+        border: "1px solid #E5F5FF",
+        backgroundColor: "#91CFF7",
+    }
 }));
 
 type TProps = {
@@ -141,7 +147,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                         </Arrow>
                         {customerLoadedData.vehicles
                             .slice(idx, idx + vehiclesPerScreen)
-                            .map(vehicle =>
+                            .map((vehicle, index) =>
                                 <CarCard
                                     onNext={onNext}
                                     onSelectCar={onSelectCar}
@@ -149,7 +155,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                                     selected={isSelected(vehicle)}
                                     clearData={clearData}
                                     car={vehicle}
-                                    key={vehicle.vin}/>
+                                    key={vehicle.dmsId || new Date().toISOString() + index}/>
                             )}
                         <Arrow onClick={next} disabled={nextDisabled()}>
                             <ChevronRight />

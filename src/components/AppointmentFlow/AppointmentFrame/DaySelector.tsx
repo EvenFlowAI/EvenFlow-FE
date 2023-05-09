@@ -169,6 +169,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
                     isXs={isXs}
                     isCurrent={date.isSame(moment.utc(day), 'date')}
                     appointment={appointments[day]}
+                    appointments={appointments}
                     onClick={handleChangeDay(day)}
                     day={day}
                 />

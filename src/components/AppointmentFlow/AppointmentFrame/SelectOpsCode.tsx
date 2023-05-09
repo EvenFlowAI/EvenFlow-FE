@@ -11,7 +11,7 @@ import {
     selectSR,
     selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
-import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
+import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
@@ -62,7 +62,7 @@ const Price = styled('span')({
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: "bold",
 })
 
@@ -90,7 +90,7 @@ const Code = styled(FormControlLabel)({
     textTransform: "uppercase",
     display: 'flex',
     "& span": {
-        fontSize: 12,
+        fontSize: 14,
         "&:last-child": {
             padding: "8px 8px 8px 0"
         }
@@ -136,8 +136,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         state.bookingFlowConfig.config,
         state.appointmentFrame.consultants,
     ]);
-    const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const isInit = useRef(true);
     const {t} = useTranslation();
@@ -342,7 +340,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
                                 {/*    {getOfferString(s.offer, Boolean(scProfile?.isRoundPrice))}*/}
                                 {/*</OfferPrice> : null}*/}
                             {Boolean(s.price)
-                                ? <Price style={isSm ? {width: '20%'} : {}}>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
+                                ? <Price>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
                                 : <InfoOutlined style={{paddingRight: 8, fontSize: '2rem'}}/>}
                             </PricesWrapper>
                         </CodeWrapper>

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {TActionProps, TTransportationData} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -8,7 +8,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {collectServiceRequestIds} from "./utils";
+import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {setSideBarSteps, setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -19,6 +19,7 @@ import {Loading} from "../../UI/Loading";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../store/reducers/transportationNeeds/types";
+import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     width: 287,
@@ -129,10 +130,21 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [
-        s, ss,
-        individualOps, categoriesIds, packageOpt, appointmentDate,
-        hashKey, selectedRecalls,
-        transportation, sideBarSteps
+        s,
+        ss,
+        individualOps,
+        categoriesIds,
+        packageOpt,
+        appointmentDate,
+        hashKey,
+        selectedRecalls,
+        transportation,
+        sideBarSteps,
+        packagePricingType,
+        selectedPackage,
+        selectedVehicle,
+        packageEMenuType,
+        allCategories,
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -144,6 +156,11 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.transportation,
         state.appointmentFrame.sideBarSteps,
+        state.appointmentFrame.packagePricingType,
+        state.appointmentFrame.selectedPackage,
+        state.appointmentFrame.selectedVehicle,
+        state.appointmentFrame.packageEMenuType,
+        state.categories.allCategories,
     ]);
 
     const serviceRequestIds = useMemo(() => {
@@ -154,26 +171,50 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        setLoading(true);
-        const data: TTransportationData = {
-            serviceCenterId: decodeSCID(id),
-            serviceRequestIds,
-            maintenancePackageOptionId: packageOpt?.id ?? null,
-            slot: appointmentDate,
-            serviceCategoryIds: packageOpt?.id || serviceRequestIds.length ? [] : categoriesIds,
-        }
-        if (appointmentDate) data.slot = appointmentDate;
-        if (hashKey) data.appointmentHashKey = hashKey;
-
-        Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
-            .then(({data}) => {
-            setTransportations(data);
-        })
-            .finally(() => {
-                setLoading(false)
+    const getCategories = useCallback((): number[] => {
+        return allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
             })
-    }, [id, serviceRequestIds, packageOpt]);
+            .map(item => item.id)
+    }, [allCategories, EServiceCategoryType, categoriesIds])
+
+    useEffect(() => {
+        if (selectedVehicle) {
+            setLoading(true);
+            const maintenancePackageOption = selectedPackage
+                ? {id: selectedPackage?.id, priceType: packagePricingType}
+                : packageEMenuType !== null
+                    ? {optionType: packageEMenuType}
+                    : null;
+            const data: TTransportationData = {
+                serviceCenterId: decodeSCID(id),
+                serviceRequestIds,
+                slot: appointmentDate,
+                serviceCategoryIds: getCategories(),
+                recalls: mapRecallsForRequest(selectedRecalls),
+                maintenancePackageOption,
+                vehicle: {
+                    vin: selectedVehicle.vin,
+                    year: selectedVehicle.year,
+                    make: selectedVehicle.make,
+                    model: selectedVehicle.model,
+                    mileage: selectedVehicle.mileage,
+                    engineTypeId: selectedVehicle.engineTypeId,
+                },
+            }
+            if (appointmentDate) data.slot = appointmentDate;
+            if (hashKey) data.appointmentHashKey = hashKey;
+            Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
+                .then(({data}) => {
+                    setTransportations(data);
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
+        }
+    }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
+        packagePricingType, packageEMenuType, appointmentDate, packageOpt, categoriesIds, hashKey]);
 
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({
@@ -199,7 +240,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const handleSideBar = () => {
         const index = sideBarSteps.indexOf("appointmentSelection");
         if (index > -1) {
-            const slicedSteps = sideBarSteps.slice(0, index);
+            const slicedSteps = sideBarSteps.slice(0, index + 1);
             dispatch(setSideBarSteps(slicedSteps))
         }
     }
@@ -236,6 +277,11 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>
         }
-        <Actions onBack={handleBack} hideNext onNext={() => {}} nextDisabled={loading || Boolean(transportations.length) && !transportation}/>
+        <Actions
+            onBack={handleBack}
+            hideNext={!!transportations.length}
+            onNext={onNext}
+            nextDisabled={loading || Boolean(transportations.length) && !transportation}
+        />
     </StepWrapper>
 };

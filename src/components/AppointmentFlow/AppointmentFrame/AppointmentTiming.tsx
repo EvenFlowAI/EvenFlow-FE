@@ -8,7 +8,7 @@ import {ReactComponent as FirstAvailableIcon} from "../../../assets/img/firstAva
 import {ReactComponent as OffersIcon} from "../../../assets/img/offersIcon.svg";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setSideBarSteps, setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {
     EAppointmentTimingType,
@@ -84,6 +84,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         serviceTypeOption,
         selectedRecalls,
         packagePricingType,
+        sideBarSteps,
     ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
@@ -105,6 +106,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.appointmentFrame.serviceTypeOption,
             state.appointmentFrame.selectedRecalls,
             state.appointmentFrame.packagePricingType,
+            state.appointmentFrame.sideBarSteps,
         ]);
 
     useEffect(() => {
@@ -142,7 +144,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             }
         }
         if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
-        if (serviceTypeOption?.type === EServiceType.PikUpDropOff) {
+        if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
             // todo uncomment when the calendar dates disabling functionality will be ready
             // dispatch(loadServiceValetSlots(dd, () => {}, () => setLoading(false)));
         } else {
@@ -175,6 +177,21 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
         && (selectedType !== EAppointmentTimingType.PreferredDate || selectedTime)
     );
 
+    const clearAppointments = useCallback(() => {
+        if (appointment?.timingType !== selectedType) {
+            dispatch(selectAppointment(null))
+            dispatch(selectServiceValetAppointment(null));
+        }
+    }, [appointment, selectedType])
+
+    const handleSideBar = () => {
+        const index = sideBarSteps.indexOf("appointmentSelection");
+        if (index > -1) {
+            const slicedSteps = sideBarSteps.slice(0, index + 1);
+            dispatch(setSideBarSteps(slicedSteps))
+        }
+    }
+
     const onSubmit = useCallback((): void => {
         if (selectedType) {
             ReactGA.event({
@@ -183,7 +200,8 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                 label: `Selected ${timingTypes[selectedType]}`,
             });
         }
-        if (appointment?.timingType !== selectedType) dispatch(selectAppointment(null))
+        clearAppointments();
+        handleSideBar();
         onNext();
     }, [appointment, dispatch, onNext, selectedType])
 
@@ -194,7 +212,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                     if (!idx) {
                         return null;
                     }
-                    if (serviceTypeOption?.type === EServiceType.PikUpDropOff && idx === 1) {
+                    if (serviceTypeOption?.type === EServiceType.PickUpDropOff && idx === 1) {
                         // todo delete this when Preferred Date Search will be implemented
                         return null;
                     }

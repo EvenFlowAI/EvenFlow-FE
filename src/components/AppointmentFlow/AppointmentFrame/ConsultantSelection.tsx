@@ -10,9 +10,15 @@ import {IConsultantsRequestData, IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
     selectCategoriesIds,
-    selectService, selectSubService,
+    selectService,
+    selectSubService,
     setAdvisor,
-    setPackage, setPackageIsSelected, setSelectedPackageOptionType, setSideBarActualSteps, setSideBarMenu
+    setPackage,
+    setPackageIsSelected,
+    setSelectedPackageOptionType,
+    setSideBarActualSteps,
+    setSideBarMenu,
+    setSideBarStepsList
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -24,14 +30,14 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
-import {collectServiceRequestIds, getCurrentMenu, getStepsMap, mapRecallsForRequest} from "./utils";
+import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
-import {MPOptionShort} from "../../../store/reducers/appointment/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+   // gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: "stretch",
     justifyContent: "flex-start",
     gridGap: "20px",
@@ -46,9 +52,12 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
 
 const ConsultantWrapper = styled(
     ({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
-    display: "flex",
-    rowGap: 16,
-    columnGap: 16,
+    //display: "flex",
+    display: 'grid',
+    gridGap: 16,
+    // rowGap: 16,
+    // columnGap: 16,
+    gridTemplateColumns: '1fr 1fr',
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     color: active ? "#FFFFFF" : theme.palette.text.primary,
     background: active ? "#000000" : "transparent",
@@ -119,7 +128,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         serviceTypeOption,
         address,
         zipCode,
-        valueService
+        valueService,
+        packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -132,7 +142,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }, [config, serviceType]);
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
-    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
+    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds &&
+        !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(service, subService, null, selectedSR, selectedRecalls);
     }, [service, subService, selectedRecalls, selectedSR]);
@@ -147,9 +158,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         if (selectedVehicle) {
-            const maintenancePackageOption: MPOptionShort|null = selectedPackage
+            const maintenancePackageOption = selectedPackage
                 ? {id: selectedPackage?.id, priceType: packagePricingType}
-                : null;
+                : packageEMenuType !== null
+                    ? {optionType: packageEMenuType}
+                    : null;
+
             const data: IConsultantsRequestData = {
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
@@ -168,7 +182,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                     mileage: selectedVehicle.mileage,
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
-                address,
+                address: typeof address === 'string' ? address : address?.label ?? '',
                 zipCode,
             }
             if (valueService?.selectedService) {
@@ -176,7 +190,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             }
             dispatch(loadConsultants(data, onNext))
         }
-    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest])
+    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage])
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
@@ -184,7 +198,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap])
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap, getStepsScreen])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(selectAppointment(null));
