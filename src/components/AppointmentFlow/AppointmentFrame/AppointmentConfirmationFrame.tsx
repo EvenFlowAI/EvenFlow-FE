@@ -85,6 +85,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const {id} = useParams();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
+
     const showError = useException();
     const dispatch = useDispatch();
     const {t} = useTranslation();
