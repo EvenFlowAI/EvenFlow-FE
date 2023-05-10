@@ -19,7 +19,7 @@ type TProps = {
     onNext: TCallback;
     onSelectCar: TArgCallback<ILoadedVehicle>;
 }
-const Wrapper = styled('div')<Theme, {active?: boolean}>(({theme}) => ({
+const Wrapper = styled((({active, ...props}) => (<div {...props}/>)))<Theme, {active?: boolean}>(({theme}) => ({
     display: "flex",
     flex: "1 1 0px",
     padding: 22,
@@ -28,7 +28,6 @@ const Wrapper = styled('div')<Theme, {active?: boolean}>(({theme}) => ({
     gap: "12px",
     justifyContent: "center",
     transition: 'all .2s',
-    border: ({active}) => `1px solid ${active ? '#DADADA' : '#000000'}`,
     '& img': {
         maxWidth: '90%',
         maxHeight: "200px",

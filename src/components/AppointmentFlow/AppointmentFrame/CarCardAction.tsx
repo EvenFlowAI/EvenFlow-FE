@@ -49,7 +49,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
 
     const handleMenuItemClick = useCallback((event: any, index:number) => {
         setSelectedIndex(index);
-        setOpen(false);
+       setOpen(false);
         onAddNewAppointment(car);
     }, [car]);
 
@@ -57,7 +57,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
         if (anchorRef.current && anchorRef.current?.contains(event?.target as Node)) {
             return;
         }
-        setOpen(false);
+       setOpen(false);
     }, [anchorRef])
 
     const hasAppointments = useMemo(() => Boolean(car.appointmentHashKeys.length), [car]);
@@ -72,6 +72,12 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
         onSelectCar(car);
     }, [hasAppointments, car, onNext, clearData])
 
+    const onMenuClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+        dispatch(setVehicle(car));
+        setOpen(true)
+    }
+
     return <ActionButtons>
         <ButtonGroup variant="contained" color="primary" ref={anchorRef}>
             <Button
@@ -81,7 +87,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
             </Button>
             {hasAppointments
                 ? <Button
-                    onClick={() => setOpen(true)}
+                    onClick={onMenuClick}
                     size="small"
                     color="primary"
                     style={hasAppointments ? {backgroundColor: "#27AE60"} : {}}>
@@ -93,7 +99,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
             open={open}
             anchorEl={anchorRef.current}
             placement={"bottom-end"}
-            role={undefined}
+            role="presentation"
             transition disablePortal>
             {({ TransitionProps, placement }) => (
                 <Grow
