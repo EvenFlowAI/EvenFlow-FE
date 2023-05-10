@@ -461,6 +461,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 {isXs
                     ? <PackageSelectionMobile
                         getTitle={getTitle}
+                        withUpsells={!!upsells.length}
                         data={packages}
                         isBmWService={isBmWService}
                         isSanfordInfinity={isSanfordInfinity}
