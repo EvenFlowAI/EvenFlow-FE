@@ -158,7 +158,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                     <>
                         <Arrow onClick={prev} disabled={prevDisabled()}>
                             <ChevronLeft />
-                            <span className="text" style={{left: isSm ? -6 : -23}}>Previous Vehicle</span>
+                            <span className="text" style={{left: isSm ? -6 : -27}}>Previous Vehicle</span>
                         </Arrow>
                         {customerLoadedData.vehicles
                             .slice(idx, idx + vehiclesPerScreen)
