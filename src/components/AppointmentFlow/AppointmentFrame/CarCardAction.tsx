@@ -1,6 +1,6 @@
 import {ILoadedVehicle} from "../../../api/types";
 import {TArgCallback, TCallback} from "../../../types/types";
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -74,7 +74,6 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
 
     const onMenuClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
-        dispatch(setVehicle(car));
         setOpen(true)
     }
 
@@ -130,4 +129,4 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
     </ActionButtons>
 };
 
-export default CarCardAction;
+export default React.memo(CarCardAction);
