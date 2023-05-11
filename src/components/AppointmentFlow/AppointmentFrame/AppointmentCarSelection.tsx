@@ -37,6 +37,7 @@ const Info = styled('div')({
 });
 
 const Arrow = styled("span")<Theme, {disabled?: boolean}>(({theme, disabled}) => ({
+    position: "relative",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -50,6 +51,18 @@ const Arrow = styled("span")<Theme, {disabled?: boolean}>(({theme, disabled}) =>
     "&:hover": {
         border: "1px solid #E5F5FF",
         backgroundColor: "#91CFF7",
+    },
+    "& .text": {
+        position: 'absolute',
+        bottom: -24,
+        fontSize: 12,
+        whiteSpace: 'nowrap',
+        [theme.breakpoints.down("sm")]: {
+            bottom: -40,
+            fontSize: 12,
+            whiteSpace: 'normal',
+            textAlign: 'center',
+        }
     }
 }));
 
@@ -81,6 +94,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const dispatch = useDispatch();
     const {t} = useTranslation();
 
@@ -144,6 +158,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                     <>
                         <Arrow onClick={prev} disabled={prevDisabled()}>
                             <ChevronLeft />
+                            <span className="text" style={{left: isSm ? -6 : -27}}>Previous Vehicle</span>
                         </Arrow>
                         {customerLoadedData.vehicles
                             .slice(idx, idx + vehiclesPerScreen)
@@ -159,6 +174,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                             )}
                         <Arrow onClick={next} disabled={nextDisabled()}>
                             <ChevronRight />
+                            <span className="text" style={{left: isSm ? -4 : -13}}>Next Vehicle</span>
                         </Arrow>
                     </> : <p>{t("No vehicles present")}</p>
                 }

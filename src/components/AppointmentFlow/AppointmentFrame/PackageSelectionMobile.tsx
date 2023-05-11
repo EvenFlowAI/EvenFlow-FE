@@ -3,7 +3,7 @@ import {Tab, Tabs as Ts, withStyles} from "@material-ui/core";
 import {Done} from "@material-ui/icons";
 import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
-import {TPackage} from "./PackageSelection";
+import {Info, TPackage} from "./PackageSelection";
 import {setPackage, setPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {EMaintenanceOptionType, TExtendedComplimentary} from "../../../api/types";
@@ -56,6 +56,7 @@ type PackageSelectionMobileProps = {
     isBmWService: boolean;
     isSanfordInfinity: boolean;
     getTitle: (type: EPackagePricingType) => string;
+    withUpsells: boolean;
 }
 
 const useStyles = makeStyles(() => ({
@@ -257,7 +258,13 @@ const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
     return <div className={classes.iconWrapper}>{isSelected && <Done  className={classes.icon} htmlColor={'white'}/>} {text}</div>
 }
 
-const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle, data,isBmWService, isSanfordInfinity }) => {
+const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
+                                                                           getTitle,
+                                                                           data,
+                                                                           isBmWService,
+                                                                           isSanfordInfinity,
+                                                                           withUpsells,
+}) => {
     const [value, setValue] = useState<string>('1');
     const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -460,6 +467,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle
             }
             {selectedPackage ? <React.Fragment>
                 <TotalPriceMobile
+                    withUpsells={withUpsells}
                     isUpsellPrice={false}
                     handleClick={handleClick}
                     type={selectedPackage.type}
@@ -467,8 +475,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle
                     price={selectedPackage.price}
                     complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
                 />
-                <TotalPriceMobile
+                {withUpsells
+                    ? <TotalPriceMobile
                     isUpsellPrice
+                    withUpsells={withUpsells}
                     handleClick={handleClick}
                     type={selectedPackage.type}
                     text={getTitle(EPackagePricingType.PriceWithFee)}
@@ -476,7 +486,16 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({getTitle
                     complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
                     upsellPrice={selectedPackage.marketPriceIntervalUpsells}
                 />
+                    : null}
             </React.Fragment> : null}
+            <Info>
+                {scProfile?.maintenancePackageDisclaimer
+                    ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <div key={line}>{line}</div>)
+                    :  isBmWService
+                        ? t("Please ask your service advisor")
+                        : t("The maintenance packages may not be available")
+                }
+            </Info>
         </div>
     );
 };

@@ -54,11 +54,11 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
         textDecoration: 'line-through',
     },
     "& .centeredPrice": {
-
+        paddingLeft: 36
     },
     "& .positionedBtn": {
         position: 'absolute',
-        top: 22,
+        top: 19,
         left: 16
     }
 }))
