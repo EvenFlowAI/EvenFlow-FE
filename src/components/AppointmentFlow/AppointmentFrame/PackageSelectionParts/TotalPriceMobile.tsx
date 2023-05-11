@@ -22,7 +22,7 @@ const PriceWrapper = styled(({isUpsellPrice, isShowPriceDetails, isSelected, ...
             alignItems: 'center',
             background: isUpsellPrice ?'#FFD966' : '#3E3E40',
             color: isUpsellPrice ? '#202021' : '#FFFFFF',
-            padding: '10px 0 10px 25px',
+            padding: '10px 0 10px 0',
         },
         '& .text': {
             display: 'flex',
@@ -119,7 +119,7 @@ const TotalPriceMobile: React.FC<TProps> = ({
             <div className="radio">
                 {selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}
             </div>
-            <div className="text">{text && withUpsells ? text : defaultString}</div>
+            <div className="text">{text && withUpsells ? text : isUpsellPrice ? "" : defaultString}</div>
             <div className="price">
                 {showDetails ?
                     <React.Fragment>

@@ -243,7 +243,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     }
 }));
 
-const Info = styled("div")({
+export const Info = styled("div")({
     width: '100%',
     display: 'flex',
     justifyContent: 'flex-start',
