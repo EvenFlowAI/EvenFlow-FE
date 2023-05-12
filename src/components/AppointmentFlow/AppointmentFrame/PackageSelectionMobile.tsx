@@ -234,7 +234,7 @@ const useStyles = makeStyles(() => ({
         display: "inline-block",
         marginLeft: 4,
         textTransform: "none",
-        fontWeight: "normal",
+        fontWeight: "bold",
         paddingTop: 12,
     }
 }))
@@ -473,7 +473,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
             </TabContext>
             }
             {withUpsells && Boolean(getTitle(EPackagePricingType.BasePrice).length)
-                ? <div>{t("Total")}<span className={classes.info}> ({t("Excluding taxes & fees")}):</span></div>
+                ? <div style={{fontWeight: "bold"}}>{t("Total")}<span className={classes.info}> ({t("Excluding taxes & fees")}):</span></div>
             : null}
             {selectedPackage ? <React.Fragment>
                 <TotalPriceMobile
