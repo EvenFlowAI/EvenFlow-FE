@@ -251,7 +251,7 @@ export const Info = styled("div")({
     color: "#808080",
 })
 
-const FeesText = styled('div')<Theme, { count: number }>(({theme, count}) => ({
+export const FeesText = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     width: "100%",
     display: "grid",
     gap: "0 16px",

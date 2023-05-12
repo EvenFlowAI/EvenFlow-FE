@@ -229,6 +229,13 @@ const useStyles = makeStyles(() => ({
     intervalUpsells: {
         background: '#FFF2CC',
         paddingBottom: 16,
+    },
+    info: {
+        display: "inline-block",
+        marginLeft: 4,
+        textTransform: "none",
+        fontWeight: "normal",
+        paddingTop: 12,
     }
 }))
 
@@ -465,6 +472,9 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                 ))}
             </TabContext>
             }
+            {withUpsells && Boolean(getTitle(EPackagePricingType.BasePrice).length)
+                ? <div>{t("Total")}<span className={classes.info}> ({t("Excluding taxes & fees")}):</span></div>
+            : null}
             {selectedPackage ? <React.Fragment>
                 <TotalPriceMobile
                     withUpsells={withUpsells}
