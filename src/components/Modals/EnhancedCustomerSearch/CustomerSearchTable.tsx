@@ -4,7 +4,18 @@ import {ReactComponent as Create} from "../../../assets/img/create_appointment.s
 import {ReactComponent as Update} from "../../../assets/img/editAppointment.svg";
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
 import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
-import {Button, IconButton, styled, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from "@material-ui/core";
+import {
+    Button,
+    IconButton,
+    styled,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Tooltip,
+    withStyles
+} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {ICustomerWithVehicles, IRemappedCustomer} from "../../../store/reducers/customer/types";
 
@@ -81,7 +92,7 @@ const mockData: ICustomerWithVehicles[] = [
             appointmentHashKeys: [],
         },
             {
-               id: 8,
+                id: 8,
                 vin: '12345678901236Y',
                 make: "Ford",
                 model: "Escape",
@@ -96,6 +107,14 @@ const IconsBlock = styled('div')({
     justifyContent: 'center',
     alignItems: 'center',
 })
+
+const Input = withStyles({
+    root: {
+        '& input': {
+            padding: 4
+        }
+    }
+})(TextField)
 
 const columnNames = [
     "Last Name",
@@ -168,47 +187,97 @@ const CustomerSearchTable = () => {
             </TableHead>
             <TableBody>
                 <TableRow className={classes.greyRow}/>
-                    {data.map((customer, index) =>
-                        (<TableRow key={customer.vehicle.vin + index}>
-                            <TableCell key="icon" className={classes.bodyCell}>
-                                { isEdit && editingElement?.vehicle.id === customer.vehicle.id
-                                    ? <IconsBlock><Button onClick={onSaveInfo} color="primary" variant="text">SAVE</Button></IconsBlock>
-                                    : <IconsBlock>
+                {data.map((customer, index) =>
+                    (<TableRow key={customer.vehicle.vin + index}>
+                        <TableCell key="icon" className={classes.bodyCell}>
+                            { isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                                ? <IconsBlock>
+                                    <Button
+                                        onClick={onSaveInfo}
+                                        color="primary"
+                                        variant="text"
+                                        size="small">
+                                        SAVE
+                                    </Button>
+                                </IconsBlock>
+                                : <IconsBlock>
                                     <Tooltip title="Create Appointment">
-                                        <IconButton style={{padding: 4}} onClick={() => onCreateNewForCar(customer)}><Create/></IconButton>
+                                        <IconButton
+                                            style={{padding: 4}}
+                                            onClick={() => onCreateNewForCar(customer)}>
+                                            <Create/>
+                                        </IconButton>
                                     </Tooltip>
                                     <Tooltip title="Edit Appointment">
-                                        <IconButton style={{padding: 4}}
-                                            disabled={!customer.vehicle.appointmentHashKeys?.length}
-                                            onClick={() => onUpdateAppForCar(customer)}>
+                                        <IconButton
+                                            style={{padding: 4}}
+                                                    disabled={!customer.vehicle.appointmentHashKeys?.length}
+                                                    onClick={() => onUpdateAppForCar(customer)}>
                                             <Update/>
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="View Repair History">
-                                        <IconButton style={{padding: 4}} onClick={() => onViewRepairHistory(customer)}><Search/></IconButton>
+                                        <IconButton
+                                            style={{padding: 4}}
+                                            onClick={() => onViewRepairHistory(customer)}>
+                                            <Search/>
+                                        </IconButton>
                                     </Tooltip>
                                     <Tooltip title="Edit Customer Information">
-                                        <IconButton style={{padding: 4}} onClick={() => onEditData(customer)}><Edit/></IconButton>
+                                        <IconButton
+                                            style={{padding: 4}}
+                                            onClick={() => onEditData(customer)}>
+                                            <Edit/>
+                                        </IconButton>
                                     </Tooltip>
                                 </IconsBlock>}
-                            </TableCell>
-                            <TableCell key="last" className={classes.bodyCell}>{
-                                isEdit && editingElement?.vehicle.id === customer.vehicle.id
-                                    ? <TextField value={editingElement.lastName} onChange={onFieldChange("lastName")}/>
-                                : customer.lastName
-                            }</TableCell>
-                            <TableCell key="first" className={classes.bodyCell}>{customer.firstName}</TableCell>
-                            <TableCell key="home" className={classes.bodyCell}>{customer.homePhoneNumber ?? ""}</TableCell>
-                            <TableCell key="cell" className={classes.bodyCell}>{customer.cellPhoneNumber ?? ""}</TableCell>
-                            <TableCell key="email" className={classes.bodyCell}>{customer.email ?? ""}</TableCell>
-                            <TableCell key="address" className={classes.bodyCell}>{customer.address ?? ""}</TableCell>
-                            <TableCell key="city" className={classes.bodyCell}>{customer.city ?? ""}</TableCell>
-                            <TableCell key="state" className={classes.bodyCell}>{customer.state ?? ""}</TableCell>
-                            <TableCell key="year" className={classes.bodyCell}>{customer.vehicle?.year ?? ""}</TableCell>
-                            <TableCell key="make" className={classes.bodyCell}>{customer.vehicle?.make ?? ""}</TableCell>
-                            <TableCell key="model" className={classes.bodyCell}>{customer.vehicle?.model ?? ""}</TableCell>
-                            <TableCell key="vin" className={classes.bodyCell}>{customer.vehicle?.vin ?? ""}</TableCell>
-                        </TableRow>))}
+                        </TableCell>
+                        <TableCell key="last" className={classes.bodyCell}>
+                            {isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                                ? <Input
+                                    value={editingElement.lastName}
+                                    onChange={onFieldChange("lastName")}/>
+                                : customer.lastName }
+                        </TableCell>
+                        <TableCell key="first" className={classes.bodyCell}>{
+                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                            ? <Input
+                                value={editingElement.firstName}
+                                onChange={onFieldChange("firstName")}/>
+                            : customer.firstName}</TableCell>
+                        <TableCell key="home" className={classes.bodyCell}>{customer.homePhoneNumber ?? ""}</TableCell>
+                        <TableCell key="cell" className={classes.bodyCell}>{customer.cellPhoneNumber ?? ""}</TableCell>
+                        <TableCell key="email" className={classes.bodyCell}>{
+                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                                ? <Input
+                                    value={editingElement.email}
+                                    onChange={onFieldChange("email")}/>
+                                : customer.email ?? ""}
+                        </TableCell>
+                        <TableCell key="address" className={classes.bodyCell}>{
+                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                                ? <Input
+                                    value={editingElement.address}
+                                    onChange={onFieldChange("address")}/>
+                                : customer.address ?? ""}
+                        </TableCell>
+                        <TableCell key="city" className={classes.bodyCell}>{
+                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                                ? <Input
+                                    value={editingElement.city}
+                                    onChange={onFieldChange("city")}/>
+                                : customer.city ?? ""}</TableCell>
+                        <TableCell key="state" className={classes.bodyCell}>{
+                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                                ? <Input
+                                    value={editingElement.state}
+                                    onChange={onFieldChange("state")}/>
+                                : customer.state ?? ""}</TableCell>
+                        <TableCell key="year" className={classes.bodyCell}>{customer.vehicle?.year ?? ""}</TableCell>
+                        <TableCell key="make" className={classes.bodyCell}>{customer.vehicle?.make ?? ""}</TableCell>
+                        <TableCell key="model" className={classes.bodyCell}>{customer.vehicle?.model ?? ""}</TableCell>
+                        <TableCell key="vin" className={classes.bodyCell}>{customer.vehicle?.vin ?? ""}</TableCell>
+                    </TableRow>))}
             </TableBody>
         </Table>
     );
