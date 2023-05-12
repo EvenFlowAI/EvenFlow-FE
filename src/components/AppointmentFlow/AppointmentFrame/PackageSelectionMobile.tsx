@@ -498,7 +498,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                 />
                     : null}
             </React.Fragment> : null}
-            <Info>
+            <Info style={{paddingTop: 8}}>
                 {scProfile?.maintenancePackageDisclaimer
                     ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <div key={line}>{line}</div>)
                     :  isBmWService
