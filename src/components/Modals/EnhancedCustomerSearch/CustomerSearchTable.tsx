@@ -3,6 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {ReactComponent as Create} from "../../../assets/img/create_appointment.svg";
 import {ReactComponent as Update} from "../../../assets/img/editAppointment.svg";
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
+import {ReactComponent as EditDisabled} from "../../../assets/img/editAppointmentDisabled.svg";
 import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
 import {
     Button,
@@ -18,6 +19,11 @@ import {
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {ICustomerWithVehicles, IRemappedCustomer} from "../../../store/reducers/customer/types";
+import {useDispatch} from "react-redux";
+import {ICustomerLoadedData} from "../../../api/types";
+import {setAddress, setVehicle, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
+import {TCallback} from "../../../types/types";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -55,7 +61,7 @@ const useStyles = makeStyles({
 
 const mockData: ICustomerWithVehicles[] = [
     {
-        id: 1,
+        id: "1",
         lastName: 'Johnson',
         firstName: 'Ana',
         cellPhoneNumber: '1234567890',
@@ -74,7 +80,7 @@ const mockData: ICustomerWithVehicles[] = [
         }]
     },
     {
-        id: 2,
+        id:"2",
         lastName: 'Johnson',
         firstName: 'Ana',
         cellPhoneNumber: '1234567890',
@@ -116,6 +122,19 @@ const Input = withStyles({
     }
 })(TextField)
 
+const HtmlTooltip = withStyles({
+    tooltip: {
+        fontSize: 12,
+        color: '#202021',
+        padding: 8,
+        background: '#F7F8FB',
+        boxShadow: "1px 1px 3px grey"
+    },
+    popper: {
+        borderRadius: 0,
+    }
+})(Tooltip);
+
 const columnNames = [
     "Last Name",
     "First Name",
@@ -131,11 +150,12 @@ const columnNames = [
     "VIN"
 ]
 
-const CustomerSearchTable = () => {
+const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
     const [data, setData] = useState<IRemappedCustomer[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<IRemappedCustomer|null>(null)
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const remappedData: IRemappedCustomer[] = [];
@@ -149,7 +169,30 @@ const CustomerSearchTable = () => {
         setData(remappedData);
     }, [])
 
+    const setCustomerData = async (item: IRemappedCustomer) => {
+        const phoneNumbers = [item.cellPhoneNumber];
+        const customerData = mockData.find(el => el.id === item.id);
+        if (customerData?.homePhoneNumber) phoneNumbers.push(customerData.homePhoneNumber);
+        const vehicles = customerData?.vehicles ? customerData?.vehicles.map(el => ({...el, mileage: null})) : [];
+        const data: ICustomerLoadedData = {
+            emails: customerData?.email ? [customerData.email] : [],
+            firstName: customerData?.firstName ?? "",
+            lastName: customerData?.lastName ?? "",
+            id: customerData?.id ?? item.id,
+            phoneNumbers,
+            vehicles,
+        }
+        if (customerData?.city) data.city = customerData.city;
+        if (customerData?.address) await dispatch(setAddress(customerData.address));
+        await dispatch(setCustomerLoadedData(data));
+        await dispatch(setVehicle({...item.vehicle, mileage: null}));
+    }
+
     const onCreateNewForCar = (item: IRemappedCustomer) => {
+        setCustomerData(item).then(() => {
+            dispatch(setWelcomeScreenView("serviceSelect"));
+            onClose()
+        })
         setEditingElement(item)
     }
 
@@ -201,35 +244,37 @@ const CustomerSearchTable = () => {
                                     </Button>
                                 </IconsBlock>
                                 : <IconsBlock>
-                                    <Tooltip title="Create Appointment">
+                                    <HtmlTooltip title="Create Appointment">
                                         <IconButton
                                             style={{padding: 4}}
                                             onClick={() => onCreateNewForCar(customer)}>
                                             <Create/>
                                         </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Edit Appointment">
+                                    </HtmlTooltip>
+                                    <HtmlTooltip title="Edit Appointment">
                                         <IconButton
                                             style={{padding: 4}}
                                                     disabled={!customer.vehicle.appointmentHashKeys?.length}
                                                     onClick={() => onUpdateAppForCar(customer)}>
-                                            <Update/>
+                                            {customer.vehicle.appointmentHashKeys?.length
+                                                ? <Update/>
+                                                : <EditDisabled/>}
                                         </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="View Repair History">
+                                    </HtmlTooltip>
+                                    <HtmlTooltip title="View Repair History">
                                         <IconButton
                                             style={{padding: 4}}
                                             onClick={() => onViewRepairHistory(customer)}>
                                             <Search/>
                                         </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Edit Customer Information">
+                                    </HtmlTooltip>
+                                    <HtmlTooltip title="Edit Customer Information">
                                         <IconButton
                                             style={{padding: 4}}
                                             onClick={() => onEditData(customer)}>
                                             <Edit/>
                                         </IconButton>
-                                    </Tooltip>
+                                    </HtmlTooltip>
                                 </IconsBlock>}
                         </TableCell>
                         <TableCell key="last" className={classes.bodyCell}>

@@ -4,11 +4,11 @@ export interface ICustomerVehicle {
     make: string;
     model: string;
     year: number|null;
-    appointmentHashKeys?: string[];
+    appointmentHashKeys: string[];
 }
 
 export interface ICustomerByName {
-    id: number;
+    id: string;
     lastName: string;
     firstName: string;
     cellPhoneNumber: string;

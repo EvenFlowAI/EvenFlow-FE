@@ -37,7 +37,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({open, onC
                     onNewSearch={onNewSearch}
                     onCreateNewAppointment={onCreateNewAppointment}/>
 
-                <CustomerSearchTable/>
+                <CustomerSearchTable onClose={onClose}/>
             </DialogContent>
         </BaseModal>
     );
