@@ -229,6 +229,13 @@ const useStyles = makeStyles(() => ({
     intervalUpsells: {
         background: '#FFF2CC',
         paddingBottom: 16,
+    },
+    info: {
+        display: "inline-block",
+        marginLeft: 4,
+        textTransform: "none",
+        fontWeight: "bold",
+        paddingTop: 12,
     }
 }))
 
@@ -465,6 +472,9 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                 ))}
             </TabContext>
             }
+            {withUpsells && Boolean(getTitle(EPackagePricingType.BasePrice).length)
+                ? <div style={{fontWeight: "bold"}}>{t("Total")}<span className={classes.info}> ({t("Excluding taxes & fees")}):</span></div>
+            : null}
             {selectedPackage ? <React.Fragment>
                 <TotalPriceMobile
                     withUpsells={withUpsells}
@@ -488,7 +498,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                 />
                     : null}
             </React.Fragment> : null}
-            <Info>
+            <Info style={{paddingTop: 8}}>
                 {scProfile?.maintenancePackageDisclaimer
                     ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <div key={line}>{line}</div>)
                     :  isBmWService
